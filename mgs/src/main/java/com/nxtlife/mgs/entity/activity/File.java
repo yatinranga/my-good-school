@@ -1,0 +1,76 @@
+package com.nxtlife.mgs.entity.activity;
+
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+
+import com.nxtlife.mgs.entity.BaseEntity;
+
+@Entity
+public class File extends BaseEntity{
+	
+	private String name;
+	
+	private String url;
+	
+	private Boolean active;
+	
+	private String extension;
+	
+	@ManyToOne
+	private ActivityPerformed activityPerformed;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+	public String getExtension() {
+		return extension;
+	}
+
+	public void setExtension(String extension) {
+		this.extension = extension;
+	}
+
+	public ActivityPerformed getActivityPerformed() {
+		return activityPerformed;
+	}
+
+	public void setActivityPerformed(ActivityPerformed activityPerformed) {
+		this.activityPerformed = activityPerformed;
+	}
+
+	public File(String name, String url, Boolean active, String extension, ActivityPerformed activityPerformed) {
+		this.name = name;
+		this.url = url;
+		this.active = active;
+		this.extension = extension;
+		this.activityPerformed = activityPerformed;
+	} 
+	
+	public File() {
+		
+	}
+	
+
+}
