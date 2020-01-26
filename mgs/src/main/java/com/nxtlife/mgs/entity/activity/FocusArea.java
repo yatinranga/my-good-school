@@ -1,9 +1,17 @@
 package com.nxtlife.mgs.entity.activity;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 import com.nxtlife.mgs.entity.BaseEntity;
@@ -12,9 +20,17 @@ import com.nxtlife.mgs.enums.PSDArea;
 @Entity
 public class FocusArea extends BaseEntity{
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	Long id;
+	
 	@NotNull
 	@Column(unique = true)
 	private String name;
+	
+	@NotNull
+	@Column(unique = true)
+	private String cId;
 	
 	private Boolean active;
 	
@@ -22,6 +38,9 @@ public class FocusArea extends BaseEntity{
 	
 	@Enumerated(EnumType.STRING)
 	PSDArea psdArea;
+	
+	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY,mappedBy ="focusArea")
+	private List<ActivityOfferedFocusArea> activityOfferedFocusArea;
 
 	public String getName() {
 		return name;
@@ -55,6 +74,30 @@ public class FocusArea extends BaseEntity{
 		this.psdArea = psdArea;
 	}
 
+	public List<ActivityOfferedFocusArea> getActivityOfferedFocusArea() {
+		return activityOfferedFocusArea;
+	}
+
+	public void setActivityOfferedFocusArea(List<ActivityOfferedFocusArea> activityOfferedFocusArea) {
+		this.activityOfferedFocusArea = activityOfferedFocusArea;
+	}
+
+	public String getcId() {
+		return cId;
+	}
+
+	public void setcId(String cId) {
+		this.cId = cId;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public FocusArea(@NotNull String name, Boolean active, String description, PSDArea psdArea) {
 		this.name = name;
 		this.active = active;
@@ -62,6 +105,16 @@ public class FocusArea extends BaseEntity{
 		this.psdArea = psdArea;
 	}
 	
+	public FocusArea(@NotNull String name, Boolean active, String description, PSDArea psdArea,
+			List<ActivityOfferedFocusArea> activityOfferedFocusArea) {
+		super();
+		this.name = name;
+		this.active = active;
+		this.description = description;
+		this.psdArea = psdArea;
+		this.activityOfferedFocusArea = activityOfferedFocusArea;
+	}
+
 	public FocusArea() {
 		
 	}

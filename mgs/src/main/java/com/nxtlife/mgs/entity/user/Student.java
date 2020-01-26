@@ -7,25 +7,39 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.activity.ActivityPerformed;
-import com.nxtlife.mgs.entity.activity.Grade;
 import com.nxtlife.mgs.entity.school.Award;
+import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
 
 @Entity
 public class Student extends BaseEntity {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	Long id;
+	
 	@NotNull
 	private String name;
 	
-	private String username;
+	@NotNull
+	@Column(unique = true)
+	private String cId;
 	
 	@NotNull
+	@Column(unique = true)
+	private String username;
+	
 	private Date dob;
 	
 	private String imageUrl;
@@ -37,14 +51,17 @@ public class Student extends BaseEntity {
 	@Column(unique = true)
 	private String mobileNumber;
 	
-	private Boolean active;
+	private Boolean active = false;
 	
 	private String gender;
 	
-	@NotNull
 	private Date subscriptionEndDate;
 	
-	@NotNull
+	@OneToOne
+	@JoinColumn(name="user_id")
+	User user;
+	
+//	@NotNull
 	@ManyToOne
 	private School school;
 	
@@ -56,6 +73,9 @@ public class Student extends BaseEntity {
 	
 	@OneToMany(cascade = CascadeType.ALL ,fetch = FetchType.LAZY,mappedBy = "student")
 	private List<ActivityPerformed> activities;
+	
+	@OneToMany(cascade = CascadeType.ALL ,fetch = FetchType.LAZY,mappedBy="student")
+	private List<Guardian> guardians ; 
 
 	public String getName() {
 		return name;
@@ -160,11 +180,47 @@ public class Student extends BaseEntity {
 	public void setActivities(List<ActivityPerformed> activities) {
 		this.activities = activities;
 	}
+	
 
-	public Student(@NotNull String name, String username, @NotNull Date dob, String imageUrl, @NotNull String email,
-			String mobileNumber, Boolean active, String gender, @NotNull Date subscriptionEndDate,
-			@NotNull School school, Grade grade, List<Award> awards, List<ActivityPerformed> activities) {
+	public String getcId() {
+		return cId;
+	}
+
+	public void setcId(String cId) {
+		this.cId = cId;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public List<Guardian> getGuardians() {
+		return guardians;
+	}
+
+	public void setGuardians(List<Guardian> guardians) {
+		this.guardians = guardians;
+	}
+	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Student(@NotNull String name, @NotNull String cId, @NotNull String username, Date dob, String imageUrl,
+			@NotNull String email, String mobileNumber, Boolean active, String gender, Date subscriptionEndDate,
+			User user, @NotNull School school, Grade grade, List<Award> awards, List<ActivityPerformed> activities,
+			List<Guardian> guardians) {
+		super();
 		this.name = name;
+		this.cId = cId;
 		this.username = username;
 		this.dob = dob;
 		this.imageUrl = imageUrl;
@@ -173,12 +229,14 @@ public class Student extends BaseEntity {
 		this.active = active;
 		this.gender = gender;
 		this.subscriptionEndDate = subscriptionEndDate;
+		this.user = user;
 		this.school = school;
 		this.grade = grade;
 		this.awards = awards;
 		this.activities = activities;
+		this.guardians = guardians;
 	}
-	
+
 	public Student() {
 		
 	}

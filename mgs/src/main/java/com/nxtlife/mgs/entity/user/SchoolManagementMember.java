@@ -4,7 +4,11 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import com.nxtlife.mgs.entity.BaseEntity;
@@ -13,10 +17,20 @@ import com.nxtlife.mgs.entity.school.School;
 @Entity
 public class SchoolManagementMember extends BaseEntity{
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	Long id;
+	
 	@NotNull
 	private String name;
 	
+	@NotNull
+	@Column(unique = true)
 	private String username;
+	
+	@NotNull
+	@Column(unique = true)
+	private String cId;
 	
 	private Date dob;
 	
@@ -36,6 +50,9 @@ public class SchoolManagementMember extends BaseEntity{
 	@NotNull
 	@ManyToOne
 	private School school;
+	
+	@OneToOne
+	User user;
 
 	public String getName() {
 		return name;
@@ -108,11 +125,38 @@ public class SchoolManagementMember extends BaseEntity{
 	public void setSchool(School school) {
 		this.school = school;
 	}
+	
+	public String getcId() {
+		return cId;
+	}
 
-	public SchoolManagementMember(@NotNull String name, String username, Date dob, String imageUrl,
-			@NotNull String email, String mobileNumber, Boolean active, String gender, @NotNull School school) {
+	public void setcId(String cId) {
+		this.cId = cId;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public SchoolManagementMember(@NotNull String name, @NotNull String username, @NotNull String cId, Date dob,
+			String imageUrl, @NotNull String email, String mobileNumber, Boolean active, String gender,
+			@NotNull School school) {
+		super();
 		this.name = name;
 		this.username = username;
+		this.cId = cId;
 		this.dob = dob;
 		this.imageUrl = imageUrl;
 		this.email = email;
@@ -121,7 +165,7 @@ public class SchoolManagementMember extends BaseEntity{
 		this.gender = gender;
 		this.school = school;
 	}
-	
+
 	public SchoolManagementMember() {
 		
 	}

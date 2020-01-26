@@ -4,6 +4,10 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import com.nxtlife.mgs.entity.BaseEntity;
@@ -11,8 +15,16 @@ import com.nxtlife.mgs.entity.BaseEntity;
 @Entity
 public class LFIN extends BaseEntity{
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	Long id;
+	
 	@NotNull
 	private String name;
+	
+	@NotNull
+	@Column(unique = true)
+	private String cId;
 	
 	private String username;
 	
@@ -30,6 +42,9 @@ public class LFIN extends BaseEntity{
 	private Boolean active;
 	
 	private String gender;
+	
+	@OneToOne
+	User user;
 
 	public String getName() {
 		return name;
@@ -95,9 +110,35 @@ public class LFIN extends BaseEntity{
 		this.gender = gender;
 	}
 
-	public LFIN(@NotNull String name, String username, Date dob, String imageUrl, @NotNull String email,
-			String mobileNumber, Boolean active, String gender) {
+	public String getcId() {
+		return cId;
+	}
+
+	public void setcId(String cId) {
+		this.cId = cId;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public LFIN(@NotNull String name, @NotNull String cId, String username, Date dob, String imageUrl,
+			@NotNull String email, String mobileNumber, Boolean active, String gender) {
+		super();
 		this.name = name;
+		this.cId = cId;
 		this.username = username;
 		this.dob = dob;
 		this.imageUrl = imageUrl;
@@ -106,7 +147,7 @@ public class LFIN extends BaseEntity{
 		this.active = active;
 		this.gender = gender;
 	}
-	
+
 	public LFIN() {
 		
 	}

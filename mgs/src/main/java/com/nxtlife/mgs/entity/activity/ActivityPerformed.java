@@ -4,10 +4,14 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -23,8 +27,16 @@ import com.nxtlife.mgs.enums.ActivityStatus;
 @Entity
 public class ActivityPerformed extends BaseEntity{
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	Long id;
+	
 	@NotNull
 	private Date dateOfActivity;
+	
+	@NotNull
+	@Column(unique = true)
+	private String cId;
 	
 	private String description;
 	
@@ -178,6 +190,22 @@ public class ActivityPerformed extends BaseEntity{
 
 	public void setActivityOffered(ActivityOfferedFocusArea activityOffered) {
 		this.activityOffered = activityOffered;
+	}
+	
+	public String getcId() {
+		return cId;
+	}
+
+	public void setcId(String cId) {
+		this.cId = cId;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public ActivityPerformed(@NotNull Date dateOfActivity, String description, String teacherRemark,

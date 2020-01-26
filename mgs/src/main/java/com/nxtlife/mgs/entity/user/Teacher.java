@@ -7,21 +7,34 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import com.nxtlife.mgs.entity.BaseEntity;
+import com.nxtlife.mgs.entity.activity.ActivityOffered;
 import com.nxtlife.mgs.entity.activity.ActivityOfferedFocusArea;
 import com.nxtlife.mgs.entity.activity.ActivityPerformed;
-import com.nxtlife.mgs.entity.activity.Grade;
 import com.nxtlife.mgs.entity.school.Award;
+import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
 
 @Entity
 public class Teacher extends BaseEntity{
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	Long id;
+	
+	@NotNull
+	@Column(unique = true)
+	private String cId;
 	
 	@NotNull
 	private String name;
@@ -52,6 +65,10 @@ public class Teacher extends BaseEntity{
 	
 	private Boolean isPrincipal;
 	
+	@OneToOne
+	@JoinColumn(name = "user_id")
+	User user;
+	
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy="teacher")
 	private List<ActivityPerformed> activitiesAssigned; 
 	
@@ -61,9 +78,11 @@ public class Teacher extends BaseEntity{
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy="teacher")
 	private List<Grade> grades;
 	
-	@OneToOne
-//	@JoinColumn
-	private ActivityOfferedFocusArea activityOfferedFocusArea;
+//	@ManyToMany(mappedBy = "teachers")
+//	private List<ActivityOfferedFocusArea> activityOfferedFocusAreas;
+	
+	@ManyToOne
+	ActivityOffered activityOffered; 
 	
 	@OneToMany(fetch = FetchType.LAZY,mappedBy="teacher")
 	private List<Award> awards ;
@@ -187,14 +206,14 @@ public class Teacher extends BaseEntity{
 	public void setGrades(List<Grade> grades) {
 		this.grades = grades;
 	}
-
-	public ActivityOfferedFocusArea getActivityOfferedFocusArea() {
-		return activityOfferedFocusArea;
-	}
-
-	public void setActivityOfferedFocusArea(ActivityOfferedFocusArea activityOfferedFocusArea) {
-		this.activityOfferedFocusArea = activityOfferedFocusArea;
-	}
+	
+//	public List<ActivityOfferedFocusArea> getActivityOfferedFocusAreas() {
+//		return activityOfferedFocusAreas;
+//	}
+//
+//	public void setActivityOfferedFocusAreas(List<ActivityOfferedFocusArea> activityOfferedFocusAreas) {
+//		this.activityOfferedFocusAreas = activityOfferedFocusAreas;
+//	}
 
 	public List<Award> getAwards() {
 		return awards;
@@ -204,10 +223,72 @@ public class Teacher extends BaseEntity{
 		this.awards = awards;
 	}
 
-	public Teacher(@NotNull String name, String username, String gender, @NotNull Date dob, String imageUrl,
-			@NotNull String email, String mobileNumber, Boolean active, String qualification, Boolean isClassTeacher,
-			Boolean isCoach, Boolean isPrincipal, List<ActivityPerformed> activitiesAssigned, School school,
-			List<Grade> grades, ActivityOfferedFocusArea activityOfferedFocusArea, List<Award> awards) {
+	public String getcId() {
+		return cId;
+	}
+
+	public void setcId(String cId) {
+		this.cId = cId;
+	}
+	
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+
+//	public Teacher(@NotNull String cId, @NotNull String name, String username, String gender, @NotNull Date dob,
+//			String imageUrl, @NotNull String email, String mobileNumber, Boolean active, String qualification,
+//			Boolean isClassTeacher, Boolean isCoach, Boolean isPrincipal, List<ActivityPerformed> activitiesAssigned,
+//			School school, List<Grade> grades, List<ActivityOfferedFocusArea> activityOfferedFocusAreas,
+//			List<Award> awards) {
+//		super();
+//		this.cId = cId;
+//		this.name = name;
+//		this.username = username;
+//		this.gender = gender;
+//		this.dob = dob;
+//		this.imageUrl = imageUrl;
+//		this.email = email;
+//		this.mobileNumber = mobileNumber;
+//		this.active = active;
+//		this.qualification = qualification;
+//		this.isClassTeacher = isClassTeacher;
+//		this.isCoach = isCoach;
+//		this.isPrincipal = isPrincipal;
+//		this.activitiesAssigned = activitiesAssigned;
+//		this.school = school;
+//		this.grades = grades;
+////		this.activityOfferedFocusAreas = activityOfferedFocusAreas;
+//		this.awards = awards;
+//	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public ActivityOffered getActivityOffered() {
+		return activityOffered;
+	}
+
+	public void setActivityOffered(ActivityOffered activityOffered) {
+		this.activityOffered = activityOffered;
+	}
+
+	public Teacher(@NotNull String cId, @NotNull String name, String username, String gender, @NotNull Date dob,
+			String imageUrl, @NotNull String email, String mobileNumber, Boolean active, String qualification,
+			Boolean isClassTeacher, Boolean isCoach, Boolean isPrincipal, User user,
+			List<ActivityPerformed> activitiesAssigned, School school, List<Grade> grades,
+			ActivityOffered activityOffered, List<Award> awards) {
+		super();
+		this.cId = cId;
 		this.name = name;
 		this.username = username;
 		this.gender = gender;
@@ -220,13 +301,14 @@ public class Teacher extends BaseEntity{
 		this.isClassTeacher = isClassTeacher;
 		this.isCoach = isCoach;
 		this.isPrincipal = isPrincipal;
+		this.user = user;
 		this.activitiesAssigned = activitiesAssigned;
 		this.school = school;
 		this.grades = grades;
-		this.activityOfferedFocusArea = activityOfferedFocusArea;
+		this.activityOffered = activityOffered;
 		this.awards = awards;
 	}
-	
+
 	public Teacher() {
 		
 	}

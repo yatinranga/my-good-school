@@ -6,11 +6,13 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 import com.nxtlife.mgs.entity.BaseEntity;
-import com.nxtlife.mgs.entity.activity.Grade;
 import com.nxtlife.mgs.entity.user.SchoolManagementMember;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
@@ -18,9 +20,17 @@ import com.nxtlife.mgs.entity.user.Teacher;
 @Entity
 public class School extends BaseEntity {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	Long id;
+	
 	@NotNull
 	@Column(unique=true)
 	private String name;
+	
+	@NotNull
+	@Column(unique = true)
+	private String cId;
 	
 	@Column(unique=true)
 	private String address;
@@ -31,6 +41,8 @@ public class School extends BaseEntity {
 	
 	@Column(unique=true)
 	private String contactNumber;
+	
+	private String logo;
 	
 	private Boolean active;
 	
@@ -116,6 +128,30 @@ public class School extends BaseEntity {
 
 	public void setSchoolManagementMembers(List<SchoolManagementMember> schoolManagementMembers) {
 		this.schoolManagementMembers = schoolManagementMembers;
+	}
+	
+	public String getcId() {
+		return cId;
+	}
+
+	public void setcId(String cId) {
+		this.cId = cId;
+	}
+	
+	public String getLogo() {
+		return logo;
+	}
+
+	public void setLogo(String logo) {
+		this.logo = logo;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public School(@NotNull String name, String address, @NotNull String email, String contactNumber, Boolean active,

@@ -2,6 +2,9 @@ package com.nxtlife.mgs.entity.school;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -16,8 +19,16 @@ import com.nxtlife.mgs.entity.user.Teacher;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name","description","student"}))
 public class Award extends BaseEntity{
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	Long id;
+	
 	@NotNull
 	private String name;
+	
+	@NotNull
+	@Column(unique = true)
+	private String cId;
 	
 	@NotNull
 	private String description;
@@ -69,6 +80,22 @@ public class Award extends BaseEntity{
 
 	public void setStudent(Student student) {
 		this.student = student;
+	}
+	
+	public String getcId() {
+		return cId;
+	}
+
+	public void setcId(String cId) {
+		this.cId = cId;
+	}
+	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public Award(@NotNull String name, @NotNull String description, Boolean active, Teacher teacher, Student student) {

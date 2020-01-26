@@ -2,9 +2,15 @@ package com.nxtlife.mgs.entity.user;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import com.nxtlife.mgs.entity.BaseEntity;
@@ -12,16 +18,24 @@ import com.nxtlife.mgs.entity.BaseEntity;
 @Entity
 public class Guardian extends BaseEntity {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	Long id;
+	
 	@NotNull
 	private String name;
 	
+	@NotNull
+	@Column(unique = true)
+	private String cId;
+	
 	private String username;
 	
-	private Date dob;
+//	private Date dob;
 	
 	private String imageUrl;
 	
-	@NotNull
+//	@NotNull
 	@Column(unique = true)
 	private String email;
 	
@@ -31,8 +45,12 @@ public class Guardian extends BaseEntity {
 	private Boolean active;
 	
 	private String gender;
+	
+	@OneToOne
+	@JoinColumn(name = "user_id")
+	User user;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	private Student student;
 
 	public String getName() {
@@ -51,13 +69,13 @@ public class Guardian extends BaseEntity {
 		this.username = username;
 	}
 
-	public Date getDob() {
-		return dob;
-	}
-
-	public void setDob(Date dob) {
-		this.dob = dob;
-	}
+//	public Date getDob() {
+//		return dob;
+//	}
+//
+//	public void setDob(Date dob) {
+//		this.dob = dob;
+//	}
 
 	public String getImageUrl() {
 		return imageUrl;
@@ -106,20 +124,45 @@ public class Guardian extends BaseEntity {
 	public void setStudent(Student student) {
 		this.student = student;
 	}
+	
+	public String getcId() {
+		return cId;
+	}
 
-	public Guardian(@NotNull String name, String username, Date dob, String imageUrl, @NotNull String email,
-			String mobileNumber, Boolean active, String gender, Student student) {
+	public void setcId(String cId) {
+		this.cId = cId;
+	}
+	
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Guardian(@NotNull String name, @NotNull String cId, String imageUrl, String email, String mobileNumber,
+			Boolean active, String gender, User user, Student student) {
+		super();
 		this.name = name;
-		this.username = username;
-		this.dob = dob;
+		this.cId = cId;
 		this.imageUrl = imageUrl;
 		this.email = email;
 		this.mobileNumber = mobileNumber;
 		this.active = active;
 		this.gender = gender;
+		this.user = user;
 		this.student = student;
 	}
-	
+
 	public Guardian() {
 		
 	}
