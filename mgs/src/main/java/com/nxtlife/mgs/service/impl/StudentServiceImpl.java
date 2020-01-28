@@ -7,6 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.hibernate.exception.ConstraintViolationException;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +26,7 @@ import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.user.Guardian;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.User;
+import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.GradeRepository;
 import com.nxtlife.mgs.jpa.GuardianRepository;
@@ -29,20 +37,8 @@ import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.Utils;
-import com.nxtlife.mgs.view.SchoolRequest;
 import com.nxtlife.mgs.view.StudentRequest;
 import com.nxtlife.mgs.view.StudentResponse;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.DataFormatter;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -120,7 +116,8 @@ public class StudentServiceImpl implements StudentService {
 		List<Guardian> parents = new ArrayList<>();
 		Guardian parent = null;
 
-		if (studentRequest.getFathersName() != null && (studentRequest.getFathersEmail() != null || studentRequest.getFathersMobileNumber() != null )) {
+		if (studentRequest.getFathersName() != null
+				&& (studentRequest.getFathersEmail() != null || studentRequest.getFathersMobileNumber() != null)) {
 			if (studentRequest.getFathersEmail() != null) {
 				parent = guardianRepository.getOneByEmail(studentRequest.getFathersEmail());
 			}
@@ -138,8 +135,8 @@ public class StudentServiceImpl implements StudentService {
 				}
 				if (studentRequest.getFathersMobileNumber() != null) {
 					parent.setMobileNumber(studentRequest.getFathersMobileNumber());
-					if(username==null)
-						username =studentRequest.getFathersMobileNumber();
+					if (username == null)
+						username = studentRequest.getFathersMobileNumber();
 //					parent.setUsername(studentRequest.getFathersMobileNumber());
 				}
 
@@ -164,7 +161,8 @@ public class StudentServiceImpl implements StudentService {
 		}
 
 		parent = null;
-		if (studentRequest.getMothersName() != null && (studentRequest.getMothersEmail() != null || studentRequest.getMothersMobileNumber() != null)) {
+		if (studentRequest.getMothersName() != null
+				&& (studentRequest.getMothersEmail() != null || studentRequest.getMothersMobileNumber() != null)) {
 			if (studentRequest.getMothersEmail() != null) {
 				parent = guardianRepository.getOneByEmail(studentRequest.getMothersEmail());
 			}
@@ -180,14 +178,14 @@ public class StudentServiceImpl implements StudentService {
 					username = studentRequest.getMothersEmail();
 //					parent.setUsername(studentRequest.getMothersEmail());
 				}
-				
+
 				if (studentRequest.getMothersMobileNumber() != null) {
 					parent.setMobileNumber(studentRequest.getMothersMobileNumber());
-					if(username==null)
+					if (username == null)
 						username = studentRequest.getMothersMobileNumber();
 //					parent.setUsername(studentRequest.getMothersMobileNumber());
 				}
-				
+
 				try {
 					parent.setcId(utils.generateRandomAlphaNumString(8));
 				} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
@@ -227,8 +225,8 @@ public class StudentServiceImpl implements StudentService {
 						sheetName));
 //					continue;
 				if (i == 0)
-					throw new ValidationException(String.format("Some of the cells (Row number : %d) are missing or extras in %s sheet", i + 1,
-							sheetName));
+					throw new ValidationException(String.format(
+							"Some of the cells (Row number : %d) are missing or extras in %s sheet", i + 1, sheetName));
 			}
 			if (i == 0) {
 				row.forEach(c -> {
@@ -244,27 +242,25 @@ public class StudentServiceImpl implements StudentService {
 				columnValues = new HashMap<>();
 				rows.add(columnValues);
 				for (int j = 0; j < columnSize; j++) {
-					cell = row.getCell(j,MissingCellPolicy.RETURN_BLANK_AS_NULL);
+					cell = row.getCell(j, MissingCellPolicy.RETURN_BLANK_AS_NULL);
 					if (cell != null) {
 						if (columnTypes.get(headers.get(j)).equals(cell.getCellType())) {
 							if (cell.getCellType() == CellType.NUMERIC) {
-								if(headers.get(j).contains("DATE")||headers.get(j).contains("DOB"))
-								   columnValues.put(headers.get(j), cell.getDateCellValue());
+								if (headers.get(j).contains("DATE") || headers.get(j).contains("DOB"))
+									columnValues.put(headers.get(j), cell.getDateCellValue());
 								else
 									columnValues.put(headers.get(j), new DataFormatter().formatCellValue(cell));
-							}
-							else if (cell.getCellType() == CellType.BOOLEAN) {
+							} else if (cell.getCellType() == CellType.BOOLEAN) {
 								columnValues.put(headers.get(j), cell.getBooleanCellValue());
 							} else {
 								columnValues.put(headers.get(j), cell.getStringCellValue());
 							}
-						} else { 
+						} else {
 							errors.add(String.format(
 									"Cell Type is incorrect (Expected : %s, Actual : %s) for column %s of sheet (%s)",
 									columnTypes.get(headers.get(j)), cell.getCellType(), headers.get(j), sheetName));
 						}
-					}
-					else {
+					} else {
 //						if(columnTypes.get(headers.get(j)).equals(cell.getCellType()))
 						columnValues.put(headers.get(j), null);
 					}
@@ -368,6 +364,87 @@ public class StudentServiceImpl implements StudentService {
 		studentRequest.setMothersMobileNumber((String) studentDetails.get(0).get("MOTHERS MOBILE NUMBER"));
 
 		return studentRequest;
+	}
+
+	@Override
+	public List<StudentResponse> findByName(String name) {
+
+		if (name == null)
+			throw new ValidationException("name can't be null");
+
+		List<Student> studentList = studentRepository.findByName(name);
+
+		List<StudentResponse> studentResponseList = new ArrayList<StudentResponse>();
+
+		if (studentList.isEmpty())
+			throw new NotFoundException(String.format("students having name [%s] didn't exist", name));
+
+		for (Student student : studentList) {
+			studentResponseList.add(new StudentResponse(student));
+		}
+
+		return studentResponseList;
+	}
+
+	@Override
+	public StudentResponse findByCId(Long cId) {
+
+		if (cId == null)
+			throw new ValidationException("cId can't be null");
+
+		Student student = studentRepository.findByCId(cId);
+
+		if (student == null)
+			throw new NotFoundException(String.format("Student having cId [%d] didn't exist", cId));
+
+		return new StudentResponse(student);
+	}
+
+	@Override
+	public StudentResponse findByMobileNumber(String mobileNumber) {
+
+		if (mobileNumber.isEmpty())
+			throw new ValidationException("mobile number can't be null");
+
+		Student student = studentRepository.findByMobileNumber(mobileNumber);
+
+		if (student == null)
+			throw new ValidationException(
+					String.format("Student having mobile number [%s] didn't exist", mobileNumber));
+
+		return new StudentResponse(student);
+	}
+
+	@Override
+	public StudentResponse findByUsername(String username) {
+
+		if (username.isEmpty())
+			throw new ValidationException("username can't be null");
+
+		Student student = studentRepository.findByUsername(username);
+
+		if (student == null)
+			throw new NotFoundException(String.format("student having username [%s] didn't exist", username));
+
+		return new StudentResponse(student);
+	}
+
+	@Override
+	public List<StudentResponse> getAll() {
+
+		List<Student> studentList = studentRepository.findAll();
+
+		List<StudentResponse> studentResponseList = new ArrayList<StudentResponse>();
+
+		if (studentList.isEmpty())
+			throw new NotFoundException("No student found");
+
+		for (Student student : studentList) {
+
+			studentResponseList.add(new StudentResponse(student));
+		}
+
+		return studentResponseList;
 	}
 
 }

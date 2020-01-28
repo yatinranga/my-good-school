@@ -14,4 +14,14 @@ public interface StudentService extends ExcelUtil{
 
 	StudentResponse save(StudentRequest request);
 
+	List<StudentResponse> findByName(String name);
+
+	StudentResponse findByCId(Long cId);
+
+	StudentResponse findByMobileNumber(String mobileNumber);
+
+	StudentResponse findByUsername(String username);
+
+	List<StudentResponse> getAll();
+
 }
