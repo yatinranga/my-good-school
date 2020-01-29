@@ -37,10 +37,10 @@ public class StudentController {
 		return studentService.findByName(name);
 	}
 
-	@GetMapping("{cId]")
-	public StudentResponse findByCId(@PathVariable Long cId) {
-		return studentService.findByCId(cId);
-	}
+//	@GetMapping("{cId]")
+//	public StudentResponse findByCId(@PathVariable Long cId) {
+//		return studentService.findByCId(cId);
+//	}
 
 	@GetMapping("{mobileNumber}")
 	public StudentResponse findByMobileNumber(@PathVariable String mobileNumber) {
