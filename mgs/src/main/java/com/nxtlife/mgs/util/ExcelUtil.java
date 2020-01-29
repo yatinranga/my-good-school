@@ -59,7 +59,7 @@ public interface ExcelUtil {
 		columnTypes.put("DOB", CellType.NUMERIC);
 		columnTypes.put("ACTIVE", CellType.BOOLEAN);
 		columnTypes.put("EMAIL", CellType.STRING);
-		columnTypes.put("MOBILE NUMBER", CellType.STRING);
+		columnTypes.put("MOBILE NUMBER", CellType.NUMERIC);
 		columnTypes.put("GENDER", CellType.STRING);
 		columnTypes.put("QUALIFICATION", CellType.STRING);
 		columnTypes.put("GRADE", CellType.STRING);
@@ -77,13 +77,13 @@ public interface ExcelUtil {
 		columnTypes.put("DOB", CellType.NUMERIC);
 		columnTypes.put("ACTIVE", CellType.BOOLEAN);
 		columnTypes.put("EMAIL", CellType.STRING);
-		columnTypes.put("MOBILE NUMBER", CellType.STRING);
+		columnTypes.put("MOBILE NUMBER", CellType.NUMERIC);
 		columnTypes.put("GENDER", CellType.STRING);
 		columnTypes.put("QUALIFICATION", CellType.STRING);
 		columnTypes.put("ACTIVITY NAME", CellType.STRING);
-		columnTypes.put("FOCUS AREA", CellType.STRING);
-		columnTypes.put("PSD AREA", CellType.STRING);
-		columnTypes.put("4S TYPE", CellType.STRING);
+//		columnTypes.put("FOCUS AREA", CellType.STRING);
+//		columnTypes.put("PSD AREA", CellType.STRING);
+//		columnTypes.put("4S TYPE", CellType.STRING);
 		
 		return columnTypes;
 	}

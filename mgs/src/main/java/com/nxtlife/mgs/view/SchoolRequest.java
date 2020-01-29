@@ -10,7 +10,7 @@ public class SchoolRequest {
 	@NotNull
 	private String name;
 	
-	private String cId;
+	private String id;
 	
 	private String address;
 	
@@ -29,12 +29,12 @@ public class SchoolRequest {
 		this.name = name;
 	}
 
-	public String getcId() {
-		return cId;
+	public String getId() {
+		return id;
 	}
 
-	public void setcId(String cId) {
-		this.cId = cId;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getAddress() {
@@ -77,8 +77,7 @@ public class SchoolRequest {
 		school.setLogo(this.logo);
 		school.setContactNumber(this.contactNumber);
 		school.setAddress(this.address);
-		
-		return null;
+		return school;
 	}
 	
     public School toEntity() {

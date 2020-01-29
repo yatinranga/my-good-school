@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
@@ -39,8 +40,11 @@ public class FocusArea extends BaseEntity{
 	@Enumerated(EnumType.STRING)
 	PSDArea psdArea;
 	
-	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY,mappedBy ="focusArea")
-	private List<ActivityOfferedFocusArea> activityOfferedFocusArea;
+	@ManyToMany(mappedBy = "focusAreas")
+	private List<Activity> activities;
+	
+//	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY,mappedBy ="focusArea")
+//	private List<ActivityOfferedFocusArea> activityOfferedFocusArea;
 
 	public String getName() {
 		return name;
@@ -74,16 +78,24 @@ public class FocusArea extends BaseEntity{
 		this.psdArea = psdArea;
 	}
 
-	public List<ActivityOfferedFocusArea> getActivityOfferedFocusArea() {
-		return activityOfferedFocusArea;
-	}
-
-	public void setActivityOfferedFocusArea(List<ActivityOfferedFocusArea> activityOfferedFocusArea) {
-		this.activityOfferedFocusArea = activityOfferedFocusArea;
-	}
+//	public List<ActivityOfferedFocusArea> getActivityOfferedFocusArea() {
+//		return activityOfferedFocusArea;
+//	}
+//
+//	public void setActivityOfferedFocusArea(List<ActivityOfferedFocusArea> activityOfferedFocusArea) {
+//		this.activityOfferedFocusArea = activityOfferedFocusArea;
+//	}
 
 	public String getcId() {
 		return cId;
+	}
+
+	public List<Activity> getActivities() {
+		return activities;
+	}
+
+	public void setActivities(List<Activity> activities) {
+		this.activities = activities;
 	}
 
 	public void setcId(String cId) {
@@ -98,21 +110,14 @@ public class FocusArea extends BaseEntity{
 		this.id = id;
 	}
 
-	public FocusArea(@NotNull String name, Boolean active, String description, PSDArea psdArea) {
+	public FocusArea(@NotNull String name, @NotNull String cId, Boolean active, String description, PSDArea psdArea,
+			List<Activity> activities) {
 		this.name = name;
+		this.cId = cId;
 		this.active = active;
 		this.description = description;
 		this.psdArea = psdArea;
-	}
-	
-	public FocusArea(@NotNull String name, Boolean active, String description, PSDArea psdArea,
-			List<ActivityOfferedFocusArea> activityOfferedFocusArea) {
-		super();
-		this.name = name;
-		this.active = active;
-		this.description = description;
-		this.psdArea = psdArea;
-		this.activityOfferedFocusArea = activityOfferedFocusArea;
+		this.activities = activities;
 	}
 
 	public FocusArea() {

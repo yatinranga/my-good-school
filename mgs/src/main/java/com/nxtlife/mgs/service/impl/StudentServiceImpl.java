@@ -88,10 +88,10 @@ public class StudentServiceImpl implements StudentService {
 //			throw new ValidationException("Grade id can not be null");
 
 		Student student = request.toEntity();
-		if (request.getSchoolCId() != null) {
-			student.setSchool(schoolRepository.getOneBycId(request.getSchoolCId()));
-			if (request.getGradeCId() != null)
-				student.setGrade(gradeRepository.getOneBycId(request.getGradeCId()));
+		if (request.getSchoolId() != null) {
+			student.setSchool(schoolRepository.getOneBycId(request.getSchoolId()));
+			if (request.getGradeId() != null)
+				student.setGrade(gradeRepository.getOneBycId(request.getGradeId()));
 
 		}
 		try {
@@ -329,12 +329,16 @@ public class StudentServiceImpl implements StudentService {
 		studentRequest.setUsername((String) studentDetails.get(0).get("USERNAME"));
 		studentRequest.setDob(
 				DateUtil.convertStringToDate(DateUtil.formatDate((Date) studentDetails.get(0).get("DOB"), null, null)));
-		School school = schoolRepository.findByNameOrEmail((String) studentDetails.get(0).get("SCHOOL"),
-				(String) studentDetails.get(0).get("SCHOOLS EMAIL"));
+		School school = null;
+		if(studentDetails.get(0).get("SCHOOL")!=null) 
+		   school = schoolRepository.findByName((String) studentDetails.get(0).get("SCHOOL"));
+		if(studentDetails.get(0).get("SCHOOLS EMAIL")!=null)
+			school = 	schoolRepository.findByEmail((String) studentDetails.get(0).get("SCHOOLS EMAIL"));
+		
 		if (school == null)
 			errors.add(String.format("School %s not found ", (String) studentDetails.get(0).get("SCHOOL")));
 		else {
-			studentRequest.setSchoolCId(school.getcId());
+			studentRequest.setSchoolId(school.getcId());
 			String standard = (String) studentDetails.get(0).get("GRADE");
 			String section = (String) studentDetails.get(0).get("SECTION");
 			Grade grade = null;
@@ -350,8 +354,9 @@ public class StudentServiceImpl implements StudentService {
 			}
 			if (grade == null)
 				errors.add(String.format("Grade  %s not found ", (String) studentDetails.get(0).get("GRADE")));
-			studentRequest.setGradeCId(grade.getcId());
+			studentRequest.setGradeId(grade.getcId());
 		}
+		
 
 		studentRequest.setEmail((String) studentDetails.get(0).get("EMAIL"));
 		if (studentDetails.get(0).get("ACTIVE") != null)

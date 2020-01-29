@@ -65,9 +65,11 @@ public class ActivityPerformed extends BaseEntity{
 	@Enumerated(EnumType.STRING)
 	private ActivityStatus activityStatus;
 	
+//	@OneToOne
+//	private ActivityOfferedFocusArea activityOffered;
+	
 	@OneToOne
-//	@JoinColumn
-	private ActivityOfferedFocusArea activityOffered;
+	private Activity activity;
 	
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy="activityPerformed")
 	private List<File> files;
@@ -184,16 +186,24 @@ public class ActivityPerformed extends BaseEntity{
 		this.teacher = teacher;
 	}
 
-	public ActivityOfferedFocusArea getActivityOffered() {
-		return activityOffered;
-	}
-
-	public void setActivityOffered(ActivityOfferedFocusArea activityOffered) {
-		this.activityOffered = activityOffered;
-	}
+//	public ActivityOfferedFocusArea getActivityOffered() {
+//		return activityOffered;
+//	}
+//
+//	public void setActivityOffered(ActivityOfferedFocusArea activityOffered) {
+//		this.activityOffered = activityOffered;
+//	}
 	
 	public String getcId() {
 		return cId;
+	}
+
+	public Activity getActivity() {
+		return activity;
+	}
+
+	public void setActivity(Activity activity) {
+		this.activity = activity;
 	}
 
 	public void setcId(String cId) {
@@ -208,12 +218,16 @@ public class ActivityPerformed extends BaseEntity{
 		this.id = id;
 	}
 
-	public ActivityPerformed(@NotNull Date dateOfActivity, String description, String teacherRemark,
-			Date teacherRemarkDate, Boolean active, @Min(0) @Min(10) Integer participationScore,
+	
+	
+	public ActivityPerformed(@NotNull Date dateOfActivity, @NotNull String cId, String description,
+			String teacherRemark, Date teacherRemarkDate, Boolean active, @Min(0) @Min(10) Integer participationScore,
 			@Min(0) @Min(10) Integer initiativeScore, @Min(0) @Min(5) Integer achievementScore,
-			@Min(0) @Min(5) Integer star, ActivityStatus activityStatus, ActivityOfferedFocusArea activityOffered,
-			List<File> files, @NotNull Student student, @NotNull Teacher teacher) {
+			@Min(0) @Min(5) Integer star, ActivityStatus activityStatus, Activity activity, List<File> files,
+			@NotNull Student student, @NotNull Teacher teacher) {
+		super();
 		this.dateOfActivity = dateOfActivity;
+		this.cId = cId;
 		this.description = description;
 		this.teacherRemark = teacherRemark;
 		this.teacherRemarkDate = teacherRemarkDate;
@@ -223,12 +237,12 @@ public class ActivityPerformed extends BaseEntity{
 		this.achievementScore = achievementScore;
 		this.star = star;
 		this.activityStatus = activityStatus;
-		this.activityOffered = activityOffered;
+		this.activity = activity;
 		this.files = files;
 		this.student = student;
 		this.teacher = teacher;
 	}
-	
+
 	public ActivityPerformed() {
 		
 	}
