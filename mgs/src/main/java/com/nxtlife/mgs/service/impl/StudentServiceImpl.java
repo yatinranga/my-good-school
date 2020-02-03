@@ -386,19 +386,19 @@ public class StudentServiceImpl implements StudentService {
 		return studentResponseList;
 	}
 
-//	@Override
-//	public StudentResponse findByCId(Long cId) {
-//
-//		if (cId == null)
-//			throw new ValidationException("cId can't be null");
-//
-//		Student student = studentRepository.findByCId(cId);
-//
-//		if (student == null)
-//			throw new NotFoundException(String.format("Student having cId [%d] didn't exist", cId));
-//
-//		return new StudentResponse(student);
-//	}
+	@Override
+	public StudentResponse findByid(Long id) {
+
+		if (id == null)
+			throw new ValidationException("id can't be null");
+
+		Student student = studentRepository.findById(id).orElse(null);
+
+		if (student == null)
+			throw new NotFoundException(String.format("Student having id [%d] didn't exist", id));
+
+		return new StudentResponse(student);
+	}
 
 	@Override
 	public StudentResponse findByMobileNumber(String mobileNumber) {

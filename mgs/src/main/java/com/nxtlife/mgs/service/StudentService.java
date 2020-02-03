@@ -8,7 +8,7 @@ import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.view.StudentRequest;
 import com.nxtlife.mgs.view.StudentResponse;
 
-public interface StudentService extends ExcelUtil{
+public interface StudentService extends ExcelUtil {
 
 	List<StudentResponse> uploadStudentsFromExcel(MultipartFile file, Integer rowLimit);
 
@@ -16,7 +16,7 @@ public interface StudentService extends ExcelUtil{
 
 	List<StudentResponse> findByName(String name);
 
-	//StudentResponse findByCId(Long cId);
+	StudentResponse findByid(Long id);
 
 	StudentResponse findByMobileNumber(String mobileNumber);
 

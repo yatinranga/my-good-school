@@ -28,19 +28,19 @@ public class StudentController {
 	}
 
 	@GetMapping()
-	public List<StudentResponse> getAll(){
+	public List<StudentResponse> getAll() {
 		return studentService.getAll();
 	}
-	
+
 	@GetMapping("{name}")
 	public List<StudentResponse> findByName(@PathVariable String name) {
 		return studentService.findByName(name);
 	}
 
-//	@GetMapping("{cId]")
-//	public StudentResponse findByCId(@PathVariable Long cId) {
-//		return studentService.findByCId(cId);
-//	}
+	@GetMapping("{id}")
+	public StudentResponse findByid(@PathVariable Long id) {
+		return studentService.findByid(id);
+	}
 
 	@GetMapping("{mobileNumber}")
 	public StudentResponse findByMobileNumber(@PathVariable String mobileNumber) {

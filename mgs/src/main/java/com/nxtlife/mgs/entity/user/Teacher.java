@@ -26,66 +26,66 @@ import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
 
 @Entity
-public class Teacher extends BaseEntity{
-	
+public class Teacher extends BaseEntity {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	Long id;
-	
+
 	@NotNull
 	@Column(unique = true)
 	private String cId;
-	
+
 	@NotNull
 	private String name;
-	
+
 	private String username;
-	
+
 	private String gender;
-	
+
 	@NotNull
 	private Date dob;
-	
+
 	private String imageUrl;
-	
+
 	@NotNull
 	@Column(unique = true)
 	private String email;
-	
+
 	@Column(unique = true)
 	private String mobileNumber;
-	
+
 	private Boolean active;
-	
+
 	private String qualification;
-	
+
 	private Boolean isClassTeacher;
-	
+
 	private Boolean isCoach;
-	
+
 	private Boolean isPrincipal;
-	
+
 	@OneToOne
 	@JoinColumn(name = "user_id")
 	User user;
-	
-	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy="teacher")
-	private List<ActivityPerformed> activitiesAssigned; 
-	
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "teacher")
+	private List<ActivityPerformed> activitiesAssigned;
+
 	@ManyToOne
 	private School school;
-	
-	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy="teacher")
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "teacher")
 	private List<Grade> grades;
-	
+
 //	@ManyToMany(mappedBy = "teachers")
 //	private List<ActivityOfferedFocusArea> activityOfferedFocusAreas;
-	
+
 	@ManyToOne
-	ActivityOffered activityOffered; 
-	
-	@OneToMany(fetch = FetchType.LAZY,mappedBy="teacher")
-	private List<Award> awards ;
+	private ActivityOffered activityOffered;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "teacher")
+	private List<Award> awards;
 
 	public String getName() {
 		return name;
@@ -206,7 +206,7 @@ public class Teacher extends BaseEntity{
 	public void setGrades(List<Grade> grades) {
 		this.grades = grades;
 	}
-	
+
 //	public List<ActivityOfferedFocusArea> getActivityOfferedFocusAreas() {
 //		return activityOfferedFocusAreas;
 //	}
@@ -230,7 +230,7 @@ public class Teacher extends BaseEntity{
 	public void setcId(String cId) {
 		this.cId = cId;
 	}
-	
+
 	public User getUser() {
 		return user;
 	}
@@ -238,7 +238,6 @@ public class Teacher extends BaseEntity{
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
 
 //	public Teacher(@NotNull String cId, @NotNull String name, String username, String gender, @NotNull Date dob,
 //			String imageUrl, @NotNull String email, String mobileNumber, Boolean active, String qualification,
@@ -310,8 +309,7 @@ public class Teacher extends BaseEntity{
 	}
 
 	public Teacher() {
-		
+
 	}
-	
 
 }
