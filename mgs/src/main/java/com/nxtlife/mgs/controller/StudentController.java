@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.service.StudentService;
+import com.nxtlife.mgs.view.StudentRequest;
 import com.nxtlife.mgs.view.StudentResponse;
 
 @RestController
@@ -26,6 +29,11 @@ public class StudentController {
 			@RequestParam Integer rowLimit) {
 		return studentService.uploadStudentsFromExcel(file, rowLimit);
 	}
+	
+	@PostMapping()
+	public StudentResponse saveStudent(@RequestBody StudentRequest studentRequest) {
+		return studentService.save(studentRequest);
+	}
 
 	@GetMapping()
 	public List<StudentResponse> getAll(){
@@ -37,10 +45,10 @@ public class StudentController {
 		return studentService.findByName(name);
 	}
 
-//	@GetMapping("{cId]")
-//	public StudentResponse findByCId(@PathVariable Long cId) {
-//		return studentService.findByCId(cId);
-//	}
+	@GetMapping("{cId]")
+	public StudentResponse findByCId(@PathVariable String cId) {
+		return studentService.findByCId(cId);
+	}
 
 	@GetMapping("{mobileNumber}")
 	public StudentResponse findByMobileNumber(@PathVariable String mobileNumber) {

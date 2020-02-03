@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.nxtlife.mgs.entity.user.Guardian;
 import com.nxtlife.mgs.entity.user.Role;
 import com.nxtlife.mgs.entity.user.Student;
+import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.entity.user.User;
 import com.nxtlife.mgs.enums.RegisterType;
 import com.nxtlife.mgs.enums.UserType;
@@ -78,6 +79,53 @@ public class UserServiceImpl implements UserService{
 			user.setStudent(student);
 			return userRepository.save(user);
 			}
+	
+	@Override
+	public User createTeacherUser(Teacher teacher) {
+		if (userRepository.countByUsername(teacher.getUsername()) > 0) {
+			   throw new ValidationException("This username is already registered");
+			}
+			User user = new User();
+			user.setActive(true);
+			user.setUserType(UserType.Teacher);
+			user.setRegisterType(RegisterType.MANUALLY); //setting it to manual may be required to passed as an argument
+			user.setUsername(teacher.getUsername());
+			// later change it to encrypted password 
+//			user.setPasswordHash(bCryptPasswordEncoder.encode(student.getUsername())); //Setting username as password
+			user.setPasswordHash(teacher.getUsername());
+			try {
+		        user.setcId(utils.generateRandomAlphaNumString(8));
+		        }catch(ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
+		        	user.setcId(utils.generateRandomAlphaNumString(8));
+		        }
+		
+//			if(teacher.getSubscriptionEndDate()!=null) {
+//				if(teacher.getSubscriptionEndDate().after(Date.from(java.time.LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())))
+//					user.setIsPaid(true);
+//			}
+			Role defaultRole = roleRepository.getOneByName("Teacher");
+			if(defaultRole==null)
+				throw new ValidationException("Role Teacher does not exist");
+			
+			List<Role> defaultRoleList = new ArrayList<>();
+			defaultRoleList.add(defaultRole); 
+			
+			if(teacher.getIsCoach()!=null && teacher.getIsCoach()==true)
+			{
+				defaultRole = roleRepository.getOneByName("Coach");
+				if(defaultRole==null)
+					throw new ValidationException("Role Coach does not exist");
+				defaultRoleList.add(defaultRole);
+			}
+			if (!defaultRoleList.isEmpty()) {
+			user.setRoles(defaultRoleList);
+			}
+			user.setTeacher(teacher);
+			return userRepository.save(user);
+	}
+   
+	
+	
 	
 	@Override
 	public User createParentUser(Guardian guardian) {

@@ -15,6 +15,7 @@ import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 
 import com.nxtlife.mgs.entity.BaseEntity;
+import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.enums.FourS;
 
 @Entity
@@ -22,9 +23,10 @@ public class Activity extends BaseEntity{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	Long id;
+	private Long id;
 
 	@NotNull
+	@Column(unique = true)
 	private String name;
 	
 	@Enumerated(EnumType.STRING)
@@ -43,6 +45,12 @@ public class Activity extends BaseEntity{
 		joinColumns = { @JoinColumn(name = "activity_id") },
 		inverseJoinColumns = { @JoinColumn(name = "focus_area_id") })
 	private List<FocusArea> focusAreas;
+	
+	@ManyToMany
+	@JoinTable(name = "teacher_activity",
+		joinColumns = { @JoinColumn(name = "teacher_id") },
+		inverseJoinColumns = { @JoinColumn(name = "activity_id") })
+	private List<Teacher> teachers;
 
 	public Long getId() {
 		return id;
@@ -99,6 +107,14 @@ public class Activity extends BaseEntity{
 	public void setFocusAreas(List<FocusArea> focusAreas) {
 		this.focusAreas = focusAreas;
 	}
+	
+	public List<Teacher> getTeachers() {
+		return teachers;
+	}
+
+	public void setTeachers(List<Teacher> teachers) {
+		this.teachers = teachers;
+	}
 
 	public Activity(@NotNull String name, FourS fourS, @NotNull String cId, String description, Boolean active,
 			List<FocusArea> focusAreas) {
@@ -110,6 +126,17 @@ public class Activity extends BaseEntity{
 		this.focusAreas = focusAreas;
 	}
 	
+	public Activity(@NotNull String name, FourS fourS, @NotNull String cId, String description, Boolean active,
+			List<FocusArea> focusAreas, List<Teacher> teachers) {
+		this.name = name;
+		this.fourS = fourS;
+		this.cId = cId;
+		this.description = description;
+		this.active = active;
+		this.focusAreas = focusAreas;
+		this.teachers = teachers;
+	}
+
 	public Activity() {
 		
 	}

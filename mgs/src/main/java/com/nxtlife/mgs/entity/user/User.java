@@ -60,7 +60,7 @@ public class User extends BaseEntity {
     @OneToOne(mappedBy = "user")
     Student student;
     
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
     Teacher teacher;
     
     @OneToOne

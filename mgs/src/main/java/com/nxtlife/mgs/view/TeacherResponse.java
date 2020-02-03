@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.user.Teacher;
 
@@ -125,6 +126,14 @@ public class TeacherResponse {
 		}
 		
 		// change database for activity and then get all activity names and add to member list in the view
+		
+		if(teacher.getActivities() != null && !teacher.getActivities().isEmpty() ) {
+			if (activities == null)
+				activities = new ArrayList<String>();
+			for(Activity activity : teacher.getActivities()) {
+				activities.add(String.format("%s", activity.getName()));
+			}
+		}
 	}
 
 }

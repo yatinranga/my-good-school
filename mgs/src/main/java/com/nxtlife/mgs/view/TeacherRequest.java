@@ -20,15 +20,13 @@ public class TeacherRequest {
 	
 	private Date dob;
 	
-	private String school;
+//	private String school;
 	
 	private String qualification;
 	
 	private Boolean isCoach;
 	
 	private Boolean isClassTeacher;
-	
-	private Boolean isPrincipal;
 	
 	private Boolean active;
 	
@@ -38,9 +36,9 @@ public class TeacherRequest {
 	
 	private String gender;
 	
-	private List<String> activities;
+	private List<String> activitiyIds;
 	
-	private String gradeId;
+	private List<String> gradeIds;
 	
 	private String schoolId;
 
@@ -84,13 +82,13 @@ public class TeacherRequest {
 		this.dob = dob;
 	}
 
-	public String getSchool() {
-		return school;
-	}
-
-	public void setSchool(String school) {
-		this.school = school;
-	}
+//	public String getSchool() {
+//		return school;
+//	}
+//
+//	public void setSchool(String school) {
+//		this.school = school;
+//	}
 
 	public String getQualification() {
 		return qualification;
@@ -114,14 +112,6 @@ public class TeacherRequest {
 
 	public void setIsClassTeacher(Boolean isClassTeacher) {
 		this.isClassTeacher = isClassTeacher;
-	}
-
-	public Boolean getIsPrincipal() {
-		return isPrincipal;
-	}
-
-	public void setIsPrincipal(Boolean isPrincipal) {
-		this.isPrincipal = isPrincipal;
 	}
 
 	public Boolean getActive() {
@@ -156,20 +146,20 @@ public class TeacherRequest {
 		this.gender = gender;
 	}
 
-	public List<String> getActivities() {
-		return activities;
+	public List<String> getActivitiyIds() {
+		return activitiyIds;
 	}
 
-	public void setActivities(List<String> activities) {
-		this.activities = activities;
+	public void setActivitiyIds(List<String> activitiyIds) {
+		this.activitiyIds = activitiyIds;
+	}
+	
+	public List<String> getGradeIds() {
+		return gradeIds;
 	}
 
-	public String getGradeId() {
-		return gradeId;
-	}
-
-	public void setGradeId(String gradeId) {
-		this.gradeId = gradeId;
+	public void setGradeIds(List<String> gradeIds) {
+		this.gradeIds = gradeIds;
 	}
 
 	public String getSchoolId() {
@@ -202,8 +192,7 @@ public class TeacherRequest {
 			teacher.setIsCoach(this.isCoach);
 		if(this.isClassTeacher!=null)
 			teacher.setIsClassTeacher(this.isClassTeacher);
-		if(this.isPrincipal!=null)
-			teacher.setIsPrincipal(this.isPrincipal);
+		
 			
 		return teacher;
 	}

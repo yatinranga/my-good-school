@@ -31,11 +31,11 @@ public class Teacher extends BaseEntity{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	Long id;
+	private Long id;
 	
 	@NotNull
 	@Column(unique = true)
-	private String cId;
+	private String cid;
 	
 	@NotNull
 	private String name;
@@ -64,8 +64,6 @@ public class Teacher extends BaseEntity{
 	
 	private Boolean isCoach;
 	
-	private Boolean isPrincipal;
-	
 	@OneToOne
 	@JoinColumn(name = "user_id")
 	User user;
@@ -79,14 +77,14 @@ public class Teacher extends BaseEntity{
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy="teacher")
 	private List<Grade> grades;
 	
+	@ManyToMany(mappedBy = "teachers")
+	private List<Activity> activities;
+	
 //	@ManyToMany(mappedBy = "teachers")
 //	private List<ActivityOfferedFocusArea> activityOfferedFocusAreas;
 	
 //	@ManyToOne
 //	ActivityOffered activityOffered; 
-	
-	@ManyToOne
-	Activity activity;
 	
 	@OneToMany(fetch = FetchType.LAZY,mappedBy="teacher")
 	private List<Award> awards ;
@@ -179,14 +177,6 @@ public class Teacher extends BaseEntity{
 		this.isCoach = isCoach;
 	}
 
-	public Boolean getIsPrincipal() {
-		return isPrincipal;
-	}
-
-	public void setIsPrincipal(Boolean isPrincipal) {
-		this.isPrincipal = isPrincipal;
-	}
-
 	public List<ActivityPerformed> getActivitiesAssigned() {
 		return activitiesAssigned;
 	}
@@ -228,11 +218,11 @@ public class Teacher extends BaseEntity{
 	}
 
 	public String getcId() {
-		return cId;
+		return cid;
 	}
 
 	public void setcId(String cId) {
-		this.cId = cId;
+		this.cid = cId;
 	}
 	
 	public User getUser() {
@@ -258,20 +248,20 @@ public class Teacher extends BaseEntity{
 //	public void setActivityOffered(ActivityOffered activityOffered) {
 //		this.activityOffered = activityOffered;
 //	}
-	public Activity getActivity() {
-		return activity;
+
+	public List<Activity> getActivities() {
+		return activities;
 	}
 
-	public void setActivity(Activity activity) {
-		this.activity = activity;
+	public void setActivities(List<Activity> activities) {
+		this.activities = activities;
 	}
 
 	public Teacher(@NotNull String cId, @NotNull String name, String username, String gender, @NotNull Date dob,
 			String imageUrl, @NotNull String email, String mobileNumber, Boolean active, String qualification,
-			Boolean isClassTeacher, Boolean isCoach, Boolean isPrincipal, User user,
-			List<ActivityPerformed> activitiesAssigned, School school, List<Grade> grades, Activity activity,
-			List<Award> awards) {
-		this.cId = cId;
+			Boolean isClassTeacher, Boolean isCoach, User user,
+			List<ActivityPerformed> activitiesAssigned, School school, List<Grade> grades, List<Activity> activities, List<Award> awards) {
+		this.cid = cId;
 		this.name = name;
 		this.username = username;
 		this.gender = gender;
@@ -283,12 +273,11 @@ public class Teacher extends BaseEntity{
 		this.qualification = qualification;
 		this.isClassTeacher = isClassTeacher;
 		this.isCoach = isCoach;
-		this.isPrincipal = isPrincipal;
 		this.user = user;
 		this.activitiesAssigned = activitiesAssigned;
 		this.school = school;
 		this.grades = grades;
-		this.activity = activity;
+		this.activities = activities;
 		this.awards = awards;
 	}
 

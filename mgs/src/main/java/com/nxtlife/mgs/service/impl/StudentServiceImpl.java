@@ -63,6 +63,8 @@ public class StudentServiceImpl implements StudentService {
 
 	@Override
 	public StudentResponse save(StudentRequest request) {
+		if(request==null)
+			throw new ValidationException("Request can not be null.");
 		if (request.getEmail() == null)
 			throw new ValidationException("Email can not be null");
 		if (studentRepository.countByEmail(request.getEmail()) > 0)
@@ -109,7 +111,10 @@ public class StudentServiceImpl implements StudentService {
 		if (StringUtils.isEmpty(user))
 			throw new ValidationException("User not created successfully");
 		student.setUser(user);
-		return new StudentResponse(studentRepository.save(student));
+		student = studentRepository.save(student);
+		if(student==null)
+			throw new RuntimeException("Something went wrong student not saved.");
+		return new StudentResponse(student);
 	}
 
 	public List<Guardian> createParent(StudentRequest studentRequest, Student student) {
@@ -318,7 +323,7 @@ public class StudentServiceImpl implements StudentService {
 
 	private StudentRequest validateStudentRequest(List<Map<String, Object>> studentDetails, List<String> errors) {
 		if (studentDetails == null || studentDetails.isEmpty()) {
-			errors.add("Equipment details not found");
+			errors.add("Student details not found");
 		}
 		StudentRequest studentRequest = new StudentRequest();
 		studentRequest.setName((String) studentDetails.get(0).get("NAME"));
@@ -342,11 +347,11 @@ public class StudentServiceImpl implements StudentService {
 				errors.add("GRADE and SECTION are empty.");
 			} else if (standard != null && section == null) {
 				errors.add("SECTION is empty");
-				grade = gradeRepository.findByNameAndSchoolId(standard, school.getId());
+				grade = gradeRepository.findByNameAndSchoolsId(standard, school.getId());
 			} else if (section != null && standard == null) {
 				errors.add("GRADE is empty");
 			} else {
-				grade = gradeRepository.findByNameAndSchoolIdAndSection(standard, school.getId(), section);
+				grade = gradeRepository.findByNameAndSchoolsIdAndSection(standard, school.getId(), section);
 			}
 			if (grade == null)
 				errors.add(String.format("Grade  %s not found ", (String) studentDetails.get(0).get("GRADE")));
@@ -391,19 +396,19 @@ public class StudentServiceImpl implements StudentService {
 		return studentResponseList;
 	}
 
-//	@Override
-//	public StudentResponse findByCId(Long cId) {
-//
-//		if (cId == null)
-//			throw new ValidationException("cId can't be null");
-//
-//		Student student = studentRepository.findByCId(cId);
-//
-//		if (student == null)
-//			throw new NotFoundException(String.format("Student having cId [%d] didn't exist", cId));
-//
-//		return new StudentResponse(student);
-//	}
+	@Override
+	public StudentResponse findByCId(String cId) {
+
+		if (cId == null)
+			throw new ValidationException("cId can't be null");
+
+		Student student = studentRepository.findBycId(cId);
+
+		if (student == null)
+			throw new NotFoundException(String.format("Student having cId [%s] didn't exist", cId));
+
+		return new StudentResponse(student);
+	}
 
 	@Override
 	public StudentResponse findByMobileNumber(String mobileNumber) {

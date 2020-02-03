@@ -55,6 +55,7 @@ public interface ExcelUtil {
 		Map<String, CellType> columnTypes = new LinkedHashMap<>();
 		columnTypes.put("NAME", CellType.STRING);
 		columnTypes.put("SCHOOL", CellType.STRING);
+		columnTypes.put("SCHOOLS EMAIL", CellType.STRING);
 		columnTypes.put("USERNAME", CellType.STRING);
 		columnTypes.put("DOB", CellType.NUMERIC);
 		columnTypes.put("ACTIVE", CellType.BOOLEAN);
@@ -63,7 +64,7 @@ public interface ExcelUtil {
 		columnTypes.put("GENDER", CellType.STRING);
 		columnTypes.put("QUALIFICATION", CellType.STRING);
 		columnTypes.put("GRADE", CellType.STRING);
-		columnTypes.put("SECTION", CellType.STRING);
+//		columnTypes.put("SECTION", CellType.STRING);
 		columnTypes.put("ACTIVE", CellType.BOOLEAN);
 		
 		return columnTypes;
@@ -73,6 +74,7 @@ public interface ExcelUtil {
 		Map<String, CellType> columnTypes = new LinkedHashMap<>();
 		columnTypes.put("NAME", CellType.STRING);
 		columnTypes.put("SCHOOL", CellType.STRING);
+		columnTypes.put("SCHOOLS EMAIL", CellType.STRING);
 		columnTypes.put("USERNAME", CellType.STRING);
 		columnTypes.put("DOB", CellType.NUMERIC);
 		columnTypes.put("ACTIVE", CellType.BOOLEAN);
@@ -81,6 +83,7 @@ public interface ExcelUtil {
 		columnTypes.put("GENDER", CellType.STRING);
 		columnTypes.put("QUALIFICATION", CellType.STRING);
 		columnTypes.put("ACTIVITY NAME", CellType.STRING);
+		columnTypes.put("GRADE", CellType.STRING);
 //		columnTypes.put("FOCUS AREA", CellType.STRING);
 //		columnTypes.put("PSD AREA", CellType.STRING);
 //		columnTypes.put("4S TYPE", CellType.STRING);
