@@ -63,6 +63,8 @@ public class StudentServiceImpl implements StudentService {
 
 	@Override
 	public StudentResponse save(StudentRequest request) {
+		if (request == null)
+			throw new ValidationException("Request can not be null.");
 		if (request.getEmail() == null)
 			throw new ValidationException("Email can not be null");
 		if (studentRepository.countByEmail(request.getEmail()) > 0)
@@ -84,10 +86,10 @@ public class StudentServiceImpl implements StudentService {
 //			throw new ValidationException("Grade id can not be null");
 
 		Student student = request.toEntity();
-		if (request.getSchoolCId() != null) {
-			student.setSchool(schoolRepository.getOneBycId(request.getSchoolCId()));
-			if (request.getGradeCId() != null)
-				student.setGrade(gradeRepository.getOneBycId(request.getGradeCId()));
+		if (request.getSchoolId() != null) {
+			student.setSchool(schoolRepository.getOneBycId(request.getSchoolId()));
+			if (request.getGradeId() != null)
+				student.setGrade(gradeRepository.getOneBycId(request.getGradeId()));
 
 		}
 		try {
@@ -109,7 +111,10 @@ public class StudentServiceImpl implements StudentService {
 		if (StringUtils.isEmpty(user))
 			throw new ValidationException("User not created successfully");
 		student.setUser(user);
-		return new StudentResponse(studentRepository.save(student));
+		student = studentRepository.save(student);
+		if (student == null)
+			throw new RuntimeException("Something went wrong student not saved.");
+		return new StudentResponse(student);
 	}
 
 	public List<Guardian> createParent(StudentRequest studentRequest, Student student) {
@@ -318,19 +323,23 @@ public class StudentServiceImpl implements StudentService {
 
 	private StudentRequest validateStudentRequest(List<Map<String, Object>> studentDetails, List<String> errors) {
 		if (studentDetails == null || studentDetails.isEmpty()) {
-			errors.add("Equipment details not found");
+			errors.add("Student details not found");
 		}
 		StudentRequest studentRequest = new StudentRequest();
 		studentRequest.setName((String) studentDetails.get(0).get("NAME"));
 		studentRequest.setUsername((String) studentDetails.get(0).get("USERNAME"));
 		studentRequest.setDob(
 				DateUtil.convertStringToDate(DateUtil.formatDate((Date) studentDetails.get(0).get("DOB"), null, null)));
-		School school = schoolRepository.findByNameOrEmail((String) studentDetails.get(0).get("SCHOOL"),
-				(String) studentDetails.get(0).get("SCHOOLS EMAIL"));
+		School school = null;
+		if (studentDetails.get(0).get("SCHOOL") != null)
+			school = schoolRepository.findByName((String) studentDetails.get(0).get("SCHOOL"));
+		if (studentDetails.get(0).get("SCHOOLS EMAIL") != null)
+			school = schoolRepository.findByEmail((String) studentDetails.get(0).get("SCHOOLS EMAIL"));
+
 		if (school == null)
 			errors.add(String.format("School %s not found ", (String) studentDetails.get(0).get("SCHOOL")));
 		else {
-			studentRequest.setSchoolCId(school.getcId());
+			studentRequest.setSchoolId(school.getcId());
 			String standard = (String) studentDetails.get(0).get("GRADE");
 			String section = (String) studentDetails.get(0).get("SECTION");
 			Grade grade = null;
@@ -338,15 +347,15 @@ public class StudentServiceImpl implements StudentService {
 				errors.add("GRADE and SECTION are empty.");
 			} else if (standard != null && section == null) {
 				errors.add("SECTION is empty");
-				grade = gradeRepository.findByNameAndSchoolId(standard, school.getId());
+				grade = gradeRepository.findByNameAndSchoolsId(standard, school.getId());
 			} else if (section != null && standard == null) {
 				errors.add("GRADE is empty");
 			} else {
-				grade = gradeRepository.findByNameAndSchoolIdAndSection(standard, school.getId(), section);
+				grade = gradeRepository.findByNameAndSchoolsIdAndSection(standard, school.getId(), section);
 			}
 			if (grade == null)
 				errors.add(String.format("Grade  %s not found ", (String) studentDetails.get(0).get("GRADE")));
-			studentRequest.setGradeCId(grade.getcId());
+			studentRequest.setGradeId(grade.getcId());
 		}
 
 		studentRequest.setEmail((String) studentDetails.get(0).get("EMAIL"));
@@ -396,6 +405,20 @@ public class StudentServiceImpl implements StudentService {
 
 		if (student == null)
 			throw new NotFoundException(String.format("Student having id [%d] didn't exist", id));
+
+		return new StudentResponse(student);
+
+	}
+
+	public StudentResponse findByCId(String cId) {
+
+		if (cId == null)
+			throw new ValidationException("cId can't be null");
+
+		Student student = studentRepository.findBycId(cId);
+
+		if (student == null)
+			throw new NotFoundException(String.format("Student having cId [%s] didn't exist", cId));
 
 		return new StudentResponse(student);
 	}

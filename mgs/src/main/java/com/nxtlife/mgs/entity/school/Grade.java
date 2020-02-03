@@ -10,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -21,7 +23,7 @@ import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name","school","section"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name","section"}))
 public class Grade extends BaseEntity{
 
 	@Id
@@ -39,9 +41,11 @@ public class Grade extends BaseEntity{
 	
 	private Boolean active;
 	
-	@ManyToOne
-	@JoinColumn(name="school")
-	private School school;
+	@ManyToMany
+	@JoinTable(name = "school_grade",
+		joinColumns = { @JoinColumn(name = "school_id") },
+		inverseJoinColumns = { @JoinColumn(name = "grade_id") })
+	private List<School> schools;
 	
 	@ManyToOne
 	private Teacher teacher;
@@ -73,12 +77,12 @@ public class Grade extends BaseEntity{
 		this.active = active;
 	}
 
-	public School getSchool() {
-		return school;
+	public List<School> getSchools() {
+		return schools;
 	}
 
-	public void setSchool(School school) {
-		this.school = school;
+	public void setSchools(List<School> schools) {
+		this.schools = schools;
 	}
 
 	public List<Student> getStudents() {
@@ -112,17 +116,24 @@ public class Grade extends BaseEntity{
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	public Grade(@NotNull String name, String section, Boolean active, School school, Teacher teacher,
-			List<Student> students) {
+	
+	public Grade(@NotNull String name, @NotNull String cId, String section, Boolean active, List<School> schools,
+			Teacher teacher, List<Student> students) {
 		this.name = name;
+		this.cId = cId;
 		this.section = section;
 		this.active = active;
-		this.school = school;
+		this.schools = schools;
 		this.teacher = teacher;
 		this.students = students;
 	}
-	
+
+	public Grade(@NotNull String name, String section) {
+		super();
+		this.name = name;
+		this.section = section;
+	}
+
 	public Grade() {
 		
 	}

@@ -131,7 +131,8 @@ public class StudentResponse {
 		this.email = student.getEmail();
 		this.gender = student.getGender();
 		this.mobileNumber = student.getMobileNumber();
-		this.userCId = student.getUser().getcId();
+		if(student.getUser() != null)
+		   this.userCId = student.getUser().getcId();
 		this.username = student.getUsername();
 		this.active = student.getActive();
 		this.dob = student.getDob();

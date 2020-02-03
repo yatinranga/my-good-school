@@ -8,7 +8,7 @@ public class SchoolResponse {
 
 private String name;
 	
-	private String cId;
+	private String id;
 	
 	private String address;
 
@@ -26,12 +26,12 @@ private String name;
 		this.name = name;
 	}
 
-	public String getcId() {
-		return cId;
+	public String getId() {
+		return id;
 	}
 
-	public void setcId(String cId) {
-		this.cId = cId;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getAddress() {
@@ -69,7 +69,7 @@ private String name;
 	public SchoolResponse(School school) {
 		this.setName(school.getName());
 		this.setAddress(school.getAddress());
-		this.setcId(school.getcId());
+		this.setId(school.getcId());
 		this.setContactNumber(school.getContactNumber());
 		this.setEmail(school.getEmail());
 		this.setLogo(school.getLogo());

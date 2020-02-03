@@ -3,7 +3,6 @@ package com.nxtlife.mgs.view;
 import java.util.Date;
 import javax.validation.constraints.NotNull;
 
-import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.user.Student;
 
 public class StudentRequest {
@@ -11,12 +10,12 @@ public class StudentRequest {
 	@NotNull
 	private String name;
 
-	private String cId;
+	private String id;
 
-	private String userCId;
+	private String userId;
 
-	@NotNull
-	private String schoolCId;
+	
+	private String schoolId;
 
 	private String username;
 
@@ -47,8 +46,7 @@ public class StudentRequest {
 
 	private Boolean active;
 
-	@NotNull
-	private String gradeCId;
+	private String gradeId;
 
 	public String getName() {
 		return name;
@@ -58,28 +56,28 @@ public class StudentRequest {
 		this.name = name;
 	}
 
-	public String getcId() {
-		return cId;
+	public String getId() {
+		return id;
 	}
 
-	public void setcId(String cId) {
-		this.cId = cId;
+	public void setId(String id) {
+		this.id = id;
 	}
 
-	public String getUserCId() {
-		return userCId;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setUserCId(String userCId) {
-		this.userCId = userCId;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
-	public String getSchoolCId() {
-		return schoolCId;
+	public String getSchoolId() {
+		return schoolId;
 	}
 
-	public void setSchoolCId(String schoolCId) {
-		this.schoolCId = schoolCId;
+	public void setSchoolId(String schoolId) {
+		this.schoolId = schoolId;
 	}
 
 	public String getUsername() {
@@ -138,12 +136,12 @@ public class StudentRequest {
 		this.subscriptionEndDate = subscriptionEndDate;
 	}
 
-	public String getGradeCId() {
-		return gradeCId;
+	public String getGradeId() {
+		return gradeId;
 	}
 
-	public void setGradeCId(String gradeCId) {
-		this.gradeCId = gradeCId;
+	public void setGradeId(String gradeId) {
+		this.gradeId = gradeId;
 	}
 
 	public String getFathersName() {

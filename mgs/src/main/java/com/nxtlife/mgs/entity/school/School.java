@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
@@ -46,7 +47,7 @@ public class School extends BaseEntity {
 	
 	private Boolean active;
 	
-	@OneToMany(cascade = CascadeType.ALL ,fetch = FetchType.LAZY,mappedBy = "school")
+	@ManyToMany(mappedBy = "schools")
 	private List<Grade> grades;
 	
 	@OneToMany(cascade = CascadeType.ALL ,fetch = FetchType.LAZY,mappedBy = "school")

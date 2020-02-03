@@ -1,27 +1,42 @@
 package com.nxtlife.mgs.controller;
 
-import javax.validation.Valid;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.service.TeacherService;
 import com.nxtlife.mgs.view.TeacherRequest;
 import com.nxtlife.mgs.view.TeacherResponse;
 
-@RestController
-@RequestMapping("/api/teacher/")
+@RequestMapping("/api/teachers")
 public class TeacherController {
 
 	@Autowired
 	TeacherService teacherService;
 
-	@PostMapping("/save")
-	public TeacherResponse addTeacher(@RequestBody @Valid TeacherRequest request) {
-		return teacherService.addTeacher(request);
+	@RequestMapping(value = "importTeachers", method = RequestMethod.POST)
+	public List<TeacherResponse> uploadStudentsFromExcel(@RequestParam("file") MultipartFile file,
+			@RequestParam Integer rowLimit) {
+		return teacherService.uploadTeachersFromExcel(file, rowLimit, false);
 	}
 
+	@RequestMapping(value = "importCoaches", method = RequestMethod.POST)
+	public List<TeacherResponse> uploadCoachesFromExcel(@RequestParam("file") MultipartFile file,
+			@RequestParam Integer rowLimit) {
+		return teacherService.uploadTeachersFromExcel(file, rowLimit, true);
+	}
+
+	@PostMapping()
+	public TeacherResponse saveTeacher(@RequestBody TeacherRequest teacherRequest) {
+		if (teacherRequest.getIsCoach())
+			return teacherService.saveCoach(teacherRequest);
+
+		return teacherService.saveClassTeacher(teacherRequest);
+	}
 }

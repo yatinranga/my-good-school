@@ -1,63 +1,70 @@
 package com.nxtlife.mgs.view;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.UniqueElements;
-
-import com.nxtlife.mgs.entity.activity.ActivityOffered;
-import com.nxtlife.mgs.entity.activity.ActivityPerformed;
-import com.nxtlife.mgs.entity.school.Award;
-import com.nxtlife.mgs.entity.school.Grade;
-import com.nxtlife.mgs.entity.school.School;
-import com.nxtlife.mgs.entity.user.User;
+import com.nxtlife.mgs.entity.user.Teacher;
 
 public class TeacherRequest {
 
-	@NotNull(message = "name can't be null")
-	@UniqueElements
 	private String name;
 
-	@NotNull(message = "cId can't be null")
-	@UniqueElements
-	private String cId;
+	private String id;
+
+	private String userId;
 
 	private String username;
 
-	private String gender;
-
 	private Date dob;
 
-	private String imageUrl;
-
-	@NotNull(message = "email can't be null")
-	@UniqueElements
-	private String email;
+//	private String school;
 
 	private String qualification;
 
-	private Boolean isClassTeacher;
-
 	private Boolean isCoach;
 
-	private Boolean isPrincipal;
+	private Boolean isClassTeacher;
 
-	private User user;
+	private Boolean active;
 
-	private School school;
+	private String email;
 
-	private List<ActivityPerformed> activitiesAssigned;
+	private String mobileNumber;
 
-	private List<Grade> grades;
+	private String gender;
 
-	private ActivityOffered activityOffered;
+	private List<String> activitiyIds;
 
-	private List<Award> awards;
+	private List<String> gradeIds;
 
-	
-	
+	private String schoolId;
+
+	public Teacher toEntity(Teacher teacher) {
+		teacher = teacher == null ? new Teacher() : teacher;
+		if (this.name != null)
+			teacher.setName(this.name);
+		if (this.username != null)
+			teacher.setUsername(this.username);
+		if (this.dob != null)
+			teacher.setDob(this.dob);
+		if (this.qualification != null)
+			teacher.setQualification(this.qualification);
+		if (this.active != null)
+			teacher.setActive(this.active);
+		if (this.gender != null)
+			teacher.setGender(this.gender);
+		if (this.mobileNumber != null)
+			teacher.setMobileNumber(this.mobileNumber);
+		if (this.email != null)
+			teacher.setEmail(this.email);
+		if (this.isCoach != null)
+			teacher.setIsCoach(this.isCoach);
+		if (this.isClassTeacher != null)
+			teacher.setIsClassTeacher(this.isClassTeacher);
+
+		return teacher;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -66,12 +73,20 @@ public class TeacherRequest {
 		this.name = name;
 	}
 
-	public String getcId() {
-		return cId;
+	public String getId() {
+		return id;
 	}
 
-	public void setcId(String cId) {
-		this.cId = cId;
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getUsername() {
@@ -82,36 +97,12 @@ public class TeacherRequest {
 		this.username = username;
 	}
 
-	public String getGender() {
-		return gender;
-	}
-
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
-
 	public Date getDob() {
 		return dob;
 	}
 
 	public void setDob(Date dob) {
 		this.dob = dob;
-	}
-
-	public String getImageUrl() {
-		return imageUrl;
-	}
-
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 	public String getQualification() {
@@ -122,14 +113,6 @@ public class TeacherRequest {
 		this.qualification = qualification;
 	}
 
-	public Boolean getIsClassTeacher() {
-		return isClassTeacher;
-	}
-
-	public void setIsClassTeacher(Boolean isClassTeacher) {
-		this.isClassTeacher = isClassTeacher;
-	}
-
 	public Boolean getIsCoach() {
 		return isCoach;
 	}
@@ -138,60 +121,71 @@ public class TeacherRequest {
 		this.isCoach = isCoach;
 	}
 
-	public Boolean getIsPrincipal() {
-		return isPrincipal;
+	public Boolean getIsClassTeacher() {
+		return isClassTeacher;
 	}
 
-	public void setIsPrincipal(Boolean isPrincipal) {
-		this.isPrincipal = isPrincipal;
+	public void setIsClassTeacher(Boolean isClassTeacher) {
+		this.isClassTeacher = isClassTeacher;
 	}
 
-	public User getUser() {
-		return user;
+	public Boolean getActive() {
+		return active;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 
-	public School getSchool() {
-		return school;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setSchool(School school) {
-		this.school = school;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
-	public List<ActivityPerformed> getActivitiesAssigned() {
-		return activitiesAssigned;
+	public String getMobileNumber() {
+		return mobileNumber;
 	}
 
-	public void setActivitiesAssigned(List<ActivityPerformed> activitiesAssigned) {
-		this.activitiesAssigned = activitiesAssigned;
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
 	}
 
-	public List<Grade> getGrades() {
-		return grades;
+	public String getGender() {
+		return gender;
 	}
 
-	public void setGrades(List<Grade> grades) {
-		this.grades = grades;
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 
-	public ActivityOffered getActivityOffered() {
-		return activityOffered;
+	public List<String> getActivitiyIds() {
+		return activitiyIds;
 	}
 
-	public void setActivityOffered(ActivityOffered activityOffered) {
-		this.activityOffered = activityOffered;
+	public void setActivitiyIds(List<String> activitiyIds) {
+		this.activitiyIds = activitiyIds;
 	}
 
-	public List<Award> getAwards() {
-		return awards;
+	public List<String> getGradeIds() {
+		return gradeIds;
 	}
 
-	public void setAwards(List<Award> awards) {
-		this.awards = awards;
+	public void setGradeIds(List<String> gradeIds) {
+		this.gradeIds = gradeIds;
 	}
 
+	public String getSchoolId() {
+		return schoolId;
+	}
+
+	public void setSchoolId(String schoolId) {
+		this.schoolId = schoolId;
+	}
+
+	public Teacher toEntity() {
+		return toEntity(null);
+	}
 }

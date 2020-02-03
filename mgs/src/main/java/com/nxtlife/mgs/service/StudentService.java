@@ -18,6 +18,8 @@ public interface StudentService extends ExcelUtil {
 
 	StudentResponse findByid(Long id);
 
+	StudentResponse findByCId(String cId);
+
 	StudentResponse findByMobileNumber(String mobileNumber);
 
 	StudentResponse findByUsername(String username);
