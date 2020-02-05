@@ -29,20 +29,25 @@ public class StudentController {
 			@RequestParam Integer rowLimit) {
 		return studentService.uploadStudentsFromExcel(file, rowLimit);
 	}
-	
+
 	@PostMapping()
 	public StudentResponse saveStudent(@RequestBody StudentRequest studentRequest) {
 		return studentService.save(studentRequest);
 	}
 
 	@GetMapping()
-	public List<StudentResponse> getAll(){
+	public List<StudentResponse> getAll() {
 		return studentService.getAll();
 	}
-	
+
 	@GetMapping("{name}")
 	public List<StudentResponse> findByName(@PathVariable String name) {
 		return studentService.findByName(name);
+	}
+
+	@GetMapping("{id}")
+	public StudentResponse findByid(@PathVariable Long id) {
+		return studentService.findByid(id);
 	}
 
 	@GetMapping("{cId]")

@@ -11,13 +11,15 @@ import com.nxtlife.mgs.view.ActivityPerformedResponse;
 import com.nxtlife.mgs.view.StudentRequest;
 import com.nxtlife.mgs.view.StudentResponse;
 
-public interface StudentService extends ExcelUtil{
+public interface StudentService extends ExcelUtil {
 
 	List<StudentResponse> uploadStudentsFromExcel(MultipartFile file, Integer rowLimit);
 
 	StudentResponse save(StudentRequest request);
 
 	List<StudentResponse> findByName(String name);
+
+	StudentResponse findByid(Long id);
 
 	StudentResponse findByCId(String cId);
 

@@ -69,7 +69,7 @@ public class StudentServiceImpl implements StudentService {
 
 	@Override
 	public StudentResponse save(StudentRequest request) {
-		if(request==null)
+		if (request == null)
 			throw new ValidationException("Request can not be null.");
 		if (request.getEmail() == null)
 			throw new ValidationException("Email can not be null");
@@ -118,7 +118,7 @@ public class StudentServiceImpl implements StudentService {
 			throw new ValidationException("User not created successfully");
 		student.setUser(user);
 		student = studentRepository.save(student);
-		if(student==null)
+		if (student == null)
 			throw new RuntimeException("Something went wrong student not saved.");
 		return new StudentResponse(student);
 	}
@@ -337,11 +337,11 @@ public class StudentServiceImpl implements StudentService {
 		studentRequest.setDob(
 				DateUtil.convertStringToDate(DateUtil.formatDate((Date) studentDetails.get(0).get("DOB"), null, null)));
 		School school = null;
-		if(studentDetails.get(0).get("SCHOOL")!=null) 
-		   school = schoolRepository.findByName((String) studentDetails.get(0).get("SCHOOL"));
-		if(studentDetails.get(0).get("SCHOOLS EMAIL")!=null)
-			school = 	schoolRepository.findByEmail((String) studentDetails.get(0).get("SCHOOLS EMAIL"));
-		
+		if (studentDetails.get(0).get("SCHOOL") != null)
+			school = schoolRepository.findByName((String) studentDetails.get(0).get("SCHOOL"));
+		if (studentDetails.get(0).get("SCHOOLS EMAIL") != null)
+			school = schoolRepository.findByEmail((String) studentDetails.get(0).get("SCHOOLS EMAIL"));
+
 		if (school == null)
 			errors.add(String.format("School %s not found ", (String) studentDetails.get(0).get("SCHOOL")));
 		else {
@@ -363,7 +363,6 @@ public class StudentServiceImpl implements StudentService {
 				errors.add(String.format("Grade  %s not found ", (String) studentDetails.get(0).get("GRADE")));
 			studentRequest.setGradeId(grade.getCid());
 		}
-		
 
 		studentRequest.setEmail((String) studentDetails.get(0).get("EMAIL"));
 		if (studentDetails.get(0).get("ACTIVE") != null)
@@ -403,6 +402,20 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
+	public StudentResponse findByid(Long id) {
+
+		if (id == null)
+			throw new ValidationException("id can't be null");
+
+		Student student = studentRepository.findById(id).orElse(null);
+
+		if (student == null)
+			throw new NotFoundException(String.format("Student having id [%d] didn't exist", id));
+
+		return new StudentResponse(student);
+
+	}
+
 	public StudentResponse findByCId(String cId) {
 
 		if (cId == null)

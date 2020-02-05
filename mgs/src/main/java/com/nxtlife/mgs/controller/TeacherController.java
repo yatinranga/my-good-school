@@ -14,35 +14,35 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.service.TeacherService;
-import com.nxtlife.mgs.view.StudentRequest;
-import com.nxtlife.mgs.view.StudentResponse;
 import com.nxtlife.mgs.view.TeacherRequest;
 import com.nxtlife.mgs.view.TeacherResponse;
 
+
 @RestController
 @RequestMapping("/api/teachers/")
+
 public class TeacherController {
 
 	@Autowired
 	TeacherService teacherService;
-	
+
 	@RequestMapping(value = "importTeachers", method = RequestMethod.POST)
 	public List<TeacherResponse> uploadTeachersFromExcel(@RequestParam("file") MultipartFile file,
 			@RequestParam Integer rowLimit) {
-		return teacherService.uploadTeachersFromExcel(file, rowLimit,false);
+		return teacherService.uploadTeachersFromExcel(file, rowLimit, false);
 	}
-	
+
 	@RequestMapping(value = "importCoaches", method = RequestMethod.POST)
 	public List<TeacherResponse> uploadCoachesFromExcel(@RequestParam("file") MultipartFile file,
 			@RequestParam Integer rowLimit) {
-		return teacherService.uploadTeachersFromExcel(file, rowLimit,true);
+		return teacherService.uploadTeachersFromExcel(file, rowLimit, true);
 	}
-	
+
 	@PostMapping()
 	public TeacherResponse saveTeacher(@RequestBody TeacherRequest teacherRequest) {
-		if(teacherRequest.getIsCoach())
+		if (teacherRequest.getIsCoach())
 			return teacherService.saveCoach(teacherRequest);
-		
+
 		return teacherService.saveClassTeacher(teacherRequest);
 	}
 	

@@ -3,44 +3,67 @@ package com.nxtlife.mgs.view;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.poi.ss.usermodel.CellType;
-
-import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
 
 public class TeacherRequest {
 
 	private String name;
-	
+
 	private String id;
-	
+
 	private String userId;
-	
+
 	private String username;
-	
+
 	private Date dob;
-	
+
 //	private String school;
-	
+
 	private String qualification;
-	
+
 	private Boolean isCoach;
-	
+
 	private Boolean isClassTeacher;
-	
+
 	private Boolean active;
-	
+
 	private String email;
-	
+
 	private String mobileNumber;
-	
+
 	private String gender;
-	
+
 	private List<String> activitiyIds;
-	
+
 	private List<String> gradeIds;
-	
+
 	private String schoolId;
+
+	public Teacher toEntity(Teacher teacher) {
+		teacher = teacher == null ? new Teacher() : teacher;
+		if (this.name != null)
+			teacher.setName(this.name);
+		if (this.username != null)
+			teacher.setUsername(this.username);
+		if (this.dob != null)
+			teacher.setDob(this.dob);
+		if (this.qualification != null)
+			teacher.setQualification(this.qualification);
+		if (this.active != null)
+			teacher.setActive(this.active);
+		if (this.gender != null)
+			teacher.setGender(this.gender);
+		if (this.mobileNumber != null)
+			teacher.setMobileNumber(this.mobileNumber);
+		if (this.email != null)
+			teacher.setEmail(this.email);
+		if (this.isCoach != null)
+			teacher.setIsCoach(this.isCoach);
+		if (this.isClassTeacher != null)
+			teacher.setIsClassTeacher(this.isClassTeacher);
+
+		return teacher;
+	}
 
 	public String getName() {
 		return name;
@@ -81,14 +104,6 @@ public class TeacherRequest {
 	public void setDob(Date dob) {
 		this.dob = dob;
 	}
-
-//	public String getSchool() {
-//		return school;
-//	}
-//
-//	public void setSchool(String school) {
-//		this.school = school;
-//	}
 
 	public String getQualification() {
 		return qualification;
@@ -153,7 +168,7 @@ public class TeacherRequest {
 	public void setActivitiyIds(List<String> activitiyIds) {
 		this.activitiyIds = activitiyIds;
 	}
-	
+
 	public List<String> getGradeIds() {
 		return gradeIds;
 	}
@@ -169,34 +184,7 @@ public class TeacherRequest {
 	public void setSchoolId(String schoolId) {
 		this.schoolId = schoolId;
 	}
-	
-	public Teacher toEntity(Teacher teacher) {
-		teacher = teacher == null ? new Teacher() : teacher;
-		if(this.name!= null)
-			teacher.setName(this.name);
-		if(this.username != null)
-			teacher.setUsername(this.username);
-		if(this.dob != null)
-			teacher.setDob(this.dob);
-		if(this.qualification!= null)
-			teacher.setQualification(this.qualification);
-		if(this.active!=null)
-			teacher.setActive(this.active);
-		if(this.gender!=null)
-			teacher.setGender(this.gender);
-		if(this.mobileNumber!=null)
-			teacher.setMobileNumber(this.mobileNumber);
-		if(this.email!=null)
-			teacher.setEmail(this.email);
-		if(this.isCoach != null)
-			teacher.setIsCoach(this.isCoach);
-		if(this.isClassTeacher!=null)
-			teacher.setIsClassTeacher(this.isClassTeacher);
-		
-			
-		return teacher;
-	}
-	
+
 	public Teacher toEntity() {
 		return toEntity(null);
 	}

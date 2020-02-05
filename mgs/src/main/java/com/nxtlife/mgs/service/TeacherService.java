@@ -10,12 +10,12 @@ import com.nxtlife.mgs.view.TeacherResponse;
 
 public interface TeacherService {
 
-	List<TeacherResponse> uploadTeachersFromExcel(MultipartFile file, Integer rowLimit,Boolean isCoach);
+	List<TeacherResponse> uploadTeachersFromExcel(MultipartFile file, Integer rowLimit, Boolean isCoach);
 
 	TeacherResponse save(TeacherRequest request);
-	
+
 	TeacherResponse saveClassTeacher(TeacherRequest request);
-	
+
 	TeacherResponse saveCoach(TeacherRequest request);
 
 	List<TeacherResponse> findCoachesByActivityName(String activityName);

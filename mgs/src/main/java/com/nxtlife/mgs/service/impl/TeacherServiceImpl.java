@@ -23,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
-import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.entity.user.User;
 import com.nxtlife.mgs.ex.ValidationException;
@@ -37,11 +36,8 @@ import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.ActivityResponse;
-import com.nxtlife.mgs.view.StudentRequest;
-import com.nxtlife.mgs.view.StudentResponse;
 import com.nxtlife.mgs.view.TeacherRequest;
 import com.nxtlife.mgs.view.TeacherResponse;
-import com.restfb.types.webhook.messaging.payment.ReuqestedUserInfo;
 
 @Service
 public class TeacherServiceImpl implements TeacherService {
@@ -54,7 +50,7 @@ public class TeacherServiceImpl implements TeacherService {
 
 	@Autowired
 	GradeRepository gradeRepository;
-	
+
 	@Autowired
 	ActivityRepository activityRepository;
 
@@ -65,7 +61,7 @@ public class TeacherServiceImpl implements TeacherService {
 	Utils utils;
 
 	@Override
-	public List<TeacherResponse> uploadTeachersFromExcel(MultipartFile file, Integer rowLimit , Boolean isCoach) {
+	public List<TeacherResponse> uploadTeachersFromExcel(MultipartFile file, Integer rowLimit, Boolean isCoach) {
 
 		if (file == null || file.isEmpty() || file.getSize() == 0)
 			throw new ValidationException("Pls upload valid excel file.");
@@ -75,21 +71,21 @@ public class TeacherServiceImpl implements TeacherService {
 		List<Map<String, Object>> teacherRecords = new ArrayList<Map<String, Object>>();
 		try {
 			XSSFWorkbook studentsSheet = new XSSFWorkbook(file.getInputStream());
-			if(isCoach==true) {
+			if (isCoach == true) {
 				teacherRecords = findSheetRowValues(studentsSheet, "COACH", rowLimit, errors);
-				
+
 				for (int i = 0; i < teacherRecords.size(); i++) {
 					List<Map<String, Object>> tempStudentsRecords = new ArrayList<Map<String, Object>>();
 					tempStudentsRecords.add(teacherRecords.get(i));
-					teacherResponseList.add(saveCoach(validateTeacherRequest(tempStudentsRecords, errors,true)));
+					teacherResponseList.add(saveCoach(validateTeacherRequest(tempStudentsRecords, errors, true)));
 				}
-			}
-			else {
+			} else {
 				teacherRecords = findSheetRowValues(studentsSheet, "TEACHER", rowLimit, errors);
 				for (int i = 0; i < teacherRecords.size(); i++) {
 					List<Map<String, Object>> tempStudentsRecords = new ArrayList<Map<String, Object>>();
 					tempStudentsRecords.add(teacherRecords.get(i));
-					teacherResponseList.add(saveClassTeacher(validateTeacherRequest(tempStudentsRecords, errors,false)));
+					teacherResponseList
+							.add(saveClassTeacher(validateTeacherRequest(tempStudentsRecords, errors, false)));
 				}
 			}
 
@@ -128,18 +124,19 @@ public class TeacherServiceImpl implements TeacherService {
 			}
 
 		}
-		
-		if(request.getActivitiyIds()!= null && !request.getActivitiyIds().isEmpty() )
-		{
+
+		if (request.getActivitiyIds() != null && !request.getActivitiyIds().isEmpty()) {
 			List<Activity> activities = new ArrayList<Activity>();
+
 			for(String actCId : request.getActivitiyIds()) {
 				Activity activity = activityRepository.getOneByCid(actCId);
 				if(activity!=null)
+
 					activities.add(activity);
 			}
 			teacher.setActivities(activities);
 		}
-		
+
 		try {
 			teacher.setcId(utils.generateRandomAlphaNumString(8));
 		} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
@@ -171,7 +168,7 @@ public class TeacherServiceImpl implements TeacherService {
 			request.setIsCoach(true);
 		return save(request);
 	}
-	
+
 	private List<Map<String, Object>> fetchRowValues(Map<String, CellType> columnTypes, XSSFSheet sheet,
 			List<String> errors, String sheetName) {
 		List<Map<String, Object>> rows = new ArrayList<>();
@@ -316,10 +313,10 @@ public class TeacherServiceImpl implements TeacherService {
 				activityNames = activities.split(",");
 
 			if (activityNames != null && activityNames.length > 0) {
-				for(String act : activityNames) {
+				for (String act : activityNames) {
 					Activity activity = activityRepository.getOneByName(act);
-					
-					if(activity == null)
+
+					if (activity == null)
 						errors.add(String.format("Activity %s  not found ", act));
 					else
 						activityCIds.add(activity.getCid());
@@ -338,74 +335,74 @@ public class TeacherServiceImpl implements TeacherService {
 		return teacherRequest;
 
 	}
-	
+
 	@Override
 	public TeacherResponse findById(Long id) {
-		if(id == null)
+		if (id == null)
 			throw new ValidationException("Id can not be null");
 		Teacher teacher = teacherRepository.findById(id).orElse(null);
-		if(teacher == null)
+		if (teacher == null)
 			throw new ValidationException(String.format("Teacher having id : %s not found", id));
-		
+
 		return new TeacherResponse(teacher);
 	}
-	
+
 	@Override
 	public TeacherResponse findByCId(String cId) {
-		if(cId == null)
+		if (cId == null)
 			throw new ValidationException("Id can not be null");
 		Teacher teacher = teacherRepository.findByCid(cId);
-		if(teacher == null)
+		if (teacher == null)
 			throw new ValidationException(String.format("Teacher having id : %s not found", cId));
-		
+
 		return new TeacherResponse(teacher);
 	}
-	
+
 	@Override
-	public List<TeacherResponse> findCoachesByActivityName(String activityName){
-		if(activityName == null)
+	public List<TeacherResponse> findCoachesByActivityName(String activityName) {
+		if (activityName == null)
 			throw new ValidationException("Activity name can not be null");
 		List<Teacher> teachersList = new ArrayList<>();
 		List<TeacherResponse> teachersResponseList = new ArrayList<>();
 		teachersList = teacherRepository.findAllByActivitiesName(activityName);
-		
-		if(teachersList!=null && !teachersList.isEmpty()) {
-			for(Teacher teacher : teachersList)
-			   teachersResponseList.add(new TeacherResponse(teacher));
+
+		if (teachersList != null && !teachersList.isEmpty()) {
+			for (Teacher teacher : teachersList)
+				teachersResponseList.add(new TeacherResponse(teacher));
 		}
-		
+
 		return teachersResponseList;
 	}
 
 	@Override
-	public List<ActivityResponse> findAllActivitiesByCoachId(Long id){
-		
-		if(id == null)
+	public List<ActivityResponse> findAllActivitiesByCoachId(Long id) {
+
+		if (id == null)
 			throw new ValidationException("Id can not be null");
-		
+
 		List<Activity> activities = new ArrayList<Activity>();
 		List<ActivityResponse> activityResponses = new ArrayList<ActivityResponse>();
-		
+
 		activities = activityRepository.findAllByTeachersId(id);
-		if(activities == null || activities.isEmpty())
+		if (activities == null || activities.isEmpty())
 			throw new ValidationException("No Activities found.");
-		for(Activity activity : activities) {
+		for (Activity activity : activities) {
 			activityResponses.add(new ActivityResponse(activity));
 		}
 		return activityResponses;
 	}
-	
+
 	@Override
-    public List<ActivityResponse> findAllActivitiesByCoachCId(String cId){
-    	if(cId == null)
+	public List<ActivityResponse> findAllActivitiesByCoachCId(String cId) {
+		if (cId == null)
 			throw new ValidationException("Id can not be null");
-    	List<Activity> activities = new ArrayList<Activity>();
+		List<Activity> activities = new ArrayList<Activity>();
 		List<ActivityResponse> activityResponses = new ArrayList<ActivityResponse>();
-		
+
 		activities = activityRepository.findAllByTeachersCid(cId);
-		if(activities == null || activities.isEmpty())
+		if (activities == null || activities.isEmpty())
 			throw new ValidationException("No Activities found.");
-		for(Activity activity : activities) {
+		for (Activity activity : activities) {
 			activityResponses.add(new ActivityResponse(activity));
 		}
 		return activityResponses;
