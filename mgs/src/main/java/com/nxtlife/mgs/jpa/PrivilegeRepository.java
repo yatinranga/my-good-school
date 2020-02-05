@@ -10,5 +10,5 @@ public interface PrivilegeRepository extends JpaRepository<Privilege, Long> {
 
     Privilege getOneByName(String name);
     
-    Privilege getOneBycId(String cId);
+    Privilege getOneByCid(String cid);
 }

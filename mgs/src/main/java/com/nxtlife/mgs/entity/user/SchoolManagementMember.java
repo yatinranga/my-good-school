@@ -30,7 +30,7 @@ public class SchoolManagementMember extends BaseEntity{
 	
 	@NotNull
 	@Column(unique = true)
-	private String cId;
+	private String cid;
 	
 	private Date dob;
 	
@@ -126,12 +126,12 @@ public class SchoolManagementMember extends BaseEntity{
 		this.school = school;
 	}
 	
-	public String getcId() {
-		return cId;
+	public String getCid() {
+		return cid;
 	}
 
-	public void setcId(String cId) {
-		this.cId = cId;
+	public void setCid(String cid) {
+		this.cid = cid;
 	}
 
 	public User getUser() {
@@ -150,13 +150,12 @@ public class SchoolManagementMember extends BaseEntity{
 		this.id = id;
 	}
 
-	public SchoolManagementMember(@NotNull String name, @NotNull String username, @NotNull String cId, Date dob,
+	public SchoolManagementMember(@NotNull String name, @NotNull String username, @NotNull String cid, Date dob,
 			String imageUrl, @NotNull String email, String mobileNumber, Boolean active, String gender,
 			@NotNull School school) {
-		super();
 		this.name = name;
 		this.username = username;
-		this.cId = cId;
+		this.cid = cid;
 		this.dob = dob;
 		this.imageUrl = imageUrl;
 		this.email = email;

@@ -22,15 +22,7 @@ public class Privilege extends BaseEntity {
 
 	@NotNull
 	@Column(unique = true)
-	private String cId;
-
-	public Privilege() {
-	}
-
-	public Privilege(Privilege p) {
-		this.name = p.name;
-		this.description = p.description;
-	}
+	private String cid;
 
 	public String getName() {
 		return name;
@@ -48,12 +40,12 @@ public class Privilege extends BaseEntity {
 		this.description = description;
 	}
 
-	public String getcId() {
-		return cId;
+	public String getCid() {
+		return cid;
 	}
 
-	public void setcId(String cId) {
-		this.cId = cId;
+	public void setCid(String cid) {
+		this.cid = cid;
 	}
 
 	public Long getId() {
@@ -64,11 +56,18 @@ public class Privilege extends BaseEntity {
 		this.id = id;
 	}
 
-	public Privilege(String name, String description, @NotNull String cId) {
+	public Privilege(String name, String description, @NotNull String cid) {
 		this.name = name;
 		this.description = description;
-		this.cId = cId;
+		this.cid = cid;
 	}
 	
+	public Privilege() {
+	}
+
+	public Privilege(Privilege p) {
+		this.name = p.name;
+		this.description = p.description;
+	}
 
 }

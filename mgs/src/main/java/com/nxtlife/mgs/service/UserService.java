@@ -1,5 +1,6 @@
 package com.nxtlife.mgs.service;
 
+import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.user.Guardian;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
@@ -13,5 +14,7 @@ public interface UserService {
 	User createParentUser(Guardian guardian);
 	
 	public User createTeacherUser(Teacher teacher) ;
+
+	User createSchoolUser(School school);
 	
 }

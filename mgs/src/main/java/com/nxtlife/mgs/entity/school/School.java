@@ -11,12 +11,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import com.nxtlife.mgs.entity.BaseEntity;
+import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.user.SchoolManagementMember;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
+import com.nxtlife.mgs.entity.user.User;
 
 @Entity
 public class School extends BaseEntity {
@@ -31,7 +34,11 @@ public class School extends BaseEntity {
 	
 	@NotNull
 	@Column(unique = true)
-	private String cId;
+	private String username;
+	
+	@NotNull
+	@Column(unique = true)
+	private String cid;
 	
 	@Column(unique=true)
 	private String address;
@@ -47,6 +54,9 @@ public class School extends BaseEntity {
 	
 	private Boolean active;
 	
+	@OneToOne
+	User user ;
+	
 	@ManyToMany(mappedBy = "schools")
 	private List<Grade> grades;
 	
@@ -58,6 +68,9 @@ public class School extends BaseEntity {
 	
 	@OneToMany(cascade = CascadeType.ALL ,fetch = FetchType.LAZY,mappedBy = "school")
 	private List<SchoolManagementMember> schoolManagementMembers;
+	
+	@ManyToMany(mappedBy="schools")
+	private List<Activity> activities ;
 
 	public String getName() {
 		return name;
@@ -131,12 +144,12 @@ public class School extends BaseEntity {
 		this.schoolManagementMembers = schoolManagementMembers;
 	}
 	
-	public String getcId() {
-		return cId;
+	public String getCid() {
+		return cid;
 	}
 
-	public void setcId(String cId) {
-		this.cId = cId;
+	public void setCid(String cid) {
+		this.cid = cid;
 	}
 	
 	public String getLogo() {
@@ -155,20 +168,52 @@ public class School extends BaseEntity {
 		this.id = id;
 	}
 
-	public School(@NotNull String name, String address, @NotNull String email, String contactNumber, Boolean active,
-			List<Grade> grades, List<Teacher> teachers, List<Student> students,
-			List<SchoolManagementMember> schoolManagementMembers) {
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	
+	public List<Activity> getActivities() {
+		return activities;
+	}
+
+	public void setActivities(List<Activity> activities) {
+		this.activities = activities;
+	}
+
+	
+	public School(@NotNull String name, @NotNull String username, @NotNull String cid, String address,
+			@NotNull String email, String contactNumber, String logo, Boolean active, User user, List<Grade> grades,
+			List<Teacher> teachers, List<Student> students, List<SchoolManagementMember> schoolManagementMembers,
+			List<Activity> activities) {
+		super();
 		this.name = name;
+		this.username = username;
+		this.cid = cid;
 		this.address = address;
 		this.email = email;
 		this.contactNumber = contactNumber;
+		this.logo = logo;
 		this.active = active;
+		this.user = user;
 		this.grades = grades;
 		this.teachers = teachers;
 		this.students = students;
 		this.schoolManagementMembers = schoolManagementMembers;
+		this.activities = activities;
 	}
-	
+
 	public School(){
 		
 	}

@@ -23,8 +23,22 @@ public interface TeacherService {
 	TeacherResponse findByCId(String cId);
 
 	TeacherResponse findById(Long id);
+	
+	TeacherResponse findCoachByCId(String cId);
+
+	TeacherResponse findCoachById(Long id);
+	
+	TeacherResponse findClassTeacherByCId(String cId);
+
+	TeacherResponse findClassTeacherById(Long id);
 
 	List<ActivityResponse> findAllActivitiesByCoachId(Long id);
 
 	List<ActivityResponse> findAllActivitiesByCoachCId(String cId);
+	
+	List<TeacherResponse> getAllTeachers();
+	
+	List<TeacherResponse> getAllCoaches();
+	
+	List<TeacherResponse> getAllClassTeachers();
 }

@@ -105,7 +105,7 @@ public class TeacherResponse {
 	public TeacherResponse(Teacher teacher) {
 		this.id = teacher.getcId();
 		if(teacher.getUser() != null)
-		  this.userId = teacher.getUser().getcId();
+		  this.userId = teacher.getUser().getCid();
 		this.username = teacher.getUsername();
 		this.name = teacher.getName();
 		this.gender = teacher.getGender();

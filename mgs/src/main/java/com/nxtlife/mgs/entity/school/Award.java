@@ -28,7 +28,7 @@ public class Award extends BaseEntity{
 	
 	@NotNull
 	@Column(unique = true)
-	private String cId;
+	private String cid;
 	
 	@NotNull
 	private String description;
@@ -82,12 +82,12 @@ public class Award extends BaseEntity{
 		this.student = student;
 	}
 	
-	public String getcId() {
-		return cId;
+	public String getCid() {
+		return cid;
 	}
 
-	public void setcId(String cId) {
-		this.cId = cId;
+	public void setCid(String cid) {
+		this.cid = cid;
 	}
 	
 	public Long getId() {

@@ -118,11 +118,11 @@ public class TeacherServiceImpl implements TeacherService {
 
 		Teacher teacher = request.toEntity();
 		if (request.getSchoolId() != null) {
-			teacher.setSchool(schoolRepository.getOneBycId(request.getSchoolId()));
+			teacher.setSchool(schoolRepository.getOneByCid(request.getSchoolId()));
 			if (request.getGradeIds() != null && !request.getGradeIds().isEmpty()) {
 				List<Grade> grades = new ArrayList<Grade>();
 				for (String grade : request.getGradeIds()) {
-					grades.add(gradeRepository.getOneBycId(grade));
+					grades.add(gradeRepository.getOneByCid(grade));
 				}
 				teacher.setGrades(grades);
 			}
@@ -133,7 +133,7 @@ public class TeacherServiceImpl implements TeacherService {
 		{
 			List<Activity> activities = new ArrayList<Activity>();
 			for(String actCId : request.getActivitiyIds()) {
-				Activity activity = activityRepository.getOneBycId(actCId);
+				Activity activity = activityRepository.getOneByCid(actCId);
 				if(activity!=null)
 					activities.add(activity);
 			}
@@ -271,7 +271,7 @@ public class TeacherServiceImpl implements TeacherService {
 		if (school == null)
 			errors.add(String.format("School %s not found ", (String) teacherDetails.get(0).get("SCHOOL")));
 		else {
-			teacherRequest.setSchoolId(school.getcId());
+			teacherRequest.setSchoolId(school.getCid());
 			String standard = (String) teacherDetails.get(0).get("GRADE");
 			String gradeNames[] = null;
 			List<String> gradeCIds = new ArrayList<String>();
@@ -300,7 +300,7 @@ public class TeacherServiceImpl implements TeacherService {
 					if (grade == null)
 						errors.add(String.format("Grade  %s not found ", gradeAndSection[0]));
 					else
-						gradeCIds.add(grade.getcId());
+						gradeCIds.add(grade.getCid());
 
 				}
 				teacherRequest.setGradeIds(gradeCIds);
@@ -322,7 +322,7 @@ public class TeacherServiceImpl implements TeacherService {
 					if(activity == null)
 						errors.add(String.format("Activity %s  not found ", act));
 					else
-						activityCIds.add(activity.getcId());
+						activityCIds.add(activity.getCid());
 				}
 				teacherRequest.setActivitiyIds(activityCIds);
 
@@ -409,5 +409,78 @@ public class TeacherServiceImpl implements TeacherService {
 			activityResponses.add(new ActivityResponse(activity));
 		}
 		return activityResponses;
+	}
+
+	@Override
+	public List<TeacherResponse> getAllTeachers() {
+		List<Teacher> teachers = new ArrayList<Teacher>();
+		List<TeacherResponse> teacherResponses = new ArrayList<>();
+		teachers = teacherRepository.findAll();
+		if(teachers==null)
+			throw new ValidationException("No teachers found.");
+		teachers.forEach(teacher->{teacherResponses.add(new TeacherResponse(teacher));});
+		return teacherResponses;
+	}
+
+	@Override
+	public List<TeacherResponse> getAllCoaches() {
+		List<Teacher> teachers = new ArrayList<Teacher>();
+		List<TeacherResponse> teacherResponses = new ArrayList<>();
+		teachers = teacherRepository.findAllByIsCoachTrue();
+		if(teachers==null)
+			throw new ValidationException("No coaches found.");
+		teachers.forEach(teacher->{teacherResponses.add(new TeacherResponse(teacher));});
+		return teacherResponses;
+	}
+
+	@Override
+	public List<TeacherResponse> getAllClassTeachers() {
+		List<Teacher> teachers = new ArrayList<Teacher>();
+		List<TeacherResponse> teacherResponses = new ArrayList<>();
+		teachers = teacherRepository.findAllByIsClassTeacherTrue();
+		if(teachers==null)
+			throw new ValidationException("No class teachers found.");
+		teachers.forEach(teacher->{teacherResponses.add(new TeacherResponse(teacher));});
+		return teacherResponses;
+	}
+
+	@Override
+	public TeacherResponse findCoachByCId(String cId) {
+		if(cId == null)
+			throw new ValidationException("Id can not be null");
+		Teacher teacher= teacherRepository.findByCidAndIsCoachTrue(cId);
+		if(teacher==null)
+			throw new ValidationException("No coach found.");
+		return new TeacherResponse(teacher);
+	}
+
+	@Override
+	public TeacherResponse findCoachById(Long id) {
+		if(id == null)
+			throw new ValidationException("Id can not be null");
+		Teacher teacher= teacherRepository.findByIdAndIsCoachTrue(id);
+		if(teacher==null)
+			throw new ValidationException("No coach found.");
+		return new TeacherResponse(teacher);
+	}
+
+	@Override
+	public TeacherResponse findClassTeacherByCId(String cId) {
+		if(cId == null)
+			throw new ValidationException("Id can not be null");
+		Teacher teacher= teacherRepository.findByCidAndIsClassTeacherTrue(cId);
+		if(teacher==null)
+			throw new ValidationException("No class teacher found.");
+		return new TeacherResponse(teacher);
+	}
+
+	@Override
+	public TeacherResponse findClassTeacherById(Long id) {
+		if(id == null)
+			throw new ValidationException("Id can not be null");
+		Teacher teacher= teacherRepository.findByIdAndIsClassTeacherTrue(id);
+		if(teacher==null)
+			throw new ValidationException("No class teacher found.");
+		return new TeacherResponse(teacher);
 	}
 }

@@ -31,7 +31,7 @@ public class Role extends BaseEntity {
 
 	@NotNull
 	@Column(unique = true)
-	private String cId;
+	private String cid;
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "role_privilege", joinColumns = { @JoinColumn(name = "ROLE_ID") }, inverseJoinColumns = {
@@ -69,12 +69,12 @@ public class Role extends BaseEntity {
 		this.privileges = privileges;
 	}
 
-	public String getcId() {
-		return cId;
+	public String getCid() {
+		return cid;
 	}
 
-	public void setcId(String cId) {
-		this.cId = cId;
+	public void setCid(String cid) {
+		this.cid = cid;
 	}
 
 	public Long getId() {
@@ -85,16 +85,22 @@ public class Role extends BaseEntity {
 		this.id = id;
 	}
 
-	public Role(@NotNull String name, String dashboard, @NotNull String cId, Set<Privilege> privileges) {
-		super();
+	public Role(@NotNull String name, String dashboard, @NotNull String cid, Set<Privilege> privileges) {
 		this.name = name;
 		this.dashboard = dashboard;
-		this.cId = cId;
+		this.cid = cid;
 		this.privileges = privileges;
 	}
+	
 	public Role() {
 		
 	}
+
+	public Role(@NotNull String name) {
+		this.name = name;
+	}
+	
+	
 	
 
 }

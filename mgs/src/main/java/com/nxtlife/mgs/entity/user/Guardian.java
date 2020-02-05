@@ -27,7 +27,7 @@ public class Guardian extends BaseEntity {
 	
 	@NotNull
 	@Column(unique = true)
-	private String cId;
+	private String cid;
 	
 	private String username;
 	
@@ -125,12 +125,12 @@ public class Guardian extends BaseEntity {
 		this.student = student;
 	}
 	
-	public String getcId() {
-		return cId;
+	public String getCid() {
+		return cid;
 	}
 
-	public void setcId(String cId) {
-		this.cId = cId;
+	public void setCid(String cid) {
+		this.cid = cid;
 	}
 	
 	public User getUser() {
@@ -149,11 +149,11 @@ public class Guardian extends BaseEntity {
 		this.id = id;
 	}
 
-	public Guardian(@NotNull String name, @NotNull String cId, String imageUrl, String email, String mobileNumber,
+	public Guardian(@NotNull String name, @NotNull String cid, String imageUrl, String email, String mobileNumber,
 			Boolean active, String gender, User user, Student student) {
 		super();
 		this.name = name;
-		this.cId = cId;
+		this.cid = cid;
 		this.imageUrl = imageUrl;
 		this.email = email;
 		this.mobileNumber = mobileNumber;

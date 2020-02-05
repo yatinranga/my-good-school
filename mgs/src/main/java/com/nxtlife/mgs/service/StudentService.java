@@ -4,7 +4,10 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.nxtlife.mgs.enums.ActivityStatus;
 import com.nxtlife.mgs.util.ExcelUtil;
+import com.nxtlife.mgs.view.ActivityPerformedRequest;
+import com.nxtlife.mgs.view.ActivityPerformedResponse;
 import com.nxtlife.mgs.view.StudentRequest;
 import com.nxtlife.mgs.view.StudentResponse;
 
@@ -23,5 +26,9 @@ public interface StudentService extends ExcelUtil{
 	StudentResponse findByUsername(String username);
 
 	List<StudentResponse> getAll();
+
+//	ActivityPerformedResponse saveActivity(ActivityPerformedRequest request);
+
+	ActivityPerformedResponse saveActivity(ActivityPerformedRequest request, ActivityStatus activityStatus);
 
 }

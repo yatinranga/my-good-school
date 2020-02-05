@@ -126,13 +126,13 @@ public class StudentResponse {
 	}
 
 	public StudentResponse(Student student) {
-		this.cId = student.getcId();
+		this.cId = student.getCid();
 		this.name = student.getName();
 		this.email = student.getEmail();
 		this.gender = student.getGender();
 		this.mobileNumber = student.getMobileNumber();
 		if(student.getUser() != null)
-		   this.userCId = student.getUser().getcId();
+		   this.userCId = student.getUser().getCid();
 		this.username = student.getUsername();
 		this.active = student.getActive();
 		this.dob = student.getDob();

@@ -1,6 +1,7 @@
 package com.nxtlife.mgs.service.impl;
 
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,8 +25,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.user.Guardian;
+import com.nxtlife.mgs.entity.user.Role;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.User;
+import com.nxtlife.mgs.enums.ActivityStatus;
+import com.nxtlife.mgs.enums.UserType;
 import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.GradeRepository;
@@ -37,6 +41,8 @@ import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.Utils;
+import com.nxtlife.mgs.view.ActivityPerformedRequest;
+import com.nxtlife.mgs.view.ActivityPerformedResponse;
 import com.nxtlife.mgs.view.StudentRequest;
 import com.nxtlife.mgs.view.StudentResponse;
 
@@ -87,15 +93,15 @@ public class StudentServiceImpl implements StudentService {
 
 		Student student = request.toEntity();
 		if (request.getSchoolId() != null) {
-			student.setSchool(schoolRepository.getOneBycId(request.getSchoolId()));
+			student.setSchool(schoolRepository.getOneByCid(request.getSchoolId()));
 			if (request.getGradeId() != null)
-				student.setGrade(gradeRepository.getOneBycId(request.getGradeId()));
+				student.setGrade(gradeRepository.getOneByCid(request.getGradeId()));
 
 		}
 		try {
-			student.setcId(utils.generateRandomAlphaNumString(8));
+			student.setCid(utils.generateRandomAlphaNumString(8));
 		} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
-			student.setcId(utils.generateRandomAlphaNumString(8));
+			student.setCid(utils.generateRandomAlphaNumString(8));
 		}
 		List<Guardian> guardians = createParent(request, student);
 		student.setGuardians(guardians);
@@ -146,9 +152,9 @@ public class StudentServiceImpl implements StudentService {
 				}
 
 				try {
-					parent.setcId(utils.generateRandomAlphaNumString(8));
+					parent.setCid(utils.generateRandomAlphaNumString(8));
 				} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
-					parent.setcId(utils.generateRandomAlphaNumString(8));
+					parent.setCid(utils.generateRandomAlphaNumString(8));
 				}
 				parent.setUsername(username);
 				parent.setMobileNumber(studentRequest.getFathersMobileNumber());
@@ -192,9 +198,9 @@ public class StudentServiceImpl implements StudentService {
 				}
 
 				try {
-					parent.setcId(utils.generateRandomAlphaNumString(8));
+					parent.setCid(utils.generateRandomAlphaNumString(8));
 				} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
-					parent.setcId(utils.generateRandomAlphaNumString(8));
+					parent.setCid(utils.generateRandomAlphaNumString(8));
 				}
 				parent.setUsername(username);
 				parent.setGender("Female");
@@ -339,7 +345,7 @@ public class StudentServiceImpl implements StudentService {
 		if (school == null)
 			errors.add(String.format("School %s not found ", (String) studentDetails.get(0).get("SCHOOL")));
 		else {
-			studentRequest.setSchoolId(school.getcId());
+			studentRequest.setSchoolId(school.getCid());
 			String standard = (String) studentDetails.get(0).get("GRADE");
 			String section = (String) studentDetails.get(0).get("SECTION");
 			Grade grade = null;
@@ -355,7 +361,7 @@ public class StudentServiceImpl implements StudentService {
 			}
 			if (grade == null)
 				errors.add(String.format("Grade  %s not found ", (String) studentDetails.get(0).get("GRADE")));
-			studentRequest.setGradeId(grade.getcId());
+			studentRequest.setGradeId(grade.getCid());
 		}
 		
 
@@ -402,7 +408,7 @@ public class StudentServiceImpl implements StudentService {
 		if (cId == null)
 			throw new ValidationException("cId can't be null");
 
-		Student student = studentRepository.findBycId(cId);
+		Student student = studentRepository.findByCid(cId);
 
 		if (student == null)
 			throw new NotFoundException(String.format("Student having cId [%s] didn't exist", cId));
@@ -455,6 +461,19 @@ public class StudentServiceImpl implements StudentService {
 		}
 
 		return studentResponseList;
+	}
+	
+	@Override
+	public ActivityPerformedResponse saveActivity(ActivityPerformedRequest request , ActivityStatus activityStatus) {
+		if(request == null)
+			throw new ValidationException("Request can not be null.");
+		
+//		if(!getCurrentUser().getRoles().contains(new Role("Student")))
+//			throw new AccessDeniedException("user is not authorized to submit activity because he is not a student.");
+		if(request.getActivityId()==null)
+			throw new ValidationException("Activity Id can not be null.");
+		request.setActivityStatus(activityStatus);
+		return null;
 	}
 
 }

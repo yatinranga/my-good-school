@@ -10,7 +10,7 @@ import com.nxtlife.mgs.entity.user.Student;
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
-	Student getOneBycId(String cId);
+	Student getOneByCid(String cid);
 
 	int countByEmail(String email);
 
@@ -18,7 +18,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
 	List<Student> findByName(String name);
 
-	Student findBycId(String cId);
+	Student findByCid(String cid);
 
 	Student findByMobileNumber(String mobileNumber);
 

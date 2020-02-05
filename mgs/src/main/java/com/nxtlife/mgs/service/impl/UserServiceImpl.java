@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.user.Guardian;
 import com.nxtlife.mgs.entity.user.Role;
 import com.nxtlife.mgs.entity.user.Student;
@@ -57,9 +58,9 @@ public class UserServiceImpl implements UserService{
 //			user.setPasswordHash(bCryptPasswordEncoder.encode(student.getUsername())); //Setting username as password
 			user.setPasswordHash(student.getUsername());
 			try {
-		        user.setcId(utils.generateRandomAlphaNumString(8));
+		        user.setCid(utils.generateRandomAlphaNumString(8));
 		        }catch(ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
-		        	user.setcId(utils.generateRandomAlphaNumString(8));
+		        	user.setCid(utils.generateRandomAlphaNumString(8));
 		        }
 		
 			if(student.getSubscriptionEndDate()!=null) {
@@ -94,9 +95,9 @@ public class UserServiceImpl implements UserService{
 //			user.setPasswordHash(bCryptPasswordEncoder.encode(student.getUsername())); //Setting username as password
 			user.setPasswordHash(teacher.getUsername());
 			try {
-		        user.setcId(utils.generateRandomAlphaNumString(8));
+		        user.setCid(utils.generateRandomAlphaNumString(8));
 		        }catch(ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
-		        	user.setcId(utils.generateRandomAlphaNumString(8));
+		        	user.setCid(utils.generateRandomAlphaNumString(8));
 		        }
 		
 //			if(teacher.getSubscriptionEndDate()!=null) {
@@ -141,9 +142,9 @@ public class UserServiceImpl implements UserService{
 //			user.setPasswordHash(bCryptPasswordEncoder.encode(guardian.getUsername())); //Setting username as password
 			user.setPasswordHash(guardian.getUsername());
 			try {
-		        user.setcId(utils.generateRandomAlphaNumString(8));
+		        user.setCid(utils.generateRandomAlphaNumString(8));
 		        }catch(ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
-		        	user.setcId(utils.generateRandomAlphaNumString(8));
+		        	user.setCid(utils.generateRandomAlphaNumString(8));
 		        }
 		
 //			if(student.getSubscriptionEndDate()!=null) {
@@ -163,6 +164,42 @@ public class UserServiceImpl implements UserService{
 			user.setGuardian(guardian);
 			return userRepository.save(user);
 
+	}
+
+	@Override
+	public User createSchoolUser(School school) {
+		if (userRepository.countByUsername(school.getUsername()) > 0) {
+			   throw new ValidationException("This username is already registered");
+			}
+			User user = new User();
+			user.setActive(true);
+			user.setUserType(UserType.School);
+			user.setRegisterType(RegisterType.MANUALLY);
+			user.setUsername(school.getUsername());
+			//later change it to encrypted password 
+//			user.setPasswordHash(bCryptPasswordEncoder.encode(school.getUsername())); //Setting username as password
+			user.setPasswordHash(school.getUsername());
+			try {
+		        user.setCid(utils.generateRandomAlphaNumString(8));
+		        }catch(ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
+		        	user.setCid(utils.generateRandomAlphaNumString(8));
+		        }
+		
+
+//					user.setIsPaid(true);
+
+			Role defaultRole = roleRepository.getOneByName("School");
+			if(defaultRole==null)
+				throw new ValidationException("Role Parent does not exist");
+			
+			List<Role> defaultRoleList = new ArrayList<>();
+			defaultRoleList.add(defaultRole);
+			
+			if (!defaultRoleList.isEmpty()) {
+			user.setRoles(defaultRoleList);
+			}
+			user.setSchool(school);
+			return userRepository.save(user);
 	}
 
 }

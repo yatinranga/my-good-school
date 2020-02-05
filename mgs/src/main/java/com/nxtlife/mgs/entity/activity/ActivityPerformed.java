@@ -36,7 +36,7 @@ public class ActivityPerformed extends BaseEntity{
 	
 	@NotNull
 	@Column(unique = true)
-	private String cId;
+	private String cid;
 	
 	private String description;
 	
@@ -194,8 +194,8 @@ public class ActivityPerformed extends BaseEntity{
 //		this.activityOffered = activityOffered;
 //	}
 	
-	public String getcId() {
-		return cId;
+	public String getCid() {
+		return cid;
 	}
 
 	public Activity getActivity() {
@@ -206,8 +206,8 @@ public class ActivityPerformed extends BaseEntity{
 		this.activity = activity;
 	}
 
-	public void setcId(String cId) {
-		this.cId = cId;
+	public void setCid(String cid) {
+		this.cid = cid;
 	}
 
 	public Long getId() {
@@ -220,14 +220,14 @@ public class ActivityPerformed extends BaseEntity{
 
 	
 	
-	public ActivityPerformed(@NotNull Date dateOfActivity, @NotNull String cId, String description,
+	public ActivityPerformed(@NotNull Date dateOfActivity, @NotNull String cid, String description,
 			String teacherRemark, Date teacherRemarkDate, Boolean active, @Min(0) @Min(10) Integer participationScore,
 			@Min(0) @Min(10) Integer initiativeScore, @Min(0) @Min(5) Integer achievementScore,
 			@Min(0) @Min(5) Integer star, ActivityStatus activityStatus, Activity activity, List<File> files,
 			@NotNull Student student, @NotNull Teacher teacher) {
 		super();
 		this.dateOfActivity = dateOfActivity;
-		this.cId = cId;
+		this.cid = cid;
 		this.description = description;
 		this.teacherRemark = teacherRemark;
 		this.teacherRemarkDate = teacherRemarkDate;

@@ -69,7 +69,7 @@ private String name;
 	public SchoolResponse(School school) {
 		this.setName(school.getName());
 		this.setAddress(school.getAddress());
-		this.setId(school.getcId());
+		this.setId(school.getCid());
 		this.setContactNumber(school.getContactNumber());
 		this.setEmail(school.getEmail());
 		this.setLogo(school.getLogo());

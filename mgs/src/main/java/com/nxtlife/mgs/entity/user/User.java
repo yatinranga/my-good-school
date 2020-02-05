@@ -22,6 +22,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import com.nxtlife.mgs.entity.BaseEntity;
+import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.enums.RegisterType;
 import com.nxtlife.mgs.enums.UserType;
 
@@ -44,7 +45,7 @@ public class User extends BaseEntity {
 	
 	@NotNull
 	@Column(unique=true)
-	private String cId;
+	private String cid;
 	
     private String passwordHash;
     
@@ -65,6 +66,9 @@ public class User extends BaseEntity {
     
     @OneToOne
     SchoolManagementMember schoolManagementMember;
+    
+    @OneToOne
+    School school;
     
     @OneToOne
     LFIN lfin;
@@ -101,11 +105,11 @@ public class User extends BaseEntity {
 	public void setRegisterType(RegisterType registerType) {
 		this.registerType = registerType;
 	}
-	public String getcId() {
-		return cId;
+	public String getCid() {
+		return cid;
 	}
-	public void setcId(String cId) {
-		this.cId = cId;
+	public void setCid(String cid) {
+		this.cid = cid;
 	}
 	public boolean isActive() {
 		return active;
@@ -173,18 +177,24 @@ public class User extends BaseEntity {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public User(UserType userType, RegisterType registerType, @NotNull String username, @NotNull String cId,
+	
+	public School getSchool() {
+		return school;
+	}
+	public void setSchool(School school) {
+		this.school = school;
+	}
+	public User(UserType userType, RegisterType registerType, @NotNull String username, @NotNull String cid,
 			String passwordHash, boolean active, Boolean isOtpVerified, Date otpCreatedDate, Boolean isPaid,
 			Student student, Teacher teacher, SchoolManagementMember schoolManagementMember, LFIN lfin,
 			Guardian guardian, List<Role> roles) {
-		super();
 		this.userType = userType;
 		this.registerType = registerType;
 		this.username = username;
-		this.cId = cId;
+		this.cid = cid;
 		this.passwordHash = passwordHash;
 		this.active = active;
-		IsOtpVerified = isOtpVerified;
+		this.IsOtpVerified = isOtpVerified;
 		this.otpCreatedDate = otpCreatedDate;
 		this.isPaid = isPaid;
 		this.student = student;

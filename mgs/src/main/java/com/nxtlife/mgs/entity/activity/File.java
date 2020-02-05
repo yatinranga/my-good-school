@@ -22,7 +22,7 @@ public class File extends BaseEntity{
 	
 	@NotNull
 	@Column(unique = true)
-	private String cId;
+	private String cid;
 	
 	@NotNull
 	@Column(unique = true)
@@ -76,12 +76,12 @@ public class File extends BaseEntity{
 		this.activityPerformed = activityPerformed;
 	}
 	
-	public String getcId() {
-		return cId;
+	public String getCid() {
+		return cid;
 	}
 
-	public void setcId(String cId) {
-		this.cId = cId;
+	public void setCid(String cid) {
+		this.cid = cid;
 	}
 
 	public Long getId() {

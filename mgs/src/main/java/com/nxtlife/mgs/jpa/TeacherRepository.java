@@ -11,7 +11,7 @@ import com.nxtlife.mgs.entity.user.Teacher;
 @Repository
 public interface TeacherRepository extends JpaRepository<Teacher, Long>{
 
-	Teacher getOneBycid(String cId);
+	Teacher getOneByCid(String cid);
 
 	int countByEmail(String email);
 
@@ -19,7 +19,15 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long>{
 
 	List<Teacher> findByName(String name);
 
-	Teacher findByCid(String cId);
+	Teacher findByCid(String cid);
+	
+	Teacher findByCidAndIsCoachTrue(String cid);
+	
+	Teacher findByCidAndIsClassTeacherTrue(String cid);
+	
+	Teacher findByIdAndIsCoachTrue(Long id);
+	
+	Teacher findByIdAndIsClassTeacherTrue(Long id);
 
 	Teacher findByMobileNumber(String mobileNumber);
 
@@ -28,6 +36,10 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long>{
 	List<Teacher> findAllByActivitiesName(String activityName);
 	
 	List<Teacher> findAllByActivitiesId(Long id);
+	
+	List<Teacher> findAllByIsCoachTrue();
+	
+	List<Teacher> findAllByIsClassTeacherTrue();
 	
 //	List<Teacher> findAllByActivitiesCId(String cId);
 }

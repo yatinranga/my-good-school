@@ -1,5 +1,7 @@
 package com.nxtlife.mgs.ex;
 
+import java.nio.file.AccessDeniedException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -25,13 +27,13 @@ public class RestErrorHandler extends ResponseEntityExceptionHandler
     return handleExceptionInternal(exception, apierror, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
   }
 
-//  @ExceptionHandler({ AccessDeniedException.class })
-//  public ResponseEntity<Object> handleAuthorisationError(Exception exception, WebRequest request)
-//  {
-//    logger.warn("Authorisation error:" + exception.getMessage());
-//    final ApiError apierror = message(HttpStatus.FORBIDDEN, exception);
-//    return handleExceptionInternal(exception, apierror, new HttpHeaders(), HttpStatus.FORBIDDEN, request);
-//  }
+  @ExceptionHandler({ AccessDeniedException.class })
+  public ResponseEntity<Object> handleAuthorisationError(Exception exception, WebRequest request)
+  {
+    logger.warn("Authorisation error:" + exception.getMessage());
+    final ApiError apierror = message(HttpStatus.FORBIDDEN, exception);
+    return handleExceptionInternal(exception, apierror, new HttpHeaders(), HttpStatus.FORBIDDEN, request);
+  }
 
   @ExceptionHandler({ NotFoundException.class })
   public ResponseEntity<Object> handleMissing(NotFoundException exception, WebRequest request)

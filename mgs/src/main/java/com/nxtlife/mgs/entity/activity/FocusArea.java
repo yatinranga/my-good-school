@@ -31,7 +31,7 @@ public class FocusArea extends BaseEntity{
 	
 	@NotNull
 	@Column(unique = true)
-	private String cId;
+	private String cid;
 	
 	private Boolean active;
 	
@@ -86,8 +86,8 @@ public class FocusArea extends BaseEntity{
 //		this.activityOfferedFocusArea = activityOfferedFocusArea;
 //	}
 
-	public String getcId() {
-		return cId;
+	public String getCid() {
+		return cid;
 	}
 
 	public List<Activity> getActivities() {
@@ -98,8 +98,8 @@ public class FocusArea extends BaseEntity{
 		this.activities = activities;
 	}
 
-	public void setcId(String cId) {
-		this.cId = cId;
+	public void setCid(String cid) {
+		this.cid = cid;
 	}
 
 	public Long getId() {
@@ -110,10 +110,10 @@ public class FocusArea extends BaseEntity{
 		this.id = id;
 	}
 
-	public FocusArea(@NotNull String name, @NotNull String cId, Boolean active, String description, PSDArea psdArea,
+	public FocusArea(@NotNull String name, @NotNull String cid, Boolean active, String description, PSDArea psdArea,
 			List<Activity> activities) {
 		this.name = name;
-		this.cId = cId;
+		this.cid = cid;
 		this.active = active;
 		this.description = description;
 		this.psdArea = psdArea;

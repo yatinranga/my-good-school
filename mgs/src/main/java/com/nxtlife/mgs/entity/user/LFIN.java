@@ -24,7 +24,7 @@ public class LFIN extends BaseEntity{
 	
 	@NotNull
 	@Column(unique = true)
-	private String cId;
+	private String cid;
 	
 	private String username;
 	
@@ -110,12 +110,12 @@ public class LFIN extends BaseEntity{
 		this.gender = gender;
 	}
 
-	public String getcId() {
-		return cId;
+	public String getCid() {
+		return cid;
 	}
 
-	public void setcId(String cId) {
-		this.cId = cId;
+	public void setCid(String cid) {
+		this.cid = cid;
 	}
 
 	public User getUser() {
@@ -134,11 +134,11 @@ public class LFIN extends BaseEntity{
 		this.id = id;
 	}
 
-	public LFIN(@NotNull String name, @NotNull String cId, String username, Date dob, String imageUrl,
+	public LFIN(@NotNull String name, @NotNull String cid, String username, Date dob, String imageUrl,
 			@NotNull String email, String mobileNumber, Boolean active, String gender) {
 		super();
 		this.name = name;
-		this.cId = cId;
+		this.cid = cid;
 		this.username = username;
 		this.dob = dob;
 		this.imageUrl = imageUrl;

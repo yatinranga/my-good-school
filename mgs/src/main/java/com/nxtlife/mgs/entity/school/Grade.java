@@ -35,7 +35,7 @@ public class Grade extends BaseEntity{
 	
 	@NotNull
 	@Column(unique = true)
-	private String cId;
+	private String cid;
 	
 	private String section;
 	
@@ -101,12 +101,12 @@ public class Grade extends BaseEntity{
 		this.teacher = teacher;
 	}
 	
-	public String getcId() {
-		return cId;
+	public String getCid() {
+		return cid;
 	}
 
-	public void setcId(String cId) {
-		this.cId = cId;
+	public void setcId(String cid) {
+		this.cid = cid;
 	}
 
 	public Long getId() {
@@ -117,10 +117,10 @@ public class Grade extends BaseEntity{
 		this.id = id;
 	}
 	
-	public Grade(@NotNull String name, @NotNull String cId, String section, Boolean active, List<School> schools,
+	public Grade(@NotNull String name, @NotNull String cid, String section, Boolean active, List<School> schools,
 			Teacher teacher, List<Student> students) {
 		this.name = name;
-		this.cId = cId;
+		this.cid = cid;
 		this.section = section;
 		this.active = active;
 		this.schools = schools;
@@ -129,7 +129,6 @@ public class Grade extends BaseEntity{
 	}
 
 	public Grade(@NotNull String name, String section) {
-		super();
 		this.name = name;
 		this.section = section;
 	}

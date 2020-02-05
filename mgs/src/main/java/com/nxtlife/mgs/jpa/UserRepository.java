@@ -8,7 +8,7 @@ import com.nxtlife.mgs.entity.user.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 	
-	User getOneBycId(String cId);
+	User getOneByCid(String cid);
 
 	int countByUsername(String username);
 

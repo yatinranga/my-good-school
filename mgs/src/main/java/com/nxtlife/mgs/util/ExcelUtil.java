@@ -46,7 +46,7 @@ public interface ExcelUtil {
 		columnTypes.put("NAME", CellType.STRING);
 		columnTypes.put("ADDRESS", CellType.STRING);
 		columnTypes.put("EMAIL", CellType.STRING);
-		columnTypes.put("CONTACT NUMBER", CellType.STRING);
+		columnTypes.put("CONTACT NUMBER", CellType.NUMERIC);
 		columnTypes.put("ACTIVE", CellType.BOOLEAN);
 		return columnTypes;
 	}
@@ -99,7 +99,7 @@ public interface ExcelUtil {
 		columnTypes.put("DOB", CellType.NUMERIC);
 		columnTypes.put("ACTIVE", CellType.BOOLEAN);
 		columnTypes.put("EMAIL", CellType.STRING);
-		columnTypes.put("MOBILE NUMBER", CellType.STRING);
+		columnTypes.put("MOBILE NUMBER", CellType.NUMERIC);
 		columnTypes.put("GENDER", CellType.STRING);
 		return columnTypes;
 	}

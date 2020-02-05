@@ -15,6 +15,7 @@ import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 
 import com.nxtlife.mgs.entity.BaseEntity;
+import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.enums.FourS;
 
@@ -34,7 +35,7 @@ public class Activity extends BaseEntity{
 	
 	@NotNull
 	@Column(unique = true)
-	private String cId;
+	private String cid;
 	
 	private String description;
 	
@@ -51,6 +52,12 @@ public class Activity extends BaseEntity{
 		joinColumns = { @JoinColumn(name = "teacher_id") },
 		inverseJoinColumns = { @JoinColumn(name = "activity_id") })
 	private List<Teacher> teachers;
+	
+	@ManyToMany
+	@JoinTable(name = "school_activity",
+		joinColumns = { @JoinColumn(name = "school_id") },
+		inverseJoinColumns = { @JoinColumn(name = "activity_id") })
+	private List<School> schools;
 
 	public Long getId() {
 		return id;
@@ -76,12 +83,12 @@ public class Activity extends BaseEntity{
 		this.fourS = fourS;
 	}
 
-	public String getcId() {
-		return cId;
+	public String getCid() {
+		return cid;
 	}
 
-	public void setcId(String cId) {
-		this.cId = cId;
+	public void setCid(String cid) {
+		this.cid = cid;
 	}
 
 	public String getDescription() {
@@ -115,26 +122,35 @@ public class Activity extends BaseEntity{
 	public void setTeachers(List<Teacher> teachers) {
 		this.teachers = teachers;
 	}
+	
+	public List<School> getSchools() {
+		return schools;
+	}
 
-	public Activity(@NotNull String name, FourS fourS, @NotNull String cId, String description, Boolean active,
+	public void setSchools(List<School> schools) {
+		this.schools = schools;
+	}
+
+	public Activity(@NotNull String name, FourS fourS, @NotNull String cid, String description, Boolean active,
 			List<FocusArea> focusAreas) {
 		this.name = name;
 		this.fourS = fourS;
-		this.cId = cId;
+		this.cid = cid;
 		this.description = description;
 		this.active = active;
 		this.focusAreas = focusAreas;
 	}
-	
-	public Activity(@NotNull String name, FourS fourS, @NotNull String cId, String description, Boolean active,
-			List<FocusArea> focusAreas, List<Teacher> teachers) {
+
+	public Activity(@NotNull String name, FourS fourS, @NotNull String cid, String description, Boolean active,
+			List<FocusArea> focusAreas, List<Teacher> teachers, List<School> schools) {
 		this.name = name;
 		this.fourS = fourS;
-		this.cId = cId;
+		this.cid = cid;
 		this.description = description;
 		this.active = active;
 		this.focusAreas = focusAreas;
 		this.teachers = teachers;
+		this.schools = schools;
 	}
 
 	public Activity() {

@@ -257,11 +257,11 @@ public class Teacher extends BaseEntity{
 		this.activities = activities;
 	}
 
-	public Teacher(@NotNull String cId, @NotNull String name, String username, String gender, @NotNull Date dob,
+	public Teacher(@NotNull String cid, @NotNull String name, String username, String gender, @NotNull Date dob,
 			String imageUrl, @NotNull String email, String mobileNumber, Boolean active, String qualification,
 			Boolean isClassTeacher, Boolean isCoach, User user,
 			List<ActivityPerformed> activitiesAssigned, School school, List<Grade> grades, List<Activity> activities, List<Award> awards) {
-		this.cid = cId;
+		this.cid = cid;
 		this.name = name;
 		this.username = username;
 		this.gender = gender;

@@ -12,10 +12,10 @@ public interface ActivityRepository extends JpaRepository<Activity, Long>{
 
 	Activity getOneByName(String name);
 	
-	Activity getOneBycId(String cId);
+	Activity getOneByCid(String cid);
 	
 	List<Activity> findAllByTeachersId(Long id);
 	
-	List<Activity> findAllByTeachersCid(String cId);
+	List<Activity> findAllByTeachersCid(String cid);
 	
 }

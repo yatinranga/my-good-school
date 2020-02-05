@@ -34,7 +34,7 @@ public class Student extends BaseEntity {
 	
 	@NotNull
 	@Column(unique = true)
-	private String cId;
+	private String cid;
 	
 	@NotNull
 	@Column(unique = true)
@@ -182,12 +182,12 @@ public class Student extends BaseEntity {
 	}
 	
 
-	public String getcId() {
-		return cId;
+	public String getCid() {
+		return cid;
 	}
 
-	public void setcId(String cId) {
-		this.cId = cId;
+	public void setCid(String cid) {
+		this.cid = cid;
 	}
 
 	public User getUser() {
@@ -214,13 +214,12 @@ public class Student extends BaseEntity {
 		this.id = id;
 	}
 
-	public Student(@NotNull String name, @NotNull String cId, @NotNull String username, Date dob, String imageUrl,
+	public Student(@NotNull String name, @NotNull String cid, @NotNull String username, Date dob, String imageUrl,
 			@NotNull String email, String mobileNumber, Boolean active, String gender, Date subscriptionEndDate,
 			User user, @NotNull School school, Grade grade, List<Award> awards, List<ActivityPerformed> activities,
 			List<Guardian> guardians) {
-		super();
 		this.name = name;
-		this.cId = cId;
+		this.cid = cid;
 		this.username = username;
 		this.dob = dob;
 		this.imageUrl = imageUrl;

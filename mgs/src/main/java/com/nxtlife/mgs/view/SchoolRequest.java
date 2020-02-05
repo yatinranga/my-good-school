@@ -10,6 +10,8 @@ public class SchoolRequest {
 	@NotNull
 	private String name;
 	
+	private String username;
+	
 	private String id;
 	
 	private String address;
@@ -69,14 +71,28 @@ public class SchoolRequest {
 		this.logo = logo;
 	}
 	
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
 	public School toEntity(School school) {
 		school = school==null?new School():school;
-		
-		school.setName(this.name);
-		school.setEmail(this.getEmail());
-		school.setLogo(this.logo);
-		school.setContactNumber(this.contactNumber);
-		school.setAddress(this.address);
+		if(this.name!=null)
+		  school.setName(this.name);
+		if(this.username!=null)
+		  school.setUsername(this.username);
+		if(this.email!=null)
+		  school.setEmail(this.getEmail());
+		if(this.logo!=null)
+		  school.setLogo(this.logo);
+		if(this.contactNumber!=null)
+		  school.setContactNumber(this.contactNumber);
+		if(this.address!=null)
+		  school.setAddress(this.address);
 		return school;
 	}
 	

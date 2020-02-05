@@ -6,6 +6,7 @@ public enum UserType
   Parent,
   Teacher,
   SchoolManagement,
+  School,
   LFIN,
   Coach,
   Nxtlife;

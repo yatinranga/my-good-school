@@ -60,7 +60,7 @@ public class ActivityResponse {
 	
 	public ActivityResponse(Activity activity)
 	{
-		this.id = activity.getcId();
+		this.id = activity.getCid();
 		this.fourS = activity.getFourS().name();
 		this.name = activity.getName();
 		this.description = activity.getDescription();

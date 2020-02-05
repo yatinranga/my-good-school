@@ -7,7 +7,7 @@ import com.nxtlife.mgs.entity.user.Guardian;
 
 @Repository
 public interface GuardianRepository extends JpaRepository<Guardian, Long> {
-	Guardian getOneBycId(String cId);
+	Guardian getOneByCid(String cid);
 	
 	Guardian getOneByEmail(String email);
 	
