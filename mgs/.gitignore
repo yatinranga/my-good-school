@@ -29,3 +29,42 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### VS Code ###
+.vscode/
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+# compiled output
+/src/main/angular/dist
+/src/main/angular/tmp
+/src/main/angular/out-tsc
+# dependencies
+/src/main/angular/node_modules
+# profiling files
+chrome-profiler-events.json
+speed-measure-plugin.json
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+# misc
+/src/main/angular/.sass-cache
+/src/main/angular/connect.lock
+/src/main/angular/coverage
+/src/main/angular/libpeerconnection.log
+/src/main/angular/npm-debug.log
+/src/main/angular/yarn-error.log
+/src/main/angular/testem.log
+/src/main/angular/typings
+# System Files
+.DS_Store
+Thumbs.db
