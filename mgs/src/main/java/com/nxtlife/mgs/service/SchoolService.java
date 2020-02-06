@@ -9,12 +9,12 @@ import com.nxtlife.mgs.view.SchoolResponse;
 
 public interface SchoolService {
 
-	List<SchoolResponse> uploadTeachersFromExcel(MultipartFile file, Integer rowLimit,Boolean isCoach);
+	List<SchoolResponse> uploadSchoolsFromExcel(MultipartFile file);
 
 	SchoolResponse save(SchoolRequest request);
 	
 	SchoolResponse findById(Long id);
 	
-	SchoolResponse findByCId(String cId);
+	SchoolResponse findByCid(String cId);
 
 }

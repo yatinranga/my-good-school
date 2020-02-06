@@ -61,7 +61,7 @@ public class TeacherServiceImpl implements TeacherService {
 	Utils utils;
 
 	@Override
-	public List<TeacherResponse> uploadTeachersFromExcel(MultipartFile file, Integer rowLimit, Boolean isCoach) {
+	public List<TeacherResponse> uploadTeachersFromExcel(MultipartFile file, Boolean isCoach) {
 
 		if (file == null || file.isEmpty() || file.getSize() == 0)
 			throw new ValidationException("Pls upload valid excel file.");
@@ -72,7 +72,7 @@ public class TeacherServiceImpl implements TeacherService {
 		try {
 			XSSFWorkbook studentsSheet = new XSSFWorkbook(file.getInputStream());
 			if (isCoach == true) {
-				teacherRecords = findSheetRowValues(studentsSheet, "COACH", rowLimit, errors);
+				teacherRecords = findSheetRowValues(studentsSheet, "COACH",  errors);
 
 				for (int i = 0; i < teacherRecords.size(); i++) {
 					List<Map<String, Object>> tempStudentsRecords = new ArrayList<Map<String, Object>>();
@@ -80,7 +80,7 @@ public class TeacherServiceImpl implements TeacherService {
 					teacherResponseList.add(saveCoach(validateTeacherRequest(tempStudentsRecords, errors, true)));
 				}
 			} else {
-				teacherRecords = findSheetRowValues(studentsSheet, "TEACHER", rowLimit, errors);
+				teacherRecords = findSheetRowValues(studentsSheet, "TEACHER", errors);
 				for (int i = 0; i < teacherRecords.size(); i++) {
 					List<Map<String, Object>> tempStudentsRecords = new ArrayList<Map<String, Object>>();
 					tempStudentsRecords.add(teacherRecords.get(i));
@@ -232,17 +232,16 @@ public class TeacherServiceImpl implements TeacherService {
 		return rows;
 	}
 
-	private List<Map<String, Object>> findSheetRowValues(XSSFWorkbook workbook, String sheetName, Integer rowLimit,
-			List<String> errors) {
+	private List<Map<String, Object>> findSheetRowValues(XSSFWorkbook workbook, String sheetName, List<String> errors) {
 //		XSSFSheet sheet = workbook.getSheet(sheetName);
 		XSSFSheet sheet = workbook.getSheetAt(0);
 		if (sheet == null) {
 			errors.add(sheetName + " sheet not found");
 			return null;
 		}
-		if (sheet.getPhysicalNumberOfRows() > rowLimit) {
-			errors.add(String.format("Number of row can't be more than %d for %s sheet", rowLimit, sheetName));
-		}
+//		if (sheet.getPhysicalNumberOfRows() > rowLimit) {
+//			errors.add(String.format("Number of row can't be more than %d for %s sheet", rowLimit, sheetName));
+//		}
 		Map<String, CellType> columnTypes = ExcelUtil.sheetColumns(sheetName);
 		return fetchRowValues(columnTypes, sheet, errors, sheetName);
 
@@ -359,12 +358,12 @@ public class TeacherServiceImpl implements TeacherService {
 	}
 
 	@Override
-	public List<TeacherResponse> findCoachesByActivityName(String activityName) {
+	public List<TeacherResponse> findCoachesBySchoolAndActivityName(String schoolCid,String activityName) {
 		if (activityName == null)
 			throw new ValidationException("Activity name can not be null");
 		List<Teacher> teachersList = new ArrayList<>();
 		List<TeacherResponse> teachersResponseList = new ArrayList<>();
-		teachersList = teacherRepository.findAllByActivitiesName(activityName);
+		teachersList = teacherRepository.findAllBySchoolCidAndActivitiesNameAndIsCoachTrue(schoolCid,activityName);
 
 		if (teachersList != null && !teachersList.isEmpty()) {
 			for (Teacher teacher : teachersList)
@@ -424,6 +423,7 @@ public class TeacherServiceImpl implements TeacherService {
 		List<Teacher> teachers = new ArrayList<Teacher>();
 		List<TeacherResponse> teacherResponses = new ArrayList<>();
 		teachers = teacherRepository.findAllByIsCoachTrue();
+//				findAllBySchoolCidAndIsCoachTrue();
 		if(teachers==null)
 			throw new ValidationException("No coaches found.");
 		teachers.forEach(teacher->{teacherResponses.add(new TeacherResponse(teacher));});
@@ -435,6 +435,7 @@ public class TeacherServiceImpl implements TeacherService {
 		List<Teacher> teachers = new ArrayList<Teacher>();
 		List<TeacherResponse> teacherResponses = new ArrayList<>();
 		teachers = teacherRepository.findAllByIsClassTeacherTrue();
+//				findAllBySchoolCidAndIsClassTeacherTrue();
 		if(teachers==null)
 			throw new ValidationException("No class teachers found.");
 		teachers.forEach(teacher->{teacherResponses.add(new TeacherResponse(teacher));});
@@ -479,5 +480,39 @@ public class TeacherServiceImpl implements TeacherService {
 		if(teacher==null)
 			throw new ValidationException("No class teacher found.");
 		return new TeacherResponse(teacher);
+	}
+
+	@Override
+	public List<TeacherResponse> getAllTeachersOfSchool(String schoolCid) {
+		List<Teacher> teachers = new ArrayList<Teacher>();
+		List<TeacherResponse> teacherResponses = new ArrayList<>();
+		teachers = teacherRepository.findAllBySchoolCid(schoolCid);
+		if(teachers==null)
+			throw new ValidationException("No teachers found.");
+		teachers.forEach(teacher->{teacherResponses.add(new TeacherResponse(teacher));});
+		return teacherResponses;
+	}
+
+	@Override
+	public List<TeacherResponse> getAllClassTeachersOfSchool(String schoolCid) {
+		List<Teacher> teachers = new ArrayList<Teacher>();
+		List<TeacherResponse> teacherResponses = new ArrayList<>();
+		teachers = teacherRepository.findAllBySchoolCidAndIsClassTeacherTrue(schoolCid);
+		if(teachers==null)
+			throw new ValidationException("No class teachers found.");
+		teachers.forEach(teacher->{teacherResponses.add(new TeacherResponse(teacher));});
+		return teacherResponses;
+	}
+
+	@Override
+	public List<TeacherResponse> getAllCoachesOfSchool(String schoolCid) {
+		List<Teacher> teachers = new ArrayList<Teacher>();
+		List<TeacherResponse> teacherResponses = new ArrayList<>();
+		teachers = teacherRepository.findAllBySchoolCidAndIsCoachTrue(schoolCid);
+//				findAllBySchoolCidAndIsCoachTrue();
+		if(teachers==null)
+			throw new ValidationException("No coaches found.");
+		teachers.forEach(teacher->{teacherResponses.add(new TeacherResponse(teacher));});
+		return teacherResponses;
 	}
 }

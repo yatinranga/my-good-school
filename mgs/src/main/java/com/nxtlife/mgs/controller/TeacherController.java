@@ -27,15 +27,14 @@ public class TeacherController {
 	TeacherService teacherService;
 
 	@RequestMapping(value = "importTeachers", method = RequestMethod.POST)
-	public List<TeacherResponse> uploadTeachersFromExcel(@RequestParam("file") MultipartFile file,
-			@RequestParam Integer rowLimit) {
-		return teacherService.uploadTeachersFromExcel(file, rowLimit, false);
+	public List<TeacherResponse> uploadTeachersFromExcel(@RequestParam("file") MultipartFile file) {
+		return teacherService.uploadTeachersFromExcel(file, false);
 	}
 
 	@RequestMapping(value = "importCoaches", method = RequestMethod.POST)
 	public List<TeacherResponse> uploadCoachesFromExcel(@RequestParam("file") MultipartFile file,
 			@RequestParam Integer rowLimit) {
-		return teacherService.uploadTeachersFromExcel(file, rowLimit, true);
+		return teacherService.uploadTeachersFromExcel(file, true);
 	}
 
 	@PostMapping()

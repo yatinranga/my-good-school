@@ -10,15 +10,13 @@ import com.nxtlife.mgs.view.TeacherResponse;
 
 public interface TeacherService {
 
-	List<TeacherResponse> uploadTeachersFromExcel(MultipartFile file, Integer rowLimit, Boolean isCoach);
+	List<TeacherResponse> uploadTeachersFromExcel(MultipartFile file,  Boolean isCoach);
 
 	TeacherResponse save(TeacherRequest request);
 
 	TeacherResponse saveClassTeacher(TeacherRequest request);
 
 	TeacherResponse saveCoach(TeacherRequest request);
-
-	List<TeacherResponse> findCoachesByActivityName(String activityName);
 
 	TeacherResponse findByCId(String cId);
 
@@ -41,4 +39,12 @@ public interface TeacherService {
 	List<TeacherResponse> getAllCoaches();
 	
 	List<TeacherResponse> getAllClassTeachers();
+	
+	List<TeacherResponse> getAllTeachersOfSchool(String schoolCid);
+	
+	List<TeacherResponse> getAllClassTeachersOfSchool(String schoolCid);
+	
+	List<TeacherResponse> getAllCoachesOfSchool(String schoolCid);
+
+	List<TeacherResponse> findCoachesBySchoolAndActivityName(String schoolCid, String activityName);
 }

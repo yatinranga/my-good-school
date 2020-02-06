@@ -3,6 +3,8 @@ package com.nxtlife.mgs.view;
 import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.nxtlife.mgs.entity.school.School;
 
 public class SchoolRequest {
@@ -21,7 +23,9 @@ public class SchoolRequest {
 	
 	private String contactNumber;
 	
-	private String logo;
+	private MultipartFile logo;
+	
+	private Boolean active ;
 
 	public String getName() {
 		return name;
@@ -62,14 +66,6 @@ public class SchoolRequest {
 	public void setContactNumber(String contactNumber) {
 		this.contactNumber = contactNumber;
 	}
-
-	public String getLogo() {
-		return logo;
-	}
-
-	public void setLogo(String logo) {
-		this.logo = logo;
-	}
 	
 	public String getUsername() {
 		return username;
@@ -77,6 +73,22 @@ public class SchoolRequest {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public MultipartFile getLogo() {
+		return logo;
+	}
+
+	public void setLogo(MultipartFile logo) {
+		this.logo = logo;
+	}
+	
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 
 	public School toEntity(School school) {
@@ -87,8 +99,6 @@ public class SchoolRequest {
 		  school.setUsername(this.username);
 		if(this.email!=null)
 		  school.setEmail(this.getEmail());
-		if(this.logo!=null)
-		  school.setLogo(this.logo);
 		if(this.contactNumber!=null)
 		  school.setContactNumber(this.contactNumber);
 		if(this.address!=null)

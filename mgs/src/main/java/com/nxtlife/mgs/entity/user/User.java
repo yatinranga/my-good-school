@@ -67,7 +67,7 @@ public class User extends BaseEntity {
     @OneToOne
     SchoolManagementMember schoolManagementMember;
     
-    @OneToOne
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
     School school;
     
     @OneToOne

@@ -47,6 +47,8 @@ public class SchoolManagementMember extends BaseEntity{
 	
 	private String gender;
 	
+	private String designation;
+	
 	@NotNull
 	@ManyToOne
 	private School school;
@@ -150,9 +152,18 @@ public class SchoolManagementMember extends BaseEntity{
 		this.id = id;
 	}
 
+	public String getDesignation() {
+		return designation;
+	}
+
+	public void setDesignation(String designation) {
+		this.designation = designation;
+	}
+
 	public SchoolManagementMember(@NotNull String name, @NotNull String username, @NotNull String cid, Date dob,
 			String imageUrl, @NotNull String email, String mobileNumber, Boolean active, String gender,
-			@NotNull School school) {
+			String designation, @NotNull School school, User user) {
+		super();
 		this.name = name;
 		this.username = username;
 		this.cid = cid;
@@ -162,7 +173,9 @@ public class SchoolManagementMember extends BaseEntity{
 		this.mobileNumber = mobileNumber;
 		this.active = active;
 		this.gender = gender;
+		this.designation = designation;
 		this.school = school;
+		this.user = user;
 	}
 
 	public SchoolManagementMember() {

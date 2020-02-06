@@ -25,9 +25,8 @@ public class StudentController {
 	StudentService studentService;
 
 	@RequestMapping(value = "importStudents", method = RequestMethod.POST)
-	public List<StudentResponse> uploadStudentsFromExcel(@RequestParam("file") MultipartFile file,
-			@RequestParam Integer rowLimit) {
-		return studentService.uploadStudentsFromExcel(file, rowLimit);
+	public List<StudentResponse> uploadStudentsFromExcel(@RequestParam("file") MultipartFile file) {
+		return studentService.uploadStudentsFromExcel(file);
 	}
 
 	@PostMapping()
@@ -45,10 +44,10 @@ public class StudentController {
 		return studentService.findByName(name);
 	}
 
-	@GetMapping("{id}")
-	public StudentResponse findByid(@PathVariable Long id) {
-		return studentService.findByid(id);
-	}
+//	@GetMapping("{id}")
+//	public StudentResponse findByid(@PathVariable Long id) {
+//		return studentService.findByid(id);
+//	}
 
 	@GetMapping("{cId]")
 	public StudentResponse findByCId(@PathVariable String cId) {

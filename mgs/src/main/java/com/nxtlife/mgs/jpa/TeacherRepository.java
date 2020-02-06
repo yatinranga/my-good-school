@@ -16,7 +16,7 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 
 	int countByUsername(String username);
 
-	List<Teacher> findByName(String name);
+	Teacher findByName(String name);
 
 	Teacher findByCid(String cid);
 	
@@ -32,12 +32,18 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 
 	Teacher findByUsername(String username);
 
-	List<Teacher> findAllByActivitiesName(String activityName);
+	List<Teacher> findAllBySchoolCidAndActivitiesNameAndIsCoachTrue(String schoolCid,String activityName);
 
-	List<Teacher> findAllByActivitiesId(Long id);
+	List<Teacher> findAllBySchoolCidAndActivitiesCidAndIsCoachTrue(String schoolCid ,String activityCid);
 	
+	List<Teacher> findAllBySchoolCidAndIsCoachTrue(String schoolCid);
+	
+	List<Teacher> findAllBySchoolCidAndIsClassTeacherTrue(String schoolCid);
+	
+	List<Teacher> findAllBySchoolCid(String schoolCid);
+
 	List<Teacher> findAllByIsCoachTrue();
-	
+
 	List<Teacher> findAllByIsClassTeacherTrue();
 	
 //	List<Teacher> findAllByActivitiesCid(String cid);

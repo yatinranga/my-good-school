@@ -6,7 +6,7 @@ import com.nxtlife.mgs.entity.school.School;
 
 public class SchoolResponse {
 
-private String name;
+    private String name;
 	
 	private String id;
 	

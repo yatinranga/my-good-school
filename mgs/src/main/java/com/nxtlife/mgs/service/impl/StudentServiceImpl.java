@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.nxtlife.mgs.entity.activity.ActivityPerformed;
+import com.nxtlife.mgs.entity.activity.File;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.user.Guardian;
@@ -36,6 +38,7 @@ import com.nxtlife.mgs.jpa.GradeRepository;
 import com.nxtlife.mgs.jpa.GuardianRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
 import com.nxtlife.mgs.jpa.StudentRepository;
+import com.nxtlife.mgs.service.ActivityPerformedService;
 import com.nxtlife.mgs.service.StudentService;
 import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.util.DateUtil;
@@ -66,6 +69,9 @@ public class StudentServiceImpl implements StudentService {
 
 	@Autowired
 	Utils utils;
+	
+	@Autowired
+	ActivityPerformedService activityPerformedService;
 
 	@Override
 	public StudentResponse save(StudentRequest request) {
@@ -282,24 +288,23 @@ public class StudentServiceImpl implements StudentService {
 		return rows;
 	}
 
-	private List<Map<String, Object>> findSheetRowValues(XSSFWorkbook workbook, String sheetName, Integer rowLimit,
-			List<String> errors) {
+	private List<Map<String, Object>> findSheetRowValues(XSSFWorkbook workbook, String sheetName,List<String> errors) {
 //		XSSFSheet sheet = workbook.getSheet(sheetName);
 		XSSFSheet sheet = workbook.getSheetAt(0);
 		if (sheet == null) {
 			errors.add(sheetName + " sheet not found");
 			return null;
 		}
-		if (sheet.getPhysicalNumberOfRows() > rowLimit) {
-			errors.add(String.format("Number of row can't be more than %d for %s sheet", rowLimit, sheetName));
-		}
+//		if (sheet.getPhysicalNumberOfRows() > rowLimit) {
+//			errors.add(String.format("Number of row can't be more than %d for %s sheet", rowLimit, sheetName));
+//		}
 		Map<String, CellType> columnTypes = ExcelUtil.sheetColumns(sheetName);
 		return fetchRowValues(columnTypes, sheet, errors, sheetName);
 
 	}
 
 	@Override
-	public List<StudentResponse> uploadStudentsFromExcel(MultipartFile file, Integer rowLimit) {
+	public List<StudentResponse> uploadStudentsFromExcel(MultipartFile file) {
 		if (file == null || file.isEmpty() || file.getSize() == 0)
 			throw new ValidationException("Pls upload valid excel file.");
 //				|| !(file.getContentType().equalsIgnoreCase("xlsx") || file.getContentType().equalsIgnoreCase("xls")
@@ -311,7 +316,7 @@ public class StudentServiceImpl implements StudentService {
 		List<Map<String, Object>> studentsRecords = new ArrayList<Map<String, Object>>();
 		try {
 			XSSFWorkbook studentsSheet = new XSSFWorkbook(file.getInputStream());
-			studentsRecords = findSheetRowValues(studentsSheet, "STUDENT", rowLimit, errors);
+			studentsRecords = findSheetRowValues(studentsSheet, "STUDENT", errors);
 			for (int i = 0; i < studentsRecords.size(); i++) {
 				List<Map<String, Object>> tempStudentsRecords = new ArrayList<Map<String, Object>>();
 				tempStudentsRecords.add(studentsRecords.get(i));
@@ -486,6 +491,22 @@ public class StudentServiceImpl implements StudentService {
 		if(request.getActivityId()==null)
 			throw new ValidationException("Activity Id can not be null.");
 		request.setActivityStatus(activityStatus);
+		
+		
+        /*==================== Converting request to entity ============================= */
+		ActivityPerformed activityPerformed = request.toEntity();
+		
+		
+		/*==================== Saving files associated with activity ============================= */
+		List<File> activityPerformedMedia = new ArrayList<>();
+		if(request.getFileRequests()!=null && !request.getFileRequests().isEmpty())
+			request.getFileRequests().forEach(fileReq-> {
+				File file = activityPerformedService.saveMediaForActivityPerformed(fileReq, "activity", activityPerformed);
+			if(file!=null)
+				activityPerformedMedia.add(file);
+			});
+		
+		activityPerformed.setFiles(activityPerformedMedia);//Assigned the returned files List set to ActivityPerformed entity
 		return null;
 	}
 

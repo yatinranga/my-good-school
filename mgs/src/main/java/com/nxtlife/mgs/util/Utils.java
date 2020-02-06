@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 
 import com.nxtlife.mgs.security.SecurityConstants;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+//import io.jsonwebtoken.Claims;
+//import io.jsonwebtoken.ExpiredJwtException;
+//import io.jsonwebtoken.Jwts;
+//import io.jsonwebtoken.SignatureAlgorithm;
 
 @Service
 public class Utils {
@@ -41,40 +41,40 @@ public class Utils {
         return new String(returnValue);
     }
 
-	public static boolean hasTokenExpired(String token) {
-		boolean returnValue = false;
+//	public static boolean hasTokenExpired(String token) {
+//		boolean returnValue = false;
+//
+//		try {
+//			Claims claims = Jwts.parser().setSigningKey(SecurityConstants.getTokenSecret()).parseClaimsJws(token)
+//					.getBody();
+//
+//			Date tokenExpirationDate = claims.getExpiration();
+//			Date todayDate = new Date();
+//
+//			returnValue = tokenExpirationDate.before(todayDate);
+//		} catch (ExpiredJwtException ex) {
+//			returnValue = true;
+//		}
+//
+//		return returnValue;
+//	}
 
-		try {
-			Claims claims = Jwts.parser().setSigningKey(SecurityConstants.getTokenSecret()).parseClaimsJws(token)
-					.getBody();
-
-			Date tokenExpirationDate = claims.getExpiration();
-			Date todayDate = new Date();
-
-			returnValue = tokenExpirationDate.before(todayDate);
-		} catch (ExpiredJwtException ex) {
-			returnValue = true;
-		}
-
-		return returnValue;
-	}
-
-    public String generateEmailVerificationToken(String userId) {
-        String token = Jwts.builder()
-                .setSubject(userId)
-                .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.getExpirationTime()))
-                .signWith(SignatureAlgorithm.HS512, SecurityConstants.getTokenSecret())
-                .compact();
-        return token;
-    }
+//    public String generateEmailVerificationToken(String userId) {
+//        String token = Jwts.builder()
+//                .setSubject(userId)
+//                .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.getExpirationTime()))
+//                .signWith(SignatureAlgorithm.HS512, SecurityConstants.getTokenSecret())
+//                .compact();
+//        return token;
+//    }
     
-    public String generatePasswordResetToken(String userId)
-    {
-        String token = Jwts.builder()
-                .setSubject(userId)
-                .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.getExpirationTime()))
-                .signWith(SignatureAlgorithm.HS512, SecurityConstants.getTokenSecret())
-                .compact();
-        return token;
-    }
+//    public String generatePasswordResetToken(String userId)
+//    {
+//        String token = Jwts.builder()
+//                .setSubject(userId)
+//                .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.getExpirationTime()))
+//                .signWith(SignatureAlgorithm.HS512, SecurityConstants.getTokenSecret())
+//                .compact();
+//        return token;
+//    }
 }

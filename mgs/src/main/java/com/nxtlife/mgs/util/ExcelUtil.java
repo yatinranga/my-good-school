@@ -48,6 +48,7 @@ public interface ExcelUtil {
 		columnTypes.put("EMAIL", CellType.STRING);
 		columnTypes.put("CONTACT NUMBER", CellType.NUMERIC);
 		columnTypes.put("ACTIVE", CellType.BOOLEAN);
+		columnTypes.put("USERNAME", CellType.STRING);
 		return columnTypes;
 	}
 	
