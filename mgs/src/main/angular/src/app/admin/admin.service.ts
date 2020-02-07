@@ -5,7 +5,9 @@ import { Injectable } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';  
 import { HttpClient } from '@angular/common/http'    
 import { Observable } from 'rxjs';  
-import { User } from 'src/app/user';
+
+import { HttpResponse } from '@angular/common/http';
+
 
 @Injectable
 ({
@@ -27,7 +29,8 @@ export class AdminService {
   }
 
   getStudent():Observable<any>{
-    return this.http.get("http://localhost:8083/api/students/export/student");
+    return this.http.get("http://localhost:8083/api/template/export/student",
+                         {responseType: "blob"});
   }
 }  
  
