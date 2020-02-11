@@ -11,10 +11,10 @@ public interface UserService {
 
 	User createStudentUser(Student student);
 
-	User createParentUser(Guardian guardian);
+//	User createParentUser(Guardian guardian);
 	
 	public User createTeacherUser(Teacher teacher) ;
 
-	User createSchoolUser(School school);
+//	User createSchoolUser(School school);
 	
 }

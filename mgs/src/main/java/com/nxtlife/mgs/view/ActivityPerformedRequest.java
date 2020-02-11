@@ -14,9 +14,9 @@ public class ActivityPerformedRequest {
 	
 	private String description;
 	
-	private String teacherRemark;
+	private String coachRemark;
 	
-	private Date teacherRemarkDate;
+	private Date coachRemarkDate;
 	
 	private Boolean active;
 	
@@ -28,13 +28,15 @@ public class ActivityPerformedRequest {
 	
 	private Integer star;
 	
-	private ActivityStatus activityStatus;
+//	private ActivityStatus activityStatus;
 	
 	private String activityId;
 	
 	private List<FileRequest> fileRequests;
 	
-	private String teacherId;
+	private String coachId;
+	
+	private String studentId;
 
 	public Date getDateOfActivity() {
 		return dateOfActivity;
@@ -59,21 +61,21 @@ public class ActivityPerformedRequest {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
-	public String getTeacherRemark() {
-		return teacherRemark;
+	
+	public String getCoachRemark() {
+		return coachRemark;
 	}
 
-	public void setTeacherRemark(String teacherRemark) {
-		this.teacherRemark = teacherRemark;
+	public void setCoachRemark(String coachRemark) {
+		this.coachRemark = coachRemark;
 	}
 
-	public Date getTeacherRemarkDate() {
-		return teacherRemarkDate;
+	public Date getCoachRemarkDate() {
+		return coachRemarkDate;
 	}
 
-	public void setTeacherRemarkDate(Date teacherRemarkDate) {
-		this.teacherRemarkDate = teacherRemarkDate;
+	public void setCoachRemarkDate(Date coachRemarkDate) {
+		this.coachRemarkDate = coachRemarkDate;
 	}
 
 	public Boolean getActive() {
@@ -116,13 +118,13 @@ public class ActivityPerformedRequest {
 		this.star = star;
 	}
 
-	public ActivityStatus getActivityStatus() {
-		return activityStatus;
-	}
-
-	public void setActivityStatus(ActivityStatus activityStatus) {
-		this.activityStatus = activityStatus;
-	}
+//	public ActivityStatus getActivityStatus() {
+//		return activityStatus;
+//	}
+//
+//	public void setActivityStatus(ActivityStatus activityStatus) {
+//		this.activityStatus = activityStatus;
+//	}
 
 	public String getActivityId() {
 		return activityId;
@@ -139,23 +141,31 @@ public class ActivityPerformedRequest {
 	public void setFileRequests(List<FileRequest> fileRequests) {
 		this.fileRequests = fileRequests;
 	}
-	
-	public String getTeacherId() {
-		return teacherId;
+
+	public String getCoachId() {
+		return coachId;
 	}
 
-	public void setTeacherId(String teacherId) {
-		this.teacherId = teacherId;
+	public void setCoachId(String coachId) {
+		this.coachId = coachId;
+	}
+
+	public String getStudentId() {
+		return studentId;
+	}
+
+	public void setStudentId(String studentId) {
+		this.studentId = studentId;
 	}
 
 	public ActivityPerformed toEntity(ActivityPerformed activityPerformed) {
 		activityPerformed=activityPerformed==null?new ActivityPerformed( ):activityPerformed;
 		activityPerformed.setCid(this.id);
 		activityPerformed.setDateOfActivity(this.dateOfActivity);
-		activityPerformed.setActivityStatus(this.activityStatus);
+//		activityPerformed.setActivityStatus(this.activityStatus);
 		activityPerformed.setDescription(this.description);
-		activityPerformed.setTeacherRemark(this.teacherRemark);
-		activityPerformed.setTeacherRemarkDate(this.teacherRemarkDate);
+		activityPerformed.setCoachRemark(this.coachRemark);
+		activityPerformed.setCoachRemarkDate(this.coachRemarkDate);
 		activityPerformed.setActive(this.active);
 		activityPerformed.setInitiativeScore(this.initiativeScore);
 		activityPerformed.setParticipationScore(this.participationScore);

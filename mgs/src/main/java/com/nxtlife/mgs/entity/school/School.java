@@ -71,6 +71,12 @@ public class School extends BaseEntity {
 	@OneToMany(cascade = CascadeType.ALL ,fetch = FetchType.LAZY,mappedBy = "school")
 	private List<SchoolManagementMember> schoolManagementMembers;
 	
+	@OneToMany(cascade = CascadeType.ALL ,fetch = FetchType.LAZY, mappedBy = "school")
+	private List<StudentSchoolGrade> studentSchoolGrades;
+	
+	@OneToMany(fetch = FetchType.LAZY , mappedBy = "school")
+	private List<TeacherSchoolGrade> teacherSchoolGrades;
+	
 	@ManyToMany(mappedBy="schools")
 	private List<Activity> activities ;
 
@@ -193,13 +199,27 @@ public class School extends BaseEntity {
 	public void setActivities(List<Activity> activities) {
 		this.activities = activities;
 	}
-
 	
+	public List<StudentSchoolGrade> getStudentSchoolGrades() {
+		return studentSchoolGrades;
+	}
+
+	public void setStudentSchoolGrades(List<StudentSchoolGrade> studentSchoolGrades) {
+		this.studentSchoolGrades = studentSchoolGrades;
+	}
+	
+	public List<TeacherSchoolGrade> getTeacherSchoolGrades() {
+		return teacherSchoolGrades;
+	}
+
+	public void setTeacherSchoolGrades(List<TeacherSchoolGrade> teacherSchoolGrades) {
+		this.teacherSchoolGrades = teacherSchoolGrades;
+	}
+
 	public School(@NotNull String name, @NotNull String username, @NotNull String cid, String address,
 			@NotNull String email, String contactNumber, String logo, Boolean active, User user, List<Grade> grades,
 			List<Teacher> teachers, List<Student> students, List<SchoolManagementMember> schoolManagementMembers,
-			List<Activity> activities) {
-		super();
+			List<StudentSchoolGrade> studentSchoolGrades, List<Activity> activities) {
 		this.name = name;
 		this.username = username;
 		this.cid = cid;
@@ -213,6 +233,7 @@ public class School extends BaseEntity {
 		this.teachers = teachers;
 		this.students = students;
 		this.schoolManagementMembers = schoolManagementMembers;
+		this.studentSchoolGrades = studentSchoolGrades;
 		this.activities = activities;
 	}
 

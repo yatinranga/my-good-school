@@ -35,7 +35,7 @@ import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.Utils;
-import com.nxtlife.mgs.view.ActivityResponse;
+import com.nxtlife.mgs.view.ActivityRequestResponse;
 import com.nxtlife.mgs.view.TeacherRequest;
 import com.nxtlife.mgs.view.TeacherResponse;
 
@@ -310,20 +310,28 @@ public class TeacherServiceImpl implements TeacherService {
 			String[] activityNames = null;
 			if (activities != null)
 				activityNames = activities.split(",");
+			List<Activity> activityList = activityRepository.findAll();
+			for(int i =0 ; i< activityList.size();i++) {
+				if(!activityNames[i].equalsIgnoreCase(activityList.get(i).getName()))
+					activityList.remove(i);
+				else
+					activityCIds.add(activityList.get(i).getCid());
+			}
+			teacherRequest.setActivitiyIds(activityCIds);
 
-			if (activityNames != null && activityNames.length > 0) {
-				for (String act : activityNames) {
-					Activity activity = activityRepository.getOneByName(act);
-
-					if (activity == null)
-						errors.add(String.format("Activity %s  not found ", act));
-					else
-						activityCIds.add(activity.getCid());
-				}
-				teacherRequest.setActivitiyIds(activityCIds);
-
-			} else
-				errors.add("No activities provided for the coach.");
+//			if (activityNames != null && activityNames.length > 0) {
+//				for (String act : activityNames) {
+//					Activity activity = activityRepository.getOneByName(act);
+//
+//					if (activity == null)
+//						errors.add(String.format("Activity %s  not found ", act));
+//					else
+//						activityCIds.add(activity.getCid());
+//				}
+//				teacherRequest.setActivitiyIds(activityCIds);
+//
+//			} else
+//				errors.add("No activities provided for the coach.");
 		}
 		teacherRequest.setEmail((String) teacherDetails.get(0).get("EMAIL"));
 		if (teacherDetails.get(0).get("ACTIVE") != null)
@@ -374,35 +382,35 @@ public class TeacherServiceImpl implements TeacherService {
 	}
 
 	@Override
-	public List<ActivityResponse> findAllActivitiesByCoachId(Long id) {
+	public List<ActivityRequestResponse> findAllActivitiesByCoachId(Long id) {
 
 		if (id == null)
 			throw new ValidationException("Id can not be null");
 
 		List<Activity> activities = new ArrayList<Activity>();
-		List<ActivityResponse> activityResponses = new ArrayList<ActivityResponse>();
+		List<ActivityRequestResponse> activityResponses = new ArrayList<ActivityRequestResponse>();
 
 		activities = activityRepository.findAllByTeachersId(id);
 		if (activities == null || activities.isEmpty())
 			throw new ValidationException("No Activities found.");
 		for (Activity activity : activities) {
-			activityResponses.add(new ActivityResponse(activity));
+			activityResponses.add(new ActivityRequestResponse(activity));
 		}
 		return activityResponses;
 	}
 
 	@Override
-	public List<ActivityResponse> findAllActivitiesByCoachCId(String cId) {
+	public List<ActivityRequestResponse> findAllActivitiesByCoachCId(String cId) {
 		if (cId == null)
 			throw new ValidationException("Id can not be null");
 		List<Activity> activities = new ArrayList<Activity>();
-		List<ActivityResponse> activityResponses = new ArrayList<ActivityResponse>();
+		List<ActivityRequestResponse> activityResponses = new ArrayList<ActivityRequestResponse>();
 
 		activities = activityRepository.findAllByTeachersCid(cId);
 		if (activities == null || activities.isEmpty())
 			throw new ValidationException("No Activities found.");
 		for (Activity activity : activities) {
-			activityResponses.add(new ActivityResponse(activity));
+			activityResponses.add(new ActivityRequestResponse(activity));
 		}
 		return activityResponses;
 	}
@@ -510,6 +518,17 @@ public class TeacherServiceImpl implements TeacherService {
 		List<TeacherResponse> teacherResponses = new ArrayList<>();
 		teachers = teacherRepository.findAllBySchoolCidAndIsCoachTrue(schoolCid);
 //				findAllBySchoolCidAndIsCoachTrue();
+		if(teachers==null)
+			throw new ValidationException("No coaches found.");
+		teachers.forEach(teacher->{teacherResponses.add(new TeacherResponse(teacher));});
+		return teacherResponses;
+	}
+
+	@Override
+	public List<TeacherResponse> findCoachesBySchoolCidAndActivityCid(String schoolCid, String activityCid) {
+		List<Teacher> teachers = new ArrayList<Teacher>();
+		List<TeacherResponse> teacherResponses = new ArrayList<>();
+		teachers = teacherRepository.findAllBySchoolCidAndActivitiesCidAndIsCoachTrue(schoolCid, activityCid);
 		if(teachers==null)
 			throw new ValidationException("No coaches found.");
 		teachers.forEach(teacher->{teacherResponses.add(new TeacherResponse(teacher));});

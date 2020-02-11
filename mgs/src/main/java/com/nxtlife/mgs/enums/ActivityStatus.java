@@ -2,7 +2,12 @@ package com.nxtlife.mgs.enums;
 
 public enum ActivityStatus {
 
-	SavedByStudent,SubmittedByStudent,InReviewStage,Reviewed;
+	InProgressAtStudent,
+	SavedByStudent,
+	SubmittedByStudent,
+	InReviewStage,
+	SavedByTeacher,
+	Reviewed;
 	
 	public static boolean matches(String activityStatus)
 	  {

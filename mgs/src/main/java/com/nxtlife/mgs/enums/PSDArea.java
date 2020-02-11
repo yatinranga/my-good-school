@@ -10,12 +10,24 @@ public enum PSDArea {
 	  {
 	    for (PSDArea pa : PSDArea.values())
 	    {
-	      if (pa.getPsdArea().equals(psdArea))
+	      if (pa.getPsdArea().equalsIgnoreCase(psdArea))
 	      {
 	        return true;
 	      }
 	    }
 	    return false;
+	  }
+	  
+	  public static PSDArea fromString(String psdArea)
+	  {
+	    for (PSDArea pa : PSDArea.values())
+	    {
+	      if (pa.getPsdArea().equalsIgnoreCase(psdArea))
+	      {
+	        return pa;
+	      }
+	    }
+	    return null;
 	  }
 
 	  private PSDArea(String psdArea)

@@ -31,6 +31,7 @@ public interface ExcelUtil {
 		columnTypes.put("MOTHERS NAME", CellType.STRING);
 		columnTypes.put("MOTHERS EMAIL", CellType.STRING);
 		columnTypes.put("MOTHERS MOBILE NUMBER", CellType.NUMERIC);
+		columnTypes.put("SESSION START DATE",CellType.NUMERIC);
 		
 		return columnTypes;
 	}
@@ -116,6 +117,32 @@ public interface ExcelUtil {
 		columnTypes.put("GENDER", CellType.STRING);
 		return columnTypes;
 	}
+	
+	public static Map<String, CellType> gradeColumns() {
+		Map<String, CellType> columnTypes = new LinkedHashMap<>();
+		columnTypes.put("GRADE", CellType.STRING);
+		columnTypes.put("SECTION", CellType.STRING);
+//		columnTypes.put("SCHOOL", CellType.STRING);
+//		columnTypes.put("SCHOOLS EMAIL", CellType.STRING);
+		return columnTypes;
+	}
+	
+	public static Map<String,CellType> activityColumns(){
+		Map<String, CellType> columnTypes = new LinkedHashMap<>();
+		columnTypes.put("NAME", CellType.STRING);
+		columnTypes.put("DESCRIPTION", CellType.STRING);
+		columnTypes.put("FOUR S", CellType.STRING);
+		columnTypes.put("FOCUS AREAS", CellType.STRING);
+		return columnTypes;
+	}
+	
+	public static Map<String,CellType> focusAreaColumns(){
+		Map<String, CellType> columnTypes = new LinkedHashMap<>();
+		columnTypes.put("NAME", CellType.STRING);
+		columnTypes.put("DESCRIPTION", CellType.STRING);
+		columnTypes.put("PSD AREA", CellType.STRING);
+		return columnTypes;
+	}
 
 	public static Map<String, CellType> sheetColumns(String sheetName) {
 		switch (sheetName) {
@@ -133,12 +160,18 @@ public interface ExcelUtil {
 			return managementColumns();
 		case "LFIN":
 			return lfinColumns();
+		case "GRADE":
+			return gradeColumns();
+		case "ACTIVITY":
+			return activityColumns();
+		case "FOCUS AREA":
+			return focusAreaColumns();
 		default:
 			throw new NotFoundException("Sheet columns not found");
 		}
 	}
 
 	public static List<String> sheets() {
-		return Arrays.asList("STUDENT", "USER", "SCHOOL", "TEACHER", "COACH", "MANAGEMENT","LFIN");
+		return Arrays.asList("STUDENT", "USER", "SCHOOL", "TEACHER", "COACH", "MANAGEMENT","LFIN","GRADE","ACTIVITY","FOCUS AREA");
 	}
 }

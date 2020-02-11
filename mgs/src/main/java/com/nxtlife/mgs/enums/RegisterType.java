@@ -21,6 +21,16 @@ public enum RegisterType
     return false;
   }
   
+  public static RegisterType fromString(String registerType) {
+	  for (RegisterType rt : RegisterType.values())
+	    {
+	      if (rt.getType().equals(registerType))
+	      {
+	        return rt;
+	      }
+	    }
+	    return null;
+  }
   private RegisterType(String type)
   {
     this.type = type;

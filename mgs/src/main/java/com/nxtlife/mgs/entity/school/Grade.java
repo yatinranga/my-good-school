@@ -52,6 +52,13 @@ public class Grade extends BaseEntity{
 	
 	@OneToMany(cascade = CascadeType.ALL ,fetch = FetchType.LAZY,mappedBy = "grade")
 	private List<Student> students;
+	
+	@OneToMany(cascade = CascadeType.ALL ,fetch = FetchType.LAZY,mappedBy = "grade")
+	private List<StudentSchoolGrade> studentSchoolGrades;
+	
+	@OneToMany(cascade = CascadeType.ALL ,fetch = FetchType.LAZY,mappedBy = "grade")
+	private List<TeacherSchoolGrade> teacherSchoolGrades;
+
 
 	public String getName() {
 		return name;
@@ -117,6 +124,26 @@ public class Grade extends BaseEntity{
 		this.id = id;
 	}
 	
+	public List<StudentSchoolGrade> getStudentSchoolGrades() {
+		return studentSchoolGrades;
+	}
+
+	public void setStudentSchoolGrades(List<StudentSchoolGrade> studentSchoolGrades) {
+		this.studentSchoolGrades = studentSchoolGrades;
+	}
+
+	public void setCid(String cid) {
+		this.cid = cid;
+	}
+
+	public List<TeacherSchoolGrade> getTeacherSchoolGrades() {
+		return teacherSchoolGrades;
+	}
+
+	public void setTeacherSchoolGrades(List<TeacherSchoolGrade> teacherSchoolGrades) {
+		this.teacherSchoolGrades = teacherSchoolGrades;
+	}
+
 	public Grade(@NotNull String name, @NotNull String cid, String section, Boolean active, List<School> schools,
 			Teacher teacher, List<Student> students) {
 		this.name = name;

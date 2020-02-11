@@ -23,5 +23,7 @@ public interface ActivityRepository extends JpaRepository<Activity, Long>{
 	List<Activity> findAllBySchoolsCidAndTeachersId(String schoolCid ,Long teacherId);
 	
 	List<Activity> findAllBySchoolsCidAndTeachersCid(String schoolCid ,String teacherCid);
+
+	Activity findByName(String name);
 	
 }

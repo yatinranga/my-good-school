@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.nxtlife.mgs.entity.activity.ActivityPerformed;
 import com.nxtlife.mgs.entity.activity.File;
+import com.nxtlife.mgs.view.ActivityPerformedRequest;
+import com.nxtlife.mgs.view.ActivityPerformedResponse;
 import com.nxtlife.mgs.view.FileRequest;
 import com.nxtlife.mgs.view.FileResponse;
 
@@ -12,5 +14,7 @@ public interface ActivityPerformedService {
 	List<FileResponse> getAllFilesOfActivity(String activityCId);
 
 	File saveMediaForActivityPerformed(FileRequest fileRequest, String category, ActivityPerformed activityPerformed);
+
+	ActivityPerformedResponse saveActivity(ActivityPerformedRequest request);
 
 }

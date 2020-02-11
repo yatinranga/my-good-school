@@ -81,7 +81,7 @@ public class SchoolServiceImpl implements SchoolService {
 			school.setCid(utils.generateRandomAlphaNumString(8));
 		}
 		
-		User user = userService.createSchoolUser(school);
+		User user =null;
 		if (StringUtils.isEmpty(user))
 			throw new ValidationException("User not created successfully");
 		school.setUser(user);

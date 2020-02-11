@@ -37,6 +37,8 @@ public class ActivityPerformedResponse {
 	private List<FileResponse> fileResponses;
 	
 	private String teacherId;
+	
+	private String studentId;
 
 	public Date getDateOfActivity() {
 		return dateOfActivity;
@@ -150,16 +152,25 @@ public class ActivityPerformedResponse {
 		this.teacherId = teacherId;
 	}
 	
+	public String getStudentId() {
+		return studentId;
+	}
+
+	public void setStudentId(String studentId) {
+		this.studentId = studentId;
+	}
+
 	public ActivityPerformedResponse(ActivityPerformed activityPerformed) {
-		this.activityId = activityPerformed.getCid();
+		this.id = activityPerformed.getCid();
 		this.active = activityPerformed.getActive();
 		this.activityId = activityPerformed.getActivity().getCid();
 		this.description = activityPerformed.getDescription();
 		this.activityStatus = activityPerformed.getActivityStatus();
 		this.dateOfActivity = activityPerformed.getDateOfActivity();
 		this.teacherId = activityPerformed.getTeacher().getcId();
-		this.teacherRemark = activityPerformed.getTeacherRemark();
-		this.teacherRemarkDate = activityPerformed.getTeacherRemarkDate();
+		this.studentId=activityPerformed.getStudent().getCid();
+		this.teacherRemark = activityPerformed.getCoachRemark();
+		this.teacherRemarkDate = activityPerformed.getCoachRemarkDate();
 		this.participationScore = activityPerformed.getParticipationScore();
 		this.initiativeScore = activityPerformed.getInitiativeScore();
 		this.achievementScore = activityPerformed.getAchievementScore();

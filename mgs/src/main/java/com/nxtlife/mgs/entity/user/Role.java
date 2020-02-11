@@ -1,75 +1,87 @@
 package com.nxtlife.mgs.entity.user;
 
-import java.util.HashSet;
-import java.util.Set;
-import javax.persistence.JoinColumn;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.jpa.domain.AbstractAuditable;
+import org.springframework.security.core.userdetails.UserDetailsService;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-import com.nxtlife.mgs.entity.BaseEntity;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
-public class Role extends BaseEntity {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	Long id;
-	
-	@NotNull
-	@Column(unique = true)
-	private String name;
+@DynamicInsert
+@DynamicUpdate
+public class Role extends AbstractAuditable<Role,Long> implements Serializable {
 
-	@Column(length = 500)
-	private String dashboard;
+    @Column(nullable = false)
+    private String name;
+    
+    @NotNull
+    @Column(unique = true)
+    private String cid;
+    
+    private Boolean active;
 
-	@NotNull
-	@Column(unique = true)
-	private String cid;
+    @Column
+    private String description;
 
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "role_privilege", joinColumns = { @JoinColumn(name = "ROLE_ID") }, inverseJoinColumns = {
-			@JoinColumn(name = "PRIV_ID") })
-	private Set<Privilege> privileges;
+    @OneToMany(mappedBy = "roleForUser",cascade = CascadeType.REMOVE)
+    private List<User> user;
 
-	public String getName() {
-		return name;
-	}
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "role_privledge_authority",
+            joinColumns = @JoinColumn(name = "role_id") , inverseJoinColumns = @JoinColumn(name = "authority_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"role_id","authority_id"}))
+    private Set<Authority> authorities;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    @PrePersist
+    public void prePersist(){
 
-	public void addPrivilege(Privilege privilege) {
-		if (privileges == null) {
-			privileges = new HashSet<>();
-		}
-		privileges.add(privilege);
-	}
+        if(this.isNew())
+            this.setCreatedDate(LocalDateTime.now());
+        else
+            this.setLastModifiedDate(LocalDateTime.now());
+    }
 
-	public String getDashboard() {
-		return dashboard;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setDashboard(String dashboard) {
-		this.dashboard = dashboard;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public Set<Privilege> getPrivileges() {
-		return privileges;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setPrivileges(Set<Privilege> privileges) {
-		this.privileges = privileges;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public String getCid() {
+    public List<User> getUser() {
+        return user;
+    }
+
+    public void setUser(List<User> user) {
+        this.user = user;
+    }
+
+    public Set<Authority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(Set<Authority> authorities) {
+        this.authorities = authorities;
+    }
+
+    public String getCid() {
 		return cid;
 	}
 
@@ -77,30 +89,17 @@ public class Role extends BaseEntity {
 		this.cid = cid;
 	}
 
-	public Long getId() {
-		return id;
+	public Boolean getActive() {
+		return active;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 
-	public Role(@NotNull String name, String dashboard, @NotNull String cid, Set<Privilege> privileges) {
-		this.name = name;
-		this.dashboard = dashboard;
-		this.cid = cid;
-		this.privileges = privileges;
-	}
-	
-	public Role() {
-		
-	}
-
-	public Role(@NotNull String name) {
-		this.name = name;
-	}
-	
-	
-	
-
+	public void addAuthorities(Authority authority){
+        if(authorities == null)
+            authorities = new HashSet<>();
+        authorities.add(authority);
+    }
 }

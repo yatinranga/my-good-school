@@ -29,6 +29,7 @@ public class Guardian extends BaseEntity {
 	@Column(unique = true)
 	private String cid;
 	
+	@Column(unique = true)
 	private String username;
 	
 //	private Date dob;

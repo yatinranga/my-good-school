@@ -14,12 +14,13 @@ public class StudentRequest {
 
 	private String userId;
 
-	
 	private String schoolId;
 
 	private String username;
 
 	private Date dob;
+	
+	private Date sessionStartDate;
 
 	private String imageUrl;
 
@@ -200,6 +201,14 @@ public class StudentRequest {
 		this.active = active;
 	}
 
+	public Date getSessionStartDate() {
+		return sessionStartDate;
+	}
+
+	public void setSessionStartDate(Date sessionStartDate) {
+		this.sessionStartDate = sessionStartDate;
+	}
+
 	public Student toEntity(Student student) {
 		student = student == null ? new Student() : student;
 		if (this.name != null)
@@ -216,6 +225,8 @@ public class StudentRequest {
 			student.setMobileNumber(this.mobileNumber);
 		if (this.subscriptionEndDate != null)
 			student.setSubscriptionEndDate(this.subscriptionEndDate);
+		if(this.sessionStartDate!=null)
+			student.setSessionStartDate(this.sessionStartDate);
 		return student;
 	}
 

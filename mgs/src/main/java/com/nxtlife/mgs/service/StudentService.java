@@ -28,9 +28,11 @@ public interface StudentService extends ExcelUtil {
 	StudentResponse findByUsername(String username);
 
 	List<StudentResponse> getAll();
+	
+	List<StudentResponse> getAllBySchoolCid(String schoolCid);
+	
+//	List<StudentResponse> getAllBySchoolCid(String schoolCid);
 
 //	ActivityPerformedResponse saveActivity(ActivityPerformedRequest request);
-
-	ActivityPerformedResponse saveActivity(ActivityPerformedRequest request, ActivityStatus activityStatus);
 
 }

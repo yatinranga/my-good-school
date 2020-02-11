@@ -99,11 +99,11 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.5</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
 			<version>0.7.0</version>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
@@ -115,7 +115,7 @@
 		</dependency>
 		<!-- <dependency> <groupId>com.sun.mail</groupId> <artifactId>javax.mail</artifactId> 
 			</dependency> -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.querydsl</groupId>
 			<artifactId>querydsl-apt</artifactId>
 			<scope>provided</scope>
@@ -123,7 +123,7 @@
 		<dependency>
 			<groupId>com.querydsl</groupId>
 			<artifactId>querydsl-jpa</artifactId>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>
@@ -206,6 +206,13 @@
 			<version>4.1.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-quartz -->
+		
+		<dependency>
+			<groupId>org.springframework.security.oauth</groupId>
+			<artifactId>spring-security-oauth2</artifactId>
+			<version>2.0.16.RELEASE</version>
+		</dependency>
+
 
 	</dependencies>
 	<build>
@@ -214,7 +221,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<plugin>
+			<!-- <plugin>
 				<groupId>com.mysema.maven</groupId>
 				<artifactId>apt-maven-plugin</artifactId>
 				<version>1.1.3</version>
@@ -229,7 +236,7 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin> -->
 		</plugins>
 	</build>
 </project>

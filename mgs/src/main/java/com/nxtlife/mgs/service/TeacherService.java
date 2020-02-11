@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.nxtlife.mgs.view.ActivityResponse;
+import com.nxtlife.mgs.view.ActivityRequestResponse;
 import com.nxtlife.mgs.view.TeacherRequest;
 import com.nxtlife.mgs.view.TeacherResponse;
 
@@ -30,9 +30,9 @@ public interface TeacherService {
 
 	TeacherResponse findClassTeacherById(Long id);
 
-	List<ActivityResponse> findAllActivitiesByCoachId(Long id);
+	List<ActivityRequestResponse> findAllActivitiesByCoachId(Long id);
 
-	List<ActivityResponse> findAllActivitiesByCoachCId(String cId);
+	List<ActivityRequestResponse> findAllActivitiesByCoachCId(String cId);
 	
 	List<TeacherResponse> getAllTeachers();
 	
@@ -47,4 +47,6 @@ public interface TeacherService {
 	List<TeacherResponse> getAllCoachesOfSchool(String schoolCid);
 
 	List<TeacherResponse> findCoachesBySchoolAndActivityName(String schoolCid, String activityName);
+	
+	List<TeacherResponse> findCoachesBySchoolCidAndActivityCid(String schoolCid , String activityCid);
 }

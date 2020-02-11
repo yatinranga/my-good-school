@@ -26,6 +26,7 @@ import com.nxtlife.mgs.entity.activity.ActivityPerformed;
 import com.nxtlife.mgs.entity.activity.File;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
+import com.nxtlife.mgs.entity.school.StudentSchoolGrade;
 import com.nxtlife.mgs.entity.user.Guardian;
 import com.nxtlife.mgs.entity.user.Role;
 import com.nxtlife.mgs.entity.user.Student;
@@ -38,11 +39,13 @@ import com.nxtlife.mgs.jpa.GradeRepository;
 import com.nxtlife.mgs.jpa.GuardianRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
 import com.nxtlife.mgs.jpa.StudentRepository;
+import com.nxtlife.mgs.jpa.StudentSchoolGradeRepository;
 import com.nxtlife.mgs.service.ActivityPerformedService;
 import com.nxtlife.mgs.service.StudentService;
 import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.ExcelUtil;
+import com.nxtlife.mgs.util.StudentSchoolGradeId;
 import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.ActivityPerformedRequest;
 import com.nxtlife.mgs.view.ActivityPerformedResponse;
@@ -65,11 +68,14 @@ public class StudentServiceImpl implements StudentService {
 	GradeRepository gradeRepository;
 
 	@Autowired
+	StudentSchoolGradeRepository studentSchoolGradeRepository;
+
+	@Autowired
 	UserService userService;
 
 	@Autowired
 	Utils utils;
-	
+
 	@Autowired
 	ActivityPerformedService activityPerformedService;
 
@@ -93,9 +99,9 @@ public class StudentServiceImpl implements StudentService {
 		if (request.getName() == null)
 			throw new ValidationException("Student name can not be null");
 //		if (request.getSchoolCId() == null)
-//			throw new ValidationException("School id can not be null");
+//			throw new ValidationException("School can not be null");
 //		if (request.getGradeCId() == null)
-//			throw new ValidationException("Grade id can not be null");
+//			throw new ValidationException("Grade can not be null");
 
 		Student student = request.toEntity();
 		if (request.getSchoolId() != null) {
@@ -104,6 +110,15 @@ public class StudentServiceImpl implements StudentService {
 				student.setGrade(gradeRepository.getOneByCid(request.getGradeId()));
 
 		}
+
+//		if (request.getSchoolId() != null && request.getGradeId() != null) {
+//			School school = schoolRepository.getOneByCid(request.getSchoolId());
+//			Grade grade = gradeRepository.getOneByCid(request.getGradeId());
+//			studentSchoolGradeRepository.save(
+//					new StudentSchoolGrade(new StudentSchoolGradeId(student.getId(), school.getId(), grade.getId()),
+//							student, school, grade, Integer.toString(LocalDateTime.now().getYear())));
+//		}
+
 		try {
 			student.setCid(utils.generateRandomAlphaNumString(8));
 		} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
@@ -167,7 +182,7 @@ public class StudentServiceImpl implements StudentService {
 				parent.setGender("Male");
 				parent.setActive(true);
 				parent.setStudent(student);
-				User user = userService.createParentUser(parent);
+				User user =null;//= userService.createParentUser(parent);
 				parent.setUser(user);
 				parents.add(parent);
 
@@ -212,7 +227,7 @@ public class StudentServiceImpl implements StudentService {
 				parent.setGender("Female");
 				parent.setActive(true);
 				parent.setStudent(student);
-				User user = userService.createParentUser(parent);
+				User user = null;//userService.createParentUser(parent);
 				parent.setUser(user);
 				parents.add(parent);
 
@@ -263,7 +278,8 @@ public class StudentServiceImpl implements StudentService {
 					if (cell != null) {
 						if (columnTypes.get(headers.get(j)).equals(cell.getCellType())) {
 							if (cell.getCellType() == CellType.NUMERIC) {
-								if (headers.get(j).contains("DATE") || headers.get(j).contains("DOB"))
+								if (headers.get(j).contains("DATE") || headers.get(j).contains("DOB")
+										|| headers.get(j).contains("SESSION START DATE"))
 									columnValues.put(headers.get(j), cell.getDateCellValue());
 								else
 									columnValues.put(headers.get(j), new DataFormatter().formatCellValue(cell));
@@ -288,7 +304,7 @@ public class StudentServiceImpl implements StudentService {
 		return rows;
 	}
 
-	private List<Map<String, Object>> findSheetRowValues(XSSFWorkbook workbook, String sheetName,List<String> errors) {
+	private List<Map<String, Object>> findSheetRowValues(XSSFWorkbook workbook, String sheetName, List<String> errors) {
 //		XSSFSheet sheet = workbook.getSheet(sheetName);
 		XSSFSheet sheet = workbook.getSheetAt(0);
 		if (sheet == null) {
@@ -368,7 +384,8 @@ public class StudentServiceImpl implements StudentService {
 				errors.add(String.format("Grade  %s not found ", (String) studentDetails.get(0).get("GRADE")));
 			studentRequest.setGradeId(grade.getCid());
 		}
-
+		studentRequest.setSessionStartDate(
+				DateUtil.convertStringToDate(DateUtil.formatDate((Date) studentDetails.get(0).get("DOB"), null, null)));
 		studentRequest.setEmail((String) studentDetails.get(0).get("EMAIL"));
 		if (studentDetails.get(0).get("ACTIVE") != null)
 			studentRequest.setActive(Boolean.valueOf((Boolean) studentDetails.get(0).get("ACTIVE")));
@@ -480,34 +497,60 @@ public class StudentServiceImpl implements StudentService {
 
 		return studentResponseList;
 	}
-	
+
 	@Override
-	public ActivityPerformedResponse saveActivity(ActivityPerformedRequest request , ActivityStatus activityStatus) {
-		if(request == null)
-			throw new ValidationException("Request can not be null.");
+	public List<StudentResponse> getAllBySchoolCid(String schoolCid) {
 		
-//		if(!getCurrentUser().getRoles().contains(new Role("Student")))
-//			throw new AccessDeniedException("user is not authorized to submit activity because he is not a student.");
-		if(request.getActivityId()==null)
-			throw new ValidationException("Activity Id can not be null.");
-		request.setActivityStatus(activityStatus);
-		
-		
-        /*==================== Converting request to entity ============================= */
-		ActivityPerformed activityPerformed = request.toEntity();
-		
-		
-		/*==================== Saving files associated with activity ============================= */
-		List<File> activityPerformedMedia = new ArrayList<>();
-		if(request.getFileRequests()!=null && !request.getFileRequests().isEmpty())
-			request.getFileRequests().forEach(fileReq-> {
-				File file = activityPerformedService.saveMediaForActivityPerformed(fileReq, "activity", activityPerformed);
-			if(file!=null)
-				activityPerformedMedia.add(file);
-			});
-		
-		activityPerformed.setFiles(activityPerformedMedia);//Assigned the returned files List set to ActivityPerformed entity
 		return null;
 	}
+
+//	@Override
+//	public ActivityPerformedResponse saveActivity(ActivityPerformedRequest request) {
+//		if (request == null)
+//			throw new ValidationException("Request can not be null.");
+//		ActivityStatus actStatus = ActivityStatus.InProgressAtStudent;
+//
+////		if(!getCurrentUser().getRoles().contains(new Role("Student")))
+////			throw new AccessDeniedException("user is not authorized to submit activity because he is not a student.");
+//		if(request.getStudentId()==null)
+//			throw new ValidationException("Student Id can not be null.");
+//		if (request.getActivityId() == null)
+//			throw new ValidationException("Activity Id can not be null.");
+//		if(request.getCoachId()==null)
+//			throw new ValidationException("Coach Id can not be null.");
+//		
+//		/* setting those fields in request to null which needs to filled by Coach */
+//		request.setCoachRemark(null);
+//		request.setCoachRemarkDate(null);
+//		request.setAchievementScore(null);
+//		request.setParticipationScore(null);
+//		request.setInitiativeScore(null);
+//		request.setStar(null);
+//		
+//		if(request.getDateOfActivity()==null || request.getDescription()==null || request.getFileRequests()==null|| request.getFileRequests().isEmpty())
+//			actStatus = ActivityStatus.SavedByStudent;
+//		else
+//			actStatus = ActivityStatus.SubmittedByStudent;
+//
+//		/* Converting request to entity */
+//		ActivityPerformed activityPerformed = request.toEntity();
+//		
+//
+//		/* Saving files associated with activity */
+//		List<File> activityPerformedMedia = new ArrayList<>();
+//		if (request.getFileRequests() != null && !request.getFileRequests().isEmpty())
+//			request.getFileRequests().forEach(fileReq -> {
+//				File file = activityPerformedService.saveMediaForActivityPerformed(fileReq, "activity",
+//						activityPerformed);
+//				if (file != null)
+//					activityPerformedMedia.add(file);
+//			});
+//		/* Assigned the returned files List set to ActivityPerformed entity */
+//		activityPerformed.setFiles(activityPerformedMedia);
+//		
+//		activityPerformed.setActive(true);
+//		activityPerformed.setActivityStatus(actStatus);
+//		return null;
+//	}
 
 }

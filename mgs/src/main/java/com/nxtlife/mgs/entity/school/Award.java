@@ -1,12 +1,17 @@
 package com.nxtlife.mgs.entity.school;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
@@ -14,9 +19,9 @@ import javax.validation.constraints.NotNull;
 import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
-
+//uniqueConstraints = @UniqueConstraint(columnNames = {"name","description","student"})
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name","description","student"}))
+@Table()
 public class Award extends BaseEntity{
 	
 	@Id
@@ -36,11 +41,15 @@ public class Award extends BaseEntity{
 	private Boolean active;
 	
 	@ManyToOne
+	@JoinColumn(name="teacherId")
 	private Teacher teacher;
 	
-	@ManyToOne
-	@JoinColumn(name = "student")
-	private Student student;
+//	@ManyToOne
+//	@JoinColumn(name = "studentId")
+//	private Student student;
+	
+	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy="award")
+	private List<StudentAward> studentAwards;
 
 	public String getName() {
 		return name;
@@ -73,14 +82,6 @@ public class Award extends BaseEntity{
 	public void setTeacher(Teacher teacher) {
 		this.teacher = teacher;
 	}
-
-	public Student getStudent() {
-		return student;
-	}
-
-	public void setStudent(Student student) {
-		this.student = student;
-	}
 	
 	public String getCid() {
 		return cid;
@@ -98,12 +99,19 @@ public class Award extends BaseEntity{
 		this.id = id;
 	}
 
-	public Award(@NotNull String name, @NotNull String description, Boolean active, Teacher teacher, Student student) {
+	public List<StudentAward> getStudentAwards() {
+		return studentAwards;
+	}
+
+	public void setStudentAwards(List<StudentAward> studentAwards) {
+		this.studentAwards = studentAwards;
+	}
+
+	public Award(@NotNull String name, @NotNull String description, Boolean active, Teacher teacher) {
 		this.name = name;
 		this.description = description;
 		this.active = active;
 		this.teacher = teacher;
-		this.student = student;
 	}
 	
 	public Award() {

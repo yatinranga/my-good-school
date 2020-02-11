@@ -1,213 +1,288 @@
 package com.nxtlife.mgs.entity.user;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.Collection;
 
-import javax.persistence.JoinColumn;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
+import javax.persistence.PrePersist;
+import javax.persistence.Transient;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
-import com.nxtlife.mgs.entity.BaseEntity;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.jpa.domain.AbstractAuditable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.enums.RegisterType;
 import com.nxtlife.mgs.enums.UserType;
 
+@SuppressWarnings("serial")
 @Entity
-public class User extends BaseEntity {
+@DynamicInsert
+@DynamicUpdate
+public class User extends AbstractAuditable<User, Long> implements UserDetails {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	Long id;
+	private String cid;
 	
+	@Column(nullable = false ,unique = true)
+	private String userName;
+
+	@Column(nullable = false, unique = true)
+	@Size(min = 10, max = 10)
+//	@Pattern(regexp = "^[6-9]{1}[0-9]]{9}$")
+	private String contactNo;
+
+	@Email
+	@Column(nullable = false, unique = true)
+	private String email;
+
+	@Column(nullable = false)
+	private String password;
+
+	@Column
+	private String picUrl;
+
+	@Column
+	private Boolean active;
+
+	@Column
 	@Enumerated(EnumType.STRING)
 	private UserType userType;
+
+	@Column
+	private String imagePath;
+
+	@Transient
+	private Collection<Authority> authorities;
+
+	@ManyToOne
+	@JoinColumn(name = "role_id")
+	private Role roleForUser;
+	
+	private Boolean isPaid=false;
 	
 	@Enumerated(EnumType.STRING)
 	private RegisterType registerType;
 	
-	@NotNull
-	@Column(unique=true)
-	private String username;
+	@OneToOne(cascade = CascadeType.ALL)
+	private Student student;
 	
-	@NotNull
-	@Column(unique=true)
-	private String cid;
+	@OneToOne(cascade = CascadeType.ALL)
+	private School school;
 	
-    private String passwordHash;
-    
-    private boolean active;
-    
-    private Boolean IsOtpVerified = false;
-    
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date otpCreatedDate;
-    
-    private Boolean isPaid = false;
-    
-    @OneToOne(mappedBy = "user")
-    Student student;
-    
-    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
-    Teacher teacher;
-    
-    @OneToOne
-    SchoolManagementMember schoolManagementMember;
-    
-    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
-    School school;
-    
-    @OneToOne
-    LFIN lfin;
-    
-    @OneToOne(cascade = CascadeType.ALL,mappedBy = "user")
-    Guardian guardian;
-    
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role", joinColumns = {@JoinColumn(name = "USER_ID")}, inverseJoinColumns = {
-            @JoinColumn(name = "ROLE_ID")})
-    private List<Role> roles = new ArrayList<>();
+	@OneToOne(cascade = CascadeType.ALL)
+	private Teacher teacher;
 	
-    public String getUsername() {
-		return username;
+	@OneToOne(cascade = CascadeType.ALL)
+	private LFIN lfin;
+
+	@PrePersist
+	public void prePersist() {
+		this.setCreatedDate(LocalDateTime.now());
+
 	}
-	public void setUsername(String username) {
-		this.username = username;
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
-	public String getPasswordHash() {
-		return passwordHash;
+
+	public String getContactNo() {
+		return contactNo;
 	}
-	public void setPasswordHash(String passwordHash) {
-		this.passwordHash = passwordHash;
+
+	public void setContactNo(String contactNo) {
+		this.contactNo = contactNo;
 	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getPicUrl() {
+		return picUrl;
+	}
+
+	public void setPicUrl(String picUrl) {
+		this.picUrl = picUrl;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
 	public UserType getUserType() {
 		return userType;
 	}
+
 	public void setUserType(UserType userType) {
 		this.userType = userType;
 	}
-	public RegisterType getRegisterType() {
-		return registerType;
+
+	public String getImagePath() {
+		return imagePath;
 	}
-	public void setRegisterType(RegisterType registerType) {
-		this.registerType = registerType;
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
 	}
+
+	@Override
+	public String getPassword() {
+		return password;
+	}
+
+	@Override
+	public String getUsername() {
+		return userName;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return this.getRoleForUser().getAuthorities();
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
+
+	public Role getRoleForUser() {
+		return roleForUser;
+	}
+
+	public void setRoleForUser(Role roleForUser) {
+		this.roleForUser = roleForUser;
+	}
+
+	public void setAuthorities(Collection<Authority> authorities) {
+		this.authorities = authorities;
+	}
+
 	public String getCid() {
 		return cid;
 	}
+
 	public void setCid(String cid) {
 		this.cid = cid;
 	}
-	public boolean isActive() {
-		return active;
+
+	public RegisterType getRegisterType() {
+		return registerType;
 	}
-	public void setActive(boolean active) {
-		this.active = active;
+
+	public void setRegisterType(RegisterType registerType) {
+		this.registerType = registerType;
 	}
-	public Boolean getIsOtpVerified() {
-		return IsOtpVerified;
+
+	public String getUserName() {
+		return userName;
 	}
-	public void setIsOtpVerified(Boolean isOtpVerified) {
-		IsOtpVerified = isOtpVerified;
-	}
-	public Date getOtpCreatedDate() {
-		return otpCreatedDate;
-	}
-	public void setOtpCreatedDate(Date otpCreatedDate) {
-		this.otpCreatedDate = otpCreatedDate;
-	}
+
 	public Boolean getIsPaid() {
 		return isPaid;
 	}
+
 	public void setIsPaid(Boolean isPaid) {
 		this.isPaid = isPaid;
 	}
-	public List<Role> getRoles() {
-		return roles;
-	}
-	public void setRoles(List<Role> roles) {
-		this.roles = roles;
-	}
+
 	public Student getStudent() {
 		return student;
 	}
+
 	public void setStudent(Student student) {
 		this.student = student;
 	}
-	public Teacher getTeacher() {
-		return teacher;
-	}
-	public void setTeacher(Teacher teacher) {
-		this.teacher = teacher;
-	}
-	public SchoolManagementMember getSchoolManagementMember() {
-		return schoolManagementMember;
-	}
-	public void setSchoolManagementMember(SchoolManagementMember schoolManagementMember) {
-		this.schoolManagementMember = schoolManagementMember;
-	}
-	public LFIN getLfin() {
-		return lfin;
-	}
-	public void setLfin(LFIN lfin) {
-		this.lfin = lfin;
-	}
-	public Guardian getGuardian() {
-		return guardian;
-	}
-	public void setGuardian(Guardian guardian) {
-		this.guardian = guardian;
-	}
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-	
+
 	public School getSchool() {
 		return school;
 	}
+
 	public void setSchool(School school) {
 		this.school = school;
 	}
-	public User(UserType userType, RegisterType registerType, @NotNull String username, @NotNull String cid,
-			String passwordHash, boolean active, Boolean isOtpVerified, Date otpCreatedDate, Boolean isPaid,
-			Student student, Teacher teacher, SchoolManagementMember schoolManagementMember, LFIN lfin,
-			Guardian guardian, List<Role> roles) {
-		this.userType = userType;
-		this.registerType = registerType;
-		this.username = username;
-		this.cid = cid;
-		this.passwordHash = passwordHash;
-		this.active = active;
-		this.IsOtpVerified = isOtpVerified;
-		this.otpCreatedDate = otpCreatedDate;
-		this.isPaid = isPaid;
-		this.student = student;
+
+	public Teacher getTeacher() {
+		return teacher;
+	}
+
+	public void setTeacher(Teacher teacher) {
 		this.teacher = teacher;
-		this.schoolManagementMember = schoolManagementMember;
+	}
+
+	public LFIN getLfin() {
+		return lfin;
+	}
+
+	public void setLfin(LFIN lfin) {
 		this.lfin = lfin;
-		this.guardian = guardian;
-		this.roles = roles;
+	}
+
+	public User(String cid, String userName,
+			@Size(min = 10, max = 10) @Pattern(regexp = "^[6-9]{1}[0-9]]{9}$") String contactNo, @Email String email,
+			String password, String picUrl, Boolean active, UserType userType, String imagePath,
+			Collection<Authority> authorities, Role roleForUser, Boolean isPaid, RegisterType registerType,
+			Student student, School school, Teacher teacher, LFIN lfin) {
+		this.cid = cid;
+		this.userName = userName;
+		this.contactNo = contactNo;
+		this.email = email;
+		this.password = password;
+		this.picUrl = picUrl;
+		this.active = active;
+		this.userType = userType;
+		this.imagePath = imagePath;
+		this.authorities = authorities;
+		this.roleForUser = roleForUser;
+		this.isPaid = isPaid;
+		this.registerType = registerType;
+		this.student = student;
+		this.school = school;
+		this.teacher = teacher;
+		this.lfin = lfin;
 	}
 	
-	public User() {
+	public User()
+	{
 		
 	}
-    
-    
+	
 }

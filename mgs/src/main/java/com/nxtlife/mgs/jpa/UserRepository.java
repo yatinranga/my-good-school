@@ -10,6 +10,20 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	
 	User getOneByCid(String cid);
 
-	int countByUsername(String username);
+	int countByUserName(String username);
+	
+	public User findByUserName(String username);
+	
+	public User findOneByUserName(String username);
+	
+    User findByEmailOrContactNo(String email,String contact);
+
+    boolean existsByEmail(String email);
+
+    boolean existsByContactNo(String email);
+
+    User findByContactNo(String contactNo);
+
+    User findByEmail(String email);
 
 }

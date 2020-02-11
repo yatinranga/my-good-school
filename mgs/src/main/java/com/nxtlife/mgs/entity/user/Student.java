@@ -21,6 +21,8 @@ import com.nxtlife.mgs.entity.activity.ActivityPerformed;
 import com.nxtlife.mgs.entity.school.Award;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
+import com.nxtlife.mgs.entity.school.StudentAward;
+import com.nxtlife.mgs.entity.school.StudentSchoolGrade;
 
 @Entity
 public class Student extends BaseEntity {
@@ -57,6 +59,8 @@ public class Student extends BaseEntity {
 	
 	private Date subscriptionEndDate;
 	
+	private Date sessionStartDate;
+	
 	@OneToOne
 	@JoinColumn(name="user_id")
 	User user;
@@ -68,14 +72,28 @@ public class Student extends BaseEntity {
 	@ManyToOne
 	private Grade grade;
 	
-	@OneToMany(cascade = CascadeType.ALL ,fetch = FetchType.LAZY,mappedBy = "student")
-	private List<Award> awards;
+//	@OneToMany(cascade = CascadeType.ALL ,fetch = FetchType.LAZY,mappedBy = "student")
+//	private List<Award> awards;
 	
 	@OneToMany(cascade = CascadeType.ALL ,fetch = FetchType.LAZY,mappedBy = "student")
 	private List<ActivityPerformed> activities;
 	
 	@OneToMany(cascade = CascadeType.ALL ,fetch = FetchType.LAZY,mappedBy="student")
 	private List<Guardian> guardians ; 
+
+	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY,mappedBy ="student")
+	private List<StudentSchoolGrade> studentSchoolGrades;
+	
+	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY,mappedBy ="student")
+	private List<StudentAward> StudentAwards;
+	
+	public Date getSessionStartDate() {
+		return sessionStartDate;
+	}
+
+	public void setSessionStartDate(Date sessionStartDate) {
+		this.sessionStartDate = sessionStartDate;
+	}
 
 	public String getName() {
 		return name;
@@ -165,13 +183,13 @@ public class Student extends BaseEntity {
 		this.grade = grade;
 	}
 
-	public List<Award> getAwards() {
-		return awards;
-	}
-
-	public void setAwards(List<Award> awards) {
-		this.awards = awards;
-	}
+//	public List<Award> getAwards() {
+//		return awards;
+//	}
+//
+//	public void setAwards(List<Award> awards) {
+//		this.awards = awards;
+//	}
 
 	public List<ActivityPerformed> getActivities() {
 		return activities;
@@ -214,9 +232,27 @@ public class Student extends BaseEntity {
 		this.id = id;
 	}
 
+
+	public List<StudentSchoolGrade> getStudentSchoolGrades() {
+		return studentSchoolGrades;
+	}
+
+	public void setStudentSchoolGrades(List<StudentSchoolGrade> studentSchoolGrades) {
+		this.studentSchoolGrades = studentSchoolGrades;
+	}
+
+
+	public List<StudentAward> getStudentAwards() {
+		return StudentAwards;
+	}
+
+	public void setStudentAwards(List<StudentAward> studentAwards) {
+		StudentAwards = studentAwards;
+	}
+
 	public Student(@NotNull String name, @NotNull String cid, @NotNull String username, Date dob, String imageUrl,
 			@NotNull String email, String mobileNumber, Boolean active, String gender, Date subscriptionEndDate,
-			User user, @NotNull School school, Grade grade, List<Award> awards, List<ActivityPerformed> activities,
+			User user, @NotNull School school, Grade grade,  List<ActivityPerformed> activities,
 			List<Guardian> guardians) {
 		this.name = name;
 		this.cid = cid;
@@ -231,7 +267,6 @@ public class Student extends BaseEntity {
 		this.user = user;
 		this.school = school;
 		this.grade = grade;
-		this.awards = awards;
 		this.activities = activities;
 		this.guardians = guardians;
 	}

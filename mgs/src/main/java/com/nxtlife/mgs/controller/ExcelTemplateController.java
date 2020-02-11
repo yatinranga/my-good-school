@@ -60,7 +60,20 @@ public class ExcelTemplateController {
 		exportExampleFile("LFIN", response);
 	}
 	
+	@GetMapping("/export/grade")
+	public void exportExampleGradeFile(HttpServletResponse response) throws IOException {
+		exportExampleFile("GRADE", response);
+	}
 	
+	@GetMapping("/export/activity")
+	public void exportExampleActivityFile(HttpServletResponse response) throws IOException {
+		exportExampleFile("ACTIVITY", response);
+	}
+	
+	@GetMapping("/export/focusArea")
+	public void exportExampleFocusAreaFile(HttpServletResponse response) throws IOException {
+		exportExampleFile("FOCUS AREA", response);
+	}
     public void exportExampleFile(String type, HttpServletResponse response) throws IOException {
         File file;
         file = excelTemplateService.exportExampleFile(type);

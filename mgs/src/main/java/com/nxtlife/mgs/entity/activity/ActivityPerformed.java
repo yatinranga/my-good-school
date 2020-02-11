@@ -40,9 +40,9 @@ public class ActivityPerformed extends BaseEntity{
 	
 	private String description;
 	
-	private String teacherRemark;
+	private String coachRemark;
 	
-	private Date teacherRemarkDate;
+	private Date coachRemarkDate;
 	
 	private Boolean active;
 	
@@ -98,20 +98,20 @@ public class ActivityPerformed extends BaseEntity{
 		this.description = description;
 	}
 
-	public String getTeacherRemark() {
-		return teacherRemark;
+	public String getCoachRemark() {
+		return coachRemark;
 	}
 
-	public void setTeacherRemark(String teacherRemark) {
-		this.teacherRemark = teacherRemark;
+	public void setCoachRemark(String coachRemark) {
+		this.coachRemark = coachRemark;
 	}
 
-	public Date getTeacherRemarkDate() {
-		return teacherRemarkDate;
+	public Date getCoachRemarkDate() {
+		return coachRemarkDate;
 	}
 
-	public void setTeacherRemarkDate(Date teacherRemarkDate) {
-		this.teacherRemarkDate = teacherRemarkDate;
+	public void setCoachRemarkDate(Date coachRemarkDate) {
+		this.coachRemarkDate = coachRemarkDate;
 	}
 
 	public Boolean getActive() {
@@ -221,7 +221,7 @@ public class ActivityPerformed extends BaseEntity{
 	
 	
 	public ActivityPerformed(@NotNull Date dateOfActivity, @NotNull String cid, String description,
-			String teacherRemark, Date teacherRemarkDate, Boolean active, @Min(0) @Min(10) Integer participationScore,
+			String coachRemark, Date coachRemarkDate, Boolean active, @Min(0) @Min(10) Integer participationScore,
 			@Min(0) @Min(10) Integer initiativeScore, @Min(0) @Min(5) Integer achievementScore,
 			@Min(0) @Min(5) Integer star, ActivityStatus activityStatus, Activity activity, List<File> files,
 			@NotNull Student student, @NotNull Teacher teacher) {
@@ -229,8 +229,8 @@ public class ActivityPerformed extends BaseEntity{
 		this.dateOfActivity = dateOfActivity;
 		this.cid = cid;
 		this.description = description;
-		this.teacherRemark = teacherRemark;
-		this.teacherRemarkDate = teacherRemarkDate;
+		this.coachRemark = coachRemark;
+		this.coachRemarkDate = coachRemarkDate;
 		this.active = active;
 		this.participationScore = participationScore;
 		this.initiativeScore = initiativeScore;

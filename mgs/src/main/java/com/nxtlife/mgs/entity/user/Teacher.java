@@ -25,6 +25,7 @@ import com.nxtlife.mgs.entity.activity.ActivityPerformed;
 import com.nxtlife.mgs.entity.school.Award;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
+import com.nxtlife.mgs.entity.school.TeacherSchoolGrade;
 
 @Entity
 public class Teacher extends BaseEntity {
@@ -83,6 +84,9 @@ public class Teacher extends BaseEntity {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "teacher")
 	private List<Award> awards;
+	
+	@OneToMany(fetch = FetchType.LAZY,mappedBy = "teacher")
+	private List<TeacherSchoolGrade> teacherSchoolGrades;
 
 	@ManyToMany(mappedBy = "teachers")
 	private List<Activity> activities;
@@ -259,6 +263,22 @@ public class Teacher extends BaseEntity {
 
 	public void setActivities(List<Activity> activities) {
 		this.activities = activities;
+	}
+
+	public String getCid() {
+		return cid;
+	}
+
+	public void setCid(String cid) {
+		this.cid = cid;
+	}
+
+	public List<TeacherSchoolGrade> getTeacherSchoolGrades() {
+		return teacherSchoolGrades;
+	}
+
+	public void setTeacherSchoolGrades(List<TeacherSchoolGrade> teacherSchoolGrades) {
+		this.teacherSchoolGrades = teacherSchoolGrades;
 	}
 
 	public Teacher(@NotNull String cid, @NotNull String name, String username, String gender, @NotNull Date dob,

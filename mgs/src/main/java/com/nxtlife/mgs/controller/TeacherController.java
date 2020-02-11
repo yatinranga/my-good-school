@@ -45,6 +45,11 @@ public class TeacherController {
 		return teacherService.saveClassTeacher(teacherRequest);
 	}
 	
+	@GetMapping(value = "/{schoolId}")
+	public List<TeacherResponse> getAllCoachesBySchoolCidAndActivityCid(@PathVariable("schoolId") String schoolCid,@RequestParam("activityId") String activityCid){
+		return teacherService.findCoachesBySchoolCidAndActivityCid(schoolCid, activityCid);
+	}
+	
 	@GetMapping()
 	public List<TeacherResponse> getAllTeachers(){
 		return teacherService.getAllTeachers();
