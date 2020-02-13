@@ -41,10 +41,10 @@ public class ActivityController {
 		return activityService.getAllOfferedActivities();
 	}
 	
-	@GetMapping(value = "/coaches")
-	public List<TeacherResponse> getCoachesBySchoolAndActivityCid(@RequestParam("schoolId") String schoolCid ,@RequestParam("activityId") String activityCid){
-		return teacherService.findCoachesBySchoolCidAndActivityCid(schoolCid, activityCid);
-	}
+//	@GetMapping(value = "/coaches")
+//	public List<TeacherResponse> getCoachesBySchoolAndActivityCid(@RequestParam("schoolId") String schoolCid ,@RequestParam("activityId") String activityCid){
+//		return teacherService.findCoachesBySchoolCidAndActivityCid(schoolCid, activityCid);
+//	}
 	
 	@RequestMapping(value = "importActivities", method = RequestMethod.POST)
 	public List<ActivityRequestResponse> uploadGradesFromExcel(@RequestParam("file") MultipartFile file) {

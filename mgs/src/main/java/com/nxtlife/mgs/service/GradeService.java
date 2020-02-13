@@ -17,4 +17,6 @@ public interface GradeService {
 	GradeResponse findById(Long id);
 	
 	GradeResponse findByCid(String cId);
+	
+	List<GradeResponse> getAllGradesOfSchool(String schoolCid);
 }

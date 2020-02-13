@@ -58,21 +58,20 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 				role.setCid(utils.generateRandomAlphaNumString(8));
 
 			role.setName("Admin");
+			roleRepository.save(role);
 		}
 		// Logic for authorities missing
-		roleRepository.save(role);
+		
 		if (userRepository.findByUserName("mainAdmin") == null) {
 			User user = new User();
 			user.setRoleForUser(role);
-//		user.setUserName("Admin0001");
+//		    user.setUserName("Admin0001");
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 			String encodedPassword = encoder.encode("root");
 			user.setPassword(encodedPassword);
-//			try {
-				user.setCid(utils.generateRandomAlphaNumString(8));
-//			} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
-//				user.setCid(utils.generateRandomAlphaNumString(8));
-//			}
+
+		    user.setCid(utils.generateRandomAlphaNumString(8));
+
 			user.setActive(true);
 			user.setContactNo("8860571043");
 			user.setEmail("admin@gmail.com");
@@ -93,19 +92,13 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		user.setUserType(UserType.Student);
 		user.setRegisterType(RegisterType.MANUALLY);
 		user.setUserName(student.getUsername());
-		// later change it to encrypted password
-//			user.setPassword(bCryptPasswordEncoder.encode(student.getUsername())); //Setting username as password
+		// setting encrypted password
+		
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		String encodedPassword = encoder.encode(utils.generateRandomAlphaNumString(10));
-		if(userRepository.findByPassword(encodedPassword)!=null)
-			throw new ValidationException("Password already exist please choose a different one.");
 		user.setPassword(encodedPassword);
 		System.out.println("Password : " + user.getPassword());
-//		try {
-			user.setCid(utils.generateRandomAlphaNumString(8));
-//		} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
-//			user.setCid(utils.generateRandomAlphaNumString(8));
-//		}
+		user.setCid(utils.generateRandomAlphaNumString(8));
 
 		if (student.getSubscriptionEndDate() != null) {
 			if (student.getSubscriptionEndDate()
@@ -134,19 +127,11 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		user.setUserType(UserType.Teacher);
 		user.setRegisterType(RegisterType.MANUALLY); // setting it to manual may be required to passed as an argument
 		user.setUserName(teacher.getUsername());
-		// later change it to encrypted password
-//			user.setPassword(bCryptPasswordEncoder.encode(student.getUsername())); //Setting username as password
-		
+		// setting  encrypted password
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		String encodedPassword = encoder.encode(utils.generateRandomAlphaNumString(10));
-		if(userRepository.findByPassword(encodedPassword)!=null)
-			throw new ValidationException("Password already exist please choose a different one.");
 		user.setPassword(encodedPassword);
-//		try {
-			user.setCid(utils.generateRandomAlphaNumString(8));
-//		} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
-//			user.setCid(utils.generateRandomAlphaNumString(8));
-//		}
+	    user.setCid(utils.generateRandomAlphaNumString(8));
 
 //			if(teacher.getSubscriptionEndDate()!=null) {
 //				if(teacher.getSubscriptionEndDate().after(Date.from(java.time.LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())))
@@ -155,9 +140,6 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		Role defaultRole = roleRepository.getOneByName("Teacher");
 		if (defaultRole == null)
 			throw new ValidationException("Role Teacher does not exist");
-
-		List<Role> defaultRoleList = new ArrayList<>();
-		defaultRoleList.add(defaultRole);
 
 		if (teacher.getIsCoach() != null && teacher.getIsCoach() == true) {
 			defaultRole = roleRepository.getOneByName("Coach");
@@ -189,20 +171,14 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		user.setActive(true);
 		user.setUserType(UserType.Parent);
 		user.setRegisterType(RegisterType.MANUALLY);
-		user.setUserName(guardian.getUsername()); // later change it to encryptedpassword
-		// user.setPassword(bCryptPasswordEncoder.encode(guardian.getUsername()));
-		// Setting username as password
+		user.setUserName(guardian.getUsername()); 
+		// Setting  encrypted password
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		String encodedPassword = encoder.encode(utils.generateRandomAlphaNumString(10));
-		if(userRepository.findByPassword(encodedPassword)!=null)
-			throw new ValidationException("Password already exist please choose a different one.");
 		user.setPassword(encodedPassword);
-//		try {
+//		if(userRepository.findByPassword(encodedPassword)!=null)
+//			throw new ValidationException("Password already exist please choose a different one.");
 			user.setCid(utils.generateRandomAlphaNumString(8));
-//		} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
-//			user.setCid(utils.generateRandomAlphaNumString(8));
-//		}
-
 		if (guardian.getStudent().getSubscriptionEndDate() != null) {
 			if (guardian.getStudent().getSubscriptionEndDate()
 					.after(Date.from(java.time.LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())))
@@ -213,10 +189,6 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			throw new ValidationException("Role Guardian does not exist");
 
 		user.setRoleForUser(defaultRole);
-		// try {
-		/*} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
-			guardian.setCid(utils.generateRandomAlphaNumString(8));
-		}*/
 		user.setGuardian(guardian);
 		user.setContactNo(guardian.getMobileNumber());
 		user.setEmail(guardian.getEmail());

@@ -155,7 +155,10 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 		Student student = request.toEntity();
 		if (request.getSchoolId() != null) {
-			student.setSchool(schoolRepository.getOneByCid(request.getSchoolId()));
+			School school = schoolRepository.getOneByCid(request.getSchoolId());
+			if(school == null )
+				throw new ValidationException(String.format("School with id : %s not found.", request.getSchoolId()));
+			student.setSchool(school);
 			if (request.getGradeId() != null)
 				student.setGrade(gradeRepository.getOneByCid(request.getGradeId()));
 
@@ -169,11 +172,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 //							student, school, grade, Integer.toString(LocalDateTime.now().getYear())));
 //		}
 
-//		try {
 			student.setCid(utils.generateRandomAlphaNumString(8));
-//		} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
-//			student.setCid(utils.generateRandomAlphaNumString(8));
-//		}
+
 		
 		for(Guardian gua : student.getGuardians()) {
 			gua.setStudent(student);
@@ -565,8 +565,18 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 	@Override
 	public List<StudentResponse> getAllBySchoolCid(String schoolCid) {
+		List<Student> studentList = studentRepository.findAllBySchoolCid(schoolCid);
+		List<StudentResponse> studentResponseList = new ArrayList<StudentResponse>();
 
-		return null;
+		if (studentList.isEmpty())
+			throw new NotFoundException("No student found");
+
+		for (Student student : studentList) {
+
+			studentResponseList.add(new StudentResponse(student));
+		}
+
+		return studentResponseList;
 	}
 
 //	@Override

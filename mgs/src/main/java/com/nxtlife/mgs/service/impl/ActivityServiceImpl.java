@@ -105,11 +105,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService{
 			activity.setSchools(schools);
 		}
 		
-		try {
-			activity.setCid(utils.generateRandomAlphaNumString(8));
-		} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
-			activity.setCid(utils.generateRandomAlphaNumString(8));
-		}
+		activity.setCid(utils.generateRandomAlphaNumString(8));
 		activity = activityRepository.save(activity);
 		if(activity==null)
 			throw new RuntimeException("Something went wrong activity not created.");
