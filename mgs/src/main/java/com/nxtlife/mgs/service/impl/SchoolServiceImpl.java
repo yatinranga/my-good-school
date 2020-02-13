@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
@@ -17,17 +19,24 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
+import com.nxtlife.mgs.entity.user.Role;
 import com.nxtlife.mgs.entity.user.User;
+import com.nxtlife.mgs.enums.UserType;
 import com.nxtlife.mgs.ex.ValidationException;
+import com.nxtlife.mgs.jpa.RoleRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
+import com.nxtlife.mgs.jpa.UserRepository;
+import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.FileService;
 import com.nxtlife.mgs.service.SchoolService;
+import com.nxtlife.mgs.service.SequenceGeneratorService;
 import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.store.FileStore;
 import com.nxtlife.mgs.util.DateUtil;
@@ -39,7 +48,7 @@ import com.nxtlife.mgs.view.StudentRequest;
 import com.nxtlife.mgs.view.StudentResponse;
 
 @Service
-public class SchoolServiceImpl implements SchoolService {
+public class SchoolServiceImpl extends BaseService implements SchoolService {
 
 	@Autowired
 	SchoolRepository schoolRepository;
@@ -53,6 +62,74 @@ public class SchoolServiceImpl implements SchoolService {
 	@Autowired
 	FileStore filestore;
 	
+	@Autowired
+	SequenceGeneratorService sequenceGeneratorService;
+	
+	@Autowired
+	RoleRepository roleRepository;
+	
+	@Autowired
+	UserRepository userRepository;
+	
+	
+	@PostConstruct
+	public void init() {
+		
+		Role role = roleRepository.getOneByName("School");
+		if (role == null) {
+			role = new Role();
+			try {
+				role.setCid(utils.generateRandomAlphaNumString(8));
+			} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
+				role.setCid(utils.generateRandomAlphaNumString(8));
+			}
+
+			role.setName("School");
+		}
+//		 Logic for authorities missing
+		roleRepository.save(role);
+		
+		School school = schoolRepository.findByName("my good school");
+		if(school == null) {
+			school = new School();
+			school.setName("my good school");
+			Long sequence = sequenceGeneratorService.findSequenceByUserType(UserType.School);
+			sequence = sequence ==null?0:sequence++;
+			school.setUsername(String.format("SCH%08d", sequence));
+			sequenceGeneratorService.updateSequenceByUserType(sequence, UserType.School);
+			school.setEmail("mygoodschool@gmail.com");
+			try {
+				school.setCid(utils.generateRandomAlphaNumString(8));
+			} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
+				school.setCid(utils.generateRandomAlphaNumString(8));
+			}
+		}
+		
+
+		if (userRepository.findByUserName(school.getUsername()) == null) {
+			User user = new User();
+			user.setRoleForUser(role);
+		    user.setUserName(school.getUsername());
+		    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+			String encodedPassword = encoder.encode("root");
+			user.setPassword(encodedPassword);
+//			user.setPassword("root");
+			try {
+				user.setCid(utils.generateRandomAlphaNumString(8));
+			} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
+				user.setCid(utils.generateRandomAlphaNumString(8));
+			}
+			user.setActive(true);
+			user.setContactNo(utils.generateRandomNumString(10));
+			user.setEmail(school.getEmail());
+//			school.setUser(user);
+//			user.setUserName("mainAdmin");
+			userRepository.save(user);
+			school.setUser(user);
+		}
+		
+		schoolRepository.save(school);
+	}
 	
 	@Override
 	public SchoolResponse save(SchoolRequest request) {
@@ -214,8 +291,8 @@ public class SchoolServiceImpl implements SchoolService {
 		if(schoolDetails.get(0).get("NAME")!=null) {
 		    schoolRequest.setName((String) schoolDetails.get(0).get("NAME"));
 		    }
-		if(schoolDetails.get(0).get("USERNAME")!=null)
-		   schoolRequest.setUsername((String) schoolDetails.get(0).get("USERNAME"));
+//		if(schoolDetails.get(0).get("USERNAME")!=null)
+//		   schoolRequest.setUsername((String) schoolDetails.get(0).get("USERNAME"));
 	
 		if (schoolDetails.get(0).get("ACTIVE") != null)
 			schoolRequest.setActive(Boolean.valueOf((Boolean) schoolDetails.get(0).get("ACTIVE")));
@@ -231,12 +308,34 @@ public class SchoolServiceImpl implements SchoolService {
 
 	@Override
 	public SchoolResponse findById(Long id) {
-		return null;
+		if(id == null)
+			throw new ValidationException("id cannot be null.");
+		School school = schoolRepository.findById(id);
+		if(school == null)
+			throw new ValidationException("School not found.");
+			
+		return new SchoolResponse(school);
 	}
 
 	@Override
-	public SchoolResponse findByCid(String cId) {
-		return null;
+	public SchoolResponse findByCid(String cid) {
+		if(cid == null)
+			throw new ValidationException("id cannot be null.");
+		School school = schoolRepository.findByCid(cid);
+		if(school == null)
+			throw new ValidationException("School not found.");
+			
+		return new SchoolResponse(school);
+	}
+	
+	@Override
+	public List<SchoolResponse> getAllSchools(){
+		List<School> schoolList = schoolRepository.findAll();
+		List<SchoolResponse> schoolResponses = new ArrayList<SchoolResponse>();
+		if(schoolList==null || schoolList.isEmpty())
+			throw new ValidationException("No schools found.");
+		schoolList.forEach(s->{schoolResponses.add(new SchoolResponse(s));});
+		return schoolResponses;
 	}
 
 }

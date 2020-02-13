@@ -14,9 +14,9 @@ public interface ExcelUtil {
 	public static Map<String, CellType> studentColumns() {
 		Map<String, CellType> columnTypes = new LinkedHashMap<>();
 		columnTypes.put("NAME", CellType.STRING);
-		columnTypes.put("SCHOOL", CellType.STRING);
-		columnTypes.put("SCHOOLS EMAIL", CellType.STRING);
-		columnTypes.put("USERNAME", CellType.STRING);
+//		columnTypes.put("SCHOOL", CellType.STRING);
+//		columnTypes.put("SCHOOLS EMAIL", CellType.STRING);
+//		columnTypes.put("USERNAME", CellType.STRING);
 		columnTypes.put("DOB", CellType.NUMERIC);
 		columnTypes.put("ACTIVE", CellType.BOOLEAN);
 		columnTypes.put("EMAIL", CellType.STRING);
@@ -49,16 +49,16 @@ public interface ExcelUtil {
 		columnTypes.put("EMAIL", CellType.STRING);
 		columnTypes.put("CONTACT NUMBER", CellType.NUMERIC);
 		columnTypes.put("ACTIVE", CellType.BOOLEAN);
-		columnTypes.put("USERNAME", CellType.STRING);
+//		columnTypes.put("USERNAME", CellType.STRING);
 		return columnTypes;
 	}
 	
 	public static Map<String, CellType> teacherColumns() {
 		Map<String, CellType> columnTypes = new LinkedHashMap<>();
 		columnTypes.put("NAME", CellType.STRING);
-		columnTypes.put("SCHOOL", CellType.STRING);
-		columnTypes.put("SCHOOLS EMAIL", CellType.STRING);
-		columnTypes.put("USERNAME", CellType.STRING);
+//		columnTypes.put("SCHOOL", CellType.STRING);
+//		columnTypes.put("SCHOOLS EMAIL", CellType.STRING);
+//		columnTypes.put("USERNAME", CellType.STRING);
 		columnTypes.put("DOB", CellType.NUMERIC);
 		columnTypes.put("ACTIVE", CellType.BOOLEAN);
 		columnTypes.put("EMAIL", CellType.STRING);
@@ -77,7 +77,7 @@ public interface ExcelUtil {
 		columnTypes.put("NAME", CellType.STRING);
 		columnTypes.put("SCHOOL", CellType.STRING);
 		columnTypes.put("SCHOOLS EMAIL", CellType.STRING);
-		columnTypes.put("USERNAME", CellType.STRING);
+//		columnTypes.put("USERNAME", CellType.STRING);
 		columnTypes.put("DOB", CellType.NUMERIC);
 		columnTypes.put("ACTIVE", CellType.BOOLEAN);
 		columnTypes.put("EMAIL", CellType.STRING);
@@ -97,7 +97,7 @@ public interface ExcelUtil {
 		Map<String, CellType> columnTypes = new LinkedHashMap<>();
 		columnTypes.put("NAME", CellType.STRING);
 		columnTypes.put("SCHOOL", CellType.STRING);
-		columnTypes.put("USERNAME", CellType.STRING);
+//		columnTypes.put("USERNAME", CellType.STRING);
 		columnTypes.put("DOB", CellType.NUMERIC);
 		columnTypes.put("ACTIVE", CellType.BOOLEAN);
 		columnTypes.put("EMAIL", CellType.STRING);
@@ -109,7 +109,7 @@ public interface ExcelUtil {
 	public static Map<String, CellType> lfinColumns() {
 		Map<String, CellType> columnTypes = new LinkedHashMap<>();
 		columnTypes.put("NAME", CellType.STRING);
-		columnTypes.put("USERNAME", CellType.STRING);
+//		columnTypes.put("USERNAME", CellType.STRING);
 		columnTypes.put("DOB", CellType.NUMERIC);
 		columnTypes.put("ACTIVE", CellType.BOOLEAN);
 		columnTypes.put("EMAIL", CellType.STRING);

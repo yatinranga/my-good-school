@@ -6,27 +6,37 @@ import com.nxtlife.mgs.entity.user.Student;
 
 public class StudentResponse {
 
-	private String cId;
+	private String id;
 	private String name;
 	private String username;
-	private String userCId;
+	private String userId;
 	private String gender;
 	private String email;
 	private String section;
 	private String grade;
-	private String schoolName;
+	private String schoolId;
 	private String mobileNumber;
 	private Date subscriptionEndDate;
 	private Boolean active;
 	private Date dob;
 	
 
-	public String getcId() {
-		return cId;
+	
+
+	public String getId() {
+		return id;
 	}
 
-	public void setcId(String cId) {
-		this.cId = cId;
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getName() {
@@ -43,14 +53,6 @@ public class StudentResponse {
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public String getUserCId() {
-		return userCId;
-	}
-
-	public void setUserCId(String userCId) {
-		this.userCId = userCId;
 	}
 
 	public String getGender() {
@@ -85,12 +87,12 @@ public class StudentResponse {
 		this.grade = grade;
 	}
 
-	public String getSchoolName() {
-		return schoolName;
+	public String getSchoolId() {
+		return schoolId;
 	}
 
-	public void setSchoolName(String schoolName) {
-		this.schoolName = schoolName;
+	public void setSchoolId(String schoolId) {
+		this.schoolId = schoolId;
 	}
 
 	public String getMobileNumber() {
@@ -126,13 +128,13 @@ public class StudentResponse {
 	}
 
 	public StudentResponse(Student student) {
-		this.cId = student.getCid();
+		this.id = student.getCid();
 		this.name = student.getName();
 		this.email = student.getEmail();
 		this.gender = student.getGender();
 		this.mobileNumber = student.getMobileNumber();
 		if(student.getUser() != null)
-		   this.userCId = student.getUser().getCid();
+		   this.userId = student.getUser().getCid();
 		this.username = student.getUsername();
 		this.active = student.getActive();
 		this.dob = student.getDob();
@@ -141,7 +143,7 @@ public class StudentResponse {
 			this.section = student.getGrade().getSection();
 		}
 		if (student.getSchool() != null)
-			this.schoolName = student.getSchool().getName();
+			this.schoolId = student.getSchool().getCid();
 		this.subscriptionEndDate = student.getSubscriptionEndDate();
 	}
 

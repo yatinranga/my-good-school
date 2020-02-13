@@ -13,7 +13,7 @@ import com.nxtlife.mgs.view.StudentResponse;
 
 public interface StudentService extends ExcelUtil {
 
-	List<StudentResponse> uploadStudentsFromExcel(MultipartFile file);
+	List<StudentResponse> uploadStudentsFromExcel(MultipartFile file , String schoolCid);
 
 	StudentResponse save(StudentRequest request);
 

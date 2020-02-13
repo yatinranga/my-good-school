@@ -61,7 +61,7 @@ public class Student extends BaseEntity {
 	
 	private Date sessionStartDate;
 	
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="user_id")
 	User user;
 	

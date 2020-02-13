@@ -18,12 +18,12 @@ public interface FileRepository extends JpaRepository<File, Long>{
 	List<String> findAllUrls();
 	
 	@Transactional
-	@Modifying(flushAutomatically = true , clearAutomatically = true)
+	@Modifying( clearAutomatically = true)
 	@Query(value="update File f set f.active = :active where f.cid = :cid")
 	int updateFileSetActiveByCid(@Param("active") Boolean active,@Param("cid") String cid);
 	
 	@Transactional
-	@Modifying(flushAutomatically = true , clearAutomatically = true)
+	@Modifying(clearAutomatically = true)
 	@Query(value="update File f set f.active = :active where f.url = :url")
 	int updateFileSetActiveByUrl(@Param("active") Boolean active,@Param("url") String cId);
 	

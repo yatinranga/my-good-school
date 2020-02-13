@@ -17,4 +17,6 @@ public interface SchoolService {
 	
 	SchoolResponse findByCid(String cId);
 
+	List<SchoolResponse> getAllSchools();
+
 }

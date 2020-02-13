@@ -14,6 +14,7 @@ import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.FileRepository;
 import com.nxtlife.mgs.service.ActivityPerformedService;
+import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.FileService;
 import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.ActivityPerformedRequest;
@@ -22,7 +23,7 @@ import com.nxtlife.mgs.view.FileRequest;
 import com.nxtlife.mgs.view.FileResponse;
 
 @Service
-public class ActivityPerformedServiceImpl implements ActivityPerformedService {
+public class ActivityPerformedServiceImpl extends BaseService implements ActivityPerformedService {
 
 	@Autowired
 	FileRepository fileRepository;

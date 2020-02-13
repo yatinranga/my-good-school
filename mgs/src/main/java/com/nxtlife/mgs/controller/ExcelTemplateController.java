@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,10 +14,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.ex.ValidationException;
+import com.nxtlife.mgs.service.ActivityService;
 import com.nxtlife.mgs.service.ExcelTemplateService;
+import com.nxtlife.mgs.service.FocusAreaService;
+import com.nxtlife.mgs.service.GradeService;
+import com.nxtlife.mgs.service.SchoolService;
+import com.nxtlife.mgs.service.StudentService;
+import com.nxtlife.mgs.service.TeacherService;
+import com.nxtlife.mgs.view.ActivityRequestResponse;
+import com.nxtlife.mgs.view.FocusAreaRequestResponse;
+import com.nxtlife.mgs.view.GradeResponse;
+import com.nxtlife.mgs.view.SchoolResponse;
+import com.nxtlife.mgs.view.StudentResponse;
+import com.nxtlife.mgs.view.TeacherResponse;
 
 @RestController
 @RequestMapping("/api/template")
@@ -25,55 +41,71 @@ public class ExcelTemplateController {
 	@Autowired
 	ExcelTemplateService excelTemplateService;
 	
-	@GetMapping("/export/student")
-	public void exportExampleStudentFile(HttpServletResponse response) throws IOException {
-		exportExampleFile("STUDENT", response);
+	@Autowired
+	TeacherService teacherService;
+	
+	@Autowired
+	StudentService studentService;
+	
+	@Autowired
+	SchoolService schoolService;
+	
+	@Autowired
+	GradeService gradeService;
+	
+	@Autowired
+	FocusAreaService focusAreaService;
+	
+	@Autowired
+	ActivityService activityService;
+
+	@GetMapping("/export")
+	public void exportExampleTemplate(@RequestParam String type , HttpServletResponse response) throws IOException {
+		if(type.equalsIgnoreCase("STUDENT"))
+			exportExampleFile("STUDENT", response);
+		else if(type.equalsIgnoreCase("TEACHER"))
+			exportExampleFile("TEACHER", response);
+		else if(type.equalsIgnoreCase("COACH"))
+			exportExampleFile("COACH", response);
+		else if(type.equalsIgnoreCase("USER"))
+			exportExampleFile("USER", response);
+		else if(type.equalsIgnoreCase("SCHOOL"))
+			exportExampleFile("SCHOOL", response);
+		else if(type.equalsIgnoreCase("MANAGEMENT"))
+			exportExampleFile("MANAGEMENT", response);
+		else if(type.equalsIgnoreCase("LFIN"))
+			exportExampleFile("LFIN", response);
+		else if(type.equalsIgnoreCase("GRADE"))
+			exportExampleFile("GRADE", response);
+		else if(type.equalsIgnoreCase("ACTIVITY"))
+			exportExampleFile("ACTIVITY", response);
+		else if(type.equalsIgnoreCase("FOCUS AREA"))
+			exportExampleFile("FOCUS AREA", response);
+		else
+			System.out.println("Invalid type.");
+		
+		
 	}
 	
-	@GetMapping("/export/teacher")
-	public void exportExampleTeacherFile(HttpServletResponse response) throws IOException {
-		exportExampleFile("TEACHER", response);
+	@RequestMapping(value = "bulkUpload", method = RequestMethod.POST)
+	public void uploadTeachersFromExcel(@RequestParam("file") MultipartFile file , @RequestParam("type") String type ,@RequestParam(required = false ,value = "schoolId") String schoolCid) {
+		if(type.equalsIgnoreCase("TEACHER"))
+			 teacherService.uploadTeachersFromExcel(file, false,schoolCid);
+		else if(type.equalsIgnoreCase("COACH"))
+			 teacherService.uploadTeachersFromExcel(file, true,schoolCid);
+		else if(type.equalsIgnoreCase("STUDENT"))
+			studentService.uploadStudentsFromExcel(file,schoolCid);
+		else if(type.equalsIgnoreCase("SCHOOL"))
+			schoolService.uploadSchoolsFromExcel(file);
+		else if(type.equalsIgnoreCase("GRADE"))
+			gradeService.uploadGradesFromExcel(file);
+		else if(type.equalsIgnoreCase("FOCUS AREA"))
+			focusAreaService.uploadFocusAreasFromExcel(file);
+		else if(type.equalsIgnoreCase("ACTIVITY"))
+			activityService.uploadActivityFromExcel(file);
 	}
-	
-	@GetMapping("/export/coach")
-	public void exportExampleCoachFile(HttpServletResponse response) throws IOException {
-		exportExampleFile("COACH", response);
-	}
-	
-	@GetMapping("/export/school")
-	public void exportExampleSchoolFile(HttpServletResponse response) throws IOException {
-		exportExampleFile("SCHOOL", response);
-	}
-	
-	@GetMapping("/export/user")
-	public void exportExampleUserFile(HttpServletResponse response) throws IOException {
-		exportExampleFile("USER", response);
-	}
-	
-	@GetMapping("/export/management")
-	public void exportExampleManagementFile(HttpServletResponse response) throws IOException {
-		exportExampleFile("MANAGEMENT", response);
-	}
-	
-	@GetMapping("/export/lfin")
-	public void exportExampleLfinFile(HttpServletResponse response) throws IOException {
-		exportExampleFile("LFIN", response);
-	}
-	
-	@GetMapping("/export/grade")
-	public void exportExampleGradeFile(HttpServletResponse response) throws IOException {
-		exportExampleFile("GRADE", response);
-	}
-	
-	@GetMapping("/export/activity")
-	public void exportExampleActivityFile(HttpServletResponse response) throws IOException {
-		exportExampleFile("ACTIVITY", response);
-	}
-	
-	@GetMapping("/export/focusArea")
-	public void exportExampleFocusAreaFile(HttpServletResponse response) throws IOException {
-		exportExampleFile("FOCUS AREA", response);
-	}
+
+
     public void exportExampleFile(String type, HttpServletResponse response) throws IOException {
         File file;
         file = excelTemplateService.exportExampleFile(type);

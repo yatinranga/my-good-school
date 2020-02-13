@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.nxtlife.mgs.entity.activity.FocusArea;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.FocusAreaRepository;
+import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.FocusAreaService;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.Utils;
@@ -28,7 +29,7 @@ import com.nxtlife.mgs.view.ActivityRequestResponse;
 import com.nxtlife.mgs.view.FocusAreaRequestResponse;
 
 @Service
-public class FocusAreaServiceImpl implements FocusAreaService{
+public class FocusAreaServiceImpl extends BaseService implements FocusAreaService{
 
 	@Autowired
 	FocusAreaRepository focusAreaRepository;

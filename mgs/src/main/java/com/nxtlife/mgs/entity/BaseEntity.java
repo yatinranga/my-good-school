@@ -1,11 +1,13 @@
 package com.nxtlife.mgs.entity;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
+import org.joda.time.DateTime;
 import org.springframework.data.jpa.domain.AbstractAuditable;
 //import org.springframework.security.core.Authentication;
 //import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,7 +36,7 @@ public abstract class BaseEntity extends AbstractAuditable<User, Long>
 	@PrePersist
 	  private void preCreate()
 	  {
-	    this.setCreatedDate(LocalDateTime.now());
+	    this.setCreatedDate(DateTime.now());
 
 //	    User current = getUser();
 //	    if (current != null)
@@ -46,7 +48,7 @@ public abstract class BaseEntity extends AbstractAuditable<User, Long>
 	  @PreUpdate
 	  private void preUpdate()
 	  {
-	    this.setLastModifiedDate(LocalDateTime.now());
+	    this.setLastModifiedDate(DateTime.now());
 //	    User current = getUser();
 //	    if (current != null)
 //	    {

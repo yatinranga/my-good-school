@@ -8,9 +8,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 
 import com.nxtlife.mgs.enums.UserType;
-import com.sun.istack.NotNull;
+//import com.sun.istack.NotNull;
 
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"userType", "sequence"})})

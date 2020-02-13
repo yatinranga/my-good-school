@@ -22,7 +22,7 @@ import com.nxtlife.mgs.view.GradeResponse;
 import com.nxtlife.mgs.view.TeacherResponse;
 
 @RestController
-@RequestMapping("/api/activitiesOffered")
+@RequestMapping("api/activitiesOffered")
 public class ActivityController {
 
 	@Autowired

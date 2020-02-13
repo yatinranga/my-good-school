@@ -19,6 +19,10 @@ public interface SchoolRepository extends JpaRepository<School, Long> {
 	int countByEmail(String email);
 
 	int countByUsername(String username);
+
+	School findByCid(String cid);
+
+	School findById(Long id);
 	
 	
 }

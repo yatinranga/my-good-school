@@ -1,8 +1,10 @@
 package com.nxtlife.mgs.service;
 
+import com.nxtlife.mgs.enums.UserType;
+
 public interface SequenceGeneratorService {
 
-	Long findSequenceByUserType(String userType);
+	Long findSequenceByUserType(UserType userType);
 	
-	int updateSequenceByUserType(Long sequence , String userType);
+	int updateSequenceByUserType(Long sequence , UserType userType);
 }

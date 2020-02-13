@@ -26,6 +26,7 @@ import com.nxtlife.mgs.jpa.ActivityRepository;
 import com.nxtlife.mgs.jpa.FocusAreaRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
 import com.nxtlife.mgs.service.ActivityService;
+import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.ActivityRequestResponse;
@@ -33,7 +34,7 @@ import com.nxtlife.mgs.view.GradeRequest;
 import com.nxtlife.mgs.view.GradeResponse;
 
 @Service
-public class ActivityServiceImpl implements ActivityService{
+public class ActivityServiceImpl extends BaseService implements ActivityService{
 
 	@Autowired
 	ActivityRepository activityRepository;

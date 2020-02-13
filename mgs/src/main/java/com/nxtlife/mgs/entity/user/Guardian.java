@@ -17,10 +17,10 @@ import com.nxtlife.mgs.entity.BaseEntity;
 
 @Entity
 public class Guardian extends BaseEntity {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	Long id;
+//
+//	@Id
+//	@GeneratedValue(strategy = GenerationType.AUTO)
+//	Long id;
 	
 	@NotNull
 	private String name;
@@ -29,6 +29,7 @@ public class Guardian extends BaseEntity {
 	@Column(unique = true)
 	private String cid;
 	
+	@NotNull
 	@Column(unique = true)
 	private String username;
 	
@@ -47,7 +48,9 @@ public class Guardian extends BaseEntity {
 	
 	private String gender;
 	
-	@OneToOne
+	private String relationship;
+	
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
 	User user;
 
@@ -142,17 +145,24 @@ public class Guardian extends BaseEntity {
 		this.user = user;
 	}
 	
-	public Long getId() {
-		return id;
+//	public Long getId() {
+//		return id;
+//	}
+//
+//	public void setId(Long id) {
+//		this.id = id;
+//	}
+
+	public String getRelationship() {
+		return relationship;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setRelationship(String relationship) {
+		this.relationship = relationship;
 	}
 
 	public Guardian(@NotNull String name, @NotNull String cid, String imageUrl, String email, String mobileNumber,
 			Boolean active, String gender, User user, Student student) {
-		super();
 		this.name = name;
 		this.cid = cid;
 		this.imageUrl = imageUrl;

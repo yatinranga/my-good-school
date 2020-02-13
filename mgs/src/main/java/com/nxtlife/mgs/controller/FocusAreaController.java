@@ -21,10 +21,10 @@ public class FocusAreaController {
 	@Autowired
 	FocusAreaService focusAreaService;
 
-	@RequestMapping(value = "importFocusAreas", method = RequestMethod.POST)
-	public List<FocusAreaRequestResponse> uploadFocusAreasFromExcel(@RequestParam("file") MultipartFile file) {
-		return focusAreaService.uploadFocusAreasFromExcel(file);
-	}
+//	@RequestMapping(value = "importFocusAreas", method = RequestMethod.POST)
+//	public List<FocusAreaRequestResponse> uploadFocusAreasFromExcel(@RequestParam("file") MultipartFile file) {
+//		return focusAreaService.uploadFocusAreasFromExcel(file);
+//	}
 
 	@PostMapping()
 	public FocusAreaRequestResponse saveFocusArea(@RequestBody FocusAreaRequestResponse request) {

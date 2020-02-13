@@ -19,11 +19,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.ExcelTemplateService;
 import com.nxtlife.mgs.util.ExcelUtil;
 
 @Service
-public class ExcelTemplateServiceImpl implements ExcelTemplateService{
+public class ExcelTemplateServiceImpl extends BaseService implements ExcelTemplateService{
 
 	@Value("${mgs.file.upload.location}")
 	protected String filedir;

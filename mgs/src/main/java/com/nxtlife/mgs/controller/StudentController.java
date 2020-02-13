@@ -24,11 +24,16 @@ public class StudentController {
 	@Autowired
 	StudentService studentService;
 
-	@RequestMapping(value = "importStudents", method = RequestMethod.POST)
-	public List<StudentResponse> uploadStudentsFromExcel(@RequestParam("file") MultipartFile file) {
-		return studentService.uploadStudentsFromExcel(file);
+//	@RequestMapping(value = "importStudents", method = RequestMethod.POST)
+//	public List<StudentResponse> uploadStudentsFromExcel(@RequestParam("file") MultipartFile file) {
+//		return studentService.uploadStudentsFromExcel(file);
+//	}
+	
+	@PostMapping(value = "/signUp")
+	public StudentResponse signUpStudent(@RequestBody StudentRequest studentRequest) {
+		return studentService.save(studentRequest);
 	}
-
+	
 	@PostMapping()
 	public StudentResponse saveStudent(@RequestBody StudentRequest studentRequest) {
 		return studentService.save(studentRequest);

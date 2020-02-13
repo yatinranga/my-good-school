@@ -14,6 +14,7 @@ import com.nxtlife.mgs.entity.activity.File;
 import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.FileRepository;
+import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.FileService;
 import com.nxtlife.mgs.view.FileRequest;
 import com.nxtlife.mgs.view.FileResponse;
@@ -21,7 +22,7 @@ import com.nxtlife.mgs.view.SuccessResponse;
 import com.nxtlife.mgs.store.FileStore;
 
 @Service
-public class FileServiceImpl implements FileService{
+public class FileServiceImpl extends BaseService implements FileService{
 
 	 @Autowired
 	  private FileStore store;

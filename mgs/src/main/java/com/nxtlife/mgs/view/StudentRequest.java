@@ -1,8 +1,12 @@
 package com.nxtlife.mgs.view;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
+import com.nxtlife.mgs.entity.user.Guardian;
 import com.nxtlife.mgs.entity.user.Student;
 
 public class StudentRequest {
@@ -19,7 +23,7 @@ public class StudentRequest {
 	private String username;
 
 	private Date dob;
-	
+
 	private Date sessionStartDate;
 
 	private String imageUrl;
@@ -33,17 +37,21 @@ public class StudentRequest {
 
 	private Date subscriptionEndDate;
 
-	private String fathersName;
+	private List<GuardianRequest> guardians;
 
-	private String fathersEmail;
+	private List<String> guardianIds;
 
-	private String fathersMobileNumber;
-
-	private String mothersName;
-
-	private String mothersEmail;
-
-	private String mothersMobileNumber;
+//	private String fathersName;
+//
+//	private String fathersEmail;
+//
+//	private String fathersMobileNumber;
+//
+//	private String mothersName;
+//
+//	private String mothersEmail;
+//
+//	private String mothersMobileNumber;
 
 	private Boolean active;
 
@@ -145,54 +153,6 @@ public class StudentRequest {
 		this.gradeId = gradeId;
 	}
 
-	public String getFathersName() {
-		return fathersName;
-	}
-
-	public void setFathersName(String fathersName) {
-		this.fathersName = fathersName;
-	}
-
-	public String getFathersEmail() {
-		return fathersEmail;
-	}
-
-	public void setFathersEmail(String fathersEmail) {
-		this.fathersEmail = fathersEmail;
-	}
-
-	public String getFathersMobileNumber() {
-		return fathersMobileNumber;
-	}
-
-	public void setFathersMobileNumber(String fathersMobileNumber) {
-		this.fathersMobileNumber = fathersMobileNumber;
-	}
-
-	public String getMothersName() {
-		return mothersName;
-	}
-
-	public void setMothersName(String mothersName) {
-		this.mothersName = mothersName;
-	}
-
-	public String getMothersEmail() {
-		return mothersEmail;
-	}
-
-	public void setMothersEmail(String mothersEmail) {
-		this.mothersEmail = mothersEmail;
-	}
-
-	public String getMothersMobileNumber() {
-		return mothersMobileNumber;
-	}
-
-	public void setMothersMobileNumber(String mothersMobileNumber) {
-		this.mothersMobileNumber = mothersMobileNumber;
-	}
-
 	public Boolean getActive() {
 		return active;
 	}
@@ -207,6 +167,22 @@ public class StudentRequest {
 
 	public void setSessionStartDate(Date sessionStartDate) {
 		this.sessionStartDate = sessionStartDate;
+	}
+
+	public List<GuardianRequest> getGuardians() {
+		return guardians;
+	}
+
+	public void setGuardians(List<GuardianRequest> guardians) {
+		this.guardians = guardians;
+	}
+
+	public List<String> getGuardianIds() {
+		return guardianIds;
+	}
+
+	public void setGuardianIds(List<String> guardianIds) {
+		this.guardianIds = guardianIds;
 	}
 
 	public Student toEntity(Student student) {
@@ -225,8 +201,15 @@ public class StudentRequest {
 			student.setMobileNumber(this.mobileNumber);
 		if (this.subscriptionEndDate != null)
 			student.setSubscriptionEndDate(this.subscriptionEndDate);
-		if(this.sessionStartDate!=null)
+		if (this.sessionStartDate != null)
 			student.setSessionStartDate(this.sessionStartDate);
+		if (guardians != null && !guardians.isEmpty()) {
+			List<Guardian> guardiansList = new ArrayList<Guardian>();
+			for (GuardianRequest gReq : guardians) {
+				guardiansList.add(gReq.toEntity());
+			}
+			student.setGuardians(guardiansList);
+		}
 		return student;
 	}
 

@@ -10,7 +10,7 @@ import com.nxtlife.mgs.view.TeacherResponse;
 
 public interface TeacherService {
 
-	List<TeacherResponse> uploadTeachersFromExcel(MultipartFile file,  Boolean isCoach);
+	List<TeacherResponse> uploadTeachersFromExcel(MultipartFile file,  Boolean isCoach , String schoolCid);
 
 	TeacherResponse save(TeacherRequest request);
 

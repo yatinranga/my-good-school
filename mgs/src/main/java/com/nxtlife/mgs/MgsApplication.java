@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.nxtlife.mgs.security.AppProperties;
+//import com.nxtlife.mgs.security.AppProperties;
 
 @SpringBootApplication
 public class MgsApplication {
@@ -25,9 +25,9 @@ public class MgsApplication {
 		return new SpringApplicationContext();
 	}
 	
-	@Bean(name="AppProperties")
-	public AppProperties getAppProperties()
-	{
-		return new AppProperties();
-	}
+//	@Bean(name="AppProperties")
+//	public AppProperties getAppProperties()
+//	{
+//		return new AppProperties();
+//	}
 }

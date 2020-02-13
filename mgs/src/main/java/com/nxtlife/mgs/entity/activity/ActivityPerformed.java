@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -47,19 +48,19 @@ public class ActivityPerformed extends BaseEntity{
 	private Boolean active;
 	
 	@Min(value = 0)
-	@Min(value = 10)
+	@Max(value = 10)
 	private Integer participationScore;
 	
 	@Min(value = 0)
-	@Min(value = 10)
+	@Max(value = 10)
 	private Integer initiativeScore;
 	
 	@Min(value = 0)
-	@Min(value = 5)
+	@Max(value = 5)
 	private Integer achievementScore;
 	
 	@Min(value = 0)
-	@Min(value = 5)
+	@Max(value = 5)
 	private Integer star;
 	
 	@Enumerated(EnumType.STRING)
@@ -219,13 +220,11 @@ public class ActivityPerformed extends BaseEntity{
 	}
 
 	
-	
-	public ActivityPerformed(@NotNull Date dateOfActivity, @NotNull String cid, String description,
-			String coachRemark, Date coachRemarkDate, Boolean active, @Min(0) @Min(10) Integer participationScore,
-			@Min(0) @Min(10) Integer initiativeScore, @Min(0) @Min(5) Integer achievementScore,
-			@Min(0) @Min(5) Integer star, ActivityStatus activityStatus, Activity activity, List<File> files,
-			@NotNull Student student, @NotNull Teacher teacher) {
-		super();
+
+	public ActivityPerformed(Date dateOfActivity, String cid, String description, String coachRemark,
+			Date coachRemarkDate, Boolean active, Integer participationScore, Integer initiativeScore,
+			Integer achievementScore, Integer star, ActivityStatus activityStatus, Activity activity, List<File> files,
+			Student student, Teacher teacher) {
 		this.dateOfActivity = dateOfActivity;
 		this.cid = cid;
 		this.description = description;

@@ -26,16 +26,16 @@ public class TeacherController {
 	@Autowired
 	TeacherService teacherService;
 
-	@RequestMapping(value = "importTeachers", method = RequestMethod.POST)
-	public List<TeacherResponse> uploadTeachersFromExcel(@RequestParam("file") MultipartFile file) {
-		return teacherService.uploadTeachersFromExcel(file, false);
-	}
-
-	@RequestMapping(value = "importCoaches", method = RequestMethod.POST)
-	public List<TeacherResponse> uploadCoachesFromExcel(@RequestParam("file") MultipartFile file,
-			@RequestParam Integer rowLimit) {
-		return teacherService.uploadTeachersFromExcel(file, true);
-	}
+//	@RequestMapping(value = "importTeachers", method = RequestMethod.POST)
+//	public List<TeacherResponse> uploadTeachersFromExcel(@RequestParam("file") MultipartFile file) {
+//		return teacherService.uploadTeachersFromExcel(file, false);
+//	}
+//
+//	@RequestMapping(value = "importCoaches", method = RequestMethod.POST)
+//	public List<TeacherResponse> uploadCoachesFromExcel(@RequestParam("file") MultipartFile file,
+//			@RequestParam Integer rowLimit) {
+//		return teacherService.uploadTeachersFromExcel(file, true);
+//	}
 
 	@PostMapping()
 	public TeacherResponse saveTeacher(@RequestBody TeacherRequest teacherRequest) {

@@ -30,6 +30,7 @@ import com.nxtlife.mgs.jpa.ActivityRepository;
 import com.nxtlife.mgs.jpa.GradeRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
 import com.nxtlife.mgs.jpa.TeacherRepository;
+import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.TeacherService;
 import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.util.DateUtil;
@@ -40,7 +41,7 @@ import com.nxtlife.mgs.view.TeacherRequest;
 import com.nxtlife.mgs.view.TeacherResponse;
 
 @Service
-public class TeacherServiceImpl implements TeacherService {
+public class TeacherServiceImpl extends BaseService implements TeacherService {
 
 	@Autowired
 	TeacherRepository teacherRepository;
@@ -61,7 +62,7 @@ public class TeacherServiceImpl implements TeacherService {
 	Utils utils;
 
 	@Override
-	public List<TeacherResponse> uploadTeachersFromExcel(MultipartFile file, Boolean isCoach) {
+	public List<TeacherResponse> uploadTeachersFromExcel(MultipartFile file, Boolean isCoach , String schoolCid) {
 
 		if (file == null || file.isEmpty() || file.getSize() == 0)
 			throw new ValidationException("Pls upload valid excel file.");
@@ -77,7 +78,7 @@ public class TeacherServiceImpl implements TeacherService {
 				for (int i = 0; i < teacherRecords.size(); i++) {
 					List<Map<String, Object>> tempStudentsRecords = new ArrayList<Map<String, Object>>();
 					tempStudentsRecords.add(teacherRecords.get(i));
-					teacherResponseList.add(saveCoach(validateTeacherRequest(tempStudentsRecords, errors, true)));
+					teacherResponseList.add(saveCoach(validateTeacherRequest(tempStudentsRecords, errors, true,schoolCid)));
 				}
 			} else {
 				teacherRecords = findSheetRowValues(studentsSheet, "TEACHER", errors);
@@ -85,7 +86,7 @@ public class TeacherServiceImpl implements TeacherService {
 					List<Map<String, Object>> tempStudentsRecords = new ArrayList<Map<String, Object>>();
 					tempStudentsRecords.add(teacherRecords.get(i));
 					teacherResponseList
-							.add(saveClassTeacher(validateTeacherRequest(tempStudentsRecords, errors, false)));
+							.add(saveClassTeacher(validateTeacherRequest(tempStudentsRecords, errors, false,schoolCid)));
 				}
 			}
 
@@ -248,24 +249,24 @@ public class TeacherServiceImpl implements TeacherService {
 	}
 
 	private TeacherRequest validateTeacherRequest(List<Map<String, Object>> teacherDetails, List<String> errors,
-			Boolean isCoach) {
+			Boolean isCoach,String schoolCid) {
 		if (teacherDetails == null || teacherDetails.isEmpty()) {
 			errors.add("Teacher details not found");
 		}
 		TeacherRequest teacherRequest = new TeacherRequest();
 		teacherRequest.setName((String) teacherDetails.get(0).get("NAME"));
 		teacherRequest.setQualification((String) teacherDetails.get(0).get("QUALIFICATION"));
-		teacherRequest.setUsername((String) teacherDetails.get(0).get("USERNAME"));
+//		teacherRequest.setUsername((String) teacherDetails.get(0).get("USERNAME"));
 		teacherRequest.setDob(
 				DateUtil.convertStringToDate(DateUtil.formatDate((Date) teacherDetails.get(0).get("DOB"), null, null)));
-		School school = null;
-		if (teacherDetails.get(0).get("SCHOOL") != null)
-			school = schoolRepository.findByName((String) teacherDetails.get(0).get("SCHOOL"));
-		if (teacherDetails.get(0).get("SCHOOLS EMAIL") != null)
-			school = schoolRepository.findByEmail((String) teacherDetails.get(0).get("SCHOOLS EMAIL"));
+		School school = schoolRepository.findByCid(schoolCid);
+//		if (teacherDetails.get(0).get("SCHOOL") != null)
+//			school = schoolRepository.findByName((String) teacherDetails.get(0).get("SCHOOL"));
+//		if (teacherDetails.get(0).get("SCHOOLS EMAIL") != null)
+//			school = schoolRepository.findByEmail((String) teacherDetails.get(0).get("SCHOOLS EMAIL"));
 
 		if (school == null)
-			errors.add(String.format("School %s not found ", (String) teacherDetails.get(0).get("SCHOOL")));
+			errors.add(String.format("School with id : %s not found ", schoolCid));
 		else {
 			teacherRequest.setSchoolId(school.getCid());
 			String standard = (String) teacherDetails.get(0).get("GRADE");
@@ -347,7 +348,7 @@ public class TeacherServiceImpl implements TeacherService {
 	public TeacherResponse findById(Long id) {
 		if (id == null)
 			throw new ValidationException("Id can not be null");
-		Teacher teacher = teacherRepository.findById(id).orElse(null);
+		Teacher teacher = teacherRepository.findById(id);
 		if (teacher == null)
 			throw new ValidationException(String.format("Teacher having id : %s not found", id));
 

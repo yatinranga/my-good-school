@@ -9,7 +9,9 @@ public enum UserType
   School,
   LFIN,
   Coach,
-  Nxtlife;
+  Nxtlife,
+  Admin;
+	
 
   public static boolean matches(String userType)
   {

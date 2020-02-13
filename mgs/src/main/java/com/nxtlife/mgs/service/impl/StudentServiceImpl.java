@@ -38,22 +38,27 @@ import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.GradeRepository;
 import com.nxtlife.mgs.jpa.GuardianRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
+import com.nxtlife.mgs.jpa.SequenceGeneratorRepo;
 import com.nxtlife.mgs.jpa.StudentRepository;
 import com.nxtlife.mgs.jpa.StudentSchoolGradeRepository;
 import com.nxtlife.mgs.service.ActivityPerformedService;
+import com.nxtlife.mgs.service.BaseService;
+import com.nxtlife.mgs.service.SequenceGeneratorService;
 import com.nxtlife.mgs.service.StudentService;
 import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.ExcelUtil;
+import com.nxtlife.mgs.util.SequenceGenerator;
 import com.nxtlife.mgs.util.StudentSchoolGradeId;
 import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.ActivityPerformedRequest;
 import com.nxtlife.mgs.view.ActivityPerformedResponse;
+import com.nxtlife.mgs.view.GuardianRequest;
 import com.nxtlife.mgs.view.StudentRequest;
 import com.nxtlife.mgs.view.StudentResponse;
 
 @Service
-public class StudentServiceImpl implements StudentService {
+public class StudentServiceImpl extends BaseService implements StudentService {
 
 	@Autowired
 	StudentRepository studentRepository;
@@ -72,6 +77,12 @@ public class StudentServiceImpl implements StudentService {
 
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	SequenceGeneratorService sequenceGeneratorService;
+	
+	@Autowired
+	SequenceGeneratorRepo sequenceGeneratorRepo;
 
 	@Autowired
 	Utils utils;
@@ -87,17 +98,56 @@ public class StudentServiceImpl implements StudentService {
 			throw new ValidationException("Email can not be null");
 		if (studentRepository.countByEmail(request.getEmail()) > 0)
 			throw new ValidationException("Email already exists");
-		if (request.getUsername() == null) {
-			request.setUsername(request.getEmail());
-			if (studentRepository.countByUsername(request.getUsername()) > 0)
-				throw new ValidationException("Username already exists");
-		} else {
-			if (studentRepository.countByUsername(request.getUsername()) > 0)
-				throw new ValidationException("Username already exists");
-		}
+//		if (request.getUsername() == null) {
+//			request.setUsername(request.getEmail());
+//			if (studentRepository.countByUsername(request.getUsername()) > 0)
+//				throw new ValidationException("Username already exists");
+//		} else {
+//			if (studentRepository.countByUsername(request.getUsername()) > 0)
+//				throw new ValidationException("Username already exists");
+//		}
+		Long studsequence = sequenceGeneratorService.findSequenceByUserType(UserType.Student);
+		if(studsequence==null) {
+			sequenceGeneratorRepo.save(new SequenceGenerator(UserType.Student, 0l));
+			}
+		++studsequence;
+		request.setUsername(String.format("STU%08d", studsequence));
+		sequenceGeneratorService.updateSequenceByUserType(studsequence, UserType.Student);
 
 		if (request.getName() == null)
 			throw new ValidationException("Student name can not be null");
+		
+		List<Guardian> repoGuardians = guardianRepository.findAll();
+		for (int i = 0; i < request.getGuardians().size(); i++) {
+			for (int j = 0; j < repoGuardians.size(); j++) {
+				if(request.getGuardians().get(i).getName()==null) {
+					request.getGuardians().remove(i);
+					continue;
+				}
+				if (request.getGuardians().get(i).getEmail() != null
+						&& repoGuardians.get(j).getEmail().equals(request.getGuardians().get(i).getEmail())) {
+					throw new ValidationException(String.format("Guardian with email : %s already exist.",
+							request.getGuardians().get(i).getEmail()));
+//					request.getGuardians().remove(i);
+				}
+				
+				if(request.getGuardians().get(i).getMobileNumber()!=null && repoGuardians.get(j).getMobileNumber().equals(request.getGuardians().get(i).getMobileNumber())) {
+					throw new ValidationException(String.format("Guardian with Mobile Number : %s already exist.",
+							request.getGuardians().get(i).getMobileNumber()));
+				}
+			}
+		}
+
+		for(GuardianRequest greq : request.getGuardians()) {
+			Long sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
+			if(sequence==null) {
+				sequenceGeneratorRepo.save(new SequenceGenerator(UserType.Parent, 0l));
+				}
+			++sequence;
+			greq.setUsername(String.format("GRD%08d", sequence));
+			sequenceGeneratorService.updateSequenceByUserType(sequence, UserType.Parent);
+		}
+		
 //		if (request.getSchoolCId() == null)
 //			throw new ValidationException("School can not be null");
 //		if (request.getGradeCId() == null)
@@ -119,13 +169,20 @@ public class StudentServiceImpl implements StudentService {
 //							student, school, grade, Integer.toString(LocalDateTime.now().getYear())));
 //		}
 
-		try {
+//		try {
 			student.setCid(utils.generateRandomAlphaNumString(8));
-		} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
-			student.setCid(utils.generateRandomAlphaNumString(8));
+//		} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
+//			student.setCid(utils.generateRandomAlphaNumString(8));
+//		}
+		
+		for(Guardian gua : student.getGuardians()) {
+			gua.setStudent(student);
+			gua.setCid(utils.generateRandomAlphaNumString(8));
+			gua.setUser(userService.createParentUser(gua));
 		}
-		List<Guardian> guardians = createParent(request, student);
-		student.setGuardians(guardians);
+//		List<Guardian> guardians = createParent(request, student);
+//		student.setGuardians(guardians);
+
 //		if (request.getActive() != null) {
 //			student.setActive(request.getActive());
 //		} else
@@ -144,101 +201,101 @@ public class StudentServiceImpl implements StudentService {
 		return new StudentResponse(student);
 	}
 
-	public List<Guardian> createParent(StudentRequest studentRequest, Student student) {
-		List<Guardian> parents = new ArrayList<>();
-		Guardian parent = null;
-
-		if (studentRequest.getFathersName() != null
-				&& (studentRequest.getFathersEmail() != null || studentRequest.getFathersMobileNumber() != null)) {
-			if (studentRequest.getFathersEmail() != null) {
-				parent = guardianRepository.getOneByEmail(studentRequest.getFathersEmail());
-			}
-			if (studentRequest.getFathersMobileNumber() != null) {
-				parent = guardianRepository.getOneByMobileNumber(studentRequest.getFathersMobileNumber());
-			}
-			if (parent == null) {
-				parent = new Guardian();
-				parent.setName(studentRequest.getFathersName());
-				String username = null;
-				if (studentRequest.getFathersEmail() != null) {
-					parent.setEmail(studentRequest.getFathersEmail());
-					username = studentRequest.getFathersEmail();
-//					parent.setUsername(studentRequest.getFathersEmail());
-				}
-				if (studentRequest.getFathersMobileNumber() != null) {
-					parent.setMobileNumber(studentRequest.getFathersMobileNumber());
-					if (username == null)
-						username = studentRequest.getFathersMobileNumber();
-//					parent.setUsername(studentRequest.getFathersMobileNumber());
-				}
-
-				try {
-					parent.setCid(utils.generateRandomAlphaNumString(8));
-				} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
-					parent.setCid(utils.generateRandomAlphaNumString(8));
-				}
-				parent.setUsername(username);
-				parent.setMobileNumber(studentRequest.getFathersMobileNumber());
-				parent.setGender("Male");
-				parent.setActive(true);
-				parent.setStudent(student);
-				User user =null;//= userService.createParentUser(parent);
-				parent.setUser(user);
-				parents.add(parent);
-
-			} else {
-				parent.setStudent(student);
-				parents.add(parent);
-			}
-		}
-
-		parent = null;
-		if (studentRequest.getMothersName() != null
-				&& (studentRequest.getMothersEmail() != null || studentRequest.getMothersMobileNumber() != null)) {
-			if (studentRequest.getMothersEmail() != null) {
-				parent = guardianRepository.getOneByEmail(studentRequest.getMothersEmail());
-			}
-			if (studentRequest.getMothersMobileNumber() != null) {
-				parent = guardianRepository.getOneByMobileNumber(studentRequest.getMothersMobileNumber());
-			}
-			if (parent == null) {
-				parent = new Guardian();
-				parent.setName(studentRequest.getMothersName());
-				String username = null;
-				if (studentRequest.getMothersEmail() != null) {
-					parent.setEmail(studentRequest.getMothersEmail());
-					username = studentRequest.getMothersEmail();
-//					parent.setUsername(studentRequest.getMothersEmail());
-				}
-
-				if (studentRequest.getMothersMobileNumber() != null) {
-					parent.setMobileNumber(studentRequest.getMothersMobileNumber());
-					if (username == null)
-						username = studentRequest.getMothersMobileNumber();
-//					parent.setUsername(studentRequest.getMothersMobileNumber());
-				}
-
-				try {
-					parent.setCid(utils.generateRandomAlphaNumString(8));
-				} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
-					parent.setCid(utils.generateRandomAlphaNumString(8));
-				}
-				parent.setUsername(username);
-				parent.setGender("Female");
-				parent.setActive(true);
-				parent.setStudent(student);
-				User user = null;//userService.createParentUser(parent);
-				parent.setUser(user);
-				parents.add(parent);
-
-			} else {
-				parent.setStudent(student);
-				parents.add(parent);
-			}
-		}
-
-		return parents;
-	}
+//	public List<Guardian> createParent(StudentRequest studentRequest, Student student) {
+//		List<Guardian> parents = new ArrayList<>();
+//		Guardian parent = null;
+//
+//		if (studentRequest.getFathersName() != null
+//				&& (studentRequest.getFathersEmail() != null || studentRequest.getFathersMobileNumber() != null)) {
+//			if (studentRequest.getFathersEmail() != null) {
+//				parent = guardianRepository.getOneByEmail(studentRequest.getFathersEmail());
+//			}
+//			if (studentRequest.getFathersMobileNumber() != null) {
+//				parent = guardianRepository.getOneByMobileNumber(studentRequest.getFathersMobileNumber());
+//			}
+//			if (parent == null) {
+//				parent = new Guardian();
+//				parent.setName(studentRequest.getFathersName());
+//				String username = null;
+//				if (studentRequest.getFathersEmail() != null) {
+//					parent.setEmail(studentRequest.getFathersEmail());
+//					username = studentRequest.getFathersEmail();
+////					parent.setUsername(studentRequest.getFathersEmail());
+//				}
+//				if (studentRequest.getFathersMobileNumber() != null) {
+//					parent.setMobileNumber(studentRequest.getFathersMobileNumber());
+//					if (username == null)
+//						username = studentRequest.getFathersMobileNumber();
+////					parent.setUsername(studentRequest.getFathersMobileNumber());
+//				}
+//
+//				try {
+//					parent.setCid(utils.generateRandomAlphaNumString(8));
+//				} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
+//					parent.setCid(utils.generateRandomAlphaNumString(8));
+//				}
+//				parent.setUsername(username);
+//				parent.setMobileNumber(studentRequest.getFathersMobileNumber());
+//				parent.setGender("Male");
+//				parent.setActive(true);
+//				parent.setStudent(student);
+//				User user =null;//= userService.createParentUser(parent);
+//				parent.setUser(user);
+//				parents.add(parent);
+//
+//			} else {
+//				parent.setStudent(student);
+//				parents.add(parent);
+//			}
+//		}
+//
+//		parent = null;
+//		if (studentRequest.getMothersName() != null
+//				&& (studentRequest.getMothersEmail() != null || studentRequest.getMothersMobileNumber() != null)) {
+//			if (studentRequest.getMothersEmail() != null) {
+//				parent = guardianRepository.getOneByEmail(studentRequest.getMothersEmail());
+//			}
+//			if (studentRequest.getMothersMobileNumber() != null) {
+//				parent = guardianRepository.getOneByMobileNumber(studentRequest.getMothersMobileNumber());
+//			}
+//			if (parent == null) {
+//				parent = new Guardian();
+//				parent.setName(studentRequest.getMothersName());
+//				String username = null;
+//				if (studentRequest.getMothersEmail() != null) {
+//					parent.setEmail(studentRequest.getMothersEmail());
+//					username = studentRequest.getMothersEmail();
+////					parent.setUsername(studentRequest.getMothersEmail());
+//				}
+//
+//				if (studentRequest.getMothersMobileNumber() != null) {
+//					parent.setMobileNumber(studentRequest.getMothersMobileNumber());
+//					if (username == null)
+//						username = studentRequest.getMothersMobileNumber();
+////					parent.setUsername(studentRequest.getMothersMobileNumber());
+//				}
+//
+//				try {
+//					parent.setCid(utils.generateRandomAlphaNumString(8));
+//				} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
+//					parent.setCid(utils.generateRandomAlphaNumString(8));
+//				}
+//				parent.setUsername(username);
+//				parent.setGender("Female");
+//				parent.setActive(true);
+//				parent.setStudent(student);
+//				User user = null;//userService.createParentUser(parent);
+//				parent.setUser(user);
+//				parents.add(parent);
+//
+//			} else {
+//				parent.setStudent(student);
+//				parents.add(parent);
+//			}
+//		}
+//
+//		return parents;
+//	}
 
 	private List<Map<String, Object>> fetchRowValues(Map<String, CellType> columnTypes, XSSFSheet sheet,
 			List<String> errors, String sheetName) {
@@ -320,7 +377,7 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public List<StudentResponse> uploadStudentsFromExcel(MultipartFile file) {
+	public List<StudentResponse> uploadStudentsFromExcel(MultipartFile file, String schoolCid) {
 		if (file == null || file.isEmpty() || file.getSize() == 0)
 			throw new ValidationException("Pls upload valid excel file.");
 //				|| !(file.getContentType().equalsIgnoreCase("xlsx") || file.getContentType().equalsIgnoreCase("xls")
@@ -336,7 +393,7 @@ public class StudentServiceImpl implements StudentService {
 			for (int i = 0; i < studentsRecords.size(); i++) {
 				List<Map<String, Object>> tempStudentsRecords = new ArrayList<Map<String, Object>>();
 				tempStudentsRecords.add(studentsRecords.get(i));
-				studentResponseList.add(save(validateStudentRequest(tempStudentsRecords, errors)));
+				studentResponseList.add(save(validateStudentRequest(tempStudentsRecords, errors,schoolCid)));
 			}
 
 		} catch (IOException e) {
@@ -348,23 +405,23 @@ public class StudentServiceImpl implements StudentService {
 		return studentResponseList;
 	}
 
-	private StudentRequest validateStudentRequest(List<Map<String, Object>> studentDetails, List<String> errors) {
+	private StudentRequest validateStudentRequest(List<Map<String, Object>> studentDetails, List<String> errors ,String schoolCid) {
 		if (studentDetails == null || studentDetails.isEmpty()) {
 			errors.add("Student details not found");
 		}
 		StudentRequest studentRequest = new StudentRequest();
 		studentRequest.setName((String) studentDetails.get(0).get("NAME"));
-		studentRequest.setUsername((String) studentDetails.get(0).get("USERNAME"));
+//		studentRequest.setUsername((String) studentDetails.get(0).get("USERNAME"));
 		studentRequest.setDob(
 				DateUtil.convertStringToDate(DateUtil.formatDate((Date) studentDetails.get(0).get("DOB"), null, null)));
-		School school = null;
-		if (studentDetails.get(0).get("SCHOOL") != null)
-			school = schoolRepository.findByName((String) studentDetails.get(0).get("SCHOOL"));
-		if (studentDetails.get(0).get("SCHOOLS EMAIL") != null)
-			school = schoolRepository.findByEmail((String) studentDetails.get(0).get("SCHOOLS EMAIL"));
+		School school = schoolRepository.findByCid(schoolCid);
+//		if (studentDetails.get(0).get("SCHOOL") != null)
+//			school = schoolRepository.findByName((String) studentDetails.get(0).get("SCHOOL"));
+//		if (studentDetails.get(0).get("SCHOOLS EMAIL") != null)
+//			school = schoolRepository.findByEmail((String) studentDetails.get(0).get("SCHOOLS EMAIL"));
 
 		if (school == null)
-			errors.add(String.format("School %s not found ", (String) studentDetails.get(0).get("SCHOOL")));
+			errors.add(String.format("School with id : %s not found ", schoolCid));
 		else {
 			studentRequest.setSchoolId(school.getCid());
 			String standard = (String) studentDetails.get(0).get("GRADE");
@@ -393,12 +450,20 @@ public class StudentServiceImpl implements StudentService {
 		studentRequest.setGender((String) studentDetails.get(0).get("GENDER"));
 		studentRequest.setSubscriptionEndDate(DateUtil.convertStringToDate(
 				DateUtil.formatDate((Date) studentDetails.get(0).get("SUBSCRIPTION END DATE"), null, null)));
-		studentRequest.setFathersName((String) studentDetails.get(0).get("FATHERS NAME"));
-		studentRequest.setFathersEmail((String) studentDetails.get(0).get("FATHERS EMAIL"));
-		studentRequest.setFathersMobileNumber((String) studentDetails.get(0).get("FATHERS MOBILE NUMBER"));
-		studentRequest.setMothersName((String) studentDetails.get(0).get("MOTHERS NAME"));
-		studentRequest.setMothersEmail((String) studentDetails.get(0).get("MOTHERS EMAIL"));
-		studentRequest.setMothersMobileNumber((String) studentDetails.get(0).get("MOTHERS MOBILE NUMBER"));
+		List<GuardianRequest> guardians = new ArrayList<GuardianRequest>();
+		guardians.add(new GuardianRequest((String) studentDetails.get(0).get("FATHERS NAME"),
+				(String) studentDetails.get(0).get("FATHERS EMAIL"), "male",
+				(String) studentDetails.get(0).get("FATHERS MOBILE NUMBER"), "Father"));
+		guardians.add(new GuardianRequest((String) studentDetails.get(0).get("MOTHERS NAME"),
+				(String) studentDetails.get(0).get("MOTHERS EMAIL"), "male",
+				(String) studentDetails.get(0).get("MOTHERS MOBILE NUMBER"), "Mother"));
+		studentRequest.setGuardians(guardians);
+//		studentRequest.setFathersName((String) studentDetails.get(0).get("FATHERS NAME"));
+//		studentRequest.setFathersEmail((String) studentDetails.get(0).get("FATHERS EMAIL"));
+//		studentRequest.setFathersMobileNumber((String) studentDetails.get(0).get("FATHERS MOBILE NUMBER"));
+//		studentRequest.setMothersName((String) studentDetails.get(0).get("MOTHERS NAME"));
+//		studentRequest.setMothersEmail((String) studentDetails.get(0).get("MOTHERS EMAIL"));
+//		studentRequest.setMothersMobileNumber((String) studentDetails.get(0).get("MOTHERS MOBILE NUMBER"));
 
 		return studentRequest;
 	}
@@ -429,7 +494,7 @@ public class StudentServiceImpl implements StudentService {
 		if (id == null)
 			throw new ValidationException("id can't be null");
 
-		Student student = studentRepository.findById(id).orElse(null);
+		Student student = studentRepository.findById(id);
 
 		if (student == null)
 			throw new NotFoundException(String.format("Student having id [%d] didn't exist", id));
@@ -500,7 +565,7 @@ public class StudentServiceImpl implements StudentService {
 
 	@Override
 	public List<StudentResponse> getAllBySchoolCid(String schoolCid) {
-		
+
 		return null;
 	}
 

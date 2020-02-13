@@ -23,6 +23,7 @@ import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.GradeRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
+import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.GradeService;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.Utils;
@@ -31,7 +32,7 @@ import com.nxtlife.mgs.view.GradeResponse;
 import com.nxtlife.mgs.view.SchoolResponse;
 import com.nxtlife.mgs.view.StudentResponse;
 @Service
-public class GradeServiceImpl implements GradeService {
+public class GradeServiceImpl extends BaseService implements GradeService {
 
 	@Autowired
 	SchoolRepository schoolRepository;

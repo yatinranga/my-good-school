@@ -13,16 +13,19 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Transient;
-import javax.validation.constraints.Email;
+//import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.validator.constraints.Email;
+import org.joda.time.DateTime;
 import org.springframework.data.jpa.domain.AbstractAuditable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.enums.RegisterType;
 import com.nxtlife.mgs.enums.UserType;
@@ -31,20 +34,24 @@ import com.nxtlife.mgs.enums.UserType;
 @Entity
 @DynamicInsert
 @DynamicUpdate
-public class User extends AbstractAuditable<User, Long> implements UserDetails {
+public class User extends BaseEntity implements UserDetails {
 
+	@Column(unique = true,nullable = false)
 	private String cid;
+	
+	@Transient
+	private Long userId;
 	
 	@Column(nullable = false ,unique = true)
 	private String userName;
 
-	@Column(nullable = false, unique = true)
+	@Column(unique = true)
 	@Size(min = 10, max = 10)
 //	@Pattern(regexp = "^[6-9]{1}[0-9]]{9}$")
 	private String contactNo;
 
 	@Email
-	@Column(nullable = false, unique = true)
+	@Column( unique = true)
 	private String email;
 
 	@Column(nullable = false)
@@ -86,11 +93,22 @@ public class User extends AbstractAuditable<User, Long> implements UserDetails {
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	private LFIN lfin;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	private Guardian guardian;
 
 	@PrePersist
 	public void prePersist() {
-		this.setCreatedDate(LocalDateTime.now());
+		this.setCreatedDate(DateTime.now());
 
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = this.getId();
 	}
 
 	public void setUserName(String userName) {
@@ -254,6 +272,14 @@ public class User extends AbstractAuditable<User, Long> implements UserDetails {
 
 	public void setLfin(LFIN lfin) {
 		this.lfin = lfin;
+	}
+
+	public Guardian getGuardian() {
+		return guardian;
+	}
+
+	public void setGuardian(Guardian guardian) {
+		this.guardian = guardian;
 	}
 
 	public User(String cid, String userName,

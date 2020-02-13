@@ -23,10 +23,10 @@ public class GradeController {
 	@Autowired
 	GradeService gradeService;
 
-	@RequestMapping(value = "importGrades", method = RequestMethod.POST)
-	public List<GradeResponse> uploadGradesFromExcel(@RequestParam("file") MultipartFile file) {
-		return gradeService.uploadGradesFromExcel(file);
-	}
+//	@RequestMapping(value = "importGrades", method = RequestMethod.POST)
+//	public List<GradeResponse> uploadGradesFromExcel(@RequestParam("file") MultipartFile file) {
+//		return gradeService.uploadGradesFromExcel(file);
+//	}
 
 	@PostMapping()
 	public GradeResponse saveGrade(@RequestBody GradeRequest gradeRequest) {

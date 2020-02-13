@@ -73,7 +73,7 @@ public class UserRequest {
 	    user =user==null? new User():user;
 		user.setContactNo(contactNumber);
 		user.setEmail(email);
-		if(UserType.matches(type)) {
+		if(!UserType.matches(type)) {
 			throw new ValidationException("Type not found");
 		}
 		if(type.equalsIgnoreCase(UserType.Student.name())) {

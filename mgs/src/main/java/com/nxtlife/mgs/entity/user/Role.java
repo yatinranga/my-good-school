@@ -2,6 +2,7 @@ package com.nxtlife.mgs.entity.user;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.joda.time.DateTime;
 import org.springframework.data.jpa.domain.AbstractAuditable;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -44,9 +45,9 @@ public class Role extends AbstractAuditable<Role,Long> implements Serializable {
     public void prePersist(){
 
         if(this.isNew())
-            this.setCreatedDate(LocalDateTime.now());
+            this.setCreatedDate(DateTime.now());
         else
-            this.setLastModifiedDate(LocalDateTime.now());
+            this.setLastModifiedDate(DateTime.now());
     }
 
     public String getName() {

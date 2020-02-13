@@ -25,9 +25,9 @@ import com.nxtlife.mgs.entity.user.User;
 @Entity
 public class School extends BaseEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	Long id;
+//	@Id
+//	@GeneratedValue(strategy = GenerationType.AUTO)
+//	Long id;
 	
 	@NotNull
 	@Column(unique=true)
@@ -168,13 +168,13 @@ public class School extends BaseEntity {
 		this.logo = logo;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
+//	public Long getId() {
+//		return id;
+//	}
+//
+//	public void setId(Long id) {
+//		this.id = id;
+//	}
 
 	public User getUser() {
 		return user;
