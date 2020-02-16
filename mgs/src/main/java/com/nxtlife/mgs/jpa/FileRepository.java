@@ -27,6 +27,8 @@ public interface FileRepository extends JpaRepository<File, Long>{
 	@Query(value="update File f set f.active = :active where f.url = :url")
 	int updateFileSetActiveByUrl(@Param("active") Boolean active,@Param("url") String cId);
 	
+//	int updateFileSetActiveBy
+	
 	List<File> findAllByActiveTrueAndActivityPerformedCid(String activityPerformedCid);
 	
 	File findByUrl(String url);

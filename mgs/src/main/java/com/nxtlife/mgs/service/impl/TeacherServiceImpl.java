@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
@@ -23,11 +25,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
+import com.nxtlife.mgs.entity.user.Role;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.entity.user.User;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.ActivityRepository;
 import com.nxtlife.mgs.jpa.GradeRepository;
+import com.nxtlife.mgs.jpa.RoleRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
 import com.nxtlife.mgs.jpa.TeacherRepository;
 import com.nxtlife.mgs.service.BaseService;
@@ -54,12 +58,77 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 
 	@Autowired
 	ActivityRepository activityRepository;
+	
+	@Autowired
+	RoleRepository roleRepository;
 
 	@Autowired
 	UserService userService;
 
 	@Autowired
 	Utils utils;
+	
+	@Override
+	public TeacherResponse save(TeacherRequest request) {
+		if (request == null)
+			throw new ValidationException("Request can not be null.");
+		if (request.getEmail() == null)
+			throw new ValidationException("Email can not be null");
+		if (teacherRepository.countByEmail(request.getEmail()) > 0)
+			throw new ValidationException("Email already exists");
+		if (request.getUsername() == null)
+			request.setUsername(request.getEmail());
+		if (teacherRepository.countByUsername(request.getUsername()) > 0)
+			throw new ValidationException("Username already exists");
+		if (request.getName() == null)
+			throw new ValidationException("Teacher name can not be null");
+
+		Teacher teacher = request.toEntity();
+		if (request.getSchoolId() != null) {
+			teacher.setSchool(schoolRepository.getOneByCid(request.getSchoolId()));
+			
+// logic to remove the grades from all available grades which are not present in request and set it to teacher
+			if (request.getGradeIds() != null && !request.getGradeIds().isEmpty()) {
+				List<Grade> repoGradeList = gradeRepository.findAllBySchoolsCid(request.getSchoolId());
+				for(int i=0;i<repoGradeList.size();i++) {
+					Boolean flag = false;
+					for(String gCid : request.getGradeIds()) 
+					   if(repoGradeList.get(i).getCid().equals(gCid)) 
+						   flag= true;
+					
+					if(!flag)
+						repoGradeList.remove(i--);	
+				}
+				teacher.setGrades(repoGradeList);
+			}
+		}
+// logic to remove the activities from all available activities which are not present in request and set it to teacher
+		if (request.getActivitiyIds() != null && !request.getActivitiyIds().isEmpty()) {
+			List<Activity> repoActivityList = activityRepository.findAll();
+			for(int i=0;i<repoActivityList.size();i++) {
+				Boolean flag = false;
+				for(String actCId : request.getActivitiyIds()) 
+				   if(repoActivityList.get(i).getCid().equals(actCId)) 
+					   flag= true;
+				
+				if(!flag)
+					repoActivityList.remove(i--);	
+			}
+			teacher.setActivities(repoActivityList);
+		}
+			teacher.setcId(utils.generateRandomAlphaNumString(8));
+		
+		User user = userService.createTeacherUser(teacher);
+		if (StringUtils.isEmpty(user))
+			throw new ValidationException("User not created successfully");
+		teacher.setUser(user);
+		teacher = teacherRepository.save(teacher);
+		if (teacher == null)
+			throw new RuntimeException("Something went wrong student not saved.");
+
+		return new TeacherResponse(teacher);
+	}
+
 
 	@Override
 	public List<TeacherResponse> uploadTeachersFromExcel(MultipartFile file, Boolean isCoach , String schoolCid) {
@@ -98,63 +167,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		return teacherResponseList;
 	}
 
-	@Override
-	public TeacherResponse save(TeacherRequest request) {
-		if (request == null)
-			throw new ValidationException("Request can not be null.");
-		if (request.getEmail() == null)
-			throw new ValidationException("Email can not be null");
-		if (teacherRepository.countByEmail(request.getEmail()) > 0)
-			throw new ValidationException("Email already exists");
-		if (request.getUsername() == null)
-			request.setUsername(request.getEmail());
-		if (teacherRepository.countByUsername(request.getUsername()) > 0)
-			throw new ValidationException("Username already exists");
-		if (request.getName() == null)
-			throw new ValidationException("Teacher name can not be null");
-
-		Teacher teacher = request.toEntity();
-		if (request.getSchoolId() != null) {
-			teacher.setSchool(schoolRepository.getOneByCid(request.getSchoolId()));
-			if (request.getGradeIds() != null && !request.getGradeIds().isEmpty()) {
-				List<Grade> grades = new ArrayList<Grade>();
-				for (String grade : request.getGradeIds()) {
-					grades.add(gradeRepository.getOneByCid(grade));
-				}
-				teacher.setGrades(grades);
-			}
-
-		}
-
-		if (request.getActivitiyIds() != null && !request.getActivitiyIds().isEmpty()) {
-			List<Activity> activities = new ArrayList<Activity>();
-
-			for(String actCId : request.getActivitiyIds()) {
-				Activity activity = activityRepository.getOneByCid(actCId);
-				if(activity!=null)
-
-					activities.add(activity);
-			}
-			teacher.setActivities(activities);
-		}
-
-		try {
-			teacher.setcId(utils.generateRandomAlphaNumString(8));
-		} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
-			teacher.setcId(utils.generateRandomAlphaNumString(8));
-		}
-		User user = userService.createTeacherUser(teacher);
-		if (StringUtils.isEmpty(user))
-			throw new ValidationException("User not created successfully");
-		teacher.setUser(user);
-		teacher = teacherRepository.save(teacher);
-		if (teacher == null)
-			throw new RuntimeException("Something went wrong student not saved.");
-
-		return new TeacherResponse(teacher);
-	}
-
-	@Override
+		@Override
 	public TeacherResponse saveClassTeacher(TeacherRequest request) {
 
 		if (request != null)
@@ -224,6 +237,9 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 						}
 					} else {
 //						if(columnTypes.get(headers.get(j)).equals(cell.getCellType()))
+						if(headers.get(j).equalsIgnoreCase("NAME")||headers.get(j).equalsIgnoreCase("EMAIL")||headers.get(j).equalsIgnoreCase("MOBILE NUMBER")||headers.get(j).equalsIgnoreCase("GRADE"))
+							   errors.add(String.format("Cell at row %d and column %d is blank for header %s.", i+1,j+1,headers.get(j)));
+							columnValues.put(headers.get(j), null);
 						columnValues.put(headers.get(j), null);
 					}
 				}

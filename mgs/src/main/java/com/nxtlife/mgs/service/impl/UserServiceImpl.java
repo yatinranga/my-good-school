@@ -1,15 +1,21 @@
 package com.nxtlife.mgs.service.impl;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.joda.time.LocalDateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,7 +25,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.nxtlife.mgs.auth.MgsAuth;
 import com.nxtlife.mgs.entity.school.School;
+import com.nxtlife.mgs.entity.user.Authority;
 import com.nxtlife.mgs.entity.user.Guardian;
 import com.nxtlife.mgs.entity.user.Role;
 import com.nxtlife.mgs.entity.user.Student;
@@ -28,6 +36,7 @@ import com.nxtlife.mgs.entity.user.User;
 import com.nxtlife.mgs.enums.RegisterType;
 import com.nxtlife.mgs.enums.UserType;
 import com.nxtlife.mgs.ex.ValidationException;
+import com.nxtlife.mgs.jpa.AuthorityRepository;
 import com.nxtlife.mgs.jpa.RoleRepository;
 import com.nxtlife.mgs.jpa.UserRepository;
 import com.nxtlife.mgs.service.BaseService;
@@ -45,23 +54,59 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Autowired
 	RoleRepository roleRepository;
-
+	
+	@Autowired
+	AuthorityRepository authorityRepository;
 
 	@Autowired
 	Utils utils;
 
+	private static Logger logger = LoggerFactory.getLogger(UserService.class);
+	
 	@PostConstruct
 	public void init() {
+
+		// Iterate through the authority list and add it to the database!
+
+		Set<Authority> authorityList = new HashSet<Authority>();
+
+		Field[] fields = MgsAuth.Authorities.class.getDeclaredFields();
+		for (Field f : fields) {
+			if (Modifier.isStatic(f.getModifiers()) && Modifier.isFinal(f.getModifiers())) {
+				logger.info("Found authority {} ", f.getName());
+				Authority a = authorityRepository.getOneByName(f.getName());
+
+				if (a == null) {
+					a = new Authority();
+					a.setName(f.getName());
+					a.setDescription(f.getName());
+					a = authorityRepository.save(a);
+
+				}
+				authorityList.add(a);
+			}
+		}
+
+		// attach it to tech admin role:)
 		Role role = roleRepository.getOneByName("Admin");
 		if (role == null) {
 			role = new Role();
-				role.setCid(utils.generateRandomAlphaNumString(8));
-
 			role.setName("Admin");
-			roleRepository.save(role);
+			role.setCid(utils.generateRandomAlphaNumString(8));
 		}
-		// Logic for authorities missing
-		
+		role.setAuthorities(authorityList);
+		roleRepository.save(role);
+		logger.info("attached Authorities to admin.");
+
+//		Role role = roleRepository.getOneByName("Admin");
+//		if (role == null) {
+//			role = new Role();
+//			role.setCid(utils.generateRandomAlphaNumString(8));
+//			role.setName("Admin");
+//			roleRepository.save(role);
+//		}
+//		// Logic for authorities missing
+
 		if (userRepository.findByUserName("mainAdmin") == null) {
 			User user = new User();
 			user.setRoleForUser(role);
@@ -70,7 +115,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			String encodedPassword = encoder.encode("root");
 			user.setPassword(encodedPassword);
 
-		    user.setCid(utils.generateRandomAlphaNumString(8));
+			user.setCid(utils.generateRandomAlphaNumString(8));
 
 			user.setActive(true);
 			user.setContactNo("8860571043");
@@ -145,9 +190,8 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			defaultRole = roleRepository.getOneByName("Coach");
 			if (defaultRole == null)
 				throw new ValidationException("Role Coach does not exist");
-			user.setRoleForUser(defaultRole);
 		}
-
+		user.setRoleForUser(defaultRole);
 		user.setTeacher(teacher);
 		user.setContactNo(teacher.getMobileNumber());
 		user.setEmail(teacher.getEmail());

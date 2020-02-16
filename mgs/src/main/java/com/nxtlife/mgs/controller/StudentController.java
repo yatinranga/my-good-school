@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.nxtlife.mgs.jpa.ActivityPerformedRepository;
+import com.nxtlife.mgs.service.ActivityPerformedService;
 import com.nxtlife.mgs.service.StudentService;
+import com.nxtlife.mgs.view.ActivityPerformedResponse;
 import com.nxtlife.mgs.view.StudentRequest;
 import com.nxtlife.mgs.view.StudentResponse;
 
@@ -23,6 +26,9 @@ public class StudentController {
 
 	@Autowired
 	StudentService studentService;
+	
+	@Autowired
+	ActivityPerformedService activityPerformedService;
 
 //	@RequestMapping(value = "importStudents", method = RequestMethod.POST)
 //	public List<StudentResponse> uploadStudentsFromExcel(@RequestParam("file") MultipartFile file) {
@@ -67,6 +73,11 @@ public class StudentController {
 	@GetMapping("{username}")
 	public StudentResponse findByUsername(@PathVariable String username) {
 		return studentService.findByUsername(username);
+	}
+	
+	@GetMapping(value = "/activities")
+	public List<ActivityPerformedResponse> getAllActivitiesOfStudentByStatus(@RequestParam("status") String status ,@RequestParam("studentId") String studentCid) {
+		return activityPerformedService.getAllActivitiesOfStudentByStatus(status, studentCid);
 	}
 
 }

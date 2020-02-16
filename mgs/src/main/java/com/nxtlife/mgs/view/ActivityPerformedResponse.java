@@ -163,12 +163,15 @@ public class ActivityPerformedResponse {
 	public ActivityPerformedResponse(ActivityPerformed activityPerformed) {
 		this.id = activityPerformed.getCid();
 		this.active = activityPerformed.getActive();
-		this.activityId = activityPerformed.getActivity().getCid();
+		if(activityPerformed.getActivity()!=null)
+		  this.activityId = activityPerformed.getActivity().getCid();
 		this.description = activityPerformed.getDescription();
 		this.activityStatus = activityPerformed.getActivityStatus();
 		this.dateOfActivity = activityPerformed.getDateOfActivity();
-		this.teacherId = activityPerformed.getTeacher().getcId();
-		this.studentId=activityPerformed.getStudent().getCid();
+		if(activityPerformed.getTeacher()!=null)
+		  this.teacherId = activityPerformed.getTeacher().getcId();
+		if(activityPerformed.getStudent()!=null)
+		   this.studentId=activityPerformed.getStudent().getCid();
 		this.teacherRemark = activityPerformed.getCoachRemark();
 		this.teacherRemarkDate = activityPerformed.getCoachRemarkDate();
 		this.participationScore = activityPerformed.getParticipationScore();

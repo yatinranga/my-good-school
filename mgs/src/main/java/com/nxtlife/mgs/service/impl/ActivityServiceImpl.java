@@ -114,7 +114,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService{
 	}
 	
 	@Override
-	public List<ActivityRequestResponse> uploadActivityFromExcel(MultipartFile file) {
+	public List<ActivityRequestResponse> uploadActivityFromExcel(MultipartFile file , String schoolCid) {
 		if (file == null || file.isEmpty() || file.getSize() == 0)
 			throw new ValidationException("Pls upload valid excel file.");
 
@@ -127,7 +127,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService{
 			for (int i = 0; i < activityRecords.size(); i++) {
 				List<Map<String, Object>> tempactivityRecords = new ArrayList<Map<String, Object>>();
 				tempactivityRecords.add(activityRecords.get(i));
-				activityResponseList.add(saveActivity(validateActivityRequest(tempactivityRecords, errors)));
+				activityResponseList.add(saveActivity(validateActivityRequest(tempactivityRecords, errors , schoolCid)));
 			}
 
 		} catch (IOException e) {
@@ -138,7 +138,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService{
 		return activityResponseList;
 	}
 
-	private ActivityRequestResponse validateActivityRequest(List<Map<String, Object>> activityDetails, List<String> errors) {
+	private ActivityRequestResponse validateActivityRequest(List<Map<String, Object>> activityDetails, List<String> errors ,String schoolCids) {
 		if(activityDetails==null || activityDetails.isEmpty())
 			errors.add("Activity details not found");
 		ActivityRequestResponse activityRequest = new ActivityRequestResponse();
@@ -148,9 +148,8 @@ public class ActivityServiceImpl extends BaseService implements ActivityService{
 		String focusAreas = (String) activityDetails.get(0).get("FOCUS AREAS");
 		
 		List<String> focusAreaCIds = new ArrayList<String>();
-		String[] focusAreaNames = null;
-		if (focusAreas != null)
-			focusAreaNames = focusAreas.split(",");
+		String[] focusAreaNames = focusAreas.split(",");
+		
 		if(focusAreaNames!=null && focusAreaNames.length>0) {
 		List<FocusArea> focusAreaList = focusAreaRepository.findAll();
 		for(int i =0 ; i< focusAreaNames.length;i++) {
@@ -164,6 +163,19 @@ public class ActivityServiceImpl extends BaseService implements ActivityService{
 		}
 		activityRequest.setFocusAreaIds(focusAreaCIds);
 		}
+		//logic to fetch comma separated schoolCids and set it to activityRequest
+		
+		if(schoolCids!=null) {
+		  List<String> activityReqSchoolCids = new ArrayList<String>();
+		  String[] schCids = schoolCids.split(",");
+		  if(schCids!=null && schCids.length>0) {
+			  for(int i=0 ; i<schCids.length;i++) {
+				  activityReqSchoolCids.add(schCids[i]);
+			  }
+		   }
+		  activityRequest.setSchoolIds(activityReqSchoolCids);
+		}
+		
 //     NAME DESCRIPTION FOUR S FOCUS AREAS		
 
 		return activityRequest;

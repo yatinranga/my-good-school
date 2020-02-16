@@ -13,21 +13,27 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.nxtlife.mgs.service.ActivityService;
 import com.nxtlife.mgs.service.SchoolService;
+import com.nxtlife.mgs.service.TeacherService;
+import com.nxtlife.mgs.view.ActivityRequestResponse;
 import com.nxtlife.mgs.view.SchoolRequest;
 import com.nxtlife.mgs.view.SchoolResponse;
 
 @RestController
-@RequestMapping("/api/schools")
+@RequestMapping("/schools")
 public class SchoolController {
 
 	@Autowired
 	SchoolService schoolService;
 	
-//	@RequestMapping(value = "importSchools", method = RequestMethod.POST)
-//	public List<SchoolResponse> uploadSchoolsFromExcel(@RequestParam("file") MultipartFile file) {
-//		return schoolService.uploadSchoolsFromExcel(file);
-//	}
+	@Autowired
+	private ActivityService activityService;
+	
+	@GetMapping(value = "/{schoolCid}/activitiesOffered")
+	public List<ActivityRequestResponse> getAllOfferedActivitiesBySchool(@PathVariable("schoolCid") String schoolCid){
+		return activityService.getAllOfferedActivitiesBySchool(schoolCid);
+	}
 
 	@PostMapping(consumes = {"multipart/form-data"})
 	public SchoolResponse saveSchool(@ModelAttribute SchoolRequest schoolRequest) {
@@ -43,4 +49,6 @@ public class SchoolController {
 	public List<SchoolResponse> getAllSchools(){
 		return schoolService.getAllSchools();
 	}
+	
+	
 }

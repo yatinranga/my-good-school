@@ -10,4 +10,6 @@ import com.nxtlife.mgs.enums.ActivityStatus;
 public interface ActivityPerformedRepository extends JpaRepository<ActivityPerformed, Long> {
 
 	List<ActivityPerformed> findAllByStudentCidAndActivityStatus(String studentCid , ActivityStatus activityStatus);
+
+	ActivityPerformed findByCid(String id);
 }

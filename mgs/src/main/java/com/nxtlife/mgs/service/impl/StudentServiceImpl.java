@@ -352,6 +352,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 						}
 					} else {
 //						if(columnTypes.get(headers.get(j)).equals(cell.getCellType()))
+						if(headers.get(j).equalsIgnoreCase("NAME")||headers.get(j).equalsIgnoreCase("EMAIL")||headers.get(j).equalsIgnoreCase("MOBILE NUMBER")||headers.get(j).equalsIgnoreCase("FATHERS NAME")||headers.get(j).equalsIgnoreCase("FATHERS EMAIL")||headers.get(j).equalsIgnoreCase("FATHERS MOBILE NUMBER")||headers.get(j).equalsIgnoreCase("MOTHERS NAME")||headers.get(j).equalsIgnoreCase("MOTHERS EMAIL")||headers.get(j).equalsIgnoreCase("MOTHERS MOBILE NUMBER"))
+						   errors.add(String.format("Cell at row %d and column %d is blank for header %s.", i+1,j+1,headers.get(j)));
 						columnValues.put(headers.get(j), null);
 					}
 				}
@@ -377,7 +379,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	}
 
 	@Override
-	public List<StudentResponse> uploadStudentsFromExcel(MultipartFile file, String schoolCid) {
+	public Map<String,List<Object>> uploadStudentsFromExcel(MultipartFile file, String schoolCid) {
 		if (file == null || file.isEmpty() || file.getSize() == 0)
 			throw new ValidationException("Pls upload valid excel file.");
 //				|| !(file.getContentType().equalsIgnoreCase("xlsx") || file.getContentType().equalsIgnoreCase("xls")
@@ -387,6 +389,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		List<String> errors = new ArrayList<String>();
 		List<StudentResponse> studentResponseList = new ArrayList<>();
 		List<Map<String, Object>> studentsRecords = new ArrayList<Map<String, Object>>();
+		Map<String,List<Object>> responseMap = new HashMap<String, List<Object>>();
 		try {
 			XSSFWorkbook studentsSheet = new XSSFWorkbook(file.getInputStream());
 			studentsRecords = findSheetRowValues(studentsSheet, "STUDENT", errors);
@@ -401,8 +404,11 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			throw new ValidationException("something wrong happened may be file not in acceptable format.");
 		}
 
+		responseMap.put("StudentResponseList",(List) studentResponseList);
+		responseMap.put("errors",(List) errors);
+		
 //		findSheetRowValues(studentsSheet,"STUDENT",);
-		return studentResponseList;
+		return responseMap;
 	}
 
 	private StudentRequest validateStudentRequest(List<Map<String, Object>> studentDetails, List<String> errors ,String schoolCid) {

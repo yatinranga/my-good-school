@@ -1,6 +1,7 @@
 package com.nxtlife.mgs.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,7 +14,7 @@ import com.nxtlife.mgs.view.StudentResponse;
 
 public interface StudentService extends ExcelUtil {
 
-	List<StudentResponse> uploadStudentsFromExcel(MultipartFile file , String schoolCid);
+	Map<String,List<Object>> uploadStudentsFromExcel(MultipartFile file , String schoolCid);
 
 	StudentResponse save(StudentRequest request);
 

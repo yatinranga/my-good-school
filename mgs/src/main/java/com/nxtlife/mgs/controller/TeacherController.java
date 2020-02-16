@@ -41,7 +41,13 @@ public class TeacherController {
 	public TeacherResponse saveTeacher(@RequestBody TeacherRequest teacherRequest) {
 		return teacherService.saveClassTeacher(teacherRequest);
 	}
-
+	
+	@PostMapping("signUp")
+	public TeacherResponse signUp(@RequestBody TeacherRequest teacherRequest) {
+		if(teacherRequest.getIsCoach())
+			return teacherService.saveCoach(teacherRequest);
+		return teacherService.saveClassTeacher(teacherRequest);
+	}
 	
 	@GetMapping("/all")
 	public List<TeacherResponse> getAllTeachers(){

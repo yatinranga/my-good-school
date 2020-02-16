@@ -5,7 +5,7 @@ import java.io.Serializable;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class StudentAwardTeacherId implements Serializable{
+public class StudentAwardId implements Serializable{
 
 	private static final long serialVersionUID = -8019856266355024203L;
 
@@ -19,12 +19,7 @@ public class StudentAwardTeacherId implements Serializable{
 		public void setStudentId(Long studentId) {
 			this.studentId = studentId;
 		}
-//		public Long getTeacherId() {
-//			return teacherId;
-//		}
-//		public void setTeacherId(Long teacherId) {
-//			this.teacherId = teacherId;
-//		}
+		
 		public Long getAwardId() {
 			return awardId;
 		}
@@ -50,7 +45,7 @@ public class StudentAwardTeacherId implements Serializable{
 				return false;
 			if (getClass() != obj.getClass())
 				return false;
-			StudentAwardTeacherId other = (StudentAwardTeacherId) obj;
+			StudentAwardId other = (StudentAwardId) obj;
 			if (awardId == null) {
 				if (other.awardId != null)
 					return false;
@@ -63,12 +58,12 @@ public class StudentAwardTeacherId implements Serializable{
 				return false;
 			return true;
 		}
-		public StudentAwardTeacherId(Long studentId, Long awardId) {
+		public StudentAwardId(Long studentId, Long awardId) {
 			this.studentId = studentId;
 			this.awardId = awardId;
 		}
 		
-		public StudentAwardTeacherId() {
+		public StudentAwardId() {
 			
 		}
 

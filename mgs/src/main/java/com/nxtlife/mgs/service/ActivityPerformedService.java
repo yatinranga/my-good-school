@@ -17,4 +17,14 @@ public interface ActivityPerformedService {
 
 	ActivityPerformedResponse saveActivity(ActivityPerformedRequest request);
 
+	List<ActivityPerformedResponse> getAllSavedActivitiesOfStudent(String studentCid);
+
+	List<ActivityPerformedResponse> getAllSubmittedActivityOfStudent(String studentCid);
+
+	List<ActivityPerformedResponse> getAllReviewedActivityOfStudent(String studentCid);
+
+	ActivityPerformedResponse submitActivity(String activityPerformedCid);
+
+	List<ActivityPerformedResponse> getAllActivitiesOfStudentByStatus(String status, String studentCid);
+
 }

@@ -22,21 +22,14 @@ import com.nxtlife.mgs.view.GradeResponse;
 import com.nxtlife.mgs.view.TeacherResponse;
 
 @RestController
-@RequestMapping("api/activitiesOffered")
+@RequestMapping("/")
 public class ActivityController {
 
 	@Autowired
 	private ActivityService activityService;
 	
-	@Autowired
-	private TeacherService teacherService;
 	
-	@GetMapping(value = "/{schoolCid}")
-	public List<ActivityRequestResponse> getAllOfferedActivitiesBySchool(@PathVariable("schoolCid") String schoolCid){
-		return activityService.getAllOfferedActivitiesBySchool(schoolCid);
-	}
-	
-	@GetMapping()
+	@GetMapping(value = "activitiesOffered")
 	public List<ActivityRequestResponse> getAllActivities(){
 		return activityService.getAllOfferedActivities();
 	}
@@ -46,12 +39,12 @@ public class ActivityController {
 //		return teacherService.findCoachesBySchoolCidAndActivityCid(schoolCid, activityCid);
 //	}
 	
-	@RequestMapping(value = "importActivities", method = RequestMethod.POST)
-	public List<ActivityRequestResponse> uploadGradesFromExcel(@RequestParam("file") MultipartFile file) {
-		return activityService.uploadActivityFromExcel(file);
-	}
+//	@RequestMapping(value = "/api/activitiesOffered/importActivities", method = RequestMethod.POST)
+//	public List<ActivityRequestResponse> uploadActivitiesFromExcel(@RequestParam("file") MultipartFile file) {
+//		return activityService.uploadActivityFromExcel(file);
+//	}
 
-	@PostMapping()
+	@PostMapping(value = "/api/activitiesOffered")
 	public ActivityRequestResponse saveActivity(@RequestBody ActivityRequestResponse request) {
 		return activityService.saveActivity(request);
 	}
