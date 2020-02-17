@@ -14,9 +14,9 @@ import com.nxtlife.mgs.entity.BaseEntity;
 @Entity
 public class File extends BaseEntity{
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	Long id;
+//	@Id
+//	@GeneratedValue(strategy = GenerationType.AUTO)
+//	Long id;
 	
 	private String name;
 	
@@ -84,13 +84,13 @@ public class File extends BaseEntity{
 		this.cid = cid;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
+//	public Long getId() {
+//		return id;
+//	}
+//
+//	public void setId(Long id) {
+//		super.setId(id);
+//	}
 
 	public File(String name, String url, Boolean active, String extension, ActivityPerformed activityPerformed) {
 		this.name = name;

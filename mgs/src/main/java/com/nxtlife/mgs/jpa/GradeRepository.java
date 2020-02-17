@@ -1,5 +1,7 @@
 package com.nxtlife.mgs.jpa;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,4 +17,6 @@ public interface GradeRepository extends JpaRepository<Grade, Long>{
 	Grade findByNameAndSchoolsId(String name, Long schoolId);
 	
 	Grade findByNameAndSchoolsCid(String name , String schoolCid);
+
+	List<Grade> findAllBySchoolsCid(String schoolCid);
 }

@@ -14,19 +14,22 @@ public class Authority extends AbstractAuditable<Authority, Long> implements Gra
 	private String name;
 
 	@Column
-	private String desciption;
+	private String description;
+	
+//	@Column(unique = true , nullable = false)
+//	private String cid;
 
 	@Override
 	public String getAuthority() {
 		return name;
 	}
 
-	public String getDesciption() {
-		return desciption;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setDesciption(String desciption) {
-		this.desciption = desciption;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public void setName(String name) {
@@ -35,9 +38,14 @@ public class Authority extends AbstractAuditable<Authority, Long> implements Gra
 
 	public Authority() {
 	}
+	
+	
+	public String getName() {
+		return name;
+	}
 
-	public Authority(String name, String desciption) {
+	public Authority(String name, String description) {
 		this.name = name;
-		this.desciption = desciption;
+		this.description = description;
 	}
 }

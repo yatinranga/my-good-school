@@ -15,7 +15,6 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -163,6 +162,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 		if (request.getSchoolId() != null) {
 			School school = schoolRepository.getOneByCid(request.getSchoolId());
+
 			if (school == null)
 				throw new ValidationException(String.format("School with id : %s not found.", request.getSchoolId()));
 			student.setSchool(school);
@@ -173,19 +173,24 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 		student.setCid(utils.generateRandomAlphaNumString(8));
 
-		if (request.getSubscriptionEndDate() != null) {
-			if (request.getSubscriptionEndDate().after(LocalDateTime.now().toDate())) {
-				student.setActive(true);
-			}
-		}
+		/*
+		 * if (request.getSubscriptionEndDate().after(LocalDateTime.now().toDate())) {
+		 * student.setActive(true); }
+		 */
 
 		User user = userService.createStudentUser(student);
-		if (StringUtils.isEmpty(user))
+
+		if (StringUtils.isEmpty(user)) {
 			throw new ValidationException("User not created successfully");
+		}
+
 		student.setUser(user);
 		student = studentRepository.save(student);
-		if (student == null)
+
+		if (student == null) {
 			throw new RuntimeException("Something went wrong student not saved.");
+		}
+
 		return new StudentResponse(student);
 	}
 
@@ -336,6 +341,16 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 						}
 					} else {
 //						if(columnTypes.get(headers.get(j)).equals(cell.getCellType()))
+						if (headers.get(j).equalsIgnoreCase("NAME") || headers.get(j).equalsIgnoreCase("EMAIL")
+								|| headers.get(j).equalsIgnoreCase("MOBILE NUMBER")
+								|| headers.get(j).equalsIgnoreCase("FATHERS NAME")
+								|| headers.get(j).equalsIgnoreCase("FATHERS EMAIL")
+								|| headers.get(j).equalsIgnoreCase("FATHERS MOBILE NUMBER")
+								|| headers.get(j).equalsIgnoreCase("MOTHERS NAME")
+								|| headers.get(j).equalsIgnoreCase("MOTHERS EMAIL")
+								|| headers.get(j).equalsIgnoreCase("MOTHERS MOBILE NUMBER"))
+							errors.add(String.format("Cell at row %d and column %d is blank for header %s.", i + 1,
+									j + 1, headers.get(j)));
 						columnValues.put(headers.get(j), null);
 					}
 				}
@@ -361,7 +376,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	}
 
 	@Override
-	public List<StudentResponse> uploadStudentsFromExcel(MultipartFile file, String schoolCid) {
+	public Map<String, List<Object>> uploadStudentsFromExcel(MultipartFile file, String schoolCid) {
 		if (file == null || file.isEmpty() || file.getSize() == 0)
 			throw new ValidationException("Pls upload valid excel file.");
 //				|| !(file.getContentType().equalsIgnoreCase("xlsx") || file.getContentType().equalsIgnoreCase("xls")
@@ -371,6 +386,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		List<String> errors = new ArrayList<String>();
 		List<StudentResponse> studentResponseList = new ArrayList<>();
 		List<Map<String, Object>> studentsRecords = new ArrayList<Map<String, Object>>();
+		Map<String, List<Object>> responseMap = new HashMap<String, List<Object>>();
 		try {
 			XSSFWorkbook studentsSheet = new XSSFWorkbook(file.getInputStream());
 			studentsRecords = findSheetRowValues(studentsSheet, "STUDENT", errors);
@@ -385,8 +401,11 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			throw new ValidationException("something wrong happened may be file not in acceptable format.");
 		}
 
+		responseMap.put("StudentResponseList", (List) studentResponseList);
+		responseMap.put("errors", (List) errors);
+
 //		findSheetRowValues(studentsSheet,"STUDENT",);
-		return studentResponseList;
+		return responseMap;
 	}
 
 	private StudentRequest validateStudentRequest(List<Map<String, Object>> studentDetails, List<String> errors,
@@ -547,10 +566,6 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	@Override
 	public List<StudentResponse> getAllBySchoolCid(String schoolCid) {
 
-		if (schoolCid == null) {
-			throw new NotFoundException("schoolId can't be null");
-		}
-
 		List<Student> studentsList = studentRepository.findAllBySchoolCidAndActiveTrue(schoolCid);
 
 		if (studentsList.isEmpty())
@@ -586,6 +601,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		} else {
 			return new SuccessResponse(org.springframework.http.HttpStatus.OK.value(), "student deleted successfully");
 		}
+
 	}
 
 //	@Override

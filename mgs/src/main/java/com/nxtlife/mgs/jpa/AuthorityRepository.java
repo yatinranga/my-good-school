@@ -7,4 +7,8 @@ import com.nxtlife.mgs.entity.user.Authority;
 public interface AuthorityRepository extends JpaRepository<Authority, Long> {
 
 	boolean existsByName(String name);
+	
+    Authority getOneByName(String name);
+    
+//	Authority getOneByCid(String cid);
 }

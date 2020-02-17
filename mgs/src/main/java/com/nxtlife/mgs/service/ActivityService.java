@@ -12,7 +12,7 @@ public interface ActivityService {
 
 	List<ActivityRequestResponse> getAllOfferedActivitiesBySchool(String schoolCid);
 
-	List<ActivityRequestResponse> uploadActivityFromExcel(MultipartFile file);
+	List<ActivityRequestResponse> uploadActivityFromExcel(MultipartFile file ,String schoolCid);
 
 	ActivityRequestResponse saveActivity(ActivityRequestResponse request);
 

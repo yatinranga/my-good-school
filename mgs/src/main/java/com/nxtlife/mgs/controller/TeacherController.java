@@ -39,18 +39,17 @@ public class TeacherController {
 
 	@PostMapping()
 	public TeacherResponse saveTeacher(@RequestBody TeacherRequest teacherRequest) {
-		if (teacherRequest.getIsCoach())
-			return teacherService.saveCoach(teacherRequest);
-
 		return teacherService.saveClassTeacher(teacherRequest);
 	}
 	
-	@GetMapping(value = "/{schoolId}")
-	public List<TeacherResponse> getAllCoachesBySchoolCidAndActivityCid(@PathVariable("schoolId") String schoolCid,@RequestParam("activityId") String activityCid){
-		return teacherService.findCoachesBySchoolCidAndActivityCid(schoolCid, activityCid);
+	@PostMapping("signUp")
+	public TeacherResponse signUp(@RequestBody TeacherRequest teacherRequest) {
+		if(teacherRequest.getIsCoach())
+			return teacherService.saveCoach(teacherRequest);
+		return teacherService.saveClassTeacher(teacherRequest);
 	}
 	
-	@GetMapping()
+	@GetMapping("/all")
 	public List<TeacherResponse> getAllTeachers(){
 		return teacherService.getAllTeachers();
 	}
@@ -60,10 +59,6 @@ public class TeacherController {
 		return teacherService.getAllClassTeachers();
 	} 
 	
-	@GetMapping(value = "coaches")
-	public List<TeacherResponse> getAllCoaches(){
-		return teacherService.getAllCoaches();
-	} 
 	
 	@GetMapping(value = "{cId}")
 	public TeacherResponse getTeacherByCId(@PathVariable("cId") String cId) {
@@ -75,8 +70,4 @@ public class TeacherController {
 		return teacherService.findClassTeacherByCId(cId);
 	}
 	
-	@GetMapping(value = "coach/{cId}")
-	public TeacherResponse getCoachByCId(@PathVariable("cId") String cId) {
-		return teacherService.findCoachByCId(cId);
-	}
 }

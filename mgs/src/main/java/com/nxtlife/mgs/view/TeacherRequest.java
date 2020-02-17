@@ -39,32 +39,7 @@ public class TeacherRequest {
 
 	private String schoolId;
 
-	public Teacher toEntity(Teacher teacher) {
-		teacher = teacher == null ? new Teacher() : teacher;
-		if (this.name != null)
-			teacher.setName(this.name);
-		if (this.username != null)
-			teacher.setUsername(this.username);
-		if (this.dob != null)
-			teacher.setDob(this.dob);
-		if (this.qualification != null)
-			teacher.setQualification(this.qualification);
-		if (this.active != null)
-			teacher.setActive(this.active);
-		if (this.gender != null)
-			teacher.setGender(this.gender);
-		if (this.mobileNumber != null)
-			teacher.setMobileNumber(this.mobileNumber);
-		if (this.email != null)
-			teacher.setEmail(this.email);
-		if (this.isCoach != null)
-			teacher.setIsCoach(this.isCoach);
-		if (this.isClassTeacher != null)
-			teacher.setIsClassTeacher(this.isClassTeacher);
-
-		return teacher;
-	}
-
+	
 	public String getName() {
 		return name;
 	}
@@ -188,4 +163,31 @@ public class TeacherRequest {
 	public Teacher toEntity() {
 		return toEntity(null);
 	}
+	
+	public Teacher toEntity(Teacher teacher) {
+		teacher = teacher == null ? new Teacher() : teacher;
+		if (this.name != null)
+			teacher.setName(this.name);
+		if (this.username != null)
+			teacher.setUsername(this.username);
+		if (this.dob != null)
+			teacher.setDob(this.dob);
+		if (this.qualification != null)
+			teacher.setQualification(this.qualification);
+		if (this.active != null)
+			teacher.setActive(this.active);
+		if (this.gender != null)
+			teacher.setGender(this.gender);
+		if (this.mobileNumber != null)
+			teacher.setMobileNumber(this.mobileNumber);
+		if (this.email != null)
+			teacher.setEmail(this.email);
+		if (this.isCoach != null)
+			teacher.setIsCoach(this.isCoach);
+		if (this.isClassTeacher != null)
+			teacher.setIsClassTeacher(this.isClassTeacher);
+
+		return teacher;
+	}
+
 }
