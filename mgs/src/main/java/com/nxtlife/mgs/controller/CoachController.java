@@ -22,17 +22,17 @@ public class CoachController {
 	@Autowired
 	TeacherService teacherService;
 	
-	@GetMapping
-	public List<TeacherResponse> getAllCoachesBySchoolCidAndActivityCid(@RequestParam("schoolId") String schoolCid,@RequestParam("activityId") String activityCid){
+	@GetMapping("/{schoolId}/{activityId}")
+	public List<TeacherResponse> getAllCoachesBySchoolCidAndActivityCid(@PathVariable("schoolId") String schoolCid,@PathVariable("activityId") String activityCid){
 		return teacherService.findCoachesBySchoolCidAndActivityCid(schoolCid, activityCid);
 	}
 
-	@GetMapping(value = "/all")
+	@GetMapping
 	public List<TeacherResponse> getAllCoaches(){
 		return teacherService.getAllCoaches();
 	} 
 	
-	@GetMapping(value = "/all/{schoolId}")
+	@GetMapping(value = "/{schoolId}")
 	public List<TeacherResponse> getAllCoachesBySchool(@PathVariable("schoolId") String schoolId){
 		return teacherService.getAllCoaches();
 	} 

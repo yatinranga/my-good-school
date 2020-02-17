@@ -155,7 +155,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 		Student student = request.toEntity();
 		if (request.getSchoolId() != null) {
-			School school = schoolRepository.getOneByCid(request.getSchoolId());
+			School school = schoolRepository.getOneByCidAndActiveTrue(request.getSchoolId());
 			if(school == null )
 				throw new ValidationException(String.format("School with id : %s not found.", request.getSchoolId()));
 			student.setSchool(school);
@@ -420,7 +420,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 //		studentRequest.setUsername((String) studentDetails.get(0).get("USERNAME"));
 		studentRequest.setDob(
 				DateUtil.convertStringToDate(DateUtil.formatDate((Date) studentDetails.get(0).get("DOB"), null, null)));
-		School school = schoolRepository.findByCid(schoolCid);
+		School school = schoolRepository.findByCidAndActiveTrue(schoolCid);
 //		if (studentDetails.get(0).get("SCHOOL") != null)
 //			school = schoolRepository.findByName((String) studentDetails.get(0).get("SCHOOL"));
 //		if (studentDetails.get(0).get("SCHOOLS EMAIL") != null)
@@ -514,7 +514,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		if (cId == null)
 			throw new ValidationException("cId can't be null");
 
-		Student student = studentRepository.findByCid(cId);
+		Student student = studentRepository.findByCidAndActiveTrue(cId);
 
 		if (student == null)
 			throw new NotFoundException(String.format("Student having cId [%s] didn't exist", cId));

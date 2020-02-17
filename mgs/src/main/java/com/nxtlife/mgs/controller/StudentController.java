@@ -60,7 +60,7 @@ public class StudentController {
 //		return studentService.findByid(id);
 //	}
 
-	@GetMapping("{cId]")
+	@GetMapping("{cId}")
 	public StudentResponse findByCId(@PathVariable String cId) {
 		return studentService.findByCId(cId);
 	}
@@ -79,5 +79,31 @@ public class StudentController {
 	public List<ActivityPerformedResponse> getAllActivitiesOfStudentByStatus(@RequestParam("status") String status ,@RequestParam("studentId") String studentCid) {
 		return activityPerformedService.getAllActivitiesOfStudentByStatus(status, studentCid);
 	}
+	
+	@GetMapping(value = "/activities/filterByFourS")
+	public List<ActivityPerformedResponse> filterActivitiesByFourS(@RequestParam("studentId") String studentCid,@RequestParam("fourS") String fourS ,@RequestParam("status") String status){
+		return activityPerformedService.findAllByStudentCidAndActivityFourSAndActivityStatusAndActiveTrue(studentCid, fourS, status);
+	}
+	
+	@GetMapping(value = "/activities/filterByFocusArea")
+	public List<ActivityPerformedResponse> filterActivitiesByFocusArea(@RequestParam("studentId") String studentCid,@RequestParam("focusArea") String focusAreaCid,@RequestParam("status") String activityStatus){
+		return activityPerformedService.findAllByStudentCidAndActivityFocusAreasCidAndActivityStatusAndActiveTrue(studentCid, focusAreaCid, activityStatus);
+	}
+	
+	@GetMapping(value = "/activities/filterByCoach")
+	public List<ActivityPerformedResponse> filterActivitiesByCoach(@RequestParam("studentId") String studentCid,@RequestParam("coachId") String teacherCid,@RequestParam("status") String activityStatus){
+		return activityPerformedService.findAllByStudentCidAndTeacherCidAndActivityStatusAndActiveTrue(studentCid, teacherCid, activityStatus);
+	}
+	
+	@GetMapping(value = "/activities/filterByPsdArea")
+	public List<ActivityPerformedResponse> filterActivitiesByPsdArea(@RequestParam("studentId") String studentCid,@RequestParam("psdArea") String psdArea,@RequestParam("status") String activityStatus){
+		return activityPerformedService.findAllByStudentCidAndActivityFocusAreasPsdAreaAndActivityStatusAndActiveTrue(studentCid, psdArea, activityStatus);
+	}
+	
+	@GetMapping(value = "/activities/filterByYear")
+	public List<ActivityPerformedResponse> filterActivitiesByYearPerformed(@RequestParam("year") String year ,@RequestParam("studentId") String studentId){
+		return activityPerformedService.filterActivityByYearPerformed(year, studentId);
+	}
+	
 
 }

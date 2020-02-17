@@ -211,10 +211,10 @@ public class GradeServiceImpl extends BaseService implements GradeService {
 	public List<GradeResponse> getAllGradesOfSchool(String schoolCid) {
 		if(schoolCid == null)
 			throw new ValidationException("School Id cannot be null.");
-		School school = schoolRepository.findByCid(schoolCid);
+		School school = schoolRepository.findByCidAndActiveTrue(schoolCid);
 		if(school == null)
 			throw new ValidationException("School not found.");
-	    List<Grade> gradeList = gradeRepository.findAllBySchoolsCid(schoolCid);
+	    List<Grade> gradeList = gradeRepository.findAllBySchoolsCidAndActiveTrue(schoolCid);
 		List<GradeResponse> gradeResponseList = new ArrayList<GradeResponse>();
 		
 		if(gradeList==null)

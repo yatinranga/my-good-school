@@ -27,4 +27,18 @@ public interface ActivityPerformedService {
 
 	List<ActivityPerformedResponse> getAllActivitiesOfStudentByStatus(String status, String studentCid);
 
+	List<ActivityPerformedResponse> findAllByStudentCidAndTeacherCidAndActivityStatusAndActiveTrue(String studentCid,
+			String teacherCid, String activityStatus);
+
+	List<ActivityPerformedResponse> findAllByStudentCidAndActivityFocusAreasPsdAreaAndActivityStatusAndActiveTrue(
+			String studentCid, String psdArea, String activityStatus);
+
+	List<ActivityPerformedResponse> findAllByStudentCidAndActivityFocusAreasCidAndActivityStatusAndActiveTrue(
+			String studentCid, String focusAreaCid, String activityStatus);
+
+	List<ActivityPerformedResponse> findAllByStudentCidAndActivityFourSAndActivityStatusAndActiveTrue(String studentCid,
+			String fourS, String activityStatus);
+
+	List<ActivityPerformedResponse> filterActivityByYearPerformed(String year, String studentCid);
+
 }

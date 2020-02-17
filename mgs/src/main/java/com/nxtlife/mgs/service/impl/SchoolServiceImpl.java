@@ -313,7 +313,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 	public SchoolResponse findByCid(String cid) {
 		if(cid == null)
 			throw new ValidationException("id cannot be null.");
-		School school = schoolRepository.findByCid(cid);
+		School school = schoolRepository.findByCidAndActiveTrue(cid);
 		if(school == null)
 			throw new ValidationException("School not found.");
 			

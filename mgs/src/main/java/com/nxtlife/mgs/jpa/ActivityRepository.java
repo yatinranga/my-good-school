@@ -3,27 +3,49 @@ package com.nxtlife.mgs.jpa;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nxtlife.mgs.entity.activity.Activity;
+import com.nxtlife.mgs.entity.activity.ActivityPerformed;
+import com.nxtlife.mgs.enums.ActivityStatus;
+import com.nxtlife.mgs.enums.FourS;
+import com.nxtlife.mgs.enums.PSDArea;
 
 @Repository
 public interface ActivityRepository extends JpaRepository<Activity, Long>{
 
-	Activity getOneByName(String name);
+	Activity getOneByNameAndActiveTrue(String name);
 	
-	Activity getOneByCid(String cid);
+	Activity getOneByCidAndActiveTrue(String cid);
 	
-	List<Activity> findAllBySchoolsCid(String schoolCid);
+	List<Activity> findAllBySchoolsCidAndActiveTrue(String schoolCid);
 	
-	List<Activity> findAllByTeachersId(Long teacherId);
+	List<Activity> findAllByTeachersIdAndActiveTrue(Long teacherId);
 	
-	List<Activity> findAllByTeachersCid(String teacherCid);
+	List<Activity> findAllByTeachersCidAndActiveTrue(String teacherCid);
 	
-	List<Activity> findAllBySchoolsCidAndTeachersId(String schoolCid ,Long teacherId);
+	List<Activity> findAllBySchoolsCidAndTeachersIdAndActiveTrue(String schoolCid ,Long teacherId);
 	
-	List<Activity> findAllBySchoolsCidAndTeachersCid(String schoolCid ,String teacherCid);
+	List<Activity> findAllBySchoolsCidAndTeachersCidAndActiveTrue(String schoolCid ,String teacherCid);
 
-	Activity findByName(String name);
+	Activity findByNameAndActiveTrue(String name);
 	
+	@Transactional
+	@Modifying( clearAutomatically = true)
+	@Query(value="update Activity a set a.active = :active where a.cid = :cid")
+	int updateActivitySetActiveByCid(@Param("active") Boolean active,@Param("cid") String cid);
+
+	List<Activity> findAllByActiveTrue();
+	
+	List<Activity> findAllBySchoolsCidAndFourSAndAndActiveTrue(String schoolCid ,FourS fourS);
+	
+	List<Activity> findAllBySchoolsCidAndFocusAreasCidAndActiveTrue(String schoolCid ,String focusAreaCid);
+	
+	List<Activity> findAllBySchoolsCidAndFocusAreasPsdAreaAndActiveTrue(String schoolCid ,PSDArea psdArea);
+
+		
 }

@@ -129,7 +129,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@Override
 	public User createStudentUser(Student student) {
 
-		if (userRepository.countByUserName(student.getUsername()) > 0) {
+		if (userRepository.countByUserNameAndActiveTrue(student.getUsername()) > 0) {
 			throw new ValidationException("This username is already registered");
 		}
 		User user = new User();
@@ -164,7 +164,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Override
 	public User createTeacherUser(Teacher teacher) {
-		if (userRepository.countByUserName(teacher.getUsername()) > 0) {
+		if (userRepository.countByUserNameAndActiveTrue(teacher.getUsername()) > 0) {
 			throw new ValidationException("This username is already registered");
 		}
 		User user = new User();
@@ -208,7 +208,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Override
 	public User createParentUser(Guardian guardian) {
-		if (userRepository.countByUserName(guardian.getUsername()) > 0) {
+		if (userRepository.countByUserNameAndActiveTrue(guardian.getUsername()) > 0) {
 			throw new ValidationException("This username is already registered");
 		}
 		User user = new User();

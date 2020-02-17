@@ -19,8 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.entity.activity.FocusArea;
+import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.FocusAreaRepository;
+import com.nxtlife.mgs.jpa.SchoolRepository;
 import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.FocusAreaService;
 import com.nxtlife.mgs.util.ExcelUtil;
@@ -35,6 +37,9 @@ public class FocusAreaServiceImpl extends BaseService implements FocusAreaServic
 	FocusAreaRepository focusAreaRepository;
 	
 	@Autowired
+	SchoolRepository schoolRepository;
+	
+	@Autowired
 	Utils utils;
 	
 	@Override
@@ -47,7 +52,7 @@ public class FocusAreaServiceImpl extends BaseService implements FocusAreaServic
 		if(request.getPsdArea() == null)
 			throw new ValidationException("PSD area cannot be null.");
 		
-		FocusArea focusArea = focusAreaRepository.findByName(request.getName());
+		FocusArea focusArea = focusAreaRepository.findByNameAndActiveTrue(request.getName());
 		if(focusArea!= null)
 			throw new ValidationException("This focus Area already exists.");
 		focusArea = request.toEntity();
@@ -62,6 +67,31 @@ public class FocusAreaServiceImpl extends BaseService implements FocusAreaServic
 		
 		return new FocusAreaRequestResponse(focusArea);
 		
+	}
+	
+	@Override
+	public List<FocusAreaRequestResponse> getAllFocusAreas(){
+		List<FocusArea> focusAreaList = focusAreaRepository.findAllByActiveTrue();
+		if(focusAreaList==null)
+			throw new ValidationException("No Focus Areas found.");
+		List<FocusAreaRequestResponse> focusAreaResponses = new ArrayList<FocusAreaRequestResponse>();
+		focusAreaList.forEach(f->{focusAreaResponses.add(new FocusAreaRequestResponse(f));});
+		return focusAreaResponses;
+	}
+	
+	@Override
+	public List<FocusAreaRequestResponse> getAllFocusAreasBySchool(String schoolCid){
+		if(schoolCid==null)
+			throw new ValidationException("school id cannot be null.");
+		School school = schoolRepository.findByCidAndActiveTrue(schoolCid);
+		if(school == null)
+			throw new ValidationException("School with id : "+schoolCid+" not found.");
+		List<FocusArea> focusAreaList = focusAreaRepository.findAllByActivitiesSchoolsCidAndActiveTrue(schoolCid);
+		if(focusAreaList==null)
+			throw new ValidationException("No Focus Areas found.");
+		List<FocusAreaRequestResponse> focusAreaResponses = new ArrayList<FocusAreaRequestResponse>();
+		focusAreaList.forEach(f->{focusAreaResponses.add(new FocusAreaRequestResponse(f));});
+		return focusAreaResponses;
 	}
 	
 	@Override

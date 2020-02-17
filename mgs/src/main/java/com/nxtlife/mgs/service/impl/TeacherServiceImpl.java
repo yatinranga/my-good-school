@@ -74,37 +74,37 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 			throw new ValidationException("Request can not be null.");
 		if (request.getEmail() == null)
 			throw new ValidationException("Email can not be null");
-		if (teacherRepository.countByEmail(request.getEmail()) > 0)
+		if (teacherRepository.countByEmailAndActiveTrue(request.getEmail()) > 0)
 			throw new ValidationException("Email already exists");
 		if (request.getUsername() == null)
 			request.setUsername(request.getEmail());
-		if (teacherRepository.countByUsername(request.getUsername()) > 0)
+		if (teacherRepository.countByUsernameAndActiveTrue(request.getUsername()) > 0)
 			throw new ValidationException("Username already exists");
 		if (request.getName() == null)
 			throw new ValidationException("Teacher name can not be null");
 
 		Teacher teacher = request.toEntity();
 		if (request.getSchoolId() != null) {
-			teacher.setSchool(schoolRepository.getOneByCid(request.getSchoolId()));
+			teacher.setSchool(schoolRepository.getOneByCidAndActiveTrue(request.getSchoolId()));
 			
 // logic to remove the grades from all available grades which are not present in request and set it to teacher
 			if (request.getGradeIds() != null && !request.getGradeIds().isEmpty()) {
-				List<Grade> repoGradeList = gradeRepository.findAllBySchoolsCid(request.getSchoolId());
+				List<Grade> repoGradeList = gradeRepository.findAllBySchoolsCidAndActiveTrue(request.getSchoolId());
 				for(int i=0;i<repoGradeList.size();i++) {
-					Boolean flag = false;
+					Boolean valid = false;
 					for(String gCid : request.getGradeIds()) 
 					   if(repoGradeList.get(i).getCid().equals(gCid)) 
-						   flag= true;
+						   valid= true;
 					
-					if(!flag)
-						repoGradeList.remove(i--);	
+					if(!valid)
+						repoGradeList.remove(i--);
 				}
 				teacher.setGrades(repoGradeList);
 			}
 		}
 // logic to remove the activities from all available activities which are not present in request and set it to teacher
 		if (request.getActivitiyIds() != null && !request.getActivitiyIds().isEmpty()) {
-			List<Activity> repoActivityList = activityRepository.findAll();
+			List<Activity> repoActivityList = activityRepository.findAllByActiveTrue();
 			for(int i=0;i<repoActivityList.size();i++) {
 				Boolean flag = false;
 				for(String actCId : request.getActivitiyIds()) 
@@ -122,6 +122,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		if (StringUtils.isEmpty(user))
 			throw new ValidationException("User not created successfully");
 		teacher.setUser(user);
+		teacher.setActive(true);
 		teacher = teacherRepository.save(teacher);
 		if (teacher == null)
 			throw new RuntimeException("Something went wrong student not saved.");
@@ -275,7 +276,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 //		teacherRequest.setUsername((String) teacherDetails.get(0).get("USERNAME"));
 		teacherRequest.setDob(
 				DateUtil.convertStringToDate(DateUtil.formatDate((Date) teacherDetails.get(0).get("DOB"), null, null)));
-		School school = schoolRepository.findByCid(schoolCid);
+		School school = schoolRepository.findByCidAndActiveTrue(schoolCid);
 //		if (teacherDetails.get(0).get("SCHOOL") != null)
 //			school = schoolRepository.findByName((String) teacherDetails.get(0).get("SCHOOL"));
 //		if (teacherDetails.get(0).get("SCHOOLS EMAIL") != null)
@@ -364,7 +365,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	public TeacherResponse findById(Long id) {
 		if (id == null)
 			throw new ValidationException("Id can not be null");
-		Teacher teacher = teacherRepository.findById(id);
+		Teacher teacher = teacherRepository.findByIdAndActiveTrue(id);
 		if (teacher == null)
 			throw new ValidationException(String.format("Teacher having id : %s not found", id));
 
@@ -375,7 +376,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	public TeacherResponse findByCId(String cId) {
 		if (cId == null)
 			throw new ValidationException("Id can not be null");
-		Teacher teacher = teacherRepository.findByCid(cId);
+		Teacher teacher = teacherRepository.findByCidAndActiveTrue(cId);
 		if (teacher == null)
 			throw new ValidationException(String.format("Teacher having id : %s not found", cId));
 
@@ -388,7 +389,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 			throw new ValidationException("Activity name can not be null");
 		List<Teacher> teachersList = new ArrayList<>();
 		List<TeacherResponse> teachersResponseList = new ArrayList<>();
-		teachersList = teacherRepository.findAllBySchoolCidAndActivitiesNameAndIsCoachTrue(schoolCid,activityName);
+		teachersList = teacherRepository.findAllBySchoolCidAndActivitiesNameAndIsCoachTrueAndActiveTrue(schoolCid,activityName);
 
 		if (teachersList != null && !teachersList.isEmpty()) {
 			for (Teacher teacher : teachersList)
@@ -407,7 +408,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		List<Activity> activities = new ArrayList<Activity>();
 		List<ActivityRequestResponse> activityResponses = new ArrayList<ActivityRequestResponse>();
 
-		activities = activityRepository.findAllByTeachersId(id);
+		activities = activityRepository.findAllByTeachersIdAndActiveTrue(id);
 		if (activities == null || activities.isEmpty())
 			throw new ValidationException("No Activities found.");
 		for (Activity activity : activities) {
@@ -423,7 +424,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		List<Activity> activities = new ArrayList<Activity>();
 		List<ActivityRequestResponse> activityResponses = new ArrayList<ActivityRequestResponse>();
 
-		activities = activityRepository.findAllByTeachersCid(cId);
+		activities = activityRepository.findAllByTeachersCidAndActiveTrue(cId);
 		if (activities == null || activities.isEmpty())
 			throw new ValidationException("No Activities found.");
 		for (Activity activity : activities) {
@@ -447,7 +448,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	public List<TeacherResponse> getAllCoaches() {
 		List<Teacher> teachers = new ArrayList<Teacher>();
 		List<TeacherResponse> teacherResponses = new ArrayList<>();
-		teachers = teacherRepository.findAllByIsCoachTrue();
+		teachers = teacherRepository.findAllByIsCoachTrueAndActiveTrue();
 //				findAllBySchoolCidAndIsCoachTrue();
 		if(teachers==null)
 			throw new ValidationException("No coaches found.");
@@ -459,7 +460,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	public List<TeacherResponse> getAllClassTeachers() {
 		List<Teacher> teachers = new ArrayList<Teacher>();
 		List<TeacherResponse> teacherResponses = new ArrayList<>();
-		teachers = teacherRepository.findAllByIsClassTeacherTrue();
+		teachers = teacherRepository.findAllByIsClassTeacherTrueAndActiveTrue();
 //				findAllBySchoolCidAndIsClassTeacherTrue();
 		if(teachers==null)
 			throw new ValidationException("No class teachers found.");
@@ -471,7 +472,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	public TeacherResponse findCoachByCId(String cId) {
 		if(cId == null)
 			throw new ValidationException("Id can not be null");
-		Teacher teacher= teacherRepository.findByCidAndIsCoachTrue(cId);
+		Teacher teacher= teacherRepository.findByCidAndIsCoachTrueAndActiveTrue(cId);
 		if(teacher==null)
 			throw new ValidationException("No coach found.");
 		return new TeacherResponse(teacher);
@@ -481,7 +482,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	public TeacherResponse findCoachById(Long id) {
 		if(id == null)
 			throw new ValidationException("Id can not be null");
-		Teacher teacher= teacherRepository.findByIdAndIsCoachTrue(id);
+		Teacher teacher= teacherRepository.findByIdAndIsCoachTrueAndActiveTrue(id);
 		if(teacher==null)
 			throw new ValidationException("No coach found.");
 		return new TeacherResponse(teacher);
@@ -491,7 +492,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	public TeacherResponse findClassTeacherByCId(String cId) {
 		if(cId == null)
 			throw new ValidationException("Id can not be null");
-		Teacher teacher= teacherRepository.findByCidAndIsClassTeacherTrue(cId);
+		Teacher teacher= teacherRepository.findByCidAndIsClassTeacherTrueAndActiveTrue(cId);
 		if(teacher==null)
 			throw new ValidationException("No class teacher found.");
 		return new TeacherResponse(teacher);
@@ -501,7 +502,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	public TeacherResponse findClassTeacherById(Long id) {
 		if(id == null)
 			throw new ValidationException("Id can not be null");
-		Teacher teacher= teacherRepository.findByIdAndIsClassTeacherTrue(id);
+		Teacher teacher= teacherRepository.findByIdAndIsClassTeacherTrueAndActiveTrue(id);
 		if(teacher==null)
 			throw new ValidationException("No class teacher found.");
 		return new TeacherResponse(teacher);
@@ -511,7 +512,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	public List<TeacherResponse> getAllTeachersOfSchool(String schoolCid) {
 		List<Teacher> teachers = new ArrayList<Teacher>();
 		List<TeacherResponse> teacherResponses = new ArrayList<>();
-		teachers = teacherRepository.findAllBySchoolCid(schoolCid);
+		teachers = teacherRepository.findAllBySchoolCidAndActiveTrue(schoolCid);
 		if(teachers==null)
 			throw new ValidationException("No teachers found.");
 		teachers.forEach(teacher->{teacherResponses.add(new TeacherResponse(teacher));});
@@ -522,7 +523,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	public List<TeacherResponse> getAllClassTeachersOfSchool(String schoolCid) {
 		List<Teacher> teachers = new ArrayList<Teacher>();
 		List<TeacherResponse> teacherResponses = new ArrayList<>();
-		teachers = teacherRepository.findAllBySchoolCidAndIsClassTeacherTrue(schoolCid);
+		teachers = teacherRepository.findAllBySchoolCidAndIsClassTeacherTrueAndActiveTrue(schoolCid);
 		if(teachers==null)
 			throw new ValidationException("No class teachers found.");
 		teachers.forEach(teacher->{teacherResponses.add(new TeacherResponse(teacher));});
@@ -533,7 +534,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	public List<TeacherResponse> getAllCoachesOfSchool(String schoolCid) {
 		List<Teacher> teachers = new ArrayList<Teacher>();
 		List<TeacherResponse> teacherResponses = new ArrayList<>();
-		teachers = teacherRepository.findAllBySchoolCidAndIsCoachTrue(schoolCid);
+		teachers = teacherRepository.findAllBySchoolCidAndIsCoachTrueAndActiveTrue(schoolCid);
 //				findAllBySchoolCidAndIsCoachTrue();
 		if(teachers==null)
 			throw new ValidationException("No coaches found.");
@@ -545,7 +546,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	public List<TeacherResponse> findCoachesBySchoolCidAndActivityCid(String schoolCid, String activityCid) {
 		List<Teacher> teachers = new ArrayList<Teacher>();
 		List<TeacherResponse> teacherResponses = new ArrayList<>();
-		teachers = teacherRepository.findAllBySchoolCidAndActivitiesCidAndIsCoachTrue(schoolCid, activityCid);
+		teachers = teacherRepository.findAllBySchoolCidAndActivitiesCidAndIsCoachTrueAndActiveTrue(schoolCid, activityCid);
 		if(teachers==null)
 			throw new ValidationException("No coaches found.");
 		teachers.forEach(teacher->{teacherResponses.add(new TeacherResponse(teacher));});
