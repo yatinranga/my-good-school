@@ -33,16 +33,16 @@ import com.nxtlife.mgs.enums.UserType;
 @SuppressWarnings("serial")
 @Entity
 @DynamicInsert
-@DynamicUpdate
+@DynamicUpdate(true)
 public class User extends BaseEntity implements UserDetails {
 
-	@Column(unique = true,nullable = false)
+	@Column(unique = true, nullable = false)
 	private String cid;
-	
+
 	@Transient
 	private Long userId;
-	
-	@Column(nullable = false ,unique = true)
+
+	@Column(nullable = false, unique = true)
 	private String userName;
 
 	@Column(unique = true)
@@ -51,7 +51,7 @@ public class User extends BaseEntity implements UserDetails {
 	private String contactNo;
 
 	@Email
-	@Column( unique = true)
+	@Column(unique = true)
 	private String email;
 
 	@Column(nullable = false)
@@ -76,24 +76,24 @@ public class User extends BaseEntity implements UserDetails {
 	@ManyToOne
 	@JoinColumn(name = "role_id")
 	private Role roleForUser;
-	
-	private Boolean isPaid=false;
-	
+
+	private Boolean isPaid = false;
+
 	@Enumerated(EnumType.STRING)
 	private RegisterType registerType;
-	
+
 	@OneToOne(cascade = CascadeType.ALL)
 	private Student student;
-	
+
 	@OneToOne(cascade = CascadeType.ALL)
 	private School school;
-	
+
 	@OneToOne(cascade = CascadeType.ALL)
 	private Teacher teacher;
-	
+
 	@OneToOne(cascade = CascadeType.ALL)
 	private LFIN lfin;
-	
+
 	@OneToOne(cascade = CascadeType.ALL)
 	private Guardian guardian;
 
@@ -305,10 +305,9 @@ public class User extends BaseEntity implements UserDetails {
 		this.teacher = teacher;
 		this.lfin = lfin;
 	}
-	
-	public User()
-	{
-		
+
+	public User() {
+
 	}
-	
+
 }

@@ -46,7 +46,6 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@Autowired
 	RoleRepository roleRepository;
 
-
 	@Autowired
 	Utils utils;
 
@@ -55,7 +54,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		Role role = roleRepository.getOneByName("Admin");
 		if (role == null) {
 			role = new Role();
-				role.setCid(utils.generateRandomAlphaNumString(8));
+			role.setCid(utils.generateRandomAlphaNumString(8));
 
 			role.setName("Admin");
 		}
@@ -69,7 +68,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			String encodedPassword = encoder.encode("root");
 			user.setPassword(encodedPassword);
 //			try {
-				user.setCid(utils.generateRandomAlphaNumString(8));
+			user.setCid(utils.generateRandomAlphaNumString(8));
 //			} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
 //				user.setCid(utils.generateRandomAlphaNumString(8));
 //			}
@@ -97,12 +96,14 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 //			user.setPassword(bCryptPasswordEncoder.encode(student.getUsername())); //Setting username as password
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		String encodedPassword = encoder.encode(utils.generateRandomAlphaNumString(10));
-		if(userRepository.findByPassword(encodedPassword)!=null)
-			throw new ValidationException("Password already exist please choose a different one.");
+		/*
+		 * if (userRepository.findByPassword(encodedPassword) != null) throw new
+		 * ValidationException("Password already exist please choose a different one.");
+		 */
 		user.setPassword(encodedPassword);
 		System.out.println("Password : " + user.getPassword());
 //		try {
-			user.setCid(utils.generateRandomAlphaNumString(8));
+		user.setCid(utils.generateRandomAlphaNumString(8));
 //		} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
 //			user.setCid(utils.generateRandomAlphaNumString(8));
 //		}
@@ -136,14 +137,14 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		user.setUserName(teacher.getUsername());
 		// later change it to encrypted password
 //			user.setPassword(bCryptPasswordEncoder.encode(student.getUsername())); //Setting username as password
-		
+
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		String encodedPassword = encoder.encode(utils.generateRandomAlphaNumString(10));
-		if(userRepository.findByPassword(encodedPassword)!=null)
+		if (userRepository.findByPassword(encodedPassword) != null)
 			throw new ValidationException("Password already exist please choose a different one.");
 		user.setPassword(encodedPassword);
 //		try {
-			user.setCid(utils.generateRandomAlphaNumString(8));
+		user.setCid(utils.generateRandomAlphaNumString(8));
 //		} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
 //			user.setCid(utils.generateRandomAlphaNumString(8));
 //		}
@@ -194,29 +195,40 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		// Setting username as password
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		String encodedPassword = encoder.encode(utils.generateRandomAlphaNumString(10));
-		if(userRepository.findByPassword(encodedPassword)!=null)
-			throw new ValidationException("Password already exist please choose a different one.");
+		/*
+		 * if(userRepository.findByPassword(encodedPassword)!=null) throw new
+		 * ValidationException("Password already exist please choose a different one.");
+		 */
 		user.setPassword(encodedPassword);
 //		try {
-			user.setCid(utils.generateRandomAlphaNumString(8));
+		user.setCid(utils.generateRandomAlphaNumString(8));
 //		} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
 //			user.setCid(utils.generateRandomAlphaNumString(8));
 //		}
 
-		if (guardian.getStudent().getSubscriptionEndDate() != null) {
-			if (guardian.getStudent().getSubscriptionEndDate()
-					.after(Date.from(java.time.LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())))
-				user.setIsPaid(true);
+		for (Student s : guardian.getStudents()) {
+
+			if (s.getSubscriptionEndDate() != null) {
+				if (s.getSubscriptionEndDate()
+						.after(Date.from(java.time.LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))) {
+					user.setIsPaid(true);
+					break;
+				}
+
+			}
 		}
+
 		Role defaultRole = roleRepository.getOneByName("Guardian");
 		if (defaultRole == null)
 			throw new ValidationException("Role Guardian does not exist");
 
 		user.setRoleForUser(defaultRole);
 		// try {
-		/*} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
-			guardian.setCid(utils.generateRandomAlphaNumString(8));
-		}*/
+		/*
+		 * } catch (ConstraintViolationException |
+		 * javax.validation.ConstraintViolationException ce) {
+		 * guardian.setCid(utils.generateRandomAlphaNumString(8)); }
+		 */
 		user.setGuardian(guardian);
 		user.setContactNo(guardian.getMobileNumber());
 		user.setEmail(guardian.getEmail());
@@ -224,14 +236,14 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		return user;
 
 	}
-	
+
 	@Override
 	public UserResponse getLoggedInUser() {
 		User user = getUser();
-		if(user == null)
+		if (user == null)
 			throw new ValidationException("No user found.");
 		return new UserResponse(user);
-		
+
 	}
 
 //	@Override public User createSchoolUser(School school) { if

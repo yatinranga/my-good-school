@@ -1,6 +1,8 @@
 package com.nxtlife.mgs.view;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.nxtlife.mgs.entity.user.Student;
 
@@ -19,9 +21,7 @@ public class StudentResponse {
 	private Date subscriptionEndDate;
 	private Boolean active;
 	private Date dob;
-	
-
-	
+	private List<GuardianResponse> guardianResponseList;
 
 	public String getId() {
 		return id;
@@ -110,7 +110,7 @@ public class StudentResponse {
 	public void setSubscriptionEndDate(Date subscriptionEndDate) {
 		this.subscriptionEndDate = subscriptionEndDate;
 	}
-	
+
 	public Boolean getActive() {
 		return active;
 	}
@@ -127,24 +127,40 @@ public class StudentResponse {
 		this.dob = dob;
 	}
 
+	public List<GuardianResponse> getGuardianResponseList() {
+		return guardianResponseList;
+	}
+
+	public void setGuardianResponseList(List<GuardianResponse> guardianResponseList) {
+		this.guardianResponseList = guardianResponseList;
+	}
+
 	public StudentResponse(Student student) {
 		this.id = student.getCid();
 		this.name = student.getName();
+		this.username = student.getUsername();
 		this.email = student.getEmail();
+		this.dob = student.getDob();
 		this.gender = student.getGender();
 		this.mobileNumber = student.getMobileNumber();
-		if(student.getUser() != null)
-		   this.userId = student.getUser().getCid();
-		this.username = student.getUsername();
 		this.active = student.getActive();
-		this.dob = student.getDob();
+		this.subscriptionEndDate = student.getSubscriptionEndDate();
+
+		if (student.getUser() != null) {
+			this.userId = student.getUser().getCid();
+		}
+
 		if (student.getGrade() != null) {
 			this.grade = student.getGrade().getName();
 			this.section = student.getGrade().getSection();
 		}
+
 		if (student.getSchool() != null)
 			this.schoolId = student.getSchool().getCid();
-		this.subscriptionEndDate = student.getSubscriptionEndDate();
+
+		this.guardianResponseList = student.getGuardians().stream().map(g -> new GuardianResponse(g))
+				.collect(Collectors.toList());
+
 	}
 
 	public StudentResponse() {

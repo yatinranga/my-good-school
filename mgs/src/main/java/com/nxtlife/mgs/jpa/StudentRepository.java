@@ -16,18 +16,28 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
 	int countByUsername(String username);
 
-	List<Student> findByName(String name);
+	List<Student> findAllBySchoolCid(String schooolCid);
+
+	List<Student> findAllBySchoolCidAndGradeCid(String schooolCid, String gradeCid);
+
+	Student findById(Long id);
+
+	void deleteByCid(String cid);
+
+	Student findByCidAndActiveTrue(String cid);
+
+	List<Student> findAllBySchoolCidAndActiveTrue(String schoolCid);
+
+	List<Student> findAllByActiveTrue();
+
+	Student findByUsernameAndActiveTrue(String username);
+
+	Student findByMobileNumberAndActiveTrue(String mobileNumber);
+
+	Student findByIdAndActiveTrue(Long id);
+
+	List<Student> findByNameAndActiveTrue(String name);
 
 	Student findByCid(String cid);
 
-	Student findByMobileNumber(String mobileNumber);
-
-	Student findByUsername(String username);
-	
-	List<Student> findAllBySchoolCid(String schooolCid);
-	
-	List<Student> findAllBySchoolCidAndGradeCid(String schooolCid , String gradeCid);
-
-	Student findById(Long id);
-	
 }
