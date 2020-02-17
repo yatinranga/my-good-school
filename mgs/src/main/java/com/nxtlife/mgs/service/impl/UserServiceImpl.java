@@ -2,18 +2,13 @@ package com.nxtlife.mgs.service.impl;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
-import org.hibernate.exception.ConstraintViolationException;
-import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +16,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.nxtlife.mgs.auth.MgsAuth;
-import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.user.Authority;
 import com.nxtlife.mgs.entity.user.Guardian;
 import com.nxtlife.mgs.entity.user.Role;
@@ -42,8 +35,6 @@ import com.nxtlife.mgs.jpa.UserRepository;
 import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.util.Utils;
-import com.nxtlife.mgs.view.StudentRequest;
-import com.nxtlife.mgs.view.user.UserRequest;
 import com.nxtlife.mgs.view.user.UserResponse;
 
 @Service
@@ -54,7 +45,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Autowired
 	RoleRepository roleRepository;
-	
+
 	@Autowired
 	AuthorityRepository authorityRepository;
 
@@ -62,7 +53,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	Utils utils;
 
 	private static Logger logger = LoggerFactory.getLogger(UserService.class);
-	
+
 	@PostConstruct
 	public void init() {
 
@@ -114,9 +105,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 			String encodedPassword = encoder.encode("root");
 			user.setPassword(encodedPassword);
-
 			user.setCid(utils.generateRandomAlphaNumString(8));
-
 			user.setActive(true);
 			user.setContactNo("8860571043");
 			user.setEmail("admin@gmail.com");
@@ -138,9 +127,10 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		user.setRegisterType(RegisterType.MANUALLY);
 		user.setUserName(student.getUsername());
 		// setting encrypted password
-		
+
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		String encodedPassword = encoder.encode(utils.generateRandomAlphaNumString(10));
+
 		user.setPassword(encodedPassword);
 		System.out.println("Password : " + user.getPassword());
 		user.setCid(utils.generateRandomAlphaNumString(8));
@@ -172,11 +162,12 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		user.setUserType(UserType.Teacher);
 		user.setRegisterType(RegisterType.MANUALLY); // setting it to manual may be required to passed as an argument
 		user.setUserName(teacher.getUsername());
-		// setting  encrypted password
+
+		// setting encrypted password
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		String encodedPassword = encoder.encode(utils.generateRandomAlphaNumString(10));
 		user.setPassword(encodedPassword);
-	    user.setCid(utils.generateRandomAlphaNumString(8));
+		user.setCid(utils.generateRandomAlphaNumString(8));
 
 //			if(teacher.getSubscriptionEndDate()!=null) {
 //				if(teacher.getSubscriptionEndDate().after(Date.from(java.time.LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())))
@@ -215,19 +206,35 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		user.setActive(true);
 		user.setUserType(UserType.Parent);
 		user.setRegisterType(RegisterType.MANUALLY);
-		user.setUserName(guardian.getUsername()); 
-		// Setting  encrypted password
+		user.setUserName(guardian.getUsername());
+		// Setting encrypted password
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		String encodedPassword = encoder.encode(utils.generateRandomAlphaNumString(10));
+
+		/*
+		 * if(userRepository.findByPassword(encodedPassword)!=null) throw new
+		 * ValidationException("Password already exist please choose a different one.");
+		 */
 		user.setPassword(encodedPassword);
-//		if(userRepository.findByPassword(encodedPassword)!=null)
-//			throw new ValidationException("Password already exist please choose a different one.");
-			user.setCid(utils.generateRandomAlphaNumString(8));
-		if (guardian.getStudent().getSubscriptionEndDate() != null) {
-			if (guardian.getStudent().getSubscriptionEndDate()
-					.after(Date.from(java.time.LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())))
-				user.setIsPaid(true);
+//		try {
+		user.setCid(utils.generateRandomAlphaNumString(8));
+//		} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
+//			user.setCid(utils.generateRandomAlphaNumString(8));
+//		}
+
+		for (Student s : guardian.getStudents()) {
+
+			if (s.getSubscriptionEndDate() != null) {
+				if (s.getSubscriptionEndDate()
+						.after(Date.from(java.time.LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))) {
+					user.setIsPaid(true);
+					break;
+				}
+
+			}
+
 		}
+
 		Role defaultRole = roleRepository.getOneByName("Guardian");
 		if (defaultRole == null)
 			throw new ValidationException("Role Guardian does not exist");
@@ -240,14 +247,14 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		return user;
 
 	}
-	
+
 	@Override
 	public UserResponse getLoggedInUser() {
 		User user = getUser();
-		if(user == null)
+		if (user == null)
 			throw new ValidationException("No user found.");
 		return new UserResponse(user);
-		
+
 	}
 
 //	@Override public User createSchoolUser(School school) { if

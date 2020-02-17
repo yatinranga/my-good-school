@@ -4,20 +4,25 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.nxtlife.mgs.entity.user.Guardian;
 import com.nxtlife.mgs.entity.user.Student;
 
 public class StudentRequest {
 
-	@NotNull
+	@NotEmpty(message = "name can't be null/empty")
 	private String name;
 
 	private String id;
 
 	private String userId;
 
+	@NotEmpty(message = "schoolId can't be null/empty")
 	private String schoolId;
 
 	private String username;
@@ -28,9 +33,12 @@ public class StudentRequest {
 
 	private String imageUrl;
 
-	@NotNull
+	@NotEmpty
+	@Email(message = "email pattern not vaild")
 	private String email;
 
+	@Size(min = 10, max = 10)
+	@Pattern(regexp = "^[0-9]*$", message = "Mobile no should contain only digit")
 	private String mobileNumber;
 
 	private String gender;

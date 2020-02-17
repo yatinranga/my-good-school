@@ -11,82 +11,96 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.validator.constraints.Email;
 
 import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.activity.ActivityPerformed;
-import com.nxtlife.mgs.entity.school.Award;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.school.StudentAward;
 import com.nxtlife.mgs.entity.school.StudentSchoolGrade;
 
 @Entity
+@DynamicUpdate(true)
 public class Student extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	Long id;
-	
+
 	@NotNull
 	private String name;
-	
+
 	@NotNull
 	@Column(unique = true)
 	private String cid;
-	
+
 	@NotNull
+	@Pattern(regexp = "^[@A-Za-z0-9_]{3,20}$", message = "username should contains only alphabets/digit/@ and length should be in between 4 to 20")
 	@Column(unique = true)
 	private String username;
-	
+
 	private Date dob;
-	
+
 	private String imageUrl;
-	
-	@NotNull
-	@Column(unique = true)
+
+	@Email
+	@Column(unique = true, nullable = false)
 	private String email;
-	
+
+	@Size(min = 10, max = 10)
+	@Pattern(regexp = "^[0-9]*$", message = "Mobile no. should contain only digit")
 	@Column(unique = true)
 	private String mobileNumber;
-	
-	private Boolean active = false;
-	
+
+	private Boolean active = true;
+
 	private String gender;
-	
+
 	private Date subscriptionEndDate;
-	
+
 	private Date sessionStartDate;
-	
+
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="user_id")
+	@JoinColumn(name = "user_id")
 	User user;
-	
+
 //	@NotNull
 	@ManyToOne
 	private School school;
-	
+
 	@ManyToOne
 	private Grade grade;
-	
+
 //	@OneToMany(cascade = CascadeType.ALL ,fetch = FetchType.LAZY,mappedBy = "student")
 //	private List<Award> awards;
-	
-	@OneToMany(cascade = CascadeType.ALL ,fetch = FetchType.LAZY,mappedBy = "student")
-	private List<ActivityPerformed> activities;
-	
-	@OneToMany(cascade = CascadeType.ALL ,fetch = FetchType.LAZY,mappedBy="student")
-	private List<Guardian> guardians ; 
 
-	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY,mappedBy ="student")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "student")
+	private List<ActivityPerformed> activities;
+
+	@ManyToMany(mappedBy = "students", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Guardian> guardians;
+
+	/*
+	 * @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy =
+	 * "student") private List<Guardian> guardians;
+	 */
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "student")
 	private List<StudentSchoolGrade> studentSchoolGrades;
-	
-	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY,mappedBy ="student")
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "student")
 	private List<StudentAward> StudentAwards;
-	
+
 	public Date getSessionStartDate() {
 		return sessionStartDate;
 	}
@@ -198,7 +212,6 @@ public class Student extends BaseEntity {
 	public void setActivities(List<ActivityPerformed> activities) {
 		this.activities = activities;
 	}
-	
 
 	public String getCid() {
 		return cid;
@@ -223,7 +236,7 @@ public class Student extends BaseEntity {
 	public void setGuardians(List<Guardian> guardians) {
 		this.guardians = guardians;
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -232,7 +245,6 @@ public class Student extends BaseEntity {
 		this.id = id;
 	}
 
-
 	public List<StudentSchoolGrade> getStudentSchoolGrades() {
 		return studentSchoolGrades;
 	}
@@ -240,7 +252,6 @@ public class Student extends BaseEntity {
 	public void setStudentSchoolGrades(List<StudentSchoolGrade> studentSchoolGrades) {
 		this.studentSchoolGrades = studentSchoolGrades;
 	}
-
 
 	public List<StudentAward> getStudentAwards() {
 		return StudentAwards;
@@ -252,7 +263,7 @@ public class Student extends BaseEntity {
 
 	public Student(@NotNull String name, @NotNull String cid, @NotNull String username, Date dob, String imageUrl,
 			@NotNull String email, String mobileNumber, Boolean active, String gender, Date subscriptionEndDate,
-			User user, @NotNull School school, Grade grade,  List<ActivityPerformed> activities,
+			User user, @NotNull School school, Grade grade, List<ActivityPerformed> activities,
 			List<Guardian> guardians) {
 		this.name = name;
 		this.cid = cid;
@@ -272,7 +283,7 @@ public class Student extends BaseEntity {
 	}
 
 	public Student() {
-		
+
 	}
-	
+
 }
