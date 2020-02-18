@@ -1,0 +1,29 @@
+
+<div class="container-fluid">
+    <div class="row">
+        <aside class="col-2 px-0 fixed-top" id="left">
+
+            <div class="list-group w-100">
+                <div>
+                    <img src="assets/images.jpg">    
+                    <a class="list-group-item active" >My Good School</a>
+                </div>
+                <a routerLink='./home' class="list-group-item">Home</a>
+                <a routerLink='./profile' class="list-group-item">Profile</a>
+                <div>
+                    <div (click)="onActivityClick()">
+                        <a routerLink='./' class="list-group-item">Activity</a>
+                    </div>
+                    <div *ngIf="showActivityList">
+                        <a routerLink='./activity/add-activity' class="list-group-item">Add Activity</a>
+                        <a routerLink='./' class="list-group-item">Review Activity</a>
+                        <a routerLink='./' class="list-group-item">Saved Activty</a>
+                    </div>
+                </div>
+                <a routerLink='./awards-achievment' class="list-group-item">Awards & Achievements</a>
+                <a routerLink='../../login' class="list-group-item">Logout</a>
+            </div>
+
+        </aside>
+    </div>
+</div>
