@@ -75,7 +75,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		if (request.getEmail() == null)
 			throw new ValidationException("Email can not be null");
 		if (teacherRepository.countByEmailAndActiveTrue(request.getEmail()) > 0)
-			throw new ValidationException("Email already exists");
+			throw new ValidationException(String.format("Email %s already exists", request.getEmail()));
 		if (request.getUsername() == null)
 			request.setUsername(request.getEmail());
 		if (teacherRepository.countByUsernameAndActiveTrue(request.getUsername()) > 0)

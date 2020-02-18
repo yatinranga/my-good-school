@@ -41,4 +41,10 @@ public interface ActivityPerformedService {
 
 	List<ActivityPerformedResponse> filterActivityByYearPerformed(String year, String studentCid);
 
+	ActivityPerformedResponse saveActivityByCoach(ActivityPerformedRequest request);
+
+	ActivityPerformedResponse submitActivityByCoach(String activityPerformedCid);
+
+	List<ActivityPerformedResponse> getAllActivitiesAssignedToCoachforReview(String coachCid);
+
 }
