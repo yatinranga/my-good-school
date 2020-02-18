@@ -68,11 +68,11 @@ export class StudentSignupComponent implements OnInit {
 
   onSubmit() {
     const payload = { studentSignUp: this.studentSignup.value };
+    console.log(payload)
     this.studentService.uploadStudentDetails(payload).subscribe((res) => {
       this.alertService.showSuccessToast('SignUp Successfully')
       this.router.navigate(['./login'])
     },
     (err) => console.log(err) )
   }
-
 }

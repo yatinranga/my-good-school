@@ -2,15 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
-  selector: 'app-add-activity',
-  templateUrl: './add-activity.component.html',
-  styleUrls: ['./add-activity.component.scss']
+  selector: 'app-student-activity',
+  templateUrl: './student-activity.component.html',
+  styleUrls: ['./student-activity.component.scss']
 })
-export class AddActivityComponent implements OnInit {
+export class StudentActivityComponent implements OnInit {
+
+  activityType = 'saved';
+  showAddActivityPopup: boolean;
+  addActivityForm : FormGroup;
 
   activites = ["Yoga","Badminton","Judo"];
-  teachers = ["Mr.Rakesh","Mrs.Seema"];
-  addActivityForm : FormGroup;
+  teachers = ["Mr.Rakesh","Mrs.Seema"];  
 
   constructor(private formBuilder: FormBuilder) { }
 
@@ -23,18 +26,6 @@ export class AddActivityComponent implements OnInit {
     })
   }
 
-  addActivity(){
-    console.log(this.addActivityForm.value);
-  }
-
-  // getActivity(event){
-  //   console.log(event);
-  // }
-
-  // getTeacher(event){
-  //   console.log(event);
-  // }
-
   onFileSelect(event) {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
@@ -43,9 +34,10 @@ export class AddActivityComponent implements OnInit {
   }
 
   saveActivity(){
-    console.log("Activitiy Saved");
+    console.log(this.addActivityForm.value);
   }
 
-
-
+  changeActivityType(str) {
+    this.activityType = str;
+  }
 }
