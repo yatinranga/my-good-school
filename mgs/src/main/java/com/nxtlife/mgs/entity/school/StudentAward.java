@@ -14,13 +14,13 @@ import javax.persistence.MapsId;
 import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
-import com.nxtlife.mgs.util.StudentAwardTeacherId;
+import com.nxtlife.mgs.util.StudentAwardId;
 
 @Entity
 public class StudentAward implements Serializable {
 
 	@EmbeddedId
-	StudentAwardTeacherId studentAwardTeacherId;
+	StudentAwardId studentAwardTeacherId;
 	
 	@MapsId(value = "studentId")
 	@ManyToOne
@@ -39,11 +39,11 @@ public class StudentAward implements Serializable {
 	private Boolean isVerified;
 
 
-	public StudentAwardTeacherId getStudentAwardTeacherId() {
+	public StudentAwardId getStudentAwardTeacherId() {
 		return studentAwardTeacherId;
 	}
 
-	public void setStudentAwardTeacherId(StudentAwardTeacherId studentAwardTeacherId) {
+	public void setStudentAwardTeacherId(StudentAwardId studentAwardTeacherId) {
 		this.studentAwardTeacherId = studentAwardTeacherId;
 	}
 
@@ -87,13 +87,13 @@ public class StudentAward implements Serializable {
 		this.isVerified = isVerified;
 	}
 
-	public StudentAward(StudentAwardTeacherId studentAwardTeacherId, Student student, Award award) {
+	public StudentAward(StudentAwardId studentAwardTeacherId, Student student, Award award) {
 		this.studentAwardTeacherId = studentAwardTeacherId;
 		this.student = student;
 		this.award = award;
 	}
 
-	public StudentAward(StudentAwardTeacherId studentAwardTeacherId, Student student, Award award, Date dateOfReceipt, Boolean isVerified) {
+	public StudentAward(StudentAwardId studentAwardTeacherId, Student student, Award award, Date dateOfReceipt, Boolean isVerified) {
 		this.studentAwardTeacherId = studentAwardTeacherId;
 		this.student = student;
 		this.award = award;

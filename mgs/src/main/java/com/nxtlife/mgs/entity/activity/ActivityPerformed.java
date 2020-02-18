@@ -28,10 +28,6 @@ import com.nxtlife.mgs.enums.ActivityStatus;
 @Entity
 public class ActivityPerformed extends BaseEntity{
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	Long id;
-	
 	@NotNull
 	private Date dateOfActivity;
 	
@@ -63,6 +59,7 @@ public class ActivityPerformed extends BaseEntity{
 	@Max(value = 5)
 	private Integer star;
 	
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	private ActivityStatus activityStatus;
 	
@@ -75,11 +72,10 @@ public class ActivityPerformed extends BaseEntity{
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy="activityPerformed")
 	private List<File> files;
 	
-	@NotNull
 	@ManyToOne
 	private Student student;
 	
-	@NotNull
+	
 	@ManyToOne
 	private Teacher teacher;
 
@@ -210,16 +206,6 @@ public class ActivityPerformed extends BaseEntity{
 	public void setCid(String cid) {
 		this.cid = cid;
 	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	
 
 	public ActivityPerformed(Date dateOfActivity, String cid, String description, String coachRemark,
 			Date coachRemarkDate, Boolean active, Integer participationScore, Integer initiativeScore,

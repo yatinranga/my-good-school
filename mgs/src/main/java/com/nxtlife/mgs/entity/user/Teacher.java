@@ -42,11 +42,11 @@ public class Teacher extends BaseEntity {
 	@NotNull
 	private String name;
 
+	@Column(unique = true,nullable = false)
 	private String username;
 
 	private String gender;
 
-	@NotNull
 	private Date dob;
 
 	private String imageUrl;

@@ -3,6 +3,8 @@ package com.nxtlife.mgs.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,11 +22,16 @@ import com.nxtlife.mgs.view.FocusAreaRequestResponse;
 public class FocusAreaController {
 	@Autowired
 	FocusAreaService focusAreaService;
-
-//	@RequestMapping(value = "importFocusAreas", method = RequestMethod.POST)
-//	public List<FocusAreaRequestResponse> uploadFocusAreasFromExcel(@RequestParam("file") MultipartFile file) {
-//		return focusAreaService.uploadFocusAreasFromExcel(file);
-//	}
+	
+	@GetMapping
+	public List<FocusAreaRequestResponse> getAllFocusAreas(){
+		return focusAreaService.getAllFocusAreas();
+	}
+	
+	@GetMapping("/school/{schoolCid}")
+	public List<FocusAreaRequestResponse> getAllFocusAreas(@PathVariable("schoolCid") String schoolCid){
+		return focusAreaService.getAllFocusAreasBySchool(schoolCid);
+	}
 
 	@PostMapping()
 	public FocusAreaRequestResponse saveFocusArea(@RequestBody FocusAreaRequestResponse request) {

@@ -78,16 +78,11 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 		Role role = roleRepository.getOneByName("School");
 		if (role == null) {
 			role = new Role();
-			try {
-				role.setCid(utils.generateRandomAlphaNumString(8));
-			} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
-				role.setCid(utils.generateRandomAlphaNumString(8));
-			}
-
+			role.setCid(utils.generateRandomAlphaNumString(8));
 			role.setName("School");
+			roleRepository.save(role);
 		}
 //		 Logic for authorities missing
-		roleRepository.save(role);
 		
 		School school = schoolRepository.findByName("my good school");
 		if(school == null) {
@@ -98,11 +93,8 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			school.setUsername(String.format("SCH%08d", sequence));
 			sequenceGeneratorService.updateSequenceByUserType(sequence, UserType.School);
 			school.setEmail("mygoodschool@gmail.com");
-			try {
-				school.setCid(utils.generateRandomAlphaNumString(8));
-			} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
-				school.setCid(utils.generateRandomAlphaNumString(8));
-			}
+		    school.setCid(utils.generateRandomAlphaNumString(8));
+			
 		}
 		
 
@@ -321,7 +313,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 	public SchoolResponse findByCid(String cid) {
 		if(cid == null)
 			throw new ValidationException("id cannot be null.");
-		School school = schoolRepository.findByCid(cid);
+		School school = schoolRepository.findByCidAndActiveTrue(cid);
 		if(school == null)
 			throw new ValidationException("School not found.");
 			

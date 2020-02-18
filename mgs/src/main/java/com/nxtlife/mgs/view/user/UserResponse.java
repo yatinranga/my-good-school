@@ -4,32 +4,33 @@ import com.nxtlife.mgs.entity.user.User;
 
 public class UserResponse {
 
-	private Long id;
-	private String cid;
+//	private Long id;
+	private String id;
 	private String userName;
 	private String contactNumber;
 	private String email;
 	private String userType;
 	private String roleId;
 	
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getCid() {
-		return cid;
-	}
-
-	public void setCid(String cid) {
-		this.cid = cid;
-	}
+//	public Long getId() {
+//		return id;
+//	}
+//
+//	public void setId(Long id) {
+//		this.id = id;
+//	}
+	
 
 	public String getUserName() {
 		return userName;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public void setUserName(String userName) {
@@ -69,8 +70,8 @@ public class UserResponse {
 	}
 
 	public UserResponse(User user) {
-		this.id = user.getId();
-		this.cid = user.getCid();
+//		this.id = user.getId();
+		this.id = user.getCid();
 		this.email = user.getEmail();
 		if(user.getRoleForUser()!=null)
 		  this.roleId = user.getRoleForUser().getCid();

@@ -10,43 +10,43 @@ import com.nxtlife.mgs.entity.user.Teacher;
 @Repository
 public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 
-	Teacher getOneByCid(String cid);
+	Teacher getOneByCidAndActiveTrue(String cid);
 
-	int countByEmail(String email);
+	int countByEmailAndActiveTrue(String email);
 
-	int countByUsername(String username);
+	int countByUsernameAndActiveTrue(String username);
 
-	Teacher findByName(String name);
+	Teacher findByNameAndActiveTrue(String name);
 
-	Teacher findByCid(String cid);
+	Teacher findByCidAndActiveTrue(String cid);
 	
-	Teacher findByCidAndIsCoachTrue(String cid);
+	Teacher findByCidAndIsCoachTrueAndActiveTrue(String cid);
 	
-	Teacher findByCidAndIsClassTeacherTrue(String cid);
+	Teacher findByCidAndIsClassTeacherTrueAndActiveTrue(String cid);
 	
-	Teacher findByIdAndIsCoachTrue(Long id);
+	Teacher findByIdAndIsCoachTrueAndActiveTrue(Long id);
 	
-	Teacher findByIdAndIsClassTeacherTrue(Long id);
+	Teacher findByIdAndIsClassTeacherTrueAndActiveTrue(Long id);
 
-	Teacher findByMobileNumber(String mobileNumber);
+	Teacher findByMobileNumberAndActiveTrue(String mobileNumber);
 
-	Teacher findByUsername(String username);
+	Teacher findByUsernameAndActiveTrue(String username);
 
-	List<Teacher> findAllBySchoolCidAndActivitiesNameAndIsCoachTrue(String schoolCid,String activityName);
+	List<Teacher> findAllBySchoolCidAndActivitiesNameAndIsCoachTrueAndActiveTrue(String schoolCid,String activityName);
 
-	List<Teacher> findAllBySchoolCidAndActivitiesCidAndIsCoachTrue(String schoolCid ,String activityCid);
+	List<Teacher> findAllBySchoolCidAndActivitiesCidAndIsCoachTrueAndActiveTrue(String schoolCid ,String activityCid);
 	
-	List<Teacher> findAllBySchoolCidAndIsCoachTrue(String schoolCid);
+	List<Teacher> findAllBySchoolCidAndIsCoachTrueAndActiveTrue(String schoolCid);
 	
-	List<Teacher> findAllBySchoolCidAndIsClassTeacherTrue(String schoolCid);
+	List<Teacher> findAllBySchoolCidAndIsClassTeacherTrueAndActiveTrue(String schoolCid);
 	
-	List<Teacher> findAllBySchoolCid(String schoolCid);
+	List<Teacher> findAllBySchoolCidAndActiveTrue(String schoolCid);
 
-	List<Teacher> findAllByIsCoachTrue();
+	List<Teacher> findAllByIsCoachTrueAndActiveTrue();
 
-	List<Teacher> findAllByIsClassTeacherTrue();
+	List<Teacher> findAllByIsClassTeacherTrueAndActiveTrue();
 
-	Teacher findById(Long id);
+	Teacher findByIdAndActiveTrue(Long id);
 	
 //	List<Teacher> findAllByActivitiesCid(String cid);
 

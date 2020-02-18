@@ -207,5 +207,22 @@ public class GradeServiceImpl extends BaseService implements GradeService {
 
 	}
 
+	@Override
+	public List<GradeResponse> getAllGradesOfSchool(String schoolCid) {
+		if(schoolCid == null)
+			throw new ValidationException("School Id cannot be null.");
+		School school = schoolRepository.findByCidAndActiveTrue(schoolCid);
+		if(school == null)
+			throw new ValidationException("School not found.");
+	    List<Grade> gradeList = gradeRepository.findAllBySchoolsCidAndActiveTrue(schoolCid);
+		List<GradeResponse> gradeResponseList = new ArrayList<GradeResponse>();
+		
+		if(gradeList==null)
+			throw new ValidationException("No Grades found in this school.");
+		
+		gradeList.forEach(g->{gradeResponseList.add(new GradeResponse(g));});
+		return gradeResponseList;
+	}
+
 
 }

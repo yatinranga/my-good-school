@@ -84,7 +84,7 @@ public class FileServiceImpl extends BaseService implements FileService{
 
 	@Override
 	public FileResponse getFileByUrl(String url) {
-		File file = fileRepository.findByUrl(url);
+		File file = fileRepository.findByUrlAndActiveTrue(url);
 		if(file==null)
 			throw new NotFoundException("file Not Found.");
 		return new FileResponse(file);
@@ -92,7 +92,7 @@ public class FileServiceImpl extends BaseService implements FileService{
 
 	@Override
 	public FileResponse getFileByCId(String cId) {
-		File file = fileRepository.findByCid(cId);
+		File file = fileRepository.findByCidAndActiveTrue(cId);
 		if(file==null)
 			throw new NotFoundException("file Not Found.");
 		return new FileResponse(file);

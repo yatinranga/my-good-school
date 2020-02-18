@@ -3,6 +3,7 @@ package com.nxtlife.mgs.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,5 +32,10 @@ public class GradeController {
 	@PostMapping()
 	public GradeResponse saveGrade(@RequestBody GradeRequest gradeRequest) {
 		return gradeService.save(gradeRequest);
+	}
+	
+	@GetMapping
+	public List<GradeResponse> getAllGradesOfSchool(@RequestParam("schoolId") String schoolCid){
+		return gradeService.getAllGradesOfSchool(schoolCid);
 	}
 }

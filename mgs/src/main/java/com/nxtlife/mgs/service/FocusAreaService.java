@@ -12,4 +12,8 @@ public interface FocusAreaService {
 
 	List<FocusAreaRequestResponse> uploadFocusAreasFromExcel(MultipartFile file);
 
+	List<FocusAreaRequestResponse> getAllFocusAreasBySchool(String schoolCid);
+
+	List<FocusAreaRequestResponse> getAllFocusAreas();
+
 }

@@ -36,6 +36,7 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
+		//By passwordEncoder() we specify that password in request should be encoded
 		auth.userDetailsService(userDetailsService).passwordEncoder(userPasswordEncoder);
 	}
 

@@ -102,7 +102,7 @@ public class ExcelTemplateController {
 		else if(type.equalsIgnoreCase("FOCUS AREA"))
 			focusAreaService.uploadFocusAreasFromExcel(file);
 		else if(type.equalsIgnoreCase("ACTIVITY"))
-			activityService.uploadActivityFromExcel(file);
+			activityService.uploadActivityFromExcel(file ,schoolCid);
 	}
 
 

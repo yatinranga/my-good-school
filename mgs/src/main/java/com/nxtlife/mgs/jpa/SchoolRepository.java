@@ -8,7 +8,7 @@ import com.nxtlife.mgs.entity.school.School;
 @Repository
 public interface SchoolRepository extends JpaRepository<School, Long> {
 
-	School getOneByCid(String cid);
+	School getOneByCidAndActiveTrue(String cid);
 	
 	School findByNameOrEmail(String name , String email);
 	
@@ -20,7 +20,7 @@ public interface SchoolRepository extends JpaRepository<School, Long> {
 
 	int countByUsername(String username);
 
-	School findByCid(String cid);
+	School findByCidAndActiveTrue(String cid);
 
 	School findById(Long id);
 	

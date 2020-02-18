@@ -36,7 +36,7 @@ public class Role extends AbstractAuditable<Role,Long> implements Serializable {
     private List<User> user;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "role_privledge_authority",
+    @JoinTable(name = "role_authority",
             joinColumns = @JoinColumn(name = "role_id") , inverseJoinColumns = @JoinColumn(name = "authority_id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"role_id","authority_id"}))
     private Set<Authority> authorities;
@@ -98,7 +98,7 @@ public class Role extends AbstractAuditable<Role,Long> implements Serializable {
 		this.active = active;
 	}
 
-	public void addAuthorities(Authority authority){
+	public void addAuthority(Authority authority){
         if(authorities == null)
             authorities = new HashSet<>();
         authorities.add(authority);
