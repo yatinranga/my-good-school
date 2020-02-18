@@ -24,4 +24,8 @@ export class AuthService {
     localStorage.removeItem('access_token')
     this.router.navigate(['/login']);
   }
+
+  getInfo(){
+    return this.http.get("/api/info");
+  }
 }

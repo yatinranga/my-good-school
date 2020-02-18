@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, FormArray, FormControlName } from '@angular/forms';
 import { AdminService } from 'src/app/services/admin.service';
 import { StudentService } from 'src/app/services/student.service';
+import { AlertService } from 'src/app/services/alert.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-student-signup',
@@ -12,25 +14,12 @@ export class StudentSignupComponent implements OnInit {
 
   studentSignup: FormGroup;
   schools = [];
-  guardianArr: FormArray;
-  // guardian : FormGroup = {
-  //   guardianName : FormControl(''),
-  //   guardianEmail : "",
-  //   guardianGender : "",
-  //   guardianMob : "",
-  //   relationship : ""     
-  // };
 
   constructor(private formBuilder: FormBuilder, private adminService: AdminService,
-    private studentService: StudentService) { }
+    private studentService: StudentService, private alertService: AlertService,
+    private router: Router) { }
 
   ngOnInit() {
-    // this.adminService.getSchools("/schools").
-    // subscribe(
-    //   res => this.schools = res,
-    //   err => console.log(err)
-    // );
-
     this.studentSignup = new FormGroup({
       name: new FormControl(''),
       dob: new FormControl(''),
@@ -43,7 +32,6 @@ export class StudentSignupComponent implements OnInit {
       guardians: new FormArray(this.giveGuardianFormArray())
     });
     console.log(this.studentSignup);
-
   }
 
   get guardians() { return this.studentSignup.get('guardians') as FormArray }
@@ -80,8 +68,11 @@ export class StudentSignupComponent implements OnInit {
 
   onSubmit() {
     const payload = { studentSignUp: this.studentSignup.value };
-    this.studentService.uploadStudentDetails(payload);
-
+    this.studentService.uploadStudentDetails(payload).subscribe((res) => {
+      this.alertService.showSuccessToast('SignUp Successfully')
+      this.router.navigate(['./login'])
+    },
+    (err) => console.log(err) )
   }
 
 }

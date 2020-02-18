@@ -37,10 +37,6 @@ export class StudentUploadComponent implements OnInit {
     });
   }
 
-  getSchoolID(schoolName) {
-    this.studentForm.value['schoolId'] = this.schools.filter((ele) => ele.name === schoolName)[0].id;
-  }
-
   onFileSelect(event) {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
@@ -63,7 +59,6 @@ export class StudentUploadComponent implements OnInit {
       (err) => console.log(err)
     );
   }
-
 
   downloadStudent() {
     this.dwnld.nativeElement.href = BASE_URL + "/api/template/export?type=student&access_token=" + localStorage.getItem('access_token');

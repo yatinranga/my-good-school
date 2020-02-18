@@ -10,32 +10,38 @@ import { AuthService } from '../services/auth.service';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
+  user: any;
 
-  constructor(private fb: FormBuilder,
+  constructor(private formBuilder: FormBuilder,
     private router: Router,
     public authService: AuthService) { }
 
   ngOnInit() {
-    this.loginForm = this.fb.group({
+    this.loginForm = this.formBuilder.group({
       username: [''],
       password: ['']
     });
   }
 
   onSubmit() {
-    this.authService.loginUser(this.loginForm.value)
-      .subscribe(
-        res => {
-            console.log(res),
-            localStorage.setItem('access_token',res.access_token),
-            this.router.navigate(['admin'])
-        },
-        err => console.log(err)
-      );
+    this.authService.loginUser(this.loginForm.value).subscribe((res) => {
+      localStorage.setItem('access_token', res.access_token)
+      this.getUserInfo();
+    });
   }
 
-  // gotoSignup(){
-  //   this.router.navigate(['/signup/student'])
-  // }
+  getUserInfo() {
+    this.authService.getInfo().subscribe((res) => {
+      this.user = res,
+        this.checkUserType(this.user.userType);
+    });
+  }
 
+  checkUserType(userType) {
+    switch (userType) {
+      case "Admin": this.router.navigate(['admin']); break;
+      case "Student": this.router.navigate(['student/' + this.user.id + '/home']); break;
+      case "Teacher": this.router.navigate(['teacher/' + this.user.id + '/home']); break;
+    }
+  }
 }

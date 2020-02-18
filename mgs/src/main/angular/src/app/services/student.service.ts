@@ -10,7 +10,6 @@ export class StudentService {
 
   uploadStudentDetails(data) {
     const url = "/api/student/signUp"
-    this.http.post(url, data);
+    return this.http.post(url, data);
   }
-
 }
