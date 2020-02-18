@@ -12,4 +12,7 @@ export class StudentService {
     const url = "/api/student/signUp"
     return this.http.post(url, data);
   }
+
+  getActivity(){    
+  }
 }

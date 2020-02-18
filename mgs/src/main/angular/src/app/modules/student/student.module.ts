@@ -7,11 +7,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { StudentAwardsComponent } from './student-awards/student-awards.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { StudentComponent } from './student.component';
-import { AddActivityComponent } from './student-activity/components/add-activity/add-activity.component';
-import { ReviewActivityComponent } from './student-activity/components/review-activity/review-activity.component';
-import { ActivityDraftsComponent } from './student-activity/components/activity-drafts/activity-drafts.component';
+
 import { ProfileComponent } from './profile/profile.component';
-import { StudentActivityModule } from './student-activity/student-activity.module';
+import { SavedActitvityComponent } from './student-activity/saved-actitvity/saved-actitvity.component';
+import { ReviewedActitvityComponent } from './student-activity/reviewed-actitvity/reviewed-actitvity.component';
+import { StudentActivityComponent } from './student-activity/student-activity.component';
+import { AddActivityComponent } from './student-activity/add-activity/add-activity.component';
 
 
 const routes: Routes = [
@@ -29,20 +30,25 @@ const routes: Routes = [
       },
       {
         path: 'activity',
-        children: [
-          {
-            path: 'add-activity',
-            component: AddActivityComponent
-          },
-          {
-            path: 'review-activity',
-            component: ReviewActivityComponent
-          },
-          {
-            path: 'activity-draft',
-            component: ActivityDraftsComponent
-          }
-        ]
+        component : StudentActivityComponent,
+        // children: [
+        //   {
+        //     path: 'saved-activity',
+        //     component: SavedActitvityComponent
+        //   },
+        //   {
+        //     path: 'review-activity',
+        //     component: ReviewedActitvityComponent
+        //   },
+        //   {
+        //     path: 'add-activity',
+        //     component: AddActitvityComponent
+        //   },
+        //   {
+        //     path: '',
+        //     component: SavedActitvityComponent
+        //   }
+        // ]
       },
       {
         path: 'awards-achievment',
@@ -53,11 +59,8 @@ const routes: Routes = [
         redirectTo: 'home'
       }
     ]
-  },
-  
+  },  
 ]
-
-
 
 @NgModule({
   declarations: [
@@ -65,12 +68,15 @@ const routes: Routes = [
     StudentComponent,
     StudentAwardsComponent,
     SidebarComponent,
-    ProfileComponent
+    SavedActitvityComponent,
+    ReviewedActitvityComponent,
+    StudentActivityComponent,
+    ProfileComponent,
+    AddActivityComponent
   ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    StudentActivityModule,
     RouterModule.forChild(routes),
   ],
   providers: []
