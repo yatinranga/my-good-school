@@ -1,0 +1,32 @@
+
+@import '../../../app.component.scss';
+
+.container.register-form {
+    box-shadow: 0 0 10px $box-shadow-color;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.note {
+    font-size: 21px;
+    color: $active;
+    margin: 20px 0 40px 0;
+}
+button.btn.btnSubmit.btn-success{
+    background: $active;
+    border: $active;
+    margin-top: 20px;
+    font-size: 17px;
+}
+.form-content {
+    border-bottom: 1px solid $box-shadow-color;
+    padding-bottom: 30px;
+}
+button.btnSubmit{
+    background: $label-color;
+    border-radius: 10px;
+    color: white;
+    padding: 5px 10px;
+    font-size: 15px;
+}
