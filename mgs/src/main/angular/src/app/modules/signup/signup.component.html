@@ -1,16 +1,42 @@
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+<!-- <div class="container">
+    <h3>Sign Up as : </h3>
+    <div class="card bg-info text-white">
+      <div class="card-body">
+        <div class="btn-group btn-group-lg">
+            <button type="button" class="btn btn-primary"
+            routerLink="/Student-signup">Student</button>
+        </div>
+        <div class="btn-group btn-group-lg">
+            <button type="button" class="btn btn-primary"
+            routerLink="/Teacher-signup">Teacher</button>
+        </div>
+        <div class="btn-group btn-group-lg">
+            <button type="button" class="btn btn-primary">Coach</button>
+        </div>
+      </div>
+      <div class="btn-group btn-group-lg">
+        <button type="button" class="btn btn-dark" routerLink="login">Back</button>
+      </div>
+    </div>
+</div> -->
+
+<nav class="navbar navbar-expand-sm">
   <!-- Brand/logo -->
-  <a class="navbar-brand">Sign Up </a>
-  
+  <a class="navbar-brand"> Sign Up Page </a>
+
   <!-- Links -->
-  <ul class="navbar-nav">
-    <li class="nav-item">
-      <a class="nav-link" routerLink='student'>Student</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink='teacher'>Teacher</a>
-    </li>
-  </ul>
+
+    <ul id="myDIV" class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" routerLink='student'>Student</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink='teacher'>Teacher</a>
+        </li>
+      </ul>
+  
 </nav>
 
 <router-outlet></router-outlet>
+
+
