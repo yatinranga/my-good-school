@@ -74,22 +74,28 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 	
 	@Override
 	public ActivityPerformedResponse saveActivity(ActivityPerformedRequest request) {
+		
 		if (request == null)
 			throw new ValidationException("Request can not be null.");
+		
 		ActivityStatus actStatus = ActivityStatus.InProgressAtStudent;
 
 		ActivityPerformed activityPerformed;
 
 		if (request.getStudentId() == null)
 			throw new ValidationException("Student Id can not be null.");
+		
 		Student student = studentRepository.findByCid(request.getStudentId());
+		
 		if(student == null)
 			throw new ValidationException(String.format("Student id is invalid no student with id : %s found.", request.getStudentId()));
 		if (request.getActivityId() == null)
 			throw new ValidationException("Activity Id can not be null.");
 		if (request.getCoachId() == null)
 			throw new ValidationException("Coach Id can not be null.");
+		
 		Teacher coach = teacherRepository.findByCidAndIsCoachTrue(request.getCoachId());
+		
 		if(coach == null)
 			throw new ValidationException(String.format("Coach id is invalid no coach with id : %s found.", request.getCoachId()));
 

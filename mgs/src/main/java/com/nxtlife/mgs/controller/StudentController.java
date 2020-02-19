@@ -42,12 +42,13 @@ public class StudentController {
 		return studentService.save(studentRequest);
 	}
 
-	@PostMapping()
-	public StudentResponse saveStudent(@Valid @RequestBody StudentRequest studentRequest) {
-		return studentService.save(studentRequest);
-	}
+	/*
+	 * @PostMapping() public StudentResponse saveStudent(@Valid @RequestBody
+	 * StudentRequest studentRequest) { return studentService.save(studentRequest);
+	 * }
+	 */
 
-	@PutMapping("/update/{cid}")
+	@PutMapping("{cid}")
 	public StudentResponse update(@RequestBody StudentRequest request, @PathVariable String cid) {
 		return studentService.update(request, cid);
 	}
@@ -57,15 +58,10 @@ public class StudentController {
 		return studentService.getAll();
 	}
 
-	@GetMapping("/name/{name}")
+	@GetMapping("{name}")
 	public List<StudentResponse> findByName(@PathVariable String name) {
 		return studentService.findByName(name);
 	}
-
-//	@GetMapping("{id}")
-//	public StudentResponse findByid(@PathVariable Long id) {
-//		return studentService.findByid(id);
-//	}
 
 	@GetMapping("/id/{cId}")
 	public StudentResponse findByCId(@PathVariable String cId) {
@@ -80,6 +76,11 @@ public class StudentController {
 	@GetMapping("/username/{username}")
 	public StudentResponse findByUsername(@PathVariable String username) {
 		return studentService.findByUsername(username);
+	}
+
+	@GetMapping("/school/{id}")
+	public List<StudentResponse> getAllBySchoolId(@PathVariable String schoolCid) {
+		return studentService.getAllBySchoolCid(schoolCid);
 	}
 
 	@GetMapping(value = "/activities")
