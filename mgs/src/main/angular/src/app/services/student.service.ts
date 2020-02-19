@@ -9,7 +9,7 @@ export class StudentService {
   constructor(private http : CustomHttpService) {}
 
   uploadStudentDetails(data) {
-    const url = "/api/student/signUp"
+    const url = "/student/signUp"
     return this.http.post(url, data);
   }
 

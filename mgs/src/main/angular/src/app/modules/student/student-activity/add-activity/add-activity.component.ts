@@ -8,18 +8,19 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 })
 export class AddActivityComponent implements OnInit {
 
-  activites = ["Yoga","Badminton","Judo"];
-  teachers = ["Mr.Rakesh","Mrs.Seema"]; 
-  addActivityForm : FormGroup; 
+  activites = ["Yoga", "Badminton", "Judo"];
+  teachers = ["Mr.Rakesh", "Mrs.Seema"];
+  addActivityForm: FormGroup;
 
   constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit() {
     this.addActivityForm = this.formBuilder.group({
-      addAtivity : [''],
-      addActivityDetails :[''],
-      addTeacher : [''],
-      attachment : ['']
+      addActivity: [''],
+      addActivityDetails: [''],
+      addActivityDate: [''],
+      addTeacher: [''],
+      attachment: ['']
     })
   }
 
@@ -27,11 +28,21 @@ export class AddActivityComponent implements OnInit {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
       this.addActivityForm.value['attachment'] = file;
+      console.log(this.addActivityForm.value['attachment']);
     }
   }
 
-  saveActivity(){
+  saveActivity() {
     console.log(this.addActivityForm.value);
   }
-  
+
 }
+
+// const formData = new FormData();
+// formData.append('studentId', this.studentBulkForm.value.selectedFile);
+// formData.append('activityId', this.studentBulkForm.value.type);
+// formData.append('coachId', this.studentBulkForm.value.schoolId);
+// formData.append('dateOfActivity', this.studentBulkForm.value.schoolId);
+// formData.append('fileRequests', this.studentBulkForm.value.schoolId);
+// formData.append('id', this.studentBulkForm.value.schoolId);
+// console.log(formData);

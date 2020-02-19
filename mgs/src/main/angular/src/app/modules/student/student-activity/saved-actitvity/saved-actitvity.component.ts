@@ -8,22 +8,33 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class SavedActitvityComponent implements OnInit {
 
-  activites = [];
-  teachers = [];
-  savedActivityForm : FormGroup;
+  activites = ["Yoga", "Badminton", "Judo"];
+  teachers = ["Mr.Rakesh", "Mrs.Seema"];
+  savedActivitiesArr = ["Yoga", "Badminton", "Cricket"];
+  showActivites = false;
+  savedActivityForm: FormGroup;
 
-  constructor( private formBuilder : FormBuilder ) { }
+  constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit() {
     this.savedActivityForm = this.formBuilder.group({
-      savedActivity : [''],
-      savedActivityDetails :[''],
-      savedTeacher : [''],
-      attachment : ['']
+      savedActivity: [''],
+      savedActivityDetails: [''],
+      savedActivityDate: [''],
+      savedTeacher: [''],
+      attachment: ['']
     })
   }
 
-  submitActivity(){
+  showSavedActivities() {
+    this.showActivites = true;
+  }
+
+  showSelectedActivities(index){
+    console.log(this.savedActivitiesArr[index]);
+  }
+
+  submitActivity() {
     console.log(this.savedActivityForm.value);
   }
 

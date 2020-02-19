@@ -6,7 +6,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { StudentUploadComponent } from './student-upload/student-upload.component';
 import { TeacherUploadComponent } from './teacher-upload/teacher-upload.component';
 
-
 const routes: Routes = [
   {
     path: '',

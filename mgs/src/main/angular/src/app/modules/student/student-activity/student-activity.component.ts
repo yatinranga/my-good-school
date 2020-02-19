@@ -30,6 +30,7 @@ export class StudentActivityComponent implements OnInit {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
       this.addActivityForm.value['attachment'] = file;
+      console.log(this.addActivityForm.value[''])
     }
   }
 

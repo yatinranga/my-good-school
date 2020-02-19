@@ -1,28 +1,26 @@
 <div class="card bg-light">
-    <div class="card-body text-center">
-      <h3>Upload Teacher</h3><br>
-  
-      <div>Select School :  
-        <select >
-          <option disabled>Select School</option>
-          <option *ngFor = "let school of schools" value={{school.name}} >{{school.name}}</option>
+  <div class="card-body text-center">
+    <h3>Upload Teacher</h3><br>
+
+    <form [formGroup]="teacherBulkForm" (ngSubmit)="uploadTeacher()">
+      <div>Select School :
+        <select formControlName="schoolId">
+          <option value="" disabled selected>Select School </option>
+          <option *ngFor="let school of schools; let i = index;" value={{school.id}}>{{school.name}}</option>
         </select>
       </div><br>
-  
-      <form [formGroup] = "uploadTeacher" (ngSubmit)="onSubmit()">      
-        <div>
-          <input type="file" name="selectedFile" (change)="onFileSelect($event)" />
-        </div><br>
-        <div>
-          <button type="submit">Upload Students</button>
-        </div>
-      </form>
-  
       <div>
-        <br>
-        <button type="button" name="" (click)="downloadTeacher()">Download Teacher Template</button>
-        <a style="display: none;" download #dwnld></a>
+        <input type="file" name="selectedFile" (change)="onFileSelect($event)" />
+      </div><br>
+      <div>
+        <button type="submit">Upload Students</button>
       </div>
+    </form>
+
+    <div>
+      <br>
+      <button type="button" name="" (click)="downloadTeacher()">Download Teacher Template</button>
+      <a style="display: none;" download #dwnld></a>
     </div>
   </div>
-  
+</div>
