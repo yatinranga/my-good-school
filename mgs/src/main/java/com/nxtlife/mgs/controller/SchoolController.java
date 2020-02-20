@@ -16,7 +16,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.nxtlife.mgs.service.ActivityService;
 import com.nxtlife.mgs.service.SchoolService;
 import com.nxtlife.mgs.service.TeacherService;
+import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.view.ActivityRequestResponse;
+import com.nxtlife.mgs.view.Mail;
+import com.nxtlife.mgs.view.MailRequest;
 import com.nxtlife.mgs.view.SchoolRequest;
 import com.nxtlife.mgs.view.SchoolResponse;
 
@@ -29,6 +32,9 @@ public class SchoolController {
 	
 	@Autowired
 	private ActivityService activityService;
+	
+	@Autowired
+	private UserService userService;
 	
 	@GetMapping(value = "/{schoolCid}/activitiesOffered")
 	public List<ActivityRequestResponse> getAllOfferedActivitiesBySchool(@PathVariable("schoolCid") String schoolCid){
@@ -47,6 +53,15 @@ public class SchoolController {
 	
 	@GetMapping
 	public List<SchoolResponse> getAllSchools(){
+//		MailRequest request = new MailRequest("Test email", "testing email sending api", null, "laxmi.ssj4@gmail.com", "vtsefkon@gmail.com");
+//		userService.sendLoginCredentials(request);
+		Mail mail = new Mail();
+		mail.setMailFrom("laxminath@nxtlifetechnologies.com");
+        mail.setMailTo("laxmi.ssj4@gmail.com");
+        mail.setMailSubject("Spring Boot - Email Example");
+        mail.setMailContent("Learn How to send Email using Spring Boot!!!\n\nThanks\nwww.technicalkeeda.com");
+        userService.sendLoginCredentialsBySMTP(mail);
+
 		return schoolService.getAllSchools();
 	}
 	

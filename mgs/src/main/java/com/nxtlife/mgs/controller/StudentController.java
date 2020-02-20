@@ -37,12 +37,12 @@ public class StudentController {
 //		return studentService.uploadStudentsFromExcel(file);
 //	}
 
-	@PostMapping(value = "signUp")
+	@PostMapping(value = "/students/signUp")
 	public StudentResponse signUpStudent(@RequestBody StudentRequest studentRequest) {
 		return studentService.save(studentRequest);
 	}
 
-	@PostMapping()
+	@PostMapping("api/students")
 	public StudentResponse saveStudent(@Valid @RequestBody StudentRequest studentRequest) {
 		return studentService.save(studentRequest);
 	}

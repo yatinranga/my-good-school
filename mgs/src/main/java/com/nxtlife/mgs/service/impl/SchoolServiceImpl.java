@@ -80,6 +80,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			role = new Role();
 			role.setCid(utils.generateRandomAlphaNumString(8));
 			role.setName("School");
+			role.setActive(true);
 			roleRepository.save(role);
 		}
 //		 Logic for authorities missing
@@ -94,6 +95,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			sequenceGeneratorService.updateSequenceByUserType(sequence, UserType.School);
 			school.setEmail("mygoodschool@gmail.com");
 		    school.setCid(utils.generateRandomAlphaNumString(8));
+		    school.setActive(true);
 			
 		}
 		

@@ -1,13 +1,19 @@
 package com.nxtlife.mgs.service.impl;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.security.GeneralSecurityException;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
+import javax.mail.MessagingException;
+import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,8 +39,11 @@ import com.nxtlife.mgs.jpa.AuthorityRepository;
 import com.nxtlife.mgs.jpa.RoleRepository;
 import com.nxtlife.mgs.jpa.UserRepository;
 import com.nxtlife.mgs.service.BaseService;
+import com.nxtlife.mgs.service.MailService;
 import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.util.Utils;
+import com.nxtlife.mgs.view.Mail;
+import com.nxtlife.mgs.view.MailRequest;
 import com.nxtlife.mgs.view.user.UserResponse;
 
 @Service
@@ -51,6 +60,12 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Autowired
 	Utils utils;
+	
+	@Autowired
+	NotificationServiceImpl notificationService;
+	
+	@Autowired
+	MailService mailService;
 
 	private static Logger logger = LoggerFactory.getLogger(UserService.class);
 
@@ -84,9 +99,11 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			role = new Role();
 			role.setName("Admin");
 			role.setCid(utils.generateRandomAlphaNumString(8));
+			role.setAuthorities(authorityList);
+			role.setActive(true);
+			roleRepository.save(role);
 		}
-		role.setAuthorities(authorityList);
-		roleRepository.save(role);
+		
 		logger.info("attached Authorities to admin.");
 
 //		Role role = roleRepository.getOneByName("Admin");
@@ -249,12 +266,39 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	}
 
 	@Override
+	@Transactional
 	public UserResponse getLoggedInUser() {
 		User user = getUser();
 		if (user == null)
 			throw new ValidationException("No user found.");
 		return new UserResponse(user);
 
+	}
+
+	@Override
+	public void sendLoginCredentialsByGmailApi(MailRequest request) {
+		if(request.getTo()==null || request.getFrom()==null||request.getSubject()==null)
+			throw new ValidationException("Please provide to , from and subject if not provided already.");
+		if(request.getContent()==null)
+			throw new ValidationException("Please provide email content to send.");
+		try {
+			notificationService.sendEmail(request);
+		} catch (MessagingException | IOException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+		logger.info(String.format("Email sent successfuly to email address %s ",request.getTo() ));
+		System.out.println(String.format("Email sent successfuly to email address %s ",request.getTo() ));
+	}
+	
+	@Override
+	public void sendLoginCredentialsBySMTP(Mail request) {
+		if(request.getMailTo()==null || request.getMailFrom()==null||request.getMailSubject()==null)
+			throw new ValidationException("Please provide to , from and subject if not provided already.");
+		if(request.getMailContent()==null)
+			throw new ValidationException("Please provide email content to send.");
+		mailService.sendEmail(request);
+		logger.info(String.format("Email sent successfuly to email address %s ",request.getMailTo()));
+		System.out.println(String.format("Email sent successfuly to email address %s ",request.getMailTo() ));
 	}
 
 //	@Override public User createSchoolUser(School school) { if
