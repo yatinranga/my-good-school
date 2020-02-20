@@ -4,38 +4,37 @@ import java.util.Date;
 import java.util.List;
 
 import com.nxtlife.mgs.entity.activity.ActivityPerformed;
-import com.nxtlife.mgs.enums.ActivityStatus;
 
 public class ActivityPerformedRequest {
 
-    private Date dateOfActivity;
-	
+	private Date dateOfActivity;
+
 	private String id;
-	
+
 	private String description;
-	
+
 	private String coachRemark;
-	
+
 	private Date coachRemarkDate;
-	
+
 	private Boolean active;
-	
+
 	private Integer participationScore;
-	
+
 	private Integer initiativeScore;
-	
+
 	private Integer achievementScore;
-	
+
 	private Integer star;
-	
+
 //	private ActivityStatus activityStatus;
-	
+
 	private String activityId;
-	
+
 	private List<FileRequest> fileRequests;
-	
+
 	private String coachId;
-	
+
 	private String studentId;
 
 	public Date getDateOfActivity() {
@@ -61,7 +60,7 @@ public class ActivityPerformedRequest {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	public String getCoachRemark() {
 		return coachRemark;
 	}
@@ -159,7 +158,7 @@ public class ActivityPerformedRequest {
 	}
 
 	public ActivityPerformed toEntity(ActivityPerformed activityPerformed) {
-		activityPerformed=activityPerformed==null?new ActivityPerformed( ):activityPerformed;
+		activityPerformed = activityPerformed == null ? new ActivityPerformed() : activityPerformed;
 		activityPerformed.setCid(this.id);
 		activityPerformed.setDateOfActivity(this.dateOfActivity);
 //		activityPerformed.setActivityStatus(this.activityStatus);
@@ -171,10 +170,10 @@ public class ActivityPerformedRequest {
 		activityPerformed.setParticipationScore(this.participationScore);
 		activityPerformed.setAchievementScore(this.achievementScore);
 		activityPerformed.setStar(this.star);
-		
+
 		return activityPerformed;
 	}
-	
+
 	public ActivityPerformed toEntity() {
 		return toEntity(null);
 	}

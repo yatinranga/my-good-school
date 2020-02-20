@@ -26,56 +26,55 @@ import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.enums.ActivityStatus;
 
 @Entity
-public class ActivityPerformed extends BaseEntity{
-	
+public class ActivityPerformed extends BaseEntity {
+
 	@NotNull
 	private Date dateOfActivity;
-	
+
 	@NotNull
 	@Column(unique = true)
 	private String cid;
-	
+
 	private String description;
-	
+
 	private String coachRemark;
-	
+
 	private Date coachRemarkDate;
-	
+
 	private Boolean active;
-	
+
 	@Min(value = 0)
 	@Max(value = 10)
 	private Integer participationScore;
-	
+
 	@Min(value = 0)
 	@Max(value = 10)
 	private Integer initiativeScore;
-	
+
 	@Min(value = 0)
 	@Max(value = 5)
 	private Integer achievementScore;
-	
+
 	@Min(value = 0)
 	@Max(value = 5)
 	private Integer star;
-	
+
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private ActivityStatus activityStatus;
-	
+
 //	@OneToOne
 //	private ActivityOfferedFocusArea activityOffered;
-	
+
 	@OneToOne
 	private Activity activity;
-	
-	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy="activityPerformed")
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "activityPerformed")
 	private List<File> files;
-	
+
 	@ManyToOne
 	private Student student;
-	
-	
+
 	@ManyToOne
 	private Teacher teacher;
 
@@ -190,7 +189,7 @@ public class ActivityPerformed extends BaseEntity{
 //	public void setActivityOffered(ActivityOfferedFocusArea activityOffered) {
 //		this.activityOffered = activityOffered;
 //	}
-	
+
 	public String getCid() {
 		return cid;
 	}
@@ -229,7 +228,7 @@ public class ActivityPerformed extends BaseEntity{
 	}
 
 	public ActivityPerformed() {
-		
+
 	}
 
 }

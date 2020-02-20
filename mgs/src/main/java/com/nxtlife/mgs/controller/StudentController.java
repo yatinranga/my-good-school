@@ -62,7 +62,7 @@ public class StudentController {
 		return studentService.findByName(name);
 	}
 
-//	@GetMapping("{id}")
+//	@GetMapping("/id/{cId}")
 //	public StudentResponse findByid(@PathVariable Long id) {
 //		return studentService.findByid(id);
 //	}
@@ -81,7 +81,18 @@ public class StudentController {
 	public StudentResponse findByUsername(@PathVariable String username) {
 		return studentService.findByUsername(username);
 	}
-	
+
+	@GetMapping("/school/{id}")
+	public List<StudentResponse> getAllBySchoolId(@PathVariable String schoolCid) {
+		return studentService.getAllBySchoolCid(schoolCid);
+	}
+
+	@GetMapping(value = "/activities")
+	public List<ActivityPerformedResponse> getAllActivitiesOfStudentByStatus(@RequestParam("status") String status,
+			@RequestParam("studentId") String studentCid) {
+		return activityPerformedService.getAllActivitiesOfStudentByStatus(status, studentCid);
+	}
+
 	@DeleteMapping("api/students/{cid}")
 	public SuccessResponse delete(@RequestBody StudentRequest request, @PathVariable String cid) {
 		return studentService.delete(request, cid);
