@@ -4,7 +4,7 @@
 <div class="card bg-light">
   <div class="card-body text-center">
     <h3>Data Upload Form For Students</h3>
-    <form [formGroup]="studentForm" (ngSubmit)="uploadStudents()">
+    <form [formGroup]="studentBulkForm" (ngSubmit)="uploadStudents()">
         Select School :
       <div class="input-field"> 
         <select formControlName="schoolId">

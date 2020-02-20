@@ -18,7 +18,7 @@ export class StudentUploadComponent implements OnInit, AfterViewInit {
 
   schools = [];
 
-  studentForm: FormGroup;
+  studentBulkForm : FormGroup;
 
   constructor(private adminService: AdminService,
     private formBuilder: FormBuilder,
@@ -30,7 +30,7 @@ export class StudentUploadComponent implements OnInit, AfterViewInit {
         res => this.schools = res,
         err => console.log(err));
 
-    this.studentForm = this.formBuilder.group({
+    this.studentBulkForm = this.formBuilder.group({
       type: ['student'],
       schoolId: [''],
       selectedFile: ['']
@@ -56,15 +56,15 @@ export class StudentUploadComponent implements OnInit, AfterViewInit {
   onFileSelect(event) {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
-      this.studentForm.value['selectedFile'] = file;
+      this.studentBulkForm.value['selectedFile'] = file;
     }
   }
 
   uploadStudents() {
     const formData = new FormData();
-    formData.append('file', this.studentForm.value.selectedFile);
-    formData.append('type', this.studentForm.value.type);
-    formData.append('schoolId', this.studentForm.value.schoolId);
+    formData.append('file', this.studentBulkForm.value.selectedFile);
+    formData.append('type', this.studentBulkForm.value.type);
+    formData.append('schoolId', this.studentBulkForm.value.schoolId);
     console.log(formData);
 
     this.adminService.UploadExcel("/api/template/bulkUpload", formData).subscribe(

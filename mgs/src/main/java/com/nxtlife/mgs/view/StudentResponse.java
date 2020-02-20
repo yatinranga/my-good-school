@@ -4,8 +4,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.nxtlife.mgs.entity.user.Student;
 
+@JsonInclude(value = Include.NON_ABSENT)
 public class StudentResponse {
 
 	private String id;
@@ -157,9 +160,37 @@ public class StudentResponse {
 
 		if (student.getSchool() != null)
 			this.schoolId = student.getSchool().getCid();
-
-		this.guardianResponseList = student.getGuardians().stream().map(g -> new GuardianResponse(g))
+		if(student.getGuardians()!=null && !student.getGuardians().isEmpty())
+		  this.guardianResponseList = student.getGuardians().stream().map(g -> new GuardianResponse(g))
 				.collect(Collectors.toList());
+
+	}
+	
+	public StudentResponse(Student student , Boolean responseForGetInfo ) {
+		if (responseForGetInfo == true) {
+			this.id = student.getCid();
+			this.name = student.getName();
+			this.username = student.getUsername();
+			this.email = student.getEmail();
+			this.dob = student.getDob();
+			this.gender = student.getGender();
+			this.mobileNumber = student.getMobileNumber();
+			this.active = student.getActive();
+			this.subscriptionEndDate = student.getSubscriptionEndDate();
+
+			if (student.getUser() != null) {
+				this.userId = student.getUser().getCid();
+			}
+
+			if (student.getGrade() != null) {
+				this.grade = student.getGrade().getName();
+				this.section = student.getGrade().getSection();
+			}
+
+			if (student.getSchool() != null)
+				this.schoolId = student.getSchool().getCid();
+
+		}
 
 	}
 

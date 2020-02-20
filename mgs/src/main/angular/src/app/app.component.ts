@@ -9,10 +9,20 @@ import { Router } from '@angular/router';
 })
 export class AppComponent implements OnInit {
   title = 'MGS';
+  userType : any;
 
   constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
+    if(this.userType = localStorage.getItem('user_type')){
+      console.log(this.userType);
+      switch (this.userType) {
+        case "Admin": this.router.navigate(['admin']); break;
+        case "Student": this.router.navigate(['student/' + '/home']); break;
+        case "Teacher": this.router.navigate(['teacher/' + '/home']); break;
+        case "" : this.router.navigate(['login']); break;
+      }
+    }
     // if (this.authService.loggedIn()) {
     //   this.router.navigate(['/admin'])
     // } else {

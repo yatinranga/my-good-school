@@ -23,7 +23,7 @@ import com.nxtlife.mgs.view.StudentResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
 
 @RestController
-@RequestMapping("/api/students")
+@RequestMapping("/")
 public class StudentController {
 
 	@Autowired
@@ -37,17 +37,25 @@ public class StudentController {
 //		return studentService.uploadStudentsFromExcel(file);
 //	}
 
-	@PostMapping(value = "/signUp")
+	@PostMapping(value = "/students/signUp")
 	public StudentResponse signUpStudent(@RequestBody StudentRequest studentRequest) {
 		return studentService.save(studentRequest);
 	}
 
-	@PostMapping()
+<<<<<<< HEAD
+	@PostMapping("api/students")
 	public StudentResponse saveStudent(@Valid @RequestBody StudentRequest studentRequest) {
 		return studentService.save(studentRequest);
 	}
+=======
+	/*
+	 * @PostMapping() public StudentResponse saveStudent(@Valid @RequestBody
+	 * StudentRequest studentRequest) { return studentService.save(studentRequest);
+	 * }
+	 */
+>>>>>>> 9858c188d65babdb27dca64399198b4b1b4bbaf5
 
-	@PutMapping("/update/{cid}")
+	@PutMapping("api/students/update/{cid}")
 	public StudentResponse update(@RequestBody StudentRequest request, @PathVariable String cid) {
 		return studentService.update(request, cid);
 	}
@@ -57,29 +65,34 @@ public class StudentController {
 		return studentService.getAll();
 	}
 
-	@GetMapping("/name/{name}")
+	@GetMapping("api/students/name/{name}")
 	public List<StudentResponse> findByName(@PathVariable String name) {
 		return studentService.findByName(name);
 	}
 
-//	@GetMapping("{id}")
+//	@GetMapping("/id/{cId}")
 //	public StudentResponse findByid(@PathVariable Long id) {
 //		return studentService.findByid(id);
 //	}
 
-	@GetMapping("{cId}")
+	@GetMapping("api/students/{cId}")
 	public StudentResponse findByCId(@PathVariable String cId) {
 		return studentService.findByCId(cId);
 	}
 
-	@GetMapping("/contact/{mobileNumber}")
+	@GetMapping("api/students/contact/{mobileNumber}")
 	public StudentResponse findByMobileNumber(@PathVariable String mobileNumber) {
 		return studentService.findByMobileNumber(mobileNumber);
 	}
 
-	@GetMapping("/username/{username}")
+	@GetMapping("api/students/username/{username}")
 	public StudentResponse findByUsername(@PathVariable String username) {
 		return studentService.findByUsername(username);
+	}
+
+	@GetMapping("/school/{id}")
+	public List<StudentResponse> getAllBySchoolId(@PathVariable String schoolCid) {
+		return studentService.getAllBySchoolCid(schoolCid);
 	}
 
 	@GetMapping(value = "/activities")
@@ -87,34 +100,8 @@ public class StudentController {
 			@RequestParam("studentId") String studentCid) {
 		return activityPerformedService.getAllActivitiesOfStudentByStatus(status, studentCid);
 	}
-	
-	@GetMapping(value = "/activities/filterByFourS")
-	public List<ActivityPerformedResponse> filterActivitiesByFourS(@RequestParam("studentId") String studentCid,@RequestParam("fourS") String fourS ,@RequestParam("status") String status){
-		return activityPerformedService.findAllByStudentCidAndActivityFourSAndActivityStatusAndActiveTrue(studentCid, fourS, status);
-	}
-	
-	@GetMapping(value = "/activities/filterByFocusArea")
-	public List<ActivityPerformedResponse> filterActivitiesByFocusArea(@RequestParam("studentId") String studentCid,@RequestParam("focusArea") String focusAreaCid,@RequestParam("status") String activityStatus){
-		return activityPerformedService.findAllByStudentCidAndActivityFocusAreasCidAndActivityStatusAndActiveTrue(studentCid, focusAreaCid, activityStatus);
-	}
-	
-	@GetMapping(value = "/activities/filterByCoach")
-	public List<ActivityPerformedResponse> filterActivitiesByCoach(@RequestParam("studentId") String studentCid,@RequestParam("coachId") String teacherCid,@RequestParam("status") String activityStatus){
-		return activityPerformedService.findAllByStudentCidAndTeacherCidAndActivityStatusAndActiveTrue(studentCid, teacherCid, activityStatus);
-	}
-	
-	@GetMapping(value = "/activities/filterByPsdArea")
-	public List<ActivityPerformedResponse> filterActivitiesByPsdArea(@RequestParam("studentId") String studentCid,@RequestParam("psdArea") String psdArea,@RequestParam("status") String activityStatus){
-		return activityPerformedService.findAllByStudentCidAndActivityFocusAreasPsdAreaAndActivityStatusAndActiveTrue(studentCid, psdArea, activityStatus);
-	}
-	
-	@GetMapping(value = "/activities/filterByYear")
-	public List<ActivityPerformedResponse> filterActivitiesByYearPerformed(@RequestParam("year") String year ,@RequestParam("studentId") String studentId){
-		return activityPerformedService.filterActivityByYearPerformed(year, studentId);
-	}
-	
 
-	@DeleteMapping("{cid}")
+	@DeleteMapping("api/students/{cid}")
 	public SuccessResponse delete(@RequestBody StudentRequest request, @PathVariable String cid) {
 		return studentService.delete(request, cid);
 	}

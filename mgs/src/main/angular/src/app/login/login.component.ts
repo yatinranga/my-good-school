@@ -25,7 +25,9 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     this.authService.loginUser(this.loginForm.value).subscribe((res) => {
-      localStorage.setItem('access_token', res.access_token)
+      localStorage.setItem('access_token', res.access_token);
+      localStorage.setItem('user_type',res.user_type);
+      console.log(res);
       this.getUserInfo();
     });
   }
@@ -33,7 +35,7 @@ export class LoginComponent implements OnInit {
   getUserInfo() {
     this.authService.getInfo().subscribe((res) => {
       this.user = res,
-        this.checkUserType(this.user.userType);
+      this.checkUserType(this.user.userType);
     });
   }
 

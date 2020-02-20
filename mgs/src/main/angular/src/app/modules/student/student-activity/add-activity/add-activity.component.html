@@ -1,43 +1,50 @@
-<div>
-    <form [formGroup]="addActivityForm" (ngSubmit)="saveActivity()">
-        <div class="container register-form">
-            <div class="form">
-                <div class="form-content">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">Select Activity :
-                                <select class="form-control" formControlName="addActivity">
-                                    <option value="" disabled selected>Select Activity </option>
-                                    <option *ngFor="let activity of activites; let i = index;" value={{activity}}>
-                                        {{activity}}
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="form-group">Enter Details :
-                                <textarea class="form-control" placeholder="Your Name"
-                                    formControlName="addActivityDetails"></textarea>
-                            </div>
-                            <div class="form-group">Select Teacher/Coach :
-                                <select class="form-control" formControlName="addTeacher">
-                                    <option value="" disabled selected>Select Teacher </option>
-                                    <option *ngFor="let teacher of teachers; let i = index;" value={{teacher}}>
-                                        {{teacher}}
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <div class="upload input-field">
-                                    <input class="choosefile" type="file" name="selectedFile"
-                                        (change)="onFileSelect($event)" />
-                                    <span class="choosefile choosefile-custom"> <i class="fa fa-file"></i> </span>
-                                </div>
-                                <button class="upload btn" type="submit"> Upload </button>
-                            </div>
+<form [formGroup]="addActivityForm" (ngSubmit)="saveActivity()">
+    <div class="container register-form">
+        <div class="form">
+            <div class="note">
+                <p><b>Add Activity.</b></p>
+            </div>
+
+            <div class="form-content">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">Select Activity :
+                            <select class="form-control" (ngModelChange)="getStudentCoach($event)" formControlName="addActivityId">
+                                <option value="" disabled selected>Select Activity </option>
+                                <option *ngFor="let activity of activities; let i = index;" value={{activity.id}}>
+                                    {{activity.name}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group">Enter Activity Details :
+                            <textarea class="form-control" placeholder="Your Name"
+                                formControlName="addActivityDetails"></textarea>
+                        </div>
+                        <div class="form-group">Enter Activity Date :
+                            <input type="date" class="form-control" placeholder="Session Start Date"
+                                formControlName="addActivityDate" />
+                        </div>
+                        <div class="form-group">Select Teacher/Coach :
+                            <select class="form-control" formControlName="addCoachId">
+                                <option value="" disabled selected>Select Teacher/Coach </option>
+                                <option *ngFor="let coach of coaches; let i = index;" value={{coach.id}}>
+                                    {{coach.name}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group">Attachment :
+                            <input type="file" name="attachment" (change)="onFileSelect($event)" />
                         </div>
                     </div>
                 </div>
-                <button class="btn btnSubmit btn-success" type="submit">Save</button>
             </div>
+<<<<<<< HEAD
         </div>
     </form>
 </div>
+=======
+            <button class="btn btnSubmit btn-success" type="submit">Save</button>
+        </div>
+    </div>
+</form>
+>>>>>>> a842ad007cab486a5ac5bbce60da31e79db660cd
