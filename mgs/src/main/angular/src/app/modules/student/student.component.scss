@@ -1,0 +1,28 @@
+@import '../../app.component.scss';
+
+.main_box{
+    width: 100%;
+    display: inline-block
+}
+.content_box{
+    width: 80%;
+    display: inline-block;
+    background: green;
+}
+
+.sidebar{
+    width: 350px;
+    background-color: red;
+    float: left;
+}
+.main .content_main {
+    display: inline-block;
+    width: calc(100% - 320px);
+    padding: 0px 20px;
+}
+.sidebar_main {
+    width: 320px;
+    float: left;
+    display: inline-block;
+    background: #277590;
+}

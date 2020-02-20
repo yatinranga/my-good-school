@@ -10,6 +10,5 @@
   </nav>
   <app-saved-actitvity *ngIf="activityType === 'saved'"></app-saved-actitvity>
  <app-reviewed-actitvity *ngIf="activityType === 'reviewed'"></app-reviewed-actitvity>
- <app-add-activity *ngIf="activityType === 'add'"></app-add-activity>
- <br><br> 
-<button (click)="changeActivityType('add')">Add Activity</button>
+ <app-add-activity *ngIf="activityType === 'add'"></app-add-activity> 
+<button (click)="changeActivityType('add')" class="add_activity"> Add Activity </button>

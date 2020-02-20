@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { AdminService } from 'src/app/services/admin.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
@@ -12,7 +12,7 @@ import { AlertService } from 'src/app/services/alert.service';
   templateUrl: './student-upload.component.html',
   styleUrls: ['./student-upload.component.scss']
 })
-export class StudentUploadComponent implements OnInit {
+export class StudentUploadComponent implements OnInit, AfterViewInit {
 
   @ViewChild('dwnld', { static: true }) dwnld: ElementRef
 
@@ -36,6 +36,22 @@ export class StudentUploadComponent implements OnInit {
       selectedFile: ['']
     });
   }
+
+  ngAfterViewInit() {
+
+      const header = document.getElementById('myDIV');
+      const btns = header.getElementsByClassName('nav-item');
+      // tslint:disable-next-line:prefer-for-of
+      for (let i = 0; i < btns.length; i++) {
+        btns[i].addEventListener('click', function() {
+          const current = document.getElementsByClassName('active');
+          current[0].className = current[0].className.replace(' active', '');
+          this.className += ' active';
+        });
+      }
+    
+  }
+
 
   onFileSelect(event) {
     if (event.target.files.length > 0) {
@@ -64,4 +80,5 @@ export class StudentUploadComponent implements OnInit {
     this.dwnld.nativeElement.href = BASE_URL + "/api/template/export?type=student&access_token=" + localStorage.getItem('access_token');
     this.dwnld.nativeElement.click();
   }
+  
 }
