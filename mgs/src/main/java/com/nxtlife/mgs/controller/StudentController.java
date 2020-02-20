@@ -37,15 +37,23 @@ public class StudentController {
 //		return studentService.uploadStudentsFromExcel(file);
 //	}
 
-	@PostMapping(value = "signUp")
+	@PostMapping(value = "/students/signUp")
 	public StudentResponse signUpStudent(@RequestBody StudentRequest studentRequest) {
 		return studentService.save(studentRequest);
 	}
 
-	@PostMapping()
+<<<<<<< HEAD
+	@PostMapping("api/students")
 	public StudentResponse saveStudent(@Valid @RequestBody StudentRequest studentRequest) {
 		return studentService.save(studentRequest);
 	}
+=======
+	/*
+	 * @PostMapping() public StudentResponse saveStudent(@Valid @RequestBody
+	 * StudentRequest studentRequest) { return studentService.save(studentRequest);
+	 * }
+	 */
+>>>>>>> 9858c188d65babdb27dca64399198b4b1b4bbaf5
 
 	@PutMapping("api/students/update/{cid}")
 	public StudentResponse update(@RequestBody StudentRequest request, @PathVariable String cid) {
@@ -62,7 +70,7 @@ public class StudentController {
 		return studentService.findByName(name);
 	}
 
-//	@GetMapping("{id}")
+//	@GetMapping("/id/{cId}")
 //	public StudentResponse findByid(@PathVariable Long id) {
 //		return studentService.findByid(id);
 //	}
@@ -81,7 +89,18 @@ public class StudentController {
 	public StudentResponse findByUsername(@PathVariable String username) {
 		return studentService.findByUsername(username);
 	}
-	
+
+	@GetMapping("/school/{id}")
+	public List<StudentResponse> getAllBySchoolId(@PathVariable String schoolCid) {
+		return studentService.getAllBySchoolCid(schoolCid);
+	}
+
+	@GetMapping(value = "/activities")
+	public List<ActivityPerformedResponse> getAllActivitiesOfStudentByStatus(@RequestParam("status") String status,
+			@RequestParam("studentId") String studentCid) {
+		return activityPerformedService.getAllActivitiesOfStudentByStatus(status, studentCid);
+	}
+
 	@DeleteMapping("api/students/{cid}")
 	public SuccessResponse delete(@RequestBody StudentRequest request, @PathVariable String cid) {
 		return studentService.delete(request, cid);

@@ -1,7 +1,10 @@
 package com.nxtlife.mgs.view;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.nxtlife.mgs.entity.user.Guardian;
 
+@JsonInclude(value = Include.NON_ABSENT)
 public class GuardianResponse {
 
 	private String name;

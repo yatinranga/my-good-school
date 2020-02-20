@@ -24,10 +24,6 @@ import com.nxtlife.mgs.entity.user.Teacher;
 @Table()
 public class Award extends BaseEntity{
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	Long id;
-	
 	@NotNull
 	private String name;
 	
@@ -91,14 +87,6 @@ public class Award extends BaseEntity{
 		this.cid = cid;
 	}
 	
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public List<StudentAward> getStudentAwards() {
 		return studentAwards;
 	}

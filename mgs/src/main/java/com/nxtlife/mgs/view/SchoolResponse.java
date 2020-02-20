@@ -2,8 +2,11 @@ package com.nxtlife.mgs.view;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.nxtlife.mgs.entity.school.School;
 
+@JsonInclude(value = Include.NON_ABSENT)
 public class SchoolResponse {
 
     private String name;

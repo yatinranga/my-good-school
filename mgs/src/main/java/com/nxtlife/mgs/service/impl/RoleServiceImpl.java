@@ -32,6 +32,7 @@ public class RoleServiceImpl {
 				role = new Role();
 				role.setName(r);
 				role.setCid(utils.generateRandomAlphaNumString(8));
+				role.setActive(true);
 			}
 			roleRepository.save(role);
 			logger.info(String.format("Created role : %s", r));

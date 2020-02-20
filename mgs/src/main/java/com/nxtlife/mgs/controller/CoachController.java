@@ -16,28 +16,28 @@ import com.nxtlife.mgs.view.TeacherRequest;
 import com.nxtlife.mgs.view.TeacherResponse;
 
 @RestController
-@RequestMapping("api/coaches")
+@RequestMapping("/")
 public class CoachController {
 
 	@Autowired
 	TeacherService teacherService;
 	
-	@GetMapping("/{schoolId}/{activityId}")
+	@GetMapping("coaches/{schoolId}/{activityId}")
 	public List<TeacherResponse> getAllCoachesBySchoolCidAndActivityCid(@PathVariable("schoolId") String schoolCid,@PathVariable("activityId") String activityCid){
 		return teacherService.findCoachesBySchoolCidAndActivityCid(schoolCid, activityCid);
 	}
 
-	@GetMapping
+	@GetMapping(value = "coaches")
 	public List<TeacherResponse> getAllCoaches(){
 		return teacherService.getAllCoaches();
 	} 
 	
-	@GetMapping(value = "/{schoolId}")
+	@GetMapping(value = "coaches/{schoolId}")
 	public List<TeacherResponse> getAllCoachesBySchool(@PathVariable("schoolId") String schoolId){
 		return teacherService.getAllCoaches();
 	} 
 	
-	@GetMapping(value = "/{cId}")
+	@GetMapping(value = "api/coaches/{cId}")
 	public TeacherResponse getCoachByCId(@PathVariable("cId") String cId) {
 		return teacherService.findCoachByCId(cId);
 	}

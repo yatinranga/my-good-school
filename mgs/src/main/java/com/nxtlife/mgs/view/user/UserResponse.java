@@ -1,7 +1,13 @@
 package com.nxtlife.mgs.view.user;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.nxtlife.mgs.entity.user.User;
+import com.nxtlife.mgs.view.SchoolResponse;
+import com.nxtlife.mgs.view.StudentResponse;
+import com.nxtlife.mgs.view.TeacherResponse;
 
+@JsonInclude(value = Include.NON_ABSENT)
 public class UserResponse {
 
 //	private Long id;
@@ -11,15 +17,10 @@ public class UserResponse {
 	private String email;
 	private String userType;
 	private String roleId;
-	
-//	public Long getId() {
-//		return id;
-//	}
-//
-//	public void setId(Long id) {
-//		this.id = id;
-//	}
-	
+	private StudentResponse student;
+	private TeacherResponse teacher;
+	private SchoolResponse school;
+
 
 	public String getUserName() {
 		return userName;
@@ -68,6 +69,30 @@ public class UserResponse {
 	public void setRoleId(String roleId) {
 		this.roleId = roleId;
 	}
+	
+	public StudentResponse getStudent() {
+		return student;
+	}
+
+	public void setStudent(StudentResponse student) {
+		this.student = student;
+	}
+
+	public TeacherResponse getTeacher() {
+		return teacher;
+	}
+
+	public void setTeacher(TeacherResponse teacher) {
+		this.teacher = teacher;
+	}
+
+	public SchoolResponse getSchool() {
+		return school;
+	}
+
+	public void setSchool(SchoolResponse school) {
+		this.school = school;
+	}
 
 	public UserResponse(User user) {
 //		this.id = user.getId();
@@ -79,6 +104,14 @@ public class UserResponse {
 		if(user.getUserType()!=null)
 		  this.userType = user.getUserType().toString();
 		this.contactNumber = user.getContactNo();
+		if(user.getStudent()!=null) {
+			this.student = new StudentResponse(user.getStudent(),true);
+		}
+		if(user.getSchool()!=null)
+			this.school=new SchoolResponse(user.getSchool());
+		if(user.getTeacher()!=null)
+			this.teacher = new TeacherResponse(user.getTeacher());
+		
 	}
 	
 	public UserResponse() {

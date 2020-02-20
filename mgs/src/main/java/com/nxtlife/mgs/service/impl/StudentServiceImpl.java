@@ -85,7 +85,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	public StudentResponse save(StudentRequest request) {
 
 		if (studentRepository.countByEmail(request.getEmail()) > 0)
-			throw new ValidationException("Email already exists");
+			throw new ValidationException(String.format("Email [%s] already exist", request.getEmail()));
 
 		Long studsequence = sequenceGeneratorService.findSequenceByUserType(UserType.Student);
 		if (studsequence == null) {
@@ -247,10 +247,11 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 		// here we're creating parent user for new guardians not for existing guardians
 
-		if (request.getActive() == false && request.getActive() != null) {
-			student.setActive(false);
-			return new StudentResponse(student);
-		}
+		/*
+		 * if (request.getActive() == false && request.getActive() != null) {
+		 * student.setActive(false); studentRepository.save(student); return new
+		 * StudentResponse(student); }
+		 */
 
 		if (student.getGuardians() != null) {
 			for (Guardian gua : student.getGuardians()) {
@@ -565,10 +566,14 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	@Override
 	public List<StudentResponse> getAllBySchoolCid(String schoolCid) {
 
+		if (schoolCid == null) {
+			throw new NotFoundException("school id can't be null");
+		}
+
 		List<Student> studentsList = studentRepository.findAllBySchoolCidAndActiveTrue(schoolCid);
 
 		if (studentsList.isEmpty())
-			throw new NotFoundException("No student found");
+			throw new NotFoundException(String.format("No student found for school having id [%s]", schoolCid));
 
 		List<StudentResponse> responseList = studentsList.stream().map(s -> new StudentResponse(s))
 				.collect(Collectors.toList());
@@ -588,13 +593,16 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			throw new NotFoundException(String.format("student having id [%s] can't exist", cid));
 		}
 
-		update(request, cid);
+		student = request.toEntity(student);
+		student.setActive(false);
+		studentRepository.save(student);
+		// update(request, cid);
 
 		// studentRepository.deleteByCid(cid);
 
 		student = studentRepository.findByCidAndActiveTrue(cid);
 
-		if (student.getActive() != false) {
+		if (student != null) {
 			throw new ValidationException(
 					String.format("something went wrong student having id [%s] can't deleted", cid));
 		} else {
@@ -602,54 +610,5 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		}
 
 	}
-
-//	@Override
-//	public ActivityPerformedResponse saveActivity(ActivityPerformedRequest request) {
-//		if (request == null)
-//			throw new ValidationException("Request can not be null.");
-//		ActivityStatus actStatus = ActivityStatus.InProgressAtStudent;
-//
-////		if(!getCurrentUser().getRoles().contains(new Role("Student")))
-////			throw new AccessDeniedException("user is not authorized to submit activity because he is not a student.");
-//		if(request.getStudentId()==null)
-//			throw new ValidationException("Student Id can not be null.");
-//		if (request.getActivityId() == null)
-//			throw new ValidationException("Activity Id can not be null.");
-//		if(request.getCoachId()==null)
-//			throw new ValidationException("Coach Id can not be null.");
-//		
-//		/* setting those fields in request to null which needs to filled by Coach */
-//		request.setCoachRemark(null);
-//		request.setCoachRemarkDate(null);
-//		request.setAchievementScore(null);
-//		request.setParticipationScore(null);
-//		request.setInitiativeScore(null);
-//		request.setStar(null);
-//		
-//		if(request.getDateOfActivity()==null || request.getDescription()==null || request.getFileRequests()==null|| request.getFileRequests().isEmpty())
-//			actStatus = ActivityStatus.SavedByStudent;
-//		else
-//			actStatus = ActivityStatus.SubmittedByStudent;
-//
-//		/* Converting request to entity */
-//		ActivityPerformed activityPerformed = request.toEntity();
-//		
-//
-//		/* Saving files associated with activity */
-//		List<File> activityPerformedMedia = new ArrayList<>();
-//		if (request.getFileRequests() != null && !request.getFileRequests().isEmpty())
-//			request.getFileRequests().forEach(fileReq -> {
-//				File file = activityPerformedService.saveMediaForActivityPerformed(fileReq, "activity",
-//						activityPerformed);
-//				if (file != null)
-//					activityPerformedMedia.add(file);
-//			});
-//		/* Assigned the returned files List set to ActivityPerformed entity */
-//		activityPerformed.setFiles(activityPerformedMedia);
-//		
-//		activityPerformed.setActive(true);
-//		activityPerformed.setActivityStatus(actStatus);
-//		return null;
-//	}
 
 }
