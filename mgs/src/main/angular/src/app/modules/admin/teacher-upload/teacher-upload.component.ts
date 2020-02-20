@@ -31,6 +31,8 @@ export class TeacherUploadComponent implements OnInit {
         err => console.log(err))
   }
 
+ 
+
   onFileSelect(event) {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];

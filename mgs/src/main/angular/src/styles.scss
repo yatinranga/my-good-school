@@ -1,1 +1,98 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import '../../angular/src/app/app.component.scss';
+
+.card.bg-light {
+    margin: 40px 0;
+}
+.card-body h3{
+     color: $active;
+}
+button.upload{
+   background: $dark;
+}
+button {
+    background: cadetblue;
+    color: #fafafa;
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+.input-field {
+    display: inline-block;
+    background: white;
+    border: solid 1px #ddd;
+    padding: 10px 10px;
+    margin: 10px;
+    border-radius: 10px;
+}
+
+.btn {
+    background: cadetblue;
+    padding: 10px 20px;
+    border-radius: 10px;
+}
+
+button.upload.btn{
+    margin-left: 20px;
+}
+i.fa.fa-file {
+    float: left;
+    position: absolute;
+    left: 30px;
+    top: 17px;
+    font-size: 14px;
+}
+
+input.choosefile {
+    opacity: 0;
+    position: relative;
+    z-index: 2;
+    border: none !important;
+    width: 100%;
+    display: inline-block;
+}
+span.choosefile.choosefile-custom {
+    position: absolute;
+    content: "";
+    background: none;
+    z-index: 1;
+    opacity: 1;
+    width: 24.1%;
+    height: 40px;
+    right: 464px;
+    height: 49px;
+    left: inherit;
+    top: 73px;
+    box-shadow: 0 0 10px white;
+    border-radius: 10px;
+}
+span.choosefile.choosefile-custom:after {
+    content: "Choose file...";
+    position: absolute;
+    width: 65%;
+    left: 0;
+    padding: 13px 0px;
+    color: #333;
+    z-index: 1;
+}
+span.choosefile.choosefile-custom:before {
+    content: "Browse";
+    position: absolute;
+    background: gainsboro;
+    width: 35%;
+    right: 0;
+    padding: 13px 0px;
+    color: #333;
+    border-radius: 10px;
+    z-index: 1;
+}
+
+select {
+    background: none;
+    border: none;
+    color: #333;
+    height: 30px;
+}
+
+
+

@@ -1,14 +1,10 @@
 <form [formGroup]="savedActivityForm" (ngSubmit)="submitActivity()">
     <div class="container register-form">
         <div class="form">
-            <div class="note">
-                <p><b>Saved Activity.</b></p>
-            </div>
-
             <div class="form-content">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="form-group">Select Activity :
+                        <div class="form-group"> Select Activity:
                             <select class="form-control" formControlName="savedActivity">
                                 <option value="" disabled selected>Select Activity </option>
                                 <option *ngFor="let activity of activites; let i = index;" value={{activity}}>
@@ -27,8 +23,12 @@
                                 </option>
                             </select>
                         </div>
-                        <div class="form-group">Attachment :
-                            <input type="file" name="selectedFile" />
+                        <div class="form-group">
+                                <div class="upload input-field">
+                                        <input class="choosefile" type="file" name="selectedFile" (change)="onFileSelect($event)" />
+                                        <span class="choosefile choosefile-custom"> <i class="fa fa-file"></i> </span>
+                                      </div>
+                                      <button class="upload btn" type="submit"> Upload </button>
                         </div>
                     </div>
                 </div>

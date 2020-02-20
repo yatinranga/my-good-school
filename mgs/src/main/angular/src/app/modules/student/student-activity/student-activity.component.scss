@@ -1,0 +1,11 @@
+@import '../../../app.component.scss';
+
+nav.navbar.navbar-expand-sm.bg-primary.navbar-dark {
+    background: $sidebar !important;
+    padding: 0 10px;
+    margin: 0 0px;
+}
+
+.add_activity{
+    background: $sidebar !important;
+}
