@@ -161,9 +161,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		student.setGuardians(alreadyPresentGuardiansList);
 
 		if (request.getSchoolId() != null) {
-			School school = schoolRepository.getOneByCid(request.getSchoolId());
-
-			if (school == null)
+			School school = schoolRepository.getOneByCidAndActiveTrue(request.getSchoolId());
+			if(school == null )
 				throw new ValidationException(String.format("School with id : %s not found.", request.getSchoolId()));
 			student.setSchool(school);
 			if (request.getGradeId() != null)
@@ -419,7 +418,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 //		studentRequest.setUsername((String) studentDetails.get(0).get("USERNAME"));
 		studentRequest.setDob(
 				DateUtil.convertStringToDate(DateUtil.formatDate((Date) studentDetails.get(0).get("DOB"), null, null)));
-		School school = schoolRepository.findByCid(schoolCid);
+		School school = schoolRepository.findByCidAndActiveTrue(schoolCid);
 //		if (studentDetails.get(0).get("SCHOOL") != null)
 //			school = schoolRepository.findByName((String) studentDetails.get(0).get("SCHOOL"));
 //		if (studentDetails.get(0).get("SCHOOLS EMAIL") != null)

@@ -12,7 +12,7 @@ import com.nxtlife.mgs.entity.activity.File;
 
 public interface FileRepository extends JpaRepository<File, Long>{
 
-	File findByCid(String cid);
+	File findByCidAndActiveTrue(String cid);
 	
 	@Query(value="select f.url from File f where f.active = true")
 	List<String> findAllUrls();
@@ -25,12 +25,12 @@ public interface FileRepository extends JpaRepository<File, Long>{
 	@Transactional
 	@Modifying(clearAutomatically = true)
 	@Query(value="update File f set f.active = :active where f.url = :url")
-	int updateFileSetActiveByUrl(@Param("active") Boolean active,@Param("url") String cId);
+	int updateFileSetActiveByUrl(@Param("active") Boolean active,@Param("url") String url);
 	
 //	int updateFileSetActiveBy
 	
-	List<File> findAllByActiveTrueAndActivityPerformedCid(String activityPerformedCid);
+	List<File> findAllByActiveTrueAndActivityPerformedCidAndActiveTrue(String activityPerformedCid);
 	
-	File findByUrl(String url);
+	File findByUrlAndActiveTrue(String url);
 	
 }

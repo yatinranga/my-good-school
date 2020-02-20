@@ -3,6 +3,7 @@ package com.nxtlife.mgs.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,7 @@ import com.nxtlife.mgs.service.TeacherService;
 import com.nxtlife.mgs.view.ActivityRequestResponse;
 import com.nxtlife.mgs.view.GradeRequest;
 import com.nxtlife.mgs.view.GradeResponse;
+import com.nxtlife.mgs.view.SuccessResponse;
 import com.nxtlife.mgs.view.TeacherResponse;
 
 @RestController
@@ -32,6 +34,16 @@ public class ActivityController {
 	@GetMapping(value = "activitiesOffered")
 	public List<ActivityRequestResponse> getAllActivities(){
 		return activityService.getAllOfferedActivities();
+	}
+	
+	@GetMapping(value = "activitiesOffered/{schoolCid}")
+	public List<ActivityRequestResponse> getAllActivitiesOfSchool(@PathVariable("schoolCid") String schoolCid){
+		return activityService.getAllOfferedActivitiesBySchool(schoolCid);
+	}
+	
+	@DeleteMapping("api/activitiesOffered/{cid}")
+	public SuccessResponse deleteActivityByCid(@PathVariable("cid") String cid) {
+		return activityService.deleteActivityByCid(cid);
 	}
 	
 //	@GetMapping(value = "/coaches")

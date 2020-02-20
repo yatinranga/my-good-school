@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,6 +29,7 @@ import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.entity.user.User;
 import com.nxtlife.mgs.enums.RegisterType;
 import com.nxtlife.mgs.enums.UserType;
+import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.AuthorityRepository;
 import com.nxtlife.mgs.jpa.RoleRepository;
@@ -35,6 +37,8 @@ import com.nxtlife.mgs.jpa.UserRepository;
 import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.util.Utils;
+import com.nxtlife.mgs.view.PasswordRequest;
+import com.nxtlife.mgs.view.SuccessResponse;
 import com.nxtlife.mgs.view.user.UserResponse;
 
 @Service
@@ -118,7 +122,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@Override
 	public User createStudentUser(Student student) {
 
-		if (userRepository.countByUserName(student.getUsername()) > 0) {
+		if (userRepository.countByUserNameAndActiveTrue(student.getUsername()) > 0) {
 			throw new ValidationException("This username is already registered");
 		}
 		User user = new User();
@@ -129,7 +133,8 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		// setting encrypted password
 
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		String encodedPassword = encoder.encode(utils.generateRandomAlphaNumString(10));
+		String password = utils.generateRandomAlphaNumString(10);
+		String encodedPassword = encoder.encode(password);
 
 		user.setPassword(encodedPassword);
 		System.out.println("Password : " + user.getPassword());
@@ -154,7 +159,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Override
 	public User createTeacherUser(Teacher teacher) {
-		if (userRepository.countByUserName(teacher.getUsername()) > 0) {
+		if (userRepository.countByUserNameAndActiveTrue(teacher.getUsername()) > 0) {
 			throw new ValidationException("This username is already registered");
 		}
 		User user = new User();
@@ -199,7 +204,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Override
 	public User createParentUser(Guardian guardian) {
-		if (userRepository.countByUserName(guardian.getUsername()) > 0) {
+		if (userRepository.countByUserNameAndActiveTrue(guardian.getUsername()) > 0) {
 			throw new ValidationException("This username is already registered");
 		}
 		User user = new User();
@@ -254,6 +259,57 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		if (user == null)
 			throw new ValidationException("No user found.");
 		return new UserResponse(user);
+
+	}
+
+	@Override
+	public SuccessResponse changePassword(PasswordRequest request) {
+
+		request.checkPassword();
+
+		User user = getUser();
+
+		String encodedPassword = user.getPassword();
+
+		if (encodedPassword == null) {
+			throw new NotFoundException(
+					String.format("User[id-%s] not found or password already exist", user.getCid()));
+		}
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+		if (!encoder.matches(request.getOldPassword(), encodedPassword)) {
+			throw new ValidationException(String.format("old password[%s] incorrect", request.getOldPassword()));
+		}
+		user.setPassword(encoder.encode(request.getPassword()));
+		user = userRepository.save(user);
+
+		return new SuccessResponse(HttpStatus.OK.value(), "password changed successfully");
+	}
+
+	@Override
+	public SuccessResponse forgotPassword(String username) {
+
+		if (!username.matches("^[@A-Za-z0-9_]")) {
+			throw new ValidationException(String.format("incorrect username [%s]", username));
+		}
+
+		User user = userRepository.findByUserNameAndActiveTrue(username);
+
+		if (user == null) {
+			throw new NotFoundException(String.format("no user found having username : [%s] ", username));
+		}
+
+		if (user.getEmail() == null && user.getContactNo() == null) {
+			throw new ValidationException("User email/contact not register with us");
+		}
+
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+		user.setPassword(encoder.encode(utils.generateRandomAlphaNumString(10)));
+		user = userRepository.save(user);
+
+		return new SuccessResponse(HttpStatus.OK.value(),
+				"new generated password has been sent to your email and contact number");
 
 	}
 

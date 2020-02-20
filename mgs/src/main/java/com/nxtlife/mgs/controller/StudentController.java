@@ -23,7 +23,7 @@ import com.nxtlife.mgs.view.StudentResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
 
 @RestController
-@RequestMapping("/api/students")
+@RequestMapping("/")
 public class StudentController {
 
 	@Autowired
@@ -37,7 +37,7 @@ public class StudentController {
 //		return studentService.uploadStudentsFromExcel(file);
 //	}
 
-	@PostMapping(value = "/signUp")
+	@PostMapping(value = "signUp")
 	public StudentResponse signUpStudent(@RequestBody StudentRequest studentRequest) {
 		return studentService.save(studentRequest);
 	}
@@ -48,7 +48,7 @@ public class StudentController {
 	 * }
 	 */
 
-	@PutMapping("{cid}")
+	@PutMapping("api/students/update/{cid}")
 	public StudentResponse update(@RequestBody StudentRequest request, @PathVariable String cid) {
 		return studentService.update(request, cid);
 	}
@@ -58,22 +58,27 @@ public class StudentController {
 		return studentService.getAll();
 	}
 
-	@GetMapping("{name}")
+	@GetMapping("api/students/name/{name}")
 	public List<StudentResponse> findByName(@PathVariable String name) {
 		return studentService.findByName(name);
 	}
 
-	@GetMapping("/id/{cId}")
+//	@GetMapping("/id/{cId}")
+//	public StudentResponse findByid(@PathVariable Long id) {
+//		return studentService.findByid(id);
+//	}
+
+	@GetMapping("api/students/{cId}")
 	public StudentResponse findByCId(@PathVariable String cId) {
 		return studentService.findByCId(cId);
 	}
 
-	@GetMapping("/contact/{mobileNumber}")
+	@GetMapping("api/students/contact/{mobileNumber}")
 	public StudentResponse findByMobileNumber(@PathVariable String mobileNumber) {
 		return studentService.findByMobileNumber(mobileNumber);
 	}
 
-	@GetMapping("/username/{username}")
+	@GetMapping("api/students/username/{username}")
 	public StudentResponse findByUsername(@PathVariable String username) {
 		return studentService.findByUsername(username);
 	}
@@ -89,7 +94,7 @@ public class StudentController {
 		return activityPerformedService.getAllActivitiesOfStudentByStatus(status, studentCid);
 	}
 
-	@DeleteMapping("{cid}")
+	@DeleteMapping("api/students/{cid}")
 	public SuccessResponse delete(@RequestBody StudentRequest request, @PathVariable String cid) {
 		return studentService.delete(request, cid);
 	}

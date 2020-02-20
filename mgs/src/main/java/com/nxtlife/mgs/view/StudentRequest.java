@@ -49,6 +49,10 @@ public class StudentRequest {
 
 	private List<String> guardianIds;
 
+	private Boolean active;
+
+	private String gradeId;
+	
 //	private String fathersName;
 //
 //	private String fathersEmail;
@@ -60,10 +64,6 @@ public class StudentRequest {
 //	private String mothersEmail;
 //
 //	private String mothersMobileNumber;
-
-	private Boolean active;
-
-	private String gradeId;
 
 	public String getName() {
 		return name;

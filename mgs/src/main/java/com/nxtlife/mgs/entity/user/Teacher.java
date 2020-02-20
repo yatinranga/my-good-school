@@ -32,7 +32,6 @@ public class Teacher extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-
 	private Long id;
 
 	@NotNull
@@ -42,7 +41,7 @@ public class Teacher extends BaseEntity {
 	@NotNull
 	private String name;
 
-	@Column(unique = true,nullable = false)
+	@Column(unique = true, nullable = false)
 	private String username;
 
 	private String gender;
@@ -66,7 +65,7 @@ public class Teacher extends BaseEntity {
 
 	private Boolean isCoach;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
 	User user;
 
@@ -84,8 +83,8 @@ public class Teacher extends BaseEntity {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "teacher")
 	private List<Award> awards;
-	
-	@OneToMany(fetch = FetchType.LAZY,mappedBy = "teacher")
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "teacher")
 	private List<TeacherSchoolGrade> teacherSchoolGrades;
 
 	@ManyToMany(mappedBy = "teachers")
@@ -284,8 +283,8 @@ public class Teacher extends BaseEntity {
 	public Teacher(@NotNull String cid, @NotNull String name, String username, String gender, @NotNull Date dob,
 			String imageUrl, @NotNull String email, String mobileNumber, Boolean active, String qualification,
 
-			Boolean isClassTeacher, Boolean isCoach, User user,
-			List<ActivityPerformed> activitiesAssigned, School school, List<Grade> grades, List<Activity> activities, List<Award> awards) {
+			Boolean isClassTeacher, Boolean isCoach, User user, List<ActivityPerformed> activitiesAssigned,
+			School school, List<Grade> grades, List<Activity> activities, List<Award> awards) {
 		this.cid = cid;
 		this.name = name;
 		this.username = username;

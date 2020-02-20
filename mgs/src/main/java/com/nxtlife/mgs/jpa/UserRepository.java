@@ -10,7 +10,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	
 	User getOneByCid(String cid);
 
-	int countByUserName(String username);
+	int countByUserNameAndActiveTrue(String username);
 	
 	public User findByUserName(String username);
 	
@@ -27,5 +27,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmail(String email);
 
 	User findByPassword(String passwordHash);
+
+	User findByUserNameAndActiveTrue(String username);
 
 }

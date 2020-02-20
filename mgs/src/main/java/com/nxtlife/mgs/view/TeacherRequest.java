@@ -39,7 +39,6 @@ public class TeacherRequest {
 
 	private String schoolId;
 
-	
 	public String getName() {
 		return name;
 	}
@@ -163,7 +162,7 @@ public class TeacherRequest {
 	public Teacher toEntity() {
 		return toEntity(null);
 	}
-	
+
 	public Teacher toEntity(Teacher teacher) {
 		teacher = teacher == null ? new Teacher() : teacher;
 		if (this.name != null)
