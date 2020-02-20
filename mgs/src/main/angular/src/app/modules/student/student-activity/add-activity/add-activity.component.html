@@ -1,40 +1,43 @@
-
 <div>
     <form [formGroup]="addActivityForm" (ngSubmit)="saveActivity()">
         <div class="container register-form">
             <div class="form">
-                <div class="note">
-                    <p><b>Add Activity.</b></p>
-                </div>
-    
                 <div class="form-content">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">Select Activity :
-                                <select class="form-control" formControlName="addActivity">  
+                                <select class="form-control" formControlName="addActivity">
                                     <option value="" disabled selected>Select Activity </option>
-                                    <option *ngFor="let activity of activites; let i = index;" value={{activity}}>{{activity}}
+                                    <option *ngFor="let activity of activites; let i = index;" value={{activity}}>
+                                        {{activity}}
                                     </option>
                                 </select>
                             </div>
                             <div class="form-group">Enter Details :
-                                <textarea class="form-control" placeholder="Your Name" formControlName="addActivityDetails" ></textarea>
-                            </div>    
+                                <textarea class="form-control" placeholder="Your Name"
+                                    formControlName="addActivityDetails"></textarea>
+                            </div>
                             <div class="form-group">Select Teacher/Coach :
                                 <select class="form-control" formControlName="addTeacher">
                                     <option value="" disabled selected>Select Teacher </option>
-                                    <option *ngFor="let teacher of teachers; let i = index;" value={{teacher}}>{{teacher}}
+                                    <option *ngFor="let teacher of teachers; let i = index;" value={{teacher}}>
+                                        {{teacher}}
                                     </option>
                                 </select>
                             </div>
-                            <div class="form-group">Attachment :                          
-                                <input type="file" name="selectedFile" (change)="onFileSelect($event)" />
-                            </div> 
+                            <div class="form-group">
+                                <div class="upload input-field">
+                                    <input class="choosefile" type="file" name="selectedFile"
+                                        (change)="onFileSelect($event)" />
+                                    <span class="choosefile choosefile-custom"> <i class="fa fa-file"></i> </span>
+                                </div>
+                                <button class="upload btn" type="submit"> Upload </button>
+                            </div>
                         </div>
-                    </div>                    
+                    </div>
                 </div>
                 <button class="btn btnSubmit btn-success" type="submit">Save</button>
             </div>
-        </div>    
+        </div>
     </form>
 </div>
