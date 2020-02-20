@@ -27,6 +27,7 @@ export class LoginComponent implements OnInit {
     this.authService.loginUser(this.loginForm.value).subscribe((res) => {
       localStorage.setItem('access_token', res.access_token);
       localStorage.setItem('user_type',res.user_type);
+      console.log(res);
       this.getUserInfo();
     });
   }

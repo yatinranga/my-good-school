@@ -11,7 +11,7 @@ export class SavedActitvityComponent implements OnInit {
   activites = ["Yoga", "Badminton", "Judo"];
   teachers = ["Mr.Rakesh", "Mrs.Seema"];
   savedActivitiesArr = ["Yoga", "Badminton", "Cricket"];
-  showActivites = false;
+  
   savedActivityForm: FormGroup;
 
   constructor(private formBuilder: FormBuilder) { }
@@ -26,10 +26,6 @@ export class SavedActitvityComponent implements OnInit {
     })
   }
 
-  showSavedActivities() {
-    this.showActivites = true;
-  }
-
   showSelectedActivities(index){
     console.log(this.savedActivitiesArr[index]);
   }
@@ -37,5 +33,4 @@ export class SavedActitvityComponent implements OnInit {
   submitActivity() {
     console.log(this.savedActivityForm.value);
   }
-
 }
