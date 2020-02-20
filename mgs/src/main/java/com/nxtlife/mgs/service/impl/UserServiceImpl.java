@@ -44,8 +44,11 @@ import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.MailService;
 import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.util.Utils;
+<<<<<<< HEAD
 import com.nxtlife.mgs.view.Mail;
 import com.nxtlife.mgs.view.MailRequest;
+=======
+>>>>>>> 9858c188d65babdb27dca64399198b4b1b4bbaf5
 import com.nxtlife.mgs.view.PasswordRequest;
 import com.nxtlife.mgs.view.SuccessResponse;
 import com.nxtlife.mgs.view.user.UserResponse;
@@ -282,6 +285,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	}
 
 	@Override
+<<<<<<< HEAD
 	public void sendLoginCredentialsByGmailApi(MailRequest request) {
 		if (request.getTo() == null || request.getFrom() == null || request.getSubject() == null)
 			throw new ValidationException("Please provide to , from and subject if not provided already.");
@@ -307,6 +311,8 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		System.out.println(String.format("Email sent successfuly to email address %s ", request.getMailTo()));
 	}
 
+=======
+>>>>>>> 9858c188d65babdb27dca64399198b4b1b4bbaf5
 	public SuccessResponse changePassword(PasswordRequest request) {
 
 		request.checkPassword();
@@ -357,6 +363,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	}
 
+<<<<<<< HEAD
 	// @Override public User createSchoolUser(School school) { if
 	// (userRepository.countByUsername(school.getUsername()) > 0) { throw new
 	// ValidationException("This username is already registered"); } User user = new
@@ -388,5 +395,36 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	// user.setRoles(defaultRoleList);
 	// }user.setSchool(school);return userRepository.save(user);
 	// }
+=======
+//	@Override public User createSchoolUser(School school) { if
+//	  (userRepository.countByUsername(school.getUsername()) > 0) { throw new
+//	  ValidationException("This username is already registered"); } User user = new
+//	  User(); user.setActive(true); user.setUserType(UserType.School);
+//	  user.setRegisterType(RegisterType.MANUALLY);
+//	  user.setUserName(school.getUsername()); //later change it to encrypted
+//	  password //
+//	  user.setPassword(bCryptPasswordEncoder.encode(school.getUsername()));
+//	  //Setting username as password user.setPassword(school.getUsername()); try {
+//	  user.setCid(utils.generateRandomAlphaNumString(8));
+//	  }catch(ConstraintViolationException|
+//
+//	javax.validation.ConstraintViolationException ce)
+//	{
+//		user.setCid(utils.generateRandomAlphaNumString(8));
+//	}
+//
+//	// user.setIsPaid(true);
+//
+//	Role defaultRole = roleRepository
+//			.getOneByName("School");if(defaultRole==null)throw new ValidationException("Role Parent does not exist");
+//
+//	List<Role> defaultRoleList = new ArrayList<>();defaultRoleList.add(defaultRole);
+//
+//	if(!defaultRoleList.isEmpty())
+//	{
+//		user.setRoles(defaultRoleList);
+//	}user.setSchool(school);return userRepository.save(user);
+//}
+>>>>>>> 9858c188d65babdb27dca64399198b4b1b4bbaf5
 
 }

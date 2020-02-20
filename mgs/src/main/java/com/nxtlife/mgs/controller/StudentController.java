@@ -42,10 +42,18 @@ public class StudentController {
 		return studentService.save(studentRequest);
 	}
 
+<<<<<<< HEAD
 	@PostMapping("api/students")
 	public StudentResponse saveStudent(@Valid @RequestBody StudentRequest studentRequest) {
 		return studentService.save(studentRequest);
 	}
+=======
+	/*
+	 * @PostMapping() public StudentResponse saveStudent(@Valid @RequestBody
+	 * StudentRequest studentRequest) { return studentService.save(studentRequest);
+	 * }
+	 */
+>>>>>>> 9858c188d65babdb27dca64399198b4b1b4bbaf5
 
 	@PutMapping("api/students/update/{cid}")
 	public StudentResponse update(@RequestBody StudentRequest request, @PathVariable String cid) {
