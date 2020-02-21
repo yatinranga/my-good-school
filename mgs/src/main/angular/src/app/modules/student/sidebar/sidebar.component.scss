@@ -1,8 +1,8 @@
 @import '../../../app.component.scss';
 
 .sidebar {
-    width: 320px;
-    color: white;
+    width: 295px;
+    color: $light;
     padding: 20px;
     height: 780px;
 }
@@ -15,31 +15,38 @@
     float: left;
     float: left;
     width: 25%;
-    border-radius: 10px;
+    border-radius: 0px;
+}
+i.fa {
+    margin: 10px;
 }
 .logo h2 {
-    font-size: 27px;
+    font-size: 24px;
     float: right;
     margin: 20px 0;
-    font-family: initial;
+    font-family: none;
+    color: $nav-link;
+}
+.logo h2:hover{
     color: $light;
 }
 .menu {
     display: inline-block;
     margin: 10px 0;
     width: 100%;
+    border-top: 1px solid $med;
 }
 .menu ul {
-    padding: 0 10px;
+    padding: 0;
     margin: 0;
 }
+
 li {
     margin: 50px 0;
     list-style-type: none;
 }
 a.menu_link{
-    color: $light;
-    margin: 10px;
+    color: $nav-link;
     font-size: 19px;
     text-align: center;
 }
@@ -49,13 +56,18 @@ a.menu_link{
     margin: 25px 0;
 }
 .logout.button {
-    background: #277590;
+    background: dimgrey;
     padding: 5px 10px;
     text-align: center;
-    border: 1px solid #277590;
-    box-shadow: 0 0 10px #15547b;
-    border-radius: 10px;
+    border: 1px solid dimgrey;
+    border-radius: 0px;
     width: 50%;
     margin: 0 60px;
-
+    box-shadow: 0 0 10px $black;
 }
+
+a.menu_link:hover{
+    text-decoration: none !important;
+    color: $light;
+}
+

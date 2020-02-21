@@ -2,12 +2,27 @@
 
 @import '../../angular/src/app/app.component.scss';
 
+
+*{
+    margin: 0;
+    outline: none;
+    box-sizing: border-box;
+    border-radius: 0;
+}
 .card.bg-light {
-    margin: 40px 0;
+    margin: 30px 0;
 }
-.card-body h3{
-     color: $active;
+h3 {
+    text-align: center;
+    color: $active;
+    margin-top: 20px;
+    margin-bottom: 0px;
+    font-size: 35px;
 }
+.card.bg-light{
+    margin: 30px 0;
+}
+
 button.upload{
    background: $dark;
 }
@@ -15,7 +30,7 @@ button {
     background: cadetblue;
     color: #fafafa;
     padding: 5px 10px;
-    border-radius: 10px;
+    border-radius: 0px;
 }
 .input-field {
     display: inline-block;
@@ -23,13 +38,13 @@ button {
     border: solid 1px #ddd;
     padding: 10px 10px;
     margin: 10px;
-    border-radius: 10px;
+    border-radius: 0px;
 }
 
 .btn {
     background: cadetblue;
     padding: 10px 20px;
-    border-radius: 10px;
+    border-radius: 0px;
 }
 
 button.upload.btn{
@@ -62,9 +77,9 @@ span.choosefile.choosefile-custom {
     right: 464px;
     height: 49px;
     left: inherit;
-    top: 73px;
+    top: 31px;
     box-shadow: 0 0 10px white;
-    border-radius: 10px;
+    border-radius: 0px;
 }
 span.choosefile.choosefile-custom:after {
     content: "Choose file...";
@@ -72,7 +87,7 @@ span.choosefile.choosefile-custom:after {
     width: 65%;
     left: 0;
     padding: 13px 0px;
-    color: #333;
+    color: $black;
     z-index: 1;
 }
 span.choosefile.choosefile-custom:before {
@@ -82,15 +97,15 @@ span.choosefile.choosefile-custom:before {
     width: 35%;
     right: 0;
     padding: 13px 0px;
-    color: #333;
-    border-radius: 10px;
+    color: $black;
+    border-radius: 0px;
     z-index: 1;
 }
 
 select {
     background: none;
     border: none;
-    color: #333;
+    color: $black;
     height: 30px;
 }
 

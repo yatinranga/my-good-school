@@ -1,10 +1,6 @@
 <form [formGroup]="addActivityForm" (ngSubmit)="saveActivity()">
     <div class="container register-form">
         <div class="form">
-            <div class="note">
-                <p><b>Add Activity.</b></p>
-            </div>
-
             <div class="form-content">
                 <div class="row">
                     <div class="col-md-6">
@@ -32,8 +28,11 @@
                                 </option>
                             </select>
                         </div>
-                        <div class="form-group">Attachment :
-                            <input type="file" name="attachment" (change)="onFileSelect($event)" multiple />
+                        <div class="form-group">
+                                <div class="input-field">
+                                        <input class="choosefile" type="file" name="selectedFile" (change)="onFileSelect($event)" />
+                                        <span class="choosefile choosefile-custom"> <i class="fa fa-file"></i> </span>
+                                      </div>
                         </div>
                     </div>
                 </div>

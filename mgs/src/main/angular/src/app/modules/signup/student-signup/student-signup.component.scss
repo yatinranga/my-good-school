@@ -4,7 +4,7 @@
 .container.register-form {
     box-shadow: 0 0 10px $box-shadow-color;
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 0px;
     margin-top: 20px;
     margin-bottom: 20px;
 }
@@ -25,7 +25,7 @@ button.btn.btnSubmit.btn-success{
 }
 button.btnSubmit{
     background: $label-color;
-    border-radius: 10px;
+    border-radius: 0px;
     color: white;
     padding: 5px 10px;
     font-size: 15px;
