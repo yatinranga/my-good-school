@@ -1,27 +1,31 @@
-<table class="table">
-    <thead class="thead-light">
-        <tr>
-            <th scope="col">S no.</th>
-            <th scope="col">Activity</th>
-            <th scope="col">Activity Date</th>
-            <th scope="col">Activity Details</th>
-            <th scope="col">Activity Status</th>
-            <th scope="col">Review</th>
+<div class="content_main_com">
+    <div class="table_main">
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">S no.</th>
+                    <th scope="col">Activity</th>
+                    <th scope="col">Activity Date</th>
+                    <th scope="col">Activity Details</th>
+                    <th scope="col">Activity Status</th>
+                    <th scope="col">Review</th>
 
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let reviewedactivitiesarr of reviewedActivitiesArr ; let i = index;" >
-            <td>{{i+1}}</td>
-            <td>{{reviewedactivitiesarr }}</td>
-            <td>dd/mm/yyyy</td>
-            <td>
-                <div>Activity Details Here</div>
-            </td>
-            <td>Activity Status</td>
-            <td>
-                <button>Review</button>
-            </td>
-        </tr>
-    </tbody>
-</table>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let reviewedactivitiesarr of reviewedActivitiesArr ; let i = index;">
+                    <td>{{i+1}}</td>
+                    <td>{{reviewedactivitiesarr }}</td>
+                    <td>dd/mm/yyyy</td>
+                    <td>
+                        <div>Activity Details Here</div>
+                    </td>
+                    <td>Activity Status</td>
+                    <td>
+                        <button>Review</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
