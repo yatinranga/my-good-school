@@ -8,7 +8,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 })
 export class StudentActivityComponent implements OnInit {
 
-  activityType = 'saved';
+  activityType = false ;
   showAddActivityPopup: boolean;
   addActivityForm : FormGroup;
 
@@ -39,6 +39,6 @@ export class StudentActivityComponent implements OnInit {
   }
 
   changeActivityType(str) {
-    this.activityType = str;
+    return this.activityType = !this.activityType;
   }
 }

@@ -13,8 +13,11 @@ export class StudentService {
     return this.http.post(url, data);
   }
 
+  getProfile(studentId){
+    return this.http.get("/api/students/"+studentId);
+  }
+
   getStudentInfo(){
-    console.log("get student")
     return this.http.get("/api/info");
   }
 
@@ -23,7 +26,6 @@ export class StudentService {
   }
 
   getActivity(schoolId){
-    console.log("getActivity by school id");
     return this.http.get("/activitiesOffered/"+schoolId);
   }
 

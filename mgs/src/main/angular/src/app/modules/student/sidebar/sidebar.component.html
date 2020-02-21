@@ -16,7 +16,12 @@
                 <a routerLink='./profile' class="menu_link"> <i class="fa fa-id-badge"> </i> Profile </a>
             </li>
             <li>
-                <a routerLink='./activity' class="menu_link"> <i class="fa fa-bar-chart" aria-hidden="true"> </i> Activity </a>
+                    <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                    <a class="menu_link" (click)="onActivityClick()"> Activity </a>
+                    <ul *ngIf="showActivityList">
+                        <li routerLink='./activity/saved-activity'>Saved Activity</li>
+                        <li routerLink='./activity/reviewed-activity'>Reviewed Activity</li>
+                    </ul>
             </li>
             <li>
                 <a routerLink='./awards-achievment' class="menu_link"> <i class="fa fa-trophy"> </i> Awards and Achievements </a>
