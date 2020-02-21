@@ -17,12 +17,12 @@
 }
 .main .content_main {
     display: inline-block;
-    width: calc(100% - 320px);
+    width: calc(100% - 295px);
     padding: 0px 20px;
 }
 .sidebar_main {
-    width: 320px;
+    width: 295px;
     float: left;
     display: inline-block;
-    background: #277590;
+    background: $sidebar;
 }

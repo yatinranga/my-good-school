@@ -20,11 +20,17 @@ span.choosefile.choosefile-custom {
     top: 0;
     text-align: center;
     box-shadow: 0 0 10px $light;
-    border-radius: 10px;
+    border-radius: 0;
 }
 button.btn.btnSubmit.btn-success {
     background: $sidebar;
     border: 1px solid $sidebar;
     box-shadow: none;
-    border-radius: 10px;
+    border-radius: 0;
+}
+.table button {
+    background: #2c7590;
+    color: #fafafa;
+    padding: 5px 15px;
+    border-radius: 0;
 }

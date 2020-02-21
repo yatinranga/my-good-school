@@ -20,11 +20,15 @@ span.choosefile.choosefile-custom {
     top: 0;
     text-align: center;
     box-shadow: 0 0 10px $light;
-    border-radius: 10px;
+    border-radius: 0px;
 }
 button.btn.btnSubmit.btn-success {
     background: $sidebar;
     border: 1px solid $sidebar;
     box-shadow: none;
-    border-radius: 10px;
+    border-radius: 0px;
+}
+
+.input-field{
+    position: relative;
 }

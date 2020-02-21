@@ -2,24 +2,25 @@
 
 h1{
     font-size: 35px;
-    color: $sidebar;    text-align: center;
+    color: $headings-content-main;    
+    text-align: center;
     margin: 25px 0;
 }
 h2{
     font-size: 26px;
-    color: $sidebar;    text-align: left;
-    text-decoration: underline;
+    color: $headings-content-main;    
+    text-align: left;
 }
 p{
     font-size: 16px;
-    color: #333;
+    color: $black;
     text-align: left;
 }
 h3{
     font-size: 22px;
-    color: #333;
+    color: $black;
     text-align: left;
-    color: $sidebar;
+    color: $headings-content-main;
 }
 .menu_content {
     width: 100%;
