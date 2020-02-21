@@ -31,15 +31,15 @@ const routes: Routes = [
       {
         path: 'activity',
         component : StudentActivityComponent,
-        // children: [
-        //   {
-        //     path: 'saved-activity',
-        //     component: SavedActitvityComponent
-        //   },
-        //   {
-        //     path: 'review-activity',
-        //     component: ReviewedActitvityComponent
-        //   },
+        children: [
+          {
+            path: 'saved-activity',
+            component: SavedActitvityComponent
+          },
+          {
+            path: 'reviewed-activity',
+            component: ReviewedActitvityComponent
+          }]
         //   {
         //     path: 'add-activity',
         //     component: AddActitvityComponent

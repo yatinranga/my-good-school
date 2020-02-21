@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { StudentService } from 'src/app/services/student.service';
 import { AlertService } from 'src/app/services/alert.service';
+import { element } from 'protractor';
 
 @Component({
   selector: 'app-add-activity',
@@ -16,6 +17,7 @@ export class AddActivityComponent implements OnInit {
   activities = [];
   coaches = [];
   addActivityForm: FormGroup;
+  file = [];
 
   constructor(private formBuilder: FormBuilder, private studentService: StudentService,
     private alertService: AlertService) { }
@@ -36,29 +38,29 @@ export class AddActivityComponent implements OnInit {
       addActivityDate: [''],
       addCoachId: [''],
       attachment: ['']
+      
+      // attachment: new FormArray([])
     });
   }
 
   getStudentActivity() {
     this.studentService.getActivity(this.schoolId).subscribe(
-      (res) => { this.activities = res; console.log(this.activities); },
+      (res) => this.activities = res,
       (err) => console.log(err)
     );
   }
 
   getStudentCoach(activityId) {
-    console.log(activityId);
     this.studentService.getCoach(this.schoolId, activityId).subscribe(
-      (res) => { console.log(res); this.coaches = res },
+      (res) => this.coaches = res,
       (err) => console.log(err)
     );
   }
 
   onFileSelect(event) {
     if (event.target.files.length > 0) {
-      const file = event.target.files[0];
-      this.addActivityForm.value['attachment'] = file;
-      console.log(this.addActivityForm.value['attachment']);
+      this.file = [...event .target.files];     
+      this.addActivityForm.value['attachment'] = this.file; 
     }
   }
 
@@ -68,10 +70,13 @@ export class AddActivityComponent implements OnInit {
     formData.append('activityId', this.addActivityForm.value.addActivityId);
     formData.append('coachId', this.addActivityForm.value.addCoachId);
     formData.append('dateOfActivity', this.addActivityForm.value.addActivityDate);
-    formData.append('fileRequests', this.addActivityForm.value.attachment);
-    // formData.append('id', this.addActivityForm.value.schoolId);
-    console.log(formData);
-    console.log(this.addActivityForm.value);
+
+    this.addActivityForm.value.attachment.forEach((element,index) => {
+      formData.append('fileRequests'+[index]+'.file',element);
+      console.log('fileRequests['+index+'].file' , element);
+    });
+    
+    console.log(this.addActivityForm.value);  
 
     this.studentService.addActivity("/api/students/activities", formData).subscribe(
       (res) => {

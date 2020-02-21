@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { AdminService } from 'src/app/services/admin.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
 // import { CustomHttpService } from 'src/app/services/custom-http-service.service';
 import { HttpClient } from '@angular/common/http';
@@ -57,6 +57,7 @@ export class StudentUploadComponent implements OnInit, AfterViewInit {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
       this.studentBulkForm.value['selectedFile'] = file;
+      console.log(this.studentBulkForm.value.selectedFile);      
     }
   }
 

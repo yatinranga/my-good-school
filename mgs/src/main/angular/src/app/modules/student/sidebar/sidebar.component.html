@@ -19,7 +19,11 @@
             </li>
             <li>
                     <i class="fa fa-bar-chart" aria-hidden="true"></i>
-                    <a routerLink='./activity' class="menu_link"> Activity </a>
+                    <a class="menu_link" (click)="onActivityClick()"> Activity </a>
+                    <ul *ngIf="showActivityList">
+                        <li routerLink='./activity/saved-activity'>Saved Activity</li>
+                        <li routerLink='./activity/reviewed-activity'>Reviewed Activity</li>
+                    </ul>
             </li>
             <li>
                 <i class="fa fa-trophy"></i>
