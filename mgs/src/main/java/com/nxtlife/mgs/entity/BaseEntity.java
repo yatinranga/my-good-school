@@ -15,6 +15,7 @@ import org.springframework.data.jpa.domain.AbstractAuditable;
 import com.nxtlife.mgs.entity.user.User;
 
 @MappedSuperclass
+@SuppressWarnings("serial")
 public abstract class BaseEntity extends AbstractAuditable<User, Long>
 {
 	
@@ -32,6 +33,7 @@ public abstract class BaseEntity extends AbstractAuditable<User, Long>
 //	    }
 //	    return null;
 //	  }
+
 
 	@PrePersist
 	  private void preCreate()

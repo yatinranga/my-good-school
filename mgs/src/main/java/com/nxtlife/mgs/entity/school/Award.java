@@ -25,6 +25,7 @@ import com.nxtlife.mgs.entity.user.Teacher;
 public class Award extends BaseEntity{
 	
 	@NotNull
+	@Column(unique = true)
 	private String name;
 	
 	@NotNull
@@ -45,7 +46,7 @@ public class Award extends BaseEntity{
 //	private Student student;
 	
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy="award")
-	private List<StudentAward> studentAwards;
+	private List<AwardActivityPerformed> awardActivityPerformed;
 
 	public String getName() {
 		return name;
@@ -86,13 +87,13 @@ public class Award extends BaseEntity{
 	public void setCid(String cid) {
 		this.cid = cid;
 	}
-	
-	public List<StudentAward> getStudentAwards() {
-		return studentAwards;
+
+	public List<AwardActivityPerformed> getAwardActivityPerformed() {
+		return awardActivityPerformed;
 	}
 
-	public void setStudentAwards(List<StudentAward> studentAwards) {
-		this.studentAwards = studentAwards;
+	public void setAwardActivityPerformed(List<AwardActivityPerformed> awardActivityPerformed) {
+		this.awardActivityPerformed = awardActivityPerformed;
 	}
 
 	public Award(@NotNull String name, @NotNull String description, Boolean active, Teacher teacher) {

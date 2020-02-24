@@ -47,4 +47,14 @@ public interface ActivityPerformedService {
 
 	List<ActivityPerformedResponse> getAllActivitiesAssignedToCoachforReview(String coachCid);
 
+	List<ActivityPerformedResponse> getAllPendingActivitiesByClass(String coachCid, String gradeCid);
+
+	List<ActivityPerformedResponse> getAllPendingActivitiesByService(String coachCid, String activityCid);
+
+	List<ActivityPerformedResponse> getAllPendingActivitiesByClassAndService(String coachCid, String gradeCid,
+			String activityCid);
+
+	List<ActivityPerformedResponse> getAllActivityOfStudentByActivityId(String studentCid, String activityCid,
+			String activityStatus);
+
 }

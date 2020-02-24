@@ -16,7 +16,7 @@ import com.nxtlife.mgs.view.TeacherRequest;
 import com.nxtlife.mgs.view.TeacherResponse;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/api/")
 public class CoachController {
 
 	@Autowired
@@ -37,12 +37,12 @@ public class CoachController {
 		return teacherService.getAllCoaches();
 	} 
 	
-	@GetMapping(value = "api/coaches/{cId}")
+	@GetMapping(value = "coaches/{cId}")
 	public TeacherResponse getCoachByCId(@PathVariable("cId") String cId) {
 		return teacherService.findCoachByCId(cId);
 	}
 	
-	@PostMapping()
+	@PostMapping("coaches")
 	public TeacherResponse saveCoach(@RequestBody TeacherRequest teacherRequest) {
 			return teacherService.saveCoach(teacherRequest);
 	}

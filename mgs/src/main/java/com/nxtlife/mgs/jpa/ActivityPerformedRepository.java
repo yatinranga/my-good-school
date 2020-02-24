@@ -28,8 +28,24 @@ public interface ActivityPerformedRepository extends JpaRepository<ActivityPerfo
 	
 	ActivityPerformed findByCidAndActiveTrue(String id);
 	
-	List<ActivityPerformed> findAllByTeacherCidAndActivityStatusAndActiveTrue(String teacherCid, ActivityStatus activityStatus);
+	List<ActivityPerformed> findAllByTeacherCidAndActivityStatusOrActivityStatusAndActiveTrue(String teacherCid, ActivityStatus activityStatus,ActivityStatus status2);
+	
+	List<ActivityPerformed> findAllByTeacherCidAndStudentGradeCidAndActivityStatusOrActivityStatusAndActiveTrue(String teacherCid, String gradeCid,ActivityStatus activityStatus ,ActivityStatus status2);
 	
 	@Query(value = "SELECT * FROM mgs.activity_performed a where (select extract(year from a.date_of_activity)) = :yearOfActivity and a.student_id = :studentId",nativeQuery = true)
 	List<ActivityPerformed> findAllByYearOfActivity(@Param("yearOfActivity") String yearOfActivity ,@Param("studentId") Long studentId);
+
+	List<ActivityPerformed> findAllByTeacherCidAndActivityCidAndActivityStatusOrActivityStatusAndActiveTrue(String coachCid,
+			String activityCid, ActivityStatus status1 , ActivityStatus status2);
+
+	List<ActivityPerformed> findAllByTeacherCidAndStudentGradeCidAndActivityCidAndActivityStatusOrActivityStatusAndActiveTrue(String coachCid,
+			String gradeCid,String activityCid, ActivityStatus status1, ActivityStatus status2);
+	
+	List<ActivityPerformed> findAllByStudentCidAndStudentActiveTrueAndActivityCidAndActivityActiveTrueAndActivityStatusAndActiveTrue(String studentCid , String activityCid ,ActivityStatus activityStatus);
+
+	List<ActivityPerformed> findAllByActiveTrue();
+
+	List<ActivityPerformed> findAllByStudentSchoolCidAndStudentSchoolActiveTrueAndActiveTrue(String schoolCid);
+	
+	List<ActivityPerformed> findAllByStudentSchoolCidAndStudentGradeCidAndActivityCidAndAndActivityStatusAndStudentSchoolActiveTrueAndStudentGradeActiveTrueAndActivityActiveTrueAndActiveTrue(String schoolCid ,String gradeCid , String ActivityCid , ActivityStatus status);
 }

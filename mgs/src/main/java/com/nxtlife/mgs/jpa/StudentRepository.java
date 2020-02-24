@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.nxtlife.mgs.entity.user.Student;
+import com.nxtlife.mgs.enums.ActivityStatus;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
@@ -39,5 +40,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 	List<Student> findByNameAndActiveTrue(String name);
 
 	Student findByCid(String cid);
+	
+	List<Student> findAllBySchoolCidAndSchoolActiveTrueAndGradeCidAndGradeActiveTrueAndActivitiesActivityCidAndActivitiesActivityActiveTrueAndActivitiesActivityStatusAndActivitiesTeacherCidAndActivitiesTeacherActiveTrueAndActiveTrue(String schoolCid, String gradeCid,String activityCid, ActivityStatus activityStatus ,String teacherCid);
 
 }

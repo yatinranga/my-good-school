@@ -39,6 +39,10 @@ public class ActivityPerformedResponse {
 	private String teacherId;
 	
 	private String studentId;
+	
+	private String activityName;
+	
+	private String teacherName;
 
 	public Date getDateOfActivity() {
 		return dateOfActivity;
@@ -160,16 +164,37 @@ public class ActivityPerformedResponse {
 		this.studentId = studentId;
 	}
 
+	public String getActivityName() {
+		return activityName;
+	}
+
+	public void setActivityName(String activityName) {
+		this.activityName = activityName;
+	}
+
+	public String getTeacherName() {
+		return teacherName;
+	}
+
+	public void setTeacherName(String teacherName) {
+		this.teacherName = teacherName;
+	}
+
 	public ActivityPerformedResponse(ActivityPerformed activityPerformed) {
 		this.id = activityPerformed.getCid();
 		this.active = activityPerformed.getActive();
-		if(activityPerformed.getActivity()!=null)
-		  this.activityId = activityPerformed.getActivity().getCid();
+		if(activityPerformed.getActivity()!=null) {
+			  this.activityId = activityPerformed.getActivity().getCid();
+			  this.activityName = activityPerformed.getActivity().getName();
+		}
 		this.description = activityPerformed.getDescription();
 		this.activityStatus = activityPerformed.getActivityStatus();
 		this.dateOfActivity = activityPerformed.getDateOfActivity();
-		if(activityPerformed.getTeacher()!=null)
-		  this.teacherId = activityPerformed.getTeacher().getcId();
+		if(activityPerformed.getTeacher()!=null) {
+			this.teacherId = activityPerformed.getTeacher().getcId();
+			this.teacherName=activityPerformed.getTeacher().getName();
+		}
+		  
 		if(activityPerformed.getStudent()!=null)
 		   this.studentId=activityPerformed.getStudent().getCid();
 		this.teacherRemark = activityPerformed.getCoachRemark();

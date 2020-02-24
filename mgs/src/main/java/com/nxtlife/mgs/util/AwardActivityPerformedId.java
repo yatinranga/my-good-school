@@ -5,20 +5,15 @@ import java.io.Serializable;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class StudentAwardId implements Serializable{
+public class AwardActivityPerformedId implements Serializable{
 
 	private static final long serialVersionUID = -8019856266355024203L;
 
-		private Long studentId;
-//		private Long teacherId;
 		private Long awardId;
+//		private Long teacherId;
+		private Long activityPerformedId;
 		
-		public Long getStudentId() {
-			return studentId;
-		}
-		public void setStudentId(Long studentId) {
-			this.studentId = studentId;
-		}
+			
 		
 		public Long getAwardId() {
 			return awardId;
@@ -26,17 +21,21 @@ public class StudentAwardId implements Serializable{
 		public void setAwardId(Long awardId) {
 			this.awardId = awardId;
 		}
+		public Long getActivityPerformedId() {
+			return activityPerformedId;
+		}
+		public void setActivityPerformedId(Long activityPerformedId) {
+			this.activityPerformedId = activityPerformedId;
+		}
 		
-				
 		@Override
 		public int hashCode() {
 			final int prime = 31;
 			int result = 1;
+			result = prime * result + ((activityPerformedId == null) ? 0 : activityPerformedId.hashCode());
 			result = prime * result + ((awardId == null) ? 0 : awardId.hashCode());
-			result = prime * result + ((studentId == null) ? 0 : studentId.hashCode());
 			return result;
 		}
-		
 		@Override
 		public boolean equals(Object obj) {
 			if (this == obj)
@@ -45,25 +44,26 @@ public class StudentAwardId implements Serializable{
 				return false;
 			if (getClass() != obj.getClass())
 				return false;
-			StudentAwardId other = (StudentAwardId) obj;
+			AwardActivityPerformedId other = (AwardActivityPerformedId) obj;
+			if (activityPerformedId == null) {
+				if (other.activityPerformedId != null)
+					return false;
+			} else if (!activityPerformedId.equals(other.activityPerformedId))
+				return false;
 			if (awardId == null) {
 				if (other.awardId != null)
 					return false;
 			} else if (!awardId.equals(other.awardId))
 				return false;
-			if (studentId == null) {
-				if (other.studentId != null)
-					return false;
-			} else if (!studentId.equals(other.studentId))
-				return false;
 			return true;
 		}
-		public StudentAwardId(Long studentId, Long awardId) {
-			this.studentId = studentId;
+		
+		public AwardActivityPerformedId(Long awardId, Long activityPerformedId) {
 			this.awardId = awardId;
+			this.activityPerformedId = activityPerformedId;
 		}
 		
-		public StudentAwardId() {
+		public AwardActivityPerformedId() {
 			
 		}
 

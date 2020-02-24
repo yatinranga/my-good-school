@@ -21,6 +21,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import com.nxtlife.mgs.entity.BaseEntity;
+import com.nxtlife.mgs.entity.school.AwardActivityPerformed;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.enums.ActivityStatus;
@@ -77,6 +78,9 @@ public class ActivityPerformed extends BaseEntity {
 
 	@ManyToOne
 	private Teacher teacher;
+	
+	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy="activityPerformed")
+	private List<AwardActivityPerformed> awardActivityPerformed;
 
 	public Date getDateOfActivity() {
 		return dateOfActivity;
@@ -204,6 +208,14 @@ public class ActivityPerformed extends BaseEntity {
 
 	public void setCid(String cid) {
 		this.cid = cid;
+	}
+
+	public List<AwardActivityPerformed> getAwardActivityPerformed() {
+		return awardActivityPerformed;
+	}
+
+	public void setAwardActivityPerformed(List<AwardActivityPerformed> awardActivityPerformed) {
+		this.awardActivityPerformed = awardActivityPerformed;
 	}
 
 	public ActivityPerformed(Date dateOfActivity, String cid, String description, String coachRemark,
