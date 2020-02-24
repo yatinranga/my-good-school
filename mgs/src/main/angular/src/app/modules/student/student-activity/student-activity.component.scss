@@ -7,6 +7,12 @@ nav.navbar.navbar-expand-sm.bg-primary.navbar-dark {
 }
 
 .add_activity{
-    background: $sidebar !important;
-    outline: none;
+    background: dimgrey;
+    padding: 5px 15px;
+    text-align: center;
+    border: 1px solid dimgrey;
+    border-radius: 0px;
+    margin: 20px;
+    box-shadow: 0 0 10px #777;
+    color: #fafafa;
 }

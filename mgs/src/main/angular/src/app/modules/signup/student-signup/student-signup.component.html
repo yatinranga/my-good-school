@@ -50,54 +50,52 @@
                 </div>
             </div>
 
-           <div class="form-content" formArrayName="guardians">
-               <div *ngFor = "let gud of guardians.controls; let i = index">
-                   <div class="form">
-                       <div class="note">
-                           <p><b>Guardian Details:  <span>{{i+1}}</span></b></p>
-                       </div>
-                   </div>
-                <div class="row" formGroupName="{{i}}">
-                       <div class="col-md-6">
-                           <div class="form-group">Enter Name :
-                               <input type="text" class="form-control" placeholder="Your Name" formControlName="name" />
-                           </div>
-                           <div class="form-group">Enter Email :
-                               <input type="email" class="form-control" placeholder="Your Email" formControlName="email" />
-                           </div>
-                           <div class="form-group">Enter Mobile no. :
-                               <input type="number" class="form-control" placeholder="Your Mobile Number" formControlName="mobileNumber" />
-                           </div>
-                       </div>
-                       <div class="col-md-6">
-                           <div class="form-group">Select Gender :
-                               <select class="form-control" placeholder="Select one" formControlName="gender">
-                                   <option value="" disabled selected>Choose your option</option>
-                                   <option value="Male">Male</option>
-                                   <option value="Female">Female</option>
-                               </select>
-                           </div>
-                           <div class="form-group">Select Relationship :
-                               <select class="form-control" placeholder="Select one" formControlName="relationship">
-                                   <option value="" disabled selected>Choose your option</option>
-                                   <option value="Father">Father</option>
-                                   <option value="Mother">Mother</option>
-                                   <option value="Local Guardian">Local Guardian</option>
-                               </select>
-                           </div>
-                       </div>
-                   </div>
-               </div>
+            <div class="form-content" formArrayName="guardians">
+                <div *ngFor="let gud of guardians.controls; let i = index">
+                    <div class="form">
+                        <div class="note">
+                            <p><b>Guardian Details: <span>{{i+1}}</span></b></p>
+                        </div>
+                    </div>
+                    <div class="row" formGroupName="{{i}}">
+                        <div class="col-md-6">
+                            <div class="form-group">Enter Name :
+                                <input type="text" class="form-control" placeholder="Your Name"
+                                    formControlName="name" />
+                            </div>
+                            <div class="form-group">Enter Email :
+                                <input type="email" class="form-control" placeholder="Your Email"
+                                    formControlName="email" />
+                            </div>
+                            <div class="form-group">Enter Mobile no. :
+                                <input type="number" class="form-control" placeholder="Your Mobile Number"
+                                    formControlName="mobileNumber" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">Select Gender :
+                                <select class="form-control" placeholder="Select one" formControlName="gender">
+                                    <option value="" disabled selected>Choose your option</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                            <div class="form-group">Select Relationship :
+                                <select class="form-control" placeholder="Select one" formControlName="relationship">
+                                    <option value="" disabled selected>Choose your option</option>
+                                    <option value="Father">Father</option>
+                                    <option value="Mother">Mother</option>
+                                    <option value="Local Guardian">Local Guardian</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="add text-right">
+                    <button type="button" class="btnSubmit" (click)="addGuardian()">Add Guardian</button>
+                </div>
             </div>
-            <div class="add">
-                <button type="button" class="btnSubmit" (click)="addGuardian()">Add Guardian</button>
-            </div>
-            <div>
-                <button class="btnSubmit" type="button" (click)="addGuardian()">Add Guardian</button>
-            </div>
-
             <button class="btn btnSubmit btn-success" type="submit">Submit</button>
-            <br><br>
         </div>
     </div>
 </form>

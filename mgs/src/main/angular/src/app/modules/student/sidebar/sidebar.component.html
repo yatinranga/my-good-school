@@ -16,11 +16,11 @@
                 <a routerLink='./profile' class="menu_link"> <i class="fa fa-id-badge"> </i> Profile </a>
             </li>
             <li>
-                    <i class="fa fa-bar-chart" aria-hidden="true"></i>
-                    <a class="menu_link" (click)="onActivityClick()"> Activity </a>
+                    
+                    <a class="menu_link" (click)="onActivityClick()"> <i class="fa fa-bar-chart" aria-hidden="true"> </i> Activity </a>
                     <ul *ngIf="showActivityList">
-                        <li routerLink='./activity/saved-activity'>Saved Activity</li>
-                        <li routerLink='./activity/reviewed-activity'>Reviewed Activity</li>
+                        <li routerLink='./activity/saved-activity' class="sub_menu">Saved Activity</li>
+                        <li routerLink='./activity/reviewed-activity' class="sub_menu">Reviewed Activity</li>
                     </ul>
             </li>
             <li>
@@ -29,7 +29,5 @@
         </ul>
     </div>
     <div class="sidebar_button">
-        <div class="logout button">
-                <a routerLink='../../login' class="menu_link" (click)="authService.logoutUser();"> Logout </a>
-        </div>
+                <a routerLink='../../login' class="logout" (click)="authService.logoutUser();"> Logout </a>
     </div>

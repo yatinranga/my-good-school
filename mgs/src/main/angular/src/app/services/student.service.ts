@@ -6,31 +6,35 @@ import { CustomHttpService } from './custom-http-service.service';
 })
 export class StudentService {
 
-  constructor(private http : CustomHttpService) {}
+  constructor(private http: CustomHttpService) { }
 
   uploadStudentDetails(data) {
     const url = "/students/signUp"
     return this.http.post(url, data);
   }
 
-  getProfile(studentId){
-    return this.http.get("/api/students/"+studentId);
+  getProfile(studentId) {
+    return this.http.get("/api/students/" + studentId);
   }
 
-  getStudentInfo(){
+  getStudentInfo() {
     return this.http.get("/api/info");
   }
 
-  getSchools(url){
+  getSchools(url) {
     return this.http.get(url);
   }
 
-  getActivity(schoolId){
-    return this.http.get("/activitiesOffered/"+schoolId);
+  getActivity(schoolId) {
+    return this.http.get("/activitiesOffered/" + schoolId);
   }
 
-  getCoach(schoolId,activityId){
-    return this.http.get("/coaches/"+schoolId+"/"+activityId);
+  getSavedActivity(studentCid) {
+    return this.http.get("/api/students/activities?status=saved&studentId=" + studentCid);
+  }
+
+  getCoach(schoolId, activityId) {
+    return this.http.get("/api/coaches/" + schoolId + "/" + activityId);
   }
 
   addActivity(url, formData: FormData) {
