@@ -1,13 +1,19 @@
 package com.nxtlife.mgs.service.impl;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.security.GeneralSecurityException;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
+import javax.mail.MessagingException;
+import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +41,13 @@ import com.nxtlife.mgs.jpa.AuthorityRepository;
 import com.nxtlife.mgs.jpa.RoleRepository;
 import com.nxtlife.mgs.jpa.UserRepository;
 import com.nxtlife.mgs.service.BaseService;
+import com.nxtlife.mgs.service.MailService;
 import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.util.Utils;
+
+import com.nxtlife.mgs.view.Mail;
+import com.nxtlife.mgs.view.MailRequest;
+
 import com.nxtlife.mgs.view.PasswordRequest;
 import com.nxtlife.mgs.view.SuccessResponse;
 import com.nxtlife.mgs.view.user.UserResponse;
@@ -55,6 +66,12 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Autowired
 	Utils utils;
+
+	@Autowired
+	NotificationServiceImpl notificationService;
+
+	@Autowired
+	MailService mailService;
 
 	private static Logger logger = LoggerFactory.getLogger(UserService.class);
 
@@ -88,24 +105,26 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			role = new Role();
 			role.setName("Admin");
 			role.setCid(utils.generateRandomAlphaNumString(8));
+			role.setAuthorities(authorityList);
+			role.setActive(true);
+			roleRepository.save(role);
 		}
-		role.setAuthorities(authorityList);
-		roleRepository.save(role);
+
 		logger.info("attached Authorities to admin.");
 
-//		Role role = roleRepository.getOneByName("Admin");
-//		if (role == null) {
-//			role = new Role();
-//			role.setCid(utils.generateRandomAlphaNumString(8));
-//			role.setName("Admin");
-//			roleRepository.save(role);
-//		}
-//		// Logic for authorities missing
+		// Role role = roleRepository.getOneByName("Admin");
+		// if (role == null) {
+		// role = new Role();
+		// role.setCid(utils.generateRandomAlphaNumString(8));
+		// role.setName("Admin");
+		// roleRepository.save(role);
+		// }
+		// // Logic for authorities missing
 
 		if (userRepository.findByUserName("mainAdmin") == null) {
 			User user = new User();
 			user.setRoleForUser(role);
-//		    user.setUserName("Admin0001");
+			// user.setUserName("Admin0001");
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 			String encodedPassword = encoder.encode("root");
 			user.setPassword(encodedPassword);
@@ -153,7 +172,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		user.setStudent(student);
 		user.setContactNo(student.getMobileNumber());
 		user.setEmail(student.getEmail());
-//		return userRepository.save(user);
+		// return userRepository.save(user);
 		return user;
 	}
 
@@ -174,10 +193,10 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		user.setPassword(encodedPassword);
 		user.setCid(utils.generateRandomAlphaNumString(8));
 
-//			if(teacher.getSubscriptionEndDate()!=null) {
-//				if(teacher.getSubscriptionEndDate().after(Date.from(java.time.LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())))
-//					user.setIsPaid(true);
-//			}
+		// if(teacher.getSubscriptionEndDate()!=null) {
+		// if(teacher.getSubscriptionEndDate().after(Date.from(java.time.LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())))
+		// user.setIsPaid(true);
+		// }
 		Role defaultRole = roleRepository.getOneByName("Teacher");
 		if (defaultRole == null)
 			throw new ValidationException("Role Teacher does not exist");
@@ -191,7 +210,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		user.setTeacher(teacher);
 		user.setContactNo(teacher.getMobileNumber());
 		user.setEmail(teacher.getEmail());
-//		return userRepository.save(user);
+		// return userRepository.save(user);
 		return user;
 	}
 
@@ -221,11 +240,12 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		 * ValidationException("Password already exist please choose a different one.");
 		 */
 		user.setPassword(encodedPassword);
-//		try {
+		// try {
 		user.setCid(utils.generateRandomAlphaNumString(8));
-//		} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
-//			user.setCid(utils.generateRandomAlphaNumString(8));
-//		}
+		// } catch (ConstraintViolationException |
+		// javax.validation.ConstraintViolationException ce) {
+		// user.setCid(utils.generateRandomAlphaNumString(8));
+		// }
 
 		for (Student s : guardian.getStudents()) {
 
@@ -248,12 +268,13 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		user.setGuardian(guardian);
 		user.setContactNo(guardian.getMobileNumber());
 		user.setEmail(guardian.getEmail());
-//		return userRepository.save(user);
+		// return userRepository.save(user);
 		return user;
 
 	}
 
 	@Override
+	@Transactional
 	public UserResponse getLoggedInUser() {
 		User user = getUser();
 		if (user == null)
@@ -263,6 +284,32 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	}
 
 	@Override
+	public void sendLoginCredentialsByGmailApi(MailRequest request) {
+		if (request.getTo() == null || request.getFrom() == null || request.getSubject() == null)
+			throw new ValidationException("Please provide to , from and subject if not provided already.");
+		if (request.getContent() == null)
+			throw new ValidationException("Please provide email content to send.");
+		try {
+			notificationService.sendEmail(request);
+		} catch (MessagingException | IOException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+		logger.info(String.format("Email sent successfuly to email address %s ", request.getTo()));
+		System.out.println(String.format("Email sent successfuly to email address %s ", request.getTo()));
+	}
+
+	@Override
+	public void sendLoginCredentialsBySMTP(Mail request) {
+		if (request.getMailTo() == null || request.getMailFrom() == null || request.getMailSubject() == null)
+			throw new ValidationException("Please provide to , from and subject if not provided already.");
+		if (request.getMailContent() == null)
+			throw new ValidationException("Please provide email content to send.");
+		mailService.sendEmail(request);
+		logger.info(String.format("Email sent successfuly to email address %s ", request.getMailTo()));
+		System.out.println(String.format("Email sent successfuly to email address %s ", request.getMailTo()));
+	}
+
+
 	public SuccessResponse changePassword(PasswordRequest request) {
 
 		request.checkPassword();
@@ -313,34 +360,37 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	}
 
-//	@Override public User createSchoolUser(School school) { if
-//	  (userRepository.countByUsername(school.getUsername()) > 0) { throw new
-//	  ValidationException("This username is already registered"); } User user = new
-//	  User(); user.setActive(true); user.setUserType(UserType.School);
-//	  user.setRegisterType(RegisterType.MANUALLY);
-//	  user.setUserName(school.getUsername()); //later change it to encrypted
-//	  password //
-//	  user.setPassword(bCryptPasswordEncoder.encode(school.getUsername()));
-//	  //Setting username as password user.setPassword(school.getUsername()); try {
-//	  user.setCid(utils.generateRandomAlphaNumString(8));
-//	  }catch(ConstraintViolationException|
-//
-//	javax.validation.ConstraintViolationException ce)
-//	{
-//		user.setCid(utils.generateRandomAlphaNumString(8));
-//	}
-//
-//	// user.setIsPaid(true);
-//
-//	Role defaultRole = roleRepository
-//			.getOneByName("School");if(defaultRole==null)throw new ValidationException("Role Parent does not exist");
-//
-//	List<Role> defaultRoleList = new ArrayList<>();defaultRoleList.add(defaultRole);
-//
-//	if(!defaultRoleList.isEmpty())
-//	{
-//		user.setRoles(defaultRoleList);
-//	}user.setSchool(school);return userRepository.save(user);
-//}
+
+	// @Override public User createSchoolUser(School school) { if
+	// (userRepository.countByUsername(school.getUsername()) > 0) { throw new
+	// ValidationException("This username is already registered"); } User user = new
+	// User(); user.setActive(true); user.setUserType(UserType.School);
+	// user.setRegisterType(RegisterType.MANUALLY);
+	// user.setUserName(school.getUsername()); //later change it to encrypted
+	// password //
+	// user.setPassword(bCryptPasswordEncoder.encode(school.getUsername()));
+	// //Setting username as password user.setPassword(school.getUsername()); try {
+	// user.setCid(utils.generateRandomAlphaNumString(8));
+	// }catch(ConstraintViolationException|
+	//
+	// javax.validation.ConstraintViolationException ce)
+	// {
+	// user.setCid(utils.generateRandomAlphaNumString(8));
+	// }
+	//
+	// // user.setIsPaid(true);
+	//
+	// Role defaultRole = roleRepository
+	// .getOneByName("School");if(defaultRole==null)throw new
+	// ValidationException("Role Parent does not exist");
+	//
+	// List<Role> defaultRoleList = new
+	// ArrayList<>();defaultRoleList.add(defaultRole);
+	//
+	// if(!defaultRoleList.isEmpty())
+	// {
+	// user.setRoles(defaultRoleList);
+	// }user.setSchool(school);return userRepository.save(user);
+	// }
 
 }

@@ -8,7 +8,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 })
 export class StudentActivityComponent implements OnInit {
 
-  activityType = 'saved';
+  activityType = false ;
   showAddActivityPopup: boolean;
   addActivityForm : FormGroup;
 
@@ -30,6 +30,7 @@ export class StudentActivityComponent implements OnInit {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
       this.addActivityForm.value['attachment'] = file;
+      console.log(this.addActivityForm.value[''])
     }
   }
 
@@ -38,6 +39,6 @@ export class StudentActivityComponent implements OnInit {
   }
 
   changeActivityType(str) {
-    this.activityType = str;
+    return this.activityType = !this.activityType;
   }
 }

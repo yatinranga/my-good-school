@@ -1,0 +1,90 @@
+@import '../../../app.component.scss';
+
+.logo {
+    width: 100%;
+    display: inline-block;
+    padding:  15px;
+}
+.logo img{
+    float: left;
+    float: left;
+    width: 70px;
+    border-radius: 0px;
+}
+i.fa {
+    margin: 10px;
+}
+.logo h2 {
+    font-size: 24px;
+    float: right;
+    margin: 20px 0;
+    font-family: none;
+    color: $nav-link;
+}
+.logo h2:hover{
+    color: $light;
+}
+.menu {
+    display: inline-block;
+    margin: 10px 0;
+    width: 100%;
+    border-top: 1px solid $med;
+}
+.menu ul {
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    list-style-type: none;
+    cursor: pointer;
+}
+a.menu_link{
+    color: #a2a2a2;
+    font-size: 19px;
+    text-align: left;
+    width: 100%;
+    display: inline-block;
+    padding: 15px;
+}
+.sidebar_button{
+    background: dimgrey;
+    padding: 5px 10px;
+    text-align: center;
+    border: 1px solid dimgrey;
+    border-radius: 0px;
+    width: 50%;
+    margin: 0 60px;
+    box-shadow: 0 0 10px $black;
+}
+a.logout
+{color: $light;}
+
+a.menu_link:hover{
+    text-decoration: none !important;
+    color: $light;
+}
+i.fa.fa-bar-chart:after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    top: 5px;
+    border: solid dimgray;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    left: 250px;
+}
+i.fa.fa-bar-chart{
+    position: relative;
+}
+li.sub_menu{
+    color: #a2a2a2;
+    padding: 5px 40px;
+}
+li.sub_menu:hover{
+    color: $light;
+}
+

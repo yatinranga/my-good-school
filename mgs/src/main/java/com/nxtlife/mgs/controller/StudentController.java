@@ -2,6 +2,8 @@ package com.nxtlife.mgs.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,16 +37,17 @@ public class StudentController {
 //		return studentService.uploadStudentsFromExcel(file);
 //	}
 
-	@PostMapping(value = "signUp")
+	@PostMapping(value = "/students/signUp")
 	public StudentResponse signUpStudent(@RequestBody StudentRequest studentRequest) {
 		return studentService.save(studentRequest);
 	}
 
-	/*
-	 * @PostMapping() public StudentResponse saveStudent(@Valid @RequestBody
-	 * StudentRequest studentRequest) { return studentService.save(studentRequest);
-	 * }
-	 */
+
+	@PostMapping("api/students")
+	public StudentResponse saveStudent(@Valid @RequestBody StudentRequest studentRequest) {
+		return studentService.save(studentRequest);
+	}
+
 
 	@PutMapping("api/students/update/{cid}")
 	public StudentResponse update(@RequestBody StudentRequest request, @PathVariable String cid) {

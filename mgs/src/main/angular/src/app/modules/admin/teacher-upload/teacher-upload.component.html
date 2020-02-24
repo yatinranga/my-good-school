@@ -1,28 +1,28 @@
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<h3> Data Upload Form For Teachers</h3>
 <div class="card bg-light">
-    <div class="card-body text-center">
-      <h3>Upload Teacher</h3><br>
-  
-      <div>Select School :  
-        <select >
-          <option disabled>Select School</option>
-          <option *ngFor = "let school of schools" value={{school.name}} >{{school.name}}</option>
+  <div class="card-body text-center">
+    <form [formGroup]="teacherBulkForm" (ngSubmit)="uploadTeacher()">
+      Select School : <div class="input-field">
+        <select>
+          <option value="" disabled selected>Select School </option>
+          <option *ngFor="let school of schools; let i = index;" value={{school.id}}>{{school.name}}</option>
         </select>
-      </div><br>
-  
-      <form [formGroup] = "uploadTeacher" (ngSubmit)="onSubmit()">      
-        <div>
-          <input type="file" name="selectedFile" (change)="onFileSelect($event)" />
-        </div><br>
-        <div>
-          <button type="submit">Upload Students</button>
-        </div>
-      </form>
-  
-      <div>
-        <br>
-        <button type="button" name="" (click)="downloadTeacher()">Download Teacher Template</button>
-        <a style="display: none;" download #dwnld></a>
       </div>
+      <div class="input-field">
+
+        <input class="choosefile" type="file" name="selectedFile" (change)="onFileSelect($event)" />
+        <span class="choosefile choosefile-custom"> <i class="fa fa-file"></i> </span>
+      </div>
+      <button class="upload btn" type="submit"> Upload </button>
+    </form>
+
+    <div>
+
+      <button class="btn" type="button" name="" (click)="downloadTeacher()">Download Teacher Template</button>
+      <a style="display: none;" download #dwnld></a>
     </div>
   </div>
-  
+</div>

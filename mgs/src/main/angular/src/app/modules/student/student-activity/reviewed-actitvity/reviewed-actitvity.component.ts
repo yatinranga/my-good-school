@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { StudentService } from 'src/app/services/student.service';
 
 @Component({
   selector: 'app-reviewed-actitvity',
@@ -7,7 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ReviewedActitvityComponent implements OnInit {
 
-  constructor() { }
+  reviewedActivitiesArr = ["Sky Diving"];
+
+  constructor(private studentService : StudentService) { }
 
   ngOnInit() {
   }

@@ -1,18 +1,33 @@
-<div class="container-fluid">
-    <div class="row">
-        <aside class="col-2 px-0 fixed-top" id="left">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
 
-            <div class="list-group w-100">
-                <div>
-                    <img src="assets/images.jpg">
-                    <a class="list-group-item active">My Good School</a>
-                </div>
-                <a routerLink='./home' class="list-group-item">Home</a>
-                <a routerLink='./profile' class="list-group-item">Profile</a>
-                <a routerLink='./activity' class="list-group-item">Activity</a>
-                <a routerLink='./awards-achievment' class="list-group-item">Awards & Achievements</a>
-                <a routerLink='../../login' class="list-group-item" (click)="authService.logoutUser();">Logout</a>
-            </div>
-        </aside>
+<div class="sidebar">
+    <div class="logo">
+        <img src="assets/images/logo.jpg">
+        <h2> My Good School </h2>
     </div>
-</div>
+    <div class="menu">
+        <ul>
+            <li>
+                <a routerLink='./home' class="menu_link"> <i class="fa fa-home"> </i> Home </a>
+            </li>
+            <li>
+                <a routerLink='./profile' class="menu_link"> <i class="fa fa-id-badge"> </i> Profile </a>
+            </li>
+            <li>
+                    
+                    <a class="menu_link" (click)="onActivityClick()"> <i class="fa fa-bar-chart" aria-hidden="true"> </i> Activity </a>
+                    <ul *ngIf="showActivityList">
+                        <li routerLink='./activity/saved-activity' class="sub_menu">Saved Activity</li>
+                        <li routerLink='./activity/reviewed-activity' class="sub_menu">Reviewed Activity</li>
+                    </ul>
+            </li>
+            <li>
+                <a routerLink='./awards-achievment' class="menu_link"> <i class="fa fa-trophy"> </i> Awards and Achievements </a>
+            </li>
+        </ul>
+    </div>
+    <div class="sidebar_button">
+                <a routerLink='../../login' class="logout" (click)="authService.logoutUser();"> Logout </a>
+    </div>

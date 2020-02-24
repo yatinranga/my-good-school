@@ -45,4 +45,6 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
 
 	List<Activity> findAllBySchoolsCidAndFocusAreasPsdAreaAndActiveTrue(String schoolCid, PSDArea psdArea);
 
+	Activity findByCidAndActiveTrue(String activityCid);
+
 }

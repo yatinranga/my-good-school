@@ -18,7 +18,7 @@ import com.nxtlife.mgs.view.TeacherRequest;
 import com.nxtlife.mgs.view.TeacherResponse;
 
 @RestController
-@RequestMapping("/api/teachers/")
+@RequestMapping("/")
 
 public class TeacherController {
 
@@ -36,39 +36,39 @@ public class TeacherController {
 //		return teacherService.uploadTeachersFromExcel(file, true);
 //	}
 
-	@PostMapping()
+	@PostMapping("api/teachers/")
 	public TeacherResponse saveTeacher(@RequestBody TeacherRequest teacherRequest) {
 		return teacherService.saveClassTeacher(teacherRequest);
 	}
 
-	@PostMapping("signUp")
+	@PostMapping("teachers/signUp")
 	public TeacherResponse signUp(@RequestBody TeacherRequest teacherRequest) {
 		if (teacherRequest.getIsCoach())
 			return teacherService.saveCoach(teacherRequest);
 		return teacherService.saveClassTeacher(teacherRequest);
 	}
 
-	@PutMapping("update/{cid}")
+	@PutMapping("api/teachers/update/{cid}")
 	public TeacherResponse update(@RequestBody TeacherRequest request, @PathVariable String cid) {
 		return teacherService.update(request, cid);
 	}
 
-	@GetMapping("/all")
+	@GetMapping("api/teachers/all")
 	public List<TeacherResponse> getAllTeachers() {
 		return teacherService.getAllTeachers();
 	}
 
-	@GetMapping(value = "classTeachers")
+	@GetMapping(value = "api/teachers/classTeachers")
 	public List<TeacherResponse> getAllClassTeachers() {
 		return teacherService.getAllClassTeachers();
 	}
 
-	@GetMapping(value = "{cId}")
+	@GetMapping(value = "api/teachers/{cId}")
 	public TeacherResponse getTeacherByCId(@PathVariable("cId") String cId) {
 		return teacherService.findByCId(cId);
 	}
 
-	@GetMapping(value = "classTeacher/{cId}")
+	@GetMapping(value = "api/teachers/classTeacher/{cId}")
 	public TeacherResponse getClassTeacherByCId(@PathVariable("cId") String cId) {
 		return teacherService.findClassTeacherByCId(cId);
 	}

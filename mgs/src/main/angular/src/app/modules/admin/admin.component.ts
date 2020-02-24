@@ -22,26 +22,3 @@ export class AdminComponent implements OnInit {
   ngOnInit() { }
 
 }
-
-
-
-  // showStudentUpload() {
-  //   this.router.navigate(['/admin/student-upload']);
-  // }
-
-  // showTeacherUpload() {
-  //   this.router.navigate(['/admin/teacher-upload']);
-  //  }
-
-
-  //   downloadTeacher(){
-  //     this.dwnld.nativeElement.href = "http://localhost:8083/api/template/export/teacher";
-  //     let a = this.dwnld.nativeElement.click();
-  //     window.alert("Download Successful !!");    
-  //   }
-
-  //   downloadCoach(){
-  //     this.dwnld.nativeElement.href = "http://localhost:8083/api/template/export/coach";
-  //     this.dwnld.nativeElement.click();
-  //     window.alert("Download Successful !!");
-  //   }

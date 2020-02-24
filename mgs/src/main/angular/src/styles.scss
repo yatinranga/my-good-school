@@ -1,1 +1,151 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import '../../angular/src/app/app.component.scss';
+
+
+*{
+    margin: 0;
+    outline: none !important;
+    box-sizing: border-box;
+    border-radius: 0;
+}
+.card.bg-light {
+    margin: 30px 0;
+}
+h3 {
+    text-align: center;
+    color: $active;
+    margin-top: 20px;
+    margin-bottom: 0px;
+    font-size: 35px;
+}
+.card.bg-light{
+    margin: 30px 0;
+}
+
+button.upload{
+   background: $dark;
+}
+
+.input-field {
+    display: inline-block;
+    background: white;
+    border: solid 1px #ddd;
+    padding: 10px 10px;
+    margin: 10px;
+    border-radius: 0px;
+}
+
+
+.btn {
+    padding: 10px 20px !important;
+    display: inline-block;
+    font-size: 20px !important;
+}
+button.upload.btn{
+    margin-left: 20px;
+}
+i.fa.fa-file {
+    float: left;
+    position: absolute;
+    left: 30px;
+    top: 17px;
+    font-size: 14px;
+}
+
+input.choosefile {
+    opacity: 0;
+    position: relative;
+    z-index: 2;
+    border: none !important;
+    width: 100%;
+    display: inline-block;
+}
+span.choosefile.choosefile-custom {
+    position: absolute;
+    content: "";
+    background: none;
+    z-index: 1;
+    opacity: 1;
+    width: 24.1%;
+    height: 40px;
+    right: 464px;
+    height: 49px;
+    left: inherit;
+    top: 31px;
+    box-shadow: 0 0 10px white;
+    border-radius: 0px;
+}
+span.choosefile.choosefile-custom:after {
+    content: "Choose file...";
+    position: absolute;
+    width: 65%;
+    left: 0;
+    padding: 13px 0px;
+    color: $black;
+    z-index: 1;
+}
+span.choosefile.choosefile-custom:before {
+    content: "Browse";
+    position: absolute;
+    background: gainsboro;
+    width: 35%;
+    right: 0;
+    padding: 13px 0px;
+    color: $black;
+    border-radius: 0px;
+    z-index: 1;
+}
+select {
+    background: none;
+    border: none;
+    color: $black;
+    height: 30px;
+    border-radius: 0 !important;
+}
+.content_main_com{
+    width: 100%;
+    display: inline-block;
+    padding: 15px;
+}
+.form-content .form-control {
+    margin-top: 5px;
+    
+}
+
+table.table {
+    margin:0;
+}
+
+th{
+    // color: #adadad !important;
+    font-weight: bold;
+}
+table.table, tr, th, td{
+    border: 1px solid #333 !important;
+}
+.table_main{
+    // margin-top: 50px;
+    // background: #596a7d;
+    display: inline-block;
+    width: 100%;
+    // padding: 25px;
+}
+.table td, th{
+    text-align: center;
+}
+.table button {
+    color: #333 !important;
+    padding: 5px 15px;
+    border-radius: 0;
+    background: #dddddd !important;
+    padding: 5px 15px;
+    border-radius: 0;
+    box-shadow: 0 0 10px #fff;
+    outline: none;
+}
+
+.main .table_main table thead tr th {
+    background: #ddd;
+    color: #333;
+}

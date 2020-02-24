@@ -6,13 +6,38 @@ import { CustomHttpService } from './custom-http-service.service';
 })
 export class StudentService {
 
-  constructor(private http : CustomHttpService) {}
+  constructor(private http: CustomHttpService) { }
 
   uploadStudentDetails(data) {
-    const url = "/api/student/signUp"
+    const url = "/students/signUp"
     return this.http.post(url, data);
   }
 
-  getActivity(){    
+  getProfile(studentId) {
+    return this.http.get("/api/students/" + studentId);
+  }
+
+  getStudentInfo() {
+    return this.http.get("/api/info");
+  }
+
+  getSchools(url) {
+    return this.http.get(url);
+  }
+
+  getActivity(schoolId) {
+    return this.http.get("/activitiesOffered/" + schoolId);
+  }
+
+  getSavedActivity(studentCid) {
+    return this.http.get("/api/students/activities?status=saved&studentId=" + studentCid);
+  }
+
+  getCoach(schoolId, activityId) {
+    return this.http.get("/api/coaches/" + schoolId + "/" + activityId);
+  }
+
+  addActivity(url, formData: FormData) {
+    return this.http.post(url, formData)
   }
 }

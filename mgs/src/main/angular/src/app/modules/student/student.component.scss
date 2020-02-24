@@ -1,0 +1,40 @@
+@import '../../app.component.scss';
+
+.main_box{
+    width: 100%;
+    display: inline-block
+}
+.content_box{
+    width: 80%;
+    display: inline-block;
+    background: green;
+}
+
+.sidebar{
+    width: 350px;
+    background-color: red;
+    float: left;
+}
+.main .content_main {
+    display: inline-block;
+    width: calc(100% - 295px);
+}
+.sidebar_main {
+    width: 295px;
+    float: left;
+    display: inline-block;
+    background: $sidebar;
+    height: 100vw;
+}
+nav.navbar.navbar-expand-sm.bg-primary.navbar-dark {
+    background: $active !important;
+}
+
+a.nav-link {
+    font-size: 18px;
+    margin: 0 20px;
+    cursor: pointer;
+}
+a.nav-link:hover{
+    color: $light !important;
+}

@@ -28,11 +28,8 @@ import com.nxtlife.mgs.entity.user.Teacher;
 @DynamicUpdate(true)
 public class Award extends BaseEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	Long id;
-
 	@NotNull
+	@Column(unique = true)
 	private String name;
 
 	@NotNull
@@ -53,7 +50,7 @@ public class Award extends BaseEntity {
 //	private Student student;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "award")
-	private List<StudentAward> studentAwards;
+	private List<AwardActivityPerformed> awardActivityPerformed;
 
 	public String getName() {
 		return name;
@@ -95,20 +92,12 @@ public class Award extends BaseEntity {
 		this.cid = cid;
 	}
 
-	public Long getId() {
-		return id;
+	public List<AwardActivityPerformed> getAwardActivityPerformed() {
+		return awardActivityPerformed;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public List<StudentAward> getStudentAwards() {
-		return studentAwards;
-	}
-
-	public void setStudentAwards(List<StudentAward> studentAwards) {
-		this.studentAwards = studentAwards;
+	public void setAwardActivityPerformed(List<AwardActivityPerformed> awardActivityPerformed) {
+		this.awardActivityPerformed = awardActivityPerformed;
 	}
 
 	public Award(@NotNull String name, @NotNull String description, Boolean active, Teacher teacher) {

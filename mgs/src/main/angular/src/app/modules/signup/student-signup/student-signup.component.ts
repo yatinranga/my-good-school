@@ -13,18 +13,22 @@ import { Router } from '@angular/router';
 export class StudentSignupComponent implements OnInit {
 
   studentSignup: FormGroup;
-  schools = [];
+  schoolsList = [];
 
   constructor(private formBuilder: FormBuilder, private adminService: AdminService,
     private studentService: StudentService, private alertService: AlertService,
     private router: Router) { }
 
   ngOnInit() {
+    this.studentService.getSchools("/schools").subscribe(
+      (res) => {this.schoolsList = res},
+      (err) => console.log(err))
+
     this.studentSignup = new FormGroup({
       name: new FormControl(''),
       dob: new FormControl(''),
       email: new FormControl(''),
-      mob: new FormControl(''),
+      mobileNumber: new FormControl(''),
       gender: new FormControl(''),
       schoolId: new FormControl(''),
       sessionStartDate: new FormControl(''),
@@ -36,9 +40,9 @@ export class StudentSignupComponent implements OnInit {
 
   get guardians() { return this.studentSignup.get('guardians') as FormArray }
 
-  getSchoolID(schoolName) {
-    this.studentSignup.value['schoolId'] = this.schools.filter((ele) => ele.name === schoolName)[0].id;
-  }
+  // getSchoolID(schoolName) {
+  //   this.studentSignup.value['schoolId'] = this.schools.filter((ele) => ele.name === schoolName)[0].id;
+  // }
 
   giveGuardianFormArray() {
     const arr = [];
@@ -67,7 +71,7 @@ export class StudentSignupComponent implements OnInit {
   }
 
   onSubmit() {
-    const payload = { studentSignUp: this.studentSignup.value };
+    const payload =  this.studentSignup.value;
     console.log(payload)
     this.studentService.uploadStudentDetails(payload).subscribe((res) => {
       this.alertService.showSuccessToast('SignUp Successfully')
