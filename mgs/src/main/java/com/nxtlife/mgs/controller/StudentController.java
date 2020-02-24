@@ -2,8 +2,6 @@ package com.nxtlife.mgs.controller;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -95,8 +93,8 @@ public class StudentController {
 	}
 
 	@DeleteMapping("api/students/{cid}")
-	public SuccessResponse delete(@RequestBody StudentRequest request, @PathVariable String cid) {
-		return studentService.delete(request, cid);
+	public SuccessResponse delete(@PathVariable String cid) {
+		return studentService.delete(cid);
 	}
 
 }

@@ -167,14 +167,17 @@ public class TeacherRequest {
 		teacher = teacher == null ? new Teacher() : teacher;
 		if (this.name != null)
 			teacher.setName(this.name);
+
 		if (this.username != null)
 			teacher.setUsername(this.username);
+
 		if (this.dob != null)
 			teacher.setDob(this.dob);
 		if (this.qualification != null)
 			teacher.setQualification(this.qualification);
-		if (this.active != null)
-			teacher.setActive(this.active);
+		/*
+		 * if (this.active != null) teacher.setActive(this.active);
+		 */
 		if (this.gender != null)
 			teacher.setGender(this.gender);
 		if (this.mobileNumber != null)

@@ -9,10 +9,12 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.DynamicUpdate;
 
 import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.school.School;
@@ -20,7 +22,8 @@ import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.enums.FourS;
 
 @Entity
-public class Activity extends BaseEntity{
+@DynamicUpdate(true)
+public class Activity extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,34 +32,29 @@ public class Activity extends BaseEntity{
 	@NotNull
 	@Column(unique = true)
 	private String name;
-	
+
 	@Enumerated(EnumType.STRING)
 	private FourS fourS;
-	
+
 	@NotNull
 	@Column(unique = true)
 	private String cid;
-	
+
 	private String description;
-	
+
 	private Boolean active;
-	
+
 	@ManyToMany
-	@JoinTable(name = "activity_focus_area",
-		joinColumns = { @JoinColumn(name = "activity_id") },
-		inverseJoinColumns = { @JoinColumn(name = "focus_area_id") })
+	@JoinTable(name = "activity_focus_area", joinColumns = { @JoinColumn(name = "activity_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "focus_area_id") })
 	private List<FocusArea> focusAreas;
-	
-	@ManyToMany
-	@JoinTable(name = "teacher_activity",
-		joinColumns = { @JoinColumn(name = "teacher_id") },
-		inverseJoinColumns = { @JoinColumn(name = "activity_id") })
+
+	@ManyToMany(mappedBy = "activities")
 	private List<Teacher> teachers;
-	
+
 	@ManyToMany
-	@JoinTable(name = "school_activity",
-		joinColumns = { @JoinColumn(name = "school_id") },
-		inverseJoinColumns = { @JoinColumn(name = "activity_id") })
+	@JoinTable(name = "school_activity", joinColumns = { @JoinColumn(name = "school_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "activity_id") })
 	private List<School> schools;
 
 	public Long getId() {
@@ -114,7 +112,7 @@ public class Activity extends BaseEntity{
 	public void setFocusAreas(List<FocusArea> focusAreas) {
 		this.focusAreas = focusAreas;
 	}
-	
+
 	public List<Teacher> getTeachers() {
 		return teachers;
 	}
@@ -122,7 +120,7 @@ public class Activity extends BaseEntity{
 	public void setTeachers(List<Teacher> teachers) {
 		this.teachers = teachers;
 	}
-	
+
 	public List<School> getSchools() {
 		return schools;
 	}
@@ -154,6 +152,6 @@ public class Activity extends BaseEntity{
 	}
 
 	public Activity() {
-		
+
 	}
 }

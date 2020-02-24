@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
@@ -16,31 +14,34 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
-import com.nxtlife.mgs.entity.user.Role;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.entity.user.User;
+import com.nxtlife.mgs.enums.UserType;
+import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.ActivityRepository;
 import com.nxtlife.mgs.jpa.GradeRepository;
 import com.nxtlife.mgs.jpa.RoleRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
+import com.nxtlife.mgs.jpa.SequenceGeneratorRepo;
 import com.nxtlife.mgs.jpa.TeacherRepository;
 import com.nxtlife.mgs.service.BaseService;
+import com.nxtlife.mgs.service.SequenceGeneratorService;
 import com.nxtlife.mgs.service.TeacherService;
 import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.ExcelUtil;
+import com.nxtlife.mgs.util.SequenceGenerator;
 import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.ActivityRequestResponse;
+import com.nxtlife.mgs.view.SuccessResponse;
 import com.nxtlife.mgs.view.TeacherRequest;
 import com.nxtlife.mgs.view.TeacherResponse;
 
@@ -57,6 +58,12 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	GradeRepository gradeRepository;
 
 	@Autowired
+	SequenceGeneratorService sequenceGeneratorService;
+
+	@Autowired
+	SequenceGeneratorRepo sequenceGeneratorRepo;
+
+	@Autowired
 	ActivityRepository activityRepository;
 
 	@Autowired
@@ -70,64 +77,175 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 
 	@Override
 	public TeacherResponse save(TeacherRequest request) {
+
 		if (request == null)
 			throw new ValidationException("Request can not be null.");
+
 		if (request.getEmail() == null)
 			throw new ValidationException("Email can not be null");
+
 		if (teacherRepository.countByEmailAndActiveTrue(request.getEmail()) > 0)
 			throw new ValidationException(String.format("Email %s already exists", request.getEmail()));
+
 		if (request.getUsername() == null)
 			request.setUsername(request.getEmail());
+
 		if (teacherRepository.countByUsernameAndActiveTrue(request.getUsername()) > 0)
 			throw new ValidationException("Username already exists");
+
 		if (request.getName() == null)
 			throw new ValidationException("Teacher name can not be null");
 
+		if (request.getIsCoach()) {
+			Long studsequence = sequenceGeneratorService.findSequenceByUserType(UserType.Coach);
+			if (studsequence == null) {
+				sequenceGeneratorRepo.save(new SequenceGenerator(UserType.Coach, 0l));
+			}
+			++studsequence;
+			request.setUsername(String.format("COA%08d", studsequence));
+			sequenceGeneratorService.updateSequenceByUserType(studsequence, UserType.Coach);
+
+		} else {
+			Long studsequence = sequenceGeneratorService.findSequenceByUserType(UserType.Teacher);
+			if (studsequence == null) {
+				sequenceGeneratorRepo.save(new SequenceGenerator(UserType.Teacher, 0l));
+			}
+			++studsequence;
+			request.setUsername(String.format("TEA%08d", studsequence));
+			sequenceGeneratorService.updateSequenceByUserType(studsequence, UserType.Teacher);
+		}
+
 		Teacher teacher = request.toEntity();
+
+		// saving school
+
 		if (request.getSchoolId() != null) {
-			teacher.setSchool(schoolRepository.getOneByCidAndActiveTrue(request.getSchoolId()));
 
-// logic to remove the grades from all available grades which are not present in request and set it to teacher
-			if (request.getGradeIds() != null && !request.getGradeIds().isEmpty()) {
-				List<Grade> repoGradeList = gradeRepository.findAllBySchoolsCidAndActiveTrue(request.getSchoolId());
-				for (int i = 0; i < repoGradeList.size(); i++) {
-					Boolean valid = false;
-					for (String gCid : request.getGradeIds())
-						if (repoGradeList.get(i).getCid().equals(gCid))
-							valid = true;
+			School school = schoolRepository.findByCidAndActiveTrue(request.getSchoolId());
 
-					if (!valid)
-						repoGradeList.remove(i--);
-				}
-				teacher.setGrades(repoGradeList);
+			if (school == null) {
+				throw new NotFoundException(String.format("school having id [%s] didn't exist", request.getSchoolId()));
 			}
+			teacher.setSchool(school);
+
 		}
-// logic to remove the activities from all available activities which are not present in request and set it to teacher
-		if (request.getActivitiyIds() != null && !request.getActivitiyIds().isEmpty()) {
-			List<Activity> repoActivityList = activityRepository.findAllByActiveTrue();
-			for (int i = 0; i < repoActivityList.size(); i++) {
-				Boolean flag = false;
-				for (String actCId : request.getActivitiyIds())
-					if (repoActivityList.get(i).getCid().equals(actCId))
+
+		// saving grades
+
+		if (request.getGradeIds() != null && !request.getGradeIds().isEmpty()) {
+
+			List<Grade> repoGradeList = gradeRepository.findAllBySchoolsCidAndActiveTrue(request.getSchoolId());
+			List<Grade> finalGradeList = new ArrayList<Grade>();
+
+			for (int i = 0; i < request.getGradeIds().size(); i++) {
+
+				boolean flag = false;
+
+				for (Grade grade : repoGradeList) {
+
+					if (grade.getCid().equals(request.getGradeIds().get(i))) {
 						flag = true;
+						finalGradeList.add(grade);
+						break;
+					}
+				}
 
-				if (!flag)
-					repoActivityList.remove(i--);
+				if (flag == false) {
+					throw new NotFoundException(
+							String.format("grade having id [%s] didn't exist", request.getGradeIds().get(i)));
+				}
+
 			}
-			teacher.setActivities(repoActivityList);
+
+			teacher.setGrades(finalGradeList);
+
 		}
+
+		// saving activities
+
+		if (request.getActivitiyIds() != null && !request.getActivitiyIds().isEmpty()) {
+
+			List<Activity> repoActivityList = activityRepository
+					.findAllBySchoolsCidAndActiveTrue(request.getSchoolId());
+
+			List<Activity> finalActivityList = new ArrayList<Activity>();
+
+			// validating activities present in request are also present in school activity
+			// list or not.
+
+			for (int i = 0; i < request.getActivitiyIds().size(); i++) {
+
+				boolean flag = false, aptFlag = false;
+				;
+
+				for (Activity activity : repoActivityList) {
+
+					if (activity.getCid().equals(request.getActivitiyIds().get(i))) {
+						flag = true;
+						finalActivityList.add(activity);
+
+						for (Teacher apt /* apt = alreadyPresentTeacher */ : activity.getTeachers()) {
+
+							if (apt.getEmail() == teacher.getEmail()
+									|| apt.getMobileNumber() == teacher.getMobileNumber()) {
+								aptFlag = true;
+								break;
+							}
+						}
+
+						if (aptFlag == false) {
+							activity.getTeachers().add(teacher);
+						}
+
+						break;
+					}
+				}
+
+				if (flag == false) {
+					throw new NotFoundException(
+							String.format("activity having id [%s] didn't exist", request.getActivitiyIds().get(i)));
+				}
+			}
+			teacher.setActivities(finalActivityList);
+		}
+
 		teacher.setcId(utils.generateRandomAlphaNumString(8));
 
 		User user = userService.createTeacherUser(teacher);
-		if (StringUtils.isEmpty(user))
+
+		if (user == null)
 			throw new ValidationException("User not created successfully");
+
 		teacher.setUser(user);
 		teacher.setActive(true);
+
 		teacher = teacherRepository.save(teacher);
+
 		if (teacher == null)
 			throw new RuntimeException("Something went wrong teacher not saved.");
 
 		return new TeacherResponse(teacher);
+	}
+
+	@Override
+	public TeacherResponse update(TeacherRequest request, String cid) {
+
+		if (cid == null) {
+			throw new ValidationException("id can't be null");
+		}
+
+		Teacher teacher = teacherRepository.findByCidAndActiveTrue(cid);
+
+		if (teacher == null) {
+			throw new NotFoundException(String.format("teacher having id [%s] didn't exist", cid));
+		}
+
+		teacher = request.toEntity(teacher);
+
+		teacher = teacherRepository.save(teacher);
+
+		return new TeacherResponse(teacher);
+
 	}
 
 	@Override
@@ -560,10 +678,10 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 
 	@Override
 	public List<TeacherResponse> findCoachesBySchoolCidAndActivityCid(String schoolCid, String activityCid) {
-		List<Teacher> teachers = new ArrayList<Teacher>();
+
 		List<TeacherResponse> teacherResponses = new ArrayList<>();
-		teachers = teacherRepository.findAllBySchoolCidAndActivitiesCidAndIsCoachTrueAndActiveTrue(schoolCid,
-				activityCid);
+		List<Teacher> teachers = teacherRepository
+				.findAllBySchoolCidAndActivitiesCidAndIsCoachTrueAndActiveTrue(schoolCid, activityCid);
 		if (teachers == null)
 			throw new ValidationException("No coaches found.");
 		teachers.forEach(teacher -> {
@@ -571,4 +689,31 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		});
 		return teacherResponses;
 	}
+
+	@Override
+	public SuccessResponse delete(String cid) {
+
+		if (cid == null) {
+			throw new ValidationException("teacher id can't be null");
+		}
+
+		Teacher teacher = teacherRepository.findByCidAndActiveTrue(cid);
+
+		if (teacher == null || teacher.getActive() == false) {
+			throw new NotFoundException(String.format("teacher having id [%s] can't exist", cid));
+		}
+
+		teacher.setActive(false);
+		teacherRepository.save(teacher);
+
+		teacher = teacherRepository.findByCidAndActiveTrue(cid);
+
+		if (teacher != null) {
+			throw new ValidationException(
+					String.format("something went wrong teacher having id [%s] can't deleted", cid));
+		} else {
+			return new SuccessResponse(org.springframework.http.HttpStatus.OK.value(), "teacher deleted successfully");
+		}
+	}
+
 }
