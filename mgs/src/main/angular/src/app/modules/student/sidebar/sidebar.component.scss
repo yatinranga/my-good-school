@@ -47,18 +47,7 @@ a.menu_link{
     display: inline-block;
     padding: 15px;
 }
-.sidebar_button{
-    background: dimgrey;
-    padding: 5px 10px;
-    text-align: center;
-    border: 1px solid dimgrey;
-    border-radius: 0px;
-    width: 50%;
-    margin: 0 60px;
-    box-shadow: 0 0 10px $black;
-}
-a.logout
-{color: $light;}
+
 
 a.menu_link:hover{
     text-decoration: none !important;
