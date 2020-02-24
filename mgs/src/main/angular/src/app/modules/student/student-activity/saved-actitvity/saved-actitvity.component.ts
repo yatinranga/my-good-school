@@ -10,10 +10,9 @@ import { StudentService } from 'src/app/services/student.service';
 export class SavedActitvityComponent implements OnInit {
 
   studentInfo = [];
-
-  savedActivitiesArr = ["Yoga", "Badminton", "Cricket"];
+  savedActivitiesArr = [];
   studentID = "";
-
+  editActivity = false;
   savedActivityForm: FormGroup;
 
   constructor(private formBuilder: FormBuilder, private studentService: StudentService) { }
@@ -27,24 +26,32 @@ export class SavedActitvityComponent implements OnInit {
       (err) => console.log(err))
 
     this.savedActivityForm = this.formBuilder.group({
-      savedActivity: [''],
+      savedActivityId: [''],
       savedActivityDetails: [''],
       savedActivityDate: [''],
-      savedTeacher: [''],
+      savedCoachId: [''],
       attachment: ['']
     })
   }
 
   getStudentSavedActivities(studentId) {
     this.studentService.getSavedActivity(studentId).subscribe((res) => {
-      // this.savedActivitiesArr = res
-      console.log(res);
+      this.savedActivitiesArr = res
+      console.log(this.savedActivitiesArr);
+      console.log("Date : ", this.savedActivitiesArr[1].dateOfActivity);
     },
       (err) => console.log(err));
   }
 
-  showSelectedActivities(index) {
+  editSelectedActivities(index) {
     console.log(this.savedActivitiesArr[index]);
+    console.log(this.editActivity);
+    return this.editActivity = !this.editActivity;
+    
+  }
+
+  updateActivity(){
+
   }
 
   submitActivity() {
