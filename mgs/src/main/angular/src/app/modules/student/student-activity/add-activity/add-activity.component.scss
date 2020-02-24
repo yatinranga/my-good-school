@@ -32,3 +32,10 @@ button.btn.btnSubmit.btn-success {
 .input-field{
     position: relative;
 }
+
+textarea.form-control.add.ng-untouched.ng-pristine.ng-valid {
+    padding: 5px !important;
+    line-height: 15px !important;
+    font-size: 17px !important;
+    text-align: left !important;
+}
