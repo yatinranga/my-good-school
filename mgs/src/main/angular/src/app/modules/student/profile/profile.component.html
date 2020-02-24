@@ -1,9 +1,11 @@
 <br>
 <div *ngIf="editForm == 'Student Profile'">
-    <label>Name : </label> {{studentProfile.value.studentName}}<br>
-    <label>Gender : </label> {{studentProfile.value.studentGender}}<br>
-    <label>Email : </label> {{studentProfile.value.studentEmail}}<br>
-    <label>Mob : </label>  {{studentProfile.value.studentDob}}<br>
+    <!-- <div *ngFor="let detail of studentDetailsArr">
+        <label>detail</label><br> -->
+        <label>Gender : </label> {{studentProfile.value.studentGender}}<br>
+        <label>Email : </label> {{studentProfile.value.studentEmail}}<br>
+        <label>Mob : </label>  {{studentProfile.value.studentDob}}<br>
+    <!-- </div> -->
     <button (click)="setEditForm('Edit Profile')">Edit</button>
 </div>
 
