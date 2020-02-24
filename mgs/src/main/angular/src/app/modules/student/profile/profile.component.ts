@@ -8,7 +8,8 @@ import { StudentService } from 'src/app/services/student.service';
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-
+  
+  studentDetailsArr = [];
   studentProfile : FormGroup;
   editForm = "Student Profile";
 
@@ -17,24 +18,22 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
     this.studentService.getStudentInfo().subscribe((res) => {
       console.log(res);
-      // this.studentInfo = res;
-      // this.schoolId = res.student.schoolId;
-      // this.getStudentActivity();
+      this.studentDetailsArr = res;      
     },
       (err) => console.log(err)
     );
 
     this.studentProfile = this.formBuilder.group({
-      studentName : ['Ram'],
-      studentGender : ['Male'],
-      studentDob : ['04-11-1997'],
-      studentEmail : ['ram@gmail.com'],
-      studentMob : ['9999999999'],
-      studentSubscriptionEndDate : ['01-12-2020'],
-      guardianName : ['Ram Father'],
-      guardianEmail : ['ram.father@gmail.com'],
-      guardianMob : ['963852741'],
-      guardianRelationship : ['Father']
+      studentName : [''],
+      studentGender : [''],
+      studentDob : [''],
+      studentEmail : [''],
+      studentMob : [''],
+      studentSubscriptionEndDate : [''],
+      guardianName : [''],
+      guardianEmail : [''],
+      guardianMob : [''],
+      guardianRelationship : ['']
     });
     // this.student 
   }
