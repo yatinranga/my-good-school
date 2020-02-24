@@ -18,11 +18,23 @@
 .main .content_main {
     display: inline-block;
     width: calc(100% - 295px);
-    padding: 0px 20px;
 }
 .sidebar_main {
     width: 295px;
     float: left;
     display: inline-block;
     background: $sidebar;
+    height: 100vw;
+}
+nav.navbar.navbar-expand-sm.bg-primary.navbar-dark {
+    background: $active !important;
+}
+
+a.nav-link {
+    font-size: 18px;
+    margin: 0 20px;
+    cursor: pointer;
+}
+a.nav-link:hover{
+    color: $light !important;
 }

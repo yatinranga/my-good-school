@@ -18,17 +18,18 @@ button.btn.btnSubmit.btn-success{
     border: $active;
     margin-top: 20px;
     font-size: 17px;
+    outline: none;
 }
 .form-content {
     border-bottom: 1px solid $box-shadow-color;
     padding-bottom: 30px;
 }
-button.btnSubmit{
-    background: $label-color;
+button.btnSubmit {
+    background: #7b7b7b;
     border-radius: 0px;
     color: white;
-    padding: 5px 10px;
-    font-size: 15px;
+    padding: 10px 20px;
+    font-size: 18px;outline: none;
 }
 .add{
     margin-top: 20px;
