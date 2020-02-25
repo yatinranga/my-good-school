@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.nxtlife.mgs.entity.activity.ActivityPerformed;
 import com.nxtlife.mgs.entity.school.AwardActivityPerformed;
+import com.nxtlife.mgs.enums.FourS;
 import com.nxtlife.mgs.util.AwardActivityPerformedId;
 
 public interface AwardActivityPerformedRepository extends JpaRepository<AwardActivityPerformed, Long>{
@@ -25,4 +26,10 @@ public interface AwardActivityPerformedRepository extends JpaRepository<AwardAct
 	
 	@Query(value = "SELECT * FROM mgs.award_activity_performed a where (select extract(year from a.date_of_receipt)) = :yearOfActivity ",nativeQuery = true)
 	List<AwardActivityPerformed> findAllByYearOfActivity(@Param("yearOfActivity") String yearOfActivity);
+
+	List<AwardActivityPerformed> findAllByActivityPerformedActivityFourSAndActivityPerformedStudentCidAndActivityPerformedActivityActiveTrueAndActivityPerformedActiveTrueAndActivityPerformedStudentActiveTrue(
+			FourS valueOf, String studentCid);
+
+	List<AwardActivityPerformed> findAllByActivityPerformedActivityFocusAreasCidAndActivityPerformedStudentCidAndActivityPerformedActivityActiveTrueAndActivityPerformedActiveTrueAndActivityPerformedStudentActiveTrue(
+			String focusAreaCid, String studentCid);
 }

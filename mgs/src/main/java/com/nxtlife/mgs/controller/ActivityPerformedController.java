@@ -38,6 +38,11 @@ public class ActivityPerformedController {
 		return activityPerformedService.saveActivityByCoach(request);
 	}
 	
+	@PostMapping(value = "api/coaches/{actCid}/submit")
+	public ActivityPerformedResponse reviewByCoach(@PathVariable("actCid") String activityPerformedCid) {
+		return activityPerformedService.submitActivityByCoach(activityPerformedCid);
+	}
+	
 	@GetMapping(value = "api/coaches/activities")
 	public List<ActivityPerformedResponse> getAllPendingActivitiesByCoach(@RequestParam("coachId") String coachCid){
 		return activityPerformedService.getAllActivitiesAssignedToCoachforReview(coachCid);
@@ -58,10 +63,6 @@ public class ActivityPerformedController {
 		return activityPerformedService.getAllPendingActivitiesByClassAndService(coachCid, gradeCid, activityCid);
 	}
 	
-	@PostMapping(value = "api/coaches/{actCid}/submit")
-	public ActivityPerformedResponse reviewByCoach(@PathVariable("actCid") String activityPerformedCid) {
-		return activityPerformedService.submitActivityByCoach(activityPerformedCid);
-	}
 	
 	@GetMapping(value = "api/students/activities")
 	public List<ActivityPerformedResponse> getAllActivitiesOfStudentByStatus(@RequestParam("status") String status,

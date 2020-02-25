@@ -54,7 +54,7 @@ public class StudentController {
 		return studentService.update(request, cid);
 	}
 
-	@GetMapping()
+	@GetMapping("api/students")
 	public List<StudentResponse> getAll() {
 		return studentService.getAll();
 	}

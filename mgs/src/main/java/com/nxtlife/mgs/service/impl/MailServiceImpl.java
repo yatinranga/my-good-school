@@ -11,11 +11,12 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.MailService;
 import com.nxtlife.mgs.view.Mail;
 
 @Service
-public class MailServiceImpl implements MailService {
+public class MailServiceImpl extends BaseService implements MailService {
 
 	@Autowired
 	JavaMailSender mailSender;

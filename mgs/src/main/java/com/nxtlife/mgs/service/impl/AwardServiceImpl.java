@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.activity.ActivityPerformed;
+import com.nxtlife.mgs.entity.activity.FocusArea;
 import com.nxtlife.mgs.entity.school.Award;
 import com.nxtlife.mgs.entity.school.AwardActivityPerformed;
 import com.nxtlife.mgs.entity.school.Grade;
@@ -19,15 +20,18 @@ import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.enums.ActivityStatus;
+import com.nxtlife.mgs.enums.FourS;
 import com.nxtlife.mgs.jpa.ActivityPerformedRepository;
 import com.nxtlife.mgs.jpa.ActivityRepository;
 import com.nxtlife.mgs.jpa.AwardActivityPerformedRepository;
 import com.nxtlife.mgs.jpa.AwardRepository;
+import com.nxtlife.mgs.jpa.FocusAreaRepository;
 import com.nxtlife.mgs.jpa.GradeRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
 import com.nxtlife.mgs.jpa.StudentRepository;
 import com.nxtlife.mgs.jpa.TeacherRepository;
 import com.nxtlife.mgs.service.AwardService;
+import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.util.AwardActivityPerformedId;
 import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.ActivityPerformedResponse;
@@ -37,7 +41,7 @@ import com.nxtlife.mgs.view.AwardResponse;
 import com.nxtlife.mgs.entity.school.Award;
 
 @Service
-public class AwardServiceImpl implements AwardService{
+public class AwardServiceImpl extends BaseService implements AwardService{
 
 	@Autowired
 	AwardRepository awardRepository;
@@ -65,6 +69,9 @@ public class AwardServiceImpl implements AwardService{
 	
 	@Autowired
 	StudentRepository studentRepository;
+	
+	@Autowired
+	FocusAreaRepository focusAreaRepository;
 	
 	@Override
 	public AwardResponse createAward(AwardRequest request) {

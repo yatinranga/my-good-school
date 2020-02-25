@@ -19,12 +19,9 @@ import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.enums.FourS;
 
+@SuppressWarnings("serial")
 @Entity
 public class Activity extends BaseEntity{
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
 
 	@NotNull
 	@Column(unique = true)
@@ -58,14 +55,6 @@ public class Activity extends BaseEntity{
 		joinColumns = { @JoinColumn(name = "school_id") },
 		inverseJoinColumns = { @JoinColumn(name = "activity_id") })
 	private List<School> schools;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;
