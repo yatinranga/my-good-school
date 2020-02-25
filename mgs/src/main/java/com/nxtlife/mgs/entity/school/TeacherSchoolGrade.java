@@ -10,28 +10,31 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.util.TeacherSchoolGradeId;
 
 @Entity
-public class TeacherSchoolGrade  implements Serializable{
-	
+@DynamicUpdate(true)
+public class TeacherSchoolGrade implements Serializable {
+
 	@EmbeddedId
 	TeacherSchoolGradeId teacherSchoolGradeId;
-	
+
 	@MapsId(value = "teacherId")
 	@ManyToOne
-	private Teacher teacher ;
-	
-	@MapsId(value="schoolId")
+	private Teacher teacher;
+
+	@MapsId(value = "schoolId")
 	@ManyToOne
 	private School school;
-	
-	@MapsId(value="gradeId")
+
+	@MapsId(value = "gradeId")
 	@ManyToOne
 	private Grade grade;
-	
+
 	private String year;
 
 	public TeacherSchoolGradeId getTeacherSchoolGradeId() {
@@ -89,10 +92,9 @@ public class TeacherSchoolGrade  implements Serializable{
 		this.school = school;
 		this.grade = grade;
 	}
-	
+
 	public TeacherSchoolGrade() {
-		
+
 	}
-	
-	
+
 }

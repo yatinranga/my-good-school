@@ -2,10 +2,13 @@ package com.nxtlife.mgs.view;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.nxtlife.mgs.entity.activity.ActivityPerformed;
 import com.nxtlife.mgs.entity.activity.File;
+import com.nxtlife.mgs.entity.activity.FocusArea;
 import com.nxtlife.mgs.enums.ActivityStatus;
 
 public class ActivityPerformedResponse {
@@ -39,6 +42,16 @@ public class ActivityPerformedResponse {
 	private String teacherId;
 	
 	private String studentId;
+	
+	private String activityName;
+	
+	private String teacherName;
+	
+	private String fourS;
+	
+	private Set<String> focusAreas;
+	
+	private Set<String> psdAreas;
 
 	public Date getDateOfActivity() {
 		return dateOfActivity;
@@ -160,16 +173,71 @@ public class ActivityPerformedResponse {
 		this.studentId = studentId;
 	}
 
+	public String getActivityName() {
+		return activityName;
+	}
+
+	public void setActivityName(String activityName) {
+		this.activityName = activityName;
+	}
+
+	public String getTeacherName() {
+		return teacherName;
+	}
+
+	public void setTeacherName(String teacherName) {
+		this.teacherName = teacherName;
+	}
+
+	public String getFourS() {
+		return fourS;
+	}
+
+	public void setFourS(String fourS) {
+		this.fourS = fourS;
+	}
+	
+
+	public Set<String> getFocusAreas() {
+		return focusAreas;
+	}
+
+	public void setFocusAreas(Set<String> focusAreas) {
+		this.focusAreas = focusAreas;
+	}
+
+	public Set<String> getPsdAreas() {
+		return psdAreas;
+	}
+
+	public void setPsdAreas(Set<String> psdAreas) {
+		this.psdAreas = psdAreas;
+	}
+
 	public ActivityPerformedResponse(ActivityPerformed activityPerformed) {
 		this.id = activityPerformed.getCid();
 		this.active = activityPerformed.getActive();
-		if(activityPerformed.getActivity()!=null)
-		  this.activityId = activityPerformed.getActivity().getCid();
+		if(activityPerformed.getActivity()!=null) {
+			  this.activityId = activityPerformed.getActivity().getCid();
+			  this.activityName = activityPerformed.getActivity().getName();
+			  this.fourS = activityPerformed.getActivity().getFourS().toString();
+			  if(activityPerformed.getActivity().getFocusAreas()!=null && !activityPerformed.getActivity().getFocusAreas().isEmpty()) {
+				  this.focusAreas = new HashSet<String>();
+				  this.psdAreas = new HashSet<String>();
+				  for(FocusArea focusarea : activityPerformed.getActivity().getFocusAreas()) {
+					  this.focusAreas.add(focusarea.getName());
+					  this.psdAreas.add(focusarea.getPsdArea().toString());
+				  }
+			  }
+		}
 		this.description = activityPerformed.getDescription();
 		this.activityStatus = activityPerformed.getActivityStatus();
 		this.dateOfActivity = activityPerformed.getDateOfActivity();
-		if(activityPerformed.getTeacher()!=null)
-		  this.teacherId = activityPerformed.getTeacher().getcId();
+		if(activityPerformed.getTeacher()!=null) {
+			this.teacherId = activityPerformed.getTeacher().getcId();
+			this.teacherName=activityPerformed.getTeacher().getName();
+		}
+		  
 		if(activityPerformed.getStudent()!=null)
 		   this.studentId=activityPerformed.getStudent().getCid();
 		this.teacherRemark = activityPerformed.getCoachRemark();

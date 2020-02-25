@@ -15,6 +15,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.user.SchoolManagementMember;
@@ -23,62 +25,63 @@ import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.entity.user.User;
 
 @Entity
+@DynamicUpdate(true)
 public class School extends BaseEntity {
 
 //	@Id
 //	@GeneratedValue(strategy = GenerationType.AUTO)
 //	Long id;
-	
+
 	@NotNull
-	@Column(unique=true)
+	@Column(unique = true)
 	private String name;
-	
+
 	@NotNull
 	@Column(unique = true)
 	private String username;
-	
+
 	@NotNull
 	@Column(unique = true)
 	private String cid;
-	
-	@Column(unique=true)
+
+	@Column(unique = true)
 	private String address;
-	
+
 	@NotNull
-	@Column(unique=true)
+	@Column(unique = true)
 	private String email;
-	
-	@Column(unique=true)
+
+	@Column(unique = true)
 	private String contactNumber;
-	
+
 	private String logo;
-	
+
 	private Boolean active;
-	
+
 	@OneToOne
-	@JoinColumn(name="user_id")
-	User user ;
-	
+	@JoinColumn(name = "user_id")
+	User user;
+
 	@ManyToMany(mappedBy = "schools")
 	private List<Grade> grades;
-	
-	@OneToMany(cascade = CascadeType.ALL ,fetch = FetchType.LAZY,mappedBy = "school")
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "school")
 	private List<Teacher> teachers;
-	
-	@OneToMany(cascade = CascadeType.ALL ,fetch = FetchType.LAZY,mappedBy = "school")
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "school")
 	private List<Student> students;
-	
-	@OneToMany(cascade = CascadeType.ALL ,fetch = FetchType.LAZY,mappedBy = "school")
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "school")
 	private List<SchoolManagementMember> schoolManagementMembers;
-	
-	@OneToMany(cascade = CascadeType.ALL ,fetch = FetchType.LAZY, mappedBy = "school")
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "school")
 	private List<StudentSchoolGrade> studentSchoolGrades;
-	
-	@OneToMany(fetch = FetchType.LAZY , mappedBy = "school")
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "school")
 	private List<TeacherSchoolGrade> teacherSchoolGrades;
-	
-	@ManyToMany(mappedBy="schools")
-	private List<Activity> activities ;
+
+	@ManyToMany(mappedBy = "schools")
+	private List<Activity> activities;
 
 	public String getName() {
 		return name;
@@ -151,7 +154,7 @@ public class School extends BaseEntity {
 	public void setSchoolManagementMembers(List<SchoolManagementMember> schoolManagementMembers) {
 		this.schoolManagementMembers = schoolManagementMembers;
 	}
-	
+
 	public String getCid() {
 		return cid;
 	}
@@ -159,7 +162,7 @@ public class School extends BaseEntity {
 	public void setCid(String cid) {
 		this.cid = cid;
 	}
-	
+
 	public String getLogo() {
 		return logo;
 	}
@@ -191,7 +194,7 @@ public class School extends BaseEntity {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	
+
 	public List<Activity> getActivities() {
 		return activities;
 	}
@@ -199,7 +202,7 @@ public class School extends BaseEntity {
 	public void setActivities(List<Activity> activities) {
 		this.activities = activities;
 	}
-	
+
 	public List<StudentSchoolGrade> getStudentSchoolGrades() {
 		return studentSchoolGrades;
 	}
@@ -207,7 +210,7 @@ public class School extends BaseEntity {
 	public void setStudentSchoolGrades(List<StudentSchoolGrade> studentSchoolGrades) {
 		this.studentSchoolGrades = studentSchoolGrades;
 	}
-	
+
 	public List<TeacherSchoolGrade> getTeacherSchoolGrades() {
 		return teacherSchoolGrades;
 	}
@@ -237,8 +240,8 @@ public class School extends BaseEntity {
 		this.activities = activities;
 	}
 
-	public School(){
-		
+	public School() {
+
 	}
-	
+
 }

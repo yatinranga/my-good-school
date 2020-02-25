@@ -20,20 +20,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.user.Guardian;
 import com.nxtlife.mgs.entity.user.Student;
+import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.entity.user.User;
+import com.nxtlife.mgs.enums.ActivityStatus;
 import com.nxtlife.mgs.enums.UserType;
 import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.ex.ValidationException;
+import com.nxtlife.mgs.jpa.ActivityRepository;
 import com.nxtlife.mgs.jpa.GradeRepository;
 import com.nxtlife.mgs.jpa.GuardianRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
 import com.nxtlife.mgs.jpa.SequenceGeneratorRepo;
 import com.nxtlife.mgs.jpa.StudentRepository;
 import com.nxtlife.mgs.jpa.StudentSchoolGradeRepository;
+import com.nxtlife.mgs.jpa.TeacherRepository;
 import com.nxtlife.mgs.service.ActivityPerformedService;
 import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.SequenceGeneratorService;
@@ -80,6 +85,12 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 	@Autowired
 	ActivityPerformedService activityPerformedService;
+	
+	@Autowired
+	ActivityRepository activityRepository;
+	
+	@Autowired
+	TeacherRepository teacherRepository;
 
 	@Override
 	public StudentResponse save(StudentRequest request) {
@@ -162,7 +173,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 		if (request.getSchoolId() != null) {
 			School school = schoolRepository.getOneByCidAndActiveTrue(request.getSchoolId());
-			if(school == null )
+			if (school == null)
 				throw new ValidationException(String.format("School with id : %s not found.", request.getSchoolId()));
 			student.setSchool(school);
 			if (request.getGradeId() != null)
@@ -582,7 +593,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	}
 
 	@Override
-	public SuccessResponse delete(StudentRequest request, String cid) {
+	public SuccessResponse delete(String cid) {
 		if (cid == null) {
 			throw new ValidationException("student id can't be null");
 		}
@@ -593,12 +604,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			throw new NotFoundException(String.format("student having id [%s] can't exist", cid));
 		}
 
-		student = request.toEntity(student);
 		student.setActive(false);
 		studentRepository.save(student);
-		// update(request, cid);
-
-		// studentRepository.deleteByCid(cid);
 
 		student = studentRepository.findByCidAndActiveTrue(cid);
 
@@ -609,6 +616,38 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			return new SuccessResponse(org.springframework.http.HttpStatus.OK.value(), "student deleted successfully");
 		}
 
+	}
+	
+	@Override
+	public List<StudentResponse> getAllStudentsBySchoolAndActivityAndCoachAndStatusReviewed(String schoolCid,String gradeCid, String activityCid,String activityStatus,String teacherCid){
+		if(schoolCid==null)
+			throw new ValidationException("School id cannot be null.");
+		if(activityCid == null)
+			throw new ValidationException("Activity id cannot be null.");
+		if(teacherCid==null)
+			throw new ValidationException("Teacher id cannot be null.");
+		if(gradeCid==null)
+			throw new ValidationException("Grade id cannot be null.");
+		School school = schoolRepository.findByCidAndActiveTrue(schoolCid);
+		if(school == null)
+			throw new ValidationException(String.format("School with id : %s not found.", schoolCid));
+		Grade grade = gradeRepository.findByCidAndActiveTrue(gradeCid);
+		if(grade == null)
+			throw new ValidationException(String.format("Grade with id : %s not found in school : %s", gradeCid,school.getName()));
+		Activity activity = activityRepository.findByCidAndActiveTrue(activityCid);
+		if(activity==null)
+			throw new ValidationException(String.format("Activity with id : %s not found.", activityCid));
+		Teacher teacher = teacherRepository.findByCidAndActiveTrue(teacherCid);
+		if(teacher==null)
+			throw new ValidationException(String.format("Teacher with id : %s not found.", teacherCid));
+		if(activityStatus==null)
+		  activityStatus = ActivityStatus.Reviewed.toString();
+		List<Student> students = studentRepository.findAllBySchoolCidAndSchoolActiveTrueAndGradeCidAndGradeActiveTrueAndActivitiesActivityCidAndActivitiesActivityActiveTrueAndActivitiesActivityStatusAndActivitiesTeacherCidAndActivitiesTeacherActiveTrueAndActiveTrue(schoolCid, gradeCid,activityCid, ActivityStatus.valueOf(activityStatus), teacherCid);
+		if(students==null)
+			throw new ValidationException(String.format("No student found in the school : %s under teacher : %s having performed activity : %s and status is %s .", school.getName(),teacher.getName(),activity.getName(),activityStatus));
+		List<StudentResponse> studentsResponse = new ArrayList<StudentResponse>();
+		students.forEach(s->{studentsResponse.add(new StudentResponse(s));});
+		return studentsResponse;
 	}
 
 }

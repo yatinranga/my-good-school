@@ -32,7 +32,10 @@ public interface StudentService extends ExcelUtil {
 
 	StudentResponse update(StudentRequest request, String cid);
 
-	SuccessResponse delete(StudentRequest request, String cid);
+	SuccessResponse delete(String cid);
+
+	List<StudentResponse> getAllStudentsBySchoolAndActivityAndCoachAndStatusReviewed(String schoolCid,String gradeCid,
+			String activityCid, String activityStatus, String teacherCid);
 
 //	List<StudentResponse> getAllBySchoolCid(String schoolCid);
 

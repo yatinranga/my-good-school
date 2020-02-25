@@ -26,11 +26,12 @@ import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.activity.ActivityPerformed;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
-import com.nxtlife.mgs.entity.school.StudentAward;
+import com.nxtlife.mgs.entity.school.AwardActivityPerformed;
 import com.nxtlife.mgs.entity.school.StudentSchoolGrade;
 
 @Entity
 @DynamicUpdate(true)
+@SuppressWarnings("serial")
 public class Student extends BaseEntity {
 
 	@Id
@@ -98,8 +99,8 @@ public class Student extends BaseEntity {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "student")
 	private List<StudentSchoolGrade> studentSchoolGrades;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "student")
-	private List<StudentAward> StudentAwards;
+//	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "student")
+//	private List<AwardActivityPerformed> StudentAwards;
 
 	public Date getSessionStartDate() {
 		return sessionStartDate;
@@ -251,14 +252,6 @@ public class Student extends BaseEntity {
 
 	public void setStudentSchoolGrades(List<StudentSchoolGrade> studentSchoolGrades) {
 		this.studentSchoolGrades = studentSchoolGrades;
-	}
-
-	public List<StudentAward> getStudentAwards() {
-		return StudentAwards;
-	}
-
-	public void setStudentAwards(List<StudentAward> studentAwards) {
-		StudentAwards = studentAwards;
 	}
 
 	public Student(@NotNull String name, @NotNull String cid, @NotNull String username, Date dob, String imageUrl,

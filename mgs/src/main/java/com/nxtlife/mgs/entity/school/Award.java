@@ -16,36 +16,41 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
+
 //uniqueConstraints = @UniqueConstraint(columnNames = {"name","description","student"})
 @Entity
 @Table()
-public class Award extends BaseEntity{
-	
+@DynamicUpdate(true)
+public class Award extends BaseEntity {
+
 	@NotNull
+	@Column(unique = true)
 	private String name;
-	
+
 	@NotNull
 	@Column(unique = true)
 	private String cid;
-	
+
 	@NotNull
 	private String description;
-	
+
 	private Boolean active;
-	
+
 	@ManyToOne
-	@JoinColumn(name="teacherId")
+	@JoinColumn(name = "teacherId")
 	private Teacher teacher;
-	
+
 //	@ManyToOne
 //	@JoinColumn(name = "studentId")
 //	private Student student;
-	
-	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy="award")
-	private List<StudentAward> studentAwards;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "award")
+	private List<AwardActivityPerformed> awardActivityPerformed;
 
 	public String getName() {
 		return name;
@@ -78,7 +83,7 @@ public class Award extends BaseEntity{
 	public void setTeacher(Teacher teacher) {
 		this.teacher = teacher;
 	}
-	
+
 	public String getCid() {
 		return cid;
 	}
@@ -86,13 +91,13 @@ public class Award extends BaseEntity{
 	public void setCid(String cid) {
 		this.cid = cid;
 	}
-	
-	public List<StudentAward> getStudentAwards() {
-		return studentAwards;
+
+	public List<AwardActivityPerformed> getAwardActivityPerformed() {
+		return awardActivityPerformed;
 	}
 
-	public void setStudentAwards(List<StudentAward> studentAwards) {
-		this.studentAwards = studentAwards;
+	public void setAwardActivityPerformed(List<AwardActivityPerformed> awardActivityPerformed) {
+		this.awardActivityPerformed = awardActivityPerformed;
 	}
 
 	public Award(@NotNull String name, @NotNull String description, Boolean active, Teacher teacher) {
@@ -101,10 +106,9 @@ public class Award extends BaseEntity{
 		this.active = active;
 		this.teacher = teacher;
 	}
-	
+
 	public Award() {
-		
+
 	}
-	
 
 }

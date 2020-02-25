@@ -11,11 +11,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.DynamicUpdate;
 
 import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.activity.Activity;
@@ -27,7 +30,9 @@ import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.school.TeacherSchoolGrade;
 
+@SuppressWarnings("serial")
 @Entity
+@DynamicUpdate(true)
 public class Teacher extends BaseEntity {
 
 	@Id
@@ -87,7 +92,9 @@ public class Teacher extends BaseEntity {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "teacher")
 	private List<TeacherSchoolGrade> teacherSchoolGrades;
 
-	@ManyToMany(mappedBy = "teachers")
+	@ManyToMany
+	@JoinTable(name = "teacher_activity", joinColumns = { @JoinColumn(name = "teacher_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "activity_id") })
 	private List<Activity> activities;
 
 //	@ManyToMany(mappedBy = "teachers")

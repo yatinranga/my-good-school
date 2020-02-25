@@ -38,14 +38,31 @@ public class ActivityPerformedController {
 		return activityPerformedService.saveActivityByCoach(request);
 	}
 	
-	@GetMapping(value = "api/coaches/activities")
-	public List<ActivityPerformedResponse> getAllActivities(@RequestParam("coachId") String coachCid){
-		return activityPerformedService.getAllActivitiesAssignedToCoachforReview(coachCid);
-	}
 	@PostMapping(value = "api/coaches/{actCid}/submit")
 	public ActivityPerformedResponse reviewByCoach(@PathVariable("actCid") String activityPerformedCid) {
 		return activityPerformedService.submitActivityByCoach(activityPerformedCid);
 	}
+	
+	@GetMapping(value = "api/coaches/activities")
+	public List<ActivityPerformedResponse> getAllPendingActivitiesByCoach(@RequestParam("coachId") String coachCid){
+		return activityPerformedService.getAllActivitiesAssignedToCoachforReview(coachCid);
+	}
+	
+	@GetMapping(value = "api/coaches/activities/filterByClass")
+	public List<ActivityPerformedResponse> getAllPendingActivitiesByClass(@RequestParam("coachId") String coachCid ,@RequestParam("classId") String gradeCid){
+		return activityPerformedService.getAllPendingActivitiesByClass(coachCid,gradeCid);
+	}
+	
+	@GetMapping(value = "api/coaches/activities/filterByService")
+	public List<ActivityPerformedResponse> getAllPendingActivitiesByActivity(@RequestParam("coachId") String coachCid ,@RequestParam("activityId") String activityCid){
+		return activityPerformedService.getAllPendingActivitiesByService(coachCid, activityCid);
+	}
+	
+	@GetMapping(value = "api/coaches/activities/filterByClassAndService")
+	public List<ActivityPerformedResponse> getAllPendingActivitiesByClassAndActivity(@RequestParam("coachId") String coachCid ,@RequestParam("classId") String gradeCid,@RequestParam("activityId") String activityCid){
+		return activityPerformedService.getAllPendingActivitiesByClassAndService(coachCid, gradeCid, activityCid);
+	}
+	
 	
 	@GetMapping(value = "api/students/activities")
 	public List<ActivityPerformedResponse> getAllActivitiesOfStudentByStatus(@RequestParam("status") String status,

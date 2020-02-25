@@ -42,25 +42,19 @@ public class StudentController {
 		return studentService.save(studentRequest);
 	}
 
-<<<<<<< HEAD
+
 	@PostMapping("api/students")
 	public StudentResponse saveStudent(@Valid @RequestBody StudentRequest studentRequest) {
 		return studentService.save(studentRequest);
 	}
-=======
-	/*
-	 * @PostMapping() public StudentResponse saveStudent(@Valid @RequestBody
-	 * StudentRequest studentRequest) { return studentService.save(studentRequest);
-	 * }
-	 */
->>>>>>> 9858c188d65babdb27dca64399198b4b1b4bbaf5
+
 
 	@PutMapping("api/students/update/{cid}")
 	public StudentResponse update(@RequestBody StudentRequest request, @PathVariable String cid) {
 		return studentService.update(request, cid);
 	}
 
-	@GetMapping()
+	@GetMapping("api/students")
 	public List<StudentResponse> getAll() {
 		return studentService.getAll();
 	}
@@ -102,8 +96,8 @@ public class StudentController {
 	}
 
 	@DeleteMapping("api/students/{cid}")
-	public SuccessResponse delete(@RequestBody StudentRequest request, @PathVariable String cid) {
-		return studentService.delete(request, cid);
+	public SuccessResponse delete(@PathVariable String cid) {
+		return studentService.delete(cid);
 	}
 
 }
