@@ -7,7 +7,6 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.nxtlife.mgs.entity.school.Award;
-import com.nxtlife.mgs.util.AwardActivityPerformedId;
 
 public class AwardRequest {
 	
