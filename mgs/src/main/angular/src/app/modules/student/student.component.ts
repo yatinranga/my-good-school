@@ -12,8 +12,7 @@ export class StudentComponent implements OnInit {
   constructor(private studentService : StudentService,public authService : AuthService) { }
 
   ngOnInit() {
-    
+
   }
-  
 
 }

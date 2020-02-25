@@ -1,14 +1,19 @@
 @import '../../../app.component.scss';
 
+.banner {
+    width: 100%;
+    display: inline-block;
+    position: relative;
+}
 h1{
     font-size: 35px;
-    color: $headings-content-main;    
+    color: $nav-bar;
     text-align: center;
     margin: 25px 0;
 }
 h2{
     font-size: 26px;
-    color: $headings-content-main;    
+    color: $nav-bar;    
     text-align: left;
 }
 p{
@@ -20,11 +25,12 @@ h3{
     font-size: 22px;
     color: $black;
     text-align: left;
-    color: $headings-content-main;
+    color: $nav-bar;
 }
 .menu_content {
     width: 100%;
     display: inline-block;
     margin: 10px 0px;
 }
+
 
