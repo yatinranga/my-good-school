@@ -18,47 +18,48 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name","section"}))
-public class Grade extends BaseEntity{
+@DynamicUpdate(true)
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "section" }))
+public class Grade extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	Long id;
-	
+
 	@NotNull
 	private String name;
-	
+
 	@NotNull
 	@Column(unique = true)
 	private String cid;
-	
+
 	private String section;
-	
+
 	private Boolean active;
-	
+
 	@ManyToMany
-	@JoinTable(name = "school_grade",
-		joinColumns = { @JoinColumn(name = "school_id") },
-		inverseJoinColumns = { @JoinColumn(name = "grade_id") })
+	@JoinTable(name = "school_grade", joinColumns = { @JoinColumn(name = "school_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "grade_id") })
 	private List<School> schools;
-	
+
 	@ManyToOne
 	private Teacher teacher;
-	
-	@OneToMany(cascade = CascadeType.ALL ,fetch = FetchType.LAZY,mappedBy = "grade")
-	private List<Student> students;
-	
-	@OneToMany(cascade = CascadeType.ALL ,fetch = FetchType.LAZY,mappedBy = "grade")
-	private List<StudentSchoolGrade> studentSchoolGrades;
-	
-	@OneToMany(cascade = CascadeType.ALL ,fetch = FetchType.LAZY,mappedBy = "grade")
-	private List<TeacherSchoolGrade> teacherSchoolGrades;
 
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "grade")
+	private List<Student> students;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "grade")
+	private List<StudentSchoolGrade> studentSchoolGrades;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "grade")
+	private List<TeacherSchoolGrade> teacherSchoolGrades;
 
 	public String getName() {
 		return name;
@@ -107,7 +108,7 @@ public class Grade extends BaseEntity{
 	public void setTeacher(Teacher teacher) {
 		this.teacher = teacher;
 	}
-	
+
 	public String getCid() {
 		return cid;
 	}
@@ -123,7 +124,7 @@ public class Grade extends BaseEntity{
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	public List<StudentSchoolGrade> getStudentSchoolGrades() {
 		return studentSchoolGrades;
 	}
@@ -161,7 +162,7 @@ public class Grade extends BaseEntity{
 	}
 
 	public Grade() {
-		
+
 	}
-	
+
 }

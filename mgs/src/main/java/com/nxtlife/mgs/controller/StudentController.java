@@ -96,8 +96,8 @@ public class StudentController {
 	}
 
 	@DeleteMapping("api/students/{cid}")
-	public SuccessResponse delete(@RequestBody StudentRequest request, @PathVariable String cid) {
-		return studentService.delete(request, cid);
+	public SuccessResponse delete(@PathVariable String cid) {
+		return studentService.delete(cid);
 	}
 
 }

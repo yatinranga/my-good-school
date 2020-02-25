@@ -173,7 +173,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 		if (request.getSchoolId() != null) {
 			School school = schoolRepository.getOneByCidAndActiveTrue(request.getSchoolId());
-			if(school == null )
+			if (school == null)
 				throw new ValidationException(String.format("School with id : %s not found.", request.getSchoolId()));
 			student.setSchool(school);
 			if (request.getGradeId() != null)
@@ -593,7 +593,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	}
 
 	@Override
-	public SuccessResponse delete(StudentRequest request, String cid) {
+	public SuccessResponse delete(String cid) {
 		if (cid == null) {
 			throw new ValidationException("student id can't be null");
 		}
@@ -604,12 +604,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			throw new NotFoundException(String.format("student having id [%s] can't exist", cid));
 		}
 
-		student = request.toEntity(student);
 		student.setActive(false);
 		studentRepository.save(student);
-		// update(request, cid);
-
-		// studentRepository.deleteByCid(cid);
 
 		student = studentRepository.findByCidAndActiveTrue(cid);
 
