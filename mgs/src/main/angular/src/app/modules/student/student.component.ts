@@ -8,11 +8,10 @@ import { StudentService } from 'src/app/services/student.service';
 })
 export class StudentComponent implements OnInit {
 
-  constructor(private studentService : StudentService) { }
+  constructor(private studentService: StudentService) { }
 
   ngOnInit() {
-    
+
   }
-  
 
 }

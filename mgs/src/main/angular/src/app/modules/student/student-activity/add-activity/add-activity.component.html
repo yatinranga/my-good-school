@@ -32,13 +32,15 @@
                                 formControlName="addActivityDate" />
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="input-field">
-                            <input class="choosefile" type="file" name="selectedFile" (change)="onFileSelect($event)"
-                                multiple />
-                            <span class="choosefile choosefile-custom"> <i class="fa fa-file"></i> </span>
+                    <div class="choosefile_box">
+                        <div class="form-group">
+                            <div class="input-field">
+                                <input class="choosefile" type="file" name="selectedFile"
+                                    (change)="onFileSelect($event)" multiple />
+                                <span class="choosefile choosefile-custom"> <i class="fa fa-file"></i> </span>
+                            </div>
+                            <button class="btn btnSubmit btn-success" type="submit">Save</button>
                         </div>
-                        <button class="btn btnSubmit btn-success" type="submit">Save</button>
                     </div>
                 </div>
             </div>

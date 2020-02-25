@@ -23,8 +23,6 @@ span.choosefile.choosefile-custom {
     border-radius: 0px;
 }
 button.btn.btnSubmit.btn-success {
-    background: $sidebar;
-    border: 1px solid $sidebar;
     box-shadow: none;
     border-radius: 0px;
 }
@@ -38,4 +36,10 @@ textarea.form-control.add.ng-untouched.ng-pristine.ng-valid {
     line-height: 15px !important;
     font-size: 17px !important;
     text-align: left !important;
+}
+
+.choosefile_box {
+    width: 100%;
+    display: inline-block;
+    text-align: center;
 }
