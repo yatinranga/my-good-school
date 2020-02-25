@@ -11,8 +11,6 @@
 }
 
 .sidebar{
-    width: 350px;
-    background-color: red;
     float: left;
 }
 .main .content_main {
@@ -24,7 +22,7 @@
     float: left;
     display: inline-block;
     background: $sidebar;
-    height: 100vw;
+    height: 100vh;
 }
 
 .nav-bar {

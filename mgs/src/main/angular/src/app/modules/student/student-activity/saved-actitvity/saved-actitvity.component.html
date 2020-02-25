@@ -5,29 +5,42 @@
                 <tr>
                     <th scope="col">S no.</th>
                     <th scope="col">Activity</th>
-                    <th scope="col">Activity Date</th>
-                    <th scope="col">Activity Details</th>
-                    <th scope="col">Activity Status</th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
+                    <th scope="col"> Date</th>
+                    <th scope="col"> Details</th>
+                    <th scope="col"> Status</th>
+                    <th scope="col" colspan="2"> Action </th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let savedactivitiesarr of savedActivitiesArr ; let i = index;">
-                    <td>{{i+1}}</td>
-                    <td>{{savedactivitiesarr.activityName}}</td>
-                    <td>{{savedactivitiesarr.dateOfActivity}}</td>
-                    <td>
-                        <div>{{savedactivitiesarr.description}}</div>
-                    </td>
-                    <td>Saved</td>
-                    <td>
-                        <button (click)="submitSavedActivity(i)">Submit</button>
-                    </td>
-                    <td>
-                        <button (click)="editSelectedActivities(i)">Edit</button>
-                    </td>
+                    <tr *ngFor="let savedactivitiesarr of savedActivitiesArr ; let i = index;">
+                            <td>{{i+1}}</td>
+                            <td>{{savedactivitiesarr.activityName}}</td>
+                            <td>{{savedactivitiesarr.dateOfActivity}}</td>
+                            <td>
+                                <div>{{savedactivitiesarr.description}}</div>
+                            </td>
+                            <td>Saved</td>
+                            <td>
+                                <button (click)="submitSavedActivity(i)">Submit</button>
+                            </td>
+                            <td>
+                                <button (click)="editSelectedActivities(i)">Edit</button>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="submit table">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">S no.</th>
+                    <th scope="col">Activity</th>
+                    <th scope="col"> Date</th>
+                    <th scope="col"> Details</th>
+                    <th scope="col"> Status</th>
+                    <th scope="col">View</th>
                 </tr>
+            </thead>
+            <tbody>
                 <tr *ngFor="let submittedactivitiesarr of submittedActivitiesArr ; let i = index;">
                     <td>{{i+1}}</td>
                     <td>{{submittedactivitiesarr.activityName}}</td>
@@ -36,8 +49,7 @@
                         <div>{{submittedactivitiesarr.description}}</div>
                     </td>
                     <td>Submitted</td>
-                    <td></td>
-                    <td></td>
+                    <td> <button> View </button> </td>
                 </tr>
             </tbody>
         </table>
@@ -56,7 +68,7 @@
                             <div class="form-group">Select Activity :
                                 <select class="form-control" (ngModelChange)="getStudentCoach($event)"
                                     formControlName="savedActivityId">
-                                    <option value="" selected ></option>
+                                    <option value="" selected></option>
                                     <option *ngFor="let activity of activities; let i = index" value={{activity.id}}>
                                         {{activity.name}}</option>
                                 </select>

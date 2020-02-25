@@ -141,7 +141,10 @@ th{
     font-weight: bold;
 }
 table.table, tr, th, td{
-    border: 1px solid #333 !important;
+    border: 1px solid #999 !important;
+}
+table.submit.table, tr, th, td{
+border: 1px solid #555 !important;
 }
 .table_main{
     // margin-top: 50px;

@@ -15,7 +15,7 @@ export class SavedActitvityComponent implements OnInit {
   activities = [];
   coaches = [];
   schoolId: any;
-  studentId : any;
+  studentId: any;
   editActivity = false;
   savedActivityForm: FormGroup;
   savedActivityId: any;
@@ -26,9 +26,9 @@ export class SavedActitvityComponent implements OnInit {
 
   ngOnInit() {
     this.studentInfo = JSON.parse(localStorage.getItem('user_info'));
-    this.studentId = this.studentInfo['student'].id
+    this.studentId = this.studentInfo['student'].id;
     this.schoolId = this.studentInfo['student'].schoolId;
-    
+
     // this.getStudentSavedActivities(this.studentInfo['student'].id)
     this.getStudentSavedActivities(this.studentId);
     this.getStudentSubmittedActivities(this.studentId);
@@ -39,7 +39,7 @@ export class SavedActitvityComponent implements OnInit {
       savedActivityDate: [''],
       savedCoachId: [''],
       attachment: ['']
-    })
+    });
   }
 
   // to get the list of SAVED Activities of student
@@ -50,7 +50,7 @@ export class SavedActitvityComponent implements OnInit {
       (err) => console.log(err));
   }
   // to get the list of SUBMITTED Activities of student
-  getStudentSubmittedActivities(studentId){
+  getStudentSubmittedActivities(studentId) {
     this.studentService.getSubmittedActivity(studentId).subscribe((res) => {
       this.submittedActivitiesArr = res;
       console.log(this.submittedActivitiesArr);
@@ -91,14 +91,13 @@ export class SavedActitvityComponent implements OnInit {
 
   // to UPDATE the saved activity
   updateActivity() {
-    
   }
 
   onFileSelect(event) {  }
 
   // to SUBMIT the activity
   submitSavedActivity(index) {
-    let activityPerformedId = this.savedActivitiesArr[index].id;
+    const activityPerformedId = this.savedActivitiesArr[index].id;
     this.studentService.submitActivity(activityPerformedId).subscribe((res) => {
       console.log(res);
       this.alertService.showSuccessToast('Activity Submitted !');
