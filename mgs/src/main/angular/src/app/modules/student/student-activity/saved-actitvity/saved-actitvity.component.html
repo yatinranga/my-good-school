@@ -15,89 +15,74 @@
             <tbody>
                 <tr *ngFor="let savedactivitiesarr of savedActivitiesArr ; let i = index;">
                     <td>{{i+1}}</td>
-                    <td>{{savedactivitiesarr.activityId}}</td>
+                    <td>{{savedactivitiesarr.activityName}}</td>
                     <td>{{savedactivitiesarr.dateOfActivity}}</td>
                     <td>
                         <div>{{savedactivitiesarr.description}}</div>
                     </td>
-                    <td>{{savedactivitiesarr.activityStatus}}</td>
+                    <td>Saved</td>
                     <td>
-                        <button>Submit</button>
+                        <button (click)="submitSavedActivity(i)">Submit</button>
                     </td>
                     <td>
                         <button (click)="editSelectedActivities(i)">Edit</button>
                     </td>
+                </tr>
+                <tr *ngFor="let submittedactivitiesarr of submittedActivitiesArr ; let i = index;">
+                    <td>{{i+1}}</td>
+                    <td>{{submittedactivitiesarr.activityName}}</td>
+                    <td>{{submittedactivitiesarr.dateOfActivity}}</td>
+                    <td>
+                        <div>{{submittedactivitiesarr.description}}</div>
+                    </td>
+                    <td>Submitted</td>
+                    <td></td>
+                    <td></td>
                 </tr>
             </tbody>
         </table>
     </div>
 </div>
 
+<!-- Edit Activity Form -->
 <div *ngIf="editActivity">
-    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              ...
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    <!-- <form [formGroup]="savedActivityForm" (ngSubmit)="updateActivity()">
+    <form [formGroup]="savedActivityForm" (ngSubmit)="updateActivity()">
         <div class="container register-form">
             <div class="form">
                 <div class="form-content">
                     <div class="row">
                         <div class="col-md-6">
+                            <h4>Edit Activity :</h4>
                             <div class="form-group">Select Activity :
                                 <select class="form-control" (ngModelChange)="getStudentCoach($event)"
-                                    formControlName="addActivityId">
-                                    <option value="" disabled selected>Select Activity </option>
-                                    <option *ngFor="let activity of activities; let i = index;" value={{activity.id}}>
-                                        {{activity.name}}
-                                    </option>
+                                    formControlName="savedActivityId">
+                                    <option value="" selected ></option>
+                                    <option *ngFor="let activity of activities; let i = index" value={{activity.id}}>
+                                        {{activity.name}}</option>
                                 </select>
                             </div>
                             <div class="form-group">Enter Activity Details :
-                                <textarea class="form-control" placeholder="Your Name"
-                                    formControlName="addActivityDetails"></textarea>
-                            </div>
-                            <div class="form-group">Enter Activity Date :
-                                <input type="date" class="form-control" placeholder="Session Start Date"
-                                    formControlName="addActivityDate" />
+                                <textarea class="form-control add" placeholder="Details"
+                                    formControlName="savedActivityDetails"></textarea>
                             </div>
                             <div class="form-group">Select Teacher/Coach :
-                                <select class="form-control" formControlName="addCoachId">
+                                <select class="form-control" formControlName="savedCoachId">
                                     <option value="" disabled selected>Select Teacher/Coach </option>
                                     <option *ngFor="let coach of coaches; let i = index;" value={{coach.id}}>
                                         {{coach.name}}
                                     </option>
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <div class="input-field">
-                                    <input class="choosefile" type="file" name="selectedFile"
-                                        (change)="onFileSelect($event)" multiple />
-                                    <span class="choosefile choosefile-custom"> <i class="fa fa-file"></i> </span>
-                                </div>
+                            <div class="form-group">Enter Activity Date :
+                                <input type="date" class="form-control" placeholder="Session Start Date"
+                                    formControlName="savedActivityDate" />
                             </div>
                         </div>
                     </div>
                 </div>
-                <button class="btn btnSubmit btn-success" type="submit">Save</button>
+                <button type="button">Cancel</button>
+                <button class="btn btnSubmit btn-success" type="submit">Update</button>
             </div>
         </div>
-    </form> -->
-
-
+    </form>
 </div>

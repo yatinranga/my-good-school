@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { StudentService } from 'src/app/services/student.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-student',
@@ -8,7 +9,7 @@ import { StudentService } from 'src/app/services/student.service';
 })
 export class StudentComponent implements OnInit {
 
-  constructor(private studentService : StudentService) { }
+  constructor(private studentService : StudentService,public authService : AuthService) { }
 
   ngOnInit() {
     

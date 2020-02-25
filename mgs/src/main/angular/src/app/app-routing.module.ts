@@ -25,6 +25,10 @@ const routes: Routes = [
     loadChildren: 'src/app/modules/student/student.module#StudentModule',
   },
   {
+    path: 'teacher',
+    loadChildren: 'src/app/modules/student/teacher.module#TeacherModule',
+  },
+  {
     path: '',
     redirectTo: '/login',
     pathMatch: 'full'
