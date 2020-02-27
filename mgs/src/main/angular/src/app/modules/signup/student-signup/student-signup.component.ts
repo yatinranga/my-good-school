@@ -35,7 +35,6 @@ export class StudentSignupComponent implements OnInit {
       subscriptionEndDate: new FormControl(''),
       guardians: new FormArray(this.giveGuardianFormArray())
     });
-    console.log(this.studentSignup);
   }
 
   get guardians() { return this.studentSignup.get('guardians') as FormArray }
@@ -72,7 +71,6 @@ export class StudentSignupComponent implements OnInit {
 
   onSubmit() {
     const payload =  this.studentSignup.value;
-    console.log(payload)
     this.studentService.uploadStudentDetails(payload).subscribe((res) => {
       this.alertService.showSuccessToast('SignUp Successfully')
       this.router.navigate(['./login'])

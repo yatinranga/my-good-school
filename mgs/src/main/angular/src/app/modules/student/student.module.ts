@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { HomeComponent } from './home/home.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 
-import { StudentAwardsComponent } from './student-awards/student-awards.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { StudentComponent } from './student.component';
 
+import { HomeComponent } from './home/home.component';
+import { StudentAwardsComponent } from './student-awards/student-awards.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SavedActitvityComponent } from './student-activity/saved-actitvity/saved-actitvity.component';
 import { ReviewedActitvityComponent } from './student-activity/reviewed-actitvity/reviewed-actitvity.component';
@@ -33,7 +33,7 @@ const routes: Routes = [
         component : StudentActivityComponent,
         children: [
           {
-            path: 'saved-activity',
+            path: '',
             component: SavedActitvityComponent
           },
           {
@@ -76,6 +76,7 @@ const routes: Routes = [
   ],
   imports: [
     CommonModule,
+    FormsModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
   ],

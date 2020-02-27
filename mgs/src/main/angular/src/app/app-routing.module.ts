@@ -14,19 +14,19 @@ const routes: Routes = [
     loadChildren: 'src/app/modules/admin/admin.module#AdminModule',
     canActivate: [AuthGuard]
   },
-  
+
   {
     path: 'signup',
-    loadChildren :'src/app/modules/signup/signup.module#SignupModule'
-    
+    loadChildren: 'src/app/modules/signup/signup.module#SignupModule'
+
   },
   {
     path: 'student',
-    loadChildren: 'src/app/modules/student/student.module#StudentModule',
+    loadChildren: 'src/app/modules/student/student.module#StudentModule'
   },
   {
     path: 'teacher',
-    loadChildren: 'src/app/modules/student/teacher.module#TeacherModule',
+    loadChildren: 'src/app/modules/teacher/teacher.module#TeacherModule'
   },
   {
     path: '',

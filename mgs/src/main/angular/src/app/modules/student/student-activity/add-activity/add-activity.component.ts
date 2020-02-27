@@ -65,7 +65,7 @@ export class AddActivityComponent implements OnInit {
   saveActivity() {
     const formData = new FormData();
     let date = new Date(this.addActivityForm.value.addActivityDate);
-    let activityDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+    let activityDate = date.getFullYear()+ "/" + (date.getMonth() + 1) + "/" +date.getDate()  ;
 
     formData.append('studentId', this.studentInfo.student.id);
     formData.append('activityId', this.addActivityForm.value.addActivityId);
@@ -77,12 +77,12 @@ export class AddActivityComponent implements OnInit {
       formData.append('fileRequests[' + index + '].file', element);
       console.log('fileRequests[' + index + '].file', element);
     });
+    console.log(this.addActivityForm.value);
 
     this.studentService.addActivity("/api/students/activities", formData).subscribe(
       (res) => {
         console.log(res);
         this.alertService.showSuccessToast('Activity Saved !');
-        window.location.reload();
       },
       (err) => console.log(err)
     );
