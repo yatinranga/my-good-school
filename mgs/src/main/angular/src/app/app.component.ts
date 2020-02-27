@@ -15,7 +15,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.userInfo = JSON.parse(localStorage.getItem('user_info'));
-    if(this.userInfo){
+    if (this.userInfo) {
       this.checkUserType(this.userInfo.userType);
     }
   }

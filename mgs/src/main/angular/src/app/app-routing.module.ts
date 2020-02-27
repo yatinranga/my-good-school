@@ -26,7 +26,7 @@ const routes: Routes = [
   },
   {
     path: 'teacher',
-    loadChildren: 'src/app/modules/student/teacher.module#TeacherModule',
+    loadChildren: 'src/app/modules/teacher/teacher.module#TeacherModule',
   },
   {
     path: '',

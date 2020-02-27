@@ -7,11 +7,15 @@ declare let $;
   templateUrl: './student.component.html',
   styleUrls: ['./student.component.scss']
 })
-export class StudentComponent implements OnInit {
+export class StudentComponent implements OnInit{
 
   constructor(private studentService: StudentService, public authService: AuthService) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
+    $('button').click(function(){
+      $('p:first').addClass('intro');
+    });
+
   }
 
 }

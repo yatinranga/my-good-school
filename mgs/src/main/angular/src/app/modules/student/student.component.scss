@@ -7,7 +7,6 @@
 .content_box{
     width: 80%;
     display: inline-block;
-    background: green;
 }
 
 .sidebar{
@@ -16,6 +15,7 @@
 .main .content_main {
     display: inline-block;
     width: calc(100% - 295px);
+    float: right;
 }
 .sidebar_main {
     width: 295px;
@@ -23,66 +23,75 @@
     display: inline-block;
     background: $sidebar;
     height: 100vh;
+    position: fixed;
 }
 
-.nav-bar {
-    background: $nav-bar;
+.navbar {
+    background: $navbar;
     color: #fafafa;
     display: inline-block;
     width: 100%;
-    padding: 15px 0;
+    padding: 10px 0;
     vertical-align: bottom;
 }
-.nav-bar .left{
+.navbar .left{
     float: left;
 }
-.nav-bar .right{
+.navbar .right{
     float: right;
 }
-.nav-bar ul{
-    display: flex;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    position: relative;
+
+.navbar i.fa {
+    font-size: 20px;
+    margin: 0 10px;
 }
-.nav-bar ul li a{
+.divider {
+    height: 0;
+    margin: 0;
+    overflow: hidden;
+    border-top: 1px solid $light;
+}
+.navbar ul li a{
     color: #fafafa !important;
     margin: 15px;
     font-size: 18px;
 }
-a.nav-bar:hover{
+a.navbar:hover{
     color: $light !important;
 }
-.nav-bar img {
+.navbar img {
     filter: invert(1);
     cursor: pointer;
 }
 .dropdown{
-    float: left;
-    margin: 0 20px;
+    position: relative;
+    display: inline-block;
 }
 .dropdown-content {
     display: none;
     position: absolute;
-    right: 0;
-    background-color: #f9f9f9;
-    min-width: 160px;
+    right: 10px;
+    background-color: $btn;
+    min-width: 200px;
     z-index: 1;
     transition: transform 0.6s;
+    top: 34px;
   }
   
   .dropdown-content a {
-    color: black;
-    padding: 10px 15px;
+    color: $light;
+    padding: 15px 10px;
     text-decoration: none;
     display: block;
   }
   
-  .dropdown-content a:hover {background-color: #f1f1f1;}
+  .dropdown-content a:hover {color: $black;}
   
   .dropdown:hover .dropdown-content {
     display: block;
+  }
+  .dropdown i.fa:hover{
+      color: #ddd;
   }
   
   i.fa.fa-sign-out {
@@ -92,7 +101,7 @@ a.nav-bar:hover{
 a.logout {
     color: #fafafa;
 }
-.nav-bar i.fa.fa-sign-out:hover {
+.navbar i.fa.fa-sign-out:hover {
     color: dimgray;
 }
 
