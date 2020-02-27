@@ -17,7 +17,6 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit() {
     this.studentService.getStudentInfo().subscribe((res) => {
-      console.log(res);
       this.studentDetailsArr = res;      
     },
       (err) => console.log(err)

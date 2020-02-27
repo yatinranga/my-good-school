@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Routes, RouterModule } from '@angular/router';
+
+import { TeacherComponent } from './teacher.component';
 import { TeacherHomeComponent } from './teacher-home/teacher-home.component';
 import { TeacherProfileComponent } from './teacher-profile/teacher-profile.component';
-import { Routes, RouterModule } from '@angular/router';
-import { TeacherComponent } from './teacher.component';
-import { ReactiveFormsModule } from '@angular/forms';
 import { TeacherSidebarComponent } from './teacher-sidebar/teacher-sidebar.component';
 
 const routes: Routes = [
@@ -30,7 +31,12 @@ const routes: Routes = [
 
 
 @NgModule({
-  declarations: [TeacherHomeComponent, TeacherProfileComponent, TeacherSidebarComponent],
+  declarations: [
+    TeacherHomeComponent, 
+    TeacherProfileComponent, 
+    TeacherSidebarComponent,
+    TeacherComponent
+  ],
   imports: [
     CommonModule,
     ReactiveFormsModule,

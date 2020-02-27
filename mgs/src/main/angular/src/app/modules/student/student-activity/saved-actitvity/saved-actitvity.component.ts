@@ -12,15 +12,23 @@ export class SavedActitvityComponent implements OnInit {
 
   studentInfo = [];
   savedActivitiesArr = [];
+  submittedActivitiesArr = [];
+  reviewedActivitiesArr = [];
+  allActivitiesArr = [];
   activities = [];
   coaches = [];
   schoolId: any;
   studentId: any;
   editActivity = false;
   savedActivityForm: FormGroup;
-  savedActivityId: any;
-
-  submittedActivitiesArr = [];
+  
+  activityName : any;
+  activityDetails: any;
+  activityTeacher: any;
+  activityId: any;
+  file = [];
+  url = '';
+  activityType = "Saved";
 
   constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService) { }
 
@@ -32,8 +40,12 @@ export class SavedActitvityComponent implements OnInit {
     // this.getStudentSavedActivities(this.studentInfo['student'].id)
     this.getStudentSavedActivities(this.studentId);
     this.getStudentSubmittedActivities(this.studentId);
+    this.getStudentAllActivities(this.studentId);
+    
+    // this.getStudentActivity(this.schoolId);
 
     this.savedActivityForm = this.formBuilder.group({
+      savedActivityName: [''],
       savedActivityId: [''],
       savedActivityDetails: [''],
       savedActivityDate: [''],
@@ -53,7 +65,15 @@ export class SavedActitvityComponent implements OnInit {
   getStudentSubmittedActivities(studentId) {
     this.studentService.getSubmittedActivity(studentId).subscribe((res) => {
       this.submittedActivitiesArr = res;
-      console.log(this.submittedActivitiesArr);
+    },
+    (err) => console.log(err)
+    );
+  }
+
+  // to get the list of ALL Activities of student
+  getStudentAllActivities(studentId){
+    this.studentService.getAllActivity(studentId).subscribe((res) => {
+      this.allActivitiesArr = res;
     },
     (err) => console.log(err)
     );
@@ -61,39 +81,63 @@ export class SavedActitvityComponent implements OnInit {
 
   // on click of edit button
   editSelectedActivities(index) {
-    // this.savedActivityId = this.savedActivitiesArr[index].id;
-    // this.savedActivityForm.controls['savedActivityId'].patchValue(this.savedActivityId);
-    // this.savedActivityForm.value.savedActivityDate = this.savedActivitiesArr[index].dateOfActivity;
-    // this.savedActivityForm.value.savedActivityDetails = this.savedActivitiesArr[index].description;
-    // this.savedActivityForm.value.savedCoachId = this.savedActivitiesArr[index].teacherId;
+    this.activityName = this.savedActivitiesArr[index]['activityName'];
+    this.activityDetails = this.savedActivitiesArr[index]['description'];
+    this.activityTeacher = this.savedActivitiesArr[index]['teacherName'];
+    this.activityId = this.savedActivitiesArr[index]['activityId'];
 
-    // console.log(this.savedActivityForm.value);
+    this.getStudentActivity(this.schoolId);
+
     console.log(this.savedActivitiesArr[index]);
-    // console.log(this.editActivity);
     return this.editActivity = !this.editActivity;
   }
 
   // to get all activities of particular school
   getStudentActivity(schoolId) {
-    this.studentService.getActivity(schoolId).subscribe(
-      (res) => this.activities = res,
+    this.studentService.getActivity(schoolId).subscribe((res) => {
+      this.activities = res;
+      this.getStudentCoach(this.activityId);
+    },
       (err) => console.log(err)
     );
-  }
+}
 
   // to get teacher/coach who perform selected activity
   getStudentCoach(activityId) {
-    this.studentService.getCoach(this.schoolId, activityId).subscribe(
-      (res) => this.coaches = res,
+    this.studentService.getCoach(this.schoolId, activityId).subscribe((res) => {
+      this.coaches = res;
+      console.log(res);
+    },
       (err) => console.log(err)
     );
   }
 
   // to UPDATE the saved activity
   updateActivity() {
+<<<<<<< HEAD
+=======
+    console.log(this.savedActivityForm.value);
+>>>>>>> a64e0cd35c0933bcb4d4ea2a7ba4ee93dcaf8f43
   }
 
-  onFileSelect(event) {  }
+  onFileSelect(event) {
+    
+      var reader = new FileReader();
+      this.file = [...event.target.files];
+      this.file.forEach((element,index) => console.log(this.file[index]));
+
+      reader.readAsDataURL(event.target.files[0]); // read file as data url
+
+      reader.onload = (event) => { // called once readAsDataURL is completed
+        // this.url = event.target.result;
+      }
+    
+    // if (event.target.files.length > 0) {
+    //   this.file = [...event.target.files];
+    //   console.log(this.file)
+    //   this.file.forEach((element,index) => console.log(this.file[index]['name']))
+    // }
+  }
 
   // to SUBMIT the activity
   submitSavedActivity(index) {
@@ -106,4 +150,16 @@ export class SavedActitvityComponent implements OnInit {
     );
   }
 
+<<<<<<< HEAD
 }
+=======
+  activityView(event){
+      this.activityType = event;
+  }
+
+  getDate(date){
+    return new Date(date)
+  }
+
+}
+>>>>>>> a64e0cd35c0933bcb4d4ea2a7ba4ee93dcaf8f43

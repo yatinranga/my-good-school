@@ -15,6 +15,11 @@ export class StudentService {
     return this.http.post(url, data);
   }
 
+  uploadTeacherDetails(data) {
+    const url = "/teachers/signUp"
+    return this.http.post(url, data);
+  }
+
   // to get profile of student
   getProfile(studentId) {
     return this.http.get("/api/students/" + studentId);
@@ -48,6 +53,11 @@ export class StudentService {
   // to get SUBMITTED Activities of student
   getReviewedActivity(studentCid) {
     return this.http.get("/api/students/activities?status=reviewed&studentId=" + studentCid);
+  }
+
+  // to get ALL Activities of student
+  getAllActivity(studentCid) {
+    return this.http.get("/api/students/activities?studentId=" + studentCid);
   }
 
   // to get teacher/coaches who perform particular activity
