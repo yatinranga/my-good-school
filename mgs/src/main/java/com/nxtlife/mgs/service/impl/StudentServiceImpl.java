@@ -16,6 +16,8 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -106,7 +108,11 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 		Long studsequence = sequenceGeneratorService.findSequenceByUserType(UserType.Student);
 		if (studsequence == null) {
-			sequenceGeneratorRepo.save(new SequenceGenerator(UserType.Student, 0l));
+			SequenceGenerator seqGen = sequenceGeneratorService.save(new SequenceGenerator(UserType.Student, 0l));
+			if(seqGen == null)
+				studsequence=0l;
+			else
+				studsequence = seqGen.getSequence();
 		}
 		++studsequence;
 		request.setUsername(String.format("STU%08d", studsequence));
@@ -139,7 +145,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			for (GuardianRequest greq : request.getGuardians()) {
 				Long sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
 				if (sequence == null) {
-					sequenceGeneratorRepo.save(new SequenceGenerator(UserType.Parent, 0l));
+					sequenceGeneratorService.save(new SequenceGenerator(UserType.Parent, 0l));
 				}
 				++sequence;
 				greq.setUsername(String.format("GRD%08d", sequence));
@@ -374,6 +380,9 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 			}
 		}
+		Map<String,Object> err = new HashMap<String, Object>();
+		err.put("errors", errors);
+		rows.add(err);
 		return rows;
 	}
 
@@ -392,21 +401,20 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Map<String, List<Object>> uploadStudentsFromExcel(MultipartFile file, String schoolCid) {
+	public ResponseEntity<?> uploadStudentsFromExcel(MultipartFile file, String schoolCid) {
 		if (file == null || file.isEmpty() || file.getSize() == 0)
 			throw new ValidationException("Pls upload valid excel file.");
-//				|| !(file.getContentType().equalsIgnoreCase("xlsx") || file.getContentType().equalsIgnoreCase("xls")
-//						|| file.getContentType().equalsIgnoreCase("xlsb")
-//						|| file.getContentType().equalsIgnoreCase("xlsm")))
 
 		List<String> errors = new ArrayList<String>();
 		List<StudentResponse> studentResponseList = new ArrayList<>();
 		List<Map<String, Object>> studentsRecords = new ArrayList<Map<String, Object>>();
-		Map<String, List<Object>> responseMap = new HashMap<String, List<Object>>();
+		
 		try {
 			XSSFWorkbook studentsSheet = new XSSFWorkbook(file.getInputStream());
 			studentsRecords = findSheetRowValues(studentsSheet, "STUDENT", errors);
+			errors = (List<String>) studentsRecords.get(studentsRecords.size()-1).get("errors");
 			for (int i = 0; i < studentsRecords.size(); i++) {
 				List<Map<String, Object>> tempStudentsRecords = new ArrayList<Map<String, Object>>();
 				tempStudentsRecords.add(studentsRecords.get(i));
@@ -417,12 +425,10 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 			throw new ValidationException("something wrong happened may be file not in acceptable format.");
 		}
-
-		responseMap.put("StudentResponseList", (List) studentResponseList);
-		responseMap.put("errors", (List) errors);
-
-//		findSheetRowValues(studentsSheet,"STUDENT",);
-		return responseMap;
+		Map<String, Object> responseMap = new HashMap<String, Object>();
+		responseMap.put("StudentResponseList",studentResponseList);
+		responseMap.put("errors",  errors);
+		return new ResponseEntity<Map<String, Object>>(responseMap, HttpStatus.OK);
 	}
 
 	private StudentRequest validateStudentRequest(List<Map<String, Object>> studentDetails, List<String> errors,
@@ -433,8 +439,9 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		StudentRequest studentRequest = new StudentRequest();
 		studentRequest.setName((String) studentDetails.get(0).get("NAME"));
 //		studentRequest.setUsername((String) studentDetails.get(0).get("USERNAME"));
-		studentRequest.setDob(
-				DateUtil.convertStringToDate(DateUtil.formatDate((Date) studentDetails.get(0).get("DOB"), null, null)));
+//		studentRequest.setDob(
+//				DateUtil.convertStringToDate(DateUtil.formatDate((Date) studentDetails.get(0).get("DOB"), null, null)));
+		studentRequest.setDob(DateUtil.formatDate((Date) studentDetails.get(0).get("DOB"), null, null));
 		School school = schoolRepository.findByCidAndActiveTrue(schoolCid);
 //		if (studentDetails.get(0).get("SCHOOL") != null)
 //			school = schoolRepository.findByName((String) studentDetails.get(0).get("SCHOOL"));

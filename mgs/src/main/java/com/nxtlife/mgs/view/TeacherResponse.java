@@ -20,9 +20,9 @@ public class TeacherResponse {
 	private String gender;
 	private String mobileNumber;
 	private String email;
-	private Date dob;
+	private String dob;
 	private String qualification;
-	private List<String> grades;
+	private List<GradeResponse> grades;
 	private List<String> activities;
 	private String schoolName;
 	private Boolean active;
@@ -84,12 +84,12 @@ public class TeacherResponse {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
-	public Date getDob() {
+	
+	public String getDob() {
 		return dob;
 	}
 
-	public void setDob(Date dob) {
+	public void setDob(String dob) {
 		this.dob = dob;
 	}
 
@@ -100,12 +100,12 @@ public class TeacherResponse {
 	public void setQualification(String qualification) {
 		this.qualification = qualification;
 	}
-
-	public List<String> getGrades() {
+	
+	public List<GradeResponse> getGrades() {
 		return grades;
 	}
 
-	public void setGrades(List<String> grades) {
+	public void setGrades(List<GradeResponse> grades) {
 		this.grades = grades;
 	}
 
@@ -160,7 +160,7 @@ public class TeacherResponse {
 		this.gender = teacher.getGender();
 		this.mobileNumber = teacher.getMobileNumber();
 		this.email = teacher.getEmail();
-		this.dob = teacher.getDob();
+		this.dob = teacher.getDob().toString();
 		this.qualification = teacher.getQualification();
 		this.active = teacher.getActive();
 		this.isManagmentMember = teacher.getIsManagmentMember();
@@ -168,10 +168,10 @@ public class TeacherResponse {
 		if (teacher.getSchool() != null)
 			this.schoolName = teacher.getSchool().getName();
 		if (teacher.getGrades() != null && !teacher.getGrades().isEmpty()) {
-			if (grades == null)
-				grades = new ArrayList<String>();
+//			if (grades == null)
+				grades = new ArrayList<GradeResponse>();
 			for (Grade grade : teacher.getGrades()) {
-				grades.add(String.format("%s %s", grade.getName(), grade.getSection()));
+				grades.add(new GradeResponse(grade));
 			}
 		}
 
@@ -185,6 +185,26 @@ public class TeacherResponse {
 				activities.add(String.format("%s", activity.getName()));
 			}
 		}
+	}
+	
+	public TeacherResponse(Teacher teacher , Boolean teacherResponseForUser) {
+		this.id = teacher.getcId();
+
+		if(teacher.getUser() != null)
+		  this.userId = teacher.getUser().getCid();
+	
+		this.username = teacher.getUsername();
+		this.name = teacher.getName();
+		this.gender = teacher.getGender();
+		this.mobileNumber = teacher.getMobileNumber();
+		this.email = teacher.getEmail();
+		this.dob = teacher.getDob().toString();
+		this.qualification = teacher.getQualification();
+		this.active = teacher.getActive();
+		if (teacher.getSchool() != null)
+			this.schoolName = teacher.getSchool().getName();
+		
+
 	}
 
 }

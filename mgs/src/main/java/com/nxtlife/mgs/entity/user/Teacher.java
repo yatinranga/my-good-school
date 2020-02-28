@@ -84,7 +84,7 @@ public class Teacher extends BaseEntity {
 	@ManyToOne
 	private School school;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "teacher")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "teacher")
 	private List<Grade> grades;
 
 //	@ManyToMany(mappedBy = "teachers")
@@ -96,9 +96,7 @@ public class Teacher extends BaseEntity {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "teacher")
 	private List<TeacherSchoolGrade> teacherSchoolGrades;
 
-	@ManyToMany
-	@JoinTable(name = "teacher_activity", joinColumns = { @JoinColumn(name = "teacher_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "activity_id") })
+	@ManyToMany(mappedBy = "teachers")
 	private List<Activity> activities;
 
 //	@ManyToMany(mappedBy = "teachers")

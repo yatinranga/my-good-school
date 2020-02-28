@@ -3,9 +3,12 @@ package com.nxtlife.mgs.view;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.nxtlife.mgs.entity.school.Award;
 import com.nxtlife.mgs.entity.school.AwardActivityPerformed;
 
+@JsonInclude(value = Include.NON_ABSENT)
 public class AwardResponse {
 
 	private String name;

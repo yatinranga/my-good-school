@@ -8,6 +8,7 @@ import com.nxtlife.mgs.view.ActivityPerformedRequest;
 import com.nxtlife.mgs.view.ActivityPerformedResponse;
 import com.nxtlife.mgs.view.FileRequest;
 import com.nxtlife.mgs.view.FileResponse;
+import com.nxtlife.mgs.view.SuccessResponse;
 
 public interface ActivityPerformedService {
 
@@ -56,5 +57,9 @@ public interface ActivityPerformedService {
 
 	List<ActivityPerformedResponse> getAllActivityOfStudentByActivityId(String studentCid, String activityCid,
 			String activityStatus);
+
+	SuccessResponse deleteActivityOfStudent(String activityPerformedCid);
+
+	List<ActivityPerformedResponse> getAllPerformedActivitiesOfStudent(String studentCid);
 
 }

@@ -15,6 +15,8 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,22 +49,21 @@ public class GradeServiceImpl extends BaseService implements GradeService {
 	public GradeResponse save(GradeRequest request) {
 		if(request == null)
 			throw new ValidationException("Request can not be null.");
-//		if(request.getSchoolId()==null)
-//			throw new ValidationException("Please provide the school id to which this section will belong.");
-//		School school = schoolRepository.getOneByCid(request.getSchoolId()); 
-//		if(school!=null)
-//			throw new ValidationException(String.format("school with id: %d does not exist.", request.getSchoolId()));
-		Grade grade = request.toEntity();
-		try {
+		
+		if(request.getGrade()==null || request.getSection()==null)
+			throw new ValidationException("Grade and section cannot be null.");
+		
+		Grade grade = gradeRepository.findByNameAndSectionAndActiveTrue(request.getGrade(),request.getSection());
+		if(grade !=null)
+			throw new ValidationException(String.format("Grade %s-%s already exist.",request.getGrade(),request.getSection() ));
+		    
+		grade = request.toEntity();
+		
 			grade.setCid(utils.generateRandomAlphaNumString(8));
-		} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
-			grade.setCid(utils.generateRandomAlphaNumString(8));
-		}
-//		List<School> schoolList = new ArrayList<School>();
-//		schoolList.add(school);
-//		grade.setSchools(schoolList);
+	
 		if(request.getSchoolIds()!=null && !request.getSchoolIds().isEmpty()) {
-			List<School> schools = schoolRepository.findAll();
+			List<School> schools = schoolRepository.findAllByActiveTrue();
+//			List
 			for(int i =0;i<schools.size();i++) {
 				if(!request.getSchoolIds().contains(schools.get(i).getCid()))
 					schools.remove(i);
@@ -86,7 +87,7 @@ public class GradeServiceImpl extends BaseService implements GradeService {
 	}
 	
 	@Override
-	public List<GradeResponse> uploadGradesFromExcel(MultipartFile file) {
+	public ResponseEntity<?> uploadGradesFromExcel(MultipartFile file ,String schoolCid) {
 		if (file == null || file.isEmpty() || file.getSize() == 0)
 			throw new ValidationException("Pls upload valid excel file.");
 
@@ -96,26 +97,34 @@ public class GradeServiceImpl extends BaseService implements GradeService {
 		try {
 			XSSFWorkbook gradesheet = new XSSFWorkbook(file.getInputStream());
 			gradeRecords = findSheetRowValues(gradesheet, "GRADE", errors);
+			errors = (List<String>) gradeRecords.get(gradeRecords.size()-1).get("errors");
 			for (int i = 0; i < gradeRecords.size(); i++) {
 				List<Map<String, Object>> tempGradesRecords = new ArrayList<Map<String, Object>>();
 				tempGradesRecords.add(gradeRecords.get(i));
-				gradeResponseList.add(save(validateGradeRequest(tempGradesRecords, errors)));
+				gradeResponseList.add(save(validateGradeRequest(tempGradesRecords, errors,schoolCid)));
 			}
 
 		} catch (IOException e) {
 
 			throw new ValidationException("something wrong happened may be file not in acceptable format.");
 		}
-
-		return gradeResponseList;
+		Map<String, Object> responseMap = new HashMap<String, Object>();
+		responseMap.put("GradeResponseList",gradeResponseList);
+		responseMap.put("errors",  errors);
+		return new ResponseEntity<Map<String, Object>>(responseMap, HttpStatus.OK);
 	}
 
-	private GradeRequest validateGradeRequest(List<Map<String, Object>> gradeDetails, List<String> errors) {
+	private GradeRequest validateGradeRequest(List<Map<String, Object>> gradeDetails, List<String> errors, String schoolCid) {
 		if(gradeDetails==null || gradeDetails.isEmpty())
 			errors.add("Grade details not found");
 		GradeRequest gradeRequest = new GradeRequest();
 		gradeRequest.setGrade((String) gradeDetails.get(0).get("GRADE"));
 		gradeRequest.setSection((String) gradeDetails.get(0).get("SECTION"));
+		if(schoolCid==null)
+			throw new ValidationException("School Id cannot be null.");
+		School school = schoolRepository.findByCidAndActiveTrue(schoolCid);
+		if(school== null)
+			throw new ValidationException(String.format("No School found with id : %s ",schoolCid));
 		
 //		School school = null;
 //		if (gradeDetails.get(0).get("SCHOOL") != null)

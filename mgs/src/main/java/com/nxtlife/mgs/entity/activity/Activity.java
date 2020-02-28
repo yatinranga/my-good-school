@@ -46,12 +46,14 @@ public class Activity extends BaseEntity {
 			@JoinColumn(name = "focus_area_id") })
 	private List<FocusArea> focusAreas;
 
-	@ManyToMany(mappedBy = "activities")
+	@ManyToMany
+	@JoinTable(name = "teacher_activity", joinColumns = { @JoinColumn(name = "activity_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "teacher_id") })
 	private List<Teacher> teachers;
 
 	@ManyToMany
-	@JoinTable(name = "school_activity", joinColumns = { @JoinColumn(name = "school_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "activity_id") })
+	@JoinTable(name = "school_activity", joinColumns = { @JoinColumn(name = "activity_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "school_id") })
 	private List<School> schools;
 
 	public String getName() {

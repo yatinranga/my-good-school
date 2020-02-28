@@ -1,11 +1,31 @@
-<br>
+<h4>Student Profile </h4>
+<div>
+    <label>Name : {{studentDetails['name']}}</label><br>
+    <label>Gender : {{studentDetails['gender']}}</label><br>
+    <label>Email : {{studentDetails['email']}}</label><br>
+    <label>Mobile Number : {{studentDetails['mobileNumber']}}</label><br>
+    <label>DOB : {{studentDetails['dob']}}</label><br><br>
+    <div *ngFor="let sd of studentDetails['guardianResponseList']; let i = index ">
+        <div> Guardian {{i+1}}<br>
+        <label>Guardian Name : {{sd['name']}}</label><br>
+        <label>Guardian Email : {{sd['email']}}</label><br>
+        <label>Guardian MOB : {{sd['mobileNumber']}}</label><br>
+        <label>Guardian Relationship: {{sd['relationship']}}</label><br>
+        </div>
+    </div>
+
+</div>
+
+
+
+<!-- <br>
 <div *ngIf="editForm == 'Student Profile'">
-    <!-- <div *ngFor="let detail of studentDetailsArr">
-        <label>detail</label><br> -->
+    <div *ngFor="let detail of studentDetailsArr">
+        <label>detail</label><br>
         <label>Name : </label> {{studentProfile.value.studentName}}<br>
         <label>Email : </label> {{studentProfile.value.studentEmail}}<br>
         <label>Mob : </label>  {{studentProfile.value.studentDob}}<br>
-    <!-- </div> -->
+     </div> 
     <button (click)="setEditForm('Edit Profile')">Edit</button>
 </div>
 
@@ -43,7 +63,7 @@
                                     <option value="Female">Female</option>
                                 </select>
                             </div>
-                            <!-- <div class="form-group">Select School :
+                            <div class="form-group">Select School :
                                 <select class="form-control" formControlName="schoolId">
                                     <option value="" disabled selected>Select School </option>
                                     <option *ngFor="let school of schoolsList; let i = index;" value={{school.id}}>
@@ -53,7 +73,7 @@
                             <div class="form-group">Session Start Date :
                                 <input type="date" class="form-control" placeholder="Session Start Date"
                                     formControlName="" />
-                            </div> -->
+                            </div>
                             <div class="form-group">Subscription End Date :
                                 <input type="date" class="form-control" placeholder="Subscription end"
                                     formControlName="studentSubscriptionEndDate" />
@@ -68,4 +88,4 @@
             <button type="submit" (click)="setEditForm('Student Profile')">Submit</button>
         </div>
     </form>
-</div>
+</div>  -->

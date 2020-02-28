@@ -50,7 +50,7 @@ public class User extends BaseEntity implements UserDetails {
 //	@Pattern(regexp = "^[6-9]{1}[0-9]]{9}$")
 	private String contactNo;
 
-	@Email
+//	@Email
 	@Column(unique = true)
 	private String email;
 

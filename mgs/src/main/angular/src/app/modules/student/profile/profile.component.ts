@@ -7,50 +7,54 @@ import { StudentService } from 'src/app/services/student.service';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit {
-  
-  studentDetailsArr = [];
+export class ProfileComponent implements OnInit {  
+
   studentProfile : FormGroup;
   editForm = "Student Profile";
+  studentDetails = {};
+  studentInfo: any;
+  studentId: any;
 
   constructor(private formBuilder:FormBuilder,private studentService : StudentService) { }
 
   ngOnInit() {
-    this.studentService.getStudentInfo().subscribe((res) => {
-      console.log(res);
-      this.studentDetailsArr = res;      
+    this.studentInfo = JSON.parse(localStorage.getItem('user_info'));
+    this.studentId = this.studentInfo['student'].id
+    this.studentService.getProfile(this.studentId).subscribe((res) => {
+      this.studentDetails = res;
+      console.log(this.studentDetails);      
     },
       (err) => console.log(err)
     );
 
-    this.studentProfile = this.formBuilder.group({
-      studentName : [''],
-      studentGender : [''],
-      studentDob : [''],
-      studentEmail : [''],
-      studentMob : [''],
-      studentSubscriptionEndDate : [''],
-      guardianName : [''],
-      guardianEmail : [''],
-      guardianMob : [''],
-      guardianRelationship : ['']
-    });
-    // this.student 
+    // this.studentProfile = this.formBuilder.group({
+    //   studentName : [''],
+    //   studentGender : [''],
+    //   studentDob : [''],
+    //   studentEmail : [''],
+    //   studentMob : [''],
+    //   studentSubscriptionEndDate : [''],
+    //   guardianName : [''],
+    //   guardianEmail : [''],
+    //   guardianMob : [''],
+    //   guardianRelationship : ['']
+    // });
+    // // this.student 
   }
 
-  setEditForm(value){
-    this.editForm = value;
-    console.log(this.editForm);
-    // return this.studentProfile.controls['studentName'].patchValue('ghv')
-  }
+  // setEditForm(value){
+  //   this.editForm = value;
+  //   console.log(this.editForm);
+  //   // return this.studentProfile.controls['studentName'].patchValue('ghv')
+  // }
 
-  cancelEditForm(){
-    this.editForm = "Student Profile";
-  }
+  // cancelEditForm(){
+  //   this.editForm = "Student Profile";
+  // }
 
-  updateProfile(){
-    this.studentProfile.patchValue;
-    console.log(this.studentProfile);
-  }
+  // updateProfile(){
+  //   this.studentProfile.patchValue;
+  //   console.log(this.studentProfile);
+  // }
 
 }

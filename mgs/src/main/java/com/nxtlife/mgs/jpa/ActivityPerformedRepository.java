@@ -59,4 +59,5 @@ public interface ActivityPerformedRepository extends JpaRepository<ActivityPerfo
 	List<ActivityPerformed> findAllByStudentSchoolCidAndStudentGradeCidAndActivityCidAndAndActivityStatusAndStudentSchoolActiveTrueAndStudentGradeActiveTrueAndActivityActiveTrueAndActiveTrue(
 			String schoolCid, String gradeCid, String ActivityCid, ActivityStatus status);
 
+	List<ActivityPerformed> findAllByStudentCidAndActiveTrue(String studentCid);
 }

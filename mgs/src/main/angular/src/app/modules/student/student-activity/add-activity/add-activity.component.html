@@ -6,39 +6,43 @@
                     <div class="col-md-6">
                         <div class="form-group">Select Activity :
                             <select class="form-control" (ngModelChange)="getStudentCoach($event)"
-                                formControlName="addActivityId">
+                                formControlName="activityId">
                                 <option value="" disabled selected>Select Activity </option>
                                 <option *ngFor="let activity of activities; let i = index;" value={{activity.id}}>
                                     {{activity.name}}
                                 </option>
                             </select>
                         </div>
-                        <div class="form-group">Enter Activity Details :
+                        <div class="form-group">Enter Description :
                             <textarea class="form-control add" placeholder="Details"
-                                formControlName="addActivityDetails"></textarea>
+                                formControlName="description"></textarea>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">Select Teacher/Coach :
-                            <select class="form-control" formControlName="addCoachId">
+                            <select class="form-control" formControlName="coachId">
                                 <option value="" disabled selected>Select Teacher/Coach </option>
                                 <option *ngFor="let coach of coaches; let i = index;" value={{coach.id}}>
                                     {{coach.name}}
                                 </option>
                             </select>
                         </div>
-                        <div class="form-group">Enter Activity Date :
-                            <input type="date" class="form-control" placeholder="Session Start Date"
-                                formControlName="addActivityDate" />
+                        <div class="form-group">Enter Date :
+                            <input type="date" class="form-control" placeholder="Date of Activity"
+                                formControlName="dateOfActivity" />
                         </div>
                     </div>
                     <div class="choosefile_box">
-                        <div class="form-group">
+                        <div class="form-group"> Select File :
                             <div class="input-field">
                                 <input class="choosefile" type="file" name="selectedFile"
                                     (change)="onFileSelect($event)" multiple />
                                 <span class="choosefile choosefile-custom"> <i class="fa fa-file"></i> </span>
-                            </div>
+                             </div>
+                             <div *ngFor="let sf of file">
+                                 <p>{{sf.name}}</p>
+                             </div>   
+                            
                             <button class="btn btnSubmit btn-success" type="submit">Save</button>
                         </div>
                     </div>

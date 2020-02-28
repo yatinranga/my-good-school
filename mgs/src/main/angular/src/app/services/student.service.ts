@@ -14,6 +14,11 @@ export class StudentService {
     const url = "/students/signUp"
     return this.http.post(url, data);
   }
+  // Single teacher signup
+  uploadTeacherDetails(data) {
+    const url = "/teachers/signUp"
+    return this.http.post(url, data);
+  }
 
   // to get profile of student
   getProfile(studentId) {
@@ -23,6 +28,11 @@ export class StudentService {
   //  to get info about the student
   getStudentInfo() {
     return this.http.get("/api/info");
+  }
+
+  // to get AWARDS of student
+  getAwarads(studentCid,activityId){
+    return this.http.get("/api/students/awards?studentId=" + studentCid + "&activityId=" + activityId);
   }
 
   // to get the list of all schools
@@ -45,9 +55,14 @@ export class StudentService {
     return this.http.get("/api/students/activities?status=submitted&studentId=" + studentCid);
   }
 
-  // to get SUBMITTED Activities of student
+  // to get REVIEWED Activities of student
   getReviewedActivity(studentCid) {
     return this.http.get("/api/students/activities?status=reviewed&studentId=" + studentCid);
+  }
+
+  // to get ALL Activities of student
+  getAllActivity(studentCid) {
+    return this.http.get("/api/students/activities?studentId=" + studentCid);
   }
 
   // to get teacher/coaches who perform particular activity
@@ -60,8 +75,14 @@ export class StudentService {
     return this.http.post(url, formData)
   }
 
-  // to SUBMIT the performed activity by student
+  // to SUBMIT saved activity by student
   submitActivity(activityPerformedId) {
     return this.http.post("/api/students/" + activityPerformedId + "/submit", {});    
   }
+  // TO DELELTE saved activity by student
+  deleteActivity(activityId) {
+    console.log("Delete APi");
+    return this.http.delete("/api/students/activities/" + activityId);
+  }
+
 }

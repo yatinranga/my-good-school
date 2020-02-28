@@ -1,1 +1,64 @@
-<p>teacher-signup works!</p>
+<br>
+<form [formGroup]="teacherSignup" (ngSubmit)="onSubmit()">
+    <div class="container register-form">
+        <div class="form">
+            <div class="note">
+                <p><b>Teacher Registration Form</b></p>
+            </div>
+
+            <div class="form-content">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">Enter Name :
+                            <input type="text" class="form-control" placeholder="Your Name" formControlName="name" />
+                        </div>
+                        <div class="form-group">Enter DOB :
+                            <input type="date" class="form-control" placeholder="Date of Birth" formControlName="dob" />
+                        </div>
+                        <div class="form-group">Enter Email :
+                            <input type="email" class="form-control" placeholder="Your Email" formControlName="email" />
+                        </div>
+                        <div class="form-group">Enter Mobile no. :
+                            <input type="number" class="form-control" placeholder="Your Mobile Number"
+                                formControlName="mobileNumber" />
+                        </div>
+                        <div class="form-group">Select Gender :
+                            <select class="form-control" placeholder="Select one" formControlName="gender">
+                                <option value="" disabled selected>Choose your option</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">Enter Qualifications :
+                            <input type="text" class="form-control" placeholder="Your Qualifications" formControlName="qualification" />
+                        </div>
+                        <div class="form-group">Select School :
+                            <select class="form-control" (ngModelChange)="getSchoolActivities($event)" formControlName="schoolId" >
+                                <option value="" disabled selected>Select School </option>
+                                <option *ngFor="let school of schoolsList; let i = index;" value={{school.id}}>
+                                    {{school.name}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">Select Grades :
+                            <select class="form-control" formControlName="gradeIds">
+                                <option value="" disabled selected>Select Grade </option>
+                                <option *ngFor="let grade of schoolGrades; let i = index;" value={{grade.id}}>
+                                    {{grade.grade}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">Select Activities :
+                            <select class="form-control" (change)="setIsCoach()" formControlName="activitiyIds">
+                                <option value="" disabled selected>Select Activities </option>
+                                <option *ngFor="let activity of schoolActivities; let i = index;" value={{activity.id}}>
+                                    {{activity.name}}</option>
+                            </select>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+            <button class="btn btnSubmit btn-success" type="submit">Submit</button>
+        </div>
+    </div>
+</form>

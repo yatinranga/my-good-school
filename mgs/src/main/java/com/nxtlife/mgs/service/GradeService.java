@@ -2,6 +2,7 @@ package com.nxtlife.mgs.service;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.view.GradeRequest;
@@ -10,7 +11,7 @@ import com.nxtlife.mgs.view.SchoolResponse;
 
 public interface GradeService {
 
-	List<GradeResponse> uploadGradesFromExcel(MultipartFile file);
+	ResponseEntity<?> uploadGradesFromExcel(MultipartFile file, String schoolCid);
 
 	GradeResponse save(GradeRequest request);
 	

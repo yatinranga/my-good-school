@@ -21,9 +21,6 @@ import com.nxtlife.mgs.enums.PSDArea;
 @Entity
 public class FocusArea extends BaseEntity{
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	Long id;
 	
 	@NotNull
 	@Column(unique = true)
@@ -100,14 +97,6 @@ public class FocusArea extends BaseEntity{
 
 	public void setCid(String cid) {
 		this.cid = cid;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public FocusArea(@NotNull String name, @NotNull String cid, Boolean active, String description, PSDArea psdArea,

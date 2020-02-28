@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
@@ -14,12 +16,16 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.activity.FocusArea;
 import com.nxtlife.mgs.entity.school.School;
+import com.nxtlife.mgs.enums.FourS;
+import com.nxtlife.mgs.enums.PSDArea;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.ActivityRepository;
 import com.nxtlife.mgs.jpa.FocusAreaRepository;
@@ -45,6 +51,265 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 
 	@Autowired
 	Utils utils;
+
+	@PostConstruct
+	public void init() {
+		List<FocusArea> focusAreaRepoList = focusAreaRepository.findAllByActiveTrue();
+		List<FocusArea> focusAreaList = new ArrayList<FocusArea>();
+//		List<FocusArea> focusAreasForPD = new ArrayList<FocusArea>();
+//		List<FocusArea> focusAreasForSD = new ArrayList<FocusArea>();
+		String[] focusAreasPd = { "Identity", "Spiritual & Aesthetic Awareness", "Decision Making", "Health",
+				"Intellectual Growth" };
+		String[] focusAreasSD = { "Community Skills", "Employment Skills", "Citizenship", "Environmental Awareness" };
+
+//		for(FocusArea foc : focusAreasForPD ) {
+//			foc.setPsdArea(PSDArea.PersonalDevelopment);
+//			foc.setActive(true);
+//			foc.setCid(utils.generateRandomAlphaNumString(8));
+//		}
+
+		for (String foc : focusAreasPd) {
+			Boolean flag = false;
+			for (int i = 0; i < focusAreaRepoList.size(); i++) {
+				if (foc.equalsIgnoreCase(focusAreaRepoList.get(i).getName())
+						&& focusAreaRepoList.get(i).getPsdArea().equals(PSDArea.PersonalDevelopment))
+					flag = true;
+			}
+			if (flag == false) {
+				FocusArea focusArea = new FocusArea();
+				focusArea.setName(foc);
+				focusArea.setDescription(foc);
+				focusArea.setPsdArea(PSDArea.PersonalDevelopment);
+				focusArea.setActive(true);
+				focusArea.setCid(utils.generateRandomAlphaNumString(8));
+				focusAreaList.add(focusArea);
+			}
+		}
+
+		for (String foc : focusAreasSD) {
+			Boolean flag = false;
+			for (int i = 0; i < focusAreaRepoList.size(); i++) {
+				if (foc.equalsIgnoreCase(focusAreaRepoList.get(i).getName())
+						&& focusAreaRepoList.get(i).getPsdArea().equals(PSDArea.PersonalDevelopment))
+					flag = true;
+			}
+			if (flag == false) {
+				FocusArea focusArea = new FocusArea();
+				focusArea.setName(foc);
+				focusArea.setDescription(foc);
+				focusArea.setPsdArea(PSDArea.SocialDevelopment);
+				focusArea.setActive(true);
+				focusArea.setCid(utils.generateRandomAlphaNumString(8));
+				focusAreaList.add(focusArea);
+			}
+		}
+
+		focusAreaList = focusAreaRepository.save(focusAreaList);
+
+		String[] skillActivities = { "Yoga", "Literary Society Hindi", "Literary Society English", "Art & Craft",
+				"Music & Dance", "Band", "Computers", "Cooking" };
+		String[] sportActivities = { "Martial Arts", "Cricket", "Fencing", "Football", "Kho-Kho", "Badminton",
+				"Kabaddi" };
+		String[] serviceActivities = { "Social Service League", "NCC", "Scouts & Guides", "Rural Livelihood Maping",
+				"Green School Club", "Eco Club" };
+		String[] studyActivities = { "Reading" };
+
+		List<Activity> activityRepoList = activityRepository.findAllByActiveTrue();
+		List<Activity> activityList = new ArrayList<Activity>();
+
+		for (String act : skillActivities) {
+			Boolean flag = false;
+			for (int i = 0; i < activityRepoList.size(); i++) {
+				if (act.equalsIgnoreCase(activityRepoList.get(i).getName())
+						&& activityRepoList.get(i).getFourS().equals(FourS.Skill))
+					flag = true;
+			}
+			if (flag == false) {
+				Activity activity = new Activity();
+				activity.setName(act);
+				activity.setDescription(act);
+				activity.setFourS(FourS.Skill);
+				activity.setActive(true);
+				activity.setCid(utils.generateRandomAlphaNumString(8));
+				activityList.add(activity);
+			}
+		}
+
+		for (String act : sportActivities) {
+			Boolean flag = false;
+			for (int i = 0; i < activityRepoList.size(); i++) {
+				if (act.equalsIgnoreCase(activityRepoList.get(i).getName())
+						&& activityRepoList.get(i).getFourS().equals(FourS.Sport))
+					flag = true;
+			}
+			if (flag == false) {
+				Activity activity = new Activity();
+				activity.setName(act);
+				activity.setDescription(act);
+				activity.setFourS(FourS.Sport);
+				activity.setActive(true);
+				activity.setCid(utils.generateRandomAlphaNumString(8));
+				activityList.add(activity);
+			}
+		}
+
+		for (String act : studyActivities) {
+			Boolean flag = false;
+			for (int i = 0; i < activityRepoList.size(); i++) {
+				if (act.equalsIgnoreCase(activityRepoList.get(i).getName())
+						&& activityRepoList.get(i).getFourS().equals(FourS.Study))
+					flag = true;
+			}
+			if (flag == false) {
+				Activity activity = new Activity();
+				activity.setName(act);
+				activity.setDescription(act);
+				activity.setFourS(FourS.Study);
+				activity.setActive(true);
+				activity.setCid(utils.generateRandomAlphaNumString(8));
+				activityList.add(activity);
+			}
+		}
+
+		for (String act : serviceActivities) {
+			Boolean flag = false;
+			for (int i = 0; i < activityRepoList.size(); i++) {
+				if (act.equalsIgnoreCase(activityRepoList.get(i).getName())
+						&& activityRepoList.get(i).getFourS().equals(FourS.Service))
+					flag = true;
+			}
+			if (flag == false) {
+				Activity activity = new Activity();
+				activity.setName(act);
+				activity.setDescription(act);
+				activity.setFourS(FourS.Service);
+				activity.setActive(true);
+				activity.setCid(utils.generateRandomAlphaNumString(8));
+				activityList.add(activity);
+			}
+		}
+
+		activityList = activityRepository.save(activityList);
+
+//	    activityList = activityRepository.findAllByActiveTrue();
+//	    focusAreaList = focusAreaRepository.findAllByActiveTrue();
+//	    for(Activity act : activityList) {
+//	    	List<String> fAs;
+//	    	switch(act.getName()) {
+//	    	case "Yoga":
+//	    		  fAs = new ArrayList<String>();
+//	    		  fAs.add("Identity");
+//	    		  fAs.add("Health");
+//	    	      act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+//	    	         break;
+//	    	case "Literary Society Hindi":
+//	    		  fAs = new ArrayList<String>();
+//		    	  fAs.add("Identity");
+//		    	  fAs.add("Intellectual Growth");
+//		    	  fAs.add("Employment Skills");
+//		    	  act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+//	    	         break;
+//	    	case "Literary Society English":
+//	    	      fAs = new ArrayList<String>();
+//	    		  fAs.add("Identity");
+//	    		  fAs.add("Intellectual Growth");
+//	    		  fAs.add("Employment Skills");  
+//	    	      
+//	    		  act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+//	    		  break;
+//	    	case "Art & Craft":
+//	    		  fAs = new ArrayList<String>();
+//	    		  fAs.add("Identity");
+//	    		  fAs.add("Spiritual & Aesthetic Awareness");
+//	    		  fAs.add("Employment Skills"); 
+//	    		  
+//	    		  act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+//	    		  break;
+//	    	case "Music & Dance":
+//	    		  fAs = new ArrayList<String>();
+//	    		  fAs.add("Identity");
+//	    		  fAs.add("Spiritual & Aesthetic Awareness");
+//	    		  fAs.add("Employment Skills"); 
+//	    		  
+//	    		  act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+//	    		  break;
+//	    	case "Band":
+//	    		  fAs = new ArrayList<String>();
+//	    		  fAs.add("Identity");
+//	    		  fAs.add("Spiritual & Aesthetic Awareness");
+//	    		  fAs.add("Employment Skills");
+//	    		  fAs.add("Community  Skills");
+//	    		  
+//	    		  act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+//	    		  break;
+//	    	case "Martial Arts":
+//	    		  fAs = new ArrayList<String>();
+//	    		  fAs.add("Identity");
+//	    		  fAs.add("Decision Making");
+//	    		  fAs.add("Health");
+//	    		  fAs.add("Citizenship");
+//	    		  
+//	    		  act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+//	    		  break;
+//	    	case "Social Service League":
+//	    		  fAs = new ArrayList<String>();
+//	    		  fAs.add("Spiritual & Aesthetic Awareness");
+//	    		  fAs.add("Environmental Awareness");
+//	    		  fAs.add("Community  Skills");
+//	    		  
+//	    		  act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+//	    		  break;
+//	    	case "Computers":
+//	    		  fAs = new ArrayList<String>();
+//	    		  fAs.add("Decision Making");
+//	    		  fAs.add("Intellectual Growth");
+//	    		  fAs.add("Employment Skills");
+//	    		  
+//	    		  act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+//	    		  break;
+//	    	case "Cooking":
+//	    		  fAs = new ArrayList<String>();
+//	    		  fAs.add("Health");
+//	    		  fAs.add("Employment Skills");
+//	    		  
+//	    		  act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+//	    		  break;
+//	    	case "Cricket":
+//	    		  fAs = new ArrayList<String>();
+//	    		  fAs.add("Health");
+//	    		  fAs.add("Community Skills");
+//	    		  fAs.add("Citizenship");
+//	    		  
+//	    		  act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+//	    		  break;
+//	    	case "Cricket":
+//	    		  fAs = new ArrayList<String>();
+//	    		  fAs.add("Health");
+//	    		  fAs.add("Community Skills");
+//	    		  fAs.add("Citizenship");
+//	    		  
+//	    		  act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+//	    		  break;
+//	    	
+//	    	}
+//	    }
+	}
+
+//	private Activity activityFocusAreaMappingUtility(Activity act ,List<String> fAs,List<FocusArea> focusAreaList) {
+//		List<FocusArea> focusAreas = act.getFocusAreas();
+//		for(String f: fAs) {
+//        	if( focusAreas.stream().filter(focArea-> focArea.getName().equalsIgnoreCase(f)).count()<=0) {
+//        		focusAreaList.stream().forEach(farea->{if(farea.getName().equalsIgnoreCase(f)) {
+//        			List<Activity> tempActivities = farea.getActivities();
+//        			tempActivities.add(act);
+//        			farea.setActivities(tempActivities);
+//    	        	focusAreas.add(farea);
+//        		}});
+//        	}
+//         }
+//		act.setFocusAreas(focusAreas);
+//		return act;
+//	}
 
 	@Override
 	public List<ActivityRequestResponse> getAllOfferedActivities() {
@@ -128,7 +393,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 	}
 
 	@Override
-	public List<ActivityRequestResponse> uploadActivityFromExcel(MultipartFile file, String schoolCid) {
+	public ResponseEntity<?> uploadActivityFromExcel(MultipartFile file, String schoolCid) {
 		if (file == null || file.isEmpty() || file.getSize() == 0)
 			throw new ValidationException("Pls upload valid excel file.");
 
@@ -138,6 +403,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 		try {
 			XSSFWorkbook gradesheet = new XSSFWorkbook(file.getInputStream());
 			activityRecords = findSheetRowValues(gradesheet, "ACTIVITY", errors);
+			errors = (List<String>) activityRecords.get(activityRecords.size() - 1).get("errors");
 			for (int i = 0; i < activityRecords.size(); i++) {
 				List<Map<String, Object>> tempactivityRecords = new ArrayList<Map<String, Object>>();
 				tempactivityRecords.add(activityRecords.get(i));
@@ -148,8 +414,10 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 
 			throw new ValidationException("something wrong happened may be file not in acceptable format.");
 		}
-
-		return activityResponseList;
+		Map<String, Object> responseMap = new HashMap<String, Object>();
+		responseMap.put("ActivityResponseList", activityResponseList);
+		responseMap.put("errors", errors);
+		return new ResponseEntity<Map<String, Object>>(responseMap, HttpStatus.OK);
 	}
 
 	private ActivityRequestResponse validateActivityRequest(List<Map<String, Object>> activityDetails,

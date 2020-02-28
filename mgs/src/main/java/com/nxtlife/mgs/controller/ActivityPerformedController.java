@@ -3,6 +3,7 @@ package com.nxtlife.mgs.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nxtlife.mgs.service.ActivityPerformedService;
 import com.nxtlife.mgs.view.ActivityPerformedRequest;
 import com.nxtlife.mgs.view.ActivityPerformedResponse;
+import com.nxtlife.mgs.view.SuccessResponse;
 
 @RestController
 @RequestMapping("/")
@@ -31,6 +33,11 @@ public class ActivityPerformedController {
 	@PostMapping(value = "api/students/{actCid}/submit")
 	public ActivityPerformedResponse submitActivity(@PathVariable("actCid") String activityPerformedCid) {
 		return activityPerformedService.submitActivity(activityPerformedCid);
+	}
+
+	@DeleteMapping(value = "api/students/activities/{activityPerformedId}")
+	public SuccessResponse deleteActivityOfStudent(@PathVariable("activityPerformedId") String activityPerformedCid) {
+		return activityPerformedService.deleteActivityOfStudent(activityPerformedCid);
 	}
 
 	@PostMapping(value = "api/coaches/save")
@@ -68,7 +75,8 @@ public class ActivityPerformedController {
 	}
 
 	@GetMapping(value = "api/students/activities")
-	public List<ActivityPerformedResponse> getAllActivitiesOfStudentByStatus(@RequestParam("status") String status,
+	public List<ActivityPerformedResponse> getAllActivitiesOfStudentByStatus(
+			@RequestParam(value = "status", required = false) String status,
 			@RequestParam("studentId") String studentCid) {
 		return activityPerformedService.getAllActivitiesOfStudentByStatus(status, studentCid);
 	}

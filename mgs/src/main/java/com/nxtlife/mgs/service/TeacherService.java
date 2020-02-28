@@ -2,6 +2,7 @@ package com.nxtlife.mgs.service;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.view.ActivityRequestResponse;
@@ -11,7 +12,7 @@ import com.nxtlife.mgs.view.TeacherResponse;
 
 public interface TeacherService {
 
-	List<TeacherResponse> uploadTeachersFromExcel(MultipartFile file, Boolean isCoach, String schoolCid);
+	ResponseEntity<?> uploadTeachersFromExcel(MultipartFile file, Boolean isCoach, String schoolCid);
 
 	TeacherResponse save(TeacherRequest request);
 

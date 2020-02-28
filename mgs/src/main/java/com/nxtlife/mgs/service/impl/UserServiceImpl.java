@@ -8,6 +8,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,6 +16,7 @@ import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.nxtlife.mgs.auth.MgsAuth;
+import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.user.Authority;
 import com.nxtlife.mgs.entity.user.Guardian;
 import com.nxtlife.mgs.entity.user.Role;
@@ -360,37 +363,36 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	}
 
+	@Override
+	public User createSchoolUser(School school) {
+		if (userRepository.countByUserNameAndActiveTrue(school.getUsername()) > 0) {
+			throw new ValidationException("This username is already registered");
+		}
+		User user = new User();
+		user.setActive(true);
+		user.setUserType(UserType.School);
+		user.setRegisterType(RegisterType.MANUALLY);
+		user.setUserName(school.getUsername());
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		String password = utils.generateRandomAlphaNumString(10);
+		String encodedPassword = encoder.encode(password);
 
-	// @Override public User createSchoolUser(School school) { if
-	// (userRepository.countByUsername(school.getUsername()) > 0) { throw new
-	// ValidationException("This username is already registered"); } User user = new
-	// User(); user.setActive(true); user.setUserType(UserType.School);
-	// user.setRegisterType(RegisterType.MANUALLY);
-	// user.setUserName(school.getUsername()); //later change it to encrypted
-	// password //
-	// user.setPassword(bCryptPasswordEncoder.encode(school.getUsername()));
-	// //Setting username as password user.setPassword(school.getUsername()); try {
-	// user.setCid(utils.generateRandomAlphaNumString(8));
-	// }catch(ConstraintViolationException|
-	//
-	// javax.validation.ConstraintViolationException ce)
-	// {
-	// user.setCid(utils.generateRandomAlphaNumString(8));
-	// }
-	//
-	// // user.setIsPaid(true);
-	//
-	// Role defaultRole = roleRepository
-	// .getOneByName("School");if(defaultRole==null)throw new
-	// ValidationException("Role Parent does not exist");
-	//
-	// List<Role> defaultRoleList = new
-	// ArrayList<>();defaultRoleList.add(defaultRole);
-	//
-	// if(!defaultRoleList.isEmpty())
-	// {
-	// user.setRoles(defaultRoleList);
-	// }user.setSchool(school);return userRepository.save(user);
-	// }
+		user.setPassword(encodedPassword);
+		System.out.println("Password : " + user.getPassword());
+		user.setCid(utils.generateRandomAlphaNumString(8));
+		
+
+		// user.setIsPaid(true);
+
+		Role defaultRole = roleRepository.getOneByName("School");
+		if (defaultRole == null)
+			throw new ValidationException("Role School does not exist");
+
+		user.setRoleForUser(defaultRole);
+		user.setSchool(school);
+		user.setEmail(school.getEmail());
+		user.setContactNo(school.getContactNumber());
+		return user;
+	}
 
 }
