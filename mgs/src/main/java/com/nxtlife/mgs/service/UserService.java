@@ -1,5 +1,6 @@
 package com.nxtlife.mgs.service;
 
+import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.user.Guardian;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
@@ -29,7 +30,6 @@ public interface UserService {
 
 	SuccessResponse forgotPassword(String username);
 
-
-//	User createSchoolUser(School school);
+	User createSchoolUser(School school);
 	
 }

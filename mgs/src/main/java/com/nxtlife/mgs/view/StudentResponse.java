@@ -21,9 +21,9 @@ public class StudentResponse {
 	private String grade;
 	private String schoolId;
 	private String mobileNumber;
-	private Date subscriptionEndDate;
+	private String subscriptionEndDate;
 	private Boolean active;
-	private Date dob;
+	private String dob;
 	private List<GuardianResponse> guardianResponseList;
 
 	public String getId() {
@@ -106,14 +106,6 @@ public class StudentResponse {
 		this.mobileNumber = mobileNumber;
 	}
 
-	public Date getSubscriptionEndDate() {
-		return subscriptionEndDate;
-	}
-
-	public void setSubscriptionEndDate(Date subscriptionEndDate) {
-		this.subscriptionEndDate = subscriptionEndDate;
-	}
-
 	public Boolean getActive() {
 		return active;
 	}
@@ -122,12 +114,16 @@ public class StudentResponse {
 		this.active = active;
 	}
 
-	public Date getDob() {
+	public String getDob() {
 		return dob;
 	}
 
-	public void setDob(Date dob) {
+	public void setDob(String dob) {
 		this.dob = dob;
+	}
+
+	public void setSubscriptionEndDate(String subscriptionEndDate) {
+		this.subscriptionEndDate = subscriptionEndDate;
 	}
 
 	public List<GuardianResponse> getGuardianResponseList() {
@@ -143,11 +139,14 @@ public class StudentResponse {
 		this.name = student.getName();
 		this.username = student.getUsername();
 		this.email = student.getEmail();
-		this.dob = student.getDob();
+		if(student.getDob()!=null)
+		   this.dob = student.getDob().toString();
 		this.gender = student.getGender();
 		this.mobileNumber = student.getMobileNumber();
 		this.active = student.getActive();
-		this.subscriptionEndDate = student.getSubscriptionEndDate();
+		
+		if(student.getSubscriptionEndDate()!=null)
+		   this.subscriptionEndDate = student.getSubscriptionEndDate().toString();
 
 		if (student.getUser() != null) {
 			this.userId = student.getUser().getCid();
@@ -172,11 +171,11 @@ public class StudentResponse {
 			this.name = student.getName();
 			this.username = student.getUsername();
 			this.email = student.getEmail();
-			this.dob = student.getDob();
+			this.dob = student.getDob().toString();
 			this.gender = student.getGender();
 			this.mobileNumber = student.getMobileNumber();
 			this.active = student.getActive();
-			this.subscriptionEndDate = student.getSubscriptionEndDate();
+			this.subscriptionEndDate = student.getSubscriptionEndDate().toString();
 
 			if (student.getUser() != null) {
 				this.userId = student.getUser().getCid();

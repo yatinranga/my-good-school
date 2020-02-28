@@ -6,11 +6,15 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 
 import org.apache.poi.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +39,7 @@ import com.nxtlife.mgs.view.StudentResponse;
 import com.nxtlife.mgs.view.TeacherResponse;
 
 @RestController
-@RequestMapping("/api/template")
+@RequestMapping("/")
 public class ExcelTemplateController {
 
 	@Autowired
@@ -59,7 +63,7 @@ public class ExcelTemplateController {
 	@Autowired
 	ActivityService activityService;
 
-	@GetMapping("/export")
+	@GetMapping("template/export")
 	public void exportExampleTemplate(@RequestParam String type , HttpServletResponse response) throws IOException {
 		if(type.equalsIgnoreCase("STUDENT"))
 			exportExampleFile("STUDENT", response);
@@ -87,22 +91,25 @@ public class ExcelTemplateController {
 		
 	}
 	
-	@RequestMapping(value = "bulkUpload", method = RequestMethod.POST)
-	public void uploadTeachersFromExcel(@RequestParam("file") MultipartFile file , @RequestParam("type") String type ,@RequestParam(required = false ,value = "schoolId") String schoolCid) {
+	@Transactional
+	@RequestMapping(value = "/api/template/bulkUpload", method = RequestMethod.POST)
+	public ResponseEntity<?> uploadTeachersFromExcel(@RequestParam("file") MultipartFile file , @RequestParam("type") String type ,@RequestParam(required = false ,value = "schoolId") String schoolCid) {
 		if(type.equalsIgnoreCase("TEACHER"))
-			 teacherService.uploadTeachersFromExcel(file, false,schoolCid);
+			 return teacherService.uploadTeachersFromExcel(file, false,schoolCid);
 		else if(type.equalsIgnoreCase("COACH"))
-			 teacherService.uploadTeachersFromExcel(file, true,schoolCid);
+			 return teacherService.uploadTeachersFromExcel(file, true,schoolCid);
 		else if(type.equalsIgnoreCase("STUDENT"))
-			studentService.uploadStudentsFromExcel(file,schoolCid);
+			 return studentService.uploadStudentsFromExcel(file,schoolCid);
 		else if(type.equalsIgnoreCase("SCHOOL"))
-			schoolService.uploadSchoolsFromExcel(file);
+			 return schoolService.uploadSchoolsFromExcel(file);
 		else if(type.equalsIgnoreCase("GRADE"))
-			gradeService.uploadGradesFromExcel(file);
+			 return gradeService.uploadGradesFromExcel(file,schoolCid);
 		else if(type.equalsIgnoreCase("FOCUS AREA"))
-			focusAreaService.uploadFocusAreasFromExcel(file);
+			return focusAreaService.uploadFocusAreasFromExcel(file);
 		else if(type.equalsIgnoreCase("ACTIVITY"))
-			activityService.uploadActivityFromExcel(file ,schoolCid);
+			return activityService.uploadActivityFromExcel(file ,schoolCid);
+		else
+			 return new ResponseEntity<String>("Something went wrong.", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 

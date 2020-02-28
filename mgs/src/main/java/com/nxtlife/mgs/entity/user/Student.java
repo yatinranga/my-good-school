@@ -32,11 +32,7 @@ import com.nxtlife.mgs.entity.school.StudentSchoolGrade;
 @Entity
 @DynamicUpdate(true)
 @SuppressWarnings("serial")
-public class Student extends BaseEntity {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	Long id;
+public class Student  extends BaseEntity {
 
 	@NotNull
 	private String name;
@@ -238,13 +234,6 @@ public class Student extends BaseEntity {
 		this.guardians = guardians;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public List<StudentSchoolGrade> getStudentSchoolGrades() {
 		return studentSchoolGrades;

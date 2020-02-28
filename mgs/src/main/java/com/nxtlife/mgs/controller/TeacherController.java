@@ -73,7 +73,7 @@ public class TeacherController {
 		return teacherService.findClassTeacherByCId(cId);
 	}
 
-	@DeleteMapping("{cid}")
+	@DeleteMapping("api/teachers/{cid}")
 	public SuccessResponse delete(@PathVariable String cid) {
 		return teacherService.delete(cid);
 	}

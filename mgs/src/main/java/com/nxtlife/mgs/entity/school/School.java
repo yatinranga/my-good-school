@@ -58,7 +58,7 @@ public class School extends BaseEntity {
 
 	private Boolean active;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
 	User user;
 

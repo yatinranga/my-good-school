@@ -2,14 +2,16 @@ package com.nxtlife.mgs.service;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.view.SchoolRequest;
 import com.nxtlife.mgs.view.SchoolResponse;
+import com.nxtlife.mgs.view.SuccessResponse;
 
 public interface SchoolService {
 
-	List<SchoolResponse> uploadSchoolsFromExcel(MultipartFile file);
+	ResponseEntity<?> uploadSchoolsFromExcel(MultipartFile file);
 
 	SchoolResponse save(SchoolRequest request);
 	
@@ -18,5 +20,7 @@ public interface SchoolService {
 	SchoolResponse findByCid(String cId);
 
 	List<SchoolResponse> getAllSchools();
+
+	SuccessResponse delete(String cid);
 
 }

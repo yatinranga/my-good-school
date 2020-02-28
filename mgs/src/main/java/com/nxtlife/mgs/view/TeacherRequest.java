@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.nxtlife.mgs.entity.user.Teacher;
+import com.nxtlife.mgs.util.DateUtil;
 
 public class TeacherRequest {
 
@@ -15,7 +16,7 @@ public class TeacherRequest {
 
 	private String username;
 
-	private Date dob;
+	private String dob;
 
 //	private String school;
 
@@ -71,11 +72,11 @@ public class TeacherRequest {
 		this.username = username;
 	}
 
-	public Date getDob() {
+	public String getDob() {
 		return dob;
 	}
 
-	public void setDob(Date dob) {
+	public void setDob(String dob) {
 		this.dob = dob;
 	}
 
@@ -172,7 +173,7 @@ public class TeacherRequest {
 			teacher.setUsername(this.username);
 
 		if (this.dob != null)
-			teacher.setDob(this.dob);
+			teacher.setDob(DateUtil.convertStringToDate(this.dob));
 		if (this.qualification != null)
 			teacher.setQualification(this.qualification);
 		/*

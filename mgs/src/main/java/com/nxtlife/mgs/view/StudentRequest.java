@@ -12,6 +12,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.nxtlife.mgs.entity.user.Guardian;
 import com.nxtlife.mgs.entity.user.Student;
+import com.nxtlife.mgs.util.DateUtil;
 
 public class StudentRequest {
 
@@ -27,7 +28,7 @@ public class StudentRequest {
 
 	private String username;
 
-	private Date dob;
+	private String dob;
 
 	private Date sessionStartDate;
 
@@ -105,11 +106,12 @@ public class StudentRequest {
 		this.username = username;
 	}
 
-	public Date getDob() {
+
+	public String getDob() {
 		return dob;
 	}
 
-	public void setDob(Date dob) {
+	public void setDob(String dob) {
 		this.dob = dob;
 	}
 
@@ -204,7 +206,7 @@ public class StudentRequest {
 		if (this.gender != null)
 			student.setGender(this.gender);
 		if (this.dob != null)
-			student.setDob(this.dob);
+			student.setDob(DateUtil.convertStringToDate(this.dob));
 		if (this.mobileNumber != null)
 			student.setMobileNumber(this.mobileNumber);
 		if (this.subscriptionEndDate != null)
