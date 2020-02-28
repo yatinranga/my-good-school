@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { StudentService } from 'src/app/services/student.service';
 
 @Component({
   selector: 'app-student-awards',
@@ -6,10 +7,36 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./student-awards.component.scss']
 })
 export class StudentAwardsComponent implements OnInit {
+  studentInfo: any;
+  schoolId: any;
+  activities: any;
+  studentId: any;
+  awardsArr = [];
 
-  constructor() { }
+  constructor(private studentService : StudentService) { }
 
   ngOnInit() {
+    this.studentInfo = JSON.parse(localStorage.getItem('user_info'));
+    this.schoolId = this.studentInfo['student'].schoolId;
+    this.studentId = this.studentInfo['student'].id;
+    this.getStudentActivity();
   }
 
+  getStudentActivity() {
+    this.studentService.getActivity(this.schoolId).subscribe(
+      (res) => this.activities = res,      
+      (err) => console.log(err)
+    );
+  }
+
+  getStudentAwards(activityId){
+    this.studentService.getAwarads(this.studentId,activityId).subscribe((res) => {
+      this.awardsArr = res;
+    },
+    (err) => console.log(err));
+  }
+
+  getDate(date) {
+    return new Date(date)
+  }
 }
