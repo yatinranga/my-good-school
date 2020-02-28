@@ -41,7 +41,7 @@ public class ActivityPerformedController {
 	}
 
 	@PostMapping(value = "api/coaches/save")
-	public ActivityPerformedResponse saveActivityByCoach(@RequestBody ActivityPerformedRequest request) {
+	public ActivityPerformedResponse saveActivityByCoach(@RequestBody/*Change it to ModelAttribute*/ ActivityPerformedRequest request) {
 		return activityPerformedService.saveActivityByCoach(request);
 	}
 

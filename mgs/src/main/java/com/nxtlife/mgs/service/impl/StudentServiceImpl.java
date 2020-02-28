@@ -657,9 +657,9 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			throw new ValidationException(String.format("Teacher with id : %s not found.", teacherCid));
 		if (activityStatus == null)
 			activityStatus = ActivityStatus.Reviewed.toString();
-		List<Student> students = studentRepository
-				.findAllBySchoolCidAndSchoolActiveTrueAndGradeCidAndGradeActiveTrueAndActivitiesActivityCidAndActivitiesActivityActiveTrueAndActivitiesActivityStatusAndActivitiesTeacherCidAndActivitiesTeacherActiveTrueAndActiveTrue(
-						schoolCid, gradeCid, activityCid, ActivityStatus.valueOf(activityStatus), teacherCid);
+		List<Student> students = studentRepository  
+				.findAllBySchoolCidAndGradeCidAndActivitiesActivityCidAndActivitiesActivityStatusAndSchoolActiveTrueAndGradeActiveTrueAndActivitiesActivityActiveTrueAndActiveTrue(
+						schoolCid, gradeCid, activityCid, ActivityStatus.valueOf(activityStatus));
 		if (students == null)
 			throw new ValidationException(String.format(
 					"No student found in the school : %s under teacher : %s having performed activity : %s and status is %s .",

@@ -28,6 +28,7 @@ public class TeacherResponse {
 	private Boolean active;
 	private String designation;
 	private Boolean isManagmentMember;
+	private Boolean isCoach;
 
 	public String getId() {
 		return id;
@@ -149,6 +150,14 @@ public class TeacherResponse {
 		this.isManagmentMember = isManagmentMember;
 	}
 
+	public Boolean getIsCoach() {
+		return isCoach;
+	}
+
+	public void setIsCoach(Boolean isCoach) {
+		this.isCoach = isCoach;
+	}
+
 	public TeacherResponse(Teacher teacher) {
 		this.id = teacher.getcId();
 
@@ -165,6 +174,7 @@ public class TeacherResponse {
 		this.active = teacher.getActive();
 		this.isManagmentMember = teacher.getIsManagmentMember();
 		this.designation = teacher.getDesignation();
+		this.isCoach = teacher.getIsCoach();
 		if (teacher.getSchool() != null)
 			this.schoolName = teacher.getSchool().getName();
 		if (teacher.getGrades() != null && !teacher.getGrades().isEmpty()) {

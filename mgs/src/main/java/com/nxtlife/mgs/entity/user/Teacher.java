@@ -84,7 +84,7 @@ public class Teacher extends BaseEntity {
 	@ManyToOne
 	private School school;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "teacher")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "teacher")
 	private List<Grade> grades;
 
 //	@ManyToMany(mappedBy = "teachers")

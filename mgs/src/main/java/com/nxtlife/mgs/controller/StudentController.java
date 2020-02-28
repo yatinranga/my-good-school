@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nxtlife.mgs.enums.ActivityStatus;
 import com.nxtlife.mgs.service.ActivityPerformedService;
 import com.nxtlife.mgs.service.StudentService;
 import com.nxtlife.mgs.view.ActivityPerformedResponse;
@@ -99,6 +100,12 @@ public class StudentController {
 			@RequestParam("activityCid") String activityCid) {
 
 		return studentService.getAllAwardsOfStudentByActivityId(studentCid, activityCid);
+	}
+	
+	@GetMapping(value = "api/student/activity/{activityCid}")
+	public List<StudentResponse> getAllStudentsBySchoolAndActivityAndCoachAndStatusReviewed(@RequestParam("schoolId") String schoolCid,
+			@RequestParam("gradeId") String gradeCid,@PathVariable("activityCid") String activityCid, @RequestParam("teacherId") String teacherCid){
+		return studentService.getAllStudentsBySchoolAndActivityAndCoachAndStatusReviewed(schoolCid, gradeCid, activityCid, ActivityStatus.Reviewed.toString(), teacherCid);
 	}
 
 	@DeleteMapping("api/students/{cid}")
