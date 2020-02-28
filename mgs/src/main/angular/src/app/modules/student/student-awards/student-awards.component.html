@@ -1,1 +1,34 @@
 <p>student-awards works!</p>
+<div>View :
+    <select (ngModelChange)="getStudentAwards($event)">
+        <option value="" disabled selected>Select Activity </option>
+        <option *ngFor="let activity of activities; let i = index;" value={{activity.id}}>
+            {{activity.name}}
+        </option>
+    </select>
+</div>
+
+<div class="content_main_com">
+    <div class="table_main">
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Date of Receipt</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let awards of awardsArr ; let i = index;">
+                    <td>{{i+1}}</td>
+                    <td>{{awards.description}}</td>
+                    <td>{{awards.name}}</td>
+                    <td>
+                        <div>{{getDate(awards.dateOfActivity) | date}}}</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

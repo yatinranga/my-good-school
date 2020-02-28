@@ -32,10 +32,10 @@ export class AddActivityComponent implements OnInit {
     );
 
     this.addActivityForm = this.formBuilder.group({
-      addActivityId: [''],
-      addActivityDetails: [''],
-      addActivityDate: [''],
-      addCoachId: [''],
+      activityId: [''],
+      description: [''],
+      dateOfActivity: [''],
+      coachId: [''],
       attachment: ['']
     });
   }
@@ -64,19 +64,21 @@ export class AddActivityComponent implements OnInit {
 
   saveActivity() {
     const formData = new FormData();
-    let date = new Date(this.addActivityForm.value.addActivityDate);
-    let activityDate = date.getFullYear()+ "/" + (date.getMonth() + 1) + "/" +date.getDate()  ;
+    let date = new Date(this.addActivityForm.value.dateOfActivity);
+    let activityDate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 
     formData.append('studentId', this.studentInfo.student.id);
-    formData.append('activityId', this.addActivityForm.value.addActivityId);
-    formData.append('coachId', this.addActivityForm.value.addCoachId);
+    formData.append('activityId', this.addActivityForm.value.activityId);
+    formData.append('coachId', this.addActivityForm.value.coachId);
     formData.append('dateOfActivity', activityDate);
-    formData.append('description', this.addActivityForm.value.addActivityDetails);
+    formData.append('description', this.addActivityForm.value.description);
 
-    this.addActivityForm.value.attachment.forEach((element, index) => {
-      formData.append('fileRequests[' + index + '].file', element);
-      console.log('fileRequests[' + index + '].file', element);
-    });
+    if (this.addActivityForm.value.attachment.length > 0) {
+      this.addActivityForm.value.attachment.forEach((element, index) => {
+        formData.append('fileRequests[' + index + '].file', element);
+      });
+    }
+
     console.log(this.addActivityForm.value);
 
     this.studentService.addActivity("/api/students/activities", formData).subscribe(

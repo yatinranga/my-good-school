@@ -1,5 +1,15 @@
 @import '../../app.component.scss';
 
+
+app-home{
+    display: inline-block;
+    width: 100%;
+}
+.main{
+    width:100%;
+    display: inline-block;
+    vertical-align: top;
+}
 .main_box{
     width: 100%;
     display: inline-block

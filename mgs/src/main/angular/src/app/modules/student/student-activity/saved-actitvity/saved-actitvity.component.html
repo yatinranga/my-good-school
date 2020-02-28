@@ -28,7 +28,8 @@
                             <td>
                                 <div *ngIf="allActi.activityStatus === 'SubmittedByStudent'">Submitted</div>
                                 <div *ngIf="allActi.activityStatus === 'SavedByStudent'">Saved</div>
-                                <div *ngIf="allActi.activityStatus === 'ReviewedByStudent'">Reviewed</div></td>
+                                <div *ngIf="allActi.activityStatus === 'ReviewedByStudent'">Reviewed</div>
+                            </td>
                         </tr>
                         <tr>
                             <td class="collapse-td" colspan="4">
@@ -55,7 +56,7 @@
                 </tbody>
             </table>
         </div>
-    </div>                  
+    </div>
 </div>
 
 <div *ngIf="activityType === 'Submitted'">
@@ -139,8 +140,9 @@
                                         </div>
                                         <div class="col-6">
                                             <div>
+                                                <button (click)="deleteSavedActivity(sa)">Delete</button>
                                                 <button (click)="submitSavedActivity(i)">Submit</button>
-                                                <button (click)="editSelectedActivities(i)">Edit</button>
+                                                <button (click)="editSavedActivity(sa)">Edit</button>
                                             </div>
                                             <div>
                                                 <p><strong>Attachments : </strong></p>
@@ -158,6 +160,57 @@
         </div>
     </div>
 </div>
+
+<!-- Edit Activity Form  -->
+<div *ngIf="editActivityShow">
+    <form [formGroup]="savedActivityForm" (ngSubmit)="updateActivity()">
+        <div class="container register-form">
+            <div class="form">
+                <div class="form-content">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>Edit Activity :</h4>
+                            <div class="form-group">Activity :
+                                <select class="form-control" (ngModelChange)="getStudentCoach($event)"
+                                    formControlName="activityId">
+                                    <option value="" selected>{{activityName}}</option>
+                                    <option *ngFor="let activity of activities; let i = index" value={{activity.id}}>
+                                        {{activity.name}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group">Description :
+                                <textarea class="form-control add" formControlName="description"></textarea>
+                            </div>
+                            <div class="form-group">Teacher/Coach :
+                                <select class="form-control" formControlName="coachId">
+                                    <option value="" selected>{{activityTeacher}}</option>
+                                    <option *ngFor="let coach of coaches; let i = index;" value={{coach.id}}>
+                                        {{coach.name}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="form-group">Date :
+                                <input type="date" class="form-control" formControlName="dateOfActivity" />
+                            </div>
+                            <div class="form-group">Attachments
+                                <input type="file" name="selectedFile"
+                                    (change)="onFileSelect($event)" multiple />
+                            </div >
+                                <div *ngFor="let sf of file">{{sf.name}}</div>
+                            
+                        </div>
+                    </div>
+                    <button type="button" (click)="onCancel()">Cancel</button>
+                    <button class="btn btnSubmit btn-success" type="submit">Update</button>
+
+                </div>
+            </div>
+        </div>
+</form>
+</div>
+
+
+
 
 <!-- <div class="upload_main">
     <div>Select file
@@ -227,7 +280,7 @@
                             <h4>Edit Activity :</h4>
                             <div class="form-group">Select Activity :
                                 <select class="form-control" (ngModelChange)="getStudentCoach($event)"
-                                    formControlName="savedActivityId">
+                                    formControlName="activityId">
                                     <option value="" disabled selected >{{activityName}}</option>
                                     <option *ngFor="let activity of activities; let i = index" value={{activity.id}}>
                                         {{activity.name}}</option>
@@ -235,10 +288,10 @@
                             </div>
                             <div class="form-group">Enter Activity Details :
                                 <textarea class="form-control add" value={{activityDetails}} 
-                                    formControlName="savedActivityDetails"></textarea>
+                                    formControlName="description"></textarea>
                             </div>
                             <div class="form-group">Select Teacher/Coach :
-                                <select class="form-control" formControlName="savedCoachId">
+                                <select class="form-control" formControlName="coachId">
                                     <option value="" disabled selected>{{activityTeacher}}</option>
                                     <option *ngFor="let coach of coaches; let i = index;" value={{coach.id}}>
                                         {{coach.name}}
@@ -247,7 +300,7 @@
                             </div>
                             <div class="form-group">Enter Activity Date :
                                 <input type="date" class="form-control" placeholder="Session Start Date"
-                                    formControlName="savedActivityDate" />
+                                    formControlName="dateOfActivity" />
                             </div>
                         </div>
                     </div>
@@ -258,6 +311,8 @@
         </div>
     </form>
 </div> -->
+
+
 <!-- 
 <div class="accordion" id="accordionExample">
     <div class="card">
