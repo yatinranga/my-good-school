@@ -1,7 +1,8 @@
-<div style="float: right;">View :
+<div class="sortby"> Filter by:
     <select style="border: 1px solid #ddd" (ngModelChange)="activityView($event)" ngModel>
-        <option value="All">All</option>
-        <option value="Saved" selected>Saved</option>
+        <option value="" selected disabled hidden> Choose here </option>
+        <option value="All" selected> All</option>
+        <option value="Saved">Saved</option>
         <option value="Submitted">Submitted</option>
         <option value="Reviewed">Reviewed</option>
     </select>
@@ -13,10 +14,11 @@
             <table class="table">
                 <thead class="thead-light">
                     <tr>
-                        <th scope="col">S no.</th>
+                        <th scope="col">#</th>
                         <th scope="col">Activity</th>
                         <th scope="col">Date</th>
                         <th scope="col">Status</th>
+                        <th scope="col">Teacher</th>
                     </tr>
                 </thead>
                 <tbody id="accordionExample">
@@ -28,23 +30,28 @@
                             <td>
                                 <div *ngIf="allActi.activityStatus === 'SubmittedByStudent'">Submitted</div>
                                 <div *ngIf="allActi.activityStatus === 'SavedByStudent'">Saved</div>
-                                <div *ngIf="allActi.activityStatus === 'ReviewedByStudent'">Reviewed</div></td>
+                                <div *ngIf="allActi.activityStatus === 'ReviewedByStudent'">Reviewed</div>
+                            </td>
                         </tr>
                         <tr>
                             <td class="collapse-td" colspan="4">
                                 <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
                                     <div class="row">
                                         <div class="col-6">
-                                            <p><strong>Name : </strong>{{allActi.activityName}}</p>
-                                            <p><strong>Description : </strong>{{allActi.description}}</p>
-                                            <p><strong>Teacher : </strong>{{allActi.teacherName}}</p>
+                                            <div class="description">
+                                                <p><strong>Name : </strong>{{allActi.activityName}}</p>
+                                                <p><strong>Description : </strong>{{allActi.description}}</p>
+                                                <p><strong>Teacher : </strong>{{allActi.teacherName}}</p>
+                                                <p><strong>Focus Area : </strong>{{allActi.focusAreas}}</p>
+                                                <p><strong>PSD Area : </strong>{{allActi.psdAreas}}</p>
+                                            </div>
                                         </div>
                                         <div class="col-6">
-                                            <p><strong>Focus Area : </strong>{{allActi.focusAreas}}</p>
-                                            <p><strong>PSD Area : </strong>{{allActi.psdAreas}}</p>
-                                            <div>
-                                                <p><strong>Attachments : </strong></p>
-                                                <p *ngFor="let file of allActi.fileResponses">{{file.name}}</p>
+                                            <div class="attachment">                                   
+                                                <div>
+                                                    <p><strong>Attachments : </strong></p>
+                                                    <p *ngFor="let file of allActi.fileResponses"> <i class="fa fa-image"> </i> {{file.name}}</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -55,7 +62,7 @@
                 </tbody>
             </table>
         </div>
-    </div>                  
+    </div>
 </div>
 
 <div *ngIf="activityType === 'Submitted'">
@@ -63,12 +70,13 @@
         <div class="table_main">
             <table class="table">
                 <thead class="thead-light">
-                    <tr>
-                        <th scope="col">S no.</th>
-                        <th scope="col">Activity</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Status</th>
-                    </tr>
+                        <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Activity</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Teacher</th>
+                            </tr>
                 </thead>
                 <tbody id="accordionExample">
                     <ng-container *ngFor="let sa of submittedActivitiesArr ; let i = index;">
@@ -83,17 +91,21 @@
                                 <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
                                     <div class="row">
                                         <div class="col-6">
-                                            <p><strong>Name : </strong>{{sa.activityName}}</p>
-                                            <p><strong>Description : </strong>{{sa.description}}</p>
-                                            <p><strong>Teacher : </strong>{{sa.teacherName}}</p>
-                                            <p><strong>Four S : </strong>{{sa.fourS}}</p>
+                                            <div class="description">
+                                                <p><strong>Name : </strong>{{sa.activityName}}</p>
+                                                <p><strong>Description : </strong>{{sa.description}}</p>
+                                                <p><strong>Teacher : </strong>{{sa.teacherName}}</p>
+                                                <p><strong>Four S : </strong>{{sa.fourS}}</p>
+                                                <p><strong>Focus Area : </strong>{{sa.focusAreas}}</p>
+                                                <p><strong>PSD Area : </strong>{{sa.psdAreas}}</p>
+                                            </div>
                                         </div>
                                         <div class="col-6">
-                                            <p><strong>Focus Area : </strong>{{sa.focusAreas}}</p>
-                                            <p><strong>PSD Area : </strong>{{sa.psdAreas}}</p>
-                                            <div>
-                                                <p><strong>Attachments : </strong></p>
-                                                <p *ngFor="let file of sa.fileResponses">{{file.name}}</p>
+                                            <div class="attachment">
+                                                <div>
+                                                    <p> <strong>Attachments : </strong></p>
+                                                    <p *ngFor="let file of sa.fileResponses"> <i class="fa fa-image"></i> {{file.name}}</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -113,12 +125,14 @@
         <div class="table_main">
             <table class="table">
                 <thead class="thead-light">
-                    <tr>
-                        <th scope="col">S no.</th>
-                        <th scope="col">Activity</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Status</th>
-                    </tr>
+                        <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Activity</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Teacher</th>
+                                
+                            </tr>
                 </thead>
                 <tbody id="accordionExample">
                     <ng-container *ngFor="let sa of savedActivitiesArr ; let i = index;">
@@ -128,23 +142,27 @@
                             <td>{{getDate(sa.dateOfActivity) | date}}</td>
                             <td>Saved</td>
                         </tr>
-                        <tr>
+                        <tr style="border: none">
                             <td class="collapse-td" colspan="4">
                                 <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
                                     <div class="row">
                                         <div class="col-6">
-                                            <p><strong>Name : </strong>{{sa.activityName}}</p>
-                                            <p><strong>Description : </strong>{{sa.description}}</p>
-                                            <p><strong>Teacher : </strong>{{sa.teacherName}}</p>
+                                            <div class="description">
+                                                <p><strong>Name : </strong>{{sa.activityName}}</p>
+                                                <p><strong>Description : </strong>{{sa.description}}</p>
+                                                <p><strong>Teacher : </strong>{{sa.teacherName}}</p>
+                                            </div>
                                         </div>
                                         <div class="col-6">
-                                            <div>
-                                                <button (click)="submitSavedActivity(i)">Submit</button>
-                                                <button (click)="editSelectedActivities(i)">Edit</button>
-                                            </div>
-                                            <div>
-                                                <p><strong>Attachments : </strong></p>
-                                                <p *ngFor="let file of sa.fileResponses">{{file.name}}</p>
+                                            <div class="attachment">
+                                                <p> <strong> Attachments : </strong></p>
+                                                <p *ngFor="let file of sa.fileResponses"> <i class="fa fa-image"></i> {{file.name}}</p>                                                  
+                                                    <div class="buttons">
+                                                       <button (click)="submitSavedActivity(i)" class="submit">
+                                                            <i class="fa fa-paper-plane" aria-hidden="true"></i> Submit</button>
+                                                       <button (click)="editSelectedActivities(i)">
+                                                           <i class="fa fa-edit"></i> Edit</button>
+                                                    </div>
                                             </div>
                                         </div>
                                     </div>
@@ -240,11 +258,7 @@
                             <div class="form-group">Select Activity :
                                 <select class="form-control" (ngModelChange)="getStudentCoach($event)"
                                     formControlName="savedActivityId">
-<<<<<<< HEAD
-                                    <option value="" selected></option>
-=======
                                     <option value="" disabled selected >{{activityName}}</option>
->>>>>>> a64e0cd35c0933bcb4d4ea2a7ba4ee93dcaf8f43
                                     <option *ngFor="let activity of activities; let i = index" value={{activity.id}}>
                                         {{activity.name}}</option>
                                 </select>

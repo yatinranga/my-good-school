@@ -54,22 +54,7 @@ a.menu_link:hover{
     text-decoration: none !important;
     color: $light;
 }
-i.fa.fa-bar-chart:after {
-    content: "";
-    position: absolute;
-    z-index: 1;
-    top: 5px;
-    border: solid dimgray;
-    border-width: 0 3px 3px 0;
-    display: inline-block;
-    padding: 3px;
-    transform: rotate(-45deg);
-    -webkit-transform: rotate(-45deg);
-    left: 250px;
-}
-i.fa.fa-bar-chart{
-    position: relative;
-}
+
 li.sub_menu{
     color: #a2a2a2;
     padding: 10px 60px;

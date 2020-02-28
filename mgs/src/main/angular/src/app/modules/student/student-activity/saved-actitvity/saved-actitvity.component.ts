@@ -21,7 +21,7 @@ export class SavedActitvityComponent implements OnInit {
   studentId: any;
   editActivity = false;
   savedActivityForm: FormGroup;
-  
+
   activityName : any;
   activityDetails: any;
   activityTeacher: any;
@@ -41,7 +41,7 @@ export class SavedActitvityComponent implements OnInit {
     this.getStudentSavedActivities(this.studentId);
     this.getStudentSubmittedActivities(this.studentId);
     this.getStudentAllActivities(this.studentId);
-    
+
     // this.getStudentActivity(this.schoolId);
 
     this.savedActivityForm = this.formBuilder.group({
@@ -114,14 +114,11 @@ export class SavedActitvityComponent implements OnInit {
 
   // to UPDATE the saved activity
   updateActivity() {
-<<<<<<< HEAD
-=======
     console.log(this.savedActivityForm.value);
->>>>>>> a64e0cd35c0933bcb4d4ea2a7ba4ee93dcaf8f43
   }
 
   onFileSelect(event) {
-    
+
       var reader = new FileReader();
       this.file = [...event.target.files];
       this.file.forEach((element,index) => console.log(this.file[index]));
@@ -131,7 +128,7 @@ export class SavedActitvityComponent implements OnInit {
       reader.onload = (event) => { // called once readAsDataURL is completed
         // this.url = event.target.result;
       }
-    
+
     // if (event.target.files.length > 0) {
     //   this.file = [...event.target.files];
     //   console.log(this.file)
@@ -150,9 +147,6 @@ export class SavedActitvityComponent implements OnInit {
     );
   }
 
-<<<<<<< HEAD
-}
-=======
   activityView(event){
       this.activityType = event;
   }
@@ -162,4 +156,3 @@ export class SavedActitvityComponent implements OnInit {
   }
 
 }
->>>>>>> a64e0cd35c0933bcb4d4ea2a7ba4ee93dcaf8f43

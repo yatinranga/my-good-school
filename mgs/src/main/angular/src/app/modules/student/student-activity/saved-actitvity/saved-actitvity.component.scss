@@ -26,12 +26,7 @@ button.btn.btnSubmit.btn-success {
     box-shadow: none;
     border-radius: 0;
 }
-.table button {
-    background: #2c7590;
-    color: #fafafa;
-    padding: 5px 15px;
-    border-radius: 0;
-}
+
 .upload img {
     max-width: 200px;
 }
@@ -47,4 +42,23 @@ button.btn.btnSubmit.btn-success {
 
 .collapse-td{
     padding: 0;
+}
+
+.sortby{
+    float: right;
+    margin: 20px 15px;
+    padding: 0px;
+    font-size: 16px;
+}
+select{
+    background: none;
+    border: none;
+    color: #333;
+    height: 40px;
+    border-radius: 0 !important;
+    width: 120px;
+}
+
+button.submit {
+    background: green;
 }
