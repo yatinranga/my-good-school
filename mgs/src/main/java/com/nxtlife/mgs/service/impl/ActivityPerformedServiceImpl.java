@@ -154,10 +154,10 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 				throw new ValidationException(
 						String.format("Activity with the id : %s is already submitted by you and cannot be edited.",
 								request.getId()));
-			if (request.getDateOfActivity() == null)
-				request.setDateOfActivity(activityPerformed.getDateOfActivity());
-			if (request.getDescription() == null)
-				request.setDescription(activityPerformed.getDescription());
+			if (request.getDateOfActivity() !=null)
+				activityPerformed.setDateOfActivity(request.getDateOfActivity());
+			if (request.getDescription() != null)
+				activityPerformed.setDescription(request.getDescription());
 
 			List<File> allValidFilesOfActivity = fileRepository
 					.findAllByActiveTrueAndActivityPerformedCidAndActiveTrue(request.getId());
@@ -681,7 +681,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 		if (!(new Integer(Integer.parseInt(year)) instanceof Integer))
 			throw new ValidationException("Year is in invalid format.");
 		if (studentCid == null)
-			throw new ValidationException("School id cannot be null.");
+			throw new ValidationException("student id cannot be null.");
 		Student student = studentRepository.findByCidAndActiveTrue(studentCid);
 		if (student == null)
 			throw new ValidationException("No student found with id : " + studentCid);

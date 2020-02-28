@@ -26,6 +26,8 @@ public class TeacherResponse {
 	private List<String> activities;
 	private String schoolName;
 	private Boolean active;
+	private String designation;
+	private Boolean isManagmentMember;
 
 	public String getId() {
 		return id;
@@ -131,12 +133,28 @@ public class TeacherResponse {
 		this.active = active;
 	}
 
+	public String getDesignation() {
+		return designation;
+	}
+
+	public void setDesignation(String designation) {
+		this.designation = designation;
+	}
+
+	public Boolean getIsManagmentMember() {
+		return isManagmentMember;
+	}
+
+	public void setIsManagmentMember(Boolean isManagmentMember) {
+		this.isManagmentMember = isManagmentMember;
+	}
+
 	public TeacherResponse(Teacher teacher) {
 		this.id = teacher.getcId();
 
-		if(teacher.getUser() != null)
-		  this.userId = teacher.getUser().getCid();
-	
+		if (teacher.getUser() != null)
+			this.userId = teacher.getUser().getCid();
+
 		this.username = teacher.getUsername();
 		this.name = teacher.getName();
 		this.gender = teacher.getGender();
@@ -145,6 +163,8 @@ public class TeacherResponse {
 		this.dob = teacher.getDob();
 		this.qualification = teacher.getQualification();
 		this.active = teacher.getActive();
+		this.isManagmentMember = teacher.getIsManagmentMember();
+		this.designation = teacher.getDesignation();
 		if (teacher.getSchool() != null)
 			this.schoolName = teacher.getSchool().getName();
 		if (teacher.getGrades() != null && !teacher.getGrades().isEmpty()) {

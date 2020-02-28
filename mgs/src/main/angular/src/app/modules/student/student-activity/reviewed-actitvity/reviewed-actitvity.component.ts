@@ -8,11 +8,18 @@ import { StudentService } from 'src/app/services/student.service';
 })
 export class ReviewedActitvityComponent implements OnInit {
 
-  reviewedActivitiesArr = ["Sky Diving"];
+  reviewedActivitiesArr = ["Yoga"];
+  studentId: any;
+  studentInfo = [];
+  // reviewedActivitiesArr = [];
 
-  constructor(private studentService : StudentService) { }
+  constructor(private studentService: StudentService) { }
 
   ngOnInit() {
+    this.studentInfo = JSON.parse(localStorage.getItem('user_info'));
+    this.studentId = this.studentInfo['student'].id;
+    // this.studentService.getReviewedActivity().subscribe((res) =>)
+
   }
 
 }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nxtlife.mgs.service.ActivityPerformedService;
 import com.nxtlife.mgs.service.StudentService;
 import com.nxtlife.mgs.view.ActivityPerformedResponse;
+import com.nxtlife.mgs.view.AwardResponse;
 import com.nxtlife.mgs.view.StudentRequest;
 import com.nxtlife.mgs.view.StudentResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
@@ -42,19 +43,17 @@ public class StudentController {
 		return studentService.save(studentRequest);
 	}
 
-
 	@PostMapping("api/students")
 	public StudentResponse saveStudent(@Valid @RequestBody StudentRequest studentRequest) {
 		return studentService.save(studentRequest);
 	}
-
 
 	@PutMapping("api/students/update/{cid}")
 	public StudentResponse update(@RequestBody StudentRequest request, @PathVariable String cid) {
 		return studentService.update(request, cid);
 	}
 
-	@GetMapping()
+	@GetMapping("api/students")
 	public List<StudentResponse> getAll() {
 		return studentService.getAll();
 	}
@@ -93,6 +92,13 @@ public class StudentController {
 	public List<ActivityPerformedResponse> getAllActivitiesOfStudentByStatus(@RequestParam("status") String status,
 			@RequestParam("studentId") String studentCid) {
 		return activityPerformedService.getAllActivitiesOfStudentByStatus(status, studentCid);
+	}
+
+	@GetMapping(value = "api/students/awards")
+	public List<AwardResponse> getAllAwardsOfStudentByActivityId(@RequestParam("studentCid") String studentCid,
+			@RequestParam("activityCid") String activityCid) {
+
+		return studentService.getAllAwardsOfStudentByActivityId(studentCid, activityCid);
 	}
 
 	@DeleteMapping("api/students/{cid}")

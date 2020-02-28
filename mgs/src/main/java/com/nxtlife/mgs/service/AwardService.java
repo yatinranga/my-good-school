@@ -19,4 +19,6 @@ public interface AwardService {
 
 	List<AwardResponse> filterAwardByYearPerformed(String year, String studentCid);
 
+	List<AwardResponse> getAllSoloUnverifiedAwardsOfSchool(String schoolCid, String awardCid);
+
 }

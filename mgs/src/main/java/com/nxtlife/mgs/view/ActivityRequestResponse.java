@@ -3,7 +3,6 @@ package com.nxtlife.mgs.view;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.activity.FocusArea;
 import com.nxtlife.mgs.enums.FourS;
@@ -11,17 +10,17 @@ import com.nxtlife.mgs.enums.FourS;
 public class ActivityRequestResponse {
 
 	private String name;
-	
+
 	private String description;
-	
+
 	private String id;
-	
+
 	private String fourS;
-	
+
 	private List<String> focusAreaIds;
-	
+
 	private List<String> schoolIds;
-	
+
 	private List<String> focusAreas;
 
 	public String getName() {
@@ -83,28 +82,28 @@ public class ActivityRequestResponse {
 	public Activity toEntitity() {
 		return toEntity(null);
 	}
-	
+
 	public Activity toEntity(Activity activity) {
-		activity = activity==null?new Activity() : activity;
+		activity = activity == null ? new Activity() : activity;
 		activity.setName(this.name);
 		activity.setDescription(this.description);
 		activity.setFourS(FourS.valueOf(this.fourS));
 		return activity;
 	}
-	public ActivityRequestResponse(Activity activity)
-	{
+
+	public ActivityRequestResponse(Activity activity) {
 		this.id = activity.getCid();
 		this.fourS = activity.getFourS().name();
 		this.name = activity.getName();
 		this.description = activity.getDescription();
 		focusAreaIds = new ArrayList<String>();
-		for(FocusArea fa : activity.getFocusAreas()) {
+		for (FocusArea fa : activity.getFocusAreas()) {
 			focusAreaIds.add(fa.getCid());
 		}
-		
+
 	}
-	
+
 	public ActivityRequestResponse() {
-		
+
 	}
 }

@@ -70,6 +70,10 @@ public class Teacher extends BaseEntity {
 
 	private Boolean isCoach;
 
+	private String designation;
+
+	private Boolean isManagmentMember;
+
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
 	User user;
@@ -285,6 +289,22 @@ public class Teacher extends BaseEntity {
 
 	public void setTeacherSchoolGrades(List<TeacherSchoolGrade> teacherSchoolGrades) {
 		this.teacherSchoolGrades = teacherSchoolGrades;
+	}
+
+	public String getDesignation() {
+		return designation;
+	}
+
+	public void setDesignation(String designation) {
+		this.designation = designation;
+	}
+
+	public Boolean getIsManagmentMember() {
+		return isManagmentMember;
+	}
+
+	public void setIsManagmentMember(Boolean isManagmentMember) {
+		this.isManagmentMember = isManagmentMember;
 	}
 
 	public Teacher(@NotNull String cid, @NotNull String name, String username, String gender, @NotNull Date dob,

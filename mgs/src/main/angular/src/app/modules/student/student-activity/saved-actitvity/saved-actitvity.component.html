@@ -1,34 +1,88 @@
 <div class="content_main_com">
     <div class="table_main">
-            <table class="table">
-                    <thead class="thead-light">
-                        <tr>
-                            <th scope="col">S no.</th>
-                            <th scope="col">Activity</th>
-                            <th scope="col">Activity Date</th>
-                            <th scope="col">Activity Details</th>
-                            <th scope="col">Activity Status</th>
-                            <th scope="col"></th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let savedactivitiesarr of savedActivitiesArr ; let i = index;">
-                            <td>{{i+1}}</td>
-                            <td>{{savedactivitiesarr}}</td>
-                            <td>dd/mm/yyyy</td>
-                            <td>
-                                <div>Activity Details Here</div>
-                            </td>
-                            <td>Activity Status</td>
-                            <td>
-                                <button>Submit</button>
-                            </td>
-                            <td>
-                                <button (click)="showSelectedActivities(i)">Edit</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">S no.</th>
+                    <th scope="col">Activity</th>
+                    <th scope="col">Activity Date</th>
+                    <th scope="col">Activity Details</th>
+                    <th scope="col">Activity Status</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let savedactivitiesarr of savedActivitiesArr ; let i = index;">
+                    <td>{{i+1}}</td>
+                    <td>{{savedactivitiesarr.activityName}}</td>
+                    <td>{{savedactivitiesarr.dateOfActivity}}</td>
+                    <td>
+                        <div>{{savedactivitiesarr.description}}</div>
+                    </td>
+                    <td>Saved</td>
+                    <td>
+                        <button (click)="submitSavedActivity(i)">Submit</button>
+                    </td>
+                    <td>
+                        <button (click)="editSelectedActivities(i)">Edit</button>
+                    </td>
+                </tr>
+                <tr *ngFor="let submittedactivitiesarr of submittedActivitiesArr ; let i = index;">
+                    <td>{{i+1}}</td>
+                    <td>{{submittedactivitiesarr.activityName}}</td>
+                    <td>{{submittedactivitiesarr.dateOfActivity}}</td>
+                    <td>
+                        <div>{{submittedactivitiesarr.description}}</div>
+                    </td>
+                    <td>Submitted</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
+</div>
+
+<!-- Edit Activity Form -->
+<div *ngIf="editActivity">
+    <form [formGroup]="savedActivityForm" (ngSubmit)="updateActivity()">
+        <div class="container register-form">
+            <div class="form">
+                <div class="form-content">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>Edit Activity :</h4>
+                            <div class="form-group">Select Activity :
+                                <select class="form-control" (ngModelChange)="getStudentCoach($event)"
+                                    formControlName="savedActivityId">
+                                    <option value="" selected ></option>
+                                    <option *ngFor="let activity of activities; let i = index" value={{activity.id}}>
+                                        {{activity.name}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group">Enter Activity Details :
+                                <textarea class="form-control add" placeholder="Details"
+                                    formControlName="savedActivityDetails"></textarea>
+                            </div>
+                            <div class="form-group">Select Teacher/Coach :
+                                <select class="form-control" formControlName="savedCoachId">
+                                    <option value="" disabled selected>Select Teacher/Coach </option>
+                                    <option *ngFor="let coach of coaches; let i = index;" value={{coach.id}}>
+                                        {{coach.name}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="form-group">Enter Activity Date :
+                                <input type="date" class="form-control" placeholder="Session Start Date"
+                                    formControlName="savedActivityDate" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button">Cancel</button>
+                <button class="btn btnSubmit btn-success" type="submit">Update</button>
+            </div>
+        </div>
+    </form>
 </div>

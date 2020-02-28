@@ -5,7 +5,8 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">Select Activity :
-                            <select class="form-control" (ngModelChange)="getStudentCoach($event)" formControlName="addActivityId">
+                            <select class="form-control" (ngModelChange)="getStudentCoach($event)"
+                                formControlName="addActivityId">
                                 <option value="" disabled selected>Select Activity </option>
                                 <option *ngFor="let activity of activities; let i = index;" value={{activity.id}}>
                                     {{activity.name}}
@@ -13,13 +14,11 @@
                             </select>
                         </div>
                         <div class="form-group">Enter Activity Details :
-                            <textarea class="form-control" placeholder="Your Name"
+                            <textarea class="form-control add" placeholder="Details"
                                 formControlName="addActivityDetails"></textarea>
                         </div>
-                        <div class="form-group">Enter Activity Date :
-                            <input type="date" class="form-control" placeholder="Session Start Date"
-                                formControlName="addActivityDate" />
-                        </div>
+                    </div>
+                    <div class="col-md-6">
                         <div class="form-group">Select Teacher/Coach :
                             <select class="form-control" formControlName="addCoachId">
                                 <option value="" disabled selected>Select Teacher/Coach </option>
@@ -28,16 +27,23 @@
                                 </option>
                             </select>
                         </div>
+                        <div class="form-group">Enter Activity Date :
+                            <input type="date" class="form-control" placeholder="Session Start Date"
+                                formControlName="addActivityDate" />
+                        </div>
+                    </div>
+                    <div class="choosefile_box">
                         <div class="form-group">
-                                <div class="input-field">
-                                        <input class="choosefile" type="file" name="selectedFile" (change)="onFileSelect($event)" multiple/>
-                                        <span class="choosefile choosefile-custom"> <i class="fa fa-file"></i> </span>
-                                </div>
+                            <div class="input-field">
+                                <input class="choosefile" type="file" name="selectedFile"
+                                    (change)="onFileSelect($event)" multiple />
+                                <span class="choosefile choosefile-custom"> <i class="fa fa-file"></i> </span>
+                            </div>
+                            <button class="btn btnSubmit btn-success" type="submit">Save</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <button class="btn btnSubmit btn-success" type="submit">Save</button>
         </div>
     </div>
 </form>

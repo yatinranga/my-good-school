@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.util.ExcelUtil;
+import com.nxtlife.mgs.view.AwardResponse;
 import com.nxtlife.mgs.view.StudentRequest;
 import com.nxtlife.mgs.view.StudentResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
@@ -36,6 +37,8 @@ public interface StudentService extends ExcelUtil {
 
 	List<StudentResponse> getAllStudentsBySchoolAndActivityAndCoachAndStatusReviewed(String schoolCid,String gradeCid,
 			String activityCid, String activityStatus, String teacherCid);
+
+	List<AwardResponse> getAllAwardsOfStudentByActivityId(String studentCid, String awardCid);
 
 //	List<StudentResponse> getAllBySchoolCid(String schoolCid);
 

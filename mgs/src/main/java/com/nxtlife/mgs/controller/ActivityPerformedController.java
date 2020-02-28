@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,6 +38,11 @@ public class ActivityPerformedController {
 		return activityPerformedService.saveActivityByCoach(request);
 	}
 
+	@PostMapping(value = "api/coaches/{actCid}/submit")
+	public ActivityPerformedResponse reviewByCoach(@PathVariable("actCid") String activityPerformedCid) {
+		return activityPerformedService.submitActivityByCoach(activityPerformedCid);
+	}
+
 	@GetMapping(value = "api/coaches/activities")
 	public List<ActivityPerformedResponse> getAllPendingActivitiesByCoach(@RequestParam("coachId") String coachCid) {
 		return activityPerformedService.getAllActivitiesAssignedToCoachforReview(coachCid);
@@ -61,11 +65,6 @@ public class ActivityPerformedController {
 			@RequestParam("coachId") String coachCid, @RequestParam("classId") String gradeCid,
 			@RequestParam("activityId") String activityCid) {
 		return activityPerformedService.getAllPendingActivitiesByClassAndService(coachCid, gradeCid, activityCid);
-	}
-
-	@PostMapping(value = "api/coaches/{actCid}/submit")
-	public ActivityPerformedResponse reviewByCoach(@PathVariable("actCid") String activityPerformedCid) {
-		return activityPerformedService.submitActivityByCoach(activityPerformedCid);
 	}
 
 	@GetMapping(value = "api/students/activities")

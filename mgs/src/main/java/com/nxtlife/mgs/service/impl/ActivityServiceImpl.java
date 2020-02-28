@@ -13,7 +13,6 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,104 +29,106 @@ import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.ActivityRequestResponse;
-import com.nxtlife.mgs.view.GradeRequest;
-import com.nxtlife.mgs.view.GradeResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
 
 @Service
-public class ActivityServiceImpl extends BaseService implements ActivityService{
+public class ActivityServiceImpl extends BaseService implements ActivityService {
 
 	@Autowired
 	ActivityRepository activityRepository;
-	
+
 	@Autowired
 	FocusAreaRepository focusAreaRepository;
-	
+
 	@Autowired
 	SchoolRepository schoolRepository;
-	
+
 	@Autowired
 	Utils utils;
-	
+
 	@Override
-	public List<ActivityRequestResponse> getAllOfferedActivities(){
+	public List<ActivityRequestResponse> getAllOfferedActivities() {
 		List<Activity> activities = activityRepository.findAllByActiveTrue();
 		List<ActivityRequestResponse> activityResponses = new ArrayList<ActivityRequestResponse>();
-		if(activities == null)
+		if (activities == null)
 			throw new ValidationException("No activities found.");
-		activities.forEach(activity -> {activityResponses.add(new ActivityRequestResponse(activity));});
+		activities.forEach(activity -> {
+			activityResponses.add(new ActivityRequestResponse(activity));
+		});
 		return activityResponses;
 	}
-	
+
 	@Override
-	public List<ActivityRequestResponse> getAllOfferedActivitiesBySchool(String schoolCid){
+	public List<ActivityRequestResponse> getAllOfferedActivitiesBySchool(String schoolCid) {
 		List<Activity> activities = activityRepository.findAllBySchoolsCidAndActiveTrue(schoolCid);
 		List<ActivityRequestResponse> activityResponses = new ArrayList<ActivityRequestResponse>();
-		if(activities == null)
+		if (activities == null)
 			throw new ValidationException("No activities found.");
-		activities.forEach(activity -> {activityResponses.add(new ActivityRequestResponse(activity));});
+		activities.forEach(activity -> {
+			activityResponses.add(new ActivityRequestResponse(activity));
+		});
 		return activityResponses;
 	}
-	
+
 	@Override
 	public ActivityRequestResponse saveActivity(ActivityRequestResponse request) {
-		if(request == null)
+		if (request == null)
 			throw new ValidationException("Request cannot be null");
-		if(request.getName()==null)
+		if (request.getName() == null)
 			throw new ValidationException("Activity name cannot be null");
-		if(request.getFourS() == null)
+		if (request.getFourS() == null)
 			throw new ValidationException("Four S cannot be null.");
-		if(request.getFocusAreaIds()==null)
+		if (request.getFocusAreaIds() == null)
 			throw new ValidationException("Focus area ids cannot be null.");
 		Activity activity = activityRepository.findByNameAndActiveTrue(request.getName());
-		if(activity != null)
+		if (activity != null)
 			throw new ValidationException("Activity already exist.");
-		List<FocusArea> focusAreaList=focusAreaRepository.findAll();
-		if(focusAreaList == null)
+		List<FocusArea> focusAreaList = focusAreaRepository.findAll();
+		if (focusAreaList == null)
 			throw new ValidationException("No Focus Areas found.");
 //		for(int i =0;i<focusAreaList.size();i++) {
 //			if(!request.getFocusAreaIds().contains(focusAreaList.get(i).getCid()))
 //				focusAreaList.remove(i);
 //		}
 		List<FocusArea> focusAreas = new ArrayList<>();
-		for(int i =0;i<request.getFocusAreaIds().size();i++) {
-			for(int j =0 ; j<focusAreaList.size();j++)
-			  if(focusAreaList.get(j).getCid().equals(request.getFocusAreaIds().get(i)))
-				focusAreas.add(focusAreaList.get(j));
+		for (int i = 0; i < request.getFocusAreaIds().size(); i++) {
+			for (int j = 0; j < focusAreaList.size(); j++)
+				if (focusAreaList.get(j).getCid().equals(request.getFocusAreaIds().get(i)))
+					focusAreas.add(focusAreaList.get(j));
 		}
 		activity = request.toEntitity();
 		activity.setFocusAreas(focusAreas);
 		List<School> schools = schoolRepository.findAll();
-		if(request.getSchoolIds()!=null && !request.getSchoolIds().isEmpty()) {
-			for(int i =0;i<schools.size();i++) {
-				if(!request.getSchoolIds().contains(schools.get(i).getCid()))
+		if (request.getSchoolIds() != null && !request.getSchoolIds().isEmpty()) {
+			for (int i = 0; i < schools.size(); i++) {
+				if (!request.getSchoolIds().contains(schools.get(i).getCid()))
 					schools.remove(i);
 			}
 		}
-		activity.setSchools(schools); //if school ids are empty activity will be set valid for all schools
-		
+
 		activity.setCid(utils.generateRandomAlphaNumString(8));
 		activity.setActive(true);
 		activity = activityRepository.save(activity);
-		if(activity==null)
+		if (activity == null)
 			throw new RuntimeException("Something went wrong activity not created.");
-			
+
 		return new ActivityRequestResponse(activity);
+
 	}
-	
+
 	@Override
 	public SuccessResponse deleteActivityByCid(String cid) {
 		Activity activity = activityRepository.getOneByCidAndActiveTrue(cid);
-		if(activity==null)
+		if (activity == null)
 			throw new ValidationException(String.format("No activity found with id : %s ", cid));
 		int i = activityRepository.updateActivitySetActiveByCid(false, cid);
-		if(i==0)
+		if (i == 0)
 			throw new RuntimeException("Something went wrong Activity not deleted.");
 		return new SuccessResponse(200, "Activity successfuly deleted.");
 	}
-	
+
 	@Override
-	public List<ActivityRequestResponse> uploadActivityFromExcel(MultipartFile file , String schoolCid) {
+	public List<ActivityRequestResponse> uploadActivityFromExcel(MultipartFile file, String schoolCid) {
 		if (file == null || file.isEmpty() || file.getSize() == 0)
 			throw new ValidationException("Pls upload valid excel file.");
 
@@ -140,7 +141,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService{
 			for (int i = 0; i < activityRecords.size(); i++) {
 				List<Map<String, Object>> tempactivityRecords = new ArrayList<Map<String, Object>>();
 				tempactivityRecords.add(activityRecords.get(i));
-				activityResponseList.add(saveActivity(validateActivityRequest(tempactivityRecords, errors , schoolCid)));
+				activityResponseList.add(saveActivity(validateActivityRequest(tempactivityRecords, errors, schoolCid)));
 			}
 
 		} catch (IOException e) {
@@ -151,44 +152,45 @@ public class ActivityServiceImpl extends BaseService implements ActivityService{
 		return activityResponseList;
 	}
 
-	private ActivityRequestResponse validateActivityRequest(List<Map<String, Object>> activityDetails, List<String> errors ,String schoolCids) {
-		if(activityDetails==null || activityDetails.isEmpty())
+	private ActivityRequestResponse validateActivityRequest(List<Map<String, Object>> activityDetails,
+			List<String> errors, String schoolCids) {
+		if (activityDetails == null || activityDetails.isEmpty())
 			errors.add("Activity details not found");
 		ActivityRequestResponse activityRequest = new ActivityRequestResponse();
 		activityRequest.setName((String) activityDetails.get(0).get("NAME"));
 		activityRequest.setDescription((String) activityDetails.get(0).get("DESCRIPTION"));
 		activityRequest.setFourS((String) activityDetails.get(0).get("FOUR S"));
 		String focusAreas = (String) activityDetails.get(0).get("FOCUS AREAS");
-		
+
 		List<String> focusAreaCIds = new ArrayList<String>();
 		String[] focusAreaNames = focusAreas.split(",");
-		
-		if(focusAreaNames!=null && focusAreaNames.length>0) {
-		List<FocusArea> focusAreaList = focusAreaRepository.findAll();
-		for(int i =0 ; i< focusAreaNames.length;i++) {
-			for(int j =0 ;j<focusAreaList.size();j++) {
-				if(focusAreaNames[i].equalsIgnoreCase(focusAreaList.get(j).getName())) {
-					focusAreaCIds.add(focusAreaList.get(j).getCid());
-					break;
+
+		if (focusAreaNames != null && focusAreaNames.length > 0) {
+			List<FocusArea> focusAreaList = focusAreaRepository.findAll();
+			for (int i = 0; i < focusAreaNames.length; i++) {
+				for (int j = 0; j < focusAreaList.size(); j++) {
+					if (focusAreaNames[i].equalsIgnoreCase(focusAreaList.get(j).getName())) {
+						focusAreaCIds.add(focusAreaList.get(j).getCid());
+						break;
+					}
+				}
+
+			}
+			activityRequest.setFocusAreaIds(focusAreaCIds);
+		}
+		// logic to fetch comma separated schoolCids and set it to activityRequest
+
+		if (schoolCids != null) {
+			List<String> activityReqSchoolCids = new ArrayList<String>();
+			String[] schCids = schoolCids.split(",");
+			if (schCids != null && schCids.length > 0) {
+				for (int i = 0; i < schCids.length; i++) {
+					activityReqSchoolCids.add(schCids[i]);
 				}
 			}
-			
+			activityRequest.setSchoolIds(activityReqSchoolCids);
 		}
-		activityRequest.setFocusAreaIds(focusAreaCIds);
-		}
-		//logic to fetch comma separated schoolCids and set it to activityRequest
-		
-		if(schoolCids!=null) {
-		  List<String> activityReqSchoolCids = new ArrayList<String>();
-		  String[] schCids = schoolCids.split(",");
-		  if(schCids!=null && schCids.length>0) {
-			  for(int i=0 ; i<schCids.length;i++) {
-				  activityReqSchoolCids.add(schCids[i]);
-			  }
-		   }
-		  activityRequest.setSchoolIds(activityReqSchoolCids);
-		}
-		
+
 //     NAME DESCRIPTION FOUR S FOCUS AREAS		
 
 		return activityRequest;
@@ -232,7 +234,8 @@ public class ActivityServiceImpl extends BaseService implements ActivityService{
 					if (cell != null) {
 						if (columnTypes.get(headers.get(j)).equals(cell.getCellType())) {
 							if (cell.getCellType() == CellType.NUMERIC) {
-								if (headers.get(j).contains("DATE") || headers.get(j).contains("DOB")|| headers.get(j).contains("SESSION START DATE"))
+								if (headers.get(j).contains("DATE") || headers.get(j).contains("DOB")
+										|| headers.get(j).contains("SESSION START DATE"))
 									columnValues.put(headers.get(j), cell.getDateCellValue());
 								else
 									columnValues.put(headers.get(j), new DataFormatter().formatCellValue(cell));

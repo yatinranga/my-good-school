@@ -39,6 +39,10 @@ public class TeacherRequest {
 
 	private String schoolId;
 
+	private String designation;
+
+	private Boolean isManagmentMember;
+
 	public String getName() {
 		return name;
 	}
@@ -159,6 +163,22 @@ public class TeacherRequest {
 		this.schoolId = schoolId;
 	}
 
+	public String getDesignation() {
+		return designation;
+	}
+
+	public void setDesignation(String designation) {
+		this.designation = designation;
+	}
+
+	public Boolean getIsManagmentMember() {
+		return isManagmentMember;
+	}
+
+	public void setIsManagmentMember(Boolean isManagmentMember) {
+		this.isManagmentMember = isManagmentMember;
+	}
+
 	public Teacher toEntity() {
 		return toEntity(null);
 	}
@@ -188,6 +208,9 @@ public class TeacherRequest {
 			teacher.setIsCoach(this.isCoach);
 		if (this.isClassTeacher != null)
 			teacher.setIsClassTeacher(this.isClassTeacher);
+
+		teacher.setIsManagmentMember(isManagmentMember);
+		teacher.setDesignation(designation);
 
 		return teacher;
 	}

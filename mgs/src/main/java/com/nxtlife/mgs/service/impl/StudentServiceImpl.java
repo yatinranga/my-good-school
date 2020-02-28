@@ -21,6 +21,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.entity.activity.Activity;
+import com.nxtlife.mgs.entity.school.AwardActivityPerformed;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.user.Guardian;
@@ -32,6 +33,7 @@ import com.nxtlife.mgs.enums.UserType;
 import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.ActivityRepository;
+import com.nxtlife.mgs.jpa.AwardActivityPerformedRepository;
 import com.nxtlife.mgs.jpa.GradeRepository;
 import com.nxtlife.mgs.jpa.GuardianRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
@@ -48,6 +50,7 @@ import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.SequenceGenerator;
 import com.nxtlife.mgs.util.Utils;
+import com.nxtlife.mgs.view.AwardResponse;
 import com.nxtlife.mgs.view.GuardianRequest;
 import com.nxtlife.mgs.view.StudentRequest;
 import com.nxtlife.mgs.view.StudentResponse;
@@ -85,12 +88,15 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 	@Autowired
 	ActivityPerformedService activityPerformedService;
-	
+
 	@Autowired
 	ActivityRepository activityRepository;
-	
+
 	@Autowired
 	TeacherRepository teacherRepository;
+
+	@Autowired
+	AwardActivityPerformedRepository awardActivityPerformedRepository;
 
 	@Override
 	public StudentResponse save(StudentRequest request) {
@@ -617,37 +623,63 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		}
 
 	}
-	
+
 	@Override
-	public List<StudentResponse> getAllStudentsBySchoolAndActivityAndCoachAndStatusReviewed(String schoolCid,String gradeCid, String activityCid,String activityStatus,String teacherCid){
-		if(schoolCid==null)
+	public List<StudentResponse> getAllStudentsBySchoolAndActivityAndCoachAndStatusReviewed(String schoolCid,
+			String gradeCid, String activityCid, String activityStatus, String teacherCid) {
+		if (schoolCid == null)
 			throw new ValidationException("School id cannot be null.");
-		if(activityCid == null)
+		if (activityCid == null)
 			throw new ValidationException("Activity id cannot be null.");
-		if(teacherCid==null)
+		if (teacherCid == null)
 			throw new ValidationException("Teacher id cannot be null.");
-		if(gradeCid==null)
+		if (gradeCid == null)
 			throw new ValidationException("Grade id cannot be null.");
 		School school = schoolRepository.findByCidAndActiveTrue(schoolCid);
-		if(school == null)
+		if (school == null)
 			throw new ValidationException(String.format("School with id : %s not found.", schoolCid));
 		Grade grade = gradeRepository.findByCidAndActiveTrue(gradeCid);
-		if(grade == null)
-			throw new ValidationException(String.format("Grade with id : %s not found in school : %s", gradeCid,school.getName()));
+		if (grade == null)
+			throw new ValidationException(
+					String.format("Grade with id : %s not found in school : %s", gradeCid, school.getName()));
 		Activity activity = activityRepository.findByCidAndActiveTrue(activityCid);
-		if(activity==null)
+		if (activity == null)
 			throw new ValidationException(String.format("Activity with id : %s not found.", activityCid));
 		Teacher teacher = teacherRepository.findByCidAndActiveTrue(teacherCid);
-		if(teacher==null)
+		if (teacher == null)
 			throw new ValidationException(String.format("Teacher with id : %s not found.", teacherCid));
-		if(activityStatus==null)
-		  activityStatus = ActivityStatus.Reviewed.toString();
-		List<Student> students = studentRepository.findAllBySchoolCidAndSchoolActiveTrueAndGradeCidAndGradeActiveTrueAndActivitiesActivityCidAndActivitiesActivityActiveTrueAndActivitiesActivityStatusAndActivitiesTeacherCidAndActivitiesTeacherActiveTrueAndActiveTrue(schoolCid, gradeCid,activityCid, ActivityStatus.valueOf(activityStatus), teacherCid);
-		if(students==null)
-			throw new ValidationException(String.format("No student found in the school : %s under teacher : %s having performed activity : %s and status is %s .", school.getName(),teacher.getName(),activity.getName(),activityStatus));
+		if (activityStatus == null)
+			activityStatus = ActivityStatus.Reviewed.toString();
+		List<Student> students = studentRepository
+				.findAllBySchoolCidAndSchoolActiveTrueAndGradeCidAndGradeActiveTrueAndActivitiesActivityCidAndActivitiesActivityActiveTrueAndActivitiesActivityStatusAndActivitiesTeacherCidAndActivitiesTeacherActiveTrueAndActiveTrue(
+						schoolCid, gradeCid, activityCid, ActivityStatus.valueOf(activityStatus), teacherCid);
+		if (students == null)
+			throw new ValidationException(String.format(
+					"No student found in the school : %s under teacher : %s having performed activity : %s and status is %s .",
+					school.getName(), teacher.getName(), activity.getName(), activityStatus));
 		List<StudentResponse> studentsResponse = new ArrayList<StudentResponse>();
-		students.forEach(s->{studentsResponse.add(new StudentResponse(s));});
+		students.forEach(s -> {
+			studentsResponse.add(new StudentResponse(s));
+		});
 		return studentsResponse;
+	}
+
+	@Override
+	public List<AwardResponse> getAllAwardsOfStudentByActivityId(String studentCid, String activityCid) {
+
+		List<AwardActivityPerformed> aap = awardActivityPerformedRepository
+				.findAllByActivityPerformedStudentCidAndActivityPerformedActivityCidAndIsVerifiedTrueAndActivityPerformedStudentActiveTrueAndActivityPerformedActivityActiveTrueAndActiveTrue(
+						studentCid, activityCid);
+
+		List<AwardResponse> responseList = new ArrayList<AwardResponse>();
+
+		for (AwardActivityPerformed awardActivityPerformed : aap) {
+
+			responseList.add(new AwardResponse(awardActivityPerformed));
+		}
+
+		return responseList;
+
 	}
 
 }
