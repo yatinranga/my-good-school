@@ -20,7 +20,7 @@ export class AddActivityComponent implements OnInit {
   schoolId = "";
 
   constructor(private formBuilder: FormBuilder, private studentService: StudentService,
-    private alertService: AlertService, private router : Router) { }
+    private alertService: AlertService, private router: Router) { }
 
   ngOnInit() {
     this.studentService.getStudentInfo().subscribe((res) => {
@@ -32,13 +32,11 @@ export class AddActivityComponent implements OnInit {
     );
 
     this.addActivityForm = this.formBuilder.group({
-      addActivityId: [''],
-      addActivityDetails: [''],
-      addActivityDate: [''],
-      addCoachId: [''],
+      activityId: [''],
+      description: [''],
+      dateOfActivity: [''],
+      coachId: [''],
       attachment: ['']
-
-      // attachment: new FormArray([])
     });
   }
 
@@ -61,47 +59,35 @@ export class AddActivityComponent implements OnInit {
       this.file = [...event.target.files];
       this.addActivityForm.value['attachment'] = this.file;
       console.log(this.file);
-      // this.file.forEach((element, index) => {
-      //   const item = [...element];
-      //   console.log('fileRequests[' + index + '].file', element);
-      // })
     }
   }
 
   saveActivity() {
-   
     const formData = new FormData();
-    let date = new Date(this.addActivityForm.value.addActivityDate);
-    let activityDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+    let date = new Date(this.addActivityForm.value.dateOfActivity);
+    let activityDate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 
     formData.append('studentId', this.studentInfo.student.id);
-    formData.append('activityId', this.addActivityForm.value.addActivityId);
-    formData.append('coachId', this.addActivityForm.value.addCoachId);
+    formData.append('activityId', this.addActivityForm.value.activityId);
+    formData.append('coachId', this.addActivityForm.value.coachId);
     formData.append('dateOfActivity', activityDate);
+    formData.append('description', this.addActivityForm.value.description);
 
+    if (this.addActivityForm.value.attachment.length > 0) {
+      this.addActivityForm.value.attachment.forEach((element, index) => {
+        formData.append('fileRequests[' + index + '].file', element);
+      });
+    }
 
-    this.addActivityForm.value.attachment.forEach((element, index) => {
-      formData.append('fileRequests[' + index + '].file', element);
-      console.log('fileRequests[' + index + '].file', element);
-    });
+    console.log(this.addActivityForm.value);
 
     this.studentService.addActivity("/api/students/activities", formData).subscribe(
       (res) => {
         console.log(res);
         this.alertService.showSuccessToast('Activity Saved !');
-        window.location.reload() ;
       },
       (err) => console.log(err)
     );
   }
 
 }
-
-// const formData = new FormData();
-// formData.append('studentId', this.addActivityForm.value.selectedFile);
-// formData.append('activityId', this.addActivityForm.value.type);
-// formData.append('coachId', this.addActivityForm.value.schoolId);
-// formData.append('dateOfActivity', this.addActivityForm.value.schoolId);
-// formData.append('fileRequests', this.addActivityForm.value.schoolId);
-// formData.append('id', this.addActivityForm.value.schoolId);
-// console.log(formData);

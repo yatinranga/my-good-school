@@ -22,6 +22,14 @@ h3 {
 .card.bg-light{
     margin: 30px 0;
 }
+.banner h1 {
+    position: absolute;
+    top: 100px;
+    right: 80px;
+    font-size: 40px !important;
+    color: $nav-bar !important;
+    font-family: fantasy;
+}
 
 button.upload{
    background: $dark;
@@ -40,7 +48,7 @@ button.upload{
 .btn {
     padding: 10px 20px !important;
     display: inline-block;
-    font-size: 20px !important;
+    font-size: 18px !important;
 }
 button.upload.btn{
     margin-left: 20px;
@@ -108,6 +116,17 @@ select {
     display: inline-block;
     padding: 15px;
 }
+.content_main img {
+    width: 100%;
+    vertical-align: top;
+    margin: 0;
+    padding: 0;
+    max-height: 400px;
+    margin-top: 0;
+    overflow: hidden;
+    z-index: 0;
+    position: relative;
+}
 .form-content .form-control {
     margin-top: 5px;
     
@@ -138,7 +157,7 @@ table.table, tr, th, td{
     color: #333 !important;
     padding: 5px 15px;
     border-radius: 0;
-    background: #dddddd !important;
+    background: #b2d57a !important;
     padding: 5px 15px;
     border-radius: 0;
     box-shadow: 0 0 10px #fff;
@@ -146,6 +165,6 @@ table.table, tr, th, td{
 }
 
 .main .table_main table thead tr th {
-    background: #ddd;
+    background: #b2d57a;
     color: #333;
 }

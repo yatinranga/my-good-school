@@ -9,25 +9,31 @@ import { Router } from '@angular/router';
 })
 export class AppComponent implements OnInit {
   title = 'MGS';
-  userType : any;
+  userInfo: any;
 
   constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
-    if(this.userType = localStorage.getItem('user_type')){
-      console.log(this.userType);
-      switch (this.userType) {
+    this.userInfo = JSON.parse(localStorage.getItem('user_info'));
+    if(this.userInfo){
+      this.checkUserType(this.userInfo.userType);
+    }
+  }
+
+  // if (this.authService.loggedIn()) {
+  //   this.router.navigate(['/admin'])
+  // } else {
+  //   this.router.navigate(['/login'])
+  // }
+
+  checkUserType(userType) {
+    if (localStorage.getItem('user_info')) {
+      switch (userType) {
         case "Admin": this.router.navigate(['admin']); break;
-        case "Student": this.router.navigate(['student/' + '/home']); break;
-        case "Teacher": this.router.navigate(['teacher/' + '/home']); break;
-        case "" : this.router.navigate(['login']); break;
+        case "Student": this.router.navigate(['student/' + this.userInfo.id + '/home']); break;
+        case "Teacher": this.router.navigate(['teacher/' + this.userInfo.id + '/home']); break;
       }
     }
-    // if (this.authService.loggedIn()) {
-    //   this.router.navigate(['/admin'])
-    // } else {
-    //   this.router.navigate(['/login'])
-    // }
   }
 
 }

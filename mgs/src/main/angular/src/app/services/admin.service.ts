@@ -18,6 +18,14 @@ export class AdminService {
     return this.http.get(url);
   }
 
+  getGrades(schoolId) {
+    return this.http.get("/grades?schoolId=" + schoolId);
+  }
+
+  getActivities(schoolId) {
+    return this.http.get("/activitiesOffered/" + schoolId);
+  }
+
   getTemplate(url) {
     return this.http.get(url);
   }

@@ -23,8 +23,6 @@ span.choosefile.choosefile-custom {
     border-radius: 0;
 }
 button.btn.btnSubmit.btn-success {
-    background: $sidebar;
-    border: 1px solid $sidebar;
     box-shadow: none;
     border-radius: 0;
 }
@@ -33,4 +31,20 @@ button.btn.btnSubmit.btn-success {
     color: #fafafa;
     padding: 5px 15px;
     border-radius: 0;
+}
+.upload img {
+    max-width: 200px;
+}
+.upload {
+    margin-top: 10px;
+}
+.upload_main {
+    max-width: 400px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    margin: 20px;
+}
+
+.collapse-td{
+    padding: 0;
 }

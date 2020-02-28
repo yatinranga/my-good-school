@@ -11,6 +11,7 @@ import { AuthService } from '../services/auth.service';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   user: any;
+  userInfo: any;
 
   constructor(private formBuilder: FormBuilder,
     private router: Router,
@@ -34,16 +35,17 @@ export class LoginComponent implements OnInit {
 
   getUserInfo() {
     this.authService.getInfo().subscribe((res) => {
-      this.user = res,
-      this.checkUserType(this.user.userType);
+      localStorage.setItem('user_info',JSON.stringify(res));
+      this.userInfo = JSON.parse(localStorage.getItem('user_info'));
+      this.checkUserType(this.userInfo.userType);
     });
   }
 
   checkUserType(userType) {
     switch (userType) {
       case "Admin": this.router.navigate(['admin']); break;
-      case "Student": this.router.navigate(['student/' + this.user.id + '/home']); break;
-      case "Teacher": this.router.navigate(['teacher/' + this.user.id + '/home']); break;
+      case "Student": this.router.navigate(['student/' + this.userInfo.id + '/home']); break;
+      case "Teacher": this.router.navigate(['teacher/' + this.userInfo.id + '/home']); break;
     }
   }
 }
