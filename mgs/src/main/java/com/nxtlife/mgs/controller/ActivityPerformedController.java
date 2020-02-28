@@ -114,4 +114,5 @@ public class ActivityPerformedController {
 			@RequestParam("studentId") String studentId) {
 		return activityPerformedService.filterActivityByYearPerformed(year, studentId);
 	}
+
 }

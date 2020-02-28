@@ -291,28 +291,41 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 
 	@Override
 	public ActivityPerformedResponse saveActivityByCoach(ActivityPerformedRequest request) {
+		
 		if (request.getId() == null)
 			throw new ValidationException("Activity id cannot be null.");
+		
 		ActivityPerformed activity = activityPerformedRepository.findByCidAndActiveTrue(request.getId());
+		
 		if (activity == null)
 			throw new ValidationException(String.format("No activity found with id : %s", request.getId()));
+		
 		if (!activity.getActivityStatus().equals(ActivityStatus.SubmittedByStudent))
 			throw new ValidationException("Activity not submitted by student yet so you cannot review it now.");
+		
 		activity = request.toEntity();
+		
 		if (activity.getCoachRemark() != null)
 			activity.setCoachRemarkDate(DateUtil.convertStringToDate(LocalDate.now().toString()));
+		
 		activity.setActivityStatus(ActivityStatus.SavedByTeacher);
+		
 		activity = activityPerformedRepository.save(activity);
+		
 		if (activity == null)
 			throw new RuntimeException("Something went wrong activity not submitted.");
+		
 		return new ActivityPerformedResponse(activity);
 	}
 
 	@Override
 	public ActivityPerformedResponse submitActivityByCoach(String activityPerformedCid) {
+		
 		if (activityPerformedCid == null)
 			throw new ValidationException("Id cannot be null.");
+		
 		ActivityPerformed activity = activityPerformedRepository.findByCidAndActiveTrue(activityPerformedCid);
+		
 		if (activity == null)
 			throw new ValidationException(String.format("No activity found for id : %s", activityPerformedCid));
 
@@ -327,7 +340,9 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			throw new ValidationException("Activity cannot be submitted first fill all the mandatory fields.");
 
 		activity.setActivityStatus(ActivityStatus.Reviewed);
+		
 		activity = activityPerformedRepository.save(activity);
+		
 		if (activity == null)
 			throw new RuntimeException("Something went wrong activity not submitted.");
 
@@ -360,20 +375,28 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 
 	@Override
 	public List<ActivityPerformedResponse> getAllActivitiesAssignedToCoachforReview(String coachCid) {
+		
 		if (coachCid == null)
 			throw new ValidationException("coach id cannot be null.");
+		
 		Teacher coach = teacherRepository.findByCidAndIsCoachTrueAndActiveTrue(coachCid);
+		
 		if (coach == null)
 			throw new ValidationException(String.format("Coach with id : %s not found.", coachCid));
+		
 		List<ActivityPerformed> submittedActivities = activityPerformedRepository
 				.findAllByTeacherCidAndActivityStatusOrActivityStatusAndActiveTrue(coachCid,
 						ActivityStatus.SubmittedByStudent, ActivityStatus.SavedByTeacher);
+		
 		List<ActivityPerformedResponse> submittedActivityResponses = new ArrayList<ActivityPerformedResponse>();
+		
 		if (submittedActivities == null || submittedActivities.isEmpty())
 			throw new ValidationException("No activities assigned to review yet.");
+		
 		submittedActivities.forEach(act -> {
 			submittedActivityResponses.add(new ActivityPerformedResponse(act));
 		});
+		
 		return submittedActivityResponses;
 	}
 

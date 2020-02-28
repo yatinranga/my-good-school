@@ -15,7 +15,7 @@ import com.nxtlife.mgs.view.AwardRequest;
 import com.nxtlife.mgs.view.AwardResponse;
 
 @RestController
-@RequestMapping("/api/awards")
+@RequestMapping("/api/award")
 public class AwardController {
 
 	@Autowired

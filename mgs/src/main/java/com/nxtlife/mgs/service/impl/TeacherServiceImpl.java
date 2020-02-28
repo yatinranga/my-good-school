@@ -15,6 +15,9 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -102,8 +105,8 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 			Long teachersequence = sequenceGeneratorService.findSequenceByUserType(UserType.Coach);
 			if (teachersequence == null) {
 				SequenceGenerator seqGen = sequenceGeneratorService.save(new SequenceGenerator(UserType.Coach, 0l));
-				if(seqGen == null)
-					teachersequence=0l;
+				if (seqGen == null)
+					teachersequence = 0l;
 				else
 					teachersequence = seqGen.getSequence();
 			}
@@ -115,11 +118,11 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 			Long teachersequence = sequenceGeneratorService.findSequenceByUserType(UserType.Teacher);
 			if (teachersequence == null) {
 				SequenceGenerator seqGen = sequenceGeneratorService.save(new SequenceGenerator(UserType.Teacher, 0l));
-				if(seqGen == null)
-					teachersequence=0l;
+				if (seqGen == null)
+					teachersequence = 0l;
 				else
 					teachersequence = seqGen.getSequence();
-				
+
 			}
 			++teachersequence;
 			request.setUsername(String.format("TEA%08d", teachersequence));
@@ -272,7 +275,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 			XSSFWorkbook studentsSheet = new XSSFWorkbook(file.getInputStream());
 			if (isCoach == true) {
 				teacherRecords = findSheetRowValues(studentsSheet, "COACH", errors);
-				errors = (List<String>) teacherRecords.get(teacherRecords.size()-1).get("errors");
+				errors = (List<String>) teacherRecords.get(teacherRecords.size() - 1).get("errors");
 				for (int i = 0; i < teacherRecords.size(); i++) {
 					List<Map<String, Object>> tempStudentsRecords = new ArrayList<Map<String, Object>>();
 					tempStudentsRecords.add(teacherRecords.get(i));
@@ -294,8 +297,8 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 			throw new ValidationException("something wrong happened may be file not in acceptable format.");
 		}
 		Map<String, Object> responseMap = new HashMap<String, Object>();
-		responseMap.put("TeacherResponseList",teacherResponseList);
-		responseMap.put("errors",  errors);
+		responseMap.put("TeacherResponseList", teacherResponseList);
+		responseMap.put("errors", errors);
 		return new ResponseEntity<Map<String, Object>>(responseMap, HttpStatus.OK);
 	}
 
@@ -570,15 +573,22 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	}
 
 	@Override
-	public List<TeacherResponse> getAllTeachers() {
-		List<Teacher> teachers = new ArrayList<Teacher>();
+	public List<TeacherResponse> getAllTeachers(Integer pageNo, Integer pageSize) {
+
+		Pageable paging = new PageRequest(pageNo, pageSize);
+
+		Page<Teacher> teachers;
 		List<TeacherResponse> teacherResponses = new ArrayList<>();
-		teachers = teacherRepository.findAll();
-		if (teachers == null)
+
+		teachers = teacherRepository.findAll(paging);
+
+		if (!teachers.hasContent())
 			throw new ValidationException("No teachers found.");
+
 		teachers.forEach(teacher -> {
 			teacherResponses.add(new TeacherResponse(teacher));
 		});
+
 		return teacherResponses;
 	}
 

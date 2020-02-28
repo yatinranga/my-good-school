@@ -2,6 +2,8 @@ package com.nxtlife.mgs.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,7 +38,7 @@ public interface TeacherService {
 
 	List<ActivityRequestResponse> findAllActivitiesByCoachCId(String cId);
 
-	List<TeacherResponse> getAllTeachers();
+	List<TeacherResponse> getAllTeachers(Integer pageNo, Integer pageSize);
 
 	List<TeacherResponse> getAllCoaches();
 
@@ -55,4 +57,5 @@ public interface TeacherService {
 	TeacherResponse update(TeacherRequest request, String cid);
 
 	SuccessResponse delete(String cid);
+
 }
