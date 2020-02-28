@@ -7,12 +7,14 @@ nav.navbar {
 }
 
 .add_activity{
-    background: $navbar;
+    background: #5f9fd2;
     padding: 5px 15px;
     text-align: center;
     border-radius: 0px;
     margin: 20px;
-    color: #fafafa;
+    color: $light;
+    border: none !important;
+    box-shadow: 0 0 10px #999;
 }
 button.add_activity{
     position: fixed;

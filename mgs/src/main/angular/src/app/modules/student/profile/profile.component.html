@@ -1,20 +1,39 @@
-<h4>Student Profile </h4>
-<div>
-    <label>Name : {{studentDetails['name']}}</label><br>
-    <label>Gender : {{studentDetails['gender']}}</label><br>
-    <label>Email : {{studentDetails['email']}}</label><br>
-    <label>Mobile Number : {{studentDetails['mobileNumber']}}</label><br>
-    <label>DOB : {{studentDetails['dob']}}</label><br><br>
-    <div *ngFor="let sd of studentDetails['guardianResponseList']; let i = index ">
-        <div> Guardian {{i+1}}<br>
-        <label>Guardian Name : {{sd['name']}}</label><br>
-        <label>Guardian Email : {{sd['email']}}</label><br>
-        <label>Guardian MOB : {{sd['mobileNumber']}}</label><br>
-        <label>Guardian Relationship: {{sd['relationship']}}</label><br>
+<div class="main">
+    <div class="content_main">
+        <div class="content_main_com">
+            <div class="profile_main">
+                <img src="assets/images/profilebg.webp">
+                <div class="profile_content">
+                    <div class="student_image">
+                        <img src="assets/images/student.jpg">
+                    </div>
+                    <div class="profile_card_main">
+                        <div class="student profile_card">
+                            <h2> Student Profile </h2>
+                            <p> <label>Name : {{studentDetails['name']}}</label>  </p>
+                            <p> <label>Gender : {{studentDetails['gender']}}</label> </p> 
+                            <p> <label>Email : {{studentDetails['email']}}</label> </p>
+                            <p> <label>Mobile Number : {{studentDetails['mobileNumber']}}</label> </p>
+                            <p> <label>Date of Birth : {{studentDetails['dob']}}</label> </p>
+                        </div>
+                        <div class="guardian profile_card">
+                            <div *ngFor="let sd of studentDetails['guardianResponseList']; let i = index ">
+                                <div> 
+                                    <h2> Guardian {{i+1}} Profile </h2> 
+                                    <p> <label> Name : {{sd['name']}}</label>  </p>
+                                    <p> <label> Email : {{sd['email']}}</label> </p> 
+                                    <p> <label> Mobile Number : {{sd['mobileNumber']}}</label> </p> 
+                                    <p> <label> Relation: {{sd['relationship']}}</label> </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
 </div>
+
 
 
 

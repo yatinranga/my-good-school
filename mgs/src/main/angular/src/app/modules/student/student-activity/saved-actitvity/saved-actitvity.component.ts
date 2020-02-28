@@ -19,30 +19,25 @@ export class SavedActitvityComponent implements OnInit {
   coaches = [];
   schoolId: any;
   studentId: any;
-<<<<<<< HEAD
-  editActivity = false;
-  savedActivityForm: FormGroup;
-
-  activityName : any;
-=======
   editActivityShow = false;
   savedActivityForm: FormGroup;
 
   activityName: any;
->>>>>>> 1d5a946f9df74b387b7e9563590129ff71cefdc0
   activityDetails: any;
   activityTeacher: any;
   activityId: any;
   activityDate: any;
   file = [];
   url = '';
-  activityType = "All";
+  activityType = 'All';
 
   constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService) { }
 
   ngOnInit() {
     this.studentInfo = JSON.parse(localStorage.getItem('user_info'));
+    // tslint:disable-next-line:no-string-literal
     this.studentId = this.studentInfo['student'].id;
+    // tslint:disable-next-line:no-string-literal
     this.schoolId = this.studentInfo['student'].schoolId;
 
     // this.getStudentSavedActivities(this.studentInfo['student'].id)
@@ -54,22 +49,13 @@ export class SavedActitvityComponent implements OnInit {
 
     this.savedActivityForm = this.formBuilder.group({
       savedActivityName: [''],
-<<<<<<< HEAD
-      savedActivityId: [''],
-      savedActivityDetails: [''],
-      savedActivityDate: [''],
-      savedCoachId: [''],
-      attachment: ['']
-    });
-=======
       activityId: [''],
       description: [''],
       dateOfActivity: [''],
       coachId: [''],
       attachment: [''],
       id: ['']
-    })
->>>>>>> 1d5a946f9df74b387b7e9563590129ff71cefdc0
+    });
   }
 
   // to get the list of SAVED Activities of student
@@ -106,15 +92,15 @@ export class SavedActitvityComponent implements OnInit {
     const date = this.getDate(activity.dateOfActivity);
     if ((date.getMonth() + 1) < 10) {
       if (date.getDate() < 10) {
-        this.savedActivityForm.controls['dateOfActivity'].patchValue(date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)) + '-' + ('0' + date.getDate()));
+        this.savedActivityForm.controls.dateOfActivity.patchValue(date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)) + '-' + ('0' + date.getDate()));
       } else {
-        this.savedActivityForm.controls['dateOfActivity'].patchValue(date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)) + '-' + date.getDate());
+        this.savedActivityForm.controls.dateOfActivity.patchValue(date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)) + '-' + date.getDate());
       }
     } else {
       if (date.getDate() < 10) {
-        this.savedActivityForm.controls['dateOfActivity'].patchValue(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + ('0' + date.getDate()));
+        this.savedActivityForm.controls.dateOfActivity.patchValue(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + ('0' + date.getDate()));
       } else {
-        this.savedActivityForm.controls['dateOfActivity'].patchValue(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate());
+        this.savedActivityForm.controls.dateOfActivity.patchValue(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate());
       }
     }
 
@@ -122,7 +108,7 @@ export class SavedActitvityComponent implements OnInit {
       activityId: activity.activityId,
       description: activity.description,
       id: activity.id,
-    })
+    });
     console.log(this.savedActivityForm.value);
 
     this.getStudentActivity(this.schoolId);
@@ -175,36 +161,9 @@ export class SavedActitvityComponent implements OnInit {
   }
 
   onFileSelect(event) {
-<<<<<<< HEAD
-
-      var reader = new FileReader();
-      this.file = [...event.target.files];
-      this.file.forEach((element,index) => console.log(this.file[index]));
-
-      reader.readAsDataURL(event.target.files[0]); // read file as data url
-
-      reader.onload = (event) => { // called once readAsDataURL is completed
-        // this.url = event.target.result;
-      }
-
-    // if (event.target.files.length > 0) {
-    //   this.file = [...event.target.files];
-    //   console.log(this.file)
-    //   this.file.forEach((element,index) => console.log(this.file[index]['name']))
-    // }
-  }
-
-  // to SUBMIT the activity
-  submitSavedActivity(index) {
-    const activityPerformedId = this.savedActivitiesArr[index].id;
-    this.studentService.submitActivity(activityPerformedId).subscribe((res) => {
-      console.log(res);
-      this.alertService.showSuccessToast('Activity Submitted !');
-    },
-=======
     if (event.target.files.length > 0) {
       this.file = [...event.target.files];
-      this.savedActivityForm.value['attachment'] = this.file;
+      this.savedActivityForm.value.attachment = this.file;
       console.log(this.file);
     }
   }
@@ -212,15 +171,15 @@ export class SavedActitvityComponent implements OnInit {
   // to UPDATE the saved activity
   updateActivity() {
     const formData = new FormData();
-    let date = new Date(this.savedActivityForm.value.dateOfActivity);
-    let activityDate = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
+    const date = new Date(this.savedActivityForm.value.dateOfActivity);
+    const activityDate = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
 
-    formData.append('studentId', this.studentInfo['student'].id);
+    formData.append('studentId', this.studentInfo.student.id);
     formData.append('activityId', this.savedActivityForm.value.activityId);
     formData.append('coachId', this.savedActivityForm.value.coachId);
     formData.append('dateOfActivity', activityDate);
     formData.append('description', this.savedActivityForm.value.description);
-    formData.append('id', this.savedActivityForm.value.id)
+    formData.append('id', this.savedActivityForm.value.id);
 
     if (this.savedActivityForm.value.attachment.length > 0) {
       this.savedActivityForm.value.attachment.forEach((element, index) => {
@@ -228,12 +187,11 @@ export class SavedActitvityComponent implements OnInit {
       });
     }
 
-    this.studentService.addActivity("/api/students/activities", formData).subscribe(
+    this.studentService.addActivity('/api/students/activities', formData).subscribe(
       (res) => {
         console.log(res);
         this.alertService.showSuccessToast('Activity Updated !');
       },
->>>>>>> 1d5a946f9df74b387b7e9563590129ff71cefdc0
       (err) => console.log(err)
     );
   }
@@ -243,7 +201,7 @@ export class SavedActitvityComponent implements OnInit {
   }
 
   getDate(date) {
-    return new Date(date)
+    return new Date(date);
   }
 
 }

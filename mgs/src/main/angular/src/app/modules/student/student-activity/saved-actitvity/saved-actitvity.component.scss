@@ -22,10 +22,6 @@ span.choosefile.choosefile-custom {
     box-shadow: 0 0 10px $light;
     border-radius: 0;
 }
-button.btn.btnSubmit.btn-success {
-    box-shadow: none;
-    border-radius: 0;
-}
 
 .upload img {
     max-width: 200px;
@@ -44,12 +40,6 @@ button.btn.btnSubmit.btn-success {
     padding: 0;
 }
 
-.sortby{
-    float: right;
-    margin: 20px 15px;
-    padding: 0px;
-    font-size: 16px;
-}
 select{
     background: none;
     border: none;
@@ -61,4 +51,22 @@ select{
 
 button.submit {
     background: green;
+}
+.submitted{
+    color: green;
+}
+.saved{
+    color: #f3cc08;
+}
+.reviewed{
+    color: firebrick;
+} 
+
+button.icon_button {
+    padding: 5px;
+    margin: 0 5px;
+    border: none !important;
+    background: none !important;
+    cursor: pointer;
+    box-shadow: none !important;
 }
