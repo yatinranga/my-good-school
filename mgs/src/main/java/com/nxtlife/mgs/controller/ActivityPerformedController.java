@@ -41,7 +41,8 @@ public class ActivityPerformedController {
 	}
 
 	@PostMapping(value = "api/coaches/save")
-	public ActivityPerformedResponse saveActivityByCoach(@RequestBody/*Change it to ModelAttribute*/ ActivityPerformedRequest request) {
+	public ActivityPerformedResponse saveActivityByCoach(
+			@RequestBody /* Change it to ModelAttribute */ ActivityPerformedRequest request) {
 		return activityPerformedService.saveActivityByCoach(request);
 	}
 
@@ -77,8 +78,9 @@ public class ActivityPerformedController {
 	@GetMapping(value = "api/students/activities")
 	public List<ActivityPerformedResponse> getAllActivitiesOfStudentByStatus(
 			@RequestParam(value = "status", required = false) String status,
-			@RequestParam("studentId") String studentCid) {
-		return activityPerformedService.getAllActivitiesOfStudentByStatus(status, studentCid);
+			@RequestParam("studentId") String studentCid, @RequestParam(value = "page", required = false ) Integer page,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize) {
+		return activityPerformedService.getAllActivitiesOfStudentByStatus(status, studentCid, page, pageSize);
 	}
 
 	@GetMapping(value = "api/students/activities/filterByFourS")
@@ -114,4 +116,5 @@ public class ActivityPerformedController {
 			@RequestParam("studentId") String studentId) {
 		return activityPerformedService.filterActivityByYearPerformed(year, studentId);
 	}
+
 }

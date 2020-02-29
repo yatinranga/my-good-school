@@ -41,10 +41,19 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
 	Student findByCid(String cid);
 
+
 	List<Student> findAllBySchoolCidAndSchoolActiveTrueAndGradeCidAndGradeActiveTrueAndActivitiesActivityCidAndActivitiesActivityActiveTrueAndActivitiesActivityStatusAndActivitiesTeacherCidAndActivitiesTeacherActiveTrueAndActiveTrue(
 			String schoolCid, String gradeCid, String activityCid, ActivityStatus activityStatus, String teacherCid);
 
 	List<Student> findAllBySchoolCidAndGradeCidAndActivitiesActivityCidAndActivitiesActivityStatusAndSchoolActiveTrueAndGradeActiveTrueAndActivitiesActivityActiveTrueAndActiveTrue(
 			String schoolCid, String gradeCid, String activityCid, ActivityStatus valueOf);
 
+
+
+	/*
+	 * List<Student>
+	 * findAllBySchoolCidAndGradeCidAndActivitiesActivityCidAndActivitiesActivityStatusAndActivitiesActivityActivityTrueAndGradeActiveTrueAndSchoolActiveTrueAndActiveTrue(
+	 * String schoolCid, String gradeCid, String activityCid, ActivityStatus
+	 * reviewed);
+	 */
 }

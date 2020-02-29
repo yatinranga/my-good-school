@@ -26,7 +26,7 @@ public interface ActivityPerformedService {
 
 	ActivityPerformedResponse submitActivity(String activityPerformedCid);
 
-	List<ActivityPerformedResponse> getAllActivitiesOfStudentByStatus(String status, String studentCid);
+	List<ActivityPerformedResponse> getAllActivitiesOfStudentByStatus(String status, String studentCid,Integer page , Integer pageSize);
 
 	List<ActivityPerformedResponse> findAllByStudentCidAndTeacherCidAndActivityStatusAndActiveTrue(String studentCid,
 			String teacherCid, String activityStatus);
@@ -60,6 +60,6 @@ public interface ActivityPerformedService {
 
 	SuccessResponse deleteActivityOfStudent(String activityPerformedCid);
 
-	List<ActivityPerformedResponse> getAllPerformedActivitiesOfStudent(String studentCid);
+	List<ActivityPerformedResponse> getAllPerformedActivitiesOfStudent(String studentCid , Integer page , Integer pageSize);
 
 }

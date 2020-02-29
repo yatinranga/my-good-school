@@ -2,6 +2,7 @@ package com.nxtlife.mgs.jpa;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -59,5 +60,5 @@ public interface ActivityPerformedRepository extends JpaRepository<ActivityPerfo
 	List<ActivityPerformed> findAllByStudentSchoolCidAndStudentGradeCidAndActivityCidAndAndActivityStatusAndStudentSchoolActiveTrueAndStudentGradeActiveTrueAndActivityActiveTrueAndActiveTrue(
 			String schoolCid, String gradeCid, String ActivityCid, ActivityStatus status);
 
-	List<ActivityPerformed> findAllByStudentCidAndActiveTrue(String studentCid);
+	List<ActivityPerformed> findAllByStudentCidAndActiveTrue(String studentCid, PageRequest pageRequest);
 }

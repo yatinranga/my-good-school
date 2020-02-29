@@ -29,12 +29,12 @@ public class GradeController {
 //		return gradeService.uploadGradesFromExcel(file);
 //	}
 
-	@PostMapping
+	@PostMapping()
 	public GradeResponse saveGrade(@RequestBody GradeRequest gradeRequest) {
 		return gradeService.save(gradeRequest);
 	}
 	
-	@GetMapping
+	@GetMapping()
 	public List<GradeResponse> getAllGradesOfSchool(@RequestParam("schoolId") String schoolCid){
 		return gradeService.getAllGradesOfSchool(schoolCid);
 	}

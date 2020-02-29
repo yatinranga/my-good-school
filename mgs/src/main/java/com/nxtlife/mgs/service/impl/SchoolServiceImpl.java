@@ -139,19 +139,10 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			throw new ValidationException("Email already exists i.e, school already exists.");
 		if (request.getName() == null)
 			throw new ValidationException("School name can not be null");
-		Long schoolsequence = sequenceGeneratorService.findSequenceByUserType(UserType.School);
-		if (schoolsequence == null) {
-			SequenceGenerator seqGen = sequenceGeneratorService.save(new SequenceGenerator(UserType.School, 0l));
-			if(seqGen == null)
-				schoolsequence=0l;
-			else
-				schoolsequence = seqGen.getSequence();
-		}
-		++schoolsequence;
-		request.setUsername(String.format("SCH%08d", schoolsequence));
-		sequenceGeneratorService.updateSequenceByUserType(schoolsequence, UserType.School);
 		
 		School school = request.toEntity();
+		Long schoolsequence = sequenceGeneratorService.findSequenceByUserType(UserType.School);
+		school.setUsername(String.format("SCH%08d", schoolsequence));
 		school.setCid(utils.generateRandomAlphaNumString(8));
 		school.setActive(true);
 		User user =userService.createSchoolUser(school);

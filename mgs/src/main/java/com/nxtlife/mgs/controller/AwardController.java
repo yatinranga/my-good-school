@@ -57,5 +57,10 @@ public class AwardController {
 			@RequestParam("studentCid") String studentCid) {
 		return awardService.filterAwardByYearPerformed(year, studentCid);
 	}
+	
+	@GetMapping(value = "api/teacher/awards")
+	public List<AwardResponse> getAllAwardsAssignedByTeacher(AwardRequest request){
+		return awardService.getAllAwardsAssignedByTeacher(request);
+	}
 
 }

@@ -52,6 +52,7 @@ public class StudentRequest {
 
 	private Boolean active;
 
+	@NotEmpty(message="grade id can't be null or empty")
 	private String gradeId;
 	
 //	private String fathersName;
@@ -213,13 +214,7 @@ public class StudentRequest {
 			student.setSubscriptionEndDate(this.subscriptionEndDate);
 		if (this.sessionStartDate != null)
 			student.setSessionStartDate(this.sessionStartDate);
-		if (guardians != null && !guardians.isEmpty()) {
-			List<Guardian> guardiansList = new ArrayList<Guardian>();
-			for (GuardianRequest gReq : guardians) {
-				guardiansList.add(gReq.toEntity());
-			}
-			student.setGuardians(guardiansList);
-		}
+		
 		return student;
 	}
 

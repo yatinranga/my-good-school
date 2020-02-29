@@ -47,6 +47,8 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 	List<Teacher> findAllByIsClassTeacherTrueAndActiveTrue();
 
 	Teacher findByIdAndActiveTrue(Long id);
+
+	Boolean existsByCidAndActiveTrue(String teacherId);
 	
 //	List<Teacher> findAllByActivitiesCid(String cid);
 

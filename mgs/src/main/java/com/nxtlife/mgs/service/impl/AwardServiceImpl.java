@@ -189,7 +189,7 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 
 		for (ActivityPerformed act : repoActivityPerformedList) {
 			AwardActivityPerformed awrdActivity = new AwardActivityPerformed(
-					new AwardActivityPerformedId(award.getId(), act.getId()), award, act);
+					new AwardActivityPerformedId(award.getId(), act.getId()), award, act,request.getTeacherId());
 
 			awardActivityPerformedToSaveList.add(awrdActivity);
 		}
@@ -201,6 +201,7 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 		List<AwardResponse> awardResponseList = new ArrayList<AwardResponse>();
 		awardActivityPerformedToSaveList.forEach(awrdAct -> {
 			AwardResponse awardResponse = new AwardResponse(awrdAct.getAward());
+			awardResponse.setAssignerId(request.getTeacherId());
 			awardResponse.setIsVerified(awrdAct.getIsVerified());
 			awardResponse.setDateOfReceipt(awrdAct.getDateOfReceipt());
 			awardResponse.setActivityPerformedResponse(new ActivityPerformedResponse(awrdAct.getActivityPerformed()));
@@ -432,6 +433,27 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 		});
 
 		return awardResponses;
+	}
+	
+	@Override
+	public List<AwardResponse> getAllAwardsAssignedByTeacher(AwardRequest request){
+		if(request.getSchoolId()==null)
+			throw new  ValidationException("School id cannot be null.");
+		Boolean school  = schoolRepository.existsByCidAndActiveTrue(request.getSchoolId());
+		if(!school)
+			throw new ValidationException(String.format("School with id : %s not found.", request.getSchoolId()));
+		
+		if (request.getTeacherId() == null)
+			throw new ValidationException("teacher id who has assigned the award cannot be null.");
+		Boolean teacher = teacherRepository.existsByCidAndActiveTrue(request.getTeacherId());
+		if (!teacher)
+			throw new ValidationException(String.format("Teacher with id : %s didn't exist", request.getTeacherId())); 	
+		
+		List<AwardActivityPerformed> awardActivityperformedList = awardActivityPerformedRepository.findAllByAwardTeacherSchoolCidAndAssignerCidAndIsVerifiedTrueAndActiveTrue(request.getSchoolId(),request.getTeacherId());
+		List<AwardResponse> resposneList  = new ArrayList<AwardResponse>();
+		awardActivityperformedList.forEach(awrdAct-> {resposneList.add(new AwardResponse(awrdAct));});
+		
+		return resposneList;
 	}
 
 }
