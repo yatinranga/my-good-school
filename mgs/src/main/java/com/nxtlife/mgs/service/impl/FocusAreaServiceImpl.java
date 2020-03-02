@@ -15,6 +15,8 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -95,7 +97,7 @@ public class FocusAreaServiceImpl extends BaseService implements FocusAreaServic
 	}
 	
 	@Override
-	public List<FocusAreaRequestResponse> uploadFocusAreasFromExcel(MultipartFile file) {
+	public ResponseEntity<?> uploadFocusAreasFromExcel(MultipartFile file) {
 		if (file == null || file.isEmpty() || file.getSize() == 0)
 			throw new ValidationException("Pls upload valid excel file.");
 
@@ -105,6 +107,7 @@ public class FocusAreaServiceImpl extends BaseService implements FocusAreaServic
 		try {
 			XSSFWorkbook gradesheet = new XSSFWorkbook(file.getInputStream());
 			focusAreaRecords = findSheetRowValues(gradesheet, "FOCUS AREA", errors);
+			errors = (List<String>) focusAreaRecords.get(focusAreaRecords.size()-1).get("errors");
 			for (int i = 0; i < focusAreaRecords.size(); i++) {
 				List<Map<String, Object>> tempFocusAreaRecords = new ArrayList<Map<String, Object>>();
 				tempFocusAreaRecords.add(focusAreaRecords.get(i));
@@ -115,8 +118,10 @@ public class FocusAreaServiceImpl extends BaseService implements FocusAreaServic
 
 			throw new ValidationException("something wrong happened may be file not in acceptable format.");
 		}
-
-		return focusAreaResponseList;
+		Map<String, Object> responseMap = new HashMap<String, Object>();
+		responseMap.put("FocusAreaResponseList",focusAreaResponseList);
+		responseMap.put("errors",  errors);
+		return new ResponseEntity<Map<String, Object>>(responseMap, HttpStatus.OK);
 	}
 
 	private FocusAreaRequestResponse validateFocusAreaRequest(List<Map<String, Object>> focusAreaDetails, List<String> errors) {

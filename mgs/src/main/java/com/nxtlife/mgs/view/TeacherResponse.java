@@ -20,12 +20,16 @@ public class TeacherResponse {
 	private String gender;
 	private String mobileNumber;
 	private String email;
-	private Date dob;
+	private String dob;
 	private String qualification;
-	private List<String> grades;
+	private List<GradeResponse> grades;
 	private List<String> activities;
 	private String schoolName;
+	private String schoolId;
 	private Boolean active;
+	private String designation;
+	private Boolean isManagmentMember;
+	private Boolean isCoach;
 
 	public String getId() {
 		return id;
@@ -83,11 +87,11 @@ public class TeacherResponse {
 		this.email = email;
 	}
 
-	public Date getDob() {
+	public String getDob() {
 		return dob;
 	}
 
-	public void setDob(Date dob) {
+	public void setDob(String dob) {
 		this.dob = dob;
 	}
 
@@ -99,11 +103,11 @@ public class TeacherResponse {
 		this.qualification = qualification;
 	}
 
-	public List<String> getGrades() {
+	public List<GradeResponse> getGrades() {
 		return grades;
 	}
 
-	public void setGrades(List<String> grades) {
+	public void setGrades(List<GradeResponse> grades) {
 		this.grades = grades;
 	}
 
@@ -131,27 +135,58 @@ public class TeacherResponse {
 		this.active = active;
 	}
 
+	public String getDesignation() {
+		return designation;
+	}
+
+	public void setDesignation(String designation) {
+		this.designation = designation;
+	}
+
+	public Boolean getIsManagmentMember() {
+		return isManagmentMember;
+	}
+
+	public void setIsManagmentMember(Boolean isManagmentMember) {
+		this.isManagmentMember = isManagmentMember;
+	}
+
+	public Boolean getIsCoach() {
+		return isCoach;
+	}
+
+	public void setIsCoach(Boolean isCoach) {
+		this.isCoach = isCoach;
+	}
+
 	public TeacherResponse(Teacher teacher) {
 		this.id = teacher.getcId();
 
-		if(teacher.getUser() != null)
-		  this.userId = teacher.getUser().getCid();
-	
+		if (teacher.getUser() != null)
+			this.userId = teacher.getUser().getCid();
+
 		this.username = teacher.getUsername();
 		this.name = teacher.getName();
 		this.gender = teacher.getGender();
 		this.mobileNumber = teacher.getMobileNumber();
 		this.email = teacher.getEmail();
-		this.dob = teacher.getDob();
+		this.dob = teacher.getDob().toString();
 		this.qualification = teacher.getQualification();
 		this.active = teacher.getActive();
-		if (teacher.getSchool() != null)
-			this.schoolName = teacher.getSchool().getName();
+		this.isManagmentMember = teacher.getIsManagmentMember();
+		this.designation = teacher.getDesignation();
+		this.isCoach = teacher.getIsCoach();
+		
+			if (teacher.getSchool() != null) {
+				this.schoolName = teacher.getSchool().getName();
+				this.schoolId = teacher.getSchool().getCid();
+			}
+		
 		if (teacher.getGrades() != null && !teacher.getGrades().isEmpty()) {
-			if (grades == null)
-				grades = new ArrayList<String>();
+//			if (grades == null)
+			grades = new ArrayList<GradeResponse>();
 			for (Grade grade : teacher.getGrades()) {
-				grades.add(String.format("%s %s", grade.getName(), grade.getSection()));
+				grades.add(new GradeResponse(grade));
 			}
 		}
 
@@ -165,6 +200,27 @@ public class TeacherResponse {
 				activities.add(String.format("%s", activity.getName()));
 			}
 		}
+	}
+
+	public TeacherResponse(Teacher teacher, Boolean teacherResponseForUser) {
+		this.id = teacher.getcId();
+
+		if (teacher.getUser() != null)
+			this.userId = teacher.getUser().getCid();
+
+		this.username = teacher.getUsername();
+		this.name = teacher.getName();
+		this.gender = teacher.getGender();
+		this.mobileNumber = teacher.getMobileNumber();
+		this.email = teacher.getEmail();
+		this.dob = teacher.getDob().toString();
+		this.qualification = teacher.getQualification();
+		this.active = teacher.getActive();
+		if (teacher.getSchool() != null) {
+			this.schoolName = teacher.getSchool().getName();
+			this.schoolId = teacher.getSchool().getCid();
+		}
+
 	}
 
 }

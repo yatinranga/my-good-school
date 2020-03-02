@@ -5,19 +5,14 @@ import java.util.Date;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.validation.constraints.NotNull;
 
-import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.activity.ActivityPerformed;
-import com.nxtlife.mgs.entity.user.Student;
-import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.util.AwardActivityPerformedId;
 
+@SuppressWarnings("serial")
 @Entity
 public class AwardActivityPerformed implements Serializable {
 
@@ -34,14 +29,14 @@ public class AwardActivityPerformed implements Serializable {
 
 //	@MapsId(value = "teacherId")
 //	@ManyToOne
-//	private Teacher teacher ;
+	private String assignerCid ;
 
 	private Date dateOfReceipt;
 
 	private Boolean isVerified = false;
-	
+
 	@NotNull
-	private Boolean active;
+	private Boolean active = true;
 
 	public AwardActivityPerformedId getAwardActivityPerformedId() {
 		return awardActivityPerformedId;
@@ -91,11 +86,20 @@ public class AwardActivityPerformed implements Serializable {
 		this.active = active;
 	}
 
+	public String getAssignerCid() {
+		return assignerCid;
+	}
+
+	public void setAssignerCid(String assignerCid) {
+		this.assignerCid = assignerCid;
+	}
+
 	public AwardActivityPerformed(AwardActivityPerformedId awardActivityPerformedId, Award award,
-			ActivityPerformed activityPerformed) {
+			ActivityPerformed activityPerformed,String assignerCid) {
 		this.awardActivityPerformedId = awardActivityPerformedId;
 		this.award = award;
 		this.activityPerformed = activityPerformed;
+		this.assignerCid = assignerCid;
 	}
 
 	public AwardActivityPerformed(AwardActivityPerformedId awardActivityPerformedId, Award award,

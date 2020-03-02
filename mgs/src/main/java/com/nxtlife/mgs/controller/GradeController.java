@@ -34,7 +34,7 @@ public class GradeController {
 		return gradeService.save(gradeRequest);
 	}
 	
-	@GetMapping
+	@GetMapping()
 	public List<GradeResponse> getAllGradesOfSchool(@RequestParam("schoolId") String schoolCid){
 		return gradeService.getAllGradesOfSchool(schoolCid);
 	}

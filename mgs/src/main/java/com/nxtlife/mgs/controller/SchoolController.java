@@ -3,6 +3,7 @@ package com.nxtlife.mgs.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,9 +23,10 @@ import com.nxtlife.mgs.view.Mail;
 import com.nxtlife.mgs.view.MailRequest;
 import com.nxtlife.mgs.view.SchoolRequest;
 import com.nxtlife.mgs.view.SchoolResponse;
+import com.nxtlife.mgs.view.SuccessResponse;
 
 @RestController
-@RequestMapping("/schools")
+@RequestMapping("/")
 public class SchoolController {
 
 	@Autowired
@@ -36,23 +38,18 @@ public class SchoolController {
 	@Autowired
 	private UserService userService;
 	
-	@GetMapping(value = "/{schoolCid}/activitiesOffered")
-	public List<ActivityRequestResponse> getAllOfferedActivitiesBySchool(@PathVariable("schoolCid") String schoolCid){
-		return activityService.getAllOfferedActivitiesBySchool(schoolCid);
-	}
-
-	@PostMapping(consumes = {"multipart/form-data"})
-	public SchoolResponse saveSchool(@ModelAttribute SchoolRequest schoolRequest) {
+	@PostMapping(consumes = {"multipart/form-data"},value = "api/schools")
+	public SchoolResponse save(@ModelAttribute SchoolRequest schoolRequest) {
 		return schoolService.save(schoolRequest);
 	}
 	
-	@GetMapping(value="/{cid}")
-	public SchoolResponse findByCid(@PathVariable("cid") String cid) {
+	@GetMapping(value="api/schools/{id}")
+	public SchoolResponse getByCid(@PathVariable("id") String cid) {
 		return schoolService.findByCid(cid);
 	}
 	
-	@GetMapping
-	public List<SchoolResponse> getAllSchools(){
+	@GetMapping("schools")
+	public List<SchoolResponse> getAll(){
 //		MailRequest request = new MailRequest("Test email", "testing email sending api", null, "laxmi.ssj4@gmail.com", "vtsefkon@gmail.com");
 //		userService.sendLoginCredentials(request);
 //		Mail mail = new Mail();
@@ -65,5 +62,9 @@ public class SchoolController {
 		return schoolService.getAllSchools();
 	}
 	
+	@DeleteMapping(value = "api/schools/{id}")
+	public SuccessResponse delete(@PathVariable("id") String cid) {
+		return schoolService.delete(cid);
+	}
 	
 }

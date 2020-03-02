@@ -45,8 +45,8 @@ public class Grade extends BaseEntity {
 	private Boolean active;
 
 	@ManyToMany
-	@JoinTable(name = "school_grade", joinColumns = { @JoinColumn(name = "school_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "grade_id") })
+	@JoinTable(name = "school_grade", joinColumns = { @JoinColumn(name = "grade_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "school_id") })
 	private List<School> schools;
 
 	@ManyToOne

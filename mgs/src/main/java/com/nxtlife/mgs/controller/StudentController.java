@@ -15,9 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nxtlife.mgs.enums.ActivityStatus;
 import com.nxtlife.mgs.service.ActivityPerformedService;
 import com.nxtlife.mgs.service.StudentService;
-import com.nxtlife.mgs.view.ActivityPerformedResponse;
+import com.nxtlife.mgs.view.AwardResponse;
 import com.nxtlife.mgs.view.StudentRequest;
 import com.nxtlife.mgs.view.StudentResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
@@ -37,19 +38,17 @@ public class StudentController {
 //		return studentService.uploadStudentsFromExcel(file);
 //	}
 
-	@PostMapping(value = "/students/signUp")
+	@PostMapping(value = "/student/signUp")
 	public StudentResponse signUpStudent(@RequestBody StudentRequest studentRequest) {
 		return studentService.save(studentRequest);
 	}
 
-
-	@PostMapping("api/students")
+	@PostMapping("api/student")
 	public StudentResponse saveStudent(@Valid @RequestBody StudentRequest studentRequest) {
 		return studentService.save(studentRequest);
 	}
 
-
-	@PutMapping("api/students/update/{cid}")
+	@PutMapping("api/student/{cid}")
 	public StudentResponse update(@RequestBody StudentRequest request, @PathVariable String cid) {
 		return studentService.update(request, cid);
 	}
@@ -59,40 +58,36 @@ public class StudentController {
 		return studentService.getAll();
 	}
 
-	@GetMapping("api/students/name/{name}")
-	public List<StudentResponse> findByName(@PathVariable String name) {
-		return studentService.findByName(name);
-	}
+//	@GetMapping("api/students/name/{name}")
+//	public List<StudentResponse> findByName(@PathVariable String name) {
+//		return studentService.findByName(name);
+//	}
 
 //	@GetMapping("/id/{cId}")
 //	public StudentResponse findByid(@PathVariable Long id) {
 //		return studentService.findByid(id);
 //	}
 
-	@GetMapping("api/students/{cId}")
+	@GetMapping("api/student/{cId}")
 	public StudentResponse findByCId(@PathVariable String cId) {
 		return studentService.findByCId(cId);
 	}
 
-	@GetMapping("api/students/contact/{mobileNumber}")
-	public StudentResponse findByMobileNumber(@PathVariable String mobileNumber) {
-		return studentService.findByMobileNumber(mobileNumber);
-	}
-
-	@GetMapping("api/students/username/{username}")
-	public StudentResponse findByUsername(@PathVariable String username) {
-		return studentService.findByUsername(username);
-	}
-
-	@GetMapping("/school/{id}")
+	@GetMapping("/api/school/{id}/students")
 	public List<StudentResponse> getAllBySchoolId(@PathVariable String schoolCid) {
 		return studentService.getAllBySchoolCid(schoolCid);
 	}
 
-	@GetMapping(value = "/activities")
-	public List<ActivityPerformedResponse> getAllActivitiesOfStudentByStatus(@RequestParam("status") String status,
-			@RequestParam("studentId") String studentCid) {
-		return activityPerformedService.getAllActivitiesOfStudentByStatus(status, studentCid);
+	@GetMapping(value = "api/student/{cid}/awards")
+	public List<AwardResponse> getAllAwardsOfStudentByActivityId(@PathVariable("cid") String studentCid,
+			@RequestParam(name = "activityCid", required = false) String activityCid) {
+		return studentService.getAllAwardsOfStudentByActivityId(studentCid, activityCid);
+	}
+	
+	@GetMapping(value = "api/student/activity/{activityCid}")
+	public List<StudentResponse> getAllStudentsBySchoolAndActivityAndCoachAndStatusReviewed(@RequestParam("schoolId") String schoolCid,
+			@RequestParam("gradeId") String gradeCid,@PathVariable("activityCid") String activityCid, @RequestParam("teacherId") String teacherCid){
+		return studentService.getAllStudentsBySchoolAndActivityAndCoachAndStatusReviewed(schoolCid, gradeCid, activityCid, ActivityStatus.Reviewed.toString(), teacherCid);
 	}
 
 	@DeleteMapping("api/students/{cid}")

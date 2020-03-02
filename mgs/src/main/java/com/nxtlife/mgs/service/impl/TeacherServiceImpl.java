@@ -15,6 +15,11 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -87,35 +92,26 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		if (teacherRepository.countByEmailAndActiveTrue(request.getEmail()) > 0)
 			throw new ValidationException(String.format("Email %s already exists", request.getEmail()));
 
-		if (request.getUsername() == null)
-			request.setUsername(request.getEmail());
+//		if (request.getUsername() == null)
+//			request.setUsername(request.getEmail());
 
 		if (teacherRepository.countByUsernameAndActiveTrue(request.getUsername()) > 0)
 			throw new ValidationException("Username already exists");
 
 		if (request.getName() == null)
 			throw new ValidationException("Teacher name can not be null");
-
+	
+		Teacher teacher = request.toEntity();
+		
+		Long teachersequence;
 		if (request.getIsCoach()) {
-			Long studsequence = sequenceGeneratorService.findSequenceByUserType(UserType.Coach);
-			if (studsequence == null) {
-				sequenceGeneratorRepo.save(new SequenceGenerator(UserType.Coach, 0l));
-			}
-			++studsequence;
-			request.setUsername(String.format("COA%08d", studsequence));
-			sequenceGeneratorService.updateSequenceByUserType(studsequence, UserType.Coach);
+			teachersequence = sequenceGeneratorService.findSequenceByUserType(UserType.Coach);
+			teacher.setUsername(String.format("COA%08d", teachersequence));
 
 		} else {
-			Long studsequence = sequenceGeneratorService.findSequenceByUserType(UserType.Teacher);
-			if (studsequence == null) {
-				sequenceGeneratorRepo.save(new SequenceGenerator(UserType.Teacher, 0l));
-			}
-			++studsequence;
-			request.setUsername(String.format("TEA%08d", studsequence));
-			sequenceGeneratorService.updateSequenceByUserType(studsequence, UserType.Teacher);
-		}
-
-		Teacher teacher = request.toEntity();
+			 teachersequence = sequenceGeneratorService.findSequenceByUserType(UserType.Teacher);
+			 teacher.setUsername(String.format("TEA%08d", teachersequence));
+		} 
 
 		// saving school
 
@@ -249,7 +245,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	}
 
 	@Override
-	public List<TeacherResponse> uploadTeachersFromExcel(MultipartFile file, Boolean isCoach, String schoolCid) {
+	public ResponseEntity<?> uploadTeachersFromExcel(MultipartFile file, Boolean isCoach, String schoolCid) {
 
 		if (file == null || file.isEmpty() || file.getSize() == 0)
 			throw new ValidationException("Pls upload valid excel file.");
@@ -261,7 +257,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 			XSSFWorkbook studentsSheet = new XSSFWorkbook(file.getInputStream());
 			if (isCoach == true) {
 				teacherRecords = findSheetRowValues(studentsSheet, "COACH", errors);
-
+				errors = (List<String>) teacherRecords.get(teacherRecords.size() - 1).get("errors");
 				for (int i = 0; i < teacherRecords.size(); i++) {
 					List<Map<String, Object>> tempStudentsRecords = new ArrayList<Map<String, Object>>();
 					tempStudentsRecords.add(teacherRecords.get(i));
@@ -282,8 +278,10 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 
 			throw new ValidationException("something wrong happened may be file not in acceptable format.");
 		}
-
-		return teacherResponseList;
+		Map<String, Object> responseMap = new HashMap<String, Object>();
+		responseMap.put("TeacherResponseList", teacherResponseList);
+		responseMap.put("errors", errors);
+		return new ResponseEntity<Map<String, Object>>(responseMap, HttpStatus.OK);
 	}
 
 	@Override
@@ -395,8 +393,9 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		teacherRequest.setName((String) teacherDetails.get(0).get("NAME"));
 		teacherRequest.setQualification((String) teacherDetails.get(0).get("QUALIFICATION"));
 //		teacherRequest.setUsername((String) teacherDetails.get(0).get("USERNAME"));
-		teacherRequest.setDob(
-				DateUtil.convertStringToDate(DateUtil.formatDate((Date) teacherDetails.get(0).get("DOB"), null, null)));
+//		teacherRequest.setDob(
+//				DateUtil.convertStringToDate(DateUtil.formatDate((Date) teacherDetails.get(0).get("DOB"), null, null)));
+		teacherRequest.setDob(DateUtil.formatDate((Date) teacherDetails.get(0).get("DOB"), null, null));
 		School school = schoolRepository.findByCidAndActiveTrue(schoolCid);
 //		if (teacherDetails.get(0).get("SCHOOL") != null)
 //			school = schoolRepository.findByName((String) teacherDetails.get(0).get("SCHOOL"));
@@ -556,15 +555,22 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	}
 
 	@Override
-	public List<TeacherResponse> getAllTeachers() {
-		List<Teacher> teachers = new ArrayList<Teacher>();
+	public List<TeacherResponse> getAllTeachers(Integer pageNo, Integer pageSize) {
+
+		Pageable paging = new PageRequest(pageNo, pageSize);
+
+		Page<Teacher> teachers;
 		List<TeacherResponse> teacherResponses = new ArrayList<>();
-		teachers = teacherRepository.findAll();
-		if (teachers == null)
+
+		teachers = teacherRepository.findAll(paging);
+
+		if (!teachers.hasContent())
 			throw new ValidationException("No teachers found.");
+
 		teachers.forEach(teacher -> {
 			teacherResponses.add(new TeacherResponse(teacher));
 		});
+
 		return teacherResponses;
 	}
 

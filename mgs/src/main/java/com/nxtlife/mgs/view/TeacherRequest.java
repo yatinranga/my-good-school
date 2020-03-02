@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.nxtlife.mgs.entity.user.Teacher;
+import com.nxtlife.mgs.util.DateUtil;
 
 public class TeacherRequest {
 
@@ -15,7 +16,7 @@ public class TeacherRequest {
 
 	private String username;
 
-	private Date dob;
+	private String dob;
 
 //	private String school;
 
@@ -38,6 +39,10 @@ public class TeacherRequest {
 	private List<String> gradeIds;
 
 	private String schoolId;
+
+	private String designation;
+
+	private Boolean isManagmentMember;
 
 	public String getName() {
 		return name;
@@ -71,11 +76,11 @@ public class TeacherRequest {
 		this.username = username;
 	}
 
-	public Date getDob() {
+	public String getDob() {
 		return dob;
 	}
 
-	public void setDob(Date dob) {
+	public void setDob(String dob) {
 		this.dob = dob;
 	}
 
@@ -159,6 +164,22 @@ public class TeacherRequest {
 		this.schoolId = schoolId;
 	}
 
+	public String getDesignation() {
+		return designation;
+	}
+
+	public void setDesignation(String designation) {
+		this.designation = designation;
+	}
+
+	public Boolean getIsManagmentMember() {
+		return isManagmentMember;
+	}
+
+	public void setIsManagmentMember(Boolean isManagmentMember) {
+		this.isManagmentMember = isManagmentMember;
+	}
+
 	public Teacher toEntity() {
 		return toEntity(null);
 	}
@@ -172,7 +193,7 @@ public class TeacherRequest {
 			teacher.setUsername(this.username);
 
 		if (this.dob != null)
-			teacher.setDob(this.dob);
+			teacher.setDob(DateUtil.convertStringToDate(this.dob));
 		if (this.qualification != null)
 			teacher.setQualification(this.qualification);
 		/*
@@ -188,6 +209,9 @@ public class TeacherRequest {
 			teacher.setIsCoach(this.isCoach);
 		if (this.isClassTeacher != null)
 			teacher.setIsClassTeacher(this.isClassTeacher);
+
+		teacher.setIsManagmentMember(isManagmentMember);
+		teacher.setDesignation(designation);
 
 		return teacher;
 	}

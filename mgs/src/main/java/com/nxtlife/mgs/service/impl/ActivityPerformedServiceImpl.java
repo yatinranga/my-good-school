@@ -2,9 +2,13 @@ package com.nxtlife.mgs.service.impl;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -36,6 +40,7 @@ import com.nxtlife.mgs.view.ActivityPerformedRequest;
 import com.nxtlife.mgs.view.ActivityPerformedResponse;
 import com.nxtlife.mgs.view.FileRequest;
 import com.nxtlife.mgs.view.FileResponse;
+import com.nxtlife.mgs.view.SuccessResponse;
 
 @Service
 public class ActivityPerformedServiceImpl extends BaseService implements ActivityPerformedService {
@@ -63,13 +68,12 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 
 	@Autowired
 	SchoolRepository schoolRepository;
-	
+
 	@Autowired
 	GradeRepository gradeRepository;
-	
+
 	@Autowired
 	ActivityRepository activityRepository;
-	
 
 	@Override
 	public List<FileResponse> getAllFilesOfActivity(String activityCId) {
@@ -113,11 +117,12 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 					String.format("Student id is invalid no student with id : %s found.", request.getStudentId()));
 		if (request.getActivityId() == null)
 			throw new ValidationException("Activity Id can not be null.");
-		
+
 		Activity activity = activityRepository.findByCidAndActiveTrue(request.getActivityId());
-		if(activity==null)
-			throw new ValidationException(String.format("Activity with id : %s does not exist.", request.getActivityId()));
-		
+		if (activity == null)
+			throw new ValidationException(
+					String.format("Activity with id : %s does not exist.", request.getActivityId()));
+
 		if (request.getCoachId() == null)
 			throw new ValidationException("Coach Id can not be null.");
 
@@ -290,28 +295,41 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 
 	@Override
 	public ActivityPerformedResponse saveActivityByCoach(ActivityPerformedRequest request) {
+		
 		if (request.getId() == null)
 			throw new ValidationException("Activity id cannot be null.");
+		
 		ActivityPerformed activity = activityPerformedRepository.findByCidAndActiveTrue(request.getId());
+		
 		if (activity == null)
 			throw new ValidationException(String.format("No activity found with id : %s", request.getId()));
+		
 		if (!activity.getActivityStatus().equals(ActivityStatus.SubmittedByStudent))
 			throw new ValidationException("Activity not submitted by student yet so you cannot review it now.");
+		
 		activity = request.toEntity();
+		
 		if (activity.getCoachRemark() != null)
 			activity.setCoachRemarkDate(DateUtil.convertStringToDate(LocalDate.now().toString()));
+		
 		activity.setActivityStatus(ActivityStatus.SavedByTeacher);
+		
 		activity = activityPerformedRepository.save(activity);
+		
 		if (activity == null)
 			throw new RuntimeException("Something went wrong activity not submitted.");
+		
 		return new ActivityPerformedResponse(activity);
 	}
 
 	@Override
 	public ActivityPerformedResponse submitActivityByCoach(String activityPerformedCid) {
+		
 		if (activityPerformedCid == null)
 			throw new ValidationException("Id cannot be null.");
+		
 		ActivityPerformed activity = activityPerformedRepository.findByCidAndActiveTrue(activityPerformedCid);
+		
 		if (activity == null)
 			throw new ValidationException(String.format("No activity found for id : %s", activityPerformedCid));
 
@@ -326,7 +344,9 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			throw new ValidationException("Activity cannot be submitted first fill all the mandatory fields.");
 
 		activity.setActivityStatus(ActivityStatus.Reviewed);
+		
 		activity = activityPerformedRepository.save(activity);
+		
 		if (activity == null)
 			throw new RuntimeException("Something went wrong activity not submitted.");
 
@@ -334,8 +354,14 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 	}
 
 	@Override
-	public List<ActivityPerformedResponse> getAllActivitiesOfStudentByStatus(String status, String studentCid) {
+	public List<ActivityPerformedResponse> getAllActivitiesOfStudentByStatus(String status, String studentCid,Integer page , Integer pageSize) {
 
+		if(status == null) {
+			page= page==null?0:page;
+			pageSize = pageSize==null?10:pageSize;
+			return getAllPerformedActivitiesOfStudent(studentCid,page,pageSize);
+		}
+		else {
 		switch (status) {
 		case "saved":
 		case "SAVED":
@@ -350,40 +376,51 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			throw new ValidationException(String
 					.format("[%s] is not a valid status. Valid status are : SAVED, SUBMITTED, REVIEWED  ", status));
 		}
+		}
 	}
 
 	@Override
 	public List<ActivityPerformedResponse> getAllActivitiesAssignedToCoachforReview(String coachCid) {
+		
 		if (coachCid == null)
 			throw new ValidationException("coach id cannot be null.");
+		
 		Teacher coach = teacherRepository.findByCidAndIsCoachTrueAndActiveTrue(coachCid);
+		
 		if (coach == null)
 			throw new ValidationException(String.format("Coach with id : %s not found.", coachCid));
+		
 		List<ActivityPerformed> submittedActivities = activityPerformedRepository
-				.findAllByTeacherCidAndActivityStatusOrActivityStatusAndActiveTrue(coachCid, ActivityStatus.SubmittedByStudent,ActivityStatus.SavedByTeacher);
+				.findAllByTeacherCidAndActivityStatusOrActivityStatusAndActiveTrue(coachCid,
+						ActivityStatus.SubmittedByStudent, ActivityStatus.SavedByTeacher);
+		
 		List<ActivityPerformedResponse> submittedActivityResponses = new ArrayList<ActivityPerformedResponse>();
+		
 		if (submittedActivities == null || submittedActivities.isEmpty())
 			throw new ValidationException("No activities assigned to review yet.");
+		
 		submittedActivities.forEach(act -> {
 			submittedActivityResponses.add(new ActivityPerformedResponse(act));
 		});
+		
 		return submittedActivityResponses;
 	}
-	
+
 	@Override
-	public List<ActivityPerformedResponse> getAllPendingActivitiesByClass(String coachCid , String gradeCid){
+	public List<ActivityPerformedResponse> getAllPendingActivitiesByClass(String coachCid, String gradeCid) {
 		if (coachCid == null)
 			throw new ValidationException("Coach id cannot be null.");
 		Teacher coach = teacherRepository.findByCidAndIsCoachTrueAndActiveTrue(coachCid);
-		if(gradeCid==null)
+		if (gradeCid == null)
 			throw new ValidationException("Grade id cannot be null.");
 		if (coach == null)
 			throw new ValidationException(String.format("Coach with id : %s not found.", coachCid));
 		Grade grade = gradeRepository.findByCidAndActiveTrue(gradeCid);
-		if(grade==null)
+		if (grade == null)
 			throw new ValidationException(String.format("Grade with id : %s not found.", gradeCid));
 		List<ActivityPerformed> submittedActivities = activityPerformedRepository
-				.findAllByTeacherCidAndStudentGradeCidAndActivityStatusOrActivityStatusAndActiveTrue(coachCid,gradeCid,ActivityStatus.SubmittedByStudent,ActivityStatus.SavedByTeacher);
+				.findAllByTeacherCidAndStudentGradeCidAndActivityStatusOrActivityStatusAndActiveTrue(coachCid, gradeCid,
+						ActivityStatus.SubmittedByStudent, ActivityStatus.SavedByTeacher);
 		List<ActivityPerformedResponse> submittedActivityResponses = new ArrayList<ActivityPerformedResponse>();
 		if (submittedActivities == null || submittedActivities.isEmpty())
 			throw new ValidationException("No activities assigned to review yet.");
@@ -392,21 +429,22 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 		});
 		return submittedActivityResponses;
 	}
-	
+
 	@Override
-	public List<ActivityPerformedResponse> getAllPendingActivitiesByService(String coachCid , String activityCid){
+	public List<ActivityPerformedResponse> getAllPendingActivitiesByService(String coachCid, String activityCid) {
 		if (coachCid == null)
 			throw new ValidationException("Coach id cannot be null.");
 		Teacher coach = teacherRepository.findByCidAndIsCoachTrueAndActiveTrue(coachCid);
-		if(activityCid==null)
+		if (activityCid == null)
 			throw new ValidationException("activity id cannot be null.");
 		if (coach == null)
 			throw new ValidationException(String.format("Coach with id : %s not found.", coachCid));
 		Activity activity = activityRepository.findByCidAndActiveTrue(activityCid);
-		if(activity==null)
+		if (activity == null)
 			throw new ValidationException(String.format("activity with id : %s not found.", activityCid));
 		List<ActivityPerformed> submittedActivities = activityPerformedRepository
-				.findAllByTeacherCidAndActivityCidAndActivityStatusOrActivityStatusAndActiveTrue(coachCid,activityCid, ActivityStatus.SubmittedByStudent,ActivityStatus.SavedByTeacher);
+				.findAllByTeacherCidAndActivityCidAndActivityStatusOrActivityStatusAndActiveTrue(coachCid, activityCid,
+						ActivityStatus.SubmittedByStudent, ActivityStatus.SavedByTeacher);
 		List<ActivityPerformedResponse> submittedActivityResponses = new ArrayList<ActivityPerformedResponse>();
 		if (submittedActivities == null || submittedActivities.isEmpty())
 			throw new ValidationException("No activities assigned to review yet.");
@@ -415,26 +453,29 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 		});
 		return submittedActivityResponses;
 	}
-	
+
 	@Override
-	public List<ActivityPerformedResponse> getAllPendingActivitiesByClassAndService(String coachCid ,String gradeCid, String activityCid){
+	public List<ActivityPerformedResponse> getAllPendingActivitiesByClassAndService(String coachCid, String gradeCid,
+			String activityCid) {
 		if (coachCid == null)
 			throw new ValidationException("Coach id cannot be null.");
 		Teacher coach = teacherRepository.findByCidAndIsCoachTrueAndActiveTrue(coachCid);
-		if(activityCid==null)
+		if (activityCid == null)
 			throw new ValidationException("activity id cannot be null.");
-		if(gradeCid==null)
+		if (gradeCid == null)
 			throw new ValidationException("Grade id cannot be null.");
 		if (coach == null)
 			throw new ValidationException(String.format("Coach with id : %s not found.", coachCid));
 		Grade grade = gradeRepository.findByCidAndActiveTrue(gradeCid);
-		if(grade==null)
+		if (grade == null)
 			throw new ValidationException(String.format("Grade with id : %s not found.", gradeCid));
 		Activity activity = activityRepository.findByCidAndActiveTrue(activityCid);
-		if(activity==null)
+		if (activity == null)
 			throw new ValidationException(String.format("activity with id : %s not found.", activityCid));
 		List<ActivityPerformed> submittedActivities = activityPerformedRepository
-				.findAllByTeacherCidAndStudentGradeCidAndActivityCidAndActivityStatusOrActivityStatusAndActiveTrue(coachCid,gradeCid,activityCid, ActivityStatus.SubmittedByStudent,ActivityStatus.SavedByTeacher);
+				.findAllByTeacherCidAndStudentGradeCidAndActivityCidAndActivityStatusOrActivityStatusAndActiveTrue(
+						coachCid, gradeCid, activityCid, ActivityStatus.SubmittedByStudent,
+						ActivityStatus.SavedByTeacher);
 		List<ActivityPerformedResponse> submittedActivityResponses = new ArrayList<ActivityPerformedResponse>();
 		if (submittedActivities == null || submittedActivities.isEmpty())
 			throw new ValidationException("No activities assigned to review yet.");
@@ -672,7 +713,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 	public List<ActivityPerformedResponse> filterActivityByYearPerformed(String year, String studentCid) {
 		if (year == null)
 			throw new ValidationException("year cannot be null.");
-		if(!(new Integer(Integer.parseInt(year)) instanceof Integer))
+		if (!(new Integer(Integer.parseInt(year)) instanceof Integer))
 			throw new ValidationException("Year is in invalid format.");
 		if (studentCid == null)
 			throw new ValidationException("student id cannot be null.");
@@ -702,6 +743,24 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 		List<ActivityPerformedResponse> performedActivityResponses = new ArrayList<ActivityPerformedResponse>();
 		if (performedActivities == null || performedActivities.isEmpty())
 			throw new ValidationException("No activities saved by student.");
+		performedActivities.forEach(act -> {
+			performedActivityResponses.add(new ActivityPerformedResponse(act));
+		});
+		return performedActivityResponses;
+	}
+	
+	@Override
+	public List<ActivityPerformedResponse> getAllPerformedActivitiesOfStudent(String studentCid,Integer page , Integer pageSize) {
+		if (studentCid == null)
+			throw new ValidationException("Student id cannot be null.");
+		if (studentRepository.findByCidAndActiveTrue(studentCid) == null)
+			throw new ValidationException("No student found with id : " + studentCid);
+
+		List<ActivityPerformed> performedActivities = activityPerformedRepository
+				.findAllByStudentCidAndActiveTrue(studentCid , new PageRequest(page, pageSize, new Sort(Direction.DESC, Arrays.asList("dateOfActivity"))));
+		List<ActivityPerformedResponse> performedActivityResponses = new ArrayList<ActivityPerformedResponse>();
+		if (performedActivities == null || performedActivities.isEmpty())
+			throw new ValidationException("No activities performed by student.");
 		performedActivities.forEach(act -> {
 			performedActivityResponses.add(new ActivityPerformedResponse(act));
 		});
@@ -737,31 +796,55 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 		});
 		return performedActivityResponses;
 	}
-	
+
 	@Override
-	public List<ActivityPerformedResponse> getAllActivityOfStudentByActivityId(String studentCid , String activityCid,String activityStatus){
-		if(studentCid==null)
+	public List<ActivityPerformedResponse> getAllActivityOfStudentByActivityId(String studentCid, String activityCid,
+			String activityStatus) {
+		if (studentCid == null)
 			throw new ValidationException("Student id cannot be null.");
-		if(activityCid==null)
+		if (activityCid == null)
 			throw new ValidationException("Activity id cannot be null.");
 		Student student = studentRepository.findByCidAndActiveTrue(studentCid);
-		if(student==null)
+		if (student == null)
 			throw new ValidationException(String.format("Student with id : %s not found.", studentCid));
 		Activity activity = activityRepository.findByCidAndActiveTrue(activityCid);
-		if(activity==null)
+		if (activity == null)
 			throw new ValidationException(String.format("No activity found having id : %s.", activityCid));
-		if(activityStatus==null)
+		if (activityStatus == null)
 			activityStatus = ActivityStatus.Reviewed.toString();
-		
-		List<ActivityPerformed> activitiesPerformed = activityPerformedRepository.findAllByStudentCidAndStudentActiveTrueAndActivityCidAndActivityActiveTrueAndActivityStatusAndActiveTrue(studentCid, activityCid, ActivityStatus.valueOf(activityStatus));
-		
-		if(activitiesPerformed==null || activitiesPerformed.isEmpty())
-			throw new ValidationException(String.format("No activity reviewed for category : %s of Student : %s ", activity.getName(),student.getName()));
-		
+
+		List<ActivityPerformed> activitiesPerformed = activityPerformedRepository
+				.findAllByStudentCidAndStudentActiveTrueAndActivityCidAndActivityActiveTrueAndActivityStatusAndActiveTrue(
+						studentCid, activityCid, ActivityStatus.valueOf(activityStatus));
+
+		if (activitiesPerformed == null || activitiesPerformed.isEmpty())
+			throw new ValidationException(String.format("No activity reviewed for category : %s of Student : %s ",
+					activity.getName(), student.getName()));
+
 		List<ActivityPerformedResponse> activityPerformedResponses = new ArrayList<ActivityPerformedResponse>();
-		activitiesPerformed.forEach(act->{activityPerformedResponses.add(new ActivityPerformedResponse(act));});
-			
-			return activityPerformedResponses;
+		activitiesPerformed.forEach(act -> {
+			activityPerformedResponses.add(new ActivityPerformedResponse(act));
+		});
+
+		return activityPerformedResponses;
+	}
+
+	@Override
+	public SuccessResponse deleteActivityOfStudent(String activityPerformedCid) {
+		if(activityPerformedCid==null)
+			throw new ValidationException("Activity Performed id cannot be null.");
+		ActivityPerformed activityPerformed = activityPerformedRepository.findByCidAndActiveTrue(activityPerformedCid);
+		if(activityPerformed == null)
+			throw new ValidationException(String.format("No activity found with id : %s .", activityPerformedCid));
+		
+		if(activityPerformed.getActivityStatus().equals(ActivityStatus.SubmittedByStudent)||activityPerformed.getActivityStatus().equals(ActivityStatus.SavedByTeacher)||activityPerformed.getActivityStatus().equals(ActivityStatus.Reviewed))
+			throw new ValidationException("Activity already submitted by you for review now it cannot be deleted.");
+		
+		activityPerformed.setActive(false);
+		activityPerformed = activityPerformedRepository.save(activityPerformed);
+		if(activityPerformed==null)
+			throw new RuntimeException("Something went wrong , Activity not deleted");
+		return new SuccessResponse(200, "Activity deleted successfuly.");
 	}
 
 }

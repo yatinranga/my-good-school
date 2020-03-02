@@ -19,6 +19,8 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -41,11 +43,13 @@ import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.store.FileStore;
 import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.ExcelUtil;
+import com.nxtlife.mgs.util.SequenceGenerator;
 import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.SchoolRequest;
 import com.nxtlife.mgs.view.SchoolResponse;
 import com.nxtlife.mgs.view.StudentRequest;
 import com.nxtlife.mgs.view.StudentResponse;
+import com.nxtlife.mgs.view.SuccessResponse;
 
 @Service
 public class SchoolServiceImpl extends BaseService implements SchoolService {
@@ -131,31 +135,22 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			throw new ValidationException("Request can not be null.");
 		if (request.getEmail() == null)
 			throw new ValidationException("Email can not be null");
-		if (schoolRepository.countByEmail(request.getEmail()) > 0)
+		if (schoolRepository.countByEmailAndActiveTrue(request.getEmail()) > 0)
 			throw new ValidationException("Email already exists i.e, school already exists.");
-		if (request.getUsername() == null) {
-			request.setUsername(request.getEmail());
-			if (schoolRepository.countByUsername(request.getUsername()) > 0)
-				throw new ValidationException("Username already exists");
-		} else {
-			if (schoolRepository.countByUsername(request.getUsername()) > 0)
-				throw new ValidationException("Username already exists");
-		}
-		
 		if (request.getName() == null)
 			throw new ValidationException("School name can not be null");
+		
 		School school = request.toEntity();
+		Long schoolsequence = sequenceGeneratorService.findSequenceByUserType(UserType.School);
+		school.setUsername(String.format("SCH%08d", schoolsequence));
+		school.setCid(utils.generateRandomAlphaNumString(8));
+		school.setActive(true);
+		User user =userService.createSchoolUser(school);
 		
-		try {
-			school.setCid(utils.generateRandomAlphaNumString(8));
-		} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
-			school.setCid(utils.generateRandomAlphaNumString(8));
-		}
-		
-		User user =null;
 		if (StringUtils.isEmpty(user))
 			throw new ValidationException("User not created successfully");
 		school.setUser(user);
+		user.setSchool(school);
 		
 		if(request.getLogo()!=null) {
 			String fileExtn = request.getLogo().getOriginalFilename().split("\\.")[1];
@@ -229,12 +224,18 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 						}
 					} else {
 //						if(columnTypes.get(headers.get(j)).equals(cell.getCellType()))
+						if (headers.get(j).equalsIgnoreCase("NAME") || headers.get(j).equalsIgnoreCase("EMAIL"))
+							errors.add(String.format("Cell at row %d and column %d is blank for header %s.", i + 1,
+									j + 1, headers.get(j)));
 						columnValues.put(headers.get(j), null);
 					}
 				}
 
 			}
 		}
+		Map<String,Object> err = new HashMap<String, Object>();
+		err.put("errors", errors);
+		rows.add(err);
 		return rows;
 	}
 
@@ -253,7 +254,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 	}
 	
 	@Override
-	public List<SchoolResponse> uploadSchoolsFromExcel(MultipartFile file) {
+	public ResponseEntity<?> uploadSchoolsFromExcel(MultipartFile file) {
 		if (file == null || file.isEmpty() || file.getSize() == 0)
 			throw new ValidationException("Pls upload valid excel file.");
 
@@ -263,6 +264,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 		try {
 			XSSFWorkbook studentsSheet = new XSSFWorkbook(file.getInputStream());
 			schoolRecords = findSheetRowValues(studentsSheet, "SCHOOL", errors);
+			errors = (List<String>) schoolRecords.get(schoolRecords.size()-1).get("errors");
 			for (int i = 0; i < schoolRecords.size(); i++) {
 				List<Map<String, Object>> tempSchoolRecords = new ArrayList<Map<String, Object>>();
 				tempSchoolRecords.add(schoolRecords.get(i));
@@ -273,8 +275,10 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 
 			throw new ValidationException("something wrong happened may be file not in acceptable format.");
 		}
-
-		return schoolResponseList;
+		Map<String, Object> responseMap = new HashMap<String, Object>();
+		responseMap.put("SchoolResponseList",schoolResponseList);
+		responseMap.put("errors",  errors);
+		return new ResponseEntity<Map<String, Object>>(responseMap, HttpStatus.OK);
 	}
 	
 	private SchoolRequest validateSchoolRequest(List<Map<String, Object>> schoolDetails, List<String> errors) {
@@ -288,8 +292,6 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 //		if(schoolDetails.get(0).get("USERNAME")!=null)
 //		   schoolRequest.setUsername((String) schoolDetails.get(0).get("USERNAME"));
 	
-		if (schoolDetails.get(0).get("ACTIVE") != null)
-			schoolRequest.setActive(Boolean.valueOf((Boolean) schoolDetails.get(0).get("ACTIVE")));
 		if(schoolDetails.get(0).get("EMAIL") != null)
 			schoolRequest.setEmail((String) schoolDetails.get(0).get("EMAIL"));
 		
@@ -330,6 +332,20 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			throw new ValidationException("No schools found.");
 		schoolList.forEach(s->{schoolResponses.add(new SchoolResponse(s));});
 		return schoolResponses;
+	}
+
+	@Override
+	public SuccessResponse delete(String cid) {
+		if(cid == null)
+			throw new ValidationException("cid cannot be null.");
+		School school = schoolRepository.findByCidAndActiveTrue(cid);
+		if(school == null)
+			throw new ValidationException(String.format("School with id : %s not found", cid));
+		school.setActive(false);
+		school = schoolRepository.save(school);
+		if(school == null)
+			throw new RuntimeException("Something went wrong school not deleted successfully.");
+		return new SuccessResponse(200, String.format("School with id : %s deleted successfully", cid));
 	}
 
 }

@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -41,17 +42,19 @@ public class Activity extends BaseEntity {
 
 	private Boolean active;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "activity_focus_area", joinColumns = { @JoinColumn(name = "activity_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "focus_area_id") })
 	private List<FocusArea> focusAreas;
 
-	@ManyToMany(mappedBy = "activities")
+	@ManyToMany
+	@JoinTable(name = "teacher_activity", joinColumns = { @JoinColumn(name = "activity_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "teacher_id") })
 	private List<Teacher> teachers;
 
 	@ManyToMany
-	@JoinTable(name = "school_activity", joinColumns = { @JoinColumn(name = "school_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "activity_id") })
+	@JoinTable(name = "school_activity", joinColumns = { @JoinColumn(name = "activity_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "school_id") })
 	private List<School> schools;
 
 	public String getName() {

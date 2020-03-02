@@ -109,8 +109,10 @@ public class UserResponse {
 		}
 		if(user.getSchool()!=null)
 			this.school=new SchoolResponse(user.getSchool());
-		if(user.getTeacher()!=null)
-			this.teacher = new TeacherResponse(user.getTeacher());
+		if(user.getTeacher()!=null) {
+			this.teacher = new TeacherResponse(user.getTeacher(),true);
+		}
+			
 		
 	}
 	

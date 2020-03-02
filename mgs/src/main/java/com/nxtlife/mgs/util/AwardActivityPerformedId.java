@@ -61,6 +61,7 @@ public class AwardActivityPerformedId implements Serializable{
 		public AwardActivityPerformedId(Long awardId, Long activityPerformedId) {
 			this.awardId = awardId;
 			this.activityPerformedId = activityPerformedId;
+			
 		}
 		
 		public AwardActivityPerformedId() {
