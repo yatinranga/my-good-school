@@ -10,19 +10,19 @@
                     <div class="profile_card_main">
                         <div class="student profile_card">
                             <h2> Student Profile </h2>
-                            <p> <label>Name : {{studentDetails['name']}}</label>  </p>
-                            <p> <label>Gender : {{studentDetails['gender']}}</label> </p> 
+                            <p> <label>Name : {{studentDetails['name']}}</label> </p>
+                            <p> <label>Gender : {{studentDetails['gender']}}</label> </p>
                             <p> <label>Email : {{studentDetails['email']}}</label> </p>
                             <p> <label>Mobile Number : {{studentDetails['mobileNumber']}}</label> </p>
                             <p> <label>Date of Birth : {{studentDetails['dob']}}</label> </p>
                         </div>
                         <div class="guardian profile_card">
                             <div *ngFor="let sd of studentDetails['guardianResponseList']; let i = index ">
-                                <div> 
-                                    <h2> Guardian {{i+1}} Profile </h2> 
-                                    <p> <label> Name : {{sd['name']}}</label>  </p>
-                                    <p> <label> Email : {{sd['email']}}</label> </p> 
-                                    <p> <label> Mobile Number : {{sd['mobileNumber']}}</label> </p> 
+                                <div>
+                                    <h2> Guardian {{i+1}} Profile </h2>
+                                    <p> <label> Name : {{sd['name']}}</label> </p>
+                                    <p> <label> Email : {{sd['email']}}</label> </p>
+                                    <p> <label> Mobile Number : {{sd['mobileNumber']}}</label> </p>
                                     <p> <label> Relation: {{sd['relationship']}}</label> </p>
                                 </div>
                             </div>
@@ -33,8 +33,6 @@
         </div>
     </div>
 </div>
-
-
 
 
 <!-- <br>

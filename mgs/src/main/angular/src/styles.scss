@@ -12,13 +12,8 @@
 .card.bg-light {
     margin: 15px 0;
 }
-h3 {
-    text-align: center;
-    color: $sidebar;
-    margin-top: 15px;
-    margin-bottom: 0px;
-    font-size: 35px;
-}
+/*-------------------------------------FORM-------------------------------------*/
+
 .input-field {
     display: inline-block;
     background: white;
@@ -101,27 +96,30 @@ select {
     height: 30px;
     border-radius: 0 !important;
 }
-.content_main_com{
-    width: 100%;
-    display: inline-block;
-    padding: 15px;
-}
-.content_main img {
-    width: 100%;
-    vertical-align: top;
-    margin: 0;
-    padding: 0;
-}
 .form-content .form-control {
     margin-top: 5px;
 }
+.sortby{
+    float: right;
+    margin: 20px 15px;
+    padding: 0px;
+    font-size: 16px;
+}
+button.btn.btnSubmit.btn-success {
+    box-shadow: none;
+    border-radius: 0px;
+    border: none;
+    margin-top: 20px;
+    font-size: 18px;
+    outline: none !important;
+}
+
+/*-------------------------------------TABLE-------------------------------------*/
 
 table.table {
     margin:0;
 }
-
 th{
-    // color: #adadad !important;
     font-weight: bold;
 }
 table.table, tr, th, td{
@@ -131,11 +129,8 @@ table.submit.table, tr, th, td{
 border: 1px solid #777 !important;
 }
 .table_main{
-    // margin-top: 50px;
-    // background: #596a7d;
     display: inline-block;
     width: 100%;
-    // padding: 25px;
 }
 .table td, th{
     text-align: center;
@@ -196,17 +191,261 @@ tbody#accordionExample > tr[aria-expanded="true"] {
     background: #ddd;
     color: #333;
 }
-.sortby{
-    float: right;
-    margin: 20px 15px;
-    padding: 0px;
-    font-size: 16px;
+
+/*-------------------------------------HOME-------------------------------------*/
+
+app-home{
+    display: inline-block;
+    width: 100%;
 }
-button.btn.btnSubmit.btn-success {
-    box-shadow: none;
-    border-radius: 0px;
-    border: none;
-    margin-top: 20px;
-    font-size: 18px;
-    outline: none !important;
+.main{
+    width:100%;
+    display: inline-block;
+    vertical-align: top;
+}
+.main_box{
+    width: 100%;
+    display: inline-block
+}
+.content_box{
+    width: 100%;
+    display: inline-block;
+}
+.main .content_main {
+    display: inline-block;
+    width: 100%;
+    vertical-align: top;
+}
+.content_main_com{
+    width: 100%;
+    display: inline-block;
+    padding: 15px;
+}
+.content_main img {
+    width: 100%;
+    vertical-align: top;
+    margin: 0;
+    padding: 0;
+}
+.banner {
+    width: 100%;
+    display: inline-block;
+    position: relative;
+
+}
+#banner{
+    vertical-align: top;
+    width: 100%;
+    display: inline-block;
+    position: relative;
+}
+.content_main_com h1{
+    font-size: 35px;
+    color: $black;
+    text-align: center;
+    margin: 25px 0;
+}
+.content_main_com h2{
+    font-size: 26px;
+    color: $black;    
+    text-align: left;
+}
+.content_main_com p{
+    font-size: 16px;
+    color: $black;
+    text-align: left;
+}
+.content_main_com h3{
+    font-size: 22px;
+    color: $black;
+    text-align: left;
+    color: $black;
+}
+.menu_content {
+    width: 100%;
+    display: inline-block;
+    margin: 10px 0px;
+}
+
+/*-------------------------------------NAVIGATION BAR-------------------------------------*/
+
+
+.navbar {
+    background: #fff;
+    color: #555;
+    display: inline-block;
+    width: 100%;
+    padding: 0;
+    vertical-align: bottom;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 22;
+    box-shadow: 0 0 10px #333;
+}
+.logo {
+    padding: 0px;
+    float: left;
+}
+.logo img{
+    width: 84px;
+    cursor: pointer;
+}
+.menu {
+    display: inline-block;
+    margin: 0px 50px;
+    float: left;
+}
+.menu ul {
+    padding: 0;
+    margin: 0;
+    display: inline-flex;
+}
+li {
+    list-style-type: none;
+    cursor: pointer;
+}
+a.menu_link{
+    font-size: 19px;
+    text-align: left;
+    width: 100%;
+    display: inline-block;
+    padding: 20px 10px;
+    color: #555;
+    margin: 0 10px;
+}
+i.fa {
+    margin: 10px;
+}
+.navbar .right{
+    float: right;
+    margin: 0px;
+}
+.divider {
+    height: 0;
+    margin: 0;
+    overflow: hidden;
+    border-top: 1px solid $light;
+}
+.dropdown{
+    position: relative;
+    display: inline-block;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 10px;
+    background-color: $btn;
+    min-width: 250px;
+    z-index: 1;
+    transition: transform 0.6s;
+    top: 52px;
+}
+.dropdown-content a {
+    color: $light;
+    padding: 15px 10px;
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+}
+.dropdown-content a:hover {color: $black;
+cursor: pointer;}
+
+.dropdown:hover .dropdown-content {
+   display: block;
+   cursor: pointer;
+}
+.dropdown i.fa:hover{
+      color: #ddd;
+      cursor: pointer;
+}
+.navbar i.fa.fa-sign-out:hover {
+    color: dimgray;
+}
+.dropdown i.fa.fa-user-circle {
+    font-size: 27px !important;
+}
+a.cb.menu_link {
+    border-bottom: 5px solid #4bafa5;
+}
+a.pink.menu_link {
+    border-bottom: 5px solid #e04090;
+}
+a.blue.menu_link {
+    border-bottom: 5px solid #1f69ad;
+}
+a.green.menu_link {
+    border-bottom: 5px solid #8dc33a;
+}
+a.menu_link:hover{
+    text-decoration: none;
+    color: #fafafa;
+}
+a.cb.menu_link:hover{
+    background: #4bafa5;
+}
+a.pink.menu_link:hover{
+    background: #e04090;
+}
+a.blue.menu_link:hover{
+    background: #1f69ad;
+}
+a.green.menu_link:hover{
+    background: #8dc33a;
+}
+
+
+/*-------------------------------------PROFILE-------------------------------------*/
+
+
+.profile_main {
+    width: 100%;
+    display: inline-block;
+    position: relative;
+}
+.profile_content{
+    position: absolute;
+    background: #93bcdc;
+    left: 0;
+    right: 0;
+    margin: auto;
+    padding: 10px;
+    top: 200px;
+    margin: 0 10px;
+    box-shadow: 0 0 10px #333;
+}
+.student_image img{
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: -60px;
+}
+.profile_card_main {
+    width: 100%;
+    margin: 100px 0;
+    padding: 20px;
+    display: inline-block;
+}
+.profile_card{
+    padding: 20px;
+    background: #f2f3fb;
+    width: 45%;
+    margin: 0 5px;
+    min-height: 320px;
+    box-shadow: 0 0 10px #555;
+}
+.student.profile_card {
+    float: left;
+}
+.guardian.profile_card{
+   float: right;
+}
+.profile_card_main h2{
+    text-align: center;
+    font-size: 24px;
 }
