@@ -19,7 +19,7 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit() {
     this.studentInfo = JSON.parse(localStorage.getItem('user_info'));
-    this.studentId = this.studentInfo['student'].id
+    this.studentId = this.studentInfo['student'].id;
     this.studentService.getProfile(this.studentId).subscribe((res) => {
       this.studentDetails = res;
       console.log(this.studentDetails);      

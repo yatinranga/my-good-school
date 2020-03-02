@@ -1,4 +1,4 @@
 DATA = {
-    ipAddress: "192.168.1.91",
+    ipAddress: "localhost",
     port: "8083"
 }

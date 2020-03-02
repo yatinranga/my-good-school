@@ -7,7 +7,7 @@
     <label>DOB : {{studentDetails['dob']}}</label><br><br>
     <div *ngFor="let sd of studentDetails['guardianResponseList']; let i = index ">
         <div> Guardian {{i+1}}<br>
-        <label>Guardian Name : {{sd['name']}}</label><br>
+        <label> Name : {{sd['name']}}</label><br>
         <label>Guardian Email : {{sd['email']}}</label><br>
         <label>Guardian MOB : {{sd['mobileNumber']}}</label><br>
         <label>Guardian Relationship: {{sd['relationship']}}</label><br>

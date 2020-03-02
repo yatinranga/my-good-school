@@ -120,6 +120,7 @@ export class SavedActitvityComponent implements OnInit {
       console.log(res);
       this.alertService.showSuccessToast('Activity Submitted !');
       // splice the selected activity from savedActivity array and push it into submit activity array
+      // this.savedActivitiesArr.splice(index,1);
     },
       (err) => console.log(err)
     );
@@ -129,7 +130,7 @@ export class SavedActitvityComponent implements OnInit {
     const activityId = activity.id;
     console.log(activityId);
     this.studentService.deleteActivity(activityId).subscribe((res) => {
-      console.log(res);
+      console.log(res);   
       this.alertService.showSuccessToast('Activity Deleted !');
     },
     (err) => console.log(err));

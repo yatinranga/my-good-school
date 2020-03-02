@@ -40,7 +40,7 @@ export class StudentService {
     return this.http.get(url);
   }
 
-  // to get activities in particular school
+  // to get all activities in particular school
   getActivity(schoolId) {
     return this.http.get("/activitiesOffered/" + schoolId);
   }
