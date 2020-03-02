@@ -22,16 +22,7 @@ span.choosefile.choosefile-custom {
     box-shadow: 0 0 10px $light;
     border-radius: 0;
 }
-button.btn.btnSubmit.btn-success {
-    box-shadow: none;
-    border-radius: 0;
-}
-.table button {
-    background: #2c7590;
-    color: #fafafa;
-    padding: 5px 15px;
-    border-radius: 0;
-}
+
 .upload img {
     max-width: 200px;
 }
@@ -47,4 +38,35 @@ button.btn.btnSubmit.btn-success {
 
 .collapse-td{
     padding: 0;
+}
+
+select{
+    background: none;
+    border: none;
+    color: #333;
+    height: 40px;
+    border-radius: 0 !important;
+    width: 120px;
+}
+
+button.submit {
+    background: green;
+}
+.submitted{
+    color: green;
+}
+.saved{
+    color: #f3cc08;
+}
+.reviewed{
+    color: firebrick;
+} 
+
+button.icon_button {
+    padding: 5px;
+    margin: 0 5px;
+    border: none !important;
+    background: none !important;
+    cursor: pointer;
+    box-shadow: none !important;
 }

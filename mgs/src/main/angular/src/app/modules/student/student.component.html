@@ -5,21 +5,22 @@
   </div>
 
   <div class="content_main">
-    <div class="nav-bar">
-      <div class="left">        
+    <div class="navbar">
+      <div class="left">
+          <i class="fa fa-bars"></i>
       </div>
       <div class="right">
         <div class="dropdown">
-          <img src="assets/images/user.png">
+            <i class="fa fa-user-circle"></i>
           <div class="dropdown-content">
-            <a href=""> My Profile </a>
-            <a href=""> My Activities </a>
-            <a href=""> Logout </a>
+            <a href=""> <i class="fa fa-user"></i> My Profile </a>
+            <a href=""> <i class="fa fa-tasks"></i> My Activities </a>
+            <a href=""> <i class="fa fa-trophy"> </i> My Achievements </a>
+            <div class="divider"></div>
+            <a routerLink='../../login' class="logout" (click)="authService.logoutUser();"> 
+              <i class="fa fa-sign-out-alt"></i>Logout </a>
           </div>
         </div>
-        <span> <a routerLink='../../login' class="logout" (click)="authService.logoutUser();"> <i
-              class="fa fa-sign-out"> </i>
-          </a> </span>
       </div>
     </div>
     <router-outlet></router-outlet>

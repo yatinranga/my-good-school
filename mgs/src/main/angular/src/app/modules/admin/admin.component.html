@@ -1,13 +1,16 @@
-<nav class="navbar navbar-expand-sm">
-  <ul id="myDIV" class="navbar-nav">
+<nav class="navbar">
+  <ul class="navbar-nav">
     <li class="nav-item active">
-      <a class="nav-link" routerLink='student-upload'>Student</a>
+      <a class="nav-link" routerLink='student-upload'> 
+        <i class='fa fa-book-reader'></i>Student</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" routerLink='teacher-upload'>Teacher</a>
+      <a class="nav-link" routerLink='teacher-upload'>
+          <i class="fa fa-chalkboard-teacher"></i>Teacher</a>
     </li>
   </ul>
-  <button class="logout btn-dark my-sm-0" (click)="authService.logoutUser();">Logout</button>
+  <button class="logout btn" (click)="authService.logoutUser();"> 
+      <i class="fa fa-sign-out-alt"></i>Logout</button>
 </nav>
 
 <router-outlet></router-outlet>
