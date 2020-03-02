@@ -2,6 +2,8 @@ package com.nxtlife.mgs.jpa;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -47,6 +49,8 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 	List<Teacher> findAllByIsClassTeacherTrueAndActiveTrue();
 
 	Teacher findByIdAndActiveTrue(Long id);
+
+	Page<Teacher> findAllByActiveTrue(Pageable paging);
 	
 //	List<Teacher> findAllByActivitiesCid(String cid);
 

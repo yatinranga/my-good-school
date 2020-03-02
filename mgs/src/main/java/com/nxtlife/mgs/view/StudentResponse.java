@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.nxtlife.mgs.entity.user.Student;
+import com.nxtlife.mgs.util.DateUtil;
 
 @JsonInclude(value = Include.NON_ABSENT)
 public class StudentResponse {
@@ -139,14 +140,14 @@ public class StudentResponse {
 		this.name = student.getName();
 		this.username = student.getUsername();
 		this.email = student.getEmail();
-		if(student.getDob()!=null)
-		   this.dob = student.getDob().toString();
+		if (student.getDob() != null)
+			this.dob = DateUtil.formatDate(student.getDob(), "yyyy-MM-dd");
 		this.gender = student.getGender();
 		this.mobileNumber = student.getMobileNumber();
 		this.active = student.getActive();
-		
-		if(student.getSubscriptionEndDate()!=null)
-		   this.subscriptionEndDate = student.getSubscriptionEndDate().toString();
+
+		if (student.getSubscriptionEndDate() != null)
+			this.subscriptionEndDate = student.getSubscriptionEndDate().toString();
 
 		if (student.getUser() != null) {
 			this.userId = student.getUser().getCid();
@@ -159,13 +160,13 @@ public class StudentResponse {
 
 		if (student.getSchool() != null)
 			this.schoolId = student.getSchool().getCid();
-		if(student.getGuardians()!=null && !student.getGuardians().isEmpty())
-		  this.guardianResponseList = student.getGuardians().stream().map(g -> new GuardianResponse(g))
-				.collect(Collectors.toList());
+		if (student.getGuardians() != null && !student.getGuardians().isEmpty())
+			this.guardianResponseList = student.getGuardians().stream().map(g -> new GuardianResponse(g))
+					.collect(Collectors.toList());
 
 	}
-	
-	public StudentResponse(Student student , Boolean responseForGetInfo ) {
+
+	public StudentResponse(Student student, Boolean responseForGetInfo) {
 		if (responseForGetInfo == true) {
 			this.id = student.getCid();
 			this.name = student.getName();
