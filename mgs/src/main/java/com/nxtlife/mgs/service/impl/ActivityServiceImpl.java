@@ -90,7 +90,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 			Boolean flag = false;
 			for (int i = 0; i < focusAreaRepoList.size(); i++) {
 				if (foc.equalsIgnoreCase(focusAreaRepoList.get(i).getName())
-						&& focusAreaRepoList.get(i).getPsdArea().equals(PSDArea.PersonalDevelopment))
+						&& focusAreaRepoList.get(i).getPsdArea().equals(PSDArea.SocialDevelopment))
 					flag = true;
 			}
 			if (flag == false) {

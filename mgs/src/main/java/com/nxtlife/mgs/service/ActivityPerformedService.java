@@ -42,7 +42,7 @@ public interface ActivityPerformedService {
 
 	ActivityPerformedResponse submitActivityByCoach(String activityPerformedCid);
 
-	List<ActivityPerformedResponse> getAllActivitiesAssignedToCoachforReview(String coachCid);
+	List<ActivityPerformedResponse> getAllActivitiesAssignedToCoachforReview(String coachCid , String status);
 
 	List<ActivityPerformedResponse> getAllPendingActivitiesByClass(String coachCid, String gradeCid);
 
