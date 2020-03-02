@@ -3,7 +3,7 @@
         <div class="form">
             <div class="form-content">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="form-group"> Select Activity :
                             <select class="form-control" (ngModelChange)="getStudentCoach($event)"
                                 formControlName="activityId">
@@ -13,14 +13,13 @@
                                 </option>
                             </select>
                         </div>
-                    </div>
-                    <div class="col-md-12">
                         <div class="form-group">Enter Description :
-                            <textarea class="form-control add" placeholder="Details"
-                                formControlName="description"></textarea>
+                                <textarea class="form-control add" placeholder="Details"
+                                    formControlName="description"></textarea>
                         </div>
                     </div>
-                    <div class="col-md-12">
+                    
+                    <div class="col-md-6">
                         <div class="form-group">Select Teacher/Coach :
                             <select class="form-control" formControlName="coachId">
                                 <option value="" disabled selected>Select Teacher/Coach </option>
@@ -29,13 +28,11 @@
                                 </option>
                             </select>
                         </div>
-
-                    </div>
-                    <div class="col-md-12">
                         <div class="form-group">Enter Date :
-                            <input type="date" class="form-control" placeholder="Date of Activity"
-                                formControlName="dateOfActivity" />
-                        </div>
+                                <input type="date" class="form-control" placeholder="Date of Activity"
+                                    formControlName="dateOfActivity" />
+                            </div>
+
                     </div>
                     <div class="col-md-12">
                         <div class="choosefile_box">
