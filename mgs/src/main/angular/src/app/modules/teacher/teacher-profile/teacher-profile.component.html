@@ -1,1 +1,30 @@
-<p>teacher-profile works!</p>
+<h5>teacher-profile works!</h5>
+<div>
+    <label>Name : {{teacherDetails['name']}}</label><br>
+    <label>Mobile Number : {{teacherDetails['mobileNumber']}}</label><br>
+    <label>Email : {{teacherDetails['email']}}</label><br>
+    <label>DOB : {{teacherDetails['dob']}}</label><br>
+    <label>Gender : {{teacherDetails['gender']}}</label><br>
+    <label>School Name : {{teacherDetails['schoolName']}}</label><br>
+    <label>Qualifications : {{teacherDetails['qualification']}}</label><br>
+
+    <div *ngIf = "teacherDetails['isCoach']">
+        <label>Coach : {{teacherDetails['isCoach']}}</label>
+    </div>
+
+    <div *ngIf = "teacherDetails['isClassTeacher']">
+        <label>Class Teacher : {{teacherDetails['isClassTeacher']}}</label>
+    </div>
+
+    <div *ngIf = "teacherDetails['activitiyIds']">Activities - 
+        <div *ngFor = "let acti of teacherDetails['activityIds']">
+            <p>{{acti.name}}</p>
+        </div>
+    </div>
+
+    <div *ngIf = "teacherDetails['gradeIds']">Activities - 
+        <div *ngFor = "let grade of teacherDetails['gradeIds']">
+            <p>{{grade.name}}</p>
+        </div>
+    </div>
+</div>

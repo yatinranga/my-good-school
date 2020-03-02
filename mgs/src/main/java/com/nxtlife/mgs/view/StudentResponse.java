@@ -135,6 +135,10 @@ public class StudentResponse {
 		this.guardianResponseList = guardianResponseList;
 	}
 
+	public String getSubscriptionEndDate() {
+		return subscriptionEndDate;
+	}
+
 	public StudentResponse(Student student) {
 		this.id = student.getCid();
 		this.name = student.getName();
@@ -176,7 +180,8 @@ public class StudentResponse {
 			this.gender = student.getGender();
 			this.mobileNumber = student.getMobileNumber();
 			this.active = student.getActive();
-			this.subscriptionEndDate = student.getSubscriptionEndDate().toString();
+			if(student.getSubscriptionEndDate()!=null)
+			   this.subscriptionEndDate = student.getSubscriptionEndDate().toString();
 
 			if (student.getUser() != null) {
 				this.userId = student.getUser().getCid();

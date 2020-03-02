@@ -1,0 +1,52 @@
+@import '../../../app.component.scss';
+
+.profile_main {
+    width: 100%;
+    display: inline-block;
+    position: relative;
+}
+.profile_content{
+    position: absolute;
+    background: #93bcdc;
+    left: 0;
+    right: 0;
+    margin: auto;
+    padding: 10px;
+    top: 200px;
+    margin: 0 10px;
+    box-shadow: 0 0 10px #333;
+}
+.student_image img{
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: -60px;
+}
+.profile_card_main {
+    width: 100%;
+    margin: 100px 0;
+    padding: 20px;
+    display: inline-block;
+}
+.profile_card{
+    padding: 20px;
+    background: #f2f3fb;
+    width: 45%;
+    margin: 0 5px;
+    min-height: 320px;
+    box-shadow: 0 0 10px #555;
+}
+.student.profile_card {
+    float: left;
+}
+.guardian.profile_card{
+   float: right;
+}
+.profile_card_main h2{
+    text-align: center;
+    font-size: 24px;
+}

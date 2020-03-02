@@ -37,7 +37,7 @@ public class FocusArea extends BaseEntity{
 	@Enumerated(EnumType.STRING)
 	PSDArea psdArea;
 	
-	@ManyToMany(mappedBy = "focusAreas")
+	@ManyToMany(mappedBy = "focusAreas",fetch = FetchType.EAGER)
 	private List<Activity> activities;
 	
 //	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY,mappedBy ="focusArea")

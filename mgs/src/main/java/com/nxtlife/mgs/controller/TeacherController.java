@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nxtlife.mgs.service.TeacherService;
+import com.nxtlife.mgs.view.AwardRequest;
 import com.nxtlife.mgs.view.SuccessResponse;
 import com.nxtlife.mgs.view.TeacherRequest;
 import com.nxtlife.mgs.view.TeacherResponse;
@@ -77,7 +78,7 @@ public class TeacherController {
 	public TeacherResponse getClassTeacherByCId(@PathVariable("cId") String cId) {
 		return teacherService.findClassTeacherByCId(cId);
 	}
-
+	
 	@DeleteMapping("api/teachers/{cid}")
 	public SuccessResponse delete(@PathVariable String cid) {
 		return teacherService.delete(cid);

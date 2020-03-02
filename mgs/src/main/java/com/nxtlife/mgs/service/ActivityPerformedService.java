@@ -18,15 +18,11 @@ public interface ActivityPerformedService {
 
 	ActivityPerformedResponse saveActivity(ActivityPerformedRequest request);
 
-	List<ActivityPerformedResponse> getAllSavedActivitiesOfStudent(String studentCid);
-
-	List<ActivityPerformedResponse> getAllSubmittedActivityOfStudent(String studentCid);
-
-	List<ActivityPerformedResponse> getAllReviewedActivityOfStudent(String studentCid);
+	List<ActivityPerformedResponse> getAllSavedActivitiesOfStudent(String studentCid,Integer page , Integer pageSize);
 
 	ActivityPerformedResponse submitActivity(String activityPerformedCid);
 
-	List<ActivityPerformedResponse> getAllActivitiesOfStudentByStatus(String status, String studentCid);
+	List<ActivityPerformedResponse> getAllActivitiesOfStudentByStatus(String status, String studentCid,Integer page , Integer pageSize);
 
 	List<ActivityPerformedResponse> findAllByStudentCidAndTeacherCidAndActivityStatusAndActiveTrue(String studentCid,
 			String teacherCid, String activityStatus);
@@ -46,7 +42,7 @@ public interface ActivityPerformedService {
 
 	ActivityPerformedResponse submitActivityByCoach(String activityPerformedCid);
 
-	List<ActivityPerformedResponse> getAllActivitiesAssignedToCoachforReview(String coachCid);
+	List<ActivityPerformedResponse> getAllActivitiesAssignedToCoachforReview(String coachCid , String status);
 
 	List<ActivityPerformedResponse> getAllPendingActivitiesByClass(String coachCid, String gradeCid);
 
@@ -60,6 +56,10 @@ public interface ActivityPerformedService {
 
 	SuccessResponse deleteActivityOfStudent(String activityPerformedCid);
 
-	List<ActivityPerformedResponse> getAllPerformedActivitiesOfStudent(String studentCid);
+	List<ActivityPerformedResponse> getAllPerformedActivitiesOfStudent(String studentCid , Integer page , Integer pageSize);
+
+	List<ActivityPerformedResponse> getAllSubmittedActivityOfStudent(String studentCid, Integer page, Integer pageSize);
+
+	List<ActivityPerformedResponse> getAllReviewedActivityOfStudent(String studentCid, Integer page, Integer pageSize);
 
 }

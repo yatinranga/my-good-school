@@ -10,31 +10,15 @@
     border-radius: 0;
 }
 .card.bg-light {
-    margin: 30px 0;
+    margin: 15px 0;
 }
 h3 {
     text-align: center;
-    color: $active;
-    margin-top: 20px;
+    color: $sidebar;
+    margin-top: 15px;
     margin-bottom: 0px;
     font-size: 35px;
 }
-.card.bg-light{
-    margin: 30px 0;
-}
-.banner h1 {
-    position: absolute;
-    top: 100px;
-    right: 80px;
-    font-size: 40px !important;
-    color: $nav-bar !important;
-    font-family: fantasy;
-}
-
-button.upload{
-   background: $dark;
-}
-
 .input-field {
     display: inline-block;
     background: white;
@@ -43,15 +27,21 @@ button.upload{
     margin: 10px;
     border-radius: 0px;
 }
-
-
 .btn {
-    padding: 10px 20px !important;
+    padding: 12px ;
     display: inline-block;
-    font-size: 18px !important;
+    font-size: 18px;
+    border-radius: 0 !important;
+    background: $btn !important;
+    outline: none !important;
+    color: $light;
 }
 button.upload.btn{
     margin-left: 20px;
+}
+
+button.btn.logout{
+    float: right;
 }
 i.fa.fa-file {
     float: left;
@@ -75,10 +65,10 @@ span.choosefile.choosefile-custom {
     background: none;
     z-index: 1;
     opacity: 1;
-    width: 24.1%;
+    width: 23.9%;
     height: 40px;
-    right: 464px;
-    height: 49px;
+    right: 459px;
+    height: 50px;
     left: inherit;
     top: 31px;
     box-shadow: 0 0 10px white;
@@ -121,15 +111,9 @@ select {
     vertical-align: top;
     margin: 0;
     padding: 0;
-    max-height: 400px;
-    margin-top: 0;
-    overflow: hidden;
-    z-index: 0;
-    position: relative;
 }
 .form-content .form-control {
     margin-top: 5px;
-    
 }
 
 table.table {
@@ -141,7 +125,10 @@ th{
     font-weight: bold;
 }
 table.table, tr, th, td{
-    border: 1px solid #333 !important;
+    border: 1px solid #777 !important;
+}
+table.submit.table, tr, th, td{
+border: 1px solid #777 !important;
 }
 .table_main{
     // margin-top: 50px;
@@ -154,17 +141,72 @@ table.table, tr, th, td{
     text-align: center;
 }
 .table button {
-    color: #333 !important;
     padding: 5px 15px;
     border-radius: 0;
-    background: #b2d57a !important;
-    padding: 5px 15px;
+    margin: 0 5px;
     border-radius: 0;
     box-shadow: 0 0 10px #fff;
     outline: none;
+    background: $sidebar;
+    color: #fafafa;
 }
-
 .main .table_main table thead tr th {
-    background: #b2d57a;
+    background: #ddd;
     color: #333;
+}
+.description, .attachment {
+    text-align: left;
+    padding: 10px;
+    display: inline-block;
+    width: 100%;
+    min-height: 140px;
+    vertical-align: bottom;
+    position: relative;
+}
+.attachment:before {
+    content: "";
+    position: absolute;
+    background: #666;
+    width: 1px;
+    left: 0;
+    top: 0;
+    bottom: 0;
+}
+.description:after {
+    content: "";
+    position: absolute;
+    background: #666;
+    width: 1px;
+    right: -31px;
+    top: 0;
+    bottom: 0;
+}
+.buttons{
+    margin-top: 78px;
+}
+td.collapse-td
+{
+    background: #fafafa;
+}
+i.fa.fa-user-circle, i.fa.fa-bars{
+    padding: 15px 0px;
+    font-size: 22px !important;
+}
+tbody#accordionExample > tr[aria-expanded="true"] {
+    background: #ddd;
+    color: #333;
+}
+.sortby{
+    float: right;
+    margin: 20px 15px;
+    padding: 0px;
+    font-size: 16px;
+}
+button.btn.btnSubmit.btn-success {
+    box-shadow: none;
+    border-radius: 0px;
+    border: none;
+    margin-top: 20px;
+    font-size: 18px;
+    outline: none !important;
 }

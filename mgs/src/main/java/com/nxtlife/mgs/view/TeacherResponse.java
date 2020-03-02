@@ -25,9 +25,11 @@ public class TeacherResponse {
 	private List<GradeResponse> grades;
 	private List<String> activities;
 	private String schoolName;
+	private String schoolId;
 	private Boolean active;
 	private String designation;
 	private Boolean isManagmentMember;
+	private Boolean isCoach;
 
 	public String getId() {
 		return id;
@@ -84,7 +86,7 @@ public class TeacherResponse {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
 	public String getDob() {
 		return dob;
 	}
@@ -100,7 +102,7 @@ public class TeacherResponse {
 	public void setQualification(String qualification) {
 		this.qualification = qualification;
 	}
-	
+
 	public List<GradeResponse> getGrades() {
 		return grades;
 	}
@@ -149,6 +151,22 @@ public class TeacherResponse {
 		this.isManagmentMember = isManagmentMember;
 	}
 
+	public Boolean getIsCoach() {
+		return isCoach;
+	}
+
+	public void setIsCoach(Boolean isCoach) {
+		this.isCoach = isCoach;
+	}
+
+	public String getSchoolId() {
+		return schoolId;
+	}
+
+	public void setSchoolId(String schoolId) {
+		this.schoolId = schoolId;
+	}
+
 	public TeacherResponse(Teacher teacher) {
 		this.id = teacher.getcId();
 
@@ -165,11 +183,16 @@ public class TeacherResponse {
 		this.active = teacher.getActive();
 		this.isManagmentMember = teacher.getIsManagmentMember();
 		this.designation = teacher.getDesignation();
-		if (teacher.getSchool() != null)
-			this.schoolName = teacher.getSchool().getName();
+		this.isCoach = teacher.getIsCoach();
+		
+			if (teacher.getSchool() != null) {
+				this.schoolName = teacher.getSchool().getName();
+				this.schoolId = teacher.getSchool().getCid();
+			}
+		
 		if (teacher.getGrades() != null && !teacher.getGrades().isEmpty()) {
 //			if (grades == null)
-				grades = new ArrayList<GradeResponse>();
+			grades = new ArrayList<GradeResponse>();
 			for (Grade grade : teacher.getGrades()) {
 				grades.add(new GradeResponse(grade));
 			}
@@ -186,13 +209,13 @@ public class TeacherResponse {
 			}
 		}
 	}
-	
-	public TeacherResponse(Teacher teacher , Boolean teacherResponseForUser) {
+
+	public TeacherResponse(Teacher teacher, Boolean teacherResponseForUser) {
 		this.id = teacher.getcId();
 
-		if(teacher.getUser() != null)
-		  this.userId = teacher.getUser().getCid();
-	
+		if (teacher.getUser() != null)
+			this.userId = teacher.getUser().getCid();
+
 		this.username = teacher.getUsername();
 		this.name = teacher.getName();
 		this.gender = teacher.getGender();
@@ -201,9 +224,10 @@ public class TeacherResponse {
 		this.dob = teacher.getDob().toString();
 		this.qualification = teacher.getQualification();
 		this.active = teacher.getActive();
-		if (teacher.getSchool() != null)
+		if (teacher.getSchool() != null) {
 			this.schoolName = teacher.getSchool().getName();
-		
+			this.schoolId = teacher.getSchool().getCid();
+		}
 
 	}
 

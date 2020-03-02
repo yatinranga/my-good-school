@@ -21,27 +21,27 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 	Teacher findByNameAndActiveTrue(String name);
 
 	Teacher findByCidAndActiveTrue(String cid);
-	
+
 	Teacher findByCidAndIsCoachTrueAndActiveTrue(String cid);
-	
+
 	Teacher findByCidAndIsClassTeacherTrueAndActiveTrue(String cid);
-	
+
 	Teacher findByIdAndIsCoachTrueAndActiveTrue(Long id);
-	
+
 	Teacher findByIdAndIsClassTeacherTrueAndActiveTrue(Long id);
 
 	Teacher findByMobileNumberAndActiveTrue(String mobileNumber);
 
 	Teacher findByUsernameAndActiveTrue(String username);
 
-	List<Teacher> findAllBySchoolCidAndActivitiesNameAndIsCoachTrueAndActiveTrue(String schoolCid,String activityName);
+	List<Teacher> findAllBySchoolCidAndActivitiesNameAndIsCoachTrueAndActiveTrue(String schoolCid, String activityName);
 
-	List<Teacher> findAllBySchoolCidAndActivitiesCidAndIsCoachTrueAndActiveTrue(String schoolCid ,String activityCid);
-	
+	List<Teacher> findAllBySchoolCidAndActivitiesCidAndIsCoachTrueAndActiveTrue(String schoolCid, String activityCid);
+
 	List<Teacher> findAllBySchoolCidAndIsCoachTrueAndActiveTrue(String schoolCid);
-	
+
 	List<Teacher> findAllBySchoolCidAndIsClassTeacherTrueAndActiveTrue(String schoolCid);
-	
+
 	List<Teacher> findAllBySchoolCidAndActiveTrue(String schoolCid);
 
 	List<Teacher> findAllByIsCoachTrueAndActiveTrue();
@@ -51,7 +51,9 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 	Teacher findByIdAndActiveTrue(Long id);
 
 	Page<Teacher> findAllByActiveTrue(Pageable paging);
-	
+
+	Boolean existsByCidAndActiveTrue(String teacherId);
+
 //	List<Teacher> findAllByActivitiesCid(String cid);
 
 }

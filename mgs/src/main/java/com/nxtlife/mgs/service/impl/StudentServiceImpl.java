@@ -626,20 +626,19 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			throw new ValidationException(String.format("Teacher with id : %s not found.", teacherCid));
 		if (activityStatus == null)
 			activityStatus = ActivityStatus.Reviewed.toString();
+		List<Student> students = studentRepository  
+				.findAllBySchoolCidAndGradeCidAndActivitiesActivityCidAndActivitiesActivityStatusAndSchoolActiveTrueAndGradeActiveTrueAndActivitiesActivityActiveTrueAndActiveTrue(
+						schoolCid, gradeCid, activityCid, ActivityStatus.valueOf(activityStatus));
+		if (students == null)
+			throw new ValidationException(String.format(
+					"No student found in the school : %s under teacher : %s having performed activity : %s and status is %s .",
+					school.getName(), teacher.getName(), activity.getName(), activityStatus));
+		List<StudentResponse> studentsResponse = new ArrayList<StudentResponse>();
+		students.forEach(s -> {
+			studentsResponse.add(new StudentResponse(s));
+		});
+		return studentsResponse;
 
-		/*
-		 * List<Student> students = studentRepository
-		 * .findAllBySchoolCidAndGradeCidAndActivitiesActivityCidAndActivitiesActivityStatusAndActivitiesActivityActivityTrueAndGradeActiveTrueAndSchoolActiveTrueAndActiveTrue(
-		 * schoolCid, gradeCid, activityCid, ActivityStatus.Reviewed);
-		 */
-		/*
-		 * if (students == null) throw new ValidationException(String.format(
-		 * "No student found in the school : %s under teacher : %s having performed activity : %s and status is %s ."
-		 * , school.getName(), teacher.getName(), activity.getName(), activityStatus));
-		 * List<StudentResponse> studentsResponse = new ArrayList<StudentResponse>();
-		 * students.forEach(s -> { studentsResponse.add(new StudentResponse(s)); });
-		 */
-		return null;// return studentsResponse;
 	}
 
 	@Override

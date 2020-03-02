@@ -13,11 +13,7 @@
     color: $active;
     margin: 20px 0 40px 0;
 }
-button.btn.btnSubmit.btn-success{
-    margin-top: 20px;
-    font-size: 17px;
-    outline: none;
-}
+
 .form-content {
     border-bottom: 1px solid $box-shadow-color;
     padding-bottom: 30px;
@@ -27,7 +23,8 @@ button.btnSubmit {
     border-radius: 0px;
     color: white;
     padding: 10px 20px;
-    font-size: 18px;outline: none;
+    font-size: 18px;
+    outline: none;
 }
 .add{
     margin-top: 20px;

@@ -1,7 +1,6 @@
 package com.nxtlife.mgs.view;
 
 import java.util.Date;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -15,7 +14,9 @@ public class AwardResponse {
 	private String id;
 	private String description;
 	private String createrId;
-//	private String assignerId;
+	private String createdBy;
+	private String assignerId;
+	private String assignedBy;
 //	private List<String> activityPerformedIds;
 	private ActivityPerformedResponse activityPerformedResponse;
 	private Date dateOfReceipt;
@@ -81,13 +82,38 @@ public class AwardResponse {
 		this.dateOfReceipt = dateOfReceipt;
 	}
 
+	public String getAssignerId() {
+		return assignerId;
+	}
+
+	public void setAssignerId(String assignerId) {
+		this.assignerId = assignerId;
+	}
+
+	public String getAssignedBy() {
+		return assignedBy;
+	}
+
+	public void setAssignedBy(String assignedBy) {
+		this.assignedBy = assignedBy;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
 	public AwardResponse(Award award) {
 		this.id = award.getCid();
 		this.description = award.getDescription();
 		this.name = award.getName();
-		if (award.getTeacher() != null)
+		if (award.getTeacher() != null) {
 			this.createrId = award.getTeacher().getcId();
-
+			this.createdBy= award.getTeacher().getName();
+		}
 	}
 
 	public AwardResponse(AwardActivityPerformed aap) {
@@ -95,6 +121,7 @@ public class AwardResponse {
 		this.name = aap.getAward().getName();
 		this.dateOfReceipt = aap.getDateOfReceipt();
 		this.description = aap.getActivityPerformed().getActivity().getName();
+		this.assignedBy =aap.getAssignerCid();
 	}
 
 }

@@ -39,4 +39,7 @@ public interface AwardActivityPerformedRepository extends JpaRepository<AwardAct
 	List<AwardActivityPerformed> findAllByActivityPerformedStudentCidAndActivityPerformedActivityCidAndIsVerifiedTrueAndActivityPerformedStudentActiveTrueAndActivityPerformedActivityActiveTrueAndActiveTrue(
 			String studentCid, String activityCid);
 
+	List<AwardActivityPerformed> findAllByAwardTeacherSchoolCidAndAssignerCidAndIsVerifiedTrueAndActiveTrue(
+			String schoolId, String teacherId);
+
 }

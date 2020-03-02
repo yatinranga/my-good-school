@@ -21,4 +21,6 @@ public interface AwardService {
 
 	List<AwardResponse> getAllSoloUnverifiedAwardsOfSchool(String schoolCid, String awardCid);
 
+	List<AwardResponse> getAllAwardsAssignedByTeacher(AwardRequest request);
+
 }

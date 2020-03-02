@@ -20,11 +20,11 @@ public class SequenceGeneratorServiceImpl extends BaseService implements Sequenc
 	public Long findSequenceByUserType(UserType userType) {
 		Long sequence = sequenceGeneratorRepo.findSequenceByUserType(userType);
 		if (sequence == null) {
-			SequenceGenerator seqGen = sequenceGeneratorRepo.save(new SequenceGenerator(userType, 1l));
-			sequence = seqGen == null ? 0l : seqGen.getSequence();
+			SequenceGenerator seqGen = this.save(new SequenceGenerator(userType, 1l));
+			sequence = seqGen == null ? 1l : seqGen.getSequence();
 		} else {
 			sequence++;
-			this.updateSequenceByUserType(sequence, UserType.Student);
+			this.updateSequenceByUserType(sequence, userType);
 		}
 		return sequence;
 	}
@@ -37,7 +37,7 @@ public class SequenceGeneratorServiceImpl extends BaseService implements Sequenc
 	@Override
 	public SequenceGenerator save(SequenceGenerator sequence) {
 		if (sequence == null)
-			throw new ValidationException("Invalid request body.");
+			throw new ValidationException("Invalid request body for sequence generator");
 		sequence = sequenceGeneratorRepo.save(sequence);
 		if (sequence == null)
 			throw new RuntimeException("Something went wrong sequence not saved.");

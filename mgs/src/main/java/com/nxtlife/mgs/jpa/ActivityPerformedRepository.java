@@ -2,6 +2,8 @@ package com.nxtlife.mgs.jpa;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,7 +16,7 @@ import com.nxtlife.mgs.enums.PSDArea;
 public interface ActivityPerformedRepository extends JpaRepository<ActivityPerformed, Long> {
 
 	List<ActivityPerformed> findAllByStudentCidAndActivityStatusAndActiveTrue(String studentCid,
-			ActivityStatus activityStatus);
+			ActivityStatus activityStatus,Pageable pageable);
 
 	List<ActivityPerformed> findAllByStudentCidAndActivityCidAndActivityStatusAndActiveTrue(String studentCid,
 			String activityCid, ActivityStatus activityStatus);
@@ -59,5 +61,7 @@ public interface ActivityPerformedRepository extends JpaRepository<ActivityPerfo
 	List<ActivityPerformed> findAllByStudentSchoolCidAndStudentGradeCidAndActivityCidAndAndActivityStatusAndStudentSchoolActiveTrueAndStudentGradeActiveTrueAndActivityActiveTrueAndActiveTrue(
 			String schoolCid, String gradeCid, String ActivityCid, ActivityStatus status);
 
-	List<ActivityPerformed> findAllByStudentCidAndActiveTrue(String studentCid);
+	List<ActivityPerformed> findAllByStudentCidAndActiveTrue(String studentCid, Pageable pageable );
+
+	List<ActivityPerformed> findAllByTeacherCidAndActivityStatusAndActiveTrue(String coachCid, ActivityStatus reviewed);
 }

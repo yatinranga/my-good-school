@@ -16,7 +16,7 @@ import com.nxtlife.mgs.enums.ActivityStatus;
 @JsonInclude(value = Include.NON_ABSENT)
 public class ActivityPerformedResponse {
 
-    private Date dateOfActivity;
+    private String dateOfActivity;
 	
 	private String id;
 	
@@ -24,7 +24,7 @@ public class ActivityPerformedResponse {
 	
 	private String teacherRemark;
 	
-	private Date teacherRemarkDate;
+	private String teacherRemarkDate;
 	
 	private Boolean active;
 	
@@ -50,19 +50,14 @@ public class ActivityPerformedResponse {
 	
 	private String teacherName;
 	
+	private String studentName;
+	
 	private String fourS;
 	
 	private Set<String> focusAreas;
 	
 	private Set<String> psdAreas;
 
-	public Date getDateOfActivity() {
-		return dateOfActivity;
-	}
-
-	public void setDateOfActivity(Date dateOfActivity) {
-		this.dateOfActivity = dateOfActivity;
-	}
 
 	public String getId() {
 		return id;
@@ -87,12 +82,21 @@ public class ActivityPerformedResponse {
 	public void setTeacherRemark(String teacherRemark) {
 		this.teacherRemark = teacherRemark;
 	}
+	
 
-	public Date getTeacherRemarkDate() {
+	public String getDateOfActivity() {
+		return dateOfActivity;
+	}
+
+	public void setDateOfActivity(String dateOfActivity) {
+		this.dateOfActivity = dateOfActivity;
+	}
+
+	public String getTeacherRemarkDate() {
 		return teacherRemarkDate;
 	}
 
-	public void setTeacherRemarkDate(Date teacherRemarkDate) {
+	public void setTeacherRemarkDate(String teacherRemarkDate) {
 		this.teacherRemarkDate = teacherRemarkDate;
 	}
 
@@ -217,6 +221,14 @@ public class ActivityPerformedResponse {
 		this.psdAreas = psdAreas;
 	}
 
+	public String getStudentName() {
+		return studentName;
+	}
+
+	public void setStudentName(String studentName) {
+		this.studentName = studentName;
+	}
+
 	public ActivityPerformedResponse(ActivityPerformed activityPerformed) {
 		this.id = activityPerformed.getCid();
 		this.active = activityPerformed.getActive();
@@ -235,16 +247,20 @@ public class ActivityPerformedResponse {
 		}
 		this.description = activityPerformed.getDescription();
 		this.activityStatus = activityPerformed.getActivityStatus();
-		this.dateOfActivity = activityPerformed.getDateOfActivity();
+		if(activityPerformed.getDateOfActivity()!=null)
+		   this.dateOfActivity = activityPerformed.getDateOfActivity().toString();
 		if(activityPerformed.getTeacher()!=null) {
 			this.teacherId = activityPerformed.getTeacher().getcId();
 			this.teacherName=activityPerformed.getTeacher().getName();
 		}
 		  
-		if(activityPerformed.getStudent()!=null)
-		   this.studentId=activityPerformed.getStudent().getCid();
+		if(activityPerformed.getStudent()!=null) {
+			 this.studentId=activityPerformed.getStudent().getCid();
+			 this.studentId=activityPerformed.getStudent().getName();
+		}
 		this.teacherRemark = activityPerformed.getCoachRemark();
-		this.teacherRemarkDate = activityPerformed.getCoachRemarkDate();
+		if(activityPerformed.getCoachRemarkDate()!=null)
+		  this.teacherRemarkDate = activityPerformed.getCoachRemarkDate().toString();
 		this.participationScore = activityPerformed.getParticipationScore();
 		this.initiativeScore = activityPerformed.getInitiativeScore();
 		this.achievementScore = activityPerformed.getAchievementScore();

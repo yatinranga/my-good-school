@@ -100,36 +100,18 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 
 		if (request.getName() == null)
 			throw new ValidationException("Teacher name can not be null");
-
+	
+		Teacher teacher = request.toEntity();
+		
+		Long teachersequence;
 		if (request.getIsCoach()) {
-			Long teachersequence = sequenceGeneratorService.findSequenceByUserType(UserType.Coach);
-			if (teachersequence == null) {
-				SequenceGenerator seqGen = sequenceGeneratorService.save(new SequenceGenerator(UserType.Coach, 0l));
-				if (seqGen == null)
-					teachersequence = 0l;
-				else
-					teachersequence = seqGen.getSequence();
-			}
-			++teachersequence;
-			request.setUsername(String.format("COA%08d", teachersequence));
-			sequenceGeneratorService.updateSequenceByUserType(teachersequence, UserType.Coach);
+			teachersequence = sequenceGeneratorService.findSequenceByUserType(UserType.Coach);
+			teacher.setUsername(String.format("COA%08d", teachersequence));
 
 		} else {
-			Long teachersequence = sequenceGeneratorService.findSequenceByUserType(UserType.Teacher);
-			if (teachersequence == null) {
-				SequenceGenerator seqGen = sequenceGeneratorService.save(new SequenceGenerator(UserType.Teacher, 0l));
-				if (seqGen == null)
-					teachersequence = 0l;
-				else
-					teachersequence = seqGen.getSequence();
-
-			}
-			++teachersequence;
-			request.setUsername(String.format("TEA%08d", teachersequence));
-			sequenceGeneratorService.updateSequenceByUserType(teachersequence, UserType.Teacher);
-		}
-
-		Teacher teacher = request.toEntity();
+			 teachersequence = sequenceGeneratorService.findSequenceByUserType(UserType.Teacher);
+			 teacher.setUsername(String.format("TEA%08d", teachersequence));
+		} 
 
 		// saving school
 
