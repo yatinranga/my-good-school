@@ -77,12 +77,13 @@ export class StudentService {
 
   // to SUBMIT saved activity by student
   submitActivity(activityPerformedId) {
-    return this.http.post("/api/students/" + activityPerformedId + "/submit", {});    
+    return this.http.post("/api/student/" + activityPerformedId + "/submit", {});    
   }
+  
   // TO DELELTE saved activity by student
   deleteActivity(activityId) {
     console.log("Delete APi");
-    return this.http.delete("/api/students/activities/" + activityId);
+    return this.http.delete("/api/student/activities/" + activityId);
   }
 
 }

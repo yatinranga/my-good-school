@@ -16,10 +16,12 @@ export class TeacherActivityComponent implements OnInit {
   submittedActivitesArr = [];
   teacherInfo: any;
   teacherId: any;
+  activityId = "";
+  studentId = "";
 
-  reviewForm : FormGroup;
+  reviewForm: FormGroup;
 
-  constructor(private teacherSerivce: TeacherService, private alertService : AlertService, private formBuilder : FormBuilder) { }
+  constructor(private teacherSerivce: TeacherService, private alertService: AlertService, private formBuilder: FormBuilder) { }
 
   ngOnInit() {
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
@@ -28,45 +30,80 @@ export class TeacherActivityComponent implements OnInit {
       this.activities = res;
       console.log(this.activities);
       this.pendingActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SubmittedByStudent"));
-      this.savedActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SavedByTeacher" ));
+      this.savedActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SavedByTeacher"));
     },
-    (err) => console.log(err));
+      (err) => console.log(err));
     this.reviewFormInit();
-  };
+  }
 
-  reviewFormInit(){
+  reviewFormInit() {
     this.reviewForm = this.formBuilder.group({
-      participationScore : [''],
-      AchievementScore : [''],
-      InitiativeScore : [''],
-      Star : [''],
-      TeacherRemark : ['']
+      participationScore: [''],
+      achievementScore: [''],
+      initiativeScore: [''],
+      star: [''],
+      coachRemark: ['']
     })
   }
 
-  saveReview(){
+  // Save/Review Pending Activity
+  saveReview() {
     console.log(this.reviewForm.value);
+    const formData = new FormData();
+    formData.append('id', this.activityId);
+    formData.append('coachId', this.teacherId);
+    formData.append('studentId', this.studentId);
+    formData.append('coachRemark', this.reviewForm.value.coachRemark);
+    formData.append('participationScore', this.reviewForm.value.participationScore);
+    formData.append('initiativeScore', this.reviewForm.value.initiativeScore);
+    formData.append('achievementScore', this.reviewForm.value.achievementScore);
+    formData.append('star', this.reviewForm.value.star);
+
+    this.teacherSerivce.saveReviewedActivity(formData).subscribe((res) => {
+      console.log(res);
+    },
+      (err) => console.log(err));
+
+  }
+  // Edit the Saved Activity by teacher
+  editSavedActivity(activity) {
+    
+    console.log(activity);
+    this.activityId = activity.id;
+    this.studentId = activity.studentId;
+    
+    this.reviewForm.patchValue({
+      participationScore: activity.participationScore,
+      achievementScore: activity.achievementScore,
+      initiativeScore: activity.initiativeScore,
+      star: activity.star,
+      coachRemark: activity.coachRemark
+    })
   }
 
   // SUBMIT the saved activity by teacher
-  submitSavedActivity(index){
+  submitSavedActivity(index) {
     const actCid = this.savedActivitiesArr[index].id;
     this.teacherSerivce.submitActivity(actCid).subscribe((res) => {
       console.log(res);
       // this.savedActivitiesArr.splice(index,1); // to splice the selected activity and push into submittedActivitesArr
       this.alertService.showSuccessToast('Activity Submitted !');
     },
-    (err) => console.log(err));
+      (err) => console.log(err));
   }
 
-  reviewActivity(activity){
-    console.log(activity.id);
+  reviewActivity(activity) {
+    console.log(activity);
+    this.activityId = activity.id
+    this.studentId = activity.studentId;
+    console.log(this.activityId);
+    console.log(this.studentId);
   }
 
   activityView(event) {
     this.activityType = event;
   }
-  
+
   getDate(date) {
     return new Date(date)
   }
