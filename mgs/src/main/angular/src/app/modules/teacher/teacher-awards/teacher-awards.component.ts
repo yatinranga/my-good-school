@@ -24,6 +24,7 @@ export class TeacherAwardsComponent implements OnInit {
   teacherId = "";
 
   createAwardForm : FormGroup;
+  assignAwardForm : FormGroup;
 
   constructor(private teacherService : TeacherService, private formbuilder : FormBuilder, private alertService : AlertService) { }
 
@@ -36,8 +37,22 @@ export class TeacherAwardsComponent implements OnInit {
     this.getStudentActivity();
 
     this.createAwardForm = this.formbuilder.group({
-      name : [('')],
-      description : [('')],
+      name : [''],
+      description : [''],
+      teacherId : ['j5MfOWYx']
+    })
+
+  }
+
+  // initialize the Assign Award Form
+  assignAwardInit(){
+    this.assignAwardForm = this.formbuilder.group({
+      id : [''],
+      teacherId : [''],
+      schoolId : [''],
+      gradeId : [''],
+      activityId : [''],
+      activityPerformedIds : ['']
     })
   }
 
@@ -80,9 +95,10 @@ export class TeacherAwardsComponent implements OnInit {
     const formData = new FormData();
     formData.append('name',this.createAwardForm.value.name);
     formData.append('description',this.createAwardForm.value.description);
-    formData.append('teacherId',this.teacherId);
+    formData.append('teacherId',"j5MfOWYx");
 
-    this.teacherService.addAward(formData).subscribe((res) => {
+
+    this.teacherService.addAward(this.createAwardForm.value).subscribe((res) => {
       console.log(res);
       this.alertService.showSuccessToast('Award Created !');
     },

@@ -175,7 +175,7 @@ export class SavedActitvityComponent implements OnInit {
     const date = new Date(this.savedActivityForm.value.dateOfActivity);
     const activityDate = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
 
-    formData.append('studentId', this.studentInfo.student.id);
+    formData.append('studentId', this.studentInfo['student'].id);
     formData.append('activityId', this.savedActivityForm.value.activityId);
     formData.append('coachId', this.savedActivityForm.value.coachId);
     formData.append('dateOfActivity', activityDate);

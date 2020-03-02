@@ -4,34 +4,34 @@
 
 <!-- Assign Award -->
 <div *ngIf="awardViewType === 'assign'">
-
-    <div>List of Awards :
-        <select>
-            <option value="" disabled selected>Select Award </option>
-            <option *ngFor="let award of awardsList">{{award.name}}</option>
-        </select>
-
-    </div>
-    <div>Grades :
-        <select (ngModelChange)="getGradeId($event)">
-            <option value="" disabled selected>Select Grades </option>
-            <option *ngFor="let grade of schoolGrades" value={{grade.id}}>{{grade.name}}</option>
-        </select>
-
-    </div>
-    <div>Activity :
-        <select (ngModelChange)="getActivityId($event)">
-            <option value="" disabled selected>Select Activity </option>
-            <option *ngFor="let activity of activities; let i = index;" value={{activity.id}}>
-                {{activity.name}}
-            </option>
-        </select>
-    </div>
-    <div>Students :
-        <div *ngFor="let stu of studentList">
-                <input type="checkbox" value={{stu}}>{{stu}}
+    <form>
+        <div>List of Awards :
+            <select>
+                <option value="" disabled selected>Select Award </option>
+                <option *ngFor="let award of awardsList">{{award.name}}</option>
+            </select>
         </div>
-    </div>
+        <div>Grades :
+            <select (ngModelChange)="getGradeId($event)">
+                <option value="" disabled selected>Select Grades </option>
+                <option *ngFor="let grade of schoolGrades" value={{grade.id}}>{{grade.name}}</option>
+            </select>
+        </div>
+        <div>Activity :
+            <select (ngModelChange)="getActivityId($event)">
+                <option value="" disabled selected>Select Activity </option>
+                <option *ngFor="let activity of activities; let i = index;" value={{activity.id}}>
+                    {{activity.name}}
+                </option>
+            </select>
+        </div>
+        <div>Students :
+            <div *ngFor="let stu of studentList">
+                    <input type="checkbox" value={{stu}}>{{stu}}
+            </div>
+        </div>
+
+    </form>
 </div>
 
 <!-- Create New Award -->
@@ -45,6 +45,6 @@
             <label for="exampleInputPassword1">Description : </label>
             <textarea class="form-control add" placeholder="Description of Award" formControlName="description" ></textarea>
           </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="submit" class="btn btn-primary">Create</button>
     </form>
 </div>
