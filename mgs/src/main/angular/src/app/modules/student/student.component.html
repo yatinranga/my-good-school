@@ -1,28 +1,46 @@
-
 <div class="main">
-  <div class="sidebar_main">
-    <app-sidebar></app-sidebar>
-  </div>
+  <div class="navbar">
+    <div class="logo">
+      <img src="assets/images/logo.jpg">
+    </div>
+    <div class="menu">
+      <ul>
+        <li> <a routerLink='./home' class="cb menu_link"> <i class="fa fa-home"> </i> Home </a> </li>
+        <li> <a routerLink='./profile' class="pink menu_link"> <i class="fa fa-id-badge"> </i> Profile </a> </li>
+        <li> <a routerLink='./activity' class="blue menu_link"> <i class="fa fa-bar-chart"> </i> Activity</a></li>
+        <!--
+              <li>
+                <a class="menu_link" (click)="onActivityClick()"> <i class="fa fa-bar-chart" aria-hidden="true"> </i>
+                    Activity </a>
+                <ul *ngIf="showActivityList">
+                    <li routerLink='./activity/saved-activity' class="sub_menu">Saved Activity</li>
+                    <li routerLink='./activity/reviewed-activity' class="sub_menu">Reviewed Activity</li>
+                </ul>
+            </li>
+            -->
+        <li>
+          <a routerLink='./awards-achievment' class="green menu_link"> <i class="fa fa-trophy"> </i> Awards and
+            Achievements </a>
+        </li>
+      </ul>
+    </div>
 
-  <div class="content_main">
-    <div class="navbar">
-      <div class="left">
-          <i class="fa fa-bars"></i>
-      </div>
-      <div class="right">
-        <div class="dropdown">
-            <i class="fa fa-user-circle"></i>
-          <div class="dropdown-content">
-            <a href=""> <i class="fa fa-user"></i> My Profile </a>
-            <a href=""> <i class="fa fa-tasks"></i> My Activities </a>
-            <a href=""> <i class="fa fa-trophy"> </i> My Achievements </a>
-            <div class="divider"></div>
-            <a routerLink='../../login' class="logout" (click)="authService.logoutUser();"> 
-              <i class="fa fa-sign-out-alt"></i>Logout </a>
-          </div>
+    <div class="right">
+      <div class="dropdown">
+        <i class="fa fa-user-circle"></i>
+        <div class="dropdown-content">
+          <a href=""> <i class="fa fa-user"></i> My Profile </a>
+          <a href=""> <i class="fa fa-tasks"></i> My Activities </a>
+          <a href=""> <i class="fa fa-trophy"> </i> My Achievements </a>
+          <div class="divider"></div>
+          <a routerLink='../../login' class="logout" (click)="authService.logoutUser();">
+            <i class="fa fa-sign-out-alt"></i>Logout </a>
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="content_main">
     <router-outlet></router-outlet>
   </div>
 

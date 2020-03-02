@@ -1,8 +1,5 @@
 @import '../../../../app.component.scss';
 
-.form {
-    margin: 50px 0;
-}
 .upload.input-field{
     position: relative;
 }
@@ -37,7 +34,6 @@ textarea.form-control.add.ng-untouched.ng-pristine.ng-valid {
     text-align: center;
 }
 form.add_activity_form .register-form {
-    max-width: 500px;
     background: white;
     border-radius: 5px;
     position: relative;
