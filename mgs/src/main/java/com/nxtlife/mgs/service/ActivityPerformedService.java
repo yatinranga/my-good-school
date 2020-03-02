@@ -18,11 +18,7 @@ public interface ActivityPerformedService {
 
 	ActivityPerformedResponse saveActivity(ActivityPerformedRequest request);
 
-	List<ActivityPerformedResponse> getAllSavedActivitiesOfStudent(String studentCid);
-
-	List<ActivityPerformedResponse> getAllSubmittedActivityOfStudent(String studentCid);
-
-	List<ActivityPerformedResponse> getAllReviewedActivityOfStudent(String studentCid);
+	List<ActivityPerformedResponse> getAllSavedActivitiesOfStudent(String studentCid,Integer page , Integer pageSize);
 
 	ActivityPerformedResponse submitActivity(String activityPerformedCid);
 
@@ -61,5 +57,9 @@ public interface ActivityPerformedService {
 	SuccessResponse deleteActivityOfStudent(String activityPerformedCid);
 
 	List<ActivityPerformedResponse> getAllPerformedActivitiesOfStudent(String studentCid , Integer page , Integer pageSize);
+
+	List<ActivityPerformedResponse> getAllSubmittedActivityOfStudent(String studentCid, Integer page, Integer pageSize);
+
+	List<ActivityPerformedResponse> getAllReviewedActivityOfStudent(String studentCid, Integer page, Integer pageSize);
 
 }

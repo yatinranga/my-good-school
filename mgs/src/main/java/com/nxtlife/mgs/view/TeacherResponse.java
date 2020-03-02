@@ -159,6 +159,14 @@ public class TeacherResponse {
 		this.isCoach = isCoach;
 	}
 
+	public String getSchoolId() {
+		return schoolId;
+	}
+
+	public void setSchoolId(String schoolId) {
+		this.schoolId = schoolId;
+	}
+
 	public TeacherResponse(Teacher teacher) {
 		this.id = teacher.getcId();
 
