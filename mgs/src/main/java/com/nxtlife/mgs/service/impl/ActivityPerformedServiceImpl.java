@@ -380,7 +380,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 	}
 
 	@Override
-	public List<ActivityPerformedResponse> getAllActivitiesAssignedToCoachforReview(String coachCid) {
+	public List<ActivityPerformedResponse> getAllActivitiesAssignedToCoachforReview(String coachCid,String status) {
 
 		if (coachCid == null)
 			throw new ValidationException("coach id cannot be null.");
@@ -389,15 +389,27 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 
 		if (coach == null)
 			throw new ValidationException(String.format("Coach with id : %s not found.", coachCid));
+		
+		List<ActivityPerformed> submittedActivities =null;
+		if(status.equalsIgnoreCase("pending")) {
+			submittedActivities= activityPerformedRepository
+					.findAllByTeacherCidAndActivityStatusOrActivityStatusAndActiveTrue(coachCid,
+							ActivityStatus.SubmittedByStudent, ActivityStatus.SavedByTeacher);
+			
+			if (submittedActivities == null || submittedActivities.isEmpty())
+				throw new ValidationException("No activities pending to review yet.");
+		}
+		else if(status.equalsIgnoreCase("reviewed")) {
+			submittedActivities= activityPerformedRepository
+					.findAllByTeacherCidAndActivityStatusAndActiveTrue(coachCid,
+							ActivityStatus.Reviewed);
+			
 
-		List<ActivityPerformed> submittedActivities = activityPerformedRepository
-				.findAllByTeacherCidAndActivityStatusOrActivityStatusAndActiveTrue(coachCid,
-						ActivityStatus.SubmittedByStudent, ActivityStatus.SavedByTeacher);
+			if (submittedActivities == null || submittedActivities.isEmpty())
+				throw new ValidationException("No activities reviewed yet.");
+		}	
 
 		List<ActivityPerformedResponse> submittedActivityResponses = new ArrayList<ActivityPerformedResponse>();
-
-		if (submittedActivities == null || submittedActivities.isEmpty())
-			throw new ValidationException("No activities assigned to review yet.");
 
 		submittedActivities.forEach(act -> {
 			submittedActivityResponses.add(new ActivityPerformedResponse(act));

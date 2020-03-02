@@ -15,16 +15,27 @@ export class TeacherService {
 
   // get PENDING Activities of Teacher
   getPendingActivity(coachId) {
-    return this.http.get("/api/coaches/activities?coachId=" + coachId);
+    return this.http.get("/api/coach/activities?coachId=" + coachId + "&status=pending");
+  }
+
+  // get PENDING Activities of Teacher
+  getReviewedActivity(coachId) {
+    return this.http.get("/api/coaches/activities?coachId=" + coachId + "&status=reviewed");
   }
 
   // get SAVED Activities of Teacher
   getSavedActivity() {
     return this.http.get("api/coaches/activities");
   }
+
+  // SAVE Reviewed Activity
+  saveReviewedActivity(formData) {
+    return this.http.post("/api/coach/save", formData);
+  }
+
   // SUBMIT Acitivity by Teacher
   submitActivity(activityPerformedId) {
-    return this.http.post("api/coaches/" + activityPerformedId + "/submit", {});
+    return this.http.post("api/coach/" + activityPerformedId + "/submit", {});
   }
 
   // get AWARDS of school
@@ -39,7 +50,7 @@ export class TeacherService {
 
   // ADD new Award
   addAward(formData) {
-    return this.http.post("/api/award",formData);
+    return this.http.post("/api/award", formData);
   }
 
   // get all activities in particular school

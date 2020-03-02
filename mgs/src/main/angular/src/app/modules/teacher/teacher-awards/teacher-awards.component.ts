@@ -38,8 +38,7 @@ export class TeacherAwardsComponent implements OnInit {
 
     this.createAwardForm = this.formbuilder.group({
       name : [''],
-      description : [''],
-      teacherId : ['j5MfOWYx']
+      description : ['']
     })
 
   }
@@ -88,15 +87,18 @@ export class TeacherAwardsComponent implements OnInit {
     },
     (err) => console.log(err));
   }
+  
+  assignAward(){
+    
+  }
 
   // create NEW Award
   createNewAward(){
     console.log(this.createAwardForm.value);
-    const formData = new FormData();
+    const formData = new FormData();  // Delete formData as JSON is required
     formData.append('name',this.createAwardForm.value.name);
     formData.append('description',this.createAwardForm.value.description);
-    formData.append('teacherId',"j5MfOWYx");
-
+    formData.append('teacherId',this.schoolId);
 
     this.teacherService.addAward(this.createAwardForm.value).subscribe((res) => {
       console.log(res);

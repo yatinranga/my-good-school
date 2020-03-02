@@ -109,7 +109,9 @@ export class SavedActitvityComponent implements OnInit {
       description: activity.description,
       id: activity.id,
     });
+
     console.log(this.savedActivityForm.value);
+
 
     this.getStudentActivity(this.schoolId);
     return this.editActivityShow = true;
@@ -188,7 +190,7 @@ export class SavedActitvityComponent implements OnInit {
       });
     }
 
-    this.studentService.addActivity('/api/students/activities', formData).subscribe(
+    this.studentService.addActivity('/api/student/activities', formData).subscribe(
       (res) => {
         console.log(res);
         this.alertService.showSuccessToast('Activity Updated !');

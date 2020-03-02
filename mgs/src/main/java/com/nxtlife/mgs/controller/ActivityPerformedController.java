@@ -52,8 +52,8 @@ public class ActivityPerformedController {
 	}
 
 	@GetMapping(value = "api/coach/activities")
-	public List<ActivityPerformedResponse> getAllPendingActivitiesByCoach(@RequestParam("coachId") String coachCid) {
-		return activityPerformedService.getAllActivitiesAssignedToCoachforReview(coachCid);
+	public List<ActivityPerformedResponse> getAllPendingActivitiesByCoach(@RequestParam("coachId") String coachCid ,@RequestParam("status") String status) {
+		return activityPerformedService.getAllActivitiesAssignedToCoachforReview(coachCid , status);
 	}
 
 	@GetMapping(value = "api/coach/activities/filterByClass")
