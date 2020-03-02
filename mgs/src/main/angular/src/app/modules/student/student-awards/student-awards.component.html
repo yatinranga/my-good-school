@@ -1,7 +1,8 @@
-<p>student-awards works!</p>
-<div>View :
-    <select (ngModelChange)="getStudentAwards($event)">
-        <option value="" disabled selected>Select Activity </option>
+<div class="sortby"> Filter by:
+    <select style="border: 1px solid #ddd" (ngModelChange)="getStudentAwards($event)">
+        <option value="" selected disabled hidden> Choose here </option>
+        <option value="All"> All</option>
+        <option value=""> Select Activity </option>
         <option *ngFor="let activity of activities; let i = index;" value={{activity.id}}>
             {{activity.name}}
         </option>
