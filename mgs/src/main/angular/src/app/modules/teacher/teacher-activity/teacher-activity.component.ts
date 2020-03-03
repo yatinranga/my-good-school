@@ -74,9 +74,9 @@ export class TeacherActivityComponent implements OnInit {
   }
 
   // Edit the Saved activity by teacher
-  editSavedActivity(e, activity) {
+  editSavedActivity(activity) {
 
-    e.stopPropagation();
+    // e.stopPropagation();
 
     console.log(activity);
     this.activityId = activity.id;
