@@ -42,7 +42,7 @@ public class Grade extends BaseEntity {
 
 	private String section;
 
-	private Boolean active;
+	private Boolean active = true;
 
 	@ManyToMany
 	@JoinTable(name = "school_grade", joinColumns = { @JoinColumn(name = "grade_id") }, inverseJoinColumns = {

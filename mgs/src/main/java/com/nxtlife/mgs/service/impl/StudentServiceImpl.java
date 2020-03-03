@@ -150,8 +150,17 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 							.getOneByMobileNumber(guardianRequest.getMobileNumber())) == null) {
 						guardian = guardianRequest.toEntity();
 						sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
-						guardian.setName(String.format("GRD%08d", sequence));
+						guardian.setUsername(String.format("GRD%08d", sequence));
 						guardian.setCid(utils.generateRandomAlphaNumString(8));
+
+						if (guardian.getStudents() == null) {
+							List<Student> st = new ArrayList<Student>();
+							st.add(student);
+							guardian.setStudents(st);
+						} else {
+							guardian.getStudents().add(student);
+						}
+
 						guardian.setUser(userService.createParentUser(guardian));
 						guardians.add(guardian);
 					} else {
@@ -162,8 +171,17 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 					if ((guardian = guardianRepository.getOneByEmail(guardianRequest.getEmail())) == null) {
 						guardian = guardianRequest.toEntity();
 						sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
-						guardian.setName(String.format("GRD%08d", sequence));
+						guardian.setUsername(String.format("GRD%08d", sequence));
 						guardian.setCid(utils.generateRandomAlphaNumString(8));
+
+						if (guardian.getStudents() == null) {
+							List<Student> st = new ArrayList<Student>();
+							st.add(student);
+							guardian.setStudents(st);
+						} else {
+							guardian.getStudents().add(student);
+						}
+
 						guardian.setUser(userService.createParentUser(guardian));
 						guardians.add(guardian);
 					} else {
@@ -626,7 +644,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			throw new ValidationException(String.format("Teacher with id : %s not found.", teacherCid));
 		if (activityStatus == null)
 			activityStatus = ActivityStatus.Reviewed.toString();
-		List<Student> students = studentRepository  
+		List<Student> students = studentRepository
 				.findAllBySchoolCidAndGradeCidAndActivitiesActivityCidAndActivitiesActivityStatusAndSchoolActiveTrueAndGradeActiveTrueAndActivitiesActivityActiveTrueAndActiveTrue(
 						schoolCid, gradeCid, activityCid, ActivityStatus.valueOf(activityStatus));
 		if (students == null)

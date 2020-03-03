@@ -18,7 +18,7 @@ import com.nxtlife.mgs.view.GradeRequest;
 import com.nxtlife.mgs.view.GradeResponse;
 
 @RestController
-@RequestMapping("/api/grades")
+@RequestMapping("/grades")
 public class GradeController {
 
 	@Autowired
