@@ -1,8 +1,11 @@
 package com.nxtlife.mgs.filtering.filter;
 
+import org.springframework.stereotype.Component;
+
 import com.nxtlife.mgs.entity.school.QAwardActivityPerformed;
 import com.querydsl.core.types.Predicate;
 
+@Component
 public class AwardFilterBuilder implements FilterBuilder<AwardFilter> {
 
 	private final QAwardActivityPerformed AwardActivityPerformed = QAwardActivityPerformed.awardActivityPerformed;

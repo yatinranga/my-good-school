@@ -24,6 +24,8 @@ import com.nxtlife.mgs.enums.FourS;
 import com.nxtlife.mgs.enums.PSDArea;
 import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.ex.ValidationException;
+import com.nxtlife.mgs.filtering.filter.ActivityPerformedFilter;
+import com.nxtlife.mgs.filtering.filter.ActivityPerformedFilterBuilder;
 import com.nxtlife.mgs.jpa.ActivityPerformedRepository;
 import com.nxtlife.mgs.jpa.ActivityRepository;
 import com.nxtlife.mgs.jpa.FileRepository;
@@ -75,6 +77,9 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 
 	@Autowired
 	ActivityRepository activityRepository;
+	
+//	@Autowired
+//	ActivityPerformedFilterBuilder activityPerformedFilterBuilder;
 
 	@Override
 	public List<FileResponse> getAllFilesOfActivity(String activityCId) {
@@ -161,7 +166,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 						String.format("Activity with the id : %s is already submitted by you and cannot be edited.",
 								request.getId()));
 			if (request.getDateOfActivity() != null)
-				activityPerformed.setDateOfActivity(request.getDateOfActivity());
+				activityPerformed.setDateOfActivity(DateUtil.convertStringToDate(request.getDateOfActivity()));
 			if (request.getDescription() != null)
 				activityPerformed.setDescription(request.getDescription());
 
@@ -305,10 +310,10 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 		if (activity == null)
 			throw new ValidationException(String.format("No activity found with id : %s", request.getId()));
 
-		if (!activity.getActivityStatus().equals(ActivityStatus.SubmittedByStudent))
-			throw new ValidationException("Activity not submitted by student yet so you cannot review it now.");
+		if (!(activity.getActivityStatus().equals(ActivityStatus.SubmittedByStudent))|| !(activity.getActivityStatus().equals(ActivityStatus.SavedByTeacher)))
+			throw new ValidationException("Activity cannot be reviewed yet.");
 
-		activity = request.toEntity();
+		activity = request.toEntity(activity);
 
 		if (activity.getCoachRemark() != null)
 			activity.setCoachRemarkDate(DateUtil.convertStringToDate(LocalDate.now().toString()));
@@ -334,7 +339,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 		if (activity == null)
 			throw new ValidationException(String.format("No activity found for id : %s", activityPerformedCid));
 
-		if (!activity.getActivityStatus().equals(ActivityStatus.SavedByTeacher))
+		if (!(activity.getActivityStatus().equals(ActivityStatus.SavedByTeacher)))
 			throw new ValidationException(String.format(
 					"Activity with the id : %s cannot be submitted first fill all mandatory fields and submit activity.",
 					activityPerformedCid));
@@ -871,5 +876,28 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			throw new RuntimeException("Something went wrong , Activity not deleted");
 		return new SuccessResponse(200, "Activity deleted successfuly.");
 	}
+	
+	@Override
+    public List<ActivityPerformedResponse> filter(String studentCid ,ActivityPerformedFilter filterRequest){
+		if(studentCid == null)
+			throw new ValidationException("Student id cannot be null.");
+		Boolean studentFlag = studentRepository.existsByCidAndActiveTrue(studentCid);
+		if(!studentFlag)
+			throw new ValidationException(String.format("Student with id : %s does not exist.", studentCid));
+		
+    	List<ActivityPerformed> performedActivities = activityPerformedRepository.findAll(new ActivityPerformedFilterBuilder().build(filterRequest));
+//    			findAllByStudentCidAndActiveTrue(studentCid,new ActivityPerformedFilterBuilder().build(filterRequest));
+    	
+    	performedActivities.stream().forEach(pa -> {if(pa.getStudent()!=null && !(pa.getStudent().getCid()).equals(studentCid)|| !pa.getActive())
+    		performedActivities.remove(pa);});
+    	
+    	if (performedActivities == null || performedActivities.isEmpty())
+			throw new ValidationException("No activities found after applying filter.");
+		List<ActivityPerformedResponse> activityPerformedResponses = new ArrayList<ActivityPerformedResponse>();
+		performedActivities.forEach(act -> {
+			activityPerformedResponses.add(new ActivityPerformedResponse(act));
+		});
+		return activityPerformedResponses;
+    }
 
 }

@@ -47,20 +47,20 @@ public class ActivityPerformed extends BaseEntity {
 
 	private Boolean active;
 
-	@Min(value = 0)
-	@Max(value = 10)
+	@Min(value = 0,message = "Minimum permissible value is 0.")
+	@Max(value = 10,message = "Maximum permissible value is 10.")
 	private Integer participationScore;
 
-	@Min(value = 0)
-	@Max(value = 10)
+	@Min(value = 0,message = "Minimum permissible value is 0.")
+	@Max(value = 10,message = "Maximum permissible value is 10.")
 	private Integer initiativeScore;
 
-	@Min(value = 0)
-	@Max(value = 5)
+	@Min(value = 0,message = "Minimum permissible value is 0.")
+	@Max(value = 5,message = "Maximum permissible value is 5.")
 	private Integer achievementScore;
 
-	@Min(value = 0)
-	@Max(value = 5)
+	@Min(value = 0,message = "Minimum permissible value is 0.")
+	@Max(value = 5,message = "Maximum permissible value is 5.")
 	private Integer star;
 
 	@NotNull
