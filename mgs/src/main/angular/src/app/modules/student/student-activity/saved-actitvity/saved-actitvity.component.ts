@@ -88,6 +88,8 @@ export class SavedActitvityComponent implements OnInit {
   editSavedActivity(activity) {
     // this.activityName = activity.activityName;
     // this.activityTeacher = activity.teacherName;
+    console.log(activity);
+    this.activityId = activity.activityId;
 
     const date = this.getDate(activity.dateOfActivity);
     if ((date.getMonth() + 1) < 10) {

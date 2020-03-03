@@ -37,7 +37,7 @@
                                 </div>
                             </td>
                             <td>
-                                    <div>
+                                <div *ngIf="allActi.activityStatus === 'SavedByStudent'">
                                             <button (click)="editSavedActivity(allActi)" class="saved icon_button">
                                                 <i class="fa fa-edit"></i>
                                             </button>
@@ -47,7 +47,7 @@
                                             <button (click)="deleteSavedActivity(allActi)" class="reviewed icon_button">
                                                 <i class="fa fa-trash"></i>
                                             </button>
-                                        </div>
+                                </div>
                             </td>
                         </tr>
                         <tr>
@@ -94,7 +94,6 @@
                         <th scope="col">Date</th>
                         <th scope="col">Teacher</th>
                         <th scope="col">Status</th>
-                        <th scope="col">Action</th>
                     </tr>
                 </thead>
                 <tbody id="accordionExample">
@@ -105,22 +104,9 @@
                             <td>{{getDate(sa.dateOfActivity) | date}}</td>
                             <td>{{sa.teacherName}}</td>
                             <td class="submitted">Submitted</td>
-                            <td>
-                                <div>
-                                    <button (click)="editSavedActivity(sa)" class="saved icon_button">
-                                        <i class="fa fa-edit"></i>
-                                    </button>
-                                    <button (click)="submitSavedActivity(i)" class="submitted icon_button">
-                                        <i class="fa fa-paper-plane"></i>
-                                    </button>
-                                    <button (click)="deleteSavedActivity(sa)" class="reviewed icon_button">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
                         </tr>
                         <tr>
-                            <td class="collapse-td" colspan="6">
+                            <td class="collapse-td" colspan="5">
                                 <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
                                     <div class="row">
                                         <div class="col-6">
@@ -217,6 +203,55 @@
             </table>
         </div>
     </div>
+</div>
+
+<div *ngIf="activityType === 'Reviewed'">
+    <div class="content_main_com">
+        <div class="table_main">
+            <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Activity</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Teacher</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="accordionExample">
+                    <ng-container *ngFor="let ra of reviewedActivitiesArr ; let i = index;">
+                        <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
+                            <td>{{i+1}}</td>
+                            <td>{{ra.activityName}}</td>
+                            <td>{{getDate(ra.dateOfActivity) | date}}</td>
+                            <td>Reviewed</td>
+                        </tr>
+                        <tr styole="border : none">
+                            <td class="collapse-td" colspan="6">
+                                <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <p><strong>Participation Score :</strong>{{ra.participationScore}}</p>
+                                            <p><strong>Initiative Score :</strong>{{ra.initiativeScore}}</p>
+                                            <p><strong>Achievement Score :</strong>{{ra.achievementScore}}</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p><strong>Star : </strong>{{ra.star}}</p>
+                                            <p><strong>Remark :</strong>{{ra.coachRemark}}</p>
+                                            <p><strong>Date : </strong>{{ra.remarkDate}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                        </tr>
+
+                    </ng-container>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 </div>
 
 <!-- Edit Activity Form  -->

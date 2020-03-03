@@ -14,7 +14,7 @@
                             <p> <label>Gender : {{studentDetails['gender']}}</label> </p> 
                             <p> <label>Email : {{studentDetails['email']}}</label> </p>
                             <p> <label>Mobile Number : {{studentDetails['mobileNumber']}}</label> </p>
-                            <p> <label>Date of Birth : {{studentDetails['dob']}}</label> </p>
+                            <p> <label>Date of Birth : {{studentDetails['dob'] | date }}</label> </p>
                         </div>
                         <div class="guardian profile_card">
                             <div *ngFor="let sd of studentDetails['guardianResponseList']; let i = index ">

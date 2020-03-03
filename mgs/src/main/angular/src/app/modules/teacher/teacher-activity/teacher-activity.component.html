@@ -88,11 +88,17 @@
                                 <div class="col-6">
                                     <p><strong>Description : </strong>{{sa.description}}</p>
                                 </div>
+                                <div>
+                                    <p><strong>Attachments : </strong></p>
+                                    <p *ngFor="let file of sa.fileResponses">{{file.name}}</p>
+                                </div>
                                 <div class="col-6">
-                                    <div>
-                                        <p><strong>Attachments : </strong></p>
-                                        <p *ngFor="let file of sa.fileResponses">{{file.name}}</p>
-                                    </div>
+                                    <div><strong>Participation Score : </strong>{{sa.participationScore}}</div>
+                                    <div><strong>Initiative Score : </strong>{{sa.initiativeScore}}</div>
+                                    <div><strong>Achievement Score : </strong>{{sa.achievementScore}}</div>
+                                    <div><strong>Star : </strong></div>
+                                    <div><strong>Remark : </strong>{{sa.coachRemark}}</div>
+                                   
                                 </div>
                             </div>
                         </div>
@@ -103,10 +109,51 @@
 </div>
 
 <div *ngIf="activityType === 'Reviewed'">
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Date</th>
+                <th scope="col">Activity</th>
+                <th scope="col">Status</th>
+            </tr>
+        </thead>
+        <tbody id="accordionExample">
+            <ng-container *ngFor="let ra of reviewedActivitiesArr; let i = index;">
+                <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
+                    <td>{{i+1}}</td>
+                    <td>{{ra.studentName}}</td>
+                    <td>{{getDate(ra.dateOfActivity) | date}}</td>
+                    <td>{{ra.activityName}}</td>     
+                    <td>Reviewed</td>
+                </tr>
+                <tr>
+                    <td class="collapse-td" colspan="5">
+                        <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
+                            <div class="row">
+                                <div class="col-6">
+                                    <p><strong>Remark : </strong>{{ra.coachRemark}}</p>
+                                    <p><strong>Date : </strong>{{ra.remarkDate}}</p>
+                                </div>
+                                <div class="col-6">
+                                    <div>
+                                        <p><strong>Participation Score : </strong>{{ra.participationScore}}</p>
+                                        <p><strong>Initative Score : </strong>{{ra.initiativeScore}}</p>
+                                        <p><strong>Achievement Score : </strong>{{ra.achievementScore}}</p>
+                                        <p><strong>Star : </strong>{{ra.star}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </ng-container>
+    </table>
 </div>
 
 
-<!-- Review Activity -->
+<!-- Review Activity Modal -->
 <div>
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -133,15 +180,19 @@
                             <input type="number" class="form-control" formControlName="initiativeScore">
                         </div>
                         <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">Star :</label>
-                            <input type="number" class="form-control" formControlName="star">
+                            <label for="recipient-name" class="col-form-label">Star : </label>
+                            <input type="radio" name="star" value="1" formControlName="star">
+                            <input type="radio" name="star" value="2" formControlName="star">
+                            <input type="radio" name="star" value="3" formControlName="star">
+                            <input type="radio" name="star" value="4" formControlName="star">
+                            <input type="radio" name="star" value="5" formControlName="star">
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Remark :</label>
                             <textarea class="form-control" formControlName="coachRemark"></textarea>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal" >Close</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="resetForm()" >Reset</button>
                             <button type="submit" class="btn btn-primary">Save changes</button>
                         </div>
                     </form>

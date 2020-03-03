@@ -65,7 +65,7 @@ export class AddActivityComponent implements OnInit {
   saveActivity() {
     const formData = new FormData();
     let date = new Date(this.addActivityForm.value.dateOfActivity);
-    let activityDate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+    let activityDate = date.getFullYear() + "-" + (date.getMonth()) + "-" + date.getDate();
 
     formData.append('studentId', this.studentInfo.student.id);
     formData.append('activityId', this.addActivityForm.value.activityId);
@@ -81,7 +81,7 @@ export class AddActivityComponent implements OnInit {
 
     console.log(this.addActivityForm.value);
 
-    this.studentService.addActivity("/api/students/activities", formData).subscribe(
+    this.studentService.addActivity("/api/student/activities", formData).subscribe(
       (res) => {
         console.log(res);
         this.alertService.showSuccessToast('Activity Saved !');

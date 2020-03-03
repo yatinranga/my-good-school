@@ -13,7 +13,7 @@ export class TeacherActivityComponent implements OnInit {
   activities = []
   pendingActivitiesArr = [];
   savedActivitiesArr = [];
-  submittedActivitesArr = [];
+  reviewedActivitiesArr = [];
   teacherInfo: any;
   teacherId: any;
   activityId = "";
@@ -33,9 +33,11 @@ export class TeacherActivityComponent implements OnInit {
       this.savedActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SavedByTeacher"));
     },
       (err) => console.log(err));
+
     this.reviewFormInit();
   }
 
+  // Initialize Review Form
   reviewFormInit() {
     this.reviewForm = this.formBuilder.group({
       participationScore: [''],
@@ -61,17 +63,20 @@ export class TeacherActivityComponent implements OnInit {
 
     this.teacherSerivce.saveReviewedActivity(formData).subscribe((res) => {
       console.log(res);
+      this.reviewForm.reset();
+      this.alertService.showSuccessToast('Review Saved !');
     },
-      (err) => console.log(err));
-
+      (err) => console.log(err)
+    );
   }
-  // Edit the Saved Activity by teacher
+
+  // Edit the Saved activity by teacher
   editSavedActivity(activity) {
-    
+
     console.log(activity);
     this.activityId = activity.id;
     this.studentId = activity.studentId;
-    
+
     this.reviewForm.patchValue({
       participationScore: activity.participationScore,
       achievementScore: activity.achievementScore,
@@ -79,6 +84,24 @@ export class TeacherActivityComponent implements OnInit {
       star: activity.star,
       coachRemark: activity.coachRemark
     })
+
+    const formData = new FormData();
+    formData.append('id', this.activityId);
+    formData.append('coachId', this.teacherId);
+    formData.append('studentId', this.studentId);
+    formData.append('coachRemark', this.reviewForm.value.coachRemark);
+    formData.append('participationScore', this.reviewForm.value.participationScore);
+    formData.append('initiativeScore', this.reviewForm.value.initiativeScore);
+    formData.append('achievementScore', this.reviewForm.value.achievementScore);
+    formData.append('star', this.reviewForm.value.star);
+
+    this.teacherSerivce.saveReviewedActivity(formData).subscribe((res) => {
+      console.log(res);
+      this.reviewForm.reset();
+      this.alertService.showSuccessToast('Saved !');
+    },
+      (err) => console.log(err)
+    );
   }
 
   // SUBMIT the saved activity by teacher
@@ -86,7 +109,7 @@ export class TeacherActivityComponent implements OnInit {
     const actCid = this.savedActivitiesArr[index].id;
     this.teacherSerivce.submitActivity(actCid).subscribe((res) => {
       console.log(res);
-      // this.savedActivitiesArr.splice(index,1); // to splice the selected activity and push into submittedActivitesArr
+      // this.savedActivitiesArr.splice(index,1); // to splice the selected activity and push into reviewedActivitesArr
       this.alertService.showSuccessToast('Activity Submitted !');
     },
       (err) => console.log(err));
@@ -106,6 +129,10 @@ export class TeacherActivityComponent implements OnInit {
 
   getDate(date) {
     return new Date(date)
+  }
+
+  resetForm(){
+    this.reviewForm.reset();
   }
 
 }

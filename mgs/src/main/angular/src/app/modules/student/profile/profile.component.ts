@@ -14,6 +14,7 @@ export class ProfileComponent implements OnInit {
   studentDetails = {};
   studentInfo: any;
   studentId: any;
+  dob = "";
 
   constructor(private formBuilder: FormBuilder, private studentService: StudentService) { }
 
