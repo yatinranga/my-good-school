@@ -11,5 +11,5 @@
   <!-- <app-saved-actitvity *ngIf="activityType === 'saved'"></app-saved-actitvity>
  <app-reviewed-actitvity *ngIf="activityType === 'reviewed'"></app-reviewed-actitvity> -->
  <router-outlet></router-outlet>
- <app-add-activity *ngIf="activityType"></app-add-activity> 
+ <app-add-activity *ngIf="activityType" (isClosed)="close($event)"></app-add-activity> 
 <button (click)="changeActivityType()" class="add_activity"> Add Activity </button>

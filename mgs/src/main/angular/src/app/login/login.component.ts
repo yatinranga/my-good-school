@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
@@ -19,15 +19,15 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
-      username: [''],
-      password: ['']
+      username: ['',[Validators.required]],
+      password: ['',[Validators.required]]
     });
   }
 
   onSubmit() {
     this.authService.loginUser(this.loginForm.value).subscribe((res) => {
       localStorage.setItem('access_token', res.access_token);
-      localStorage.setItem('user_type',res.user_type);
+      localStorage.setItem('user_type',JSON.stringify(res.user_type));
       console.log(res);
       this.getUserInfo();
     });
@@ -43,9 +43,9 @@ export class LoginComponent implements OnInit {
 
   checkUserType(userType) {
     switch (userType) {
-      case "Admin": this.router.navigate(['admin']); break;
-      case "Student": this.router.navigate(['student/' + this.userInfo.id + '/home']); break;
-      case "Teacher": this.router.navigate(['teacher/' + this.userInfo.id + '/home']); break;
+      case "Admin": this.router.navigate(['Admin']); break;
+      case "Student": this.router.navigate(['Student/' + '/home']); break;
+      case "Teacher": this.router.navigate(['Teacher/' + '/home']); break;
     }
   }
 }

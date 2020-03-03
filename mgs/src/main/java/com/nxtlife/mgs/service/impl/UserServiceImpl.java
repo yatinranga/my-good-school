@@ -133,7 +133,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			user.setPassword(encodedPassword);
 			user.setCid(utils.generateRandomAlphaNumString(8));
 			user.setActive(true);
-			user.setContactNo("8860571043");
+			user.setMobileNo("8860571043");
 			user.setEmail("admin@gmail.com");
 			user.setUserName("mainAdmin");
 			user.setUserType(UserType.Admin);
@@ -173,7 +173,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 		user.setRoleForUser(defaultRole);
 		user.setStudent(student);
-		user.setContactNo(student.getMobileNumber());
+		user.setMobileNo(student.getMobileNumber());
 		user.setEmail(student.getEmail());
 		// return userRepository.save(user);
 		return user;
@@ -211,7 +211,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		}
 		user.setRoleForUser(defaultRole);
 		user.setTeacher(teacher);
-		user.setContactNo(teacher.getMobileNumber());
+		user.setMobileNo(teacher.getMobileNumber());
 		user.setEmail(teacher.getEmail());
 		// return userRepository.save(user);
 		return user;
@@ -229,6 +229,14 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		if (userRepository.countByUserNameAndActiveTrue(guardian.getUsername()) > 0) {
 			throw new ValidationException("This username is already registered");
 		}
+
+		if ((userRepository.countByMobileNo(guardian.getMobileNumber())) > 0
+				|| userRepository.countByEmail(guardian.getEmail()) > 0) {
+			throw new ValidationException(String.format(
+					"mobile number [%s] or email [%s] for guardian [%s] is already registered for some other guardian",
+					guardian.getMobileNumber(), guardian.getEmail(), guardian.getName()));
+		}
+
 		User user = new User();
 		user.setActive(true);
 		user.setUserType(UserType.Parent);
@@ -269,7 +277,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 		user.setRoleForUser(defaultRole);
 		user.setGuardian(guardian);
-		user.setContactNo(guardian.getMobileNumber());
+		user.setMobileNo(guardian.getMobileNumber());
 		user.setEmail(guardian.getEmail());
 		// return userRepository.save(user);
 		return user;
@@ -312,7 +320,6 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		System.out.println(String.format("Email sent successfuly to email address %s ", request.getMailTo()));
 	}
 
-
 	public SuccessResponse changePassword(PasswordRequest request) {
 
 		request.checkPassword();
@@ -349,7 +356,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			throw new NotFoundException(String.format("no user found having username : [%s] ", username));
 		}
 
-		if (user.getEmail() == null && user.getContactNo() == null) {
+		if (user.getEmail() == null && user.getMobileNo() == null) {
 			throw new ValidationException("User email/contact not register with us");
 		}
 
@@ -380,7 +387,6 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		user.setPassword(encodedPassword);
 		System.out.println("Password : " + user.getPassword());
 		user.setCid(utils.generateRandomAlphaNumString(8));
-		
 
 		// user.setIsPaid(true);
 
@@ -391,7 +397,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		user.setRoleForUser(defaultRole);
 		user.setSchool(school);
 		user.setEmail(school.getEmail());
-		user.setContactNo(school.getContactNumber());
+		user.setMobileNo(school.getContactNumber());
 		return user;
 	}
 

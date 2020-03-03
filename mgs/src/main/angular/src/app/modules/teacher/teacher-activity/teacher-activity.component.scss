@@ -1,0 +1,76 @@
+@import '../../../app.component.scss';
+
+.form {
+    margin: 35px 0;
+}
+.upload.input-field{
+    position: relative;
+}
+span.choosefile.choosefile-custom {
+    position: absolute;
+    content: "";
+    background: none;
+    z-index: 1;
+    opacity: 1;
+    width: 100%;
+    height: 40px;
+    right: 0;
+    height: 50px;
+    left: inherit;
+    top: 0;
+    text-align: center;
+    box-shadow: 0 0 10px $light;
+    border-radius: 0;
+}
+
+.upload img {
+    max-width: 200px;
+}
+.upload {
+    margin-top: 10px;
+}
+.upload_main {
+    max-width: 400px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    margin: 20px;
+}
+
+.collapse-td{
+    padding: 0;
+}
+
+select{
+    background: none;
+    border: none;
+    color: #333;
+    height: 40px;
+    border-radius: 0 !important;
+    width: 120px;
+}
+
+button.submit {
+    background: green;
+}
+.submitted{
+    color: green;
+}
+.saved{
+    color: #f3cc08;
+}
+.reviewed{
+    color: firebrick;
+} 
+
+button.icon_button {
+    padding: 5px;
+    margin: 0 5px;
+    border: none !important;
+    background: none !important;
+    cursor: pointer;
+    box-shadow: none !important;
+}
+.teacher_activity_main{
+    width: 100%;
+    display: inline-block;
+}

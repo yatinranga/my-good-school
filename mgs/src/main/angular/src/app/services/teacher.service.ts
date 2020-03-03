@@ -50,7 +50,8 @@ export class TeacherService {
 
   // SUBMIT Acitivity by Teacher
   submitActivity(activityPerformedId) {
-    return this.http.post("api/coach/" + activityPerformedId + "/submit", {});
+    console.log("service");
+    return this.http.post("/api/coach/" + activityPerformedId + "/submit", {});
   }
 
   // ADD new Award

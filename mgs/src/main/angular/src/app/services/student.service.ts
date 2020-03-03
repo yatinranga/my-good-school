@@ -32,12 +32,16 @@ export class StudentService {
 
   // to get AWARDS of student
   getAwarads(studentCid,activityId){
-    return this.http.get("/api/students/awards?studentId=" + studentCid + "&activityId=" + activityId);
+    return this.http.get("/api/student/awards?studentId=" + studentCid + "&activityId=" + activityId);
   }
 
   // to get the list of all schools
   getSchools(url) {
     return this.http.get(url);
+  }
+
+  getGradesOfSchool(schoolId){
+    return this.http.get("/grades?schoolId=" + schoolId);
   }
 
   // to get all activities in particular school
