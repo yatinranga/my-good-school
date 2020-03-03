@@ -17,7 +17,7 @@ import { AddActivityComponent } from './student-activity/add-activity/add-activi
 
 const routes: Routes = [
   {
-    path: ':id',
+    path: '',
     component: StudentComponent,  
     children: [
       {
@@ -40,18 +40,9 @@ const routes: Routes = [
             path: 'reviewed-activity',
             component: ReviewedActitvityComponent
           }]
-        //   {
-        //     path: 'add-activity',
-        //     component: AddActitvityComponent
-        //   },
-        //   {
-        //     path: '',
-        //     component: SavedActitvityComponent
-        //   }
-        // ]
       },
       {
-        path: 'awards-achievment',
+        path: 'awards-achievement',
         component: StudentAwardsComponent
       },
       {

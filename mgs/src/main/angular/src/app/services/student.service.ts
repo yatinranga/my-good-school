@@ -40,6 +40,10 @@ export class StudentService {
     return this.http.get(url);
   }
 
+  getGradesOfSchool(schoolId){
+    return this.http.get("/grades?schoolId=" + schoolId);
+  }
+
   // to get all activities in particular school
   getActivity(schoolId) {
     return this.http.get("/activitiesOffered/" + schoolId);

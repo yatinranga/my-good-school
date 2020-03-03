@@ -10,12 +10,21 @@
                     <div class="col-md-6">
                         <div class="form-group">Enter Name :
                             <input type="text" class="form-control" placeholder="Your Name" formControlName="name" />
+                            <small class="text-danger" *ngIf="!studentSignup.get('name').valid && studentSignup.get('name').touched">
+                                Name Required
+                            </small>
                         </div>
                         <div class="form-group">Enter DOB :
                             <input type="date" class="form-control" placeholder="Date of Birth" formControlName="dob" />
+                            <small class="text-danger" *ngIf="!studentSignup.get('dob').valid && studentSignup.get('dob').touched">
+                                DOB Required
+                            </small>
                         </div>
                         <div class="form-group">Enter Email :
                             <input type="email" class="form-control" placeholder="Your Email" formControlName="email" />
+                            <small class="text-danger" *ngIf="!studentSignup.get('email').valid && studentSignup.get('email').touched">
+                                Email Required
+                            </small>
                         </div>
                         <div class="form-group">Enter Mobile no. :
                             <input type="number" class="form-control" placeholder="Your Mobile Number"
@@ -29,13 +38,29 @@
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
                             </select>
+                            <small class="text-danger" *ngIf="!studentSignup.get('gender').valid && studentSignup.get('gender').touched">
+                                Gender Required
+                            </small>
                         </div>
                         <div class="form-group">Select School :
-                            <select class="form-control" formControlName="schoolId">
+                            <select class="form-control" formControlName="schoolId" (ngModelChange)="getGrades($event)">
                                 <option value="" disabled selected>Select School </option>
                                 <option *ngFor="let school of schoolsList; let i = index;" value={{school.id}}>
                                     {{school.name}}</option>
                             </select>
+                            <small class="text-danger" *ngIf="!studentSignup.get('schoolId').valid && studentSignup.get('schoolId').touched">
+                                School Required
+                            </small>
+                        </div>
+                        <div class="form-group">Select Grade :
+                            <select class="form-control" formControlName="gradeId">
+                                <option value="" disabled selected>Select School </option>
+                                <option *ngFor="let grade of gradesList; let i = index;" value={{grade.id}}>
+                                    {{grade.name}}</option>
+                            </select>
+                            <small class="text-danger" *ngIf="!studentSignup.get('gradeId').valid && studentSignup.get('gradeId').touched">
+                                Grade Required
+                            </small>
                         </div>
                         <div class="form-group">Session Start Date :
                             <input type="date" class="form-control" placeholder="Session Start Date"
@@ -88,6 +113,9 @@
                                 </select>
                             </div>
                         </div>
+                    </div>
+                    <div>
+                        <button type="button" (click)="deleteGuardian(i)">Delete</button>
                     </div>
                 </div>
                 <div class="add text-right">

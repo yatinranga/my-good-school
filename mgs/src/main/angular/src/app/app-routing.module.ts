@@ -10,7 +10,7 @@ const routes: Routes = [
     component: LoginComponent
   },
   {
-    path: 'admin',
+    path: 'Admin',
     loadChildren: 'src/app/modules/admin/admin.module#AdminModule',
     canActivate: [AuthGuard]
   },
@@ -21,16 +21,16 @@ const routes: Routes = [
 
   },
   {
-    path: 'student',
+    path: 'Student',
     loadChildren: 'src/app/modules/student/student.module#StudentModule'
   },
   {
-    path: 'teacher',
+    path: 'Teacher',
     loadChildren: 'src/app/modules/teacher/teacher.module#TeacherModule'
   },
   {
     path: '',
-    redirectTo: '/login',
+    redirectTo: ''+JSON.parse(localStorage.getItem('user_type')),
     pathMatch: 'full'
   },
   // {

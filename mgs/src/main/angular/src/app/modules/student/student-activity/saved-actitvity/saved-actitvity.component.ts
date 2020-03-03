@@ -79,15 +79,18 @@ export class SavedActitvityComponent implements OnInit {
   getStudentAllActivities(studentId) {
     this.studentService.getAllActivity(studentId).subscribe((res) => {
       this.allActivitiesArr = res;
+      this.allActivitiesArr = this.allActivitiesArr.filter((e) => (e.activityStatus != "SavedByTeacher"));
+      console.log(this.allActivitiesArr);
     },
       (err) => console.log(err)
     );
   }
 
   // on click of edit button
-  editSavedActivity(activity) {
+  editSavedActivity(e,activity) {
     // this.activityName = activity.activityName;
     // this.activityTeacher = activity.teacherName;
+    e.stopPropagation();
     console.log(activity);
     this.activityId = activity.activityId;
 
@@ -120,26 +123,29 @@ export class SavedActitvityComponent implements OnInit {
   }
 
   // to SUBMIT the activity
-  submitSavedActivity(index) {
+  submitSavedActivity(e, index) {
+    e.stopPropagation();
     const activityId = this.savedActivitiesArr[index].id;
+
+    console.log(this.submittedActivitiesArr);
     this.studentService.submitActivity(activityId).subscribe((res) => {
       console.log(res);
+      this.submittedActivitiesArr = [...this.submittedActivitiesArr, ...this.savedActivitiesArr.splice(index, 1)];
       this.alertService.showSuccessToast('Activity Submitted !');
-      // splice the selected activity from savedActivity array and push it into submit activity array
-      // this.savedActivitiesArr.splice(index,1);
     },
       (err) => console.log(err)
     );
   }
 
-  deleteSavedActivity(activity) {
+  deleteSavedActivity(e,activity) {
+    e.stopPropagation();
     const activityId = activity.id;
     console.log(activityId);
     this.studentService.deleteActivity(activityId).subscribe((res) => {
-      console.log(res);   
+      console.log(res);
       this.alertService.showSuccessToast('Activity Deleted !');
     },
-    (err) => console.log(err));
+      (err) => console.log(err));
   }
 
   onCancel() {
