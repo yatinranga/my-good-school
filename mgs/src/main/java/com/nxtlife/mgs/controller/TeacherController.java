@@ -58,7 +58,7 @@ public class TeacherController {
 		return teacherService.update(request, cid);
 	}
 
-	@GetMapping("api/teachers/all")
+	@GetMapping("api/teachers")
 	public List<TeacherResponse> getAllTeachers(@RequestParam(defaultValue = "0") Integer pageNo,
 			@RequestParam(defaultValue = "10") Integer pageSize) {
 		return teacherService.getAllTeachers(pageNo, pageSize);
