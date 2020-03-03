@@ -56,29 +56,28 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 
 	@Autowired
 	SchoolRepository schoolRepository;
-	
+
 	@Autowired
 	UserService userService;
-	
+
 	@Autowired
 	Utils utils;
-	
+
 	@Autowired
 	FileStore filestore;
-	
+
 	@Autowired
 	SequenceGeneratorService sequenceGeneratorService;
-	
+
 	@Autowired
 	RoleRepository roleRepository;
-	
+
 	@Autowired
 	UserRepository userRepository;
-	
-	
+
 	@PostConstruct
 	public void init() {
-		
+
 		Role role = roleRepository.getOneByName("School");
 		if (role == null) {
 			role = new Role();
@@ -88,27 +87,26 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			roleRepository.save(role);
 		}
 //		 Logic for authorities missing
-		
+
 		School school = schoolRepository.findByName("my good school");
-		if(school == null) {
+		if (school == null) {
 			school = new School();
 			school.setName("my good school");
 			Long sequence = sequenceGeneratorService.findSequenceByUserType(UserType.School);
-			sequence = sequence ==null?0:sequence++;
+			sequence = sequence == null ? 0 : sequence++;
 			school.setUsername(String.format("SCH%08d", sequence));
 			sequenceGeneratorService.updateSequenceByUserType(sequence, UserType.School);
 			school.setEmail("mygoodschool@gmail.com");
-		    school.setCid(utils.generateRandomAlphaNumString(8));
-		    school.setActive(true);
-			
+			school.setCid(utils.generateRandomAlphaNumString(8));
+			school.setActive(true);
+
 		}
-		
 
 		if (userRepository.findByUserName(school.getUsername()) == null) {
 			User user = new User();
 			user.setRoleForUser(role);
-		    user.setUserName(school.getUsername());
-		    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+			user.setUserName(school.getUsername());
+			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 			String encodedPassword = encoder.encode("root");
 			user.setPassword(encodedPassword);
 //			user.setPassword("root");
@@ -118,20 +116,20 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 				user.setCid(utils.generateRandomAlphaNumString(8));
 			}
 			user.setActive(true);
-			user.setContactNo(utils.generateRandomNumString(10));
+			user.setMobileNo(utils.generateRandomNumString(10));
 			user.setEmail(school.getEmail());
 //			school.setUser(user);
 //			user.setUserName("mainAdmin");
 			userRepository.save(user);
 			school.setUser(user);
 		}
-		
+
 		schoolRepository.save(school);
 	}
-	
+
 	@Override
 	public SchoolResponse save(SchoolRequest request) {
-		if(request==null)
+		if (request == null)
 			throw new ValidationException("Request can not be null.");
 		if (request.getEmail() == null)
 			throw new ValidationException("Email can not be null");
@@ -139,35 +137,34 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			throw new ValidationException("Email already exists i.e, school already exists.");
 		if (request.getName() == null)
 			throw new ValidationException("School name can not be null");
-		
+
 		School school = request.toEntity();
 		Long schoolsequence = sequenceGeneratorService.findSequenceByUserType(UserType.School);
 		school.setUsername(String.format("SCH%08d", schoolsequence));
 		school.setCid(utils.generateRandomAlphaNumString(8));
 		school.setActive(true);
-		User user =userService.createSchoolUser(school);
-		
+		User user = userService.createSchoolUser(school);
+
 		if (StringUtils.isEmpty(user))
 			throw new ValidationException("User not created successfully");
 		school.setUser(user);
 		user.setSchool(school);
-		
-		if(request.getLogo()!=null) {
+
+		if (request.getLogo() != null) {
 			String fileExtn = request.getLogo().getOriginalFilename().split("\\.")[1];
-		       String filename = UUID.randomUUID().toString() + "." + fileExtn;
+			String filename = UUID.randomUUID().toString() + "." + fileExtn;
 			try {
-		       String logoUrl = filestore.store("schoolLogo", filename, request.getLogo().getBytes());
-		       school.setLogo(logoUrl);
-			}catch (IOException e)
-		       {
-		         e.printStackTrace();
-		       }
+				String logoUrl = filestore.store("schoolLogo", filename, request.getLogo().getBytes());
+				school.setLogo(logoUrl);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		school = schoolRepository.save(school);
-		if(school==null)
+		if (school == null)
 			throw new RuntimeException("Something went wrong school not saved.");
 		return new SchoolResponse(school);
-		
+
 	}
 
 	private List<Map<String, Object>> fetchRowValues(Map<String, CellType> columnTypes, XSSFSheet sheet,
@@ -233,13 +230,13 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 
 			}
 		}
-		Map<String,Object> err = new HashMap<String, Object>();
+		Map<String, Object> err = new HashMap<String, Object>();
 		err.put("errors", errors);
 		rows.add(err);
 		return rows;
 	}
 
-	private List<Map<String, Object>> findSheetRowValues(XSSFWorkbook workbook, String sheetName,List<String> errors) {
+	private List<Map<String, Object>> findSheetRowValues(XSSFWorkbook workbook, String sheetName, List<String> errors) {
 //		XSSFSheet sheet = workbook.getSheet(sheetName);
 		XSSFSheet sheet = workbook.getSheetAt(0);
 		if (sheet == null) {
@@ -252,7 +249,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 		Map<String, CellType> columnTypes = ExcelUtil.sheetColumns(sheetName);
 		return fetchRowValues(columnTypes, sheet, errors, sheetName);
 	}
-	
+
 	@Override
 	public ResponseEntity<?> uploadSchoolsFromExcel(MultipartFile file) {
 		if (file == null || file.isEmpty() || file.getSize() == 0)
@@ -264,7 +261,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 		try {
 			XSSFWorkbook studentsSheet = new XSSFWorkbook(file.getInputStream());
 			schoolRecords = findSheetRowValues(studentsSheet, "SCHOOL", errors);
-			errors = (List<String>) schoolRecords.get(schoolRecords.size()-1).get("errors");
+			errors = (List<String>) schoolRecords.get(schoolRecords.size() - 1).get("errors");
 			for (int i = 0; i < schoolRecords.size(); i++) {
 				List<Map<String, Object>> tempSchoolRecords = new ArrayList<Map<String, Object>>();
 				tempSchoolRecords.add(schoolRecords.get(i));
@@ -276,27 +273,27 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			throw new ValidationException("something wrong happened may be file not in acceptable format.");
 		}
 		Map<String, Object> responseMap = new HashMap<String, Object>();
-		responseMap.put("SchoolResponseList",schoolResponseList);
-		responseMap.put("errors",  errors);
+		responseMap.put("SchoolResponseList", schoolResponseList);
+		responseMap.put("errors", errors);
 		return new ResponseEntity<Map<String, Object>>(responseMap, HttpStatus.OK);
 	}
-	
+
 	private SchoolRequest validateSchoolRequest(List<Map<String, Object>> schoolDetails, List<String> errors) {
 		if (schoolDetails == null || schoolDetails.isEmpty()) {
 			errors.add("School details not found");
 		}
 		SchoolRequest schoolRequest = new SchoolRequest();
-		if(schoolDetails.get(0).get("NAME")!=null) {
-		    schoolRequest.setName((String) schoolDetails.get(0).get("NAME"));
-		    }
+		if (schoolDetails.get(0).get("NAME") != null) {
+			schoolRequest.setName((String) schoolDetails.get(0).get("NAME"));
+		}
 //		if(schoolDetails.get(0).get("USERNAME")!=null)
 //		   schoolRequest.setUsername((String) schoolDetails.get(0).get("USERNAME"));
-	
-		if(schoolDetails.get(0).get("EMAIL") != null)
+
+		if (schoolDetails.get(0).get("EMAIL") != null)
 			schoolRequest.setEmail((String) schoolDetails.get(0).get("EMAIL"));
-		
+
 		schoolRequest.setContactNumber((String) schoolDetails.get(0).get("CONTACT NUMBER"));
-		
+
 		schoolRequest.setAddress((String) schoolDetails.get(0).get("ADDRESS"));
 
 		return schoolRequest;
@@ -304,46 +301,48 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 
 	@Override
 	public SchoolResponse findById(Long id) {
-		if(id == null)
+		if (id == null)
 			throw new ValidationException("id cannot be null.");
 		School school = schoolRepository.findById(id);
-		if(school == null)
+		if (school == null)
 			throw new ValidationException("School not found.");
-			
+
 		return new SchoolResponse(school);
 	}
 
 	@Override
 	public SchoolResponse findByCid(String cid) {
-		if(cid == null)
+		if (cid == null)
 			throw new ValidationException("id cannot be null.");
 		School school = schoolRepository.findByCidAndActiveTrue(cid);
-		if(school == null)
+		if (school == null)
 			throw new ValidationException("School not found.");
-			
+
 		return new SchoolResponse(school);
 	}
-	
+
 	@Override
-	public List<SchoolResponse> getAllSchools(){
+	public List<SchoolResponse> getAllSchools() {
 		List<School> schoolList = schoolRepository.findAll();
 		List<SchoolResponse> schoolResponses = new ArrayList<SchoolResponse>();
-		if(schoolList==null || schoolList.isEmpty())
+		if (schoolList == null || schoolList.isEmpty())
 			throw new ValidationException("No schools found.");
-		schoolList.forEach(s->{schoolResponses.add(new SchoolResponse(s));});
+		schoolList.forEach(s -> {
+			schoolResponses.add(new SchoolResponse(s));
+		});
 		return schoolResponses;
 	}
 
 	@Override
 	public SuccessResponse delete(String cid) {
-		if(cid == null)
+		if (cid == null)
 			throw new ValidationException("cid cannot be null.");
 		School school = schoolRepository.findByCidAndActiveTrue(cid);
-		if(school == null)
+		if (school == null)
 			throw new ValidationException(String.format("School with id : %s not found", cid));
 		school.setActive(false);
 		school = schoolRepository.save(school);
-		if(school == null)
+		if (school == null)
 			throw new RuntimeException("Something went wrong school not deleted successfully.");
 		return new SuccessResponse(200, String.format("School with id : %s deleted successfully", cid));
 	}
