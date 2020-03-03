@@ -50,6 +50,7 @@ export class TeacherService {
 
   // SUBMIT Acitivity by Teacher
   submitActivity(activityPerformedId) {
+    console.log("service");
     return this.http.post("/api/coach/" + activityPerformedId + "/submit", {});
   }
 
