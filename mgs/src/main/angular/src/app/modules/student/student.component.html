@@ -5,10 +5,23 @@
     </div>
     <div class="menu">
       <ul>
-        <li> <a routerLink='./home' class="cb menu_link"> <i class="fa fa-home"> </i> Home </a> </li>
-        <li> <a routerLink='./profile' class="pink menu_link"> <i class="fa fa-id-badge"> </i> Profile </a> </li>
-        <li> <a routerLink='./activity' class="blue menu_link"> <i class="fa fa-bar-chart"> </i> Activity</a></li>
-        <li> <a routerLink='./awards-achievement' class="green menu_link"> <i class="fa fa-trophy"> </i> Awards and Achievements </a></li>
+        <li class="cb" routerLinkActive='active'> <a routerLink='./home' class="cb menu_link"> <i class="fa fa-home"> </i> Home </a> </li>
+        <li class="pink" routerLinkActive='active'> <a routerLink='./profile' class="pink menu_link"> <i class="fa fa-id-badge"> </i> Profile </a> </li>
+        <li class="blue" routerLinkActive='active'> <a routerLink='./activity' class="blue menu_link"> <i class="fa fa-bar-chart"> </i> Activity</a></li>
+        <!--
+              <li>
+                <a class="menu_link" (click)="onActivityClick()"> <i class="fa fa-bar-chart" aria-hidden="true"> </i>
+                    Activity </a>
+                <ul *ngIf="showActivityList">
+                    <li routerLink='./activity/saved-activity' class="sub_menu">Saved Activity</li>
+                    <li routerLink='./activity/reviewed-activity' class="sub_menu">Reviewed Activity</li>
+                </ul>
+            </li>
+            -->
+        <li class="green" routerLinkActive='active'>
+          <a routerLink='./awards-achievment' class="green menu_link"> <i class="fa fa-trophy"> </i> Awards and
+            Achievements </a>
+        </li>
       </ul>
     </div>
 

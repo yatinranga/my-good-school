@@ -2,8 +2,8 @@
     <div class="content_main">
         <div class="content_main_com">
             <div class="profile_main">
-                <img src="assets/images/profilebg.webp">
-                <div class="profile_content">
+                <div class="student profile_card">
+                    <h2> Student Profile </h2>
                     <div class="student_image">
                         <img src="assets/images/student.jpg">
                     </div>
@@ -16,14 +16,25 @@
                             <p> <label>Mobile Number : {{studentDetails['mobileNumber']}}</label> </p>
                             <p> <label>Date of Birth : {{studentDetails['dob'] | date }}</label> </p>
                         </div>
-                        <div class="guardian profile_card">
-                            <div *ngFor="let sd of studentDetails['guardianResponseList']; let i = index ">
-                                <div> 
-                                    <h2> Guardian {{i+1}} Profile </h2> 
-                                    <p> <label> Name : {{sd['name']}}</label>  </p>
-                                    <p> <label> Email : {{sd['email']}}</label> </p> 
-                                    <p> <label> Mobile Number : {{sd['mobileNumber']}}</label> </p> 
-                                    <p> <label> Relation: {{sd['relationship']}}</label> </p>
+                        <div class="guardian content">
+                            <div [ngSwitch]="tabs">
+                                <div *ngSwitchCase="'guardianOne'">
+                                    <h2> Guardian 1 Profile </h2>
+                                    <p> <label> Name: {{studentDetails['name']}}</label> </p>
+                                    <p> <label> Email: {{studentDetails['email']}}</label> </p>
+                                    <p> <label> Mobile Number: {{studentDetails['mobileNumber']}}</label> </p>
+                                    <p> <label> Relationship: {{studentDetails['relationship']}}</label> </p>
+                                </div>
+                                <div *ngSwitchCase="'guardianTwo'">
+                                    <h2> Guardian 2 Profile </h2>
+                                    <p> <label> Name: {{studentDetails['name']}}</label> </p>
+                                    <p> <label> Email: {{studentDetails['email']}}</label> </p>
+                                    <p> <label> Mobile Number: {{studentDetails['mobileNumber']}}</label> </p>
+                                    <p> <label> Relationship: {{studentDetails['relationship']}}</label> </p>
+                                </div>
+                                <div *ngSwitchCase="'addGuardian'">
+                                        <h2> Guardian 3 Profile </h2>
+                                        <p> Add Guardian (Insert form) </p>
                                 </div>
                             </div>
                         </div>
@@ -33,7 +44,6 @@
         </div>
     </div>
 </div>
-
 
 
 
