@@ -1,0 +1,67 @@
+.teacher-awards.content {
+    width: 50%;
+    color: white;
+    display: inline-block;
+    float: left;
+}
+
+.teacher-awards.image {
+    width: 50%;
+    color: white;
+    display: inline-block;
+    float: right;
+}
+.tabs {
+    width: 100%;
+    display: inline-flex;
+    background: #46818d;
+}
+
+.teacher-awards .popup-form {
+    width: 100%;
+    background: #fff;
+    padding: 15px;
+    text-align: left;
+    position: relative;
+    left: 50%;
+    top: 20px;
+    color: #333;
+    margin: auto;
+    box-shadow: 0 0 10px #999;
+}
+.popup-form select {
+    background: none;
+    border: none;
+    color: #333;
+    height: 30px;
+    border-radius: 0 !important;
+    border: 1px solid #333;
+    margin: 20px 10px;
+}
+
+button.assign-button {
+    background: green !important;
+    border: none;
+    color: #fafafa;
+    font-size: 18px;
+    padding: 5px 10px;
+    margin-top: 15px;
+}
+img{
+    width: 100%;
+    display: inline-block;
+    position: relative;
+    opacity: 0.8;
+}
+
+.teacher-awards {
+    width: 100%;
+    margin: 0;
+    display: inline-block;
+    text-align: center;
+}
+.award-button{
+    background: #46818d !important;
+}
+
+

@@ -22,7 +22,7 @@ export class StudentService {
 
   // to get profile of student
   getProfile(studentId) {
-    return this.http.get("/api/students/" + studentId);
+    return this.http.get("/api/student/" + studentId);
   }
 
   //  to get info about the student
@@ -32,7 +32,7 @@ export class StudentService {
 
   // to get AWARDS of student
   getAwarads(studentCid,activityId){
-    return this.http.get("/api/students/awards?studentId=" + studentCid + "&activityId=" + activityId);
+    return this.http.get("/api/student/awards?studentId=" + studentCid + "&activityId=" + activityId);
   }
 
   // to get the list of all schools
@@ -47,22 +47,22 @@ export class StudentService {
 
   // to get SAVED activities of student
   getSavedActivity(studentCid) {
-    return this.http.get("/api/students/activities?status=saved&studentId=" + studentCid);
+    return this.http.get("/api/student/activities?status=saved&studentId=" + studentCid);
   }
 
   // to get SUBMITTED Activities of student
   getSubmittedActivity(studentCid) {
-    return this.http.get("/api/students/activities?status=submitted&studentId=" + studentCid);
+    return this.http.get("/api/student/activities?status=submitted&studentId=" + studentCid);
   }
 
   // to get REVIEWED Activities of student
   getReviewedActivity(studentCid) {
-    return this.http.get("/api/students/activities?status=reviewed&studentId=" + studentCid);
+    return this.http.get("/api/student/activities?status=reviewed&studentId=" + studentCid);
   }
 
   // to get ALL Activities of student
   getAllActivity(studentCid) {
-    return this.http.get("/api/students/activities?studentId=" + studentCid);
+    return this.http.get("/api/student/activities?studentId=" + studentCid);
   }
 
   // to get teacher/coaches who perform particular activity

@@ -14,6 +14,7 @@ export class ProfileComponent implements OnInit {
   studentDetails = {};
   studentInfo: any;
   studentId: any;
+  tabs = 'guardianOne';
 
   constructor(private formBuilder: FormBuilder, private studentService: StudentService) { }
 
@@ -40,6 +41,12 @@ export class ProfileComponent implements OnInit {
     //   guardianRelationship : ['']
     // });
     // // this.student
+  }
+
+  switchTabs(t) {
+    console.log(t);
+    
+    this.tabs = t;
   }
 
   // setEditForm(value){
