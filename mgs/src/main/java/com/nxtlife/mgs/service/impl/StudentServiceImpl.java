@@ -472,7 +472,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				DateUtil.convertStringToDate(DateUtil.formatDate((Date) studentDetails.get(0).get("DOB"), null, null)));
 		studentRequest.setEmail((String) studentDetails.get(0).get("EMAIL"));
 		if (studentDetails.get(0).get("ACTIVE") != null)
-			studentRequest.setActive(Boolean.valueOf((Boolean) studentDetails.get(0).get("ACTIVE")));
+//			studentRequest.setActive(Boolean.valueOf((Boolean) studentDetails.get(0).get("ACTIVE")));
 		studentRequest.setMobileNumber((String) studentDetails.get(0).get("MOBILE NUMBER"));
 		studentRequest.setGender((String) studentDetails.get(0).get("GENDER"));
 		studentRequest.setSubscriptionEndDate(DateUtil.convertStringToDate(

@@ -19,6 +19,8 @@ import com.nxtlife.mgs.enums.PSDArea;
 public interface ActivityRepository extends JpaRepository<Activity, Long> {
 
 	Activity getOneByNameAndActiveTrue(String name);
+	
+	String findCidByNameAndActiveTrue(String cid);
 
 	Activity getOneByCidAndActiveTrue(String cid);
 

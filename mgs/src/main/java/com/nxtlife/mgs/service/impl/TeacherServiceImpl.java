@@ -95,8 +95,8 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 //		if (request.getUsername() == null)
 //			request.setUsername(request.getEmail());
 
-		if (teacherRepository.countByUsernameAndActiveTrue(request.getUsername()) > 0)
-			throw new ValidationException("Username already exists");
+//		if (teacherRepository.countByUsernameAndActiveTrue(request.getUsername()) > 0)
+//			throw new ValidationException("Username already exists");
 
 		if (request.getName() == null)
 			throw new ValidationException("Teacher name can not be null");
@@ -432,14 +432,14 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 					}
 
 					if (grade == null)
-						errors.add(String.format("Grade  %s not found ", gradeAndSection[0]));
+						errors.add(String.format("Grade  %s not found in records.", gradeAndSection[0]));
 					else
 						gradeCIds.add(grade.getCid());
 
 				}
 				teacherRequest.setGradeIds(gradeCIds);
 			} else
-				errors.add("No classes provided for the teacher");
+				errors.add("No grades provided for the teacher");
 		}
 
 		if (isCoach == true) {
@@ -448,28 +448,26 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 			String[] activityNames = null;
 			if (activities != null)
 				activityNames = activities.split(",");
-			List<Activity> activityList = activityRepository.findAll();
-			for (int i = 0; i < activityList.size(); i++) {
-				if (!activityNames[i].equalsIgnoreCase(activityList.get(i).getName()))
-					activityList.remove(i);
-				else
-					activityCIds.add(activityList.get(i).getCid());
+//			List<Activity> activityList = activityRepository.findAll();
+//			for (int i = 0; i < activityList.size(); i++) {
+//				if (!activityNames[i].equalsIgnoreCase(activityList.get(i).getName()))
+//					activityList.remove(i);
+//				else
+//					activityCIds.add(activityList.get(i).getCid());
+//			}
+			if (activityNames != null && activityNames.length > 0) {
+				for (String activity : activityNames) {
+					String actCid = activityRepository.findCidByNameAndActiveTrue(activity);
+					if (actCid != null)
+						activityCIds.add(actCid);
+					else
+						errors.add(String.format("Activity with name : %s does not exist.", activity));
+				}
+				teacherRequest.setActivitiyIds(activityCIds);
 			}
-			teacherRequest.setActivitiyIds(activityCIds);
+			else
+				errors.add("No activities provided for the coach.");
 
-//			if (activityNames != null && activityNames.length > 0) {
-//				for (String act : activityNames) {
-//					Activity activity = activityRepository.getOneByName(act);
-//
-//					if (activity == null)
-//						errors.add(String.format("Activity %s  not found ", act));
-//					else
-//						activityCIds.add(activity.getCid());
-//				}
-//				teacherRequest.setActivitiyIds(activityCIds);
-//
-//			} else
-//				errors.add("No activities provided for the coach.");
 		}
 		teacherRequest.setEmail((String) teacherDetails.get(0).get("EMAIL"));
 		if (teacherDetails.get(0).get("ACTIVE") != null)

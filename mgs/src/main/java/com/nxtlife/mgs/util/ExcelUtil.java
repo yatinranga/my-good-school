@@ -18,7 +18,7 @@ public interface ExcelUtil {
 //		columnTypes.put("SCHOOLS EMAIL", CellType.STRING);
 //		columnTypes.put("USERNAME", CellType.STRING);
 		columnTypes.put("DOB", CellType.NUMERIC);
-		columnTypes.put("ACTIVE", CellType.BOOLEAN);
+//		columnTypes.put("ACTIVE", CellType.BOOLEAN);
 		columnTypes.put("EMAIL", CellType.STRING);
 		columnTypes.put("MOBILE NUMBER", CellType.NUMERIC);
 		columnTypes.put("GENDER", CellType.STRING);
@@ -60,7 +60,7 @@ public interface ExcelUtil {
 //		columnTypes.put("SCHOOLS EMAIL", CellType.STRING);
 //		columnTypes.put("USERNAME", CellType.STRING);
 		columnTypes.put("DOB", CellType.NUMERIC);
-		columnTypes.put("ACTIVE", CellType.BOOLEAN);
+//		columnTypes.put("ACTIVE", CellType.BOOLEAN);
 		columnTypes.put("EMAIL", CellType.STRING);
 		columnTypes.put("MOBILE NUMBER", CellType.NUMERIC);
 		columnTypes.put("GENDER", CellType.STRING);
@@ -79,7 +79,7 @@ public interface ExcelUtil {
 		columnTypes.put("SCHOOLS EMAIL", CellType.STRING);
 //		columnTypes.put("USERNAME", CellType.STRING);
 		columnTypes.put("DOB", CellType.NUMERIC);
-		columnTypes.put("ACTIVE", CellType.BOOLEAN);
+//		columnTypes.put("ACTIVE", CellType.BOOLEAN);
 		columnTypes.put("EMAIL", CellType.STRING);
 		columnTypes.put("MOBILE NUMBER", CellType.NUMERIC);
 		columnTypes.put("GENDER", CellType.STRING);
@@ -97,9 +97,8 @@ public interface ExcelUtil {
 		Map<String, CellType> columnTypes = new LinkedHashMap<>();
 		columnTypes.put("NAME", CellType.STRING);
 		columnTypes.put("SCHOOL", CellType.STRING);
-//		columnTypes.put("USERNAME", CellType.STRING);
+		columnTypes.put("DESIGNATION", CellType.STRING);
 		columnTypes.put("DOB", CellType.NUMERIC);
-		columnTypes.put("ACTIVE", CellType.BOOLEAN);
 		columnTypes.put("EMAIL", CellType.STRING);
 		columnTypes.put("MOBILE NUMBER", CellType.NUMERIC);
 		columnTypes.put("GENDER", CellType.STRING);
@@ -111,7 +110,6 @@ public interface ExcelUtil {
 		columnTypes.put("NAME", CellType.STRING);
 //		columnTypes.put("USERNAME", CellType.STRING);
 		columnTypes.put("DOB", CellType.NUMERIC);
-		columnTypes.put("ACTIVE", CellType.BOOLEAN);
 		columnTypes.put("EMAIL", CellType.STRING);
 		columnTypes.put("MOBILE NUMBER", CellType.STRING);
 		columnTypes.put("GENDER", CellType.STRING);
