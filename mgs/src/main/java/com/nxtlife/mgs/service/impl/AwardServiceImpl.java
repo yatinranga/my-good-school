@@ -19,6 +19,8 @@ import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.enums.ActivityStatus;
 import com.nxtlife.mgs.ex.NotFoundException;
+import com.nxtlife.mgs.filtering.filter.AwardFilter;
+import com.nxtlife.mgs.filtering.filter.AwardFilterBuilder;
 import com.nxtlife.mgs.jpa.ActivityPerformedRepository;
 import com.nxtlife.mgs.jpa.ActivityRepository;
 import com.nxtlife.mgs.jpa.AwardActivityPerformedRepository;
@@ -456,4 +458,35 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 		return resposneList;
 	}
 
+	@Override
+	public List<AwardResponse> filter(String studentCid , AwardFilter filterRequest){
+		if (studentCid == null)
+			throw new ValidationException("Student id cannot be null.");
+
+		Boolean studentFlag = studentRepository.existsByCidAndActiveTrue(studentCid);
+
+		if (!studentFlag)
+			throw new ValidationException("No student found with id : " + studentCid);
+		
+		List<AwardActivityPerformed> awardActivityperformedList = (List<AwardActivityPerformed>) awardActivityPerformedRepository
+				.findAll(new AwardFilterBuilder().build(filterRequest));
+		
+		awardActivityperformedList.stream().forEach(awrdAct -> {if(awrdAct.getActivityPerformed().getStudent()!=null && !(awrdAct.getActivityPerformed().getStudent().getCid()).equals(studentCid)|| !awrdAct.getActive() || !awrdAct.getIsVerified())
+			awardActivityperformedList.remove(awrdAct);});
+		
+		if (awardActivityperformedList == null || awardActivityperformedList.isEmpty())
+			throw new ValidationException("No awards found after applying filter.");
+		
+		List<AwardResponse> awardResponses = new ArrayList<AwardResponse>();
+
+		awardActivityperformedList.forEach(awrdAct -> {
+			AwardResponse awardResponse = new AwardResponse(awrdAct.getAward());
+			awardResponse.setDateOfReceipt(awrdAct.getDateOfReceipt());
+			awardResponse.setIsVerified(awrdAct.getIsVerified());
+			awardResponse.setActivityPerformedResponse(new ActivityPerformedResponse(awrdAct.getActivityPerformed()));
+			awardResponses.add(awardResponse);
+		});
+
+		return awardResponses;
+	}
 }

@@ -6,9 +6,9 @@ import java.util.function.Function;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.EnumExpression;
+
+
 
 public class OptionalBooleanBuilder {
 

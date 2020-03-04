@@ -12,6 +12,7 @@ import com.nxtlife.mgs.entity.activity.ActivityPerformed;
 import com.nxtlife.mgs.entity.activity.File;
 import com.nxtlife.mgs.entity.activity.FocusArea;
 import com.nxtlife.mgs.enums.ActivityStatus;
+import com.nxtlife.mgs.util.DateUtil;
 
 @JsonInclude(value = Include.NON_ABSENT)
 public class ActivityPerformedResponse {
@@ -22,9 +23,9 @@ public class ActivityPerformedResponse {
 	
 	private String description;
 	
-	private String teacherRemark;
+	private String coachRemark;
 	
-	private String teacherRemarkDate;
+	private String coachRemarkDate;
 	
 	private Boolean active;
 	
@@ -42,13 +43,13 @@ public class ActivityPerformedResponse {
 	
 	private List<FileResponse> fileResponses;
 	
-	private String teacherId;
+	private String coachId;
 	
 	private String studentId;
 	
 	private String activityName;
 	
-	private String teacherName;
+	private String coachName;
 	
 	private String studentName;
 	
@@ -58,6 +59,15 @@ public class ActivityPerformedResponse {
 	
 	private Set<String> psdAreas;
 
+	
+
+	public String getDateOfActivity() {
+		return dateOfActivity;
+	}
+
+	public void setDateOfActivity(String dateOfActivity) {
+		this.dateOfActivity = dateOfActivity;
+	}
 
 	public String getId() {
 		return id;
@@ -75,29 +85,20 @@ public class ActivityPerformedResponse {
 		this.description = description;
 	}
 
-	public String getTeacherRemark() {
-		return teacherRemark;
+	public String getCoachRemark() {
+		return coachRemark;
 	}
 
-	public void setTeacherRemark(String teacherRemark) {
-		this.teacherRemark = teacherRemark;
-	}
-	
-
-	public String getDateOfActivity() {
-		return dateOfActivity;
+	public void setCoachRemark(String coachRemark) {
+		this.coachRemark = coachRemark;
 	}
 
-	public void setDateOfActivity(String dateOfActivity) {
-		this.dateOfActivity = dateOfActivity;
+	public String getCoachRemarkDate() {
+		return coachRemarkDate;
 	}
 
-	public String getTeacherRemarkDate() {
-		return teacherRemarkDate;
-	}
-
-	public void setTeacherRemarkDate(String teacherRemarkDate) {
-		this.teacherRemarkDate = teacherRemarkDate;
+	public void setCoachRemarkDate(String coachRemarkDate) {
+		this.coachRemarkDate = coachRemarkDate;
 	}
 
 	public Boolean getActive() {
@@ -164,14 +165,14 @@ public class ActivityPerformedResponse {
 		this.fileResponses = fileResponses;
 	}
 
-	public String getTeacherId() {
-		return teacherId;
+	public String getCoachId() {
+		return coachId;
 	}
 
-	public void setTeacherId(String teacherId) {
-		this.teacherId = teacherId;
+	public void setCoachId(String coachId) {
+		this.coachId = coachId;
 	}
-	
+
 	public String getStudentId() {
 		return studentId;
 	}
@@ -188,12 +189,20 @@ public class ActivityPerformedResponse {
 		this.activityName = activityName;
 	}
 
-	public String getTeacherName() {
-		return teacherName;
+	public String getCoachName() {
+		return coachName;
 	}
 
-	public void setTeacherName(String teacherName) {
-		this.teacherName = teacherName;
+	public void setCoachName(String coachName) {
+		this.coachName = coachName;
+	}
+
+	public String getStudentName() {
+		return studentName;
+	}
+
+	public void setStudentName(String studentName) {
+		this.studentName = studentName;
 	}
 
 	public String getFourS() {
@@ -203,7 +212,6 @@ public class ActivityPerformedResponse {
 	public void setFourS(String fourS) {
 		this.fourS = fourS;
 	}
-	
 
 	public Set<String> getFocusAreas() {
 		return focusAreas;
@@ -221,21 +229,14 @@ public class ActivityPerformedResponse {
 		this.psdAreas = psdAreas;
 	}
 
-	public String getStudentName() {
-		return studentName;
-	}
-
-	public void setStudentName(String studentName) {
-		this.studentName = studentName;
-	}
-
 	public ActivityPerformedResponse(ActivityPerformed activityPerformed) {
 		this.id = activityPerformed.getCid();
 		this.active = activityPerformed.getActive();
 		if(activityPerformed.getActivity()!=null) {
-			  this.activityId = activityPerformed.getActivity().getCid();
-			  this.activityName = activityPerformed.getActivity().getName();
-			  this.fourS = activityPerformed.getActivity().getFourS().toString();
+				  this.activityId = activityPerformed.getActivity().getCid();
+				  this.activityName = activityPerformed.getActivity().getName();
+				  this.fourS = activityPerformed.getActivity().getFourS().toString();
+			
 			  if(activityPerformed.getActivity().getFocusAreas()!=null && !activityPerformed.getActivity().getFocusAreas().isEmpty()) {
 				  this.focusAreas = new HashSet<String>();
 				  this.psdAreas = new HashSet<String>();
@@ -248,19 +249,19 @@ public class ActivityPerformedResponse {
 		this.description = activityPerformed.getDescription();
 		this.activityStatus = activityPerformed.getActivityStatus();
 		if(activityPerformed.getDateOfActivity()!=null)
-		   this.dateOfActivity = activityPerformed.getDateOfActivity().toString();
+		   this.dateOfActivity = DateUtil.formatDate(activityPerformed.getDateOfActivity());
 		if(activityPerformed.getTeacher()!=null) {
-			this.teacherId = activityPerformed.getTeacher().getcId();
-			this.teacherName=activityPerformed.getTeacher().getName();
+			this.coachId = activityPerformed.getTeacher().getcId();
+			this.coachName=activityPerformed.getTeacher().getName();
 		}
 		  
 		if(activityPerformed.getStudent()!=null) {
 			 this.studentId=activityPerformed.getStudent().getCid();
-			 this.studentId=activityPerformed.getStudent().getName();
+			 this.studentName=activityPerformed.getStudent().getName();
 		}
-		this.teacherRemark = activityPerformed.getCoachRemark();
+		this.coachRemark = activityPerformed.getCoachRemark();
 		if(activityPerformed.getCoachRemarkDate()!=null)
-		  this.teacherRemarkDate = activityPerformed.getCoachRemarkDate().toString();
+		  this.coachRemarkDate = DateUtil.formatDate(activityPerformed.getCoachRemarkDate());
 		this.participationScore = activityPerformed.getParticipationScore();
 		this.initiativeScore = activityPerformed.getInitiativeScore();
 		this.achievementScore = activityPerformed.getAchievementScore();

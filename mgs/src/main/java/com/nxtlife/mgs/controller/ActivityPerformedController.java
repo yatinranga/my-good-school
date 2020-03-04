@@ -2,6 +2,8 @@ package com.nxtlife.mgs.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nxtlife.mgs.filtering.filter.ActivityPerformedFilter;
 import com.nxtlife.mgs.service.ActivityPerformedService;
 import com.nxtlife.mgs.view.ActivityPerformedRequest;
 import com.nxtlife.mgs.view.ActivityPerformedResponse;
@@ -42,12 +45,12 @@ public class ActivityPerformedController {
 
 	@PostMapping(value = "api/coach/save")
 	public ActivityPerformedResponse saveActivityByCoach(
-			@ModelAttribute /* Change it to ModelAttribute */ ActivityPerformedRequest request) {
+			@Valid @ModelAttribute /* Change it to ModelAttribute */ ActivityPerformedRequest request) {
 		return activityPerformedService.saveActivityByCoach(request);
 	}
 
 	@PostMapping(value = "api/coach/{actCid}/submit")
-	public ActivityPerformedResponse reviewByCoach(@PathVariable("activityPerformedId") String activityPerformedCid) {
+	public ActivityPerformedResponse reviewByCoach(@PathVariable("actCid") String activityPerformedCid) {
 		return activityPerformedService.submitActivityByCoach(activityPerformedCid);
 	}
 
@@ -115,6 +118,11 @@ public class ActivityPerformedController {
 	public List<ActivityPerformedResponse> filterActivitiesByYearPerformed(@RequestParam("year") String year,
 			@RequestParam("studentId") String studentId) {
 		return activityPerformedService.filterActivityByYearPerformed(year, studentId);
+	}
+	
+	@GetMapping(value = "api/student/{studentCid}/activityPerformed/filter")
+	public List<ActivityPerformedResponse> filter(@PathVariable("studentCid") String studentCid , @RequestBody ActivityPerformedFilter filterRequest){
+		return activityPerformedService.filter(studentCid, filterRequest);
 	}
 
 }
