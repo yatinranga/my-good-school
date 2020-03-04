@@ -2,15 +2,19 @@ package com.nxtlife.mgs.view;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.activity.FocusArea;
 import com.nxtlife.mgs.enums.FourS;
 
+@JsonInclude(content=Include.NON_NULL)
 public class ActivityRequestResponse {
 
 	@NotEmpty(message = " activity name can't be null")
@@ -115,10 +119,14 @@ public class ActivityRequestResponse {
 		this.name = activity.getName();
 		this.description = activity.getDescription();
 		this.isGeneral = activity.getIsGeneral();
-		focusAreaIds = new ArrayList<String>();
+		// focusAreaIds = new ArrayList<String>();
+		focusAreas = new ArrayList<String>();
 		for (FocusArea fa : activity.getFocusAreas()) {
-			focusAreaIds.add(fa.getCid());
+			// focusAreaIds.add(fa.getCid());
+			focusAreas.add(fa.getName());
 		}
+		focusAreas = focusAreas.stream().distinct().collect(Collectors.toList());
+		// focusAreaIds = focusAreaIds.stream().distinct().collect(Collectors.toList());
 
 	}
 

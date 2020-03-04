@@ -146,7 +146,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 		Activity activity;
 		List<Activity> allActivities = new ArrayList<Activity>();
 
-		if (request.getGeneralActivities() != null || !request.getGeneralActivities().isEmpty()) {
+		if (request.getGeneralActivities() != null && !request.getGeneralActivities().isEmpty()) {
 
 			for (String generalActivity : request.getGeneralActivities()) {
 
@@ -169,7 +169,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 
 		}
 
-		if (request.getNewActivities() != null || !request.getNewActivities().isEmpty()) {
+		if (request.getNewActivities() != null && !request.getNewActivities().isEmpty()) {
 
 			for (ActivityRequestResponse newActivity : request.getNewActivities()) {
 
