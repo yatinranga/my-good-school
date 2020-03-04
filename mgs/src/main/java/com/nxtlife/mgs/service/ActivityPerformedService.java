@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.nxtlife.mgs.entity.activity.ActivityPerformed;
 import com.nxtlife.mgs.entity.activity.File;
+import com.nxtlife.mgs.filtering.filter.ActivityPerformedFilter;
 import com.nxtlife.mgs.view.ActivityPerformedRequest;
 import com.nxtlife.mgs.view.ActivityPerformedResponse;
 import com.nxtlife.mgs.view.FileRequest;
@@ -61,5 +62,7 @@ public interface ActivityPerformedService {
 	List<ActivityPerformedResponse> getAllSubmittedActivityOfStudent(String studentCid, Integer page, Integer pageSize);
 
 	List<ActivityPerformedResponse> getAllReviewedActivityOfStudent(String studentCid, Integer page, Integer pageSize);
+
+	List<ActivityPerformedResponse> filter(String studentCid ,ActivityPerformedFilter filterRequest);
 
 }

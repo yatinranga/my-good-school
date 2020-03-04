@@ -411,10 +411,17 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 
 	@Override
 	public List<ActivityRequestResponse> getAllOfferedActivitiesBySchool(String schoolCid) {
-		List<Activity> activities = activityRepository.findAllBySchoolsCidAndActiveTrue(schoolCid);
+		List<Activity> activities;
+		if(schoolCid == null)
+			activities = activityRepository.findAllByActiveTrue();
+		else 
+			activities = activityRepository.findAllBySchoolsCidAndActiveTrue(schoolCid);
+		
+			
 		List<ActivityRequestResponse> activityResponses = new ArrayList<ActivityRequestResponse>();
-		if (activities == null)
-			throw new ValidationException("No activities found.");
+		
+		if(activities== null || activities.isEmpty())
+			throw new ValidationException("No general or school specific activities found.");
 		activities.forEach(activity -> {
 			activityResponses.add(new ActivityRequestResponse(activity));
 		});

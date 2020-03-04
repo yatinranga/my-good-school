@@ -1,158 +1,73 @@
-<div style="float: right;">View :
-    <select style="border: 1px solid #ddd" (ngModelChange)="activityView($event)" ngModel>
-        <option value="Pending" selected>Pending</option>
-        <option value="Saved">Saved</option>
-        <option value="Reviewed">Reviewed</option>
-    </select>
-</div>
-
-<div *ngIf="activityType === 'Pending'">
-    <table class="table">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Date</th>
-                <th scope="col">Status</th>
-                <th scope="col">Action</th>
-            </tr>
-        </thead>
-        <tbody id="accordionExample">
-            <ng-container *ngFor="let pa of pendingActivitiesArr; let i = index;">
-                <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
-                    <td>{{i+1}}</td>
-                    <td>{{pa.studentName}}</td>
-                    <td>{{pa.dateOfActivity | date}}</td>
-                    <td>
-                        <div *ngIf="pa.activityStatus === 'SubmittedByStudent'">Pending</div>
-                    </td>
-                    <td>
-                        <div>
-                            <button data-toggle="modal" data-target="#exampleModal"
-                                (click)="reviewActivity(pa)">Review</button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="collapse-td" colspan="5">
-                        <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
-                            <div class="row">
-                                <div class="col-6">
-                                    <p><strong>Description : </strong>{{pa.description}}</p>
-                                </div>
-                                <div class="col-6">
-                                    <div>
-                                        <p><strong>Attachments : </strong></p>
-                                        <p *ngFor="let file of pa.fileResponses">{{file.name}}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            </ng-container>
-    </table>
-</div>
-
-<div *ngIf="activityType === 'Saved'">
-    <table class="table">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Date</th>
-                <th scope="col">Status</th>
-                <th scope="col">Action</th>
-            </tr>
-        </thead>
-        <tbody id="accordionExample">
-            <ng-container *ngFor="let sa of savedActivitiesArr; let i = index;">
-                <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
-                    <td>{{i+1}}</td>
-                    <td>{{sa.studentName}}</td>
-                    <td>{{getDate(sa.dateOfActivity) | date}}</td>
-                    <td>
-                        <div *ngIf="sa.activityStatus === 'SavedByTeacher'">Saved</div>
-                    </td>
-                    <td>
-                        <div>
-                            <button (click)="submitSavedActivity($event,i)">Submit</button>
-                            <button  (click)="editSavedActivity(sa)" data-toggle="modal" data-target="#exampleModal" >Edit</button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="collapse-td" colspan="5">
-                        <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
-                            <div class="row">
-                                <div class="col-6">
-                                    <p><strong>Description : </strong>{{sa.description}}</p>
-                                </div>
-                                <div>
-                                    <p><strong>Attachments : </strong></p>
-                                    <p *ngFor="let file of sa.fileResponses">{{file.name}}</p>
-                                </div>
-                                <div class="col-6">
-                                    <div><strong>Participation Score : </strong>{{sa.participationScore}}</div>
-                                    <div><strong>Initiative Score : </strong>{{sa.initiativeScore}}</div>
-                                    <div><strong>Achievement Score : </strong>{{sa.achievementScore}}</div>
-                                    <div><strong>Star : </strong></div>
-                                    <div><strong>Remark : </strong>{{sa.coachRemark}}</div>
-                                   
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            </ng-container>
-    </table>
-</div>
-
-<div *ngIf="activityType === 'Reviewed'">
-    <table class="table">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Date</th>
-                <th scope="col">Activity</th>
-                <th scope="col">Status</th>
-            </tr>
-        </thead>
-        <tbody id="accordionExample">
-            <ng-container *ngFor="let ra of reviewedActivitiesArr; let i = index;">
-                <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
-                    <td>{{i+1}}</td>
-                    <td>{{ra.studentName}}</td>
-                    <td>{{getDate(ra.dateOfActivity) | date}}</td>
-                    <td>{{ra.activityName}}</td>     
-                    <td>Reviewed</td>
-                </tr>
-                <tr>
-                    <td class="collapse-td" colspan="5">
-                        <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
-                            <div class="row">
-                                <div class="col-6">
-                                    <p><strong>Remark : </strong>{{ra.coachRemark}}</p>
-                                    <p><strong>Date : </strong>{{ra.remarkDate}}</p>
-                                </div>
-                                <div class="col-6">
-                                    <div>
-                                        <p><strong>Participation Score : </strong>{{ra.participationScore}}</p>
-                                        <p><strong>Initative Score : </strong>{{ra.initiativeScore}}</p>
-                                        <p><strong>Achievement Score : </strong>{{ra.achievementScore}}</p>
-                                        <p><strong>Star : </strong>{{ra.star}}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            </ng-container>
-    </table>
-</div>
+<div class="main">
+    <div class="content_main">
+        <div class="content_main_com">
+            <div class="teacher_activity_main">
+                <div class="sortby"> Filter by:
+                    <select style="border: 1px solid #ddd" (ngModelChange)="activityView($event)" ngModel>
+                        <option value="" selected disabled hidden> Choose here </option>
+                        <option value="All" selected> All</option>
+                        <option value="Pending" selected>Pending</option>
+                        <option value="Saved">Saved</option>
+                        <option value="Reviewed">Reviewed</option>
+                    </select>
+                </div>
 
 
+                <div *ngIf="activityType === 'Pending'">
+
+                    <div class="table_main">
+                        <table class="table">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="accordionExample">
+                                <ng-container *ngFor="let pa of pendingActivitiesArr; let i = index;">
+                                    <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
+                                        <td>{{i+1}}</td>
+                                        <td>{{pa.studentName}}</td>
+                                        <td>{{getDate(pa.dateOfActivity) | date}}</td>
+                                        <td>
+                                            <div *ngIf="pa.activityStatus === 'SubmittedByStudent'">Pending</div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <button data-toggle="modal" data-target="#exampleModal"
+                                                    (click)="reviewActivity(pa)">Review</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="collapse-td" colspan="5">
+                                            <div [attr.id]="'collapse' + i" class="collapse"
+                                                data-parent="#accordionExample">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <div class="description">
+                                                            <p><strong>Description : </strong>{{pa.description}}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="attachment">
+                                                            <p><strong>Attachments : </strong></p>
+                                                            <p *ngFor="let file of pa.fileResponses">{{file.name}}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                        </table>
+
+                    </div>
+
+<<<<<<< HEAD
 <!-- Review Activity Modal -->
 <div>
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -197,10 +112,119 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="resetForm()" >Reset</button>
                             <button type="submit" class="btn btn-primary" >Save changes</button>
+=======
+                    <div *ngIf="activityType === 'Saved'">
+
+                        <div class="table_main">
+                            <table class="table">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="accordionExample">
+                                    <ng-container *ngFor="let sa of savedActivitiesArr; let i = index;">
+                                        <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
+                                            <td>{{i+1}}</td>
+                                            <td>{{sa.studentName}}</td>
+                                            <td>{{getDate(sa.dateOfActivity) | date}}</td>
+                                            <td>
+                                                <div *ngIf="sa.activityStatus === 'SavedByTeacher'">Saved</div>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <button (click)="submitSavedActivity(i)">Submit</button>
+                                                    <button data-toggle="modal" data-target="#exampleModal"
+                                                        (click)="editSavedActivity(sa)">Edit</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="collapse-td" colspan="5">
+                                                <div [attr.id]="'collapse' + i" class="collapse"
+                                                    data-parent="#accordionExample">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <p><strong>Description : </strong>{{sa.description}}</p>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div>
+                                                                <p><strong>Attachments : </strong></p>
+                                                                <p *ngFor="let file of sa.fileResponses">{{file.name}}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                            </table>
                         </div>
-                    </form>
+                    </div>
+
+                    <div *ngIf="activityType === 'Reviewed'">
+                    </div>
+
+
+                    <!-- Review Activity -->
+                    <div>
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Review Activity</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form [formGroup]="reviewForm" (ngSubmit)="saveReview()">
+                                            <div class="form-group">
+                                                <label for="recipient-name" class="col-form-label">Participation Score
+                                                    :</label>
+                                                <input type="number" class="form-control"
+                                                    formControlName="participationScore">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="recipient-name" class="col-form-label">Achievement Score
+                                                    :</label>
+                                                <input type="number" class="form-control"
+                                                    formControlName="achievementScore">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="recipient-name" class="col-form-label">Initiative Score
+                                                    :</label>
+                                                <input type="number" class="form-control"
+                                                    formControlName="initiativeScore">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="recipient-name" class="col-form-label">Star :</label>
+                                                <input type="number" class="form-control" formControlName="star">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="message-text" class="col-form-label">Remark :</label>
+                                                <textarea class="form-control" formControlName="coachRemark"></textarea>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+>>>>>>> 5a3a583661e43c504cf9cea3ef25d7fe4f4a277a
+                        </div>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
-</div>

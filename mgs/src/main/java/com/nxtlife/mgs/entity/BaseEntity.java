@@ -15,26 +15,27 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.nxtlife.mgs.entity.user.User;
+import com.nxtlife.mgs.service.BaseService;
 
 @MappedSuperclass
 @SuppressWarnings("serial")
 public abstract class BaseEntity extends AbstractAuditable<User, Long>
 {
 	
-	public User getUser()
-	  {
-	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-	    if (authentication == null || !authentication.isAuthenticated())
-	    {
-	      return null;
-	    }
-
-	    if (authentication.getPrincipal() instanceof User)
-	    {
-	      return ((User) authentication.getPrincipal()).getUser();
-	    }
-	    return null;
-	  }
+//	public User getUser()
+//	  {
+//	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//	    if (authentication == null || !authentication.isAuthenticated())
+//	    {
+//	      return null;
+//	    }
+//
+//	    if (authentication.getPrincipal() instanceof User)
+//	    {
+//	      return ((User) authentication.getPrincipal()).getUser();
+//	    }
+//	    return null;
+//	  }
 
 
 	@PrePersist
@@ -42,7 +43,7 @@ public abstract class BaseEntity extends AbstractAuditable<User, Long>
 	  {
 	    this.setCreatedDate(DateTime.now());
 
-	    User current = getUser();
+	    User current = BaseService.getUser();
 	    if (current != null)
 	    {
 	      this.setCreatedBy(current);
@@ -53,7 +54,7 @@ public abstract class BaseEntity extends AbstractAuditable<User, Long>
 	  private void preUpdate()
 	  {
 	    this.setLastModifiedDate(DateTime.now());
-	    User current = getUser();
+	    User current = BaseService.getUser();
 	    if (current != null)
 	    {
 	      this.setLastModifiedBy(current);

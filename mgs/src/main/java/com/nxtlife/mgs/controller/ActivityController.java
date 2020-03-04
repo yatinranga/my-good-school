@@ -28,14 +28,14 @@ public class ActivityController {
 		return activityService.saveActivity(request);
 	}
 
-	@GetMapping(value = "activitiesOffered")
-	public List<ActivityRequestResponse> getAllActivities(@RequestParam(defaultValue = "0") Integer pageNo,
-			@RequestParam(defaultValue = "10") Integer pageSize) {
-		return activityService.getAllOfferedActivities(pageNo, pageSize);
-	}
+//	@GetMapping(value = "activitiesOffered")
+//	public List<ActivityRequestResponse> getAllActivities(@RequestParam(defaultValue = "0") Integer pageNo,
+//			@RequestParam(defaultValue = "10") Integer pageSize) {
+//		return activityService.getAllOfferedActivities(pageNo, pageSize);
+//	}
 
-	@GetMapping(value = "activitiesOffered/{schoolCid}")
-	public List<ActivityRequestResponse> getAllActivitiesOfSchool(@PathVariable("schoolCid") String schoolCid) {
+	@GetMapping(value = {"activitiesOffered/{schoolCid}","activitiesOffered"})
+	public List<ActivityRequestResponse> getAllActivitiesOfSchool(@PathVariable(name = "schoolCid" ,required = false) String schoolCid) {
 		return activityService.getAllOfferedActivitiesBySchool(schoolCid);
 	}
 

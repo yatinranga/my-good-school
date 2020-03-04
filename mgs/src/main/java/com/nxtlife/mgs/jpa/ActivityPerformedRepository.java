@@ -2,18 +2,21 @@ package com.nxtlife.mgs.jpa;
 
 import java.util.List;
 
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import com.nxtlife.mgs.entity.activity.ActivityPerformed;
 import com.nxtlife.mgs.enums.ActivityStatus;
 import com.nxtlife.mgs.enums.FourS;
 import com.nxtlife.mgs.enums.PSDArea;
+import com.querydsl.core.types.Predicate;
 
-public interface ActivityPerformedRepository extends JpaRepository<ActivityPerformed, Long> {
+@Repository
+public interface ActivityPerformedRepository extends JpaRepository<ActivityPerformed, Long> , QueryDslPredicateExecutor<ActivityPerformed> {
 
 	List<ActivityPerformed> findAllByStudentCidAndActivityStatusAndActiveTrue(String studentCid,
 			ActivityStatus activityStatus,Pageable pageable);
@@ -64,4 +67,8 @@ public interface ActivityPerformedRepository extends JpaRepository<ActivityPerfo
 	List<ActivityPerformed> findAllByStudentCidAndActiveTrue(String studentCid, Pageable pageable );
 
 	List<ActivityPerformed> findAllByTeacherCidAndActivityStatusAndActiveTrue(String coachCid, ActivityStatus reviewed);
+
+	List<ActivityPerformed> findAll(Predicate build);
+
+	List<ActivityPerformed> findAllByStudentCidAndActiveTrue(String studentCid, Predicate predicate);
 }
