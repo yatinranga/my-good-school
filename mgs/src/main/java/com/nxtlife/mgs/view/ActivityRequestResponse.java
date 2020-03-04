@@ -3,20 +3,29 @@ package com.nxtlife.mgs.view;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.activity.FocusArea;
 import com.nxtlife.mgs.enums.FourS;
 
 public class ActivityRequestResponse {
 
+	@NotEmpty(message = " activity name can't be null")
 	private String name;
 
 	private String description;
 
 	private String id;
 
+	@NotEmpty
 	private String fourS;
 
+	private Boolean isGeneral;
+
+	@NotNull
 	private List<String> focusAreaIds;
 
 	private List<String> schoolIds;
@@ -71,6 +80,14 @@ public class ActivityRequestResponse {
 		this.focusAreaIds = focusAreaIds;
 	}
 
+	public Boolean getIsGeneral() {
+		return isGeneral;
+	}
+
+	public void setIsGeneral(Boolean isGeneral) {
+		this.isGeneral = isGeneral;
+	}
+
 	public List<String> getSchoolIds() {
 		return schoolIds;
 	}
@@ -88,6 +105,7 @@ public class ActivityRequestResponse {
 		activity.setName(this.name);
 		activity.setDescription(this.description);
 		activity.setFourS(FourS.valueOf(this.fourS));
+		activity.setIsGeneral(this.isGeneral);
 		return activity;
 	}
 
@@ -96,6 +114,7 @@ public class ActivityRequestResponse {
 		this.fourS = activity.getFourS().name();
 		this.name = activity.getName();
 		this.description = activity.getDescription();
+		this.isGeneral = activity.getIsGeneral();
 		focusAreaIds = new ArrayList<String>();
 		for (FocusArea fa : activity.getFocusAreas()) {
 			focusAreaIds.add(fa.getCid());

@@ -133,6 +133,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 				activity.setDescription(act);
 				activity.setFourS(FourS.Skill);
 				activity.setActive(true);
+				activity.setIsGeneral(true);
 				activity.setCid(utils.generateRandomAlphaNumString(8));
 				activityList.add(activity);
 			}
@@ -151,6 +152,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 				activity.setDescription(act);
 				activity.setFourS(FourS.Sport);
 				activity.setActive(true);
+				activity.setIsGeneral(true);
 				activity.setCid(utils.generateRandomAlphaNumString(8));
 				activityList.add(activity);
 			}
@@ -169,6 +171,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 				activity.setDescription(act);
 				activity.setFourS(FourS.Study);
 				activity.setActive(true);
+				activity.setIsGeneral(true);
 				activity.setCid(utils.generateRandomAlphaNumString(8));
 				activityList.add(activity);
 			}
@@ -187,6 +190,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 				activity.setDescription(act);
 				activity.setFourS(FourS.Service);
 				activity.setActive(true);
+				activity.setIsGeneral(true);
 				activity.setCid(utils.generateRandomAlphaNumString(8));
 				activityList.add(activity);
 			}

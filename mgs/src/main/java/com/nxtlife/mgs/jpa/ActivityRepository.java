@@ -51,4 +51,6 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
 
 	Page<Activity> findAllByActiveTrue(Pageable paging);
 
+	Activity getOneByCid(String activity);
+
 }
