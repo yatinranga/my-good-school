@@ -80,7 +80,7 @@ public class School extends BaseEntity {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "school")
 	private List<TeacherSchoolGrade> teacherSchoolGrades;
 
-	@ManyToMany(mappedBy = "schools")
+	@ManyToMany(mappedBy = "schools", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	private List<Activity> activities;
 
 	public String getName() {

@@ -32,7 +32,7 @@ export class TeacherAwardsComponent implements OnInit {
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
     this.schoolId = this.teacherInfo['teacher'].schoolId;
     this.teacherId = this.teacherInfo['teacher'].id;
-    console.log(this.teacherId);
+
     this.getSchoolAwards();
     this.getSchoolGrades();
     this.getStudentActivity();
@@ -96,9 +96,11 @@ export class TeacherAwardsComponent implements OnInit {
 
   // create NEW Award
   createNewAward() {
+    this.createAwardForm.value.teacherId = this.teacherId;
     this.teacherService.addAward(this.createAwardForm.value).subscribe((res) => {
       console.log(res);
       this.alertService.showSuccessToast('Award Created !');
+      this.createAwardForm.reset();
     },
       (err) => console.log(err));
   }

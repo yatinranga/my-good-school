@@ -2,7 +2,6 @@ package com.nxtlife.mgs.service.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,29 +25,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.nxtlife.mgs.entity.school.Grade;
+import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.user.Role;
 import com.nxtlife.mgs.entity.user.User;
 import com.nxtlife.mgs.enums.UserType;
+import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.ex.ValidationException;
+import com.nxtlife.mgs.jpa.ActivityRepository;
 import com.nxtlife.mgs.jpa.RoleRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
 import com.nxtlife.mgs.jpa.UserRepository;
 import com.nxtlife.mgs.service.BaseService;
-import com.nxtlife.mgs.service.FileService;
 import com.nxtlife.mgs.service.SchoolService;
 import com.nxtlife.mgs.service.SequenceGeneratorService;
 import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.store.FileStore;
-import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.ExcelUtil;
-import com.nxtlife.mgs.util.SequenceGenerator;
 import com.nxtlife.mgs.util.Utils;
+import com.nxtlife.mgs.view.ActivityRequestResponse;
 import com.nxtlife.mgs.view.SchoolRequest;
 import com.nxtlife.mgs.view.SchoolResponse;
-import com.nxtlife.mgs.view.StudentRequest;
-import com.nxtlife.mgs.view.StudentResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
 
 @Service
@@ -74,6 +71,9 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 
 	@Autowired
 	UserRepository userRepository;
+
+	@Autowired
+	ActivityRepository activityRepository;
 
 	@PostConstruct
 	public void init() {
@@ -129,20 +129,85 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 
 	@Override
 	public SchoolResponse save(SchoolRequest request) {
+
 		if (request == null)
 			throw new ValidationException("Request can not be null.");
+
 		if (request.getEmail() == null)
 			throw new ValidationException("Email can not be null");
+
 		if (schoolRepository.countByEmailAndActiveTrue(request.getEmail()) > 0)
-			throw new ValidationException("Email already exists i.e, school already exists.");
+			throw new ValidationException(String.format("Email [%s] already exists", request.getEmail()));
+
 		if (request.getName() == null)
 			throw new ValidationException("School name can not be null");
 
 		School school = request.toEntity();
+		Activity activity;
+		List<Activity> allActivities = new ArrayList<Activity>();
+
+		if (request.getGeneralActivities() != null && !request.getGeneralActivities().isEmpty()) {
+
+			for (String generalActivity : request.getGeneralActivities()) {
+
+				activity = activityRepository.getOneByCid(generalActivity);
+
+				if (activity == null)
+					throw new NotFoundException(
+							String.format("General Activity having id [%s] didn't exist", generalActivity));
+
+				if (activity.getSchools() == null || activity.getSchools().isEmpty()) {
+					List<School> schoolList = new ArrayList<School>();
+					schoolList.add(school);
+					activity.setSchools(schoolList);
+					allActivities.add(activity);
+				} else {
+					activity.getSchools().add(school);
+					allActivities.add(activity);
+				}
+			}
+
+		}
+
+		if (request.getNewActivities() != null && !request.getNewActivities().isEmpty()) {
+
+			for (ActivityRequestResponse newActivity : request.getNewActivities()) {
+
+				activity = activityRepository.getOneByNameAndActiveTrue(newActivity.getName());
+				if (activity != null) {
+
+					if (activity.getSchools() == null || activity.getSchools().isEmpty()) {
+						List<School> schoolList = new ArrayList<School>();
+						schoolList.add(school);
+						activity.setSchools(schoolList);
+						allActivities.add(activity);
+					} else {
+						activity.getSchools().add(school);
+						allActivities.add(activity);
+					}
+
+				} else {
+
+					activity = newActivity.toEntitity();
+
+					List<School> sl = new ArrayList<School>();
+					sl.add(school);
+					activity.setSchools(sl);
+					allActivities.add(activity);
+
+				}
+
+			}
+		}
+
+		school.setActivities(allActivities);
+
 		Long schoolsequence = sequenceGeneratorService.findSequenceByUserType(UserType.School);
+
 		school.setUsername(String.format("SCH%08d", schoolsequence));
 		school.setCid(utils.generateRandomAlphaNumString(8));
 		school.setActive(true);
+
 		User user = userService.createSchoolUser(school);
 
 		if (StringUtils.isEmpty(user))

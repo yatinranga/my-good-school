@@ -63,14 +63,22 @@ export class AddActivityComponent implements OnInit {
   }
 
   saveActivity() {
+
+    const time = this.addActivityForm.value.dateOfActivity + " 00:00:00";
+    this.addActivityForm.value.dateOfActivity = time ;
+    
     const formData = new FormData();
-    let date = new Date(this.addActivityForm.value.dateOfActivity);
-    let activityDate = date.getFullYear() + "-" + (date.getMonth()) + "-" + date.getDate();
+    // let date = new Date(this.addActivityForm.value.dateOfActivity);
+    // let activityDate = date.getFullYear() + "-" + (date.getMonth()) + "-" + date.getDate();
+
+    // const time = this.studentSignup.value.dob + " 00:00:00";
+    // this.studentSignup.value.dob = time;
+    // console.log(time);
 
     formData.append('studentId', this.studentInfo.student.id);
     formData.append('activityId', this.addActivityForm.value.activityId);
     formData.append('coachId', this.addActivityForm.value.coachId);
-    formData.append('dateOfActivity', activityDate);
+    formData.append('dateOfActivity', time);
     formData.append('description', this.addActivityForm.value.description);
 
     if (this.addActivityForm.value.attachment.length > 0) {
@@ -85,6 +93,7 @@ export class AddActivityComponent implements OnInit {
       (res) => {
         console.log(res);
         this.alertService.showSuccessToast('Activity Saved !');
+        this.closeModel(false);
       },
       (err) => console.log(err)
     );

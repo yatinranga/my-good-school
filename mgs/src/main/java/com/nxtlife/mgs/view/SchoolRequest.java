@@ -1,6 +1,7 @@
 package com.nxtlife.mgs.view;
 
-import javax.persistence.Column;
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -11,21 +12,25 @@ public class SchoolRequest {
 
 	@NotNull
 	private String name;
-	
+
 	private String username;
-	
+
 	private String id;
-	
+
 	private String address;
-	
+
 	@NotNull
 	private String email;
-	
+
 	private String contactNumber;
-	
+
 	private MultipartFile logo;
-	
-	private Boolean active ;
+
+	private Boolean active;
+
+	private List<String> generalActivities;
+
+	private List<ActivityRequestResponse> newActivities;
 
 	public String getName() {
 		return name;
@@ -66,7 +71,7 @@ public class SchoolRequest {
 	public void setContactNumber(String contactNumber) {
 		this.contactNumber = contactNumber;
 	}
-	
+
 	public String getUsername() {
 		return username;
 	}
@@ -82,7 +87,7 @@ public class SchoolRequest {
 	public void setLogo(MultipartFile logo) {
 		this.logo = logo;
 	}
-	
+
 	public Boolean getActive() {
 		return active;
 	}
@@ -91,23 +96,39 @@ public class SchoolRequest {
 		this.active = active;
 	}
 
+	public List<String> getGeneralActivities() {
+		return generalActivities;
+	}
+
+	public void setGeneralActivities(List<String> generalActivities) {
+		this.generalActivities = generalActivities;
+	}
+
+	public List<ActivityRequestResponse> getNewActivities() {
+		return newActivities;
+	}
+
+	public void setNewActivities(List<ActivityRequestResponse> newActivities) {
+		this.newActivities = newActivities;
+	}
+
 	public School toEntity(School school) {
-		school = school==null?new School():school;
-		if(this.name!=null)
-		  school.setName(this.name);
-		if(this.username!=null)
-		  school.setUsername(this.username);
-		if(this.email!=null)
-		  school.setEmail(this.getEmail());
-		if(this.contactNumber!=null)
-		  school.setContactNumber(this.contactNumber);
-		if(this.address!=null)
-		  school.setAddress(this.address);
+		school = school == null ? new School() : school;
+		if (this.name != null)
+			school.setName(this.name);
+		if (this.username != null)
+			school.setUsername(this.username);
+		if (this.email != null)
+			school.setEmail(this.getEmail());
+		if (this.contactNumber != null)
+			school.setContactNumber(this.contactNumber);
+		if (this.address != null)
+			school.setAddress(this.address);
 		return school;
 	}
-	
-    public School toEntity() {
-		
+
+	public School toEntity() {
+
 		return this.toEntity(null);
 	}
 }
