@@ -1,6 +1,6 @@
 <div class="sortby"> Filter by:
     <select style="border: 1px solid #ddd" (ngModelChange)="activityView($event)" ngModel>
-        <option value="" selected disabled hidden> Choose here </option>
+        <option value="" disabled hidden> Choose here </option>
         <option value="All" selected> All</option>
         <option value="Saved">Saved</option>
         <option value="Submitted">Submitted</option>
@@ -28,23 +28,26 @@
                             <td>{{i+1}}</td>
                             <td>{{allActi.activityName}}</td>
                             <td>{{getDate(allActi.dateOfActivity) | date}}</td>
-                            <td>{{allActi.teacherName}}</td>
+                            <td>{{allActi.coachName}}</td>
                             <td>
                                 <div *ngIf="allActi.activityStatus === 'SubmittedByStudent'" class="submitted">Submitted
                                 </div>
                                 <div *ngIf="allActi.activityStatus === 'SavedByStudent'" class="saved">Saved</div>
-                                <div *ngIf="allActi.activityStatus === 'ReviewedByStudent'" class="reviewed">Reviewed
+                                <div *ngIf="allActi.activityStatus === 'Reviewed'" class="reviewed">Reviewed
                                 </div>
                             </td>
                             <td>
-                                <div *ngIf="allActi.activityStatus === 'SavedByStudent'">
-                                    <button (click)="editSavedActivity($event,allActi)" class="saved icon_button">
+                                <div>
+                                    <button [disabled]="!(allActi.activityStatus === 'SavedByStudent')"
+                                        (click)="editSavedActivity($event,allActi)" class="saved icon_button">
                                         <i class="fa fa-edit"></i>
                                     </button>
-                                    <button (click)="submitSavedActivity($event,i)" class="submitted icon_button">
+                                    <button [disabled]="!(allActi.activityStatus === 'SavedByStudent')"
+                                        (click)="submitSavedActivity($event,i)" class="submitted icon_button">
                                         <i class="fa fa-paper-plane"></i>
                                     </button>
-                                    <button (click)="deleteSavedActivity($event,allActi)" class="reviewed icon_button">
+                                    <button [disabled]="!(allActi.activityStatus === 'SavedByStudent')"
+                                        (click)="deleteSavedActivity($event,allActi,i)" class="reviewed icon_button">
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </div>
@@ -58,17 +61,24 @@
                                             <div class="description">
                                                 <p><strong>Name : </strong>{{allActi.activityName}}</p>
                                                 <p><strong>Description : </strong>{{allActi.description}}</p>
-                                                <p><strong>Teacher : </strong>{{allActi.teacherName}}</p>
+                                                <p><strong>Teacher : </strong>{{allActi.coachName}}</p>
                                                 <p><strong>Focus Area : </strong>{{allActi.focusAreas}}</p>
                                                 <p><strong>PSD Area : </strong>{{allActi.psdAreas}}</p>
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="attachment">
-                                                <div>
-                                                    <p><strong>Attachments : </strong></p>
-                                                    <p *ngFor="let file of allActi.fileResponses"> <i
-                                                            class="fa fa-image"> </i> {{file.name}}</p>
+
+                                                <p><strong>Attachments : </strong></p>
+                                                <div *ngFor="let file of allActi.fileResponses">
+                                                    <div class="audio" *ngIf="file.extension == 'mp3'"> <i
+                                                            class="fa fa-file-audio"></i> {{file.name}} </div>
+                                                    <div class="image" *ngIf="file.extension=='jpg'"> <i
+                                                            class="fa fa-image"></i> {{file.name}} </div>
+                                                    <div class="video" *ngIf="file.extension=='video'"> <i
+                                                            class="fa fa-video-camera"
+                                                            aria-hidden="true"></i>{{file.name}} </div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -94,10 +104,7 @@
                         <th scope="col">Date</th>
                         <th scope="col">Teacher</th>
                         <th scope="col">Status</th>
-<<<<<<< HEAD
-=======
-                        
->>>>>>> 5a3a583661e43c504cf9cea3ef25d7fe4f4a277a
+
                     </tr>
                 </thead>
                 <tbody id="accordionExample">
@@ -106,12 +113,9 @@
                             <td>{{i+1}}</td>
                             <td>{{sa.activityName}}</td>
                             <td>{{getDate(sa.dateOfActivity) | date}}</td>
-                            <td>{{sa.teacherName}}</td>
+                            <td>{{sa.coachName}}</td>
                             <td class="submitted">Submitted</td>
-<<<<<<< HEAD
-=======
-                            
->>>>>>> 5a3a583661e43c504cf9cea3ef25d7fe4f4a277a
+
                         </tr>
                         <tr>
                             <td class="collapse-td" colspan="5">
@@ -121,7 +125,7 @@
                                             <div class="description">
                                                 <p><strong>Name : </strong>{{sa.activityName}}</p>
                                                 <p><strong>Description : </strong>{{sa.description}}</p>
-                                                <p><strong>Teacher : </strong>{{sa.teacherName}}</p>
+                                                <p><strong>Teacher : </strong>{{sa.coachName}}</p>
                                                 <p><strong>Four S : </strong>{{sa.fourS}}</p>
                                                 <p><strong>Focus Area : </strong>{{sa.focusAreas}}</p>
                                                 <p><strong>PSD Area : </strong>{{sa.psdAreas}}</p>
@@ -129,10 +133,17 @@
                                         </div>
                                         <div class="col-6">
                                             <div class="attachment">
-                                                <div>
-                                                    <p> <strong>Attachments : </strong></p>
-                                                    <p *ngFor="let file of sa.fileResponses"> <i
-                                                            class="fa fa-image"></i> {{file.name}} </p>
+
+                                                <p><strong>Attachments : </strong></p>
+                                                <div *ngFor="let file of sa.fileResponses">
+                                                    <div class="audio" *ngIf="file.extension == 'mp3'"> <i
+                                                            class="fa fa-file-audio"></i> {{file.name}} </div>
+                                                    <div class="image" *ngIf="file.extension=='jpg'"> <i
+                                                            class="fa fa-image"></i> {{file.name}} </div>
+                                                    <div class="video" *ngIf="file.extension=='video'"> <i
+                                                            class="fa fa-video-camera"
+                                                            aria-hidden="true"></i>{{file.name}} </div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -168,7 +179,7 @@
                             <td>{{i+1}}</td>
                             <td>{{sa.activityName}}</td>
                             <td>{{getDate(sa.dateOfActivity) | date}}</td>
-                            <td>{{sa.teacherName}}</td>
+                            <td>{{sa.coachName}}</td>
                             <td> Saved </td>
                             <td>
                                 <div>
@@ -178,7 +189,7 @@
                                     <button (click)="submitSavedActivity($event,i)" class="submitted icon_button">
                                         <i class="fa fa-paper-plane"></i>
                                     </button>
-                                    <button (click)="deleteSavedActivity($event,sa)" class="reviewed icon_button">
+                                    <button (click)="deleteSavedActivity($event,sa,i)" class="reviewed icon_button">
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </div>
@@ -190,9 +201,9 @@
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="description">
-                                                <p><strong>Name : </strong>{{sa.activityName}}</p>
+                                                <p><strong>Name : </strong> {{sa.activityName}}</p>
                                                 <p><strong>Description : </strong>{{sa.description}}</p>
-                                                <p><strong>Teacher : </strong>{{sa.teacherName}}</p>
+                                                <p><strong>Teacher : </strong>{{sa.coachName}}</p>
                                             </div>
                                         </div>
                                         <div class="col-6">
@@ -206,7 +217,6 @@
                             </td>
                         </tr>
                     </ng-container>
-
                 </tbody>
             </table>
         </div>
@@ -232,10 +242,11 @@
                             <td>{{i+1}}</td>
                             <td>{{ra.activityName}}</td>
                             <td>{{getDate(ra.dateOfActivity) | date}}</td>
+                            <td>{{ra.coachName}}</td>
                             <td>Reviewed</td>
                         </tr>
                         <tr styole="border : none">
-                            <td class="collapse-td" colspan="6">
+                            <td class="collapse-td" colspan="5">
                                 <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
                                     <div class="row">
                                         <div class="col-6">
@@ -251,15 +262,12 @@
                                     </div>
                                 </div>
                             </td>
-
                         </tr>
-
                     </ng-container>
                 </tbody>
             </table>
         </div>
     </div>
-
 </div>
 
 <!-- Edit Activity Form  -->
@@ -308,11 +316,3 @@
         </div>
     </form>
 </div>
-
-
-<!--
-      <p *ngFor="let file of sa.fileResponses">{{file.name}}</p>
-  <div class="audio" *ngIf="file.type=='audio'"> <i class="fa fa-file-audio"></i>{(file.name)} </div>
-  <div class="image" *ngIf="file.type=='image'"> <i class="fa fa-image"></i> {(file.name)} </div>
-  <div class="video" *ngIf="file.type=='video'"> <i class="fa fa-video-camera" aria-hidden="true"></i>{(file.name)} </div>
-  -->
