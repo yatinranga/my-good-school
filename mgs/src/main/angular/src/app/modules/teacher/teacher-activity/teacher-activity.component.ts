@@ -18,7 +18,7 @@ export class TeacherActivityComponent implements OnInit {
   teacherId: any;
   activityId = "";
   studentId = "";
-  i : any;
+  i: any;
 
   reviewForm: FormGroup;
 
@@ -89,24 +89,6 @@ export class TeacherActivityComponent implements OnInit {
       star: activity.star,
       coachRemark: activity.coachRemark
     })
-
-    // const formData = new FormData();
-    // formData.append('id', this.activityId);
-    // formData.append('coachId', this.teacherId);
-    // formData.append('studentId', this.studentId);
-    // formData.append('coachRemark', this.reviewForm.value.coachRemark);
-    // formData.append('participationScore', this.reviewForm.value.participationScore);
-    // formData.append('initiativeScore', this.reviewForm.value.initiativeScore);
-    // formData.append('achievementScore', this.reviewForm.value.achievementScore);
-    // formData.append('star', this.reviewForm.value.star);
-
-    // this.teacherSerivce.saveReviewedActivity(formData).subscribe((res) => {
-    //   console.log(res);
-    //   this.reviewForm.reset();
-    //   this.alertService.showSuccessToast('Saved !');
-    // },
-    //   (err) => console.log(err)
-    // );
   }
 
   // SUBMIT the saved activity by teacher

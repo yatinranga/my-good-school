@@ -41,8 +41,8 @@ export class SavedActitvityComponent implements OnInit {
     this.schoolId = this.studentInfo['student'].schoolId;
 
     // this.getStudentSavedActivities(this.studentInfo['student'].id)
-    this.getStudentSavedActivities(this.studentId);
-    this.getStudentSubmittedActivities(this.studentId);
+    // this.getStudentSavedActivities(this.studentId);
+    // this.getStudentSubmittedActivities(this.studentId);
     this.getStudentAllActivities(this.studentId);
 
     // this.getStudentActivity(this.schoolId);
@@ -79,7 +79,10 @@ export class SavedActitvityComponent implements OnInit {
   getStudentAllActivities(studentId) {
     this.studentService.getAllActivity(studentId).subscribe((res) => {
       this.allActivitiesArr = res;
-      this.allActivitiesArr = this.allActivitiesArr.filter((e) => (e.activityStatus != "SavedByTeacher"));
+      this.allActivitiesArr = res.filter((e) => (e.activityStatus != "SavedByTeacher"));
+      this.savedActivitiesArr = this.allActivitiesArr.filter((e) => (e.activityStatus == "SavedByStudent"));
+      this.submittedActivitiesArr = this.allActivitiesArr.filter((e) => (e.activityStatus == "SubmittedByStudent"));
+      this.reviewedActivitiesArr = this.allActivitiesArr.filter((e) => (e.activityStatus == "Reviewed"));
       console.log(this.allActivitiesArr);
     },
       (err) => console.log(err)
@@ -137,12 +140,13 @@ export class SavedActitvityComponent implements OnInit {
     );
   }
 
-  deleteSavedActivity(e,activity) {
+  deleteSavedActivity(e,activity,i) {
     e.stopPropagation();
     const activityId = activity.id;
     console.log(activityId);
     this.studentService.deleteActivity(activityId).subscribe((res) => {
       console.log(res);
+      this.savedActivitiesArr.splice(i,1);
       this.alertService.showSuccessToast('Activity Deleted !');
     },
       (err) => console.log(err));

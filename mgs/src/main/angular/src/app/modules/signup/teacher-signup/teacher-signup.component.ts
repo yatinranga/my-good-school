@@ -65,12 +65,16 @@ export class TeacherSignupComponent implements OnInit {
   onSubmit(){
     // const payload =  this.teacherSignup.value;
     // console.log(this.teacherSignup);
+
+    const time = this.teacherSignup.value.dob + " 00:00:00";
+    this.teacherSignup.value.dob = time;
+    console.log(this.teacherSignup.value);
     
-    this.studentService.uploadTeacherDetails(this.teacherSignup.value).subscribe((res) => {
-      this.alertService.showSuccessToast('SignUp Successfully')
-      this.router.navigate(['./login'])
-    },
-    (err) => console.log(err) )
+  //   this.studentService.uploadTeacherDetails(this.teacherSignup.value).subscribe((res) => {
+  //     this.alertService.showSuccessToast('SignUp Successfully')
+  //     this.router.navigate(['./login'])
+  //   },
+  //   (err) => console.log(err) )
   }
 
 }
