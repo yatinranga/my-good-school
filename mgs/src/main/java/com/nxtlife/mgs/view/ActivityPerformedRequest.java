@@ -3,11 +3,15 @@ package com.nxtlife.mgs.view;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 import com.nxtlife.mgs.entity.activity.ActivityPerformed;
+import com.nxtlife.mgs.util.DateUtil;
 
 public class ActivityPerformedRequest {
 
-	private Date dateOfActivity;
+	private String dateOfActivity;
 
 	private String id;
 
@@ -15,16 +19,24 @@ public class ActivityPerformedRequest {
 
 	private String coachRemark;
 
-	private Date coachRemarkDate;
+	private String coachRemarkDate;
 
 	private Boolean active;
 
+	@Min(value = 0,message = "Minimum permissible value is 0.")
+	@Max(value = 10,message = "Maximum permissible value is 10.")
 	private Integer participationScore;
 
+	@Min(value = 0,message = "Minimum permissible value is 0.")
+	@Max(value = 10,message = "Maximum permissible value is 10.")
 	private Integer initiativeScore;
 
+	@Min(value = 0,message = "Minimum permissible value is 0.")
+	@Max(value = 5,message = "Maximum permissible value is 5.")
 	private Integer achievementScore;
 
+	@Min(value = 0,message = "Minimum permissible value is 0.")
+	@Max(value = 5,message = "Maximum permissible value is 5.")
 	private Integer star;
 
 //	private ActivityStatus activityStatus;
@@ -36,14 +48,6 @@ public class ActivityPerformedRequest {
 	private String coachId;
 
 	private String studentId;
-
-	public Date getDateOfActivity() {
-		return dateOfActivity;
-	}
-
-	public void setDateOfActivity(Date dateOfActivity) {
-		this.dateOfActivity = dateOfActivity;
-	}
 
 	public String getId() {
 		return id;
@@ -67,14 +71,6 @@ public class ActivityPerformedRequest {
 
 	public void setCoachRemark(String coachRemark) {
 		this.coachRemark = coachRemark;
-	}
-
-	public Date getCoachRemarkDate() {
-		return coachRemarkDate;
-	}
-
-	public void setCoachRemarkDate(Date coachRemarkDate) {
-		this.coachRemarkDate = coachRemarkDate;
 	}
 
 	public Boolean getActive() {
@@ -157,19 +153,43 @@ public class ActivityPerformedRequest {
 		this.studentId = studentId;
 	}
 
+	public String getDateOfActivity() {
+		return dateOfActivity;
+	}
+
+	public void setDateOfActivity(String dateOfActivity) {
+		this.dateOfActivity = dateOfActivity;
+	}
+
+	public String getCoachRemarkDate() {
+		return coachRemarkDate;
+	}
+
+	public void setCoachRemarkDate(String coachRemarkDate) {
+		this.coachRemarkDate = coachRemarkDate;
+	}
+
 	public ActivityPerformed toEntity(ActivityPerformed activityPerformed) {
 		activityPerformed = activityPerformed == null ? new ActivityPerformed() : activityPerformed;
-		activityPerformed.setCid(this.id);
-		activityPerformed.setDateOfActivity(this.dateOfActivity);
+		if (this.id != null)
+			activityPerformed.setCid(this.id);
+		if (this.dateOfActivity != null)
+			activityPerformed.setDateOfActivity(DateUtil.convertStringToDate(this.dateOfActivity));
 //		activityPerformed.setActivityStatus(this.activityStatus);
-		activityPerformed.setDescription(this.description);
-		activityPerformed.setCoachRemark(this.coachRemark);
-		activityPerformed.setCoachRemarkDate(this.coachRemarkDate);
-		activityPerformed.setActive(this.active);
-		activityPerformed.setInitiativeScore(this.initiativeScore);
-		activityPerformed.setParticipationScore(this.participationScore);
-		activityPerformed.setAchievementScore(this.achievementScore);
-		activityPerformed.setStar(this.star);
+		if (this.description != null)
+			activityPerformed.setDescription(this.description);
+		if (this.getCoachRemark() != null)
+			activityPerformed.setCoachRemark(this.coachRemark);
+//		activityPerformed.setCoachRemarkDate(DateUtil.convertStringToDate(this.coachRemarkDate));
+//		activityPerformed.setActive(this.active);
+		if (this.getInitiativeScore() != null)
+			activityPerformed.setInitiativeScore(this.initiativeScore);
+		if (this.getParticipationScore() != null)
+			activityPerformed.setParticipationScore(this.participationScore);
+		if (this.getAchievementScore() != null)
+			activityPerformed.setAchievementScore(this.achievementScore);
+		if (this.getStar() != null)
+			activityPerformed.setStar(this.star);
 
 		return activityPerformed;
 	}

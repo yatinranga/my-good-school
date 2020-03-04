@@ -27,6 +27,21 @@ export class TeacherService {
   getSavedActivity() {
     return this.http.get("api/coaches/activities");
   }
+  
+  // get AWARDS of school
+  getAwards(schoolId) {
+    return this.http.get("/api/award?schoolId=" + schoolId);
+  }
+
+  // get all activities in particular school
+  getActivity(schoolId) {
+    return this.http.get("/activitiesOffered/" + schoolId);
+  }
+
+  // get GRADES of school
+  getGrades(schoolId) {
+    return this.http.get("/api/grades?schoolId=" + schoolId)
+  }
 
   // SAVE Reviewed Activity
   saveReviewedActivity(formData) {
@@ -35,27 +50,13 @@ export class TeacherService {
 
   // SUBMIT Acitivity by Teacher
   submitActivity(activityPerformedId) {
-    return this.http.post("api/coach/" + activityPerformedId + "/submit", {});
-  }
-
-  // get AWARDS of school
-  getAwards(schoolId) {
-    return this.http.get("/api/award?schoolId=" + schoolId);
-  }
-
-  // get GRADES of school
-  getGrades(schoolId) {
-    return this.http.get("/api/grades?schoolId=" + schoolId)
+    console.log("service");
+    return this.http.post("/api/coach/" + activityPerformedId + "/submit", {});
   }
 
   // ADD new Award
   addAward(formData) {
     return this.http.post("/api/award", formData);
-  }
-
-  // get all activities in particular school
-  getActivity(schoolId) {
-    return this.http.get("/activitiesOffered/" + schoolId);
   }
 
   // get LIST of students who performed specific activity of particular grade

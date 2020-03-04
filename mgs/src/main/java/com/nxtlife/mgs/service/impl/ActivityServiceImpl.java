@@ -16,6 +16,9 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -388,8 +391,11 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 	}
 
 	@Override
-	public List<ActivityRequestResponse> getAllOfferedActivities() {
-		List<Activity> activities = activityRepository.findAllByActiveTrue();
+	public List<ActivityRequestResponse> getAllOfferedActivities(Integer pageNo, Integer pageSize) {
+
+		Pageable paging = new PageRequest(pageNo, pageSize);
+
+		Page<Activity> activities = activityRepository.findAllByActiveTrue(paging);
 		List<ActivityRequestResponse> activityResponses = new ArrayList<ActivityRequestResponse>();
 		if (activities == null)
 			throw new ValidationException("No activities found.");
@@ -401,10 +407,17 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 
 	@Override
 	public List<ActivityRequestResponse> getAllOfferedActivitiesBySchool(String schoolCid) {
-		List<Activity> activities = activityRepository.findAllBySchoolsCidAndActiveTrue(schoolCid);
+		List<Activity> activities;
+		if(schoolCid == null)
+			activities = activityRepository.findAllByActiveTrue();
+		else 
+			activities = activityRepository.findAllBySchoolsCidAndActiveTrue(schoolCid);
+		
+			
 		List<ActivityRequestResponse> activityResponses = new ArrayList<ActivityRequestResponse>();
-		if (activities == null)
-			throw new ValidationException("No activities found.");
+		
+		if(activities== null || activities.isEmpty())
+			throw new ValidationException("No general or school specific activities found.");
 		activities.forEach(activity -> {
 			activityResponses.add(new ActivityRequestResponse(activity));
 		});

@@ -13,7 +13,7 @@ import { TeacherAwardsComponent } from './teacher-awards/teacher-awards.componen
 
 const routes: Routes = [
   {
-    path: ':id',
+    path: '',
     component: TeacherComponent,
     children: [
       {

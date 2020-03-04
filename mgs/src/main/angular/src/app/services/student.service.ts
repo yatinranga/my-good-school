@@ -11,7 +11,7 @@ export class StudentService {
 
   // Single student signup
   uploadStudentDetails(data) {
-    const url = "/students/signUp"
+    const url = "/student/signUp"
     return this.http.post(url, data);
   }
   // Single teacher signup
@@ -38,6 +38,10 @@ export class StudentService {
   // to get the list of all schools
   getSchools(url) {
     return this.http.get(url);
+  }
+
+  getGradesOfSchool(schoolId){
+    return this.http.get("/grades?schoolId=" + schoolId);
   }
 
   // to get all activities in particular school
@@ -83,7 +87,7 @@ export class StudentService {
   // TO DELELTE saved activity by student
   deleteActivity(activityId) {
     console.log("Delete APi");
-    return this.http.delete("/api/student/activities/" + activityId);
+    return this.http.delete("/api/student/activity/" + activityId);
   }
 
 }

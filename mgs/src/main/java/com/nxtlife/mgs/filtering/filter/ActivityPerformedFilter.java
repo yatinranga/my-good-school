@@ -1,5 +1,8 @@
 package com.nxtlife.mgs.filtering.filter;
 
+import lombok.Data;
+
+@Data
 public class ActivityPerformedFilter {
 	private String year;
 	private String status;

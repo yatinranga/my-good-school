@@ -15,6 +15,7 @@ export class ProfileComponent implements OnInit {
   studentInfo: any;
   studentId: any;
   tabs = 'guardianOne';
+  dob = "";
 
   constructor(private formBuilder: FormBuilder, private studentService: StudentService) { }
 

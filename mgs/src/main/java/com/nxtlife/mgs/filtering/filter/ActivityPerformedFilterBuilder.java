@@ -1,9 +1,13 @@
 package com.nxtlife.mgs.filtering.filter;
 
+import org.springframework.stereotype.Component;
+
 import com.nxtlife.mgs.entity.activity.QActivityPerformed;
-import com.nxtlife.mgs.entity.school.QAwardActivityPerformed;
 import com.querydsl.core.types.Predicate;
 
+
+
+@Component
 public class ActivityPerformedFilterBuilder implements FilterBuilder<ActivityPerformedFilter>{
 
 private final QActivityPerformed ActivityPerformed = QActivityPerformed.activityPerformed;
@@ -19,6 +23,5 @@ private final QActivityPerformed ActivityPerformed = QActivityPerformed.activity
 				.notEmptyAnd(ActivityPerformed.activity.focusAreas.any().psdArea.stringValue()::containsIgnoreCase, filter.getPsdArea())
 				.notEmptyAnd(ActivityPerformed.dateOfActivity.year().stringValue()::containsIgnoreCase, filter.getYear())
 				.build();
-//		return null;
 	}
 }

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.user.Teacher;
+import com.nxtlife.mgs.util.DateUtil;
 
 @JsonInclude(value = Include.NON_ABSENT)
 public class TeacherResponse {
@@ -178,7 +179,8 @@ public class TeacherResponse {
 		this.gender = teacher.getGender();
 		this.mobileNumber = teacher.getMobileNumber();
 		this.email = teacher.getEmail();
-		this.dob = teacher.getDob().toString();
+		if(teacher.getDob()!=null)
+		   this.dob = DateUtil.formatDate(teacher.getDob());
 		this.qualification = teacher.getQualification();
 		this.active = teacher.getActive();
 		this.isManagmentMember = teacher.getIsManagmentMember();
@@ -221,7 +223,8 @@ public class TeacherResponse {
 		this.gender = teacher.getGender();
 		this.mobileNumber = teacher.getMobileNumber();
 		this.email = teacher.getEmail();
-		this.dob = teacher.getDob().toString();
+		if(teacher.getDob()!=null)
+			   this.dob = DateUtil.formatDate(teacher.getDob());
 		this.qualification = teacher.getQualification();
 		this.active = teacher.getActive();
 		if (teacher.getSchool() != null) {

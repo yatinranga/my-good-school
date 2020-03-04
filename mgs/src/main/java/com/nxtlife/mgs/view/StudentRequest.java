@@ -52,9 +52,9 @@ public class StudentRequest {
 
 	private Boolean active;
 
-	@NotEmpty(message="grade id can't be null or empty")
+	@NotEmpty(message = "grade id can't be null or empty")
 	private String gradeId;
-	
+
 //	private String fathersName;
 //
 //	private String fathersEmail;
@@ -106,7 +106,6 @@ public class StudentRequest {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-
 
 	public String getDob() {
 		return dob;
@@ -208,13 +207,14 @@ public class StudentRequest {
 			student.setGender(this.gender);
 		if (this.dob != null)
 			student.setDob(DateUtil.convertStringToDate(this.dob));
+		// student.setDob(DateUtil.getDate(this.dob));
 		if (this.mobileNumber != null)
 			student.setMobileNumber(this.mobileNumber);
 		if (this.subscriptionEndDate != null)
 			student.setSubscriptionEndDate(this.subscriptionEndDate);
 		if (this.sessionStartDate != null)
 			student.setSessionStartDate(this.sessionStartDate);
-		
+
 		return student;
 	}
 

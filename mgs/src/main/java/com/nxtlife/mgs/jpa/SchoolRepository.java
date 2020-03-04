@@ -29,6 +29,8 @@ public interface SchoolRepository extends JpaRepository<School, Long> {
 	List<School> findAllByActiveTrue();
 
 	Boolean existsByCidAndActiveTrue(String schoolId);
+
+	School getOneByCid(String schoolRequest);
 	
 	
 }

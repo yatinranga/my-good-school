@@ -562,7 +562,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		Page<Teacher> teachers;
 		List<TeacherResponse> teacherResponses = new ArrayList<>();
 
-		teachers = teacherRepository.findAll(paging);
+		teachers = teacherRepository.findAllByActiveTrue(paging);
 
 		if (!teachers.hasContent())
 			throw new ValidationException("No teachers found.");

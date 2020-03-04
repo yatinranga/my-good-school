@@ -13,6 +13,6 @@ import com.nxtlife.mgs.view.MailRequest;
 public interface NotificationService {
 
 	void sendEmail(MailRequest request)
-			throws AddressException, MessagingException, IOException, GeneralSecurityException;
+			throws IOException, GeneralSecurityException, AddressException, MessagingException;
 
 }

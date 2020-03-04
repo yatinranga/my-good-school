@@ -10,7 +10,7 @@ import com.nxtlife.mgs.view.SuccessResponse;
 
 public interface ActivityService {
 
-	List<ActivityRequestResponse> getAllOfferedActivities();
+	List<ActivityRequestResponse> getAllOfferedActivities(Integer pageNo, Integer pageSize);
 
 	List<ActivityRequestResponse> getAllOfferedActivitiesBySchool(String schoolCid);
 

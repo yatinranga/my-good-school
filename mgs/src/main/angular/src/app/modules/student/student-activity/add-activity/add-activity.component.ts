@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { StudentService } from 'src/app/services/student.service';
 import { AlertService } from 'src/app/services/alert.service';
@@ -18,7 +18,7 @@ export class AddActivityComponent implements OnInit {
   addActivityForm: FormGroup;
   file = [];
   schoolId = "";
-
+  @Output() isClosed = new EventEmitter<boolean>();
   constructor(private formBuilder: FormBuilder, private studentService: StudentService,
     private alertService: AlertService, private router: Router) { }
 
@@ -65,7 +65,7 @@ export class AddActivityComponent implements OnInit {
   saveActivity() {
     const formData = new FormData();
     let date = new Date(this.addActivityForm.value.dateOfActivity);
-    let activityDate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+    let activityDate = date.getFullYear() + "-" + (date.getMonth()) + "-" + date.getDate();
 
     formData.append('studentId', this.studentInfo.student.id);
     formData.append('activityId', this.addActivityForm.value.activityId);
@@ -81,13 +81,17 @@ export class AddActivityComponent implements OnInit {
 
     console.log(this.addActivityForm.value);
 
-    this.studentService.addActivity("/api/students/activities", formData).subscribe(
+    this.studentService.addActivity("/api/student/activities", formData).subscribe(
       (res) => {
         console.log(res);
         this.alertService.showSuccessToast('Activity Saved !');
       },
       (err) => console.log(err)
     );
+  }
+
+  closeModel(value: boolean) {
+    this.isClosed.emit(value);
   }
 
 }

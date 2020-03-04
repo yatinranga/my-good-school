@@ -18,7 +18,7 @@ import com.nxtlife.mgs.view.GradeRequest;
 import com.nxtlife.mgs.view.GradeResponse;
 
 @RestController
-@RequestMapping("/api/grades")
+@RequestMapping("/")
 public class GradeController {
 
 	@Autowired
@@ -29,13 +29,13 @@ public class GradeController {
 //		return gradeService.uploadGradesFromExcel(file);
 //	}
 
-	@PostMapping()
+	@PostMapping("grades")
 	public GradeResponse saveGrade(@RequestBody GradeRequest gradeRequest) {
 		return gradeService.save(gradeRequest);
 	}
-	
-	@GetMapping()
-	public List<GradeResponse> getAllGradesOfSchool(@RequestParam("schoolId") String schoolCid){
+
+	@GetMapping("grades")
+	public List<GradeResponse> getAllGradesOfSchool(@RequestParam("schoolId") String schoolCid) {
 		return gradeService.getAllGradesOfSchool(schoolCid);
 	}
 }

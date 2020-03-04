@@ -14,12 +14,10 @@ public class UserRequest {
 	public String type;
 	public String email;
 	public String contactNumber;
-	
+
 	public StudentRequest student;
-	
+
 	public TeacherRequest teacher;
-	
-	
 
 	public String getUsername() {
 		return username;
@@ -70,23 +68,21 @@ public class UserRequest {
 	}
 
 	public User toEntity(User user) {
-	    user =user==null? new User():user;
-		user.setContactNo(contactNumber);
+		user = user == null ? new User() : user;
+		user.setMobileNo(contactNumber);
 		user.setEmail(email);
-		if(!UserType.matches(type)) {
+		if (!UserType.matches(type)) {
 			throw new ValidationException("Type not found");
 		}
-		if(type.equalsIgnoreCase(UserType.Student.name())) {
+		if (type.equalsIgnoreCase(UserType.Student.name())) {
 			user.setStudent(student.toEntity());
-		}
-		else if(type.equalsIgnoreCase(UserType.Teacher.name())) {
+		} else if (type.equalsIgnoreCase(UserType.Teacher.name())) {
 			user.setTeacher(teacher.toEntity());
 		}
-		
-		
+
 		return user;
 	}
-	
+
 	public User toEntity() {
 		return toEntity(null);
 	}

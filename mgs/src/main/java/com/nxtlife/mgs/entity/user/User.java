@@ -1,6 +1,5 @@
 package com.nxtlife.mgs.entity.user;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 
 import javax.persistence.CascadeType;
@@ -21,7 +20,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Email;
 import org.joda.time.DateTime;
-import org.springframework.data.jpa.domain.AbstractAuditable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -48,7 +46,7 @@ public class User extends BaseEntity implements UserDetails {
 	@Column(unique = true)
 	@Size(min = 10, max = 10)
 //	@Pattern(regexp = "^[6-9]{1}[0-9]]{9}$")
-	private String contactNo;
+	private String mobileNo;
 
 //	@Email
 	@Column(unique = true)
@@ -115,12 +113,12 @@ public class User extends BaseEntity implements UserDetails {
 		this.userName = userName;
 	}
 
-	public String getContactNo() {
-		return contactNo;
+	public String getMobileNo() {
+		return mobileNo;
 	}
 
-	public void setContactNo(String contactNo) {
-		this.contactNo = contactNo;
+	public void setMobileNo(String mobileNo) {
+		this.mobileNo = mobileNo;
 	}
 
 	public String getEmail() {
@@ -283,13 +281,13 @@ public class User extends BaseEntity implements UserDetails {
 	}
 
 	public User(String cid, String userName,
-			@Size(min = 10, max = 10) @Pattern(regexp = "^[6-9]{1}[0-9]]{9}$") String contactNo, @Email String email,
+			@Size(min = 10, max = 10) @Pattern(regexp = "^[6-9]{1}[0-9]]{9}$") String mobileNo, @Email String email,
 			String password, String picUrl, Boolean active, UserType userType, String imagePath,
 			Collection<Authority> authorities, Role roleForUser, Boolean isPaid, RegisterType registerType,
 			Student student, School school, Teacher teacher, LFIN lfin) {
 		this.cid = cid;
 		this.userName = userName;
-		this.contactNo = contactNo;
+		this.mobileNo = mobileNo;
 		this.email = email;
 		this.password = password;
 		this.picUrl = picUrl;

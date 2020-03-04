@@ -13,8 +13,8 @@ export class TeacherAwardsComponent implements OnInit {
 
   awardsList = [];
   schoolGrades = [];
-  studentList = ["Ram","John","Radhe"];
-  awardViewType : any;
+  studentList = ["Ram", "John", "Radhe"];
+  awardViewType: any;
   teacherInfo: any;
   schoolId = "";
   activities: any;
@@ -23,52 +23,54 @@ export class TeacherAwardsComponent implements OnInit {
   activityId = ""
   teacherId = "";
 
-  createAwardForm : FormGroup;
-  assignAwardForm : FormGroup;
+  createAwardForm: FormGroup;
+  assignAwardForm: FormGroup;
 
-  constructor(private teacherService : TeacherService, private formbuilder : FormBuilder, private alertService : AlertService) { }
+  constructor(private teacherService: TeacherService, private formbuilder: FormBuilder, private alertService: AlertService) { }
 
   ngOnInit() {
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
     this.schoolId = this.teacherInfo['teacher'].schoolId;
-    this.teacherId =  this.teacherInfo['teacher'].id;
+    this.teacherId = this.teacherInfo['teacher'].id;
+    console.log(this.teacherId);
     this.getSchoolAwards();
     this.getSchoolGrades();
     this.getStudentActivity();
 
     this.createAwardForm = this.formbuilder.group({
-      name : [''],
-      description : ['']
+      name: [''],
+      description: [''],
+      teacherId: ['']
     })
 
   }
 
   // initialize the Assign Award Form
-  assignAwardInit(){
+  assignAwardInit() {
     this.assignAwardForm = this.formbuilder.group({
-      id : [''],
-      teacherId : [''],
-      schoolId : [''],
-      gradeId : [''],
-      activityId : [''],
-      activityPerformedIds : ['']
+      id: [''],
+      teacherId: [''],
+      schoolId: [''],
+      gradeId: [''],
+      activityId: [''],
+      activityPerformedIds: ['']
     })
   }
 
   // get AWARDS of School
-  getSchoolAwards(){
+  getSchoolAwards() {
     this.teacherService.getAwards(this.schoolId).subscribe((res) => {
       this.awardsList = res;
     },
-    (err) => console.log(err));
+      (err) => console.log(err));
   }
 
   // get Grades of School
-  getSchoolGrades(){
+  getSchoolGrades() {
     this.teacherService.getGrades(this.schoolId).subscribe((res) => {
       this.schoolGrades = res;
     },
-    (err) => console.log(err));
+      (err) => console.log(err));
   }
 
   // get the Activities Offered in School
@@ -81,43 +83,36 @@ export class TeacherAwardsComponent implements OnInit {
   }
 
   //  get LIST of students who performed specific activity of particular grade
-  getListOfStudent(){
-    this.teacherService.getStudents(this.schoolId,this.gradeId,this.activityId,this.teacherId).subscribe((res) => {
+  getListOfStudent() {
+    this.teacherService.getStudents(this.schoolId, this.gradeId, this.activityId, this.teacherId).subscribe((res) => {
       this.studentList = res
     },
-    (err) => console.log(err));
+      (err) => console.log(err));
   }
-  
-  assignAward(){
-    
+
+  assignAward() {
+
   }
 
   // create NEW Award
-  createNewAward(){
-    console.log(this.createAwardForm.value);
-    const formData = new FormData();  // Delete formData as JSON is required
-    formData.append('name',this.createAwardForm.value.name);
-    formData.append('description',this.createAwardForm.value.description);
-    formData.append('teacherId',this.schoolId);
-
+  createNewAward() {
     this.teacherService.addAward(this.createAwardForm.value).subscribe((res) => {
       console.log(res);
       this.alertService.showSuccessToast('Award Created !');
     },
-    (err) => console.log(err));
+      (err) => console.log(err));
   }
 
-  getActivityId(event){
+  getActivityId(event) {
     this.activityId = event;
     this.getListOfStudent();
   }
 
-  getGradeId(event){
+  getGradeId(event) {
     this.gradeId = event;
   }
 
-  awardView(type)
-  {
+  awardView(type) {
     this.awardViewType = type;
   }
 
