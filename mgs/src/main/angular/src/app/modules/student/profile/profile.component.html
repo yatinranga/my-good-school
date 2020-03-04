@@ -3,17 +3,18 @@
         <div class="content_main_com">
             <div class="profile_main">
                 <div class="student profile_card">
-                    <h2> Student Profile </h2>
-                    <div class="student_image">
-                        <img src="assets/images/student.jpg">
-                    </div>
-                    <div class="student content">
-                        <p> <label> {{studentDetails['name']}}</label> </p>
-                        <p> <label> {{studentDetails['gender']}}</label> </p>
-                        <p> <label> {{studentDetails['email']}}</label> </p>
-                        <p> <label> {{studentDetails['mobileNumber']}}</label> </p>
-                        <p> <label> {{studentDetails['dob']}}</label> </p>
-                    </div>
+                        <h2> Student Profile </h2>
+                        <div class="student_image">
+                            <img src="assets/images/student.jpg">
+                            <p> <label> {{studentDetails['name']}}</label> </p>
+                        </div>
+                        <div class="student content">
+                            <h3> Basic Info </h3>
+                            <p> <label> Gender : {{studentDetails['gender']}}</label> </p>
+                            <p> <label> Email : {{studentDetails['email']}}</label> </p>
+                            <p> <label> Date of Birth : {{studentDetails['dob'] | date}} </label> </p>
+                            <p> <label> Mobile Number : {{studentDetails['mobileNumber']}}</label> </p>
+                        </div>
                 </div>
                 <div class="guardian profile_card">
                     <div *ngFor="let sd of studentDetails['guardianResponseList']; let i = index ">
@@ -21,28 +22,23 @@
                             <ul>
                                 <li> <a (click)="switchTabs('guardianOne')"> Guardian One </a>
                                 <li> <a (click)="switchTabs('guardianTwo')"> Guardian Two </a>
-                                <li> <a (click)="switchTabs('addGuardian')"> Add Guardian </a>
                             </ul>
                         </div>
                         <div class="guardian content">
                             <div [ngSwitch]="tabs">
                                 <div *ngSwitchCase="'guardianOne'">
                                     <h2> Guardian 1 Profile </h2>
-                                    <p> <label> Name: {{sd['name']}}</label> </p>
-                                    <p> <label> Email: {{sd['email']}}</label> </p>
-                                    <p> <label> Mobile Number: {{sd['mobileNumber']}}</label> </p>
-                                    <p> <label> Relationship: {{sd['relationship']}}</label> </p>
+                                    <p> <label> Name : {{sd['name']}}</label> </p>
+                                    <p> <label> Email : {{sd['email']}}</label> </p>
+                                    <p> <label> Mobile Number : {{sd['mobileNumber']}}</label> </p>
+                                    <p> <label> Relationship : {{sd['relationship']}}</label> </p>
                                 </div>
                                 <div *ngSwitchCase="'guardianTwo'">
                                     <h2> Guardian 2 Profile </h2>
-                                    <p> <label> Name: {{sd['name']}}</label> </p>
-                                    <p> <label> Email: {{sd['email']}}</label> </p>
-                                    <p> <label> Mobile Number: {{sd['mobileNumber']}}</label> </p>
-                                    <p> <label> Relationship: {{sd['relationship']}}</label> </p>
-                                </div>
-                                <div *ngSwitchCase="'addGuardian'">
-                                        <h2> Guardian 3 Profile </h2>
-                                        <p> Add Guardian (Insert form) </p>
+                                    <p> <label> Name : {{sd['name']}}</label> </p>
+                                    <p> <label> Email : {{sd['email']}}</label> </p>
+                                    <p> <label> Mobile Number : {{sd['mobileNumber']}}</label> </p>
+                                    <p> <label> Relationship : {{sd['relationship']}}</label> </p>
                                 </div>
                             </div>
                         </div>

@@ -253,8 +253,8 @@ app-home{
 }
 .content_main_com h1{
     font-size: 40px;
-    text-align: center;
-    margin-top: 20px;
+    text-align: left;
+    margin: 30px 0;
     color: $black;
 }
 .content_main_com h2{
@@ -272,6 +272,7 @@ app-home{
 .content_main_com h3{
     font-size: 22px;
     color: $black;
+    margin: 0;
 }
 .menu_main{
     width: 50%;
@@ -284,8 +285,8 @@ app-home{
 .menu_content {
     width: 100%;
     display: inline-block;
-    padding: 10px;
-    margin: 10px 0;
+    padding: 5px;
+    margin: 0;
 }
 .title p{
     text-align: center;
@@ -434,7 +435,7 @@ li.cb.active{
     text-align: center;
     box-shadow: 0 0 10px #333;
     padding: 10px 20px;
-    height: 100vh;
+    height: 100%;
 }
 .student.profile_card {
     width: 33%;
@@ -446,26 +447,38 @@ li.cb.active{
     margin: 15px 0;
     color: $black;
 }
-.student_image{
-    width: 100%;
+
+.student_image {
+    width: 60%;
     text-align: center;
+    margin: 0 auto;
+    border-bottom: 1px solid;
 }
 .student_image img {
-    width: 230px;
-    height: 230px;
+    width: 200px;
+    height: 200px;
     border-radius: 50%;
+    opacity: 0.9;
+}
+.student_image p {
+    font-size: 21px;
+    color: $black;
+    margin: 0;
 }
 .student.content{
     width: 100%;
     display: inline-block;
+    text-align: left;
+    padding: 0 40px;
+    margin: 40px auto;
 }
 .content p {
     margin: 10px 0;
     font-size: 18px;
     color: #ddd;
 }
-.student.content p {
-    text-align: center !important;
+.guardian.content p {
+    text-align: left;
 }
 .guardian.profile_card {
     width: 65%;
