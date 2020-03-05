@@ -176,7 +176,8 @@ public class StudentResponse {
 			this.name = student.getName();
 			this.username = student.getUsername();
 			this.email = student.getEmail();
-			this.dob = student.getDob().toString();
+			if(student.getDob()!=null)
+			   this.dob = DateUtil.formatDate(student.getDob());
 			this.gender = student.getGender();
 			this.mobileNumber = student.getMobileNumber();
 			this.active = student.getActive();

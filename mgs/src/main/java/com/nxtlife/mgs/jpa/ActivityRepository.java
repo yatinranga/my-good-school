@@ -55,4 +55,6 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
 
 	Activity getOneByCid(String activity);
 
+	List<Activity> findAllByIsGeneralTrueAndActiveTrue();
+
 }

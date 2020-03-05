@@ -374,6 +374,15 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 			}
 		}
 		activityList = activityRepository.save(activityList);
+		
+		activityList = activityRepository.findAllByIsGeneralTrueAndActiveTrue();
+		List<School> schoolList = schoolRepository.findAllByActiveTrue();
+		
+		activityList.forEach(act-> {act.getSchools().addAll(schoolList);});
+		final List<Activity> activities = activityList;
+		schoolList.forEach(sch -> { sch.setActivities(activities);});
+		 activityRepository.save(activities);
+		
 	}
 
 	private Activity activityFocusAreaMappingUtility(Activity act, List<String> fAs, List<FocusArea> focusAreaList) {
