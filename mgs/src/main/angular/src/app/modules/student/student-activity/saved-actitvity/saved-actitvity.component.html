@@ -56,32 +56,48 @@
                         <tr>
                             <td class="collapse-td" colspan="6">
                                 <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <div class="description">
-                                                <p><strong>Name : </strong>{{allActi.activityName}}</p>
-                                                <p><strong>Description : </strong>{{allActi.description}}</p>
-                                                <p><strong>Teacher : </strong>{{allActi.coachName}}</p>
-                                                <p><strong>Focus Area : </strong>{{allActi.focusAreas}}</p>
-                                                <p><strong>PSD Area : </strong>{{allActi.psdAreas}}</p>
+                                    <div *ngIf=" (allActi.activityStatus === 'SavedByStudent') || (allActi.activityStatus === 'SubmittedByStudent')">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="description">
+                                                    <p><strong>Name : </strong>{{allActi.activityName}}</p>
+                                                    <p><strong>Description : </strong>{{allActi.description}}</p>
+                                                    <p><strong>Teacher : </strong>{{allActi.coachName}}</p>
+                                                    <p><strong>Focus Area : </strong>{{allActi.focusAreas}}</p>
+                                                    <p><strong>PSD Area : </strong>{{allActi.psdAreas}}</p>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-6">
-                                            <div class="attachment">
+                                            <div class="col-6">
+                                                <div class="attachment">
 
-                                                <p><strong>Attachments : </strong></p>
-                                                <div *ngFor="let file of allActi.fileResponses">
-                                                    <div class="audio" *ngIf="file.extension == 'mp3'"> <i
-                                                            class="fa fa-file-audio"></i> {{file.name}} </div>
-                                                    <div class="image" *ngIf="file.extension=='jpg'"> <i
-                                                            class="fa fa-image"></i> {{file.name}} </div>
-                                                    <div class="video" *ngIf="file.extension=='video'"> <i
-                                                            class="fa fa-video-camera"
-                                                            aria-hidden="true"></i>{{file.name}} </div>
-
+                                                    <p><strong>Attachments : </strong></p>
+                                                    <div *ngFor="let file of allActi.fileResponses">
+                                                        <div class="audio" *ngIf="file.extension == 'mp3'"> <i
+                                                                class="fa fa-file-audio"></i> {{file.name}} </div>
+                                                        <div class="image" *ngIf="file.extension=='jpg'"> <i
+                                                                class="fa fa-image"></i> {{file.name}} </div>
+                                                        <div class="video" *ngIf="file.extension=='video'"> <i
+                                                                class="fa fa-video-camera"
+                                                                aria-hidden="true"></i>{{file.name}} </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+
+                                    <div *ngIf=" allActi.activityStatus === 'Reviewed'" >
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <p><strong>Participation Score :</strong>{{allActi.participationScore}}</p>
+                                                <p><strong>Initiative Score :</strong>{{allActi.initiativeScore}}</p>
+                                                <p><strong>Achievement Score :</strong>{{allActi.achievementScore}}</p>
+                                            </div>
+                                            <div class="col-6">
+                                                <p><strong>Star : </strong>{{allActi.star}}</p>
+                                                <p><strong>Remark :</strong>{{allActi.coachRemark}}</p>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                             </td>
@@ -209,7 +225,16 @@
                                         <div class="col-6">
                                             <div>
                                                 <p><strong>Attachments : </strong></p>
-                                                <p *ngFor="let file of sa.fileResponses">{{file.name}}</p>
+                                                <div *ngFor="let file of sa.fileResponses">
+                                                    <div class="audio" *ngIf="file.extension == 'mp3'"> <i
+                                                            class="fa fa-file-audio"></i> {{file.name}} </div>
+                                                    <div class="image" *ngIf="file.extension=='jpg'"> <i
+                                                            class="fa fa-image"></i> {{file.name}} </div>
+                                                    <div class="video" *ngIf="file.extension=='video'"> <i
+                                                            class="fa fa-video-camera"
+                                                            aria-hidden="true"></i>{{file.name}} </div>
+
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

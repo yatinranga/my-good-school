@@ -29,7 +29,7 @@ export class SavedActitvityComponent implements OnInit {
   activityDate: any;
   file = [];
   url = '';
-  activityType = 'All';
+  activityType = 'Submitted';
 
   constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService) { }
 
@@ -42,12 +42,13 @@ export class SavedActitvityComponent implements OnInit {
 
     // this.getStudentSavedActivities(this.studentInfo['student'].id)
 
-    this.getStudentSavedActivities(this.studentId);
-    this.getStudentSubmittedActivities(this.studentId);
-    this.getStudentAllActivities(this.studentId);
-    this.getStudentReviewedActivities(this.studentId);
+    // this.getStudentSavedActivities(this.studentId);
+    // this.getStudentSubmittedActivities(this.studentId);
+    // this.getStudentAllActivities(this.studentId);
+    // this.getStudentReviewedActivities(this.studentId);
 
     // this.getStudentActivity(this.schoolId);
+    this.activityView(this.activityType);
 
     this.savedActivityForm = this.formBuilder.group({
       savedActivityName: [''],
@@ -191,6 +192,7 @@ export class SavedActitvityComponent implements OnInit {
     }
   }
 
+
   // to UPDATE the saved activity
   updateActivity() {
     const formData = new FormData();
@@ -221,6 +223,19 @@ export class SavedActitvityComponent implements OnInit {
 
   activityView(event) {
     this.activityType = event;
+    switch (this.activityType) {
+      case "All": this.getStudentAllActivities(this.studentId);  
+        break;
+
+      case "Saved" : this.getStudentSavedActivities(this.studentId);
+      break;
+
+      case "Reviewed" : this.getStudentReviewedActivities(this.studentId);
+      break;
+      
+      case "Submitted" : this.getStudentSubmittedActivities(this.studentId);
+      break;
+    }
   }
 
   getDate(date) {

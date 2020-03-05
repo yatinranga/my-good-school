@@ -1,12 +1,12 @@
 
-<h3> Data Upload Form For Teachers</h3>
+<h3> Data Upload Form For Schools</h3>
 <div class="card bg-light">
   <div class="card-body text-center">
-    <form [formGroup]="teacherBulkForm" (ngSubmit)="uploadTeacher()">
+    <form [formGroup]="schoolBulkForm" (ngSubmit)="uploadSchool()">
       Select School : <div class="input-field">
         <select>
-          <option value="" disabled selected>Select School </option>
-          <option *ngFor="let school of schools; let i = index;" value={{school.id}}>{{school.name}}</option>
+          <!-- <option value="" disabled selected>Select School </option>
+          <option *ngFor="let school of schools; let i = index;" value={{school.id}}>{{school.name}}</option> -->
         </select>
       </div>
       <div class="input-field">
@@ -19,7 +19,7 @@
 
     <div>
 
-      <button class="download btn" type="button" name="" (click)="downloadTeacher()">Download Teacher Template</button>
+      <button class="download btn" type="button" name="" (click)="downloadSchool()">Download School Template</button>
       <a style="display: none;" download #dwnld></a>
     </div>
   </div>
