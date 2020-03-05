@@ -31,25 +31,25 @@ public class SchoolController {
 
 	@Autowired
 	SchoolService schoolService;
-	
+
 	@Autowired
 	private ActivityService activityService;
-	
+
 	@Autowired
 	private UserService userService;
-	
-	@PostMapping(consumes = {"multipart/form-data"},value = "api/schools")
+
+	@PostMapping(consumes = { "multipart/form-data" }, value = "api/school")
 	public SchoolResponse save(@ModelAttribute SchoolRequest schoolRequest) {
 		return schoolService.save(schoolRequest);
 	}
-	
-	@GetMapping(value="api/schools/{id}")
+
+	@GetMapping(value = "api/schools/{id}")
 	public SchoolResponse getByCid(@PathVariable("id") String cid) {
 		return schoolService.findByCid(cid);
 	}
-	
+
 	@GetMapping("schools")
-	public List<SchoolResponse> getAll(){
+	public List<SchoolResponse> getAll() {
 //		MailRequest request = new MailRequest("Test email", "testing email sending api", null, "laxmi.ssj4@gmail.com", "vtsefkon@gmail.com");
 //		userService.sendLoginCredentials(request);
 //		Mail mail = new Mail();
@@ -61,10 +61,10 @@ public class SchoolController {
 
 		return schoolService.getAllSchools();
 	}
-	
+
 	@DeleteMapping(value = "api/schools/{id}")
 	public SuccessResponse delete(@PathVariable("id") String cid) {
 		return schoolService.delete(cid);
 	}
-	
+
 }

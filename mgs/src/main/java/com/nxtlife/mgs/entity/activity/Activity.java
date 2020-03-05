@@ -42,6 +42,8 @@ public class Activity extends BaseEntity {
 
 	private Boolean active;
 
+	private Boolean isGeneral;
+
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "activity_focus_area", joinColumns = { @JoinColumn(name = "activity_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "focus_area_id") })
@@ -119,6 +121,14 @@ public class Activity extends BaseEntity {
 
 	public void setSchools(List<School> schools) {
 		this.schools = schools;
+	}
+
+	public Boolean getIsGeneral() {
+		return isGeneral;
+	}
+
+	public void setIsGeneral(Boolean isGeneral) {
+		this.isGeneral = isGeneral;
 	}
 
 	public Activity(@NotNull String name, FourS fourS, @NotNull String cid, String description, Boolean active,
