@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { AdminService } from 'src/app/services/admin.service';
 import { StudentService } from 'src/app/services/student.service';
 import { AlertService } from 'src/app/services/alert.service';
@@ -34,12 +34,16 @@ export class TeacherSignupComponent implements OnInit {
       mobileNumber: [('')],
       qualification: [('')],
       gender: [('')],
-      activitiyIds: [('')],
+      activityIds: [('')],
       gradeIds: [('')],
       schoolId: [('')],
       isCoach: [('False')],
       isClassTeacher: [('True')],      
     })
+  }
+
+  get activitiyIds() {
+    return this.teacherSignup.get('activitiyIds') as FormArray 
   }
 
   getSchoolActivities(selectedSchoolId){
@@ -70,11 +74,11 @@ export class TeacherSignupComponent implements OnInit {
     this.teacherSignup.value.dob = time;
     console.log(this.teacherSignup.value);
     
-  //   this.studentService.uploadTeacherDetails(this.teacherSignup.value).subscribe((res) => {
-  //     this.alertService.showSuccessToast('SignUp Successfully')
-  //     this.router.navigate(['./login'])
-  //   },
-  //   (err) => console.log(err) )
+    this.studentService.uploadTeacherDetails(this.teacherSignup.value).subscribe((res) => {
+      this.alertService.showSuccessToast('SignUp Successfully')
+      this.router.navigate(['./login'])
+    },
+    (err) => console.log(err) );
   }
 
 }

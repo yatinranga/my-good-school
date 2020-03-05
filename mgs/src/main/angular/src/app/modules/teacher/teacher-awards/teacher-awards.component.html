@@ -20,21 +20,22 @@
 <div *ngIf="awardViewType === 'assign'" class="popup-form">
     <form [formGroup]="assignAwardForm" (ngSubmit)="assignAward()">
         <div>List of Awards :
-            <select>
+            <select formControlName="id">
                 <option value="" disabled selected>Select Award </option>
                 <option *ngFor="let award of awardsList" value={{award.id}}>{{award.name}}
                 </option>
             </select>
         </div>
         <div>Grades :
-            <select (ngModelChange)="getGradeId($event)">
+            <select (ngModelChange)="getGradeId($event)" formControlName="gradeId">
                 <option value="" disabled selected>Select Grades </option>
-                <option *ngFor="let grade of schoolGrades" value={{grade.id}}>{{grade.name}}
+                <option *ngFor="let grade of schoolGrades" value={{grade.id}}>
+                    {{grade.grade}} {{grade.section}}
                 </option>
             </select>
         </div>
         <div>Activity :
-            <select (ngModelChange)="getActivityId($event)">
+            <select (ngModelChange)="getActivityId($event)" formControlName="activityId">
                 <option value="" disabled selected>Select Activity </option>
                 <option *ngFor="let activity of activities; let i = index;" value={{activity.id}}>
                     {{activity.name}}
@@ -42,9 +43,13 @@
             </select>
         </div>
         <div>Students :
-            <div *ngFor="let stu of studentList">
+            <!-- <div *ngFor="let stu of studentList">
                 <input type="checkbox" value={{stu}}>{{stu}}
-            </div>
+            </div> -->
+            <select class="mdb-select md-form" formControlName="activityPerformedIds" multiple>
+                <option value="" disabled selected>Select Student</option>
+                <option *ngFor="let stu of studentList" value={{stu.id}}>{{stu.name}}</option>
+              </select>
         </div>
         <button type="submit" class="assign-button">Assign</button>
     </form>
