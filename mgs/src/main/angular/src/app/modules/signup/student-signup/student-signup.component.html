@@ -8,19 +8,19 @@
             <div class="form-content">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="form-group">Enter Name :
+                        <div class="form-group">Enter Name :*
                             <input type="text" class="form-control" placeholder="Your Name" formControlName="name" />
                             <small class="text-danger" *ngIf="!studentSignup.get('name').valid && studentSignup.get('name').touched">
                                 Name Required
                             </small>
                         </div>
-                        <div class="form-group">Enter DOB :
+                        <div class="form-group">Enter DOB :*
                             <input type="date" class="form-control" placeholder="Date of Birth" formControlName="dob" />
                             <small class="text-danger" *ngIf="!studentSignup.get('dob').valid && studentSignup.get('dob').touched">
                                 DOB Required
                             </small>
                         </div>
-                        <div class="form-group">Enter Email :
+                        <div class="form-group">Enter Email :*
                             <input type="email" class="form-control" placeholder="Your Email" formControlName="email" />
                             <small class="text-danger" *ngIf="!studentSignup.get('email').valid && studentSignup.get('email').touched">
                                 Email Required
@@ -29,10 +29,12 @@
                         <div class="form-group">Enter Mobile no. :
                             <input type="number" class="form-control" placeholder="Your Mobile Number"
                                 formControlName="mobileNumber" />
+                                <small class="text-danger" *ngIf="!studentSignup.get('mobileNumber').valid">Mobile Number can only be 10 digits</small>
+                                
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="form-group">Select Gender :
+                        <div class="form-group">Select Gender :*
                             <select class="form-control" placeholder="Select one" formControlName="gender">
                                 <option value="" selected>Choose your option</option>
                                 <option value="Male">Male</option>
@@ -42,7 +44,7 @@
                                 Gender Required
                             </small>
                         </div>
-                        <div class="form-group">Select School :
+                        <div class="form-group">Select School :*
                             <select class="form-control" formControlName="schoolId" (ngModelChange)="getGrades($event)">
                                 <option value="" disabled selected>Select School </option>
                                 <option *ngFor="let school of schoolsList; let i = index;" value={{school.id}}>
@@ -52,7 +54,7 @@
                                 School Required
                             </small>
                         </div>
-                        <div class="form-group">Select Grade :
+                        <div class="form-group">Select Grade :*
                             <select class="form-control" formControlName="gradeId">
                                 <option value="" selected>Select Grade</option>
                                 <option *ngFor="let grade of gradesList; let i = index;" value={{grade.id}}>
@@ -94,6 +96,7 @@
                             <div class="form-group">Enter Mobile no. :
                                 <input type="number" class="form-control" placeholder="Your Mobile Number"
                                     formControlName="mobileNumber" />
+                                    
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -122,7 +125,7 @@
                     <button type="button" class="btnSubmit" (click)="addGuardian()">Add Guardian</button>
                 </div>
             </div>
-            <button class="btn btnSubmit btn-success" type="submit">Submit</button>
+            <button class="btn btnSubmit btn-success" type="submit" [disabled]="studentSignup.invalid">Submit</button>
         </div>
     </div>
 </form>

@@ -13,18 +13,18 @@ export class TeacherAwardsComponent implements OnInit {
 
   awardsList = [];
   schoolGrades = [];
-  studentList = ["Ram", "John", "Radhe"];
+  studentList = [];
   awardViewType: any;
   teacherInfo: any;
   schoolId = "";
-  activities: any;
+  activities = [];
 
   gradeId = "";
   activityId = ""
   teacherId = "";
 
   createAwardForm: FormGroup;
-  assignAwardForm: FormGroup;
+    assignAwardForm: FormGroup;
 
   constructor(private teacherService: TeacherService, private formbuilder: FormBuilder, private alertService: AlertService) { }
 
@@ -32,6 +32,8 @@ export class TeacherAwardsComponent implements OnInit {
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
     this.schoolId = this.teacherInfo['teacher'].schoolId;
     this.teacherId = this.teacherInfo['teacher'].id;
+
+    this.assignAwardInit();
 
     this.getSchoolAwards();
     this.getSchoolGrades();
@@ -68,6 +70,8 @@ export class TeacherAwardsComponent implements OnInit {
   // get Grades of School
   getSchoolGrades() {
     this.teacherService.getGrades(this.schoolId).subscribe((res) => {
+      console.log("grades");
+      console.log(res);
       this.schoolGrades = res;
     },
       (err) => console.log(err));
@@ -76,6 +80,8 @@ export class TeacherAwardsComponent implements OnInit {
   // get the Activities Offered in School
   getStudentActivity() {
     this.teacherService.getActivity(this.schoolId).subscribe((res) => {
+      console.log("activities");
+      console.log(res);
       this.activities = res;
     },
       (err) => console.log(err)
@@ -85,12 +91,15 @@ export class TeacherAwardsComponent implements OnInit {
   //  get LIST of students who performed specific activity of particular grade
   getListOfStudent() {
     this.teacherService.getStudents(this.schoolId, this.gradeId, this.activityId, this.teacherId).subscribe((res) => {
+      console.log(res);
+      
       this.studentList = res
     },
       (err) => console.log(err));
   }
 
   assignAward() {
+    console.log(this.assignAwardForm.value);
 
   }
 

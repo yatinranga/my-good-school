@@ -29,7 +29,7 @@ export class StudentSignupComponent implements OnInit {
       name: new FormControl('',[Validators.required]),
       dob: new FormControl('',[Validators.required]),
       email: new FormControl('',[Validators.required,Validators.email]),
-      mobileNumber: new FormControl(''),
+      mobileNumber: new FormControl('',[Validators.min(10)]),
       gender: new FormControl('',[Validators.required]),
       schoolId: new FormControl('',[Validators.required]),
       gradeId : new FormControl('',[Validators.required]),
@@ -43,14 +43,6 @@ export class StudentSignupComponent implements OnInit {
 
   giveGuardianFormArray() {
     const arr = [];
-    // const fg = new FormGroup({
-    //   name: new FormControl(''),
-    //   email: new FormControl(''),
-    //   gender: new FormControl(''),
-    //   mobileNumber: new FormControl(''),
-    //   relationship: new FormControl('')
-    // });
-    // arr.push(fg);
     return arr;
   }
 

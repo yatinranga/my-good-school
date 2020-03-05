@@ -40,7 +40,7 @@ export class TeacherService {
 
   // get GRADES of school
   getGrades(schoolId) {
-    return this.http.get("/api/grades?schoolId=" + schoolId)
+    return this.http.get("/grades?schoolId=" + schoolId)
   }
 
   // SAVE Reviewed Activity
@@ -61,6 +61,6 @@ export class TeacherService {
 
   // get LIST of students who performed specific activity of particular grade
   getStudents(schoolId, gradeId, activityId, teacherId) {
-    return this.http.get("/api/student/activity/" + activityId + "?schoolId" + schoolId + "&gradeId=" + gradeId + "&teacherId=" + teacherId);
+    return this.http.get("/api/student/activity/" + activityId + "?schoolId=" + schoolId + "&gradeId=" + gradeId + "&teacherId=" + teacherId);
   }
 }

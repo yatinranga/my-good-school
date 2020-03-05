@@ -41,9 +41,11 @@ export class SavedActitvityComponent implements OnInit {
     this.schoolId = this.studentInfo['student'].schoolId;
 
     // this.getStudentSavedActivities(this.studentInfo['student'].id)
-    // this.getStudentSavedActivities(this.studentId);
-    // this.getStudentSubmittedActivities(this.studentId);
+
+    this.getStudentSavedActivities(this.studentId);
+    this.getStudentSubmittedActivities(this.studentId);
     this.getStudentAllActivities(this.studentId);
+    this.getStudentReviewedActivities(this.studentId);
 
     // this.getStudentActivity(this.schoolId);
 
@@ -78,19 +80,25 @@ export class SavedActitvityComponent implements OnInit {
   // to get the list of ALL Activities of student
   getStudentAllActivities(studentId) {
     this.studentService.getAllActivity(studentId).subscribe((res) => {
+      console.log(res);
       this.allActivitiesArr = res;
-      this.allActivitiesArr = res.filter((e) => (e.activityStatus != "SavedByTeacher"));
-      this.savedActivitiesArr = this.allActivitiesArr.filter((e) => (e.activityStatus == "SavedByStudent"));
-      this.submittedActivitiesArr = this.allActivitiesArr.filter((e) => (e.activityStatus == "SubmittedByStudent"));
-      this.reviewedActivitiesArr = this.allActivitiesArr.filter((e) => (e.activityStatus == "Reviewed"));
-      console.log(this.allActivitiesArr);
+      this.allActivitiesArr = this.allActivitiesArr.filter((e) => (e.activityStatus != "SavedByTeacher"));
     },
       (err) => console.log(err)
     );
   }
 
+  // to get the list of REVIEWED Activities of student
+  getStudentReviewedActivities(studentId) {
+    this.studentService.getReviewedActivity(studentId).subscribe((res) => {
+      this.reviewedActivitiesArr = res;
+    },
+      (err) => console.log(err));
+
+  }
+
   // on click of edit button
-  editSavedActivity(e,activity) {
+  editSavedActivity(e, activity) {
     // this.activityName = activity.activityName;
     // this.activityTeacher = activity.teacherName;
     e.stopPropagation();
@@ -140,13 +148,13 @@ export class SavedActitvityComponent implements OnInit {
     );
   }
 
-  deleteSavedActivity(e,activity,i) {
+  deleteSavedActivity(e, activity, i) {
     e.stopPropagation();
     const activityId = activity.id;
     console.log(activityId);
     this.studentService.deleteActivity(activityId).subscribe((res) => {
       console.log(res);
-      this.savedActivitiesArr.splice(i,1);
+      this.savedActivitiesArr.splice(i, 1);
       this.alertService.showSuccessToast('Activity Deleted !');
     },
       (err) => console.log(err));
