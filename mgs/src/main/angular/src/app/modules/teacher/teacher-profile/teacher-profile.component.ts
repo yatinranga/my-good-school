@@ -19,6 +19,7 @@ export class TeacherProfileComponent implements OnInit {
     this.teacherId = this.teacherInfo['teacher'].id;
     this.teacherService.getProfile(this.teacherId).subscribe((res) => {
       this.teacherDetails = res;
+      console.log(res);
     },
     (err) => console.log(err)
     );

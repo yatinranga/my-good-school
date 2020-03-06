@@ -16,7 +16,7 @@ export class StudentService {
   }
   // Single teacher signup
   uploadTeacherDetails(data) {
-    const url = "/teachers/signUp"
+    const url = "/teacher/signUp"
     return this.http.post(url, data);
   }
 

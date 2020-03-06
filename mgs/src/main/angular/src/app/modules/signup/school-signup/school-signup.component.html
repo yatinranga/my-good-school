@@ -39,7 +39,7 @@
                         <img *ngIf="path" [src]="path" height="200">
                     </div>
                     <div class="form-group">General Activities :
-                        <select class="form-control" formControlName="generalActivity" multiple>
+                        <select class="form-control" formControlName="generalActivities" multiple>
                             <option *ngFor="let g of generalActivitiesArr" value={{g.id}} >{{g.name}}</option>
                         </select>
 

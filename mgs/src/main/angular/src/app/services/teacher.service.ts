@@ -10,7 +10,7 @@ export class TeacherService {
 
   // get Profile of Teacher
   getProfile(teacherId) {
-    return this.http.get("/api/teachers/" + teacherId);
+    return this.http.get("/api/teacher/" + teacherId);
   }
 
   // get PENDING Activities of Teacher

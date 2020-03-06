@@ -45,7 +45,7 @@
                             <select class="form-control" formControlName="gradeIds" multiple>
                                 <option value="" disabled selected>Select Grade </option>
                                 <option *ngFor="let grade of schoolGrades; let i = index;" value={{grade.id}}>
-                                    {{grade.grade}}</option>
+                                    {{grade.grade}} {{grade.section}}</option>
                             </select>
                         </div>
                         <div class="form-group">Select Activities :

@@ -26,7 +26,7 @@ export class SchoolSignupComponent implements OnInit {
       email: [(''), [Validators.email, Validators.required]],
       contactNo: [('')],
       logo: [('')],
-      generalActivity: ['']
+      generalActivities: ['']
     })
 
     this.schoolService.getGeneralActivities().subscribe((res) => {
@@ -56,9 +56,9 @@ export class SchoolSignupComponent implements OnInit {
     const formData = new FormData();
     
     Object.keys(this.schoolSignup.value).forEach(key => {
-      if(key=='generalActivity'){
+      if(key=='generalActivities'){
         if(typeof(this.schoolSignup.value[key])=='object'){
-          this.schoolSignup.value.generalActivity.forEach((element, index) => {
+          this.schoolSignup.value.generalActivities.forEach((element, index) => {
             formData.append(key + '[' + index + ']', element);
           });
         }
@@ -66,6 +66,13 @@ export class SchoolSignupComponent implements OnInit {
         formData.append(key, this.schoolSignup.value[key])
       }
     });
+
+    // formData.append('name',this.schoolSignup.value.name);
+    // formData.append('address',this.schoolSignup.value.address);
+    // formData.append('email',this.schoolSignup.value.email);
+    // formData.append('contactNo',this.schoolSignup.value.contactNo);
+    // formData.append('logo',this.schoolSignup.value.logo);
+    // formData.append('generalActivities',this.schoolSignup.value.generalActivities);    
 
 
 
