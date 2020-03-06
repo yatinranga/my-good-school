@@ -17,6 +17,9 @@
 </div>
 
 <div *ngIf="activityType === 'All'">
+    <div *ngIf="loader" class="spinner-border text-dark" role="status">
+        <span class="sr-only">Data Loading</span>
+      </div>
     <div class="table_main">
         <table class="table">
             <thead class="thead-dark">
@@ -110,6 +113,9 @@
 
 
 <div *ngIf="activityType === 'Pending'">
+    <div *ngIf="loader" class="spinner-border text-dark" role="status">
+        <span class="sr-only">Data Loading</span>
+      </div>
     <div class="table_main">
         <table class="table">
             <thead class="thead-dark">
@@ -163,6 +169,9 @@
 </div>
 
 <div *ngIf="activityType === 'Saved'">
+    <div *ngIf="loader" class="spinner-border text-dark" role="status">
+        <span class="sr-only">Data Loading</span>
+      </div>
 
     <div class="table_main">
         <table class="table">
@@ -219,6 +228,9 @@
 </div>
 
 <div *ngIf="activityType === 'Reviewed'">
+    <div *ngIf="loader" class="spinner-border text-dark" role="status">
+        <span class="sr-only">Data Loading</span>
+      </div>
     <div class="table_main">
         <table class="table">
             <thead class="thead-dark">
