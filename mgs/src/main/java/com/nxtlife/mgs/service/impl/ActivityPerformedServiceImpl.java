@@ -288,8 +288,10 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 					String.format("Activity with the id : %s is already submitted by you and cannot be edited.",
 							activityPerformedCid));
 
-		if (activity.getDateOfActivity() == null || activity.getDescription() == null || activity.getFiles() == null
-				|| activity.getFiles().isEmpty())
+		if (activity.getDateOfActivity() == null
+				|| activity.getDescription() == null/*
+													 * || activity.getFiles() == null || activity.getFiles().isEmpty()
+													 */)
 			throw new ValidationException("Activity cannot be submitted first fill all the mandatory fields.");
 
 		activity.setActivityStatus(ActivityStatus.SubmittedByStudent);

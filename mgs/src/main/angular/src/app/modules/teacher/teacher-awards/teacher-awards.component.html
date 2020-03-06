@@ -23,7 +23,13 @@
 <div [ngSwitch]="awardViewType">
     <!-- Assign Award -->
     <div *ngSwitchCase="'assign'" class="popup-form">
-        <form [formGroup]="assignAwardForm" (ngSubmit)="assignAward()">
+        <select class="mdb-select md-form">
+            <option value="" disabled selected>Choose your option</option>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+          </select>
+        <!-- <form [formGroup]="assignAwardForm" (ngSubmit)="assignAward()">
             <div>List of Awards :
                 <select>
                     <option value="" disabled selected>Select Award </option>
@@ -32,29 +38,32 @@
                 </select>
             </div>
             <div>Grades :
-                <select (ngModelChange)="getGradeId($event)">
+                <select (ngModelChange)="getGradeId($event)" formControlName="gradeId">
                     <option value="" disabled selected>Select Grades </option>
-                    <option *ngFor="let grade of schoolGrades" value={{grade.id}}>{{grade.name}}
+                    <option *ngFor="let grade of schoolGrades" value={{grade.id}}>
+                        {{grade.grade}} {{grade.section}}
                     </option>
                 </select>
             </div>
             <div>Activity :
-                <select (ngModelChange)="getActivityId($event)">
+                <select (ngModelChange)="getActivityId($event)" formControlName="activityId">
                     <option value="" disabled selected>Select Activity </option>
                     <option *ngFor="let activity of activities; let i = index;" value={{activity.id}}>
                         {{activity.name}}
                     </option>
                 </select>
             </div>
-            <div>Students :
-                <div *ngFor="let stu of studentList">
-                    <input type="checkbox" value={{stu}}>{{stu}}
-                </div>
+            <div>Students :                
+                <select (ngModelChange)="getStudentId($event)" ngModel>
+                    <option value="" selected>Select Student</option>
+                    <option *ngFor="let stu of studentList;" value={{stu.id}}>
+                        {{stu.name}}
+                    </option>
+                </select>
             </div>
             <button type="submit" class="assign-button">Assign</button>
         </form>
-    </div>
-    
+    </div>    -->
     
     
     <!-- Create New Award -->
@@ -73,7 +82,8 @@
         </form>
     </div>
 
+    <!-- View Awards -->
     <div *ngSwitchCase="'view'" class="popup-form">
-        
+
     </div>
 </div>
