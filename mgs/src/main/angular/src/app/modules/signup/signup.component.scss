@@ -5,6 +5,7 @@
 
 ul.navbar-nav {
     float: left;
+    display: -webkit-inline-box;
 }
 a.navbar-brand {
     float: right;
@@ -13,14 +14,14 @@ a.navbar-brand {
 }
 a.nav-link{
     color: $light;
-    background: $active;
+    background: $btn;
     font-size: 19px;
 }
 
-li.nav-item.active .nav-link {
-    background: #333;
-}
 nav.navbar .navbar-nav li a {
-    padding: 15px 25px !important;
+    padding: 16px !important;
     display: inline-block;
+}
+nav.navbar ul.navbar-nav li.nav-item.active .nav-link {
+    background: $active;
 }

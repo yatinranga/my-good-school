@@ -6,40 +6,51 @@
                     <h2> Student Profile </h2>
                     <div class="student_image">
                         <img src="assets/images/student.jpg">
+                        <p> <label> {{studentDetails['name']}}</label> </p>
                     </div>
-                    <div class="profile_card_main">
-                        <div class="student profile_card">
-                            <h2> Student Profile </h2>
-                            <p> <label>Name : {{studentDetails['name']}}</label>  </p>
-                            <p> <label>Gender : {{studentDetails['gender']}}</label> </p> 
-                            <p> <label>Email : {{studentDetails['email']}}</label> </p>
-                            <p> <label>Mobile Number : {{studentDetails['mobileNumber']}}</label> </p>
-                            <p> <label>Date of Birth : {{studentDetails['dob'] | date }}</label> </p>
-                        </div>
-                        <div class="guardian content">
-                            <div [ngSwitch]="tabs">
-                                <div *ngSwitchCase="'guardianOne'">
-                                    <h2> Guardian 1 Profile </h2>
-                                    <p> <label> Name: {{studentDetails['name']}}</label> </p>
-                                    <p> <label> Email: {{studentDetails['email']}}</label> </p>
-                                    <p> <label> Mobile Number: {{studentDetails['mobileNumber']}}</label> </p>
-                                    <p> <label> Relationship: {{studentDetails['relationship']}}</label> </p>
-                                </div>
-                                <div *ngSwitchCase="'guardianTwo'">
-                                    <h2> Guardian 2 Profile </h2>
-                                    <p> <label> Name: {{studentDetails['name']}}</label> </p>
-                                    <p> <label> Email: {{studentDetails['email']}}</label> </p>
-                                    <p> <label> Mobile Number: {{studentDetails['mobileNumber']}}</label> </p>
-                                    <p> <label> Relationship: {{studentDetails['relationship']}}</label> </p>
-                                </div>
-                                <div *ngSwitchCase="'addGuardian'">
-                                        <h2> Guardian 3 Profile </h2>
-                                        <p> Add Guardian (Insert form) </p>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="student content">
+                        <h3> Basic Info </h3>
+                        <p> <label> Gender : {{studentDetails['gender']}}</label> </p>
+                        <p> <label> Email : {{studentDetails['email']}}</label> </p>
+                        <p> <label> Date of Birth : {{studentDetails['dob'] | date}} </label> </p>
+                        <p> <label> Mobile Number : {{studentDetails['mobileNumber']}}</label> </p>
                     </div>
                 </div>
+                <div class="guardian profile_card">
+                        <h2> Guardian Profile </h2>
+                    <div class="tab_nav">
+                        <div class="tab_buttons"
+                            *ngFor="let sd of studentDetails['guardianResponseList']; let i = index">
+                            <ul>
+                                <li [ngClass]="{'active':tabs=='guardian' + i}"> <a (click)="switchTabs('guardian' + i)">
+                                        Guardian {{i}} </a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                        <!-- <ul>
+                            <li [ngClass]="{'active':tabs=='guardian' + i}"> <a (click)="switchTabs('guardian' + i)">
+                                    Guardian One </a>
+                            <li [ngClass]="{'active':tabs=='guardianTwo'}"> <a (click)="switchTabs('guardianTwo')">
+                                    Guardian Two </a>
+                        </ul> -->
+
+
+                        <div class="guardian content">
+                            <div [ngSwitch]="tabs">
+                                <ng-container *ngFor="let sd of studentDetails.guardianResponseList; let i = index">
+                                    <div *ngSwitchCase="'guardian' + i">
+                                        <h3> Guardian {{i}} Profile </h3>
+                                        <p> <label> Name : {{sd['name']}}</label> </p>
+                                        <p> <label> Email : {{sd['email']}}</label> </p>
+                                        <p> <label> Mobile Number : {{sd['mobileNumber']}}</label> </p>
+                                        <p> <label> Relationship : {{sd['relationship']}}</label> </p>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+
+                    </div>
             </div>
         </div>
     </div>

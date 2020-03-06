@@ -4,8 +4,8 @@
             <div class="teacher_activity_main">
                 <div class="sortby"> Filter by:
                     <select style="border: 1px solid #ddd" (ngModelChange)="activityView($event)" ngModel>
-                        <option value="" selected disabled hidden> Choose here </option>
-                        <option value="All" selected> All</option>
+                        <option value="" disabled hidden> Choose here </option>
+                        <option value="All"> All</option>
                         <option value="Pending" selected>Pending</option>
                         <option value="Saved">Saved</option>
                         <option value="Reviewed">Reviewed</option>
@@ -13,6 +13,98 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+<div *ngIf="activityType === 'All'">
+    <div class="table_main">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody id="accordionExample">
+                <ng-container *ngFor="let allacti of allActivitiesArr; let i = index;">
+                    <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
+                        <td>{{i+1}}</td>
+                        <td>{{allacti.studentName}}</td>
+                        <td>{{getDate(allacti.dateOfActivity) | date}}</td>
+                        <td>
+                            <div *ngIf="allacti.activityStatus === 'SubmittedByStudent'">Pending</div>
+                            <div *ngIf="allacti.activityStatus === 'SavedByTeacher'">Saved</div>
+                            <div *ngIf="allacti.activityStatus === 'Reviewed'">Reviewed</div>
+                        </td>
+                        <td>
+                            <button [disabled]="!(allacti.activityStatus === 'SavedByTeacher')" (click)="submitSavedActivity($event,i,'All')" >Submit</button>      
+                            <button [disabled]="!(allacti.activityStatus === 'SavedByTeacher')" data-toggle="modal" data-target="#exampleModal"
+                                    (click)="editSavedActivity(allacti)">Edit</button>
+                            <button [disabled]="!(allacti.activityStatus === 'SubmittedByStudent')" data-toggle="modal" data-target="#exampleModal"
+                                    (click)="reviewActivity(allacti)">Review</button>                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="collapse-td" colspan="5">
+                            <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
+
+                                <div *ngIf="allacti.activityStatus === 'Reviewed'">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <p><strong>Participation Score :</strong>{{allacti.participationScore}}</p>
+                                            <p><strong>Initiative Score :</strong>{{allacti.initiativeScore}}</p>
+                                            <p><strong>Achievement Score :</strong>{{allacti.achievementScore}}</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p><strong>Activity : </strong>{{allacti.activityName}}</p>
+                                            <p><strong>Star : </strong>{{allacti.star}}</p>
+                                            <p><strong>Remark : </strong>{{allacti.coachRemark}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div *ngIf="allacti.activityStatus === 'SavedByTeacher'">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <p><strong>Description :
+                                                </strong>{{allacti.description}}</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <div>
+                                                <p><strong>Attachments : </strong></p>
+                                                <p *ngFor="let file of allacti.fileResponses">
+                                                    {{file.name}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div *ngIf="allacti.activityStatus === 'SubmittedByStudent'">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="description">
+                                                <p><strong>Description : </strong>{{allacti.description}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="attachment">
+                                                <p><strong>Attachments : </strong></p>
+                                                <p *ngFor="let file of allacti.fileResponses">{{file.name}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
     </div>
 </div>
 
@@ -135,13 +227,41 @@
                     <th scope="col">Name</th>
                     <th scope="col">Date</th>
                     <th scope="col">Status</th>
-                    <th scope="col">Action</th>
                 </tr>
             </thead>
+            <tbody id="accordionExample">
+                <ng-container *ngFor="let ra of reviewedActivitiesArr; let i = index;">
+                    <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
+                        <td>{{i+1}}</td>
+                        <td>{{ra.studentName}}</td>
+                        <td>{{ra.coachRemarkDate | date}}</td>
+                        <td>Reviewed</td>
+                    </tr>
+                    <tr>
+                        <td class="collapse-td" colspan="5">
+                            <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <p><strong>Participation Score :</strong>{{ra.participationScore}}</p>
+                                        <p><strong>Initiative Score :</strong>{{ra.initiativeScore}}</p>
+                                        <p><strong>Achievement Score :</strong>{{ra.achievementScore}}</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p><strong>Activity : </strong>{{ra.activityName}}</p>
+                                        <p><strong>Star : </strong>{{ra.star}}</p>
+                                        <p><strong>Remark :</strong>{{ra.coachRemark}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-container>
+            </tbody>
         </table>
     </div>
 </div>
 
+<!-- Review Activity Modal-->
 <div>
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -188,7 +308,8 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal"
                                 (click)="resetForm()">Reset</button>
-                            <button class="btn btn-primary" type="submit" [disabled]="reviewForm.invalid">Save changes</button>
+                            <button class="btn btn-primary" type="submit" [disabled]="reviewForm.invalid">Save
+                                changes</button>
                         </div>
                     </form>
                 </div>
@@ -200,8 +321,8 @@
 
 
 
-    <!-- Review Activity -->
-    <!-- <div>
+<!-- Review Activity -->
+<!-- <div>
                                     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
                                         aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog" role="document">

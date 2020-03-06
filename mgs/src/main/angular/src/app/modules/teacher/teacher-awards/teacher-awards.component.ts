@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TeacherService } from 'src/app/services/teacher.service';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { AlertService } from 'src/app/services/alert.service';
 
 
@@ -14,7 +14,7 @@ export class TeacherAwardsComponent implements OnInit {
   awardsList = [];
   schoolGrades = [];
   studentList = [];
-  awardViewType: any;
+  awardViewType = "assign";
   teacherInfo: any;
   schoolId = "";
   activities = [];
@@ -24,7 +24,7 @@ export class TeacherAwardsComponent implements OnInit {
   teacherId = "";
 
   createAwardForm: FormGroup;
-    assignAwardForm: FormGroup;
+  assignAwardForm: FormGroup;
 
   constructor(private teacherService: TeacherService, private formbuilder: FormBuilder, private alertService: AlertService) { }
 
@@ -80,8 +80,6 @@ export class TeacherAwardsComponent implements OnInit {
   // get the Activities Offered in School
   getStudentActivity() {
     this.teacherService.getActivity(this.schoolId).subscribe((res) => {
-      console.log("activities");
-      console.log(res);
       this.activities = res;
     },
       (err) => console.log(err)
@@ -92,14 +90,20 @@ export class TeacherAwardsComponent implements OnInit {
   getListOfStudent() {
     this.teacherService.getStudents(this.schoolId, this.gradeId, this.activityId, this.teacherId).subscribe((res) => {
       console.log(res);
-      
+
       this.studentList = res
     },
       (err) => console.log(err));
   }
 
+  // Assign Award to Students
   assignAward() {
     console.log(this.assignAwardForm.value);
+
+    this.teacherService.assignAward(this.assignAwardForm.value).subscribe((res) => {
+      console.log(res);
+    },
+      (err) => console.log(err));
 
   }
 
