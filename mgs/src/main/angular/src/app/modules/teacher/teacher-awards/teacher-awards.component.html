@@ -3,72 +3,81 @@
         <div class="content_main_com">
             <div class="teacher-awards">
                 <div class="tabs">
-                    <div>
+                    <ul>
+                        <li> <a (click)="awardView('assign')"> Assign Awards </a> </li>
+                        <li> <a (click)="awardView('create')"> Create New Awards </a> </li>
+                        <li> <a (click)="awardView('view')"> View Awards </a> </li>
+                    </ul>
+                    <!-- <div>
                         <button type="button" class="award-button btn btn-primary btn-lg"
-                            (click)="awardView('assign')">Assign Award</button>
+                            >Assign Award</button>
                         <button type="button" class="award-button btn btn-secondary btn-lg"
-                            (click)="awardView('create')">Create New Award </button>
-                    </div>
+                            >Create New Award </button>
+                    </div> -->
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<div [ngSwitch]="awardViewType">
+    <!-- Assign Award -->
+    <div *ngSwitchCase="'assign'" class="popup-form">
+        <form [formGroup]="assignAwardForm" (ngSubmit)="assignAward()">
+            <div>List of Awards :
+                <select>
+                    <option value="" disabled selected>Select Award </option>
+                    <option *ngFor="let award of awardsList" value={{award.id}}>{{award.name}}
+                    </option>
+                </select>
+            </div>
+            <div>Grades :
+                <select (ngModelChange)="getGradeId($event)" formControlName="gradeId">
+                    <option value="" disabled selected>Select Grades </option>
+                    <option *ngFor="let grade of schoolGrades" value={{grade.id}}>
+                        {{grade.grade}} {{grade.section}}
+                    </option>
+                </select>
+            </div>
+            <div>Activity :
+                <select (ngModelChange)="getActivityId($event)" formControlName="activityId">
+                    <option value="" disabled selected>Select Activity </option>
+                    <option *ngFor="let activity of activities; let i = index;" value={{activity.id}}>
+                        {{activity.name}}
+                    </option>
+                </select>
+            </div>
+            <div>Students :                
+                <select (ngModalChange)="getStudentId($event)" formControlName="studentId">
+                    <option value="" selected>Select Student</option>
+                    <option *ngFor="let stu of studentList;" value={{stu.id}}>
+                        {{stu.name}}
+                    </option>
+                </select>
+            </div>
+            <button type="submit" class="assign-button">Assign</button>
+        </form>
+    </div>
+    
+    
+    
+    <!-- Create New Award -->
+    <div *ngSwitchCase="'create'" class="popup-form">
+        <form [formGroup]="createAwardForm" (ngSubmit)="createNewAward()">
+            <div class="form-group">
+                <label for="exampleInputEmail1">Name : </label>
+                <input type="email" class="form-control" placeholder="Name of Award" formControlName="name">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Description : </label>
+                <textarea class="form-control add" placeholder="Description of Award"
+                    formControlName="description"></textarea>
+            </div>
+            <button type="submit" class="assign-button btn btn-primary">Create</button>
+        </form>
+    </div>
 
-<!-- Assign Award -->
-<div *ngIf="awardViewType === 'assign'" class="popup-form">
-    <form [formGroup]="assignAwardForm" (ngSubmit)="assignAward()">
-        <div>List of Awards :
-            <select formControlName="id">
-                <option value="" disabled selected>Select Award </option>
-                <option *ngFor="let award of awardsList" value={{award.id}}>{{award.name}}
-                </option>
-            </select>
-        </div>
-        <div>Grades :
-            <select (ngModelChange)="getGradeId($event)" formControlName="gradeId">
-                <option value="" disabled selected>Select Grades </option>
-                <option *ngFor="let grade of schoolGrades" value={{grade.id}}>
-                    {{grade.grade}} {{grade.section}}
-                </option>
-            </select>
-        </div>
-        <div>Activity :
-            <select (ngModelChange)="getActivityId($event)" formControlName="activityId">
-                <option value="" disabled selected>Select Activity </option>
-                <option *ngFor="let activity of activities; let i = index;" value={{activity.id}}>
-                    {{activity.name}}
-                </option>
-            </select>
-        </div>
-        <div>Students :
-            <!-- <div *ngFor="let stu of studentList">
-                <input type="checkbox" value={{stu}}>{{stu}}
-            </div> -->
-            <select class="mdb-select md-form" formControlName="activityPerformedIds" multiple>
-                <option value="" disabled selected>Select Student</option>
-                <option *ngFor="let stu of studentList" value={{stu.id}}>{{stu.name}}</option>
-              </select>
-        </div>
-        <button type="submit" class="assign-button">Assign</button>
-    </form>
-</div>
+    <div *ngSwitchCase="'view'" class="popup-form">
 
-
-
-<!-- Create New Award -->
-<div *ngIf="awardViewType === 'create'" class="popup-form">
-    <form [formGroup]="createAwardForm" (ngSubmit)="createNewAward()">
-        <div class="form-group">
-            <label for="exampleInputEmail1">Name : </label>
-            <input type="email" class="form-control" placeholder="Name of Award" formControlName="name">
-        </div>
-        <div class="form-group">
-            <label for="exampleInputPassword1">Description : </label>
-            <textarea class="form-control add" placeholder="Description of Award"
-                formControlName="description"></textarea>
-        </div>
-        <button type="submit" class="assign-button btn btn-primary">Create</button>
-    </form>
+    </div>
 </div>

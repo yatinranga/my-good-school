@@ -1,0 +1,41 @@
+.profile_main{
+    width: 100%;
+    display: inline-block;
+}
+.profile_image{
+    width: 100%;
+    position: relative;
+}
+.profile_image img{
+    width: 100%;
+    height: calc(100vh - 107px);
+}
+.profile_text_main{
+    left: 40px;
+    width: 30%;
+    float: left;
+    background: #8cbbc5;
+    position: absolute;
+    top: 175px;
+    padding: 10px;
+    box-shadow: 0 0 5px #999;
+}
+.profile_text h2{
+    margin: 0 0 20px 0;
+    color: #e04090;
+    font-weight: 300;
+    text-align: left;
+}
+.profile_text label {
+    border-bottom: 1px solid #333;
+    font-size: 17px;
+    color: #333;
+}
+
+.profile_text h3{
+    font-size: 21px;
+    color: #333;
+    text-align: left;
+    margin-bottom: 20px;
+    font-weight: 400;
+}

@@ -29,22 +29,28 @@
                             <div class="forms_field">
                                 <input type="text" class="forms_field-input" placeholder="Username"
                                     formControlName="username">
-                                    <small class="text-danger" *ngIf="!loginForm.get('username').valid && loginForm.get('username').touched">
-                                        Username or email required
-                                    </small>
+                                <small class="text-danger"
+                                    *ngIf="!loginForm.get('username').valid && loginForm.get('username').touched">
+                                    Username or email required
+                                </small>
 
                             </div>
                             <div class="forms_field">
                                 <input type="password" formControlName="password" placeholder="Password"
                                     class="forms_field-input">
-                                    <small class="text-danger" *ngIf="!loginForm.get('password').valid && loginForm.get('password').touched">
-                                        Password required
-                                    </small>
+                                <small class="text-danger"
+                                    *ngIf="!loginForm.get('password').valid && loginForm.get('password').touched">
+                                    Password required
+                                </small>
                             </div>
                         </fieldset>
                         <div class="forms_buttons">
                             <a routerLink='/forgot-pwd'>Forgot Password ?</a>
-                            <button class="forms_buttons-action login-btn" type="submit">Login</button>
+                            <button class="forms_buttons-action login-btn" type="submit">Login
+                                <span *ngIf="loader">
+                                    <div class="spinner-border" role="status">
+                                    </div>
+                                </span></button>
                         </div>
 
                         <!-- <div class="err-msg" *ngIf="errorMsg">

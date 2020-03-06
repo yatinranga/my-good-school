@@ -30,8 +30,13 @@ export class StudentService {
     return this.http.get("/api/info");
   }
 
+  // get ALL AWARDS of student
+  getAllAwards(studentCid){
+    return this.http.get("/api/student/" + studentCid + "/awards");
+  }
+    
   // to get AWARDS of student
-  getAwarads(studentCid,activityId){
+  getAwards(studentCid,activityId){
     return this.http.get("/api/student/awards?studentId=" + studentCid + "&activityId=" + activityId);
   }
 

@@ -44,7 +44,7 @@ export class TeacherAwardsComponent implements OnInit {
       description: [''],
       teacherId: ['']
     })
-
+    this.assignAwardInit();
   }
 
   // initialize the Assign Award Form
@@ -55,8 +55,9 @@ export class TeacherAwardsComponent implements OnInit {
       schoolId: [''],
       gradeId: [''],
       activityId: [''],
+      studentId : [''],
       activityPerformedIds: ['']
-    })
+    });
   }
 
   // get AWARDS of School
@@ -70,8 +71,6 @@ export class TeacherAwardsComponent implements OnInit {
   // get Grades of School
   getSchoolGrades() {
     this.teacherService.getGrades(this.schoolId).subscribe((res) => {
-      console.log("grades");
-      console.log(res);
       this.schoolGrades = res;
     },
       (err) => console.log(err));
@@ -89,8 +88,8 @@ export class TeacherAwardsComponent implements OnInit {
   //  get LIST of students who performed specific activity of particular grade
   getListOfStudent() {
     this.teacherService.getStudents(this.schoolId, this.gradeId, this.activityId, this.teacherId).subscribe((res) => {
+      console.log("Student List - ");
       console.log(res);
-
       this.studentList = res
     },
       (err) => console.log(err));
@@ -119,8 +118,14 @@ export class TeacherAwardsComponent implements OnInit {
   }
 
   getActivityId(event) {
+    console.log("getActivityId called ");
     this.activityId = event;
     this.getListOfStudent();
+  }
+
+  getStudentId(event) {
+    console.log("StudentID called");
+    console.log(event);
   }
 
   getGradeId(event) {

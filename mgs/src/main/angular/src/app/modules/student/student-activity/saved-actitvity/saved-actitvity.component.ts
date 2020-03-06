@@ -30,6 +30,7 @@ export class SavedActitvityComponent implements OnInit {
   file = [];
   url = '';
   activityType = 'Submitted';
+  loader:boolean = false;
 
   constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService) { }
 
@@ -65,6 +66,8 @@ export class SavedActitvityComponent implements OnInit {
   getStudentSavedActivities(studentId) {
     this.studentService.getSavedActivity(studentId).subscribe((res) => {
       this.savedActivitiesArr = res;
+      console.log(res);
+      this.loader = false;
     },
       (err) => console.log(err));
   }
@@ -73,6 +76,7 @@ export class SavedActitvityComponent implements OnInit {
   getStudentSubmittedActivities(studentId) {
     this.studentService.getSubmittedActivity(studentId).subscribe((res) => {
       this.submittedActivitiesArr = res;
+      this.loader = false;
     },
       (err) => console.log(err)
     );
@@ -84,6 +88,7 @@ export class SavedActitvityComponent implements OnInit {
       console.log(res);
       this.allActivitiesArr = res;
       this.allActivitiesArr = this.allActivitiesArr.filter((e) => (e.activityStatus != "SavedByTeacher"));
+      this.loader = false;
     },
       (err) => console.log(err)
     );
@@ -93,6 +98,7 @@ export class SavedActitvityComponent implements OnInit {
   getStudentReviewedActivities(studentId) {
     this.studentService.getReviewedActivity(studentId).subscribe((res) => {
       this.reviewedActivitiesArr = res;
+      this.loader = false;
     },
       (err) => console.log(err));
 
@@ -136,29 +142,35 @@ export class SavedActitvityComponent implements OnInit {
 
   // to SUBMIT the activity
   submitSavedActivity(e, index) {
-    e.stopPropagation();
-    const activityId = this.savedActivitiesArr[index].id;
-
-    console.log(this.submittedActivitiesArr);
-    this.studentService.submitActivity(activityId).subscribe((res) => {
-      console.log(res);
-      this.submittedActivitiesArr = [...this.submittedActivitiesArr, ...this.savedActivitiesArr.splice(index, 1)];
-      this.alertService.showSuccessToast('Activity Submitted !');
-    },
-      (err) => console.log(err)
-    );
+    const submit = confirm("Do you want to submit ?");
+    if(submit){
+      e.stopPropagation();
+      const activityId = this.savedActivitiesArr[index].id;
+  
+      console.log(this.submittedActivitiesArr);
+      this.studentService.submitActivity(activityId).subscribe((res) => {
+        console.log(res);
+        this.submittedActivitiesArr = [...this.submittedActivitiesArr, ...this.savedActivitiesArr.splice(index, 1)];
+        this.alertService.showSuccessToast('Activity Submitted !');
+      },
+        (err) => console.log(err)
+      );      
+    }
   }
 
   deleteSavedActivity(e, activity, i) {
-    e.stopPropagation();
-    const activityId = activity.id;
-    console.log(activityId);
-    this.studentService.deleteActivity(activityId).subscribe((res) => {
-      console.log(res);
-      this.savedActivitiesArr.splice(i, 1);
-      this.alertService.showSuccessToast('Activity Deleted !');
-    },
-      (err) => console.log(err));
+    const submit = confirm("Do you want to delete ?");
+    if(submit){
+      e.stopPropagation();
+      const activityId = activity.id;
+      console.log(activityId);
+      this.studentService.deleteActivity(activityId).subscribe((res) => {
+        console.log(res);
+        this.savedActivitiesArr.splice(i, 1);
+        this.alertService.showSuccessToast('Activity Deleted !');
+      },
+        (err) => console.log(err));
+    }
   }
 
   onCancel() {
@@ -192,7 +204,6 @@ export class SavedActitvityComponent implements OnInit {
     }
   }
 
-
   // to UPDATE the saved activity
   updateActivity() {
     const formData = new FormData();
@@ -223,6 +234,7 @@ export class SavedActitvityComponent implements OnInit {
 
   activityView(event) {
     this.activityType = event;
+    this.loader = true;
     switch (this.activityType) {
       case "All": this.getStudentAllActivities(this.studentId);  
         break;

@@ -19,6 +19,8 @@ export class AddActivityComponent implements OnInit {
   file = [];
   schoolId = "";
   @Output() isClosed = new EventEmitter<boolean>();
+  @Output() pushActivity = new EventEmitter();
+
   constructor(private formBuilder: FormBuilder, private studentService: StudentService,
     private alertService: AlertService, private router: Router) { }
 
@@ -94,6 +96,7 @@ export class AddActivityComponent implements OnInit {
         console.log(res);
         this.alertService.showSuccessToast('Activity Saved !');
         this.closeModel(false);
+        this.addActi(formData);
       },
       (err) => console.log(err)
     );
@@ -101,6 +104,9 @@ export class AddActivityComponent implements OnInit {
 
   closeModel(value: boolean) {
     this.isClosed.emit(value);
+  }
+  addActi(value : FormData){
+    this.pushActivity.emit(value);
   }
 
 }
