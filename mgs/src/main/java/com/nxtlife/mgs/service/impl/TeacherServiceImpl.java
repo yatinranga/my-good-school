@@ -43,7 +43,6 @@ import com.nxtlife.mgs.service.TeacherService;
 import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.ExcelUtil;
-import com.nxtlife.mgs.util.SequenceGenerator;
 import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.ActivityRequestResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
@@ -100,18 +99,18 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 
 		if (request.getName() == null)
 			throw new ValidationException("Teacher name can not be null");
-	
+
 		Teacher teacher = request.toEntity();
-		
+
 		Long teachersequence;
 		if (request.getIsCoach()) {
 			teachersequence = sequenceGeneratorService.findSequenceByUserType(UserType.Coach);
 			teacher.setUsername(String.format("COA%08d", teachersequence));
 
 		} else {
-			 teachersequence = sequenceGeneratorService.findSequenceByUserType(UserType.Teacher);
-			 teacher.setUsername(String.format("TEA%08d", teachersequence));
-		} 
+			teachersequence = sequenceGeneratorService.findSequenceByUserType(UserType.Teacher);
+			teacher.setUsername(String.format("TEA%08d", teachersequence));
+		}
 
 		// saving school
 
@@ -464,8 +463,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 						errors.add(String.format("Activity with name : %s does not exist.", activity));
 				}
 				teacherRequest.setActivitiyIds(activityCIds);
-			}
-			else
+			} else
 				errors.add("No activities provided for the coach.");
 
 		}
@@ -718,6 +716,29 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		} else {
 			return new SuccessResponse(org.springframework.http.HttpStatus.OK.value(), "teacher deleted successfully");
 		}
+	}
+
+	@Override
+	public List<TeacherResponse> getAllManagmentBySchool(String schoolCid) {
+
+		if (schoolCid == null)
+			throw new ValidationException("School id can't be null");
+
+		List<Teacher> managmentMembers = teacherRepository
+				.findAllBySchoolCidAndIsManagmentMemberTrueAndSchoolActiveTrueAndActiveTrue(schoolCid);
+
+		if (managmentMembers == null || managmentMembers.isEmpty())
+			throw new NotFoundException(
+					String.format("no managment members are found in school having id [%s]", schoolCid));
+
+		List<TeacherResponse> responseList = new ArrayList<TeacherResponse>();
+
+		for (Teacher member : managmentMembers) {
+
+			responseList.add(new TeacherResponse(member));
+		}
+
+		return responseList;
 	}
 
 }

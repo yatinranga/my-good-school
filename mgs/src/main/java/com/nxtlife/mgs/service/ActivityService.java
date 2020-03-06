@@ -20,4 +20,6 @@ public interface ActivityService {
 
 	SuccessResponse deleteActivityByCid(String cid);
 
+	List<ActivityRequestResponse> getAllGeneralActivities();
+
 }

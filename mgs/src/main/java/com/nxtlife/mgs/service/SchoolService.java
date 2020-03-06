@@ -14,13 +14,15 @@ public interface SchoolService {
 	ResponseEntity<?> uploadSchoolsFromExcel(MultipartFile file);
 
 	SchoolResponse save(SchoolRequest request);
-	
+
 	SchoolResponse findById(Long id);
-	
+
 	SchoolResponse findByCid(String cId);
 
 	List<SchoolResponse> getAllSchools();
 
 	SuccessResponse delete(String cid);
+
+	SchoolResponse update(SchoolRequest request, String cid);
 
 }
