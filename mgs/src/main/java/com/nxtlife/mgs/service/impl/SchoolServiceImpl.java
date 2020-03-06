@@ -88,7 +88,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 		}
 //		 Logic for authorities missing
 
-		School school = schoolRepository.findByName("my good school");
+		School school = schoolRepository.findByNameAndActiveTrue("my good school");
 		if (school == null) {
 			school = new School();
 			school.setName("my good school");

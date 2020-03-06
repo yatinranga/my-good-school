@@ -118,7 +118,6 @@ public class ActivityRequestResponse {
 
 		if (activity.getFourS() != null)
 			this.fourS = activity.getFourS().name();
-
 		this.name = activity.getName();
 		this.description = activity.getDescription();
 		this.isGeneral = activity.getIsGeneral();

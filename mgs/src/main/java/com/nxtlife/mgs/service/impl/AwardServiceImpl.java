@@ -9,6 +9,7 @@ import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.nxtlife.mgs.controller.ActivityPerformedController;
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.activity.ActivityPerformed;
 import com.nxtlife.mgs.entity.school.Award;
@@ -35,6 +36,7 @@ import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.util.AwardActivityPerformedId;
 import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.ActivityPerformedResponse;
+import com.nxtlife.mgs.view.AwardActivityPerformedCid;
 import com.nxtlife.mgs.view.AwardRequest;
 import com.nxtlife.mgs.view.AwardResponse;
 
@@ -122,80 +124,46 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 		if (teacher == null)
 			throw new ValidationException(String.format("Teacher with id : %s didn't exist", request.getTeacherId()));
 
-		if (request.getSchoolId() == null)
-			throw new ValidationException("school id cannot be null.");
-		School school = schoolRepository.findByCidAndActiveTrue(request.getSchoolId());
 
-		if (school == null)
-			throw new ValidationException("No school found with id : " + request.getSchoolId());
+		List<AwardActivityPerformed> awardActivityPerformedToSaveList = new ArrayList<AwardActivityPerformed>();
 
-		if (request.getGradeId() == null)
-			throw new ValidationException("Grade id cannot be null.");
-		Grade grade = gradeRepository.findByCidAndActiveTrue(request.getGradeId());
-
-		if (grade == null)
-			throw new ValidationException(String.format("No grade found with id : %s", request.getGradeId()));
-
-		if (request.getActivityId() == null)
-			throw new ValidationException("activity id cannot be null.");
-		Activity activity = activityRepository.findByCidAndActiveTrue(request.getActivityId());
-
-		if (activity == null)
-			throw new ValidationException(
-					String.format("Activity with id : %s didn't exist.", request.getActivityId()));
-
-		List<ActivityPerformed> repoActivityPerformedList = activityPerformedRepository
-				.findAllByStudentSchoolCidAndStudentGradeCidAndActivityCidAndAndActivityStatusAndStudentSchoolActiveTrueAndStudentGradeActiveTrueAndActivityActiveTrueAndActiveTrue(
-						request.getSchoolId(), request.getGradeId(), request.getActivityId(), ActivityStatus.Reviewed);
-
-		if (repoActivityPerformedList == null || repoActivityPerformedList.isEmpty()) {
-			throw new ValidationException("No activities performed yet.");
-		}
-
-		// logic to retain valid ids in repoActivityPerformedList and invalid ids in
-		// requestActivityPerformedIds
-		for (int i = 0; i < repoActivityPerformedList.size(); i++) {
-
-			if (!requestActivityPerformedIds.contains(repoActivityPerformedList.get(i).getCid()))
-				repoActivityPerformedList.remove(i--);
-			else
-				requestActivityPerformedIds.remove(repoActivityPerformedList.get(i).getCid());
-		}
-
-		if (requestActivityPerformedIds != null && !requestActivityPerformedIds.isEmpty())
-			for (String id : requestActivityPerformedIds) {
-				throw new ValidationException(String.format("Activity Performed with id : %s not found.", id));
-			}
-
-		// Write logic here to check if award is already assigned to activities present
-		// in repoActivityPerformedList
-
-		List<AwardActivityPerformed> awardActivityPerformedList = awardActivityPerformedRepository
-				.findAllByAwardCidAndIsVerifiedTrueAndActiveTrue(award.getCid());
-
-		if (awardActivityPerformedList != null && !awardActivityPerformedList.isEmpty()
-				&& repoActivityPerformedList != null && !repoActivityPerformedList.isEmpty()) {
-
-			for (ActivityPerformed act : repoActivityPerformedList) {
-				for (int i = 0; i < awardActivityPerformedList.size(); i++) {
-					if (act.getCid().equals(awardActivityPerformedList.get(i).getActivityPerformed().getCid()))
+		
+		for (String actPerId : requestActivityPerformedIds) {
+			ActivityPerformed activityPerformed = activityPerformedRepository.findByCidAndActiveTrue(actPerId);
+			if (activityPerformed == null)
+				throw new ValidationException(
+						String.format("Activity Performed with id : %s does not exist.", actPerId));
+			else {
+				AwardActivityPerformed awardActivityPerformed = awardActivityPerformedRepository
+						.findByAwardActivityPerformedIdAndActiveTrue(
+								new AwardActivityPerformedId(award.getId(), activityPerformed.getId()));
+				
+				if (awardActivityPerformed != null) {
+					if(awardActivityPerformed.getIsVerified())
 						throw new ValidationException(String.format(
-								"Award : %s already awarded to activity having id : %s on  %s", award.getName(),
-								act.getCid(), awardActivityPerformedList.get(i).getDateOfReceipt()));
+								"Award (%s) already assigned to this activity performed having id : (%s) performed by : (%s) .",
+								award.getName(), activityPerformed.getCid(), activityPerformed.getStudent().getName()));
+					else {
+						if(awardActivityPerformed.getIsRejected())
+							throw new ValidationException(String.format(
+								"Award (%s) assigned to this activity performed having id : (%s) performed by : (%s) is rejected by Management.",
+								award.getName(), activityPerformed.getCid(), activityPerformed.getStudent().getName()));
+						else {
+							throw new ValidationException(String.format(
+									"Award (%s) assigned to this activity performed having id : (%s) performed by : (%s) is pending for approval by Management.",
+									award.getName(), activityPerformed.getCid(), activityPerformed.getStudent().getName()));
+						}
+					}
+				} else {
+					AwardActivityPerformed awrdAct = new AwardActivityPerformed(
+							new AwardActivityPerformedId(award.getId(), activityPerformed.getId()), award,
+							activityPerformed, request.getTeacherId());
+					
+					awardActivityPerformedToSaveList.add(awrdAct);
 				}
 			}
 		}
-
-		// directly save the entries because there are no awards allocated yet.
-		List<AwardActivityPerformed> awardActivityPerformedToSaveList = new ArrayList<AwardActivityPerformed>();
-
-		for (ActivityPerformed act : repoActivityPerformedList) {
-			AwardActivityPerformed awrdActivity = new AwardActivityPerformed(
-					new AwardActivityPerformedId(award.getId(), act.getId()), award, act,request.getTeacherId());
-
-			awardActivityPerformedToSaveList.add(awrdActivity);
-		}
-
+		
 		awardActivityPerformedToSaveList = awardActivityPerformedRepository.save(awardActivityPerformedToSaveList);
 		if (awardActivityPerformedToSaveList == null)
 			throw new RuntimeException("Something went wrong , entries not saved to AwardActivityPerformed Table.");
@@ -387,6 +355,31 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 			awardResponse.setActivityPerformedResponse(new ActivityPerformedResponse(awrdAct.getActivityPerformed()));
 			awardResponseList.add(awardResponse);
 		});
+		
+//		if(request.getAwardActivityPerformedList()==null || request.getAwardActivityPerformedList().isEmpty()) {
+//			throw new ValidationException(String.format("awardActivityPerformedList cannot be null or empty."));
+//		}else {
+//			List<AwardActivityPerformedCid> awardActivityPerformedCids = request.getAwardActivityPerformedList();
+//			for(AwardActivityPerformedCid awrdActPerCid : awardActivityPerformedCids) {
+//				if(awrdActPerCid.getAwardId()==null)
+//					throw new ValidationException(String.format("Award id cannot be null."));
+//				Long awardId = awardRepository.findIdByCidAndActiveTrue(awrdActPerCid.getAwardId());
+//				if(awardId == null)
+//					throw new ValidationException(String.format("AwardId (%s) not found."));
+//				
+//				if(awrdActPerCid.getActivityPerformedId()==null)
+//					throw new ValidationException(String.format("ActivityPerformedId id cannot be null."));
+//				Long activityPerId = activityPerformedRepository.findIdByCidAndActiveTrue(awrdActPerCid.getActivityPerformedId());
+//				if(activityPerId == null)
+//					throw new ValidationException(String.format("ActivityPerformedId  (%s) not found."));
+//				if(awrdActPerCid.getStatus() == null)
+//					throw new ValidationException("Status cannot be null.");
+//				if(!awrdActPerCid.getStatus().equalsIgnoreCase("approve") && !awrdActPerCid.getStatus().equalsIgnoreCase("reject"))
+//					throw new ValidationException(String.format("Status cannot have value other than (approve/reject)."));
+//				
+//				
+//			}
+//		}
 
 		return awardResponseList;
 
