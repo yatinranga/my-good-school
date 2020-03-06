@@ -21,5 +21,21 @@
     box-shadow: 0 0 5px #999;
 }
 .profile_text h2{
-    margin: 20px 0;
+    margin: 0 0 20px 0;
+    color: #e04090;
+    font-weight: 300;
+    text-align: left;
+}
+.profile_text label {
+    border-bottom: 1px solid #333;
+    font-size: 17px;
+    color: #333;
+}
+
+.profile_text h3{
+    font-size: 21px;
+    color: #333;
+    text-align: left;
+    margin-bottom: 20px;
+    font-weight: 400;
 }

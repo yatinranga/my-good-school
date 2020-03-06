@@ -7,18 +7,19 @@
             <div class="profile_text_main">
                 <div class="profile_text">
                         <h2> Teacher Profile </h2>
-                        <p><label>Name : {{teacherDetails['name']}}</label></p>
-                        <p> <label>Mobile Number : {{teacherDetails['mobileNumber']}}</label> </p>
-                        <p> <label>Email : {{teacherDetails['email']}}</label> </p>
-                        <p> <label>DOB : {{teacherDetails['dob'] | date }}</label></p>
-                        <p> <label>Gender : {{teacherDetails['gender']}}</label> </p>
-                        <p> <label>School Name : {{teacherDetails['schoolName']}}</label> </p>
-                        <p> <label>Qualifications : {{teacherDetails['qualification']}}</label> </p>
+                        <h3> Basic Info </h3>
+                        <p><label>Name - {{teacherDetails['name']}}</label></p>
+                        <p> <label>Mobile Number - {{teacherDetails['mobileNumber']}}</label> </p>
+                        <p> <label>Email - {{teacherDetails['email']}}</label> </p>
+                        <p> <label>DOB - {{teacherDetails['dob'] | date }}</label></p>
+                        <p> <label>Gender - {{teacherDetails['gender']}}</label> </p>
+                        <p> <label>School Name - {{teacherDetails['schoolName']}}</label> </p>
+                        <p> <label>Qualifications - {{teacherDetails['qualification']}}</label> </p>
                         <div *ngIf="teacherDetails['isCoach']">
-                            <label>Coach : {{teacherDetails['isCoach']}}</label>
+                            <label>Coach - {{teacherDetails['isCoach']}}</label>
                         </div>
                         <div *ngIf="teacherDetails['isClassTeacher']">
-                            <label>Class Teacher : {{teacherDetails['isClassTeacher']}}</label>
+                            <label>Class Teacher - {{teacherDetails['isClassTeacher']}}</label>
                         </div>
                         <div *ngIf="teacherDetails['activitiyIds']">Activities -
                             <div *ngFor="let acti of teacherDetails['activityIds']">
