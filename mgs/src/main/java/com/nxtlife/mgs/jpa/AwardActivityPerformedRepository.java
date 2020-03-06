@@ -50,4 +50,6 @@ public interface AwardActivityPerformedRepository
 
 	List<AwardActivityPerformed> findAll(Predicate predicate);
 
+	List<AwardActivityPerformed> findAllByActivityPerformedStudentCidAndIsVerifiedTrueAndActiveTrue(String studentCid);
+
 }

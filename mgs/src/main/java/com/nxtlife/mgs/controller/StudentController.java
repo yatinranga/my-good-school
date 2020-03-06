@@ -80,7 +80,7 @@ public class StudentController {
 
 	@GetMapping(value = "api/student/{cid}/awards")
 	public List<AwardResponse> getAllAwardsOfStudentByActivityId(@PathVariable("cid") String studentCid,
-			@RequestParam(name = "activityCid", required = false) String activityCid) {
+			@RequestParam(name = "activityId", required = false) String activityCid) {
 		return studentService.getAllAwardsOfStudentByActivityId(studentCid, activityCid);
 	}
 	

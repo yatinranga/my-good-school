@@ -34,6 +34,7 @@ import com.nxtlife.mgs.enums.ActivityStatus;
 import com.nxtlife.mgs.enums.UserType;
 import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.ex.ValidationException;
+import com.nxtlife.mgs.jpa.ActivityPerformedRepository;
 import com.nxtlife.mgs.jpa.ActivityRepository;
 import com.nxtlife.mgs.jpa.AwardActivityPerformedRepository;
 import com.nxtlife.mgs.jpa.GradeRepository;
@@ -99,6 +100,9 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 	@Autowired
 	AwardActivityPerformedRepository awardActivityPerformedRepository;
+	
+	@Autowired
+	ActivityPerformedRepository activityPerformedRepository;
 
 	@Override
 	public StudentResponse save(StudentRequest request) {
@@ -661,20 +665,39 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 	@Override
 	public List<AwardResponse> getAllAwardsOfStudentByActivityId(String studentCid, String activityCid) {
-
-		List<AwardActivityPerformed> aap = awardActivityPerformedRepository
+		if(studentCid==null)
+			throw new ValidationException("Student id cannot be null.");
+		
+		if(!studentRepository.existsByCidAndActiveTrue(studentCid))
+			throw new ValidationException(String.format("Student having id : %s not found.", studentCid));
+		
+		List<AwardActivityPerformed> aap;
+		if(activityCid==null)
+			aap = awardActivityPerformedRepository.findAllByActivityPerformedStudentCidAndIsVerifiedTrueAndActiveTrue(studentCid);
+		else {
+			if(!activityPerformedRepository.existsByCidAndActiveTrue(activityCid))
+				throw new ValidationException(String.format("Activity Performed having id : %s not found.", activityCid));
+		 aap = awardActivityPerformedRepository
 				.findAllByActivityPerformedStudentCidAndActivityPerformedActivityCidAndIsVerifiedTrueAndActivityPerformedStudentActiveTrueAndActivityPerformedActivityActiveTrueAndActiveTrue(
 						studentCid, activityCid);
+		}
 
 		List<AwardResponse> responseList = new ArrayList<AwardResponse>();
-
+    if(aap == null || aap.isEmpty())
+    	throw new ValidationException(String.format("No awards assigned to student having id: %s", studentCid));
+    
 		for (AwardActivityPerformed awardActivityPerformed : aap) {
-
-			responseList.add(new AwardResponse(awardActivityPerformed));
+			AwardResponse awardResponse = new AwardResponse(awardActivityPerformed);
+			if(awardActivityPerformed.getAssignerCid()!=null) {
+				Teacher teacher = teacherRepository.findByCidAndActiveTrue(awardActivityPerformed.getAssignerCid());
+				awardResponse.setAssignedBy(teacher.getName());
+			}
+			responseList.add(awardResponse);
 		}
 
 		return responseList;
 
 	}
+
 
 }
