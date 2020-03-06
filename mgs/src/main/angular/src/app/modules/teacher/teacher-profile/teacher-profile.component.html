@@ -19,23 +19,20 @@
                     </div>
                     <div class="guardian profile_card">
                         <div>
-                            <div *ngIf="teacherDetails['isCoach']">
-                                <label>Coach : {{teacherDetails['isCoach']}} </label>
-                            </div>
+                                                        
+                            <label>Coach :  {{teacherDetails['isCoach'] ? "Yes" : "No" }} </label><br>
+                            <label>Class Teacher : {{teacherDetails['isClassTeacher'] ? "Yes" : "No" }}</label>
+                            
 
-                            <div *ngIf="teacherDetails['isClassTeacher']">
-                                <label>Class Teacher : {{teacherDetails['isClassTeacher']}}</label>
-                            </div>
-
-                            <div *ngIf="teacherDetails['activitiyIds']">Activities -
-                                <div *ngFor="let acti of teacherDetails['activityIds']">
-                                    <p>{{acti.name}}</p>
+                            <div *ngIf="teacherDetails['activities']">Activities -
+                                <div *ngFor="let acti of teacherDetails['activities']">
+                                    <label>{{acti}}</label>
                                 </div>
                             </div>
 
                             <div *ngIf="teacherDetails['gradeIds']">Activities -
                                 <div *ngFor="let grade of teacherDetails['gradeIds']">
-                                    <p>{{grade.name}}</p>
+                                    <p>{{grade.grade}} {{grade.section}}</p>
                                 </div>
                             </div>
                         </div>
