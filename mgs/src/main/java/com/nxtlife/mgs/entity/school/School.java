@@ -16,6 +16,8 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.activity.Activity;
@@ -80,7 +82,8 @@ public class School extends BaseEntity {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "school")
 	private List<TeacherSchoolGrade> teacherSchoolGrades;
 
-	@ManyToMany(mappedBy = "schools", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+	@ManyToMany(mappedBy = "schools", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Activity> activities;
 
 	public String getName() {

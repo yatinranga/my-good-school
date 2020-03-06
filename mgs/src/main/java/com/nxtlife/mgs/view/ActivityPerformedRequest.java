@@ -19,7 +19,7 @@ public class ActivityPerformedRequest {
 
 	private String coachRemark;
 
-	private String coachRemarkDate;
+//	private String coachRemarkDate;
 
 	private Boolean active;
 
@@ -161,13 +161,13 @@ public class ActivityPerformedRequest {
 		this.dateOfActivity = dateOfActivity;
 	}
 
-	public String getCoachRemarkDate() {
-		return coachRemarkDate;
-	}
-
-	public void setCoachRemarkDate(String coachRemarkDate) {
-		this.coachRemarkDate = coachRemarkDate;
-	}
+//	public String getCoachRemarkDate() {
+//		return coachRemarkDate;
+//	}
+//
+//	public void setCoachRemarkDate(String coachRemarkDate) {
+//		this.coachRemarkDate = coachRemarkDate;
+//	}
 
 	public ActivityPerformed toEntity(ActivityPerformed activityPerformed) {
 		activityPerformed = activityPerformed == null ? new ActivityPerformed() : activityPerformed;

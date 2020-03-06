@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
+import com.nxtlife.mgs.ex.ValidationException;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -48,9 +50,9 @@ public class DateUtil {
 			}
 			return date;
 		} catch (ParseException e) {
-			e.printStackTrace();
+			throw new ValidationException(String.format("Invalid date format correct format is : %s", defaultDateFormat));
 		}
-		return null;
+//		return null;
 	}
 
 	public static Date convertStringToDate(String dateString, Integer addMinutes, DayTime dayTime) {

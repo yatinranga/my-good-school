@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
+import com.nxtlife.mgs.enums.ActivityStatus;
 import com.nxtlife.mgs.filtering.filter.ActivityPerformedFilter;
 import com.nxtlife.mgs.service.ActivityPerformedService;
 import com.nxtlife.mgs.view.ActivityPerformedRequest;
@@ -38,11 +40,6 @@ public class ActivityPerformedController {
 		return activityPerformedService.submitActivity(activityPerformedCid);
 	}
 
-	@DeleteMapping(value = "api/student/activity/{activityPerformedId}")
-	public SuccessResponse deleteActivityOfStudent(@PathVariable("activityPerformedId") String activityPerformedCid) {
-		return activityPerformedService.deleteActivityOfStudent(activityPerformedCid);
-	}
-
 	@PostMapping(value = "api/coach/save")
 	public ActivityPerformedResponse saveActivityByCoach(
 			@Valid @ModelAttribute /* Change it to ModelAttribute */ ActivityPerformedRequest request) {
@@ -55,7 +52,7 @@ public class ActivityPerformedController {
 	}
 
 	@GetMapping(value = "api/coach/activities")
-	public List<ActivityPerformedResponse> getAllPendingActivitiesByCoach(@RequestParam("coachId") String coachCid ,@RequestParam("status") String status) {
+	public List<ActivityPerformedResponse> getAllPendingActivitiesByCoach(@RequestParam("coachId") String coachCid ,@RequestParam(name="status",required = false) String status) {
 		return activityPerformedService.getAllActivitiesAssignedToCoachforReview(coachCid , status);
 	}
 
@@ -124,5 +121,14 @@ public class ActivityPerformedController {
 	public List<ActivityPerformedResponse> filter(@PathVariable("studentCid") String studentCid , @RequestBody ActivityPerformedFilter filterRequest){
 		return activityPerformedService.filter(studentCid, filterRequest);
 	}
+	
+	@GetMapping(value = "api/student/{studentId}/activities")
+	public List<ActivityPerformedResponse> getAllReviewedActivityOfStudentByActivityId(@RequestParam("activityId") String activityCid ,@PathVariable("studentId") String studentCid){
+		return activityPerformedService.getAllActivityOfStudentByActivityId(studentCid, activityCid, ActivityStatus.Reviewed.toString());
+	}
 
+	@DeleteMapping(value = "api/student/activity/{activityPerformedId}")
+	public SuccessResponse deleteActivityOfStudent(@PathVariable("activityPerformedId") String activityPerformedCid) {
+		return activityPerformedService.deleteActivityOfStudent(activityPerformedCid);
+	}
 }

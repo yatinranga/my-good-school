@@ -100,6 +100,9 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			school.setCid(utils.generateRandomAlphaNumString(8));
 			school.setActive(true);
 
+		}else {
+			if(!school.getActive())
+				school.setActive(true);
 		}
 
 		if (userRepository.findByUserName(school.getUsername()) == null) {
