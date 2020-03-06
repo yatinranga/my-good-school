@@ -1,7 +1,7 @@
 <div class="sortby" style="float: right"> Filter by:
     <select style="border: 1px solid #ddd" (ngModelChange)="getStudentAwards($event)">
-            <option value="All" selected> All </option>
-            <option *ngFor="let activity of activities; let i = index;" value={{activity.id}}>
+        <option value="All" selected>All</option>
+        <option *ngFor="let activity of activities; let i = index;" value={{activity.id}}>
             {{activity.name}}
         </option>
     </select>

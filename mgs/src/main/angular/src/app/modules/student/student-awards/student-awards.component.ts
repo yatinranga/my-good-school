@@ -33,12 +33,22 @@ export class StudentAwardsComponent implements OnInit {
   getStudentAwards(activityId){
     this.loader = true;
     console.log(activityId);
-    this.studentService.getAwards(this.studentId,activityId).subscribe((res) => {
-      this.awardsArr = res;
-      console.log(res);
-      // this.loader = false;
-    },
-    (err) => console.log(err));
+
+    if(activityId === "All"){
+      this.studentService.getAllAwards(this.studentId).subscribe((res) => {
+        this.awardsArr = res;
+        console.log(res);
+        this.loader = false;
+      },
+      (err) =>  console.log(err));
+    }else{
+      this.studentService.getAwards(this.studentId,activityId).subscribe((res) => {
+        this.awardsArr = res;
+        console.log(res);
+        this.loader = false;
+      },
+      (err) => console.log(err));
+    }
   }
 
   getDate(date) {

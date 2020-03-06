@@ -66,6 +66,7 @@ export class SavedActitvityComponent implements OnInit {
   getStudentSavedActivities(studentId) {
     this.studentService.getSavedActivity(studentId).subscribe((res) => {
       this.savedActivitiesArr = res;
+      console.log(res);
       this.loader = false;
     },
       (err) => console.log(err));
