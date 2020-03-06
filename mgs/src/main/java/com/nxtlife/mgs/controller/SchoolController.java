@@ -8,19 +8,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.service.ActivityService;
 import com.nxtlife.mgs.service.SchoolService;
-import com.nxtlife.mgs.service.TeacherService;
 import com.nxtlife.mgs.service.UserService;
-import com.nxtlife.mgs.view.ActivityRequestResponse;
-import com.nxtlife.mgs.view.Mail;
-import com.nxtlife.mgs.view.MailRequest;
 import com.nxtlife.mgs.view.SchoolRequest;
 import com.nxtlife.mgs.view.SchoolResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
@@ -37,6 +31,11 @@ public class SchoolController {
 
 	@Autowired
 	private UserService userService;
+
+	@PostMapping(consumes = { "multipart/form-data" }, value = "school/signUp")
+	public SchoolResponse signUp(@ModelAttribute SchoolRequest schoolRequest) {
+		return schoolService.save(schoolRequest);
+	}
 
 	@PostMapping(consumes = { "multipart/form-data" }, value = "api/school")
 	public SchoolResponse save(@ModelAttribute SchoolRequest schoolRequest) {
@@ -60,6 +59,11 @@ public class SchoolController {
 //        userService.sendLoginCredentialsBySMTP(mail);
 
 		return schoolService.getAllSchools();
+	}
+
+	@PutMapping(consumes = { "multipart/form-data" }, value = "api/update/{cid}")
+	public SchoolResponse update(@ModelAttribute SchoolRequest request, @PathVariable("cid") String cid) {
+		return schoolService.update(request, cid);
 	}
 
 	@DeleteMapping(value = "api/schools/{id}")

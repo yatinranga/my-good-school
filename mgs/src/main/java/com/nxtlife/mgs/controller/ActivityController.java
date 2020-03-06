@@ -34,9 +34,15 @@ public class ActivityController {
 //		return activityService.getAllOfferedActivities(pageNo, pageSize);
 //	}
 
-	@GetMapping(value = {"activitiesOffered/{schoolCid}","activitiesOffered"})
-	public List<ActivityRequestResponse> getAllActivitiesOfSchool(@PathVariable(name = "schoolCid" ,required = false) String schoolCid) {
+	@GetMapping(value = { "activitiesOffered/{schoolCid}", "activitiesOffered" })
+	public List<ActivityRequestResponse> getAllActivitiesOfSchool(
+			@PathVariable(name = "schoolCid", required = false) String schoolCid) {
 		return activityService.getAllOfferedActivitiesBySchool(schoolCid);
+	}
+
+	@GetMapping("generalActivities")
+	public List<ActivityRequestResponse> getAllGeneralActivities() {
+		return activityService.getAllGeneralActivities();
 	}
 
 	@DeleteMapping("api/activitiesOffered/{cid}")
