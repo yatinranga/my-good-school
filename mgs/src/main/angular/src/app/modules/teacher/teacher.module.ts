@@ -7,7 +7,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { TeacherComponent } from './teacher.component';
 import { TeacherHomeComponent } from './teacher-home/teacher-home.component';
 import { TeacherProfileComponent } from './teacher-profile/teacher-profile.component';
-import { TeacherSidebarComponent } from './teacher-sidebar/teacher-sidebar.component';
 import { TeacherActivityComponent } from './teacher-activity/teacher-activity.component';
 import { TeacherAwardsComponent } from './teacher-awards/teacher-awards.component';
 
@@ -45,7 +44,6 @@ const routes: Routes = [
   declarations: [
     TeacherHomeComponent, 
     TeacherProfileComponent, 
-    TeacherSidebarComponent,
     TeacherComponent,
     TeacherActivityComponent,
     TeacherAwardsComponent
