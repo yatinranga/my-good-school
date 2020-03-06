@@ -44,7 +44,7 @@ export class TeacherAwardsComponent implements OnInit {
       description: [''],
       teacherId: ['']
     })
-
+    this.assignAwardInit();
   }
 
   // initialize the Assign Award Form
@@ -56,7 +56,7 @@ export class TeacherAwardsComponent implements OnInit {
       gradeId: [''],
       activityId: [''],
       activityPerformedIds: ['']
-    })
+    });
   }
 
   // get AWARDS of School

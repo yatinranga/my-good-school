@@ -266,12 +266,13 @@ app-home{
     vertical-align: top;
     height: calc(100vh - 107px);
 }
-.content_main_com h1{
+.menu_main h1{
     font-size: 40px;
     text-align: left;
-    margin: 30px 0;
+    margin: 0 0 30px 0;
     color: $black;
 }
+
 .content_main_com h2{
     font-size: 26px;
     text-align: left;
@@ -319,6 +320,7 @@ app-home{
     list-style: disc;
     margin: 0 20px;
 }
+
 
 /*-------------------------------------NAVIGATION BAR-------------------------------------*/
 
@@ -502,7 +504,6 @@ a.nav-link i.fa, button.logout.btn i.fa{
     width: 80%;
     text-align: center;
     margin: 0 auto;
-    border-bottom: 1px solid;
 }
 .student_image img {
     width: 200px;
@@ -512,15 +513,14 @@ a.nav-link i.fa, button.logout.btn i.fa{
 }
 .student_image p {
     font-size: 21px;
-    color: $black;
+    color: #e04090;
     margin: 15px 0;
 }
 .student.content{
-    width: 100%;
+    width: 70%;
     display: inline-block;
+    margin: auto;
     text-align: left;
-    padding: 0 40px;
-    margin: 0 auto;
 }
 .content p {
     margin: 10px 0;
@@ -553,7 +553,7 @@ a.nav-link i.fa, button.logout.btn i.fa{
 }
 
 .tab_buttons li.active a{
-    border-bottom: 1px solid #e04090; 
+    border-bottom: 2px solid #e04090; 
 }
 .tab_buttons {
     display: inline-block;
@@ -561,15 +561,15 @@ a.nav-link i.fa, button.logout.btn i.fa{
 .tab_nav a {
     color: #e04090 !important;
     width: 100%;
-    margin: 0 10px;
-    font-size: 20px;
-    font-weight: 400;
+    margin: 0;
+    font-size: 22px;
+    font-weight: 425;
 }
 .tab_nav a:hover{
     text-decoration: none;
 }
 .guardian.content {
-    padding: 10px;
+    padding: 10px 20px;
 }
 .student.content h3{
     font-size: 22px;

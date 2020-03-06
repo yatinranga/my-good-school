@@ -1,42 +1,36 @@
 <div class="main">
     <div class="content_main">
         <div class="profile_main">
-            <img src="assets/images/board.jpg">
-            <div class="profile_content">
-                <div class="student_image">
-                    <img src="assets/images/tprofile.jpg">
-                </div>
-                <div class="profile_card_main">
-                    <div class="student profile_card">
+            <div class="profile_image">
+                <img src="assets/images/teacherprofile.jpg">
+            </div>
+            <div class="profile_text_main">
+                <div class="profile_text">
                         <h2> Teacher Profile </h2>
-                        <p><label>Name : {{teacherDetails['name']}}</label></p>
-                        <p> <label>Mobile Number : {{teacherDetails['mobileNumber']}}</label> </p>
-                        <p> <label>Email : {{teacherDetails['email']}}</label> </p>
-                        <p> <label>DOB : {{teacherDetails['dob'] | date }}</label></p>
-                        <p> <label>Gender : {{teacherDetails['gender']}}</label> </p>
-                        <p> <label>School Name : {{teacherDetails['schoolName']}}</label> </p>
-                        <p> <label>Qualifications : {{teacherDetails['qualification']}}</label> </p>
-                    </div>
-                    <div class="guardian profile_card">
-                        <div>
-                                                        
-                            <label>Coach :  {{teacherDetails['isCoach'] ? "Yes" : "No" }} </label><br>
-                            <label>Class Teacher : {{teacherDetails['isClassTeacher'] ? "Yes" : "No" }}</label>
-                            
-
-                            <div *ngIf="teacherDetails['activities']">Activities -
-                                <div *ngFor="let acti of teacherDetails['activities']">
-                                    <label>{{acti}}</label>
-                                </div>
-                            </div>
-
-                            <div *ngIf="teacherDetails['gradeIds']">Activities -
-                                <div *ngFor="let grade of teacherDetails['gradeIds']">
-                                    <p>{{grade.grade}} {{grade.section}}</p>
-                                </div>
+                        <h3> Basic Info </h3>
+                        <p><label>Name - {{teacherDetails['name']}}</label></p>
+                        <p> <label>Mobile Number - {{teacherDetails['mobileNumber']}}</label> </p>
+                        <p> <label>Email - {{teacherDetails['email']}}</label> </p>
+                        <p> <label>DOB - {{teacherDetails['dob'] | date }}</label></p>
+                        <p> <label>Gender - {{teacherDetails['gender']}}</label> </p>
+                        <p> <label>School Name - {{teacherDetails['schoolName']}}</label> </p>
+                        <p> <label>Qualifications - {{teacherDetails['qualification']}}</label> </p>
+                        <div *ngIf="teacherDetails['isCoach']">
+                            <label>Coach - {{teacherDetails['isCoach']}}</label>
+                        </div>
+                        <div *ngIf="teacherDetails['isClassTeacher']">
+                            <label>Class Teacher - {{teacherDetails['isClassTeacher']}}</label>
+                        </div>
+                        <div *ngIf="teacherDetails['activitiyIds']">Activities -
+                            <div *ngFor="let acti of teacherDetails['activityIds']">
+                                <p>{{acti.name}}</p>
                             </div>
                         </div>
-                    </div>
+                        <div *ngIf="teacherDetails['gradeIds']">Activities -
+                            <div *ngFor="let grade of teacherDetails['gradeIds']">
+                                <p>{{grade.name}}</p>
+                            </div>
+                        </div>
                 </div>
             </div>
         </div>

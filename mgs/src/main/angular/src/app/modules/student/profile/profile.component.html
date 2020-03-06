@@ -10,10 +10,10 @@
                     </div>
                     <div class="student content">
                         <h3> Basic Info </h3>
-                        <p> <label> Gender : {{studentDetails['gender']}}</label> </p>
-                        <p> <label> Email : {{studentDetails['email']}}</label> </p>
-                        <p> <label> Date of Birth : {{studentDetails['dob'] | date}} </label> </p>
-                        <p> <label> Mobile Number : {{studentDetails['mobileNumber']}}</label> </p>
+                        <p> <label> Gender - {{studentDetails['gender']}}</label> </p>
+                        <p> <label> Email - {{studentDetails['email']}}</label> </p>
+                        <p> <label> Date of Birth - {{studentDetails['dob'] | date}} </label> </p>
+                        <p> <label> Mobile Number - {{studentDetails['mobileNumber']}}</label> </p>
                     </div>
                 </div>
                 <div class="guardian profile_card">
@@ -21,9 +21,9 @@
                     <div class="tab_nav">
                         <div class="tab_buttons"
                             *ngFor="let sd of studentDetails['guardianResponseList']; let i = index">
-                            <ul>
+                            <ul class="breadcrumb">
                                 <li [ngClass]="{'active':tabs=='guardian' + i}"> <a (click)="switchTabs('guardian' + i)">
-                                        Guardian {{i}} </a></li>
+                                        {{sd['relationship']}} </a></li>
                             </ul>
                         </div>
                     </div>
@@ -40,11 +40,11 @@
                             <div [ngSwitch]="tabs">
                                 <ng-container *ngFor="let sd of studentDetails.guardianResponseList; let i = index">
                                     <div *ngSwitchCase="'guardian' + i">
-                                        <h3> Guardian {{i}} Profile </h3>
-                                        <p> <label> Name : {{sd['name']}}</label> </p>
-                                        <p> <label> Email : {{sd['email']}}</label> </p>
-                                        <p> <label> Mobile Number : {{sd['mobileNumber']}}</label> </p>
-                                        <p> <label> Relationship : {{sd['relationship']}}</label> </p>
+                                        <h3> {{sd['relationship']}} Profile </h3>
+                                        <p> <label> Name - {{sd['name']}}</label> </p>
+                                        <p> <label> Email - {{sd['email']}}</label> </p>
+                                        <p> <label> Mobile Number - {{sd['mobileNumber']}}</label> </p>
+                                        <p> <label> Relationship - {{sd['relationship']}}</label> </p>
                                     </div>
                                 </ng-container>
                             </div>
