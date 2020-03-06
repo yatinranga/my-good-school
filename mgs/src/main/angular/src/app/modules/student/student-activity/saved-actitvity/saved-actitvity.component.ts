@@ -10,7 +10,8 @@ import { AlertService } from 'src/app/services/alert.service';
 })
 export class SavedActitvityComponent implements OnInit {
 
-  studentInfo = {};
+  addActivityShow: boolean;
+  studentInfo: any = [];
   savedActivitiesArr = [];
   submittedActivitiesArr = [];
   reviewedActivitiesArr = [];
@@ -30,34 +31,23 @@ export class SavedActitvityComponent implements OnInit {
   file = [];
   url = '';
   activityType = 'Submitted';
-  loader:boolean = false;
+  loader: boolean = false;
 
   constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService) { }
 
   ngOnInit() {
     this.studentInfo = JSON.parse(localStorage.getItem('user_info'));
-    // tslint:disable-next-line:no-string-literal
     this.studentId = this.studentInfo['student'].id;
-    // tslint:disable-next-line:no-string-literal
     this.schoolId = this.studentInfo['student'].schoolId;
-
-    // this.getStudentSavedActivities(this.studentInfo['student'].id)
-
-    // this.getStudentSavedActivities(this.studentId);
-    // this.getStudentSubmittedActivities(this.studentId);
-    // this.getStudentAllActivities(this.studentId);
-    // this.getStudentReviewedActivities(this.studentId);
-
-    // this.getStudentActivity(this.schoolId);
     this.activityView(this.activityType);
+    this.getStudentActivity(this.schoolId);
 
     this.savedActivityForm = this.formBuilder.group({
-      savedActivityName: [''],
       activityId: [''],
       description: [''],
       dateOfActivity: [''],
       coachId: [''],
-      attachment: [''],
+      attachment: [],
       id: ['']
     });
   }
@@ -67,8 +57,10 @@ export class SavedActitvityComponent implements OnInit {
     this.studentService.getSavedActivity(studentId).subscribe((res) => {
       this.savedActivitiesArr = res;
       this.loader = false;
-    },
-      (err) => console.log(err));
+    }, (err) => {
+      this.loader = false;
+      console.log(err)
+    })
   }
 
   // to get the list of SUBMITTED Activities of student
@@ -76,9 +68,10 @@ export class SavedActitvityComponent implements OnInit {
     this.studentService.getSubmittedActivity(studentId).subscribe((res) => {
       this.submittedActivitiesArr = res;
       this.loader = false;
-    },
-      (err) => console.log(err)
-    );
+    }, (err) => {
+      this.loader = false;
+      console.log(err)
+    });
   }
 
   // to get the list of ALL Activities of student
@@ -88,8 +81,10 @@ export class SavedActitvityComponent implements OnInit {
       this.allActivitiesArr = res;
       this.allActivitiesArr = this.allActivitiesArr.filter((e) => (e.activityStatus != "SavedByTeacher"));
       this.loader = false;
-    },
-      (err) => console.log(err)
+    }, (err) => {
+      this.loader = false;
+      console.log(err)
+    }
     );
   }
 
@@ -98,54 +93,42 @@ export class SavedActitvityComponent implements OnInit {
     this.studentService.getReviewedActivity(studentId).subscribe((res) => {
       this.reviewedActivitiesArr = res;
       this.loader = false;
-    },
-      (err) => console.log(err));
+    }, (err) => {
+      this.loader = false;
+      console.log(err)
+    })
 
   }
 
   // on click of edit button
   editSavedActivity(e, activity) {
-    // this.activityName = activity.activityName;
-    // this.activityTeacher = activity.teacherName;
     e.stopPropagation();
     console.log(activity);
     this.activityId = activity.activityId;
-
-    const date = this.getDate(activity.dateOfActivity);
-    if ((date.getMonth() + 1) < 10) {
-      if (date.getDate() < 10) {
-        this.savedActivityForm.controls.dateOfActivity.patchValue(date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)) + '-' + ('0' + date.getDate()));
-      } else {
-        this.savedActivityForm.controls.dateOfActivity.patchValue(date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)) + '-' + date.getDate());
-      }
-    } else {
-      if (date.getDate() < 10) {
-        this.savedActivityForm.controls.dateOfActivity.patchValue(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + ('0' + date.getDate()));
-      } else {
-        this.savedActivityForm.controls.dateOfActivity.patchValue(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate());
-      }
-    }
-
+    this.getStudentCoach(this.activityId);
+    this.savedActivityForm.controls.dateOfActivity.patchValue(activity.dateOfActivity.split(' ')[0]);
     this.savedActivityForm.patchValue({
       activityId: activity.activityId,
       description: activity.description,
+      coachId: activity.coachId,
       id: activity.id,
     });
+    this.editActivityShow = true;
+  }
 
-    console.log(this.savedActivityForm.value);
-
-
-    this.getStudentActivity(this.schoolId);
-    return this.editActivityShow = true;
+  addActivity() {
+    this.savedActivityForm.reset();
+    this.savedActivityForm.value.attachment = [];
+    this.addActivityShow = true;
   }
 
   // to SUBMIT the activity
   submitSavedActivity(e, index) {
     const submit = confirm("Do you want to submit ?");
-    if(submit){
+    if (submit) {
       e.stopPropagation();
       const activityId = this.savedActivitiesArr[index].id;
-  
+
       console.log(this.submittedActivitiesArr);
       this.studentService.submitActivity(activityId).subscribe((res) => {
         console.log(res);
@@ -153,13 +136,13 @@ export class SavedActitvityComponent implements OnInit {
         this.alertService.showSuccessToast('Activity Submitted !');
       },
         (err) => console.log(err)
-      );      
+      );
     }
   }
 
   deleteSavedActivity(e, activity, i) {
     const submit = confirm("Do you want to delete ?");
-    if(submit){
+    if (submit) {
       e.stopPropagation();
       const activityId = activity.id;
       console.log(activityId);
@@ -173,14 +156,13 @@ export class SavedActitvityComponent implements OnInit {
   }
 
   onCancel() {
-    return this.editActivityShow = false;
+    this.editActivityShow = false;
   }
 
   // to get all activities of particular school
   getStudentActivity(schoolId) {
     this.studentService.getActivity(schoolId).subscribe((res) => {
       this.activities = res;
-      this.getStudentCoach(this.activityId);
     },
       (err) => console.log(err)
     );
@@ -205,47 +187,80 @@ export class SavedActitvityComponent implements OnInit {
 
   // to UPDATE the saved activity
   updateActivity() {
-    const formData = new FormData();
-    const date = new Date(this.savedActivityForm.value.dateOfActivity);
-    const activityDate = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
+    if (this.editActivityShow) {
+      const formData = new FormData();
+      const date = new Date(this.savedActivityForm.value.dateOfActivity);
+      const activityDate = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
 
-    formData.append('studentId', this.studentInfo['student'].id);
-    formData.append('activityId', this.savedActivityForm.value.activityId);
-    formData.append('coachId', this.savedActivityForm.value.coachId);
-    formData.append('dateOfActivity', activityDate);
-    formData.append('description', this.savedActivityForm.value.description);
-    formData.append('id', this.savedActivityForm.value.id);
+      formData.append('studentId', this.studentInfo['student'].id);
+      formData.append('activityId', this.savedActivityForm.value.activityId);
+      formData.append('coachId', this.savedActivityForm.value.coachId);
+      formData.append('dateOfActivity', activityDate);
+      formData.append('description', this.savedActivityForm.value.description);
+      formData.append('id', this.savedActivityForm.value.id);
 
-    if (this.savedActivityForm.value.attachment.length > 0) {
-      this.savedActivityForm.value.attachment.forEach((element, index) => {
-        formData.append('fileRequests[' + index + '].file', element);
-      });
+      if (this.savedActivityForm.value.attachment.length > 0) {
+        this.savedActivityForm.value.attachment.forEach((element, index) => {
+          formData.append('fileRequests[' + index + '].file', element);
+        });
+      }
+
+      this.studentService.addActivity('/api/student/activities', formData).subscribe(
+        (res) => {
+          console.log(res);
+          this.alertService.showSuccessToast('Activity Updated !');
+          this.editActivityShow = false;
+        },
+        (err) => console.log(err)
+      );
     }
 
-    this.studentService.addActivity('/api/student/activities', formData).subscribe(
-      (res) => {
-        console.log(res);
-        this.alertService.showSuccessToast('Activity Updated !');
-      },
-      (err) => console.log(err)
-    );
+    if (this.addActivityShow) {
+      const time = this.savedActivityForm.value.dateOfActivity + " 00:00:00";
+      this.savedActivityForm.value.dateOfActivity = time;
+      const formData = new FormData();
+      formData.append('studentId', this.studentInfo.student.id);
+      formData.append('activityId', this.savedActivityForm.value.activityId);
+      formData.append('coachId', this.savedActivityForm.value.coachId);
+      formData.append('dateOfActivity', time);
+      formData.append('description', this.savedActivityForm.value.description);
+
+      if (this.savedActivityForm.value.attachment.length > 0) {
+        this.savedActivityForm.value.attachment.forEach((element, index) => {
+          formData.append('fileRequests[' + index + '].file', element);
+        });
+      }
+
+      console.log(this.savedActivityForm.value);
+
+      this.studentService.addActivity("/api/student/activities", formData).subscribe(
+        (res) => {
+          console.log(res);
+          this.savedActivitiesArr.push(res);
+          this.allActivitiesArr.push(res);
+          this.alertService.showSuccessToast('Activity Saved !');
+          this.addActivityShow = false;
+        },
+        (err) => console.log(err)
+      );
+    }
   }
 
   activityView(event) {
     this.activityType = event;
     this.loader = true;
     switch (this.activityType) {
-      case "All": this.getStudentAllActivities(this.studentId);  
+      case "All": this.getStudentAllActivities(this.studentId);
         break;
 
-      case "Saved" : this.getStudentSavedActivities(this.studentId);
-      break;
+      case "Saved": this.getStudentSavedActivities(this.studentId);
+        break;
 
-      case "Reviewed" : this.getStudentReviewedActivities(this.studentId);
-      break;
-      
-      case "Submitted" : this.getStudentSubmittedActivities(this.studentId);
-      break;
+      case "Reviewed": this.getStudentReviewedActivities(this.studentId);
+        break;
+
+      case "Submitted": this.getStudentSubmittedActivities(this.studentId);
+        break;
     }
   }
 
