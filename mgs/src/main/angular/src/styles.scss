@@ -108,10 +108,12 @@ select {
     margin-top: 5px;
 }
 .sortby{
-    float: right;
+    display: inline-block;
     margin: 20px 15px;
     padding: 0px;
-    font-size: 16px;
+    font-size: 17px;
+    font-weight: 600;
+    color: #1f69ad;
 }
 button.btn.btnSubmit.btn-success {
     box-shadow: none;
@@ -270,7 +272,7 @@ app-home{
     font-size: 40px;
     text-align: left;
     margin: 0 0 30px 0;
-    color: $black;
+    color: #38847c;
 }
 
 .content_main_com h2{
@@ -280,6 +282,7 @@ app-home{
 .menu_content p{
     font-size: 16px;
     text-align: left;
+    margin: 5px 10px;
 }
 .menu_content ul{
     margin: 0;
@@ -309,12 +312,16 @@ app-home{
 .title p{
     text-align: center;
 }
-
-.content_main_com h3:before {
-    content: url('assets/images/f.png');
-    left: -15px;
+.menu_content h3{
+    position: relative;
+    font-size: 26px;
+    margin: 5px 10px;
+}
+.menu_content h3:before {
+    content: url(assets/images/ff.jpg);
     position: absolute;
-    top: 9px;
+    top: 3px;
+    left: -35px;
 }
 .menu_content li{
     list-style: disc;

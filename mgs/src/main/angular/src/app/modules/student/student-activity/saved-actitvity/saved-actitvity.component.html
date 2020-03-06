@@ -1,24 +1,26 @@
-<div>PSD :
-    <select>
+<div class="sortby"> PSD :
+    <select style="border: 1px solid #ddd">
+        <option value="" disabled hidden> Choose here </option>
+        <option>Personal Development</option>
+        <option>Social Development</option>
+    </select>
+</div>
+<div class="sortby"> Focus Area :
+    <select style="border: 1px solid #ddd">
+        <option value="" disabled hidden> Choose here </option>
+        <option>Personal Development</option>
+        <option>Social Development</option>
+    </select>
+</div>
+<div class="sortby"> 4S :
+    <select style="border: 1px solid #ddd">
+        <option value="" disabled hidden> Choose here </option>
         <option>Personal Development</option>
         <option>Social Development</option>
     </select>
 </div>
 
-<div>Focus Area :
-    <select>
-
-    </select>
-
-</div>
-
-<div>4S :
-    <select>
-
-    </select>
-</div>
-
-<div class="sortby"> Filter by:
+<div class="sortby" style="float: right"> Filter by:
     <select style="border: 1px solid #ddd" (ngModelChange)="activityView($event)" ngModel>
         <option value="" disabled hidden> Choose here </option>
         <option value="All" selected> All</option>
@@ -31,7 +33,7 @@
 <div *ngIf="activityType === 'All'">
     <div *ngIf="loader" class="spinner-border text-dark" role="status">
         <span class="sr-only">Data Loading</span>
-      </div>
+    </div>
     <div class="content_main_com">
         <div class="table_main">
             <table class="table">
@@ -79,7 +81,8 @@
                         <tr>
                             <td class="collapse-td" colspan="6">
                                 <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
-                                    <div *ngIf=" (allActi.activityStatus === 'SavedByStudent') || (allActi.activityStatus === 'SubmittedByStudent')">
+                                    <div
+                                        *ngIf=" (allActi.activityStatus === 'SavedByStudent') || (allActi.activityStatus === 'SubmittedByStudent')">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="description">
@@ -108,10 +111,11 @@
                                         </div>
                                     </div>
 
-                                    <div *ngIf=" allActi.activityStatus === 'Reviewed'" >
+                                    <div *ngIf=" allActi.activityStatus === 'Reviewed'">
                                         <div class="row">
                                             <div class="col-6">
-                                                <p><strong>Participation Score :</strong>{{allActi.participationScore}}</p>
+                                                <p><strong>Participation Score :</strong>{{allActi.participationScore}}
+                                                </p>
                                                 <p><strong>Initiative Score :</strong>{{allActi.initiativeScore}}</p>
                                                 <p><strong>Achievement Score :</strong>{{allActi.achievementScore}}</p>
                                             </div>
@@ -135,7 +139,7 @@
 <div *ngIf="activityType === 'Submitted'">
     <div *ngIf="loader" class="spinner-border text-dark" role="status">
         <span class="sr-only">Data Loading</span>
-      </div>
+    </div>
     <div class="content_main_com">
         <div class="table_main">
             <table class="table">
@@ -202,9 +206,9 @@
 </div>
 
 <div *ngIf="activityType === 'Saved'">
-        <div *ngIf="loader" class="spinner-border text-dark" role="status">
+    <div *ngIf="loader" class="spinner-border text-dark" role="status">
         <span class="sr-only">Data Loading</span>
-      </div>
+    </div>
     <div class="content_main_com">
         <div class="table_main">
             <table class="table">
@@ -280,7 +284,7 @@
 <div *ngIf="activityType === 'Reviewed'">
     <div *ngIf="loader" class="spinner-border text-dark" role="status">
         <span class="sr-only">Data Loading</span>
-      </div>
+    </div>
     <div class="content_main_com">
         <div class="table_main">
             <table class="table">
@@ -376,7 +380,7 @@
                         <div class="col-md-12">
                             <div class="edit_activity_buttons">
                                 <button class="btn cancel" type="button" (click)="onCancel()">Cancel</button>
-                            <button class="btn saved btnSubmit btn-success" type="submit">Update</button>
+                                <button class="btn saved btnSubmit btn-success" type="submit">Update</button>
                             </div>
                         </div>
                     </div>
