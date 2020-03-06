@@ -20,6 +20,7 @@ public class UserResponse {
 	private StudentResponse student;
 	private TeacherResponse teacher;
 	private SchoolResponse school;
+	private String roleName;
 
 	public String getUserName() {
 		return userName;
@@ -93,12 +94,22 @@ public class UserResponse {
 		this.school = school;
 	}
 
+	public String getRoleName() {
+		return roleName;
+	}
+
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
+
 	public UserResponse(User user) {
 //		this.id = user.getId();
 		this.id = user.getCid();
 		this.email = user.getEmail();
-		if (user.getRoleForUser() != null)
+		if (user.getRoleForUser() != null) {
 			this.roleId = user.getRoleForUser().getCid();
+			this.roleName = user.getRoleForUser().getName();
+		}
 		this.userName = user.getUserName();
 		if (user.getUserType() != null)
 			this.userType = user.getUserType().toString();

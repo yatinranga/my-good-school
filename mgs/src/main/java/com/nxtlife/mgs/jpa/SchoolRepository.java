@@ -14,7 +14,7 @@ public interface SchoolRepository extends JpaRepository<School, Long> {
 	
 	School findByNameOrEmail(String name , String email);
 	
-	School findByName(String name);
+	School findByNameAndActiveTrue(String name);
 	
 	School findByEmail(String email);
 
@@ -31,6 +31,8 @@ public interface SchoolRepository extends JpaRepository<School, Long> {
 	Boolean existsByCidAndActiveTrue(String schoolId);
 
 	School getOneByCid(String schoolRequest);
+
+	boolean existsByNameAndActiveTrue(String string);
 	
 	
 }

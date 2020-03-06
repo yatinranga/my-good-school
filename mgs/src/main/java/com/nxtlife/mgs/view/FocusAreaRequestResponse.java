@@ -52,7 +52,8 @@ public class FocusAreaRequestResponse {
     	this.id = focusArea.getCid();
     	this.name = focusArea.getName();
     	this.description = focusArea.getDescription();
-    	this.psdArea = focusArea.getPsdArea().toString();
+    	if(focusArea.getPsdArea() != null)
+    	   this.psdArea = focusArea.getPsdArea().toString();
     }
     public FocusAreaRequestResponse() {
     	

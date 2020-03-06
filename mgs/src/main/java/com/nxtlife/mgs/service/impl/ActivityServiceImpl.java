@@ -375,13 +375,22 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 		}
 		activityList = activityRepository.save(activityList);
 		
-		activityList = activityRepository.findAllByIsGeneralTrueAndActiveTrue();
-		List<School> schoolList = schoolRepository.findAllByActiveTrue();
-		
-		activityList.forEach(act-> {act.getSchools().addAll(schoolList);});
-		final List<Activity> activities = activityList;
-		schoolList.forEach(sch -> { sch.setActivities(activities);});
-		 activityRepository.save(activities);
+//		activityList = activityRepository.findAllByIsGeneralTrueAndActiveTrue();
+//		List<School> schoolList = schoolRepository.findAllByActiveTrue();
+//		
+//		activityList.forEach(act-> {act.getSchools().addAll(schoolList);});
+//		final List<Activity> activities = activityList;
+//		schoolList.forEach(sch -> { sch.setActivities(activities);});
+//		 activityRepository.save(activities);
+		School school = schoolRepository.findByNameAndActiveTrue("my good school");
+		if(school != null) {
+			activityList.forEach(act -> {
+				if(!act.getSchools().contains(school))
+				    act.getSchools().add(school);
+				});
+			school.setActivities(activityList);
+			schoolRepository.save(school);
+		}
 		
 	}
 

@@ -25,6 +25,7 @@ public class StudentResponse {
 	private String subscriptionEndDate;
 	private Boolean active;
 	private String dob;
+	private String schoolName;
 	private List<GuardianResponse> guardianResponseList;
 
 	public String getId() {
@@ -139,6 +140,14 @@ public class StudentResponse {
 		return subscriptionEndDate;
 	}
 
+	public String getSchoolName() {
+		return schoolName;
+	}
+
+	public void setSchoolName(String schoolName) {
+		this.schoolName = schoolName;
+	}
+
 	public StudentResponse(Student student) {
 		this.id = student.getCid();
 		this.name = student.getName();
@@ -151,7 +160,7 @@ public class StudentResponse {
 		this.active = student.getActive();
 
 		if (student.getSubscriptionEndDate() != null)
-			this.subscriptionEndDate = student.getSubscriptionEndDate().toString();
+			this.subscriptionEndDate = DateUtil.formatDate(student.getSubscriptionEndDate());
 
 		if (student.getUser() != null) {
 			this.userId = student.getUser().getCid();
@@ -162,8 +171,11 @@ public class StudentResponse {
 			this.section = student.getGrade().getSection();
 		}
 
-		if (student.getSchool() != null)
+		if (student.getSchool() != null) {
 			this.schoolId = student.getSchool().getCid();
+			this.schoolName = student.getSchool().getName();
+		}
+		
 		if (student.getGuardians() != null && !student.getGuardians().isEmpty())
 			this.guardianResponseList = student.getGuardians().stream().map(g -> new GuardianResponse(g))
 					.collect(Collectors.toList());
@@ -182,7 +194,7 @@ public class StudentResponse {
 			this.mobileNumber = student.getMobileNumber();
 			this.active = student.getActive();
 			if(student.getSubscriptionEndDate()!=null)
-			   this.subscriptionEndDate = student.getSubscriptionEndDate().toString();
+			   this.subscriptionEndDate = DateUtil.formatDate(student.getSubscriptionEndDate());
 
 			if (student.getUser() != null) {
 				this.userId = student.getUser().getCid();
@@ -193,8 +205,10 @@ public class StudentResponse {
 				this.section = student.getGrade().getSection();
 			}
 
-			if (student.getSchool() != null)
+			if (student.getSchool() != null) {
 				this.schoolId = student.getSchool().getCid();
+				this.schoolName = student.getSchool().getName();
+			}
 
 		}
 

@@ -91,10 +91,8 @@ public class SchoolResponse {
 		this.setEmail(school.getEmail());
 		this.setLogo(school.getLogo());
 
-		if (this.getActivities() == null) {
-
+		if (this.getActivities() == null)
 			this.activities = new ArrayList<ActivityRequestResponse>();
-		}
 
 		for (Activity activity : school.getActivities()) {
 			this.activities.add(new ActivityRequestResponse(activity));

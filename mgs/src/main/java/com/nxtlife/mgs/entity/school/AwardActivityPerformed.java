@@ -34,6 +34,8 @@ public class AwardActivityPerformed implements Serializable {
 	private Date dateOfReceipt;
 
 	private Boolean isVerified = false;
+	
+	private Boolean isRejected = false;
 
 	@NotNull
 	private Boolean active = true;
@@ -94,6 +96,14 @@ public class AwardActivityPerformed implements Serializable {
 		this.assignerCid = assignerCid;
 	}
 
+	public Boolean getIsRejected() {
+		return isRejected;
+	}
+
+	public void setIsRejected(Boolean isRejected) {
+		this.isRejected = isRejected;
+	}
+
 	public AwardActivityPerformed(AwardActivityPerformedId awardActivityPerformedId, Award award,
 			ActivityPerformed activityPerformed,String assignerCid) {
 		this.awardActivityPerformedId = awardActivityPerformedId;
@@ -103,7 +113,7 @@ public class AwardActivityPerformed implements Serializable {
 	}
 
 	public AwardActivityPerformed(AwardActivityPerformedId awardActivityPerformedId, Award award,
-			ActivityPerformed activityPerformed, Date dateOfReceipt, Boolean isVerified) {
+			ActivityPerformed activityPerformed, Date dateOfReceipt, Boolean isVerified ) {
 		this.awardActivityPerformedId = awardActivityPerformedId;
 		this.award = award;
 		this.activityPerformed = activityPerformed;

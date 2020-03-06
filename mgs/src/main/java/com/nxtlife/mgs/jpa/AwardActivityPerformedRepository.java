@@ -2,7 +2,6 @@ package com.nxtlife.mgs.jpa;
 
 import java.util.List;
 
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
@@ -14,7 +13,8 @@ import com.nxtlife.mgs.util.AwardActivityPerformedId;
 import com.querydsl.core.types.Predicate;
 
 public interface AwardActivityPerformedRepository
-		extends JpaRepository<AwardActivityPerformed, AwardActivityPerformedId>, QueryDslPredicateExecutor<AwardActivityPerformed> {
+		extends JpaRepository<AwardActivityPerformed, AwardActivityPerformedId>,
+		QueryDslPredicateExecutor<AwardActivityPerformed> {
 
 	AwardActivityPerformed findByAwardCidAndActivityPerformedCidAndActiveTrue(String awardCid,
 			String activityPerformedCid);
@@ -22,6 +22,8 @@ public interface AwardActivityPerformedRepository
 	List<AwardActivityPerformed> findAllByAwardCidAndIsVerifiedTrueAndActiveTrue(String awardCid);
 
 	List<AwardActivityPerformed> findAllByAwardActivityPerformedIdAndActiveTrue(AwardActivityPerformedId compositeId);
+	
+	AwardActivityPerformed findByAwardActivityPerformedIdAndActiveTrue(AwardActivityPerformedId compositeId);
 
 	List<AwardActivityPerformed> findAllByAwardTeacherSchoolCidAndIsVerifiedFalseAndAwardTeacherSchoolActiveTrueAndActiveTrue(
 			String schoolCid);

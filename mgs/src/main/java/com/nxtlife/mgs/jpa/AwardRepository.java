@@ -15,4 +15,6 @@ public interface AwardRepository extends JpaRepository<Award, Long> {
 	List<Award> findByTeacherSchoolCidAndActiveTrue(String schoolCid);
 
 	Award findByCidAndActiveTrue(String awardCid);
+	
+	Long findIdByCidAndActiveTrue(String awardCid);
 }

@@ -16,18 +16,6 @@ public class GuardianResponse {
 	private String relationship;
 	private String id;
 
-	public GuardianResponse() {
-	}
-
-	public GuardianResponse(Guardian guardian) {
-
-		this.name = guardian.getName();
-		this.email = guardian.getEmail();
-		this.mobileNumber = guardian.getMobileNumber();
-		this.relationship = guardian.getRelationship();
-		this.id = guardian.getCid();
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -90,6 +78,18 @@ public class GuardianResponse {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	public GuardianResponse() {
+	}
+
+	public GuardianResponse(Guardian guardian) {
+
+		this.name = guardian.getName();
+		this.email = guardian.getEmail();
+		this.mobileNumber = guardian.getMobileNumber();
+		this.relationship = guardian.getRelationship();
+		this.id = guardian.getCid();
 	}
 
 }

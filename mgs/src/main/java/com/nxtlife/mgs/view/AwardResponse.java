@@ -120,7 +120,8 @@ public class AwardResponse {
 
 		this.name = aap.getAward().getName();
 		this.dateOfReceipt = aap.getDateOfReceipt();
-		this.description = aap.getActivityPerformed().getActivity().getName();
+		if(aap.getActivityPerformed().getActivity() !=null)
+	     	this.description = aap.getActivityPerformed().getActivity().getName();
 		this.assignedBy =aap.getAssignerCid();
 	}
 
