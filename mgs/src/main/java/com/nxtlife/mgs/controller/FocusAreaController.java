@@ -1,5 +1,6 @@
 package com.nxtlife.mgs.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.nxtlife.mgs.enums.FourS;
 import com.nxtlife.mgs.service.FocusAreaService;
 import com.nxtlife.mgs.view.ActivityRequestResponse;
 import com.nxtlife.mgs.view.FocusAreaRequestResponse;

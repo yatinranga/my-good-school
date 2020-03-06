@@ -1,5 +1,6 @@
 package com.nxtlife.mgs.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nxtlife.mgs.enums.FourS;
+import com.nxtlife.mgs.enums.PSDArea;
 import com.nxtlife.mgs.service.ActivityService;
 import com.nxtlife.mgs.view.ActivityRequestResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
@@ -43,6 +46,24 @@ public class ActivityController {
 	@GetMapping("generalActivities")
 	public List<ActivityRequestResponse> getAllGeneralActivities() {
 		return activityService.getAllGeneralActivities();
+	}
+	
+	@GetMapping(value = "/fourS")
+	public List<String> getAllFours(){
+		List<String> fourS = new ArrayList<String>();
+		for(FourS fours : FourS.values()) {
+			fourS.add(fours.toString());
+		}
+		return fourS;
+	}
+	
+	@GetMapping(value = "/psdAreas")
+	public List<String> getAllpsdAreas(){
+		List<String> psdAreas = new ArrayList<String>();
+		for(PSDArea psd : PSDArea.values()) {
+			psdAreas.add(psd.toString());
+		}
+		return psdAreas;
 	}
 
 	@DeleteMapping("api/activitiesOffered/{cid}")
