@@ -1,25 +1,5 @@
 @import '../../app.component.scss';
 
-nav.navbar
-{
-     background: #fff;
-     display: inline-block;
-     width: 100%;
-     padding: 0;
-}
-ul.navbar-nav{
-    float: left;
-    display: -webkit-inline-box;
-}
-a.nav-link{
-    color: $black;
-    font-size: 18px;
-    padding: 13px;
-}
-a.nav-link i.fa, button.logout.btn i.fa{
-    margin: 0 7px;
-}
+@import '../signup/signup.component.scss';
 
-nav.navbar ul.navbar-nav li.nav-item.active .nav-link {
-    background: $btn;
-}
+

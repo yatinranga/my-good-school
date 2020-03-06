@@ -12,6 +12,13 @@
 .card.bg-light {
     margin: 15px 0;
 }
+.student_upload h2, .teacher_upload h2 {
+    text-align: center;
+    margin: 35px 0;
+    color: #333;
+    font-family: initial;
+    font-size: 32px;
+}
 /*-------------------------------------FORM-------------------------------------*/
 
 .input-field {
@@ -23,9 +30,9 @@
     border-radius: 0px;
 }
 .btn {
-    padding: 12px ;
+    padding: 16px 12px ;
     display: inline-block;
-    font-size: 18px;
+    font-size: 19px;
     border-radius: 0 !important;
     background: $btn !important;
     outline: none !important;
@@ -42,9 +49,9 @@ button.btn.logout{
 i.fa.fa-file {
     float: left;
     position: absolute;
-    left: 30px;
-    top: 17px;
-    font-size: 14px;
+    left: 26px;
+    top: 8px;
+    font-size: 15px;
 }
 
 input.choosefile {
@@ -84,7 +91,7 @@ span.choosefile.choosefile-custom:before {
     position: absolute;
     background: gainsboro;
     width: 35%;
-    right: 0;
+    right: -18px;
     padding: 13px 0px;
     color: $black;
     border-radius: 0px;
@@ -113,6 +120,19 @@ button.btn.btnSubmit.btn-success {
     margin-top: 20px;
     font-size: 18px;
     outline: none !important;
+}
+.form-control {
+    display: block;
+    width: 100% !important;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da !important;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
 /*-------------------------------------TABLE-------------------------------------*/
@@ -185,7 +205,7 @@ td.collapse-td
     background: #fafafa;
 }
 i.fa.fa-user-circle, i.fa.fa-bars{
-    padding: 20px 0px;
+    padding: 25px 0px;
     font-size: 22px !important;
 }
 tbody#accordionExample > tr[aria-expanded="true"] {
@@ -234,7 +254,7 @@ app-home{
     display: inline-block;
     background: none;
     position: absolute;
-    top: 120px;
+    top: 60px;
     right: 0;
     float: right;
 }
@@ -243,13 +263,8 @@ app-home{
     display: inline-block;
     position: relative;
     overflow: hidden;
-}
-#banner{
     vertical-align: top;
-    width: 100%;
-    display: inline-block;
-    position: relative;
-    overflow: hidden;
+    height: calc(100vh - 107px);
 }
 .content_main_com h1{
     font-size: 40px;
@@ -278,18 +293,31 @@ app-home{
     width: 50%;
     display: -webkit-inline-box;
     display: inline-block;
-    float: right;
-    padding: 0;
+    float: left;
+    padding: 10px 20px;
     margin: 20px 0;
+    font-family: initial;
 }
 .menu_content {
     width: 100%;
     display: inline-block;
-    padding: 5px;
+    padding: 5px 15px;
     margin: 0;
+    position: relative;
 }
 .title p{
     text-align: center;
+}
+
+.content_main_com h3:before {
+    content: url('assets/images/f.png');
+    left: -15px;
+    position: absolute;
+    top: 9px;
+}
+.menu_content li{
+    list-style: disc;
+    margin: 0 20px;
 }
 
 /*-------------------------------------NAVIGATION BAR-------------------------------------*/
@@ -346,7 +374,7 @@ i.fa {
 }
 .navbar .right{
     float: right;
-    margin-top: 15px;
+    margin-top: 5px;
 }
 .divider {
     height: 0;
@@ -366,7 +394,7 @@ i.fa {
     min-width: 250px;
     z-index: 1;
     transition: transform 0.6s;
-    top: 91px;
+    top: 101px;
 }
 .dropdown-content a {
     color: $light;
@@ -422,19 +450,41 @@ li.cb.active{
  li.green.active{
     background: #8dc33a;
 }
+nav.navbar
+{
+     background: #fff;
+     display: inline-block;
+     width: 100%;
+     padding: 0;
+}
+ul.navbar-nav{
+    float: left;
+    display: -webkit-inline-box;
+}
+a.nav-link{
+    color: $black;
+    font-size: 18px;
+    padding: 13px;
+}
+a.nav-link i.fa, button.logout.btn i.fa{
+    margin: 0 7px;
+}
+
+
 
 
 /*-------------------------------------PROFILE-------------------------------------*/
 .profile_main{
     width: 100%;
     display: inline-block;
+    height: calc(100vh - 150px);
 }
 .profile_card{
     display: inline-block;
-    background: $label-color;
+    background: #cecece;
     text-align: center;
     box-shadow: 0 0 10px #333;
-    padding: 10px 20px;
+    padding: 0;
     height: 100%;
 }
 .student.profile_card {
@@ -449,7 +499,7 @@ li.cb.active{
 }
 
 .student_image {
-    width: 60%;
+    width: 80%;
     text-align: center;
     margin: 0 auto;
     border-bottom: 1px solid;
@@ -463,19 +513,19 @@ li.cb.active{
 .student_image p {
     font-size: 21px;
     color: $black;
-    margin: 0;
+    margin: 15px 0;
 }
 .student.content{
     width: 100%;
     display: inline-block;
     text-align: left;
     padding: 0 40px;
-    margin: 40px auto;
+    margin: 0 auto;
 }
 .content p {
     margin: 10px 0;
     font-size: 18px;
-    color: #ddd;
+    color: #555;
 }
 .guardian.content p {
     text-align: left;
@@ -487,30 +537,48 @@ li.cb.active{
 }
 .guardian.profile_card h2{
     text-align: left;
+    padding: 0 10px;
 }
-.tab_buttons {
+.tab_nav {
     width: 100%;
-    padding: 10px;
-    margin: 0;
+    padding: 0;
+    margin-top: 10px;
     display: inline-block;
-    border-bottom: 1px solid;
     text-align: left;
 }
-.tab_buttons ul{
+.tab_nav ul{
     display: inline-flex;
     margin: 0;
     padding: 0;
 }
-.tab_buttons a {
-    color: #ddd !important;
+
+.tab_buttons li.active a{
+    border-bottom: 1px solid #e04090; 
+}
+.tab_buttons {
+    display: inline-block;
+}
+.tab_nav a {
+    color: #e04090 !important;
     width: 100%;
     margin: 0 10px;
     font-size: 20px;
+    font-weight: 400;
 }
-.tab_buttons a:hover{
+.tab_nav a:hover{
     text-decoration: none;
-    color: $black !important;
 }
 .guardian.content {
     padding: 10px;
+}
+.student.content h3{
+    font-size: 22px;
+    color: #333;
+    margin: 15px 0;
+}
+.guardian.content h3 {
+    font-size: 22px;
+    font-weight: normal;
+    text-align: left;
+    margin: 20px 0;
 }

@@ -70,11 +70,11 @@ export class TeacherSignupComponent implements OnInit {
     this.teacherSignup.value.dob = time;
     console.log(this.teacherSignup.value);
     
-  //   this.studentService.uploadTeacherDetails(this.teacherSignup.value).subscribe((res) => {
-  //     this.alertService.showSuccessToast('SignUp Successfully')
-  //     this.router.navigate(['./login'])
-  //   },
-  //   (err) => console.log(err) )
+    this.studentService.uploadTeacherDetails(this.teacherSignup.value).subscribe((res) => {
+      this.alertService.showSuccessToast('SignUp Successfully');
+      this.router.navigate(['./login']);
+    },
+    (err) => console.log(err) )
   }
 
 }
