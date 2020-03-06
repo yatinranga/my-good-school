@@ -10,7 +10,7 @@ export class TeacherService {
 
   // get Profile of Teacher
   getProfile(teacherId) {
-    return this.http.get("/api/teachers/" + teacherId);
+    return this.http.get("/api/teacher/" + teacherId);
   }
 
   // get PENDING Activities of Teacher
@@ -20,7 +20,12 @@ export class TeacherService {
 
   // get PENDING Activities of Teacher
   getReviewedActivity(coachId) {
-    return this.http.get("/api/coaches/activities?coachId=" + coachId + "&status=reviewed");
+    return this.http.get("/api/coach/activities?coachId=" + coachId + "&status=reviewed");
+  }
+
+  // get ALL Activities of Teacher
+  getAllActivity(coachId){
+    return this.http.get("/api/coach/activities?coachId=" + coachId );
   }
 
   // get SAVED Activities of Teacher
@@ -62,5 +67,10 @@ export class TeacherService {
   // get LIST of students who performed specific activity of particular grade
   getStudents(schoolId, gradeId, activityId, teacherId) {
     return this.http.get("/api/student/activity/" + activityId + "?schoolId=" + schoolId + "&gradeId=" + gradeId + "&teacherId=" + teacherId);
+  }
+
+  // Assign Award to Students
+  assignAward(reqBody){
+    return this.http.post("api/award/assign",reqBody);
   }
 }

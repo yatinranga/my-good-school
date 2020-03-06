@@ -3,9 +3,6 @@ package com.nxtlife.mgs.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nxtlife.mgs.service.TeacherService;
-import com.nxtlife.mgs.view.AwardRequest;
 import com.nxtlife.mgs.view.SuccessResponse;
 import com.nxtlife.mgs.view.TeacherRequest;
 import com.nxtlife.mgs.view.TeacherResponse;
@@ -78,7 +74,12 @@ public class TeacherController {
 	public TeacherResponse getClassTeacherByCId(@PathVariable("cId") String cId) {
 		return teacherService.findClassTeacherByCId(cId);
 	}
-	
+
+	@GetMapping(value = "api/{schoolCid}/managment")
+	public List<TeacherResponse> getAllManagmentBySchool(@PathVariable("schoolCid") String schoolCid) {
+		return teacherService.getAllManagmentBySchool(schoolCid);
+	}
+
 	@DeleteMapping("api/teachers/{cid}")
 	public SuccessResponse delete(@PathVariable String cid) {
 		return teacherService.delete(cid);

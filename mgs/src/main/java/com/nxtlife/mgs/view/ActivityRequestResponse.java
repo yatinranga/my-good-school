@@ -14,7 +14,7 @@ import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.activity.FocusArea;
 import com.nxtlife.mgs.enums.FourS;
 
-@JsonInclude(content=Include.NON_NULL)
+@JsonInclude(content = Include.NON_NULL)
 public class ActivityRequestResponse {
 
 	@NotEmpty(message = " activity name can't be null")
@@ -115,18 +115,19 @@ public class ActivityRequestResponse {
 
 	public ActivityRequestResponse(Activity activity) {
 		this.id = activity.getCid();
-		if(activity.getFourS() != null)
-		    this.fourS = activity.getFourS().name();
+
+		if (activity.getFourS() != null)
+			this.fourS = activity.getFourS().name();
 		this.name = activity.getName();
 		this.description = activity.getDescription();
 		this.isGeneral = activity.getIsGeneral();
 		// focusAreaIds = new ArrayList<String>();
-		focusAreas = new ArrayList<String>();
-		for (FocusArea fa : activity.getFocusAreas()) {
-			// focusAreaIds.add(fa.getCid());
-			focusAreas.add(fa.getName());
-		}
-		focusAreas = focusAreas.stream().distinct().collect(Collectors.toList());
+		/*
+		 * this.focusAreas = new ArrayList<String>(); for (FocusArea fa :
+		 * activity.getFocusAreas()) { // focusAreaIds.add(fa.getCid());
+		 * focusAreas.add(fa.getName()); } focusAreas =
+		 * focusAreas.stream().distinct().collect(Collectors.toList());
+		 */
 		// focusAreaIds = focusAreaIds.stream().distinct().collect(Collectors.toList());
 
 	}

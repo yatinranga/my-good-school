@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { StudentUploadComponent } from './student-upload/student-upload.component';
 import { TeacherUploadComponent } from './teacher-upload/teacher-upload.component';
+import { SchoolUploadComponent } from './school-upload/school-upload.component';
 
 const routes: Routes = [
   {
@@ -13,13 +14,14 @@ const routes: Routes = [
     children: [
       { path: 'student-upload', component: StudentUploadComponent },
       { path: 'teacher-upload', component: TeacherUploadComponent },
+      { path: 'school-upload', component: SchoolUploadComponent },
       { path: '', redirectTo : 'student-upload' }
     ]
   }
 ]
 
 @NgModule({
-  declarations: [AdminComponent, StudentUploadComponent, TeacherUploadComponent],
+  declarations: [AdminComponent, StudentUploadComponent, TeacherUploadComponent, SchoolUploadComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,

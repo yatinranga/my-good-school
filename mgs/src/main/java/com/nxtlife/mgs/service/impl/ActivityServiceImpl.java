@@ -29,6 +29,7 @@ import com.nxtlife.mgs.entity.activity.FocusArea;
 import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.enums.FourS;
 import com.nxtlife.mgs.enums.PSDArea;
+import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.ActivityRepository;
 import com.nxtlife.mgs.jpa.FocusAreaRepository;
@@ -374,6 +375,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 			}
 		}
 		activityList = activityRepository.save(activityList);
+
 		
 //		activityList = activityRepository.findAllByIsGeneralTrueAndActiveTrue();
 //		List<School> schoolList = schoolRepository.findAllByActiveTrue();
@@ -392,6 +394,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 			schoolRepository.save(school);
 		}
 		
+
 	}
 
 	private Activity activityFocusAreaMappingUtility(Activity act, List<String> fAs, List<FocusArea> focusAreaList) {
@@ -430,15 +433,14 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 	@Override
 	public List<ActivityRequestResponse> getAllOfferedActivitiesBySchool(String schoolCid) {
 		List<Activity> activities;
-		if(schoolCid == null)
+		if (schoolCid == null)
 			activities = activityRepository.findAllByActiveTrue();
-		else 
+		else
 			activities = activityRepository.findAllBySchoolsCidAndActiveTrue(schoolCid);
-		
-			
+
 		List<ActivityRequestResponse> activityResponses = new ArrayList<ActivityRequestResponse>();
-		
-		if(activities== null || activities.isEmpty())
+
+		if (activities == null || activities.isEmpty())
 			throw new ValidationException("No general or school specific activities found.");
 		activities.forEach(activity -> {
 			activityResponses.add(new ActivityRequestResponse(activity));
@@ -651,5 +653,25 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 		Map<String, CellType> columnTypes = ExcelUtil.sheetColumns(sheetName);
 		return fetchRowValues(columnTypes, sheet, errors, sheetName);
 
+	}
+
+	@Override
+	public List<ActivityRequestResponse> getAllGeneralActivities() {
+
+		List<Activity> generalActivities = activityRepository.findAllByIsGeneralTrueAndActiveTrue();
+
+		if (generalActivities == null || generalActivities.isEmpty()) {
+			throw new NotFoundException("no general activities found");
+		}
+
+		List<ActivityRequestResponse> responseList = new ArrayList<ActivityRequestResponse>();
+
+		for (Activity activity : generalActivities) {
+
+			responseList.add(new ActivityRequestResponse(activity));
+
+		}
+
+		return responseList;
 	}
 }

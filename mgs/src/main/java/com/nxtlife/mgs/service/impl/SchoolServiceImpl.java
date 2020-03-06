@@ -100,8 +100,8 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			school.setCid(utils.generateRandomAlphaNumString(8));
 			school.setActive(true);
 
-		}else {
-			if(!school.getActive())
+		} else {
+			if (!school.getActive())
 				school.setActive(true);
 		}
 
@@ -146,6 +146,22 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			throw new ValidationException("School name can not be null");
 
 		School school = request.toEntity();
+
+		Long schoolsequence = sequenceGeneratorService.findSequenceByUserType(UserType.School);
+
+		school.setUsername(String.format("SCH%08d", schoolsequence));
+		school.setCid(utils.generateRandomAlphaNumString(8));
+		school.setActive(true);
+
+		User user = userService.createSchoolUser(school);
+
+		if (StringUtils.isEmpty(user))
+			throw new ValidationException("User not created successfully");
+		school.setUser(user);
+		user.setSchool(school);
+
+		school = schoolRepository.save(school);
+
 		Activity activity;
 		List<Activity> allActivities = new ArrayList<Activity>();
 
@@ -183,6 +199,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 						List<School> schoolList = new ArrayList<School>();
 						schoolList.add(school);
 						activity.setSchools(schoolList);
+						// activity.setCid(utils.generateRandomAlphaNumString(8));
 						allActivities.add(activity);
 					} else {
 						activity.getSchools().add(school);
@@ -196,6 +213,8 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 					List<School> sl = new ArrayList<School>();
 					sl.add(school);
 					activity.setSchools(sl);
+					activity.setCid(utils.generateRandomAlphaNumString(8));
+					activity.setActive(true);
 					allActivities.add(activity);
 
 				}
@@ -204,19 +223,6 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 		}
 
 		school.setActivities(allActivities);
-
-		Long schoolsequence = sequenceGeneratorService.findSequenceByUserType(UserType.School);
-
-		school.setUsername(String.format("SCH%08d", schoolsequence));
-		school.setCid(utils.generateRandomAlphaNumString(8));
-		school.setActive(true);
-
-		User user = userService.createSchoolUser(school);
-
-		if (StringUtils.isEmpty(user))
-			throw new ValidationException("User not created successfully");
-		school.setUser(user);
-		user.setSchool(school);
 
 		if (request.getLogo() != null) {
 			String fileExtn = request.getLogo().getOriginalFilename().split("\\.")[1];
@@ -228,7 +234,9 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 				e.printStackTrace();
 			}
 		}
+
 		school = schoolRepository.save(school);
+
 		if (school == null)
 			throw new RuntimeException("Something went wrong school not saved.");
 		return new SchoolResponse(school);
@@ -413,6 +421,24 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 		if (school == null)
 			throw new RuntimeException("Something went wrong school not deleted successfully.");
 		return new SuccessResponse(200, String.format("School with id : %s deleted successfully", cid));
+	}
+
+	@Override
+	public SchoolResponse update(SchoolRequest request, String cid) {
+
+		if (cid == null) {
+			throw new ValidationException("School id can't be null");
+		}
+
+		School school = schoolRepository.findByCidAndActiveTrue(cid);
+
+		if (school == null)
+			throw new NotFoundException(String.format("school havind id [%s] didn't exist", cid));
+
+		school = request.toEntity(school);
+		school = schoolRepository.save(school);
+
+		return new SchoolResponse(school);
 	}
 
 }
