@@ -31,7 +31,7 @@ export class StudentService {
   }
 
   // to get AWARDS of student
-  getAwarads(studentCid,activityId){
+  getAwards(studentCid,activityId){
     return this.http.get("/api/student/awards?studentId=" + studentCid + "&activityId=" + activityId);
   }
 

@@ -1,8 +1,6 @@
 <div class="sortby"> Filter by:
     <select style="border: 1px solid #ddd" (ngModelChange)="getStudentAwards($event)">
-        <option value="" selected disabled hidden> Choose here </option>
-        <option value="All"> All</option>
-        <option value=""> Select Activity </option>
+        
         <option *ngFor="let activity of activities; let i = index;" value={{activity.id}}>
             {{activity.name}}
         </option>
@@ -10,6 +8,9 @@
 </div>
 
 <div class="content_main_com">
+    <div *ngIf="loader" class="spinner-border text-dark" role="status">
+        <span class="sr-only">Data Loading</span>
+      </div>
     <div class="table_main">
         <table class="table">
             <thead class="thead-light">

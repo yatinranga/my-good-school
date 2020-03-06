@@ -12,6 +12,7 @@ export class StudentAwardsComponent implements OnInit {
   activities: any;
   studentId: any;
   awardsArr = [];
+  loader : boolean = false ;
 
   constructor(private studentService : StudentService) { }
 
@@ -24,15 +25,18 @@ export class StudentAwardsComponent implements OnInit {
 
   getStudentActivity() {
     this.studentService.getActivity(this.schoolId).subscribe(
-      (res) => this.activities = res,      
+      (res) => this.activities = res ,
       (err) => console.log(err)
     );
   }
 
   getStudentAwards(activityId){
+    this.loader = true;
     console.log(activityId);
-    this.studentService.getAwarads(this.studentId,activityId).subscribe((res) => {
+    this.studentService.getAwards(this.studentId,activityId).subscribe((res) => {
       this.awardsArr = res;
+      console.log(res);
+      // this.loader = false;
     },
     (err) => console.log(err));
   }

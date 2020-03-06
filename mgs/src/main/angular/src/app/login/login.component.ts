@@ -12,6 +12,7 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   user: any;
   userInfo: any;
+  loader:boolean = false;
 
   constructor(private formBuilder: FormBuilder,
     private router: Router,
@@ -25,6 +26,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
+    this.loader=true;
     this.authService.loginUser(this.loginForm.value).subscribe((res) => {
       localStorage.setItem('access_token', res.access_token);
       localStorage.setItem('user_type',JSON.stringify(res.user_type));
