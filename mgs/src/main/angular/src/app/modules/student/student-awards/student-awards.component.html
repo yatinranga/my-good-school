@@ -1,11 +1,11 @@
-<div class="sortby" style="float: right"> Filter by:
-    <select style="border: 1px solid #ddd" (ngModelChange)="getStudentAwards($event)" ngModel>
+<!-- <div class="sortby" style="float: right"> Filter by:
+    <select style="border: 1px solid #ddd" (ngModelChange)="getStudentAwards($event)" [(ngModel)]="activityId">
         <option value="All" selected>All</option>
         <option *ngFor="let activity of activities; let i = index;" value={{activity.id}}>
             {{activity.name}}
         </option>
     </select>
-</div>
+</div> -->
 
 <div class="content_main_com">
     <div *ngIf="loader" class="spinner-border text-dark" role="status">
@@ -16,21 +16,26 @@
             <thead class="thead-light">
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Description</th>
                     <th scope="col">Name</th>
-                    <th scope="col">Date of Receipt</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Activity</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr *ngFor="let awards of awardsArr ; let i = index;">
-                    <td>{{i+1}}</td>
-                    <td>{{awards.description}}</td>
-                    <td>{{awards.name}}</td>
-                    <td>
-                        
-                    </td>
-                </tr>
+            <tbody id="accordionExample">
+                <ng-container  >
+                    <tr *ngFor="let awards of awardsArr ; let i = index;">
+                        <td>{{i+1}}</td>
+                        <td>{{awards.name}}</td>
+                        <td>{{awards.description}}</td>
+                        <td>{{awards.activity.name}}</td>
+                    </tr>
+                </ng-container>
             </tbody>
+            <tfoot *ngIf="awardsArr.length == 0">
+                <tr>
+                    <td colspan="5">No Awards</td>
+                </tr>
+            </tfoot>
         </table>
     </div>
 </div>

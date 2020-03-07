@@ -65,12 +65,21 @@ export class TeacherService {
   }
 
   // get LIST of students who performed specific activity of particular grade
-  getStudents(schoolId, gradeId, activityId, teacherId) {
-    return this.http.get("/api/student/activity/" + activityId + "?schoolId=" + schoolId + "&gradeId=" + gradeId + "&teacherId=" + teacherId);
+  getStudents(gradeId) {
+    return this.http.get("/api/students/?gradeId=" + gradeId);
   }
 
   // Assign Award to Students
   assignAward(reqBody){
-    return this.http.post("api/award/assign",reqBody);
+    return this.http.post("/api/award",reqBody);
+  }
+
+  //
+  getStudentPerformedActivities(studentId,actiId){
+    return this.http.get("/api/student/"+studentId+"/activities?activityId="+actiId);
+  }
+
+  getStudentActivities(studentCid){
+    return this.http.get("/api/student/activities?status=reviewed&studentId=" + studentCid);
   }
 }
