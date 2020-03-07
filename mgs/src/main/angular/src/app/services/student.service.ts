@@ -33,13 +33,13 @@ export class StudentService {
 
   // get ALL AWARDS of student
   getAllAwards(studentCid){
-    return this.http.get("/api/student/" + studentCid + "/awards");
+    return this.http.get("/api/student/awards");
   }
     
-  // to get AWARDS of student
-  getAwards(studentCid,activityId){
-    return this.http.get("/api/student/awards?studentId=" + studentCid + "&activityId=" + activityId);
-  }
+  // to get AWARDS of student by Activity ID
+  // getAwards(studentCid,activityId){
+  //   return this.http.get("/api/student/awards?studentId=" + studentCid + "&activityId=" + activityId);
+  // }
 
   // to get the list of all schools
   getSchools(url) {

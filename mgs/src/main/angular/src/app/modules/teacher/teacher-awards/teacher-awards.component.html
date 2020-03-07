@@ -5,7 +5,6 @@
                 <div class="tabs">
                     <ul>
                         <li> <a (click)="awardView('assign')"> Assign Awards </a> </li>
-                        <li> <a (click)="awardView('create')"> Create New Awards </a> </li>
                         <li> <a (click)="awardView('view')"> View Awards </a> </li>
                     </ul>
                     <!-- <div>
@@ -21,69 +20,172 @@
 </div>
 
 <div [ngSwitch]="awardViewType">
+
     <!-- Assign Award -->
     <div *ngSwitchCase="'assign'" class="popup-form">
-        <select class="mdb-select md-form">
-            <option value="" disabled selected>Choose your option</option>
-            <option value="1">Option 1</option>
-            <option value="2">Option 2</option>
-            <option value="3">Option 3</option>
-          </select>
-        <!-- <form [formGroup]="assignAwardForm" (ngSubmit)="assignAward()">
-            <div>List of Awards :
-                <select>
-                    <option value="" disabled selected>Select Award </option>
-                    <option *ngFor="let award of awardsList" value={{award.id}}>{{award.name}}
-                    </option>
-                </select>
-            </div>
-            <div>Grades :
-                <select (ngModelChange)="getGradeId($event)" formControlName="gradeId">
-                    <option value="" disabled selected>Select Grades </option>
-                    <option *ngFor="let grade of schoolGrades" value={{grade.id}}>
-                        {{grade.grade}} {{grade.section}}
-                    </option>
-                </select>
-            </div>
-            <div>Activity :
-                <select (ngModelChange)="getActivityId($event)" formControlName="activityId">
-                    <option value="" disabled selected>Select Activity </option>
-                    <option *ngFor="let activity of activities; let i = index;" value={{activity.id}}>
-                        {{activity.name}}
-                    </option>
-                </select>
-            </div>
-            <div>Students :                
-                <select (ngModelChange)="getStudentId($event)" ngModel>
-                    <option value="" selected>Select Student</option>
-                    <option *ngFor="let stu of studentList;" value={{stu.id}}>
-                        {{stu.name}}
-                    </option>
-                </select>
-            </div>
-            <button type="submit" class="assign-button">Assign</button>
-        </form>
-    </div>    -->
-    
-    
-    <!-- Create New Award -->
-    <div *ngSwitchCase="'create'" class="popup-form">
-        <form [formGroup]="createAwardForm" (ngSubmit)="createNewAward()">
-            <div class="form-group">
-                <label for="exampleInputEmail1">Name : </label>
-                <input type="email" class="form-control" placeholder="Name of Award" formControlName="name">
-            </div>
-            <div class="form-group">
-                <label for="exampleInputPassword1">Description : </label>
-                <textarea class="form-control add" placeholder="Description of Award"
-                    formControlName="description"></textarea>
-            </div>
-            <button type="submit" class="assign-button btn btn-primary">Create</button>
-        </form>
+        <div class="">
+            <label for="exampleFormControlSelect1">Select Grade :</label>
+            <select class="" id="exampleFormControlSelect1" (ngModelChange)="getListOfStudent($event)" ngModel>
+                <option value="" disabled selected>Select Grades </option>
+                <option *ngFor="let grade of schoolGrades" value={{grade.id}}>
+                    {{grade.grade}} {{grade.section}}
+                </option>
+                <option disabled *ngIf="schoolGrades.length == 0">No Grades Found</option>
+            </select>
+            <span *ngIf="grade_loader">
+                <div class="spinner-border" role="status">
+                </div>
+            </span>
+        </div>
+
+        <div class="">
+            <label for="exampleFormControlSelect2">Students :</label>
+            <select class="" id="exampleFormControlSelect1" (ngModelChange)="getStudentId($event)" ngModel>
+                <option value="" selected>Select Student</option>
+                <option *ngFor="let stu of studentList;" value={{stu.id}}>
+                    {{stu.name}}
+                </option>
+                <option disabled *ngIf="studentList.length == 0">No Student Found</option>
+            </select>
+            <span *ngIf="stu_loader">
+                <div class="spinner-border" role="status">
+                </div>
+            </span>
+        </div>
+
+        <div class="">
+            <label for="exampleFormControlSelect3">Select Activity :</label>
+            <select class="" id="exampleFormControlSelect3" (ngModelChange)="getActivityId($event)" ngModel>
+                <option value="" disabled selected>Select Activity </option>
+                <option *ngFor="let activity of activities; let i = index;" value={{activity.activityId}}>
+                    {{activity.activityName}}
+                </option>
+                <option disabled *ngIf="activities.length == 0">No Activity Found</option>
+            </select>
+            <span *ngIf="acti_loader">
+                <div class="spinner-border" role="status">
+                </div>
+            </span>
+        </div>
     </div>
 
     <!-- View Awards -->
     <div *ngSwitchCase="'view'" class="popup-form">
 
+    </div>
+</div>
+
+<!-- List of Performed Activity -->
+<div *ngIf="studentActivityList">
+    <div class="content_main_com">
+        <div class="table_main">
+            <table class="table table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Select</th>
+                        <th scope="col">#</th>
+                        <th scope="col">Date</th>
+                    </tr>
+                </thead>
+                <tbody id="accordionExample">
+                    <ng-container *ngFor="let pa of performedActiArr ; let i = index;">
+                        <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
+                            <td>
+                                <label>
+                                    <input type="checkbox" (click)="stopCollapse($event)"
+                                        [(ngModel)]="actiPerform[pa.id]">
+                                    {{pa.activityName}}
+                                </label>
+                            </td>
+                            <td>{{i+1}}</td>
+                            <td>{{pa.dateOfActivity | date}}</td>
+                        </tr>
+                        <tr>
+                            <td class="collapse-td" colspan="3">
+                                <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <p>
+                                                <strong>Description : </strong>{{pa.description}}</p>
+                                            <p>
+                                                <strong>Four S : </strong>{{pa.fourS}}</p>
+                                            <p>
+                                                <strong>Focus Area : </strong>{{pa.focusAreas}}</p>
+                                            <p>
+                                                <strong>PSD Area : </strong>{{pa.psdAreas}}</p>
+                                            <p>
+                                                <strong>Attachments : </strong></p>
+
+                                            <div *ngFor="let file of pa.fileResponses">
+                                                <div class="audio" *ngIf="file.extension == 'mp3'">
+                                                    <i class="fa fa-file-audio"></i> {{file.name}} </div>
+                                                <div class="image" *ngIf="file.extension=='jpg'">
+                                                    <i class="fa fa-image"></i> {{file.name}} </div>
+                                                <div class="video" *ngIf="file.extension=='video'">
+                                                    <i class="fa fa-video-camera" aria-hidden="true"></i>{{file.name}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <p>
+                                                <strong>Participation Score : </strong>{{pa.participationScore}}</p>
+                                            <p>
+                                                <strong>Initiative Score : </strong>{{pa.initiativeScore}}</p>
+                                            <p>
+                                                <strong>Achievement Score : </strong>{{pa.achievementScore}}</p>
+                                            <p>
+                                                <strong>Coach Remark : </strong>{{pa.coachRemark}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-container>
+
+                </tbody>
+            </table>
+        </div>
+        <span *ngIf="pa_loader">
+            <div class="spinner-border" role="status">
+            </div>
+        </span>
+    </div>
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#assignAwardModal">Give Award</button>
+</div>
+
+<!-- Modal to Enter Award Name and Description -->
+<div class="modal fade" id="assignAwardModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Award Details :</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="assignAwardForm" (ngSubmit)="assignAward()">
+                    <div class="form-group" >
+                        <label for="recipient-name" class="col-form-label">Name:</label>
+                        <input type="text" class="form-control" id="recipient-name" formControlName="name">
+                        <small class="text-danger" *ngIf="!assignAwardForm.get('name').valid && assignAwardForm.get('name').touched">
+                            Name Required
+                        </small>
+                    </div>
+                    <div class="form-group" >
+                        <label for="message-text" class="col-form-label">Description:</label>
+                        <textarea class="form-control" id="message-text" formControlName="description"></textarea>
+                        <small class="text-danger" *ngIf="!assignAwardForm.get('description').valid && assignAwardForm.get('description').touched">
+                            Max Length 255.
+                        </small>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Done</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
