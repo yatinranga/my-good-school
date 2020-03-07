@@ -20,7 +20,8 @@
     </select>
 </div>
 
-<div class="sortby"> Filter by:
+<div class="sortby">
+    Filter by:
     <select style="border: 1px solid #ddd" (ngModelChange)="activityView($event)" [(ngModel)]="activityType">
         <option value="" disabled> Choose here </option>
         <option value="All"> All</option>
@@ -28,12 +29,12 @@
         <option value="Submitted">Submitted</option>
         <option value="Reviewed">Reviewed</option>
     </select>
-</div>
-
-<div *ngIf="activityType === 'All'">
     <div *ngIf="loader" class="spinner-border text-dark" role="status">
         <span class="sr-only">Data Loading</span>
     </div>
+</div>
+
+<div *ngIf="activityType === 'All'">
     <div class="content_main_com">
         <div class="table_main">
             <table class="table table-hover">
@@ -94,7 +95,7 @@
                                                         <strong>PSD Area : </strong>{{allActi.psdAreas}}</p>
                                                 </div>
                                             </div>
-                                            <div class="col-6">
+                                            <div class="col-6" *ngIf="allActi.fileResponses.length">
                                                 <div class="attachment">
 
                                                     <p>
@@ -143,9 +144,6 @@
 </div>
 
 <div *ngIf="activityType === 'Submitted'">
-    <div *ngIf="loader" class="spinner-border text-dark" role="status">
-        <span class="sr-only">Data Loading</span>
-    </div>
     <div class="content_main_com">
         <div class="table_main">
             <table class="table table-hover">
@@ -219,9 +217,6 @@
 </div>
 
 <div *ngIf="activityType === 'Saved'">
-    <div *ngIf="loader" class="spinner-border text-dark" role="status">
-        <span class="sr-only">Data Loading</span>
-    </div>
     <div class="content_main_com">
         <div class="table_main">
             <table class="table table-hover">
@@ -299,9 +294,6 @@
 </div>
 
 <div *ngIf="activityType === 'Reviewed'">
-    <div *ngIf="loader" class="spinner-border text-dark" role="status">
-        <span class="sr-only">Data Loading</span>
-    </div>
     <div class="content_main_com">
         <div class="table_main">
             <table class="table table-hover">
@@ -365,9 +357,9 @@
                             <h4> {{addActivityShow?'Add':'Edit'}} Activity </h4>
                             <div class="form-group">Activity :
                                 <select class="form-control" (ngModelChange)="getStudentCoach($event)" formControlName="activityId">
-                                    <option value="" selected>{{activityName}}</option>
                                     <option *ngFor="let activity of activities; let i = index" value={{activity.id}}>
                                         {{activity.name}}</option>
+                                    <option disabled *ngIf="!activities.length">No activities available</option>
                                 </select>
                             </div>
                             <div class="form-group">Teacher/Coach :
@@ -375,10 +367,11 @@
                                     <option *ngFor="let coach of coaches; let i = index;" value={{coach.id}}>
                                         {{coach.name}}
                                     </option>
+                                    <option disabled *ngIf="!coaches.length">Teacher/Coach available</option>
                                 </select>
                             </div>
                             <div class="form-group">Description :
-                                <textarea class="form-control add" formControlName="description"></textarea>
+                                <textarea class="form-control add" formControlName="description" rows="3"></textarea>
                             </div>
                             <div class="form-group">Date :
                                 <input type="date" class="form-control" formControlName="dateOfActivity" />
@@ -388,7 +381,8 @@
                             <div class="choosefile_box">
                                 <div class="form-group"> Select File :
                                     <div class="input-field">
-                                        <input class="choosefile" type="file" name="selectedFile" (change)="onFileSelect($event)" multiple />
+                                        <input class="choosefile" type="file" accept="image/*, audio/*, video/*, application/pdf,application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
+                                        text/plain" name="selectedFile" (change)="onFileSelect($event)" multiple />
                                         <span class="choosefile choosefile-custom">
                                             <i class="fa fa-file"></i>
                                         </span>

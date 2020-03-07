@@ -115,12 +115,14 @@ export class SavedActitvityComponent implements OnInit {
       id: activity.id,
     });
     this.editActivityShow = true;
+    this.addActivityShow = false;
   }
 
   addActivity() {
     this.savedActivityForm.reset();
     this.savedActivityForm.value.attachment = [];
     this.addActivityShow = true;
+    this.editActivityShow = false;
   }
 
   // to SUBMIT the activity
@@ -158,6 +160,7 @@ export class SavedActitvityComponent implements OnInit {
 
   onCancel() {
     this.editActivityShow = false;
+    this.addActivityShow = false;
   }
 
   // to get all activities of particular school
