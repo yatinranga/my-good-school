@@ -9,14 +9,17 @@ import { Router } from '@angular/router';
 })
 export class AppComponent implements OnInit {
   title = 'MGS';
-  userInfo: any;
+
 
   constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
-    this.userInfo = JSON.parse(localStorage.getItem('user_info'));
-    if(this.userInfo){
-      this.checkUserType(this.userInfo.userType);
+    // this.userInfo = JSON.parse(localStorage.getItem('user_info'));
+    // if (this.userInfo) {
+    //   this.checkUserType(this.userInfo.userType);
+    // }
+    if (!JSON.parse(localStorage.getItem('user_type'))) {
+      this.router.navigate(['/login']);
     }
   }
 
@@ -26,14 +29,14 @@ export class AppComponent implements OnInit {
   //   this.router.navigate(['/login'])
   // }
 
-  checkUserType(userType) {
-    if (localStorage.getItem('user_info')) {
-      switch (userType) {
-        case "Admin": this.router.navigate(['admin']); break;
-        case "Student": this.router.navigate(['student/' + this.userInfo.id + '/home']); break;
-        case "Teacher": this.router.navigate(['teacher/' + this.userInfo.id + '/home']); break;
-      }
-    }
-  }
+  // checkUserType(userType) {
+  //   if (localStorage.getItem('user_info')) {
+  //     switch (userType) {
+  //       case "Admin": this.router.navigate(['admin']); break;
+  //       case "Student": this.router.navigate(['student/' + this.userInfo.id + '/home' ]); break;
+  //       case "Teacher": this.router.navigate(['teacher/' + this.userInfo.id ]); break;
+  //     }
+  //   }
+  // }
 
 }

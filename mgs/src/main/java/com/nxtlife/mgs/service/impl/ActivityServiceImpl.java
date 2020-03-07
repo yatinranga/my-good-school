@@ -16,6 +16,9 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,7 @@ import com.nxtlife.mgs.entity.activity.FocusArea;
 import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.enums.FourS;
 import com.nxtlife.mgs.enums.PSDArea;
+import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.ActivityRepository;
 import com.nxtlife.mgs.jpa.FocusAreaRepository;
@@ -90,7 +94,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 			Boolean flag = false;
 			for (int i = 0; i < focusAreaRepoList.size(); i++) {
 				if (foc.equalsIgnoreCase(focusAreaRepoList.get(i).getName())
-						&& focusAreaRepoList.get(i).getPsdArea().equals(PSDArea.PersonalDevelopment))
+						&& focusAreaRepoList.get(i).getPsdArea().equals(PSDArea.SocialDevelopment))
 					flag = true;
 			}
 			if (flag == false) {
@@ -130,6 +134,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 				activity.setDescription(act);
 				activity.setFourS(FourS.Skill);
 				activity.setActive(true);
+				activity.setIsGeneral(true);
 				activity.setCid(utils.generateRandomAlphaNumString(8));
 				activityList.add(activity);
 			}
@@ -148,6 +153,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 				activity.setDescription(act);
 				activity.setFourS(FourS.Sport);
 				activity.setActive(true);
+				activity.setIsGeneral(true);
 				activity.setCid(utils.generateRandomAlphaNumString(8));
 				activityList.add(activity);
 			}
@@ -166,6 +172,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 				activity.setDescription(act);
 				activity.setFourS(FourS.Study);
 				activity.setActive(true);
+				activity.setIsGeneral(true);
 				activity.setCid(utils.generateRandomAlphaNumString(8));
 				activityList.add(activity);
 			}
@@ -184,6 +191,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 				activity.setDescription(act);
 				activity.setFourS(FourS.Service);
 				activity.setActive(true);
+				activity.setIsGeneral(true);
 				activity.setCid(utils.generateRandomAlphaNumString(8));
 				activityList.add(activity);
 			}
@@ -191,129 +199,228 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 
 		activityList = activityRepository.save(activityList);
 
-//	    activityList = activityRepository.findAllByActiveTrue();
-//	    focusAreaList = focusAreaRepository.findAllByActiveTrue();
-//	    for(Activity act : activityList) {
-//	    	List<String> fAs;
-//	    	switch(act.getName()) {
-//	    	case "Yoga":
-//	    		  fAs = new ArrayList<String>();
-//	    		  fAs.add("Identity");
-//	    		  fAs.add("Health");
-//	    	      act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
-//	    	         break;
-//	    	case "Literary Society Hindi":
-//	    		  fAs = new ArrayList<String>();
-//		    	  fAs.add("Identity");
-//		    	  fAs.add("Intellectual Growth");
-//		    	  fAs.add("Employment Skills");
-//		    	  act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
-//	    	         break;
-//	    	case "Literary Society English":
-//	    	      fAs = new ArrayList<String>();
-//	    		  fAs.add("Identity");
-//	    		  fAs.add("Intellectual Growth");
-//	    		  fAs.add("Employment Skills");  
-//	    	      
-//	    		  act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
-//	    		  break;
-//	    	case "Art & Craft":
-//	    		  fAs = new ArrayList<String>();
-//	    		  fAs.add("Identity");
-//	    		  fAs.add("Spiritual & Aesthetic Awareness");
-//	    		  fAs.add("Employment Skills"); 
-//	    		  
-//	    		  act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
-//	    		  break;
-//	    	case "Music & Dance":
-//	    		  fAs = new ArrayList<String>();
-//	    		  fAs.add("Identity");
-//	    		  fAs.add("Spiritual & Aesthetic Awareness");
-//	    		  fAs.add("Employment Skills"); 
-//	    		  
-//	    		  act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
-//	    		  break;
-//	    	case "Band":
-//	    		  fAs = new ArrayList<String>();
-//	    		  fAs.add("Identity");
-//	    		  fAs.add("Spiritual & Aesthetic Awareness");
-//	    		  fAs.add("Employment Skills");
-//	    		  fAs.add("Community  Skills");
-//	    		  
-//	    		  act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
-//	    		  break;
-//	    	case "Martial Arts":
-//	    		  fAs = new ArrayList<String>();
-//	    		  fAs.add("Identity");
-//	    		  fAs.add("Decision Making");
-//	    		  fAs.add("Health");
-//	    		  fAs.add("Citizenship");
-//	    		  
-//	    		  act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
-//	    		  break;
-//	    	case "Social Service League":
-//	    		  fAs = new ArrayList<String>();
-//	    		  fAs.add("Spiritual & Aesthetic Awareness");
-//	    		  fAs.add("Environmental Awareness");
-//	    		  fAs.add("Community  Skills");
-//	    		  
-//	    		  act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
-//	    		  break;
-//	    	case "Computers":
-//	    		  fAs = new ArrayList<String>();
-//	    		  fAs.add("Decision Making");
-//	    		  fAs.add("Intellectual Growth");
-//	    		  fAs.add("Employment Skills");
-//	    		  
-//	    		  act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
-//	    		  break;
-//	    	case "Cooking":
-//	    		  fAs = new ArrayList<String>();
-//	    		  fAs.add("Health");
-//	    		  fAs.add("Employment Skills");
-//	    		  
-//	    		  act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
-//	    		  break;
-//	    	case "Cricket":
-//	    		  fAs = new ArrayList<String>();
-//	    		  fAs.add("Health");
-//	    		  fAs.add("Community Skills");
-//	    		  fAs.add("Citizenship");
-//	    		  
-//	    		  act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
-//	    		  break;
-//	    	case "Cricket":
-//	    		  fAs = new ArrayList<String>();
-//	    		  fAs.add("Health");
-//	    		  fAs.add("Community Skills");
-//	    		  fAs.add("Citizenship");
-//	    		  
-//	    		  act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
-//	    		  break;
-//	    	
-//	    	}
-//	    }
+		activityList = activityRepository.findAllByActiveTrue();
+		focusAreaList = focusAreaRepository.findAllByActiveTrue();
+		for (Activity act : activityList) {
+			List<String> fAs;
+			switch (act.getName()) {
+			case "Yoga":
+				fAs = new ArrayList<String>();
+				fAs.add("Identity");
+				fAs.add("Health");
+				act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+				break;
+			case "Literary Society Hindi":
+				fAs = new ArrayList<String>();
+				fAs.add("Identity");
+				fAs.add("Intellectual Growth");
+				fAs.add("Employment Skills");
+				act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+				break;
+			case "Literary Society English":
+				fAs = new ArrayList<String>();
+				fAs.add("Identity");
+				fAs.add("Intellectual Growth");
+				fAs.add("Employment Skills");
+
+				act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+				break;
+			case "Art & Craft":
+				fAs = new ArrayList<String>();
+				fAs.add("Identity");
+				fAs.add("Spiritual & Aesthetic Awareness");
+				fAs.add("Employment Skills");
+
+				act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+				break;
+			case "Music & Dance":
+				fAs = new ArrayList<String>();
+				fAs.add("Identity");
+				fAs.add("Spiritual & Aesthetic Awareness");
+				fAs.add("Employment Skills");
+
+				act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+				break;
+			case "Band":
+				fAs = new ArrayList<String>();
+				fAs.add("Identity");
+				fAs.add("Spiritual & Aesthetic Awareness");
+				fAs.add("Employment Skills");
+				fAs.add("Community  Skills");
+
+				act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+				break;
+			case "Martial Arts":
+				fAs = new ArrayList<String>();
+				fAs.add("Identity");
+				fAs.add("Decision Making");
+				fAs.add("Health");
+				fAs.add("Citizenship");
+
+				act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+				break;
+			case "Social Service League":
+				fAs = new ArrayList<String>();
+				fAs.add("Spiritual & Aesthetic Awareness");
+				fAs.add("Environmental Awareness");
+				fAs.add("Community  Skills");
+
+				act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+				break;
+			case "Computers":
+				fAs = new ArrayList<String>();
+				fAs.add("Decision Making");
+				fAs.add("Intellectual Growth");
+				fAs.add("Employment Skills");
+
+				act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+				break;
+			case "Cooking":
+				fAs = new ArrayList<String>();
+				fAs.add("Health");
+				fAs.add("Employment Skills");
+
+				act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+				break;
+			case "Cricket":
+				fAs = new ArrayList<String>();
+				fAs.add("Health");
+				fAs.add("Community Skills");
+				fAs.add("Citizenship");
+
+				act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+				break;
+			case "Fencing":
+				fAs = new ArrayList<String>();
+				fAs.add("Health");
+				fAs.add("Community Skills");
+				fAs.add("Citizenship");
+
+				act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+				break;
+			case "Football":
+				fAs = new ArrayList<String>();
+				fAs.add("Health");
+				fAs.add("Community Skills");
+				fAs.add("Citizenship");
+
+				act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+				break;
+			case "Kho-Kho":
+				fAs = new ArrayList<String>();
+				fAs.add("Health");
+				fAs.add("Community Skills");
+				fAs.add("Citizenship");
+
+				act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+				break;
+			case "Badminton":
+				fAs = new ArrayList<String>();
+				fAs.add("Health");
+				fAs.add("Community Skills");
+				fAs.add("Citizenship");
+
+				act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+				break;
+			case "Kabaddi":
+				fAs = new ArrayList<String>();
+				fAs.add("Health");
+				fAs.add("Community Skills");
+				fAs.add("Citizenship");
+
+				act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+				break;
+			case "Reading":
+				fAs = new ArrayList<String>();
+				fAs.add("Intellectual Growth");
+
+				act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+				break;
+			case "NCC":
+				fAs = new ArrayList<String>();
+				fAs.add("Community Skills");
+
+				act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+				break;
+			case "Scouts & Guides":
+				fAs = new ArrayList<String>();
+				fAs.add("Environmental Awareness");
+				fAs.add("Community Skills");
+
+				act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+				break;
+			case "Rural Livelihood Maping":
+				fAs = new ArrayList<String>();
+				fAs.add("Employment Skills");
+				fAs.add("Community Skills");
+
+				act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+				break;
+			case "Green School Club":
+				fAs = new ArrayList<String>();
+				fAs.add("Environmental Awareness");
+
+				act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+				break;
+			case "Eco Club":
+				fAs = new ArrayList<String>();
+				fAs.add("Environmental Awareness");
+
+				act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
+				break;
+
+			default:
+				System.out.println(String.format("Invalid activity : %s", act.getName()));
+
+			}
+		}
+		activityList = activityRepository.save(activityList);
+
+		
+//		activityList = activityRepository.findAllByIsGeneralTrueAndActiveTrue();
+//		List<School> schoolList = schoolRepository.findAllByActiveTrue();
+//		
+//		activityList.forEach(act-> {act.getSchools().addAll(schoolList);});
+//		final List<Activity> activities = activityList;
+//		schoolList.forEach(sch -> { sch.setActivities(activities);});
+//		 activityRepository.save(activities);
+		School school = schoolRepository.findByNameAndActiveTrue("my good school");
+		if(school != null) {
+			activityList.forEach(act -> {
+				if(!act.getSchools().contains(school))
+				    act.getSchools().add(school);
+				});
+			school.setActivities(activityList);
+			schoolRepository.save(school);
+		}
+		
+
 	}
 
-//	private Activity activityFocusAreaMappingUtility(Activity act ,List<String> fAs,List<FocusArea> focusAreaList) {
-//		List<FocusArea> focusAreas = act.getFocusAreas();
-//		for(String f: fAs) {
-//        	if( focusAreas.stream().filter(focArea-> focArea.getName().equalsIgnoreCase(f)).count()<=0) {
-//        		focusAreaList.stream().forEach(farea->{if(farea.getName().equalsIgnoreCase(f)) {
-//        			List<Activity> tempActivities = farea.getActivities();
-//        			tempActivities.add(act);
-//        			farea.setActivities(tempActivities);
-//    	        	focusAreas.add(farea);
-//        		}});
-//        	}
-//         }
-//		act.setFocusAreas(focusAreas);
-//		return act;
-//	}
+	private Activity activityFocusAreaMappingUtility(Activity act, List<String> fAs, List<FocusArea> focusAreaList) {
+		List<FocusArea> focusAreas = act.getFocusAreas();
+		for (String f : fAs) {
+			if (focusAreas.stream().filter(focArea -> focArea.getName().equalsIgnoreCase(f)).count() <= 0) {
+				focusAreaList.stream().forEach(farea -> {
+					if (farea.getName().equalsIgnoreCase(f)) {
+						List<Activity> tempActivities = farea.getActivities();
+						tempActivities.add(act);
+						farea.setActivities(tempActivities);
+						focusAreas.add(farea);
+					}
+				});
+			}
+		}
+		act.setFocusAreas(focusAreas);
+		return act;
+	}
 
 	@Override
-	public List<ActivityRequestResponse> getAllOfferedActivities() {
-		List<Activity> activities = activityRepository.findAllByActiveTrue();
+	public List<ActivityRequestResponse> getAllOfferedActivities(Integer pageNo, Integer pageSize) {
+
+		Pageable paging = new PageRequest(pageNo, pageSize);
+
+		Page<Activity> activities = activityRepository.findAllByActiveTrue(paging);
 		List<ActivityRequestResponse> activityResponses = new ArrayList<ActivityRequestResponse>();
 		if (activities == null)
 			throw new ValidationException("No activities found.");
@@ -325,10 +432,16 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 
 	@Override
 	public List<ActivityRequestResponse> getAllOfferedActivitiesBySchool(String schoolCid) {
-		List<Activity> activities = activityRepository.findAllBySchoolsCidAndActiveTrue(schoolCid);
+		List<Activity> activities;
+		if (schoolCid == null)
+			activities = activityRepository.findAllByActiveTrue();
+		else
+			activities = activityRepository.findAllBySchoolsCidAndActiveTrue(schoolCid);
+
 		List<ActivityRequestResponse> activityResponses = new ArrayList<ActivityRequestResponse>();
-		if (activities == null)
-			throw new ValidationException("No activities found.");
+
+		if (activities == null || activities.isEmpty())
+			throw new ValidationException("No general or school specific activities found.");
 		activities.forEach(activity -> {
 			activityResponses.add(new ActivityRequestResponse(activity));
 		});
@@ -392,6 +505,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 		return new SuccessResponse(200, "Activity successfuly deleted.");
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public ResponseEntity<?> uploadActivityFromExcel(MultipartFile file, String schoolCid) {
 		if (file == null || file.isEmpty() || file.getSize() == 0)
@@ -539,5 +653,25 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 		Map<String, CellType> columnTypes = ExcelUtil.sheetColumns(sheetName);
 		return fetchRowValues(columnTypes, sheet, errors, sheetName);
 
+	}
+
+	@Override
+	public List<ActivityRequestResponse> getAllGeneralActivities() {
+
+		List<Activity> generalActivities = activityRepository.findAllByIsGeneralTrueAndActiveTrue();
+
+		if (generalActivities == null || generalActivities.isEmpty()) {
+			throw new NotFoundException("no general activities found");
+		}
+
+		List<ActivityRequestResponse> responseList = new ArrayList<ActivityRequestResponse>();
+
+		for (Activity activity : generalActivities) {
+
+			responseList.add(new ActivityRequestResponse(activity));
+
+		}
+
+		return responseList;
 	}
 }

@@ -3,9 +3,6 @@ package com.nxtlife.mgs.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,7 +42,7 @@ public class TeacherController {
 		return teacherService.saveClassTeacher(teacherRequest);
 	}
 
-	@PostMapping("teachers/signUp")
+	@PostMapping("teacher/signUp")
 	public TeacherResponse signUp(@RequestBody TeacherRequest teacherRequest) {
 		if (teacherRequest.getIsCoach())
 			return teacherService.saveCoach(teacherRequest);
@@ -57,7 +54,7 @@ public class TeacherController {
 		return teacherService.update(request, cid);
 	}
 
-	@GetMapping("api/teachers/all")
+	@GetMapping("api/teachers")
 	public List<TeacherResponse> getAllTeachers(@RequestParam(defaultValue = "0") Integer pageNo,
 			@RequestParam(defaultValue = "10") Integer pageSize) {
 		return teacherService.getAllTeachers(pageNo, pageSize);
@@ -76,6 +73,11 @@ public class TeacherController {
 	@GetMapping(value = "api/teachers/classTeacher/{cId}")
 	public TeacherResponse getClassTeacherByCId(@PathVariable("cId") String cId) {
 		return teacherService.findClassTeacherByCId(cId);
+	}
+
+	@GetMapping(value = "api/{schoolCid}/managment")
+	public List<TeacherResponse> getAllManagmentBySchool(@PathVariable("schoolCid") String schoolCid) {
+		return teacherService.getAllManagmentBySchool(schoolCid);
 	}
 
 	@DeleteMapping("api/teachers/{cid}")

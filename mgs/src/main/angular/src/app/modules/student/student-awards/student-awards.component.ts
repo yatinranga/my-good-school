@@ -12,28 +12,43 @@ export class StudentAwardsComponent implements OnInit {
   activities: any;
   studentId: any;
   awardsArr = [];
+  loader : boolean = false ;
 
   constructor(private studentService : StudentService) { }
 
   ngOnInit() {
     this.studentInfo = JSON.parse(localStorage.getItem('user_info'));
-    this.schoolId = this.studentInfo['student'].schoolId;
     this.studentId = this.studentInfo['student'].id;
+    this.schoolId = this.studentInfo['student'].schoolId;
     this.getStudentActivity();
   }
 
   getStudentActivity() {
     this.studentService.getActivity(this.schoolId).subscribe(
-      (res) => this.activities = res,      
+      (res) => this.activities = res ,
       (err) => console.log(err)
     );
   }
 
   getStudentAwards(activityId){
-    this.studentService.getAwarads(this.studentId,activityId).subscribe((res) => {
-      this.awardsArr = res;
-    },
-    (err) => console.log(err));
+    this.loader = true;
+    console.log(activityId);
+
+    if(activityId === "All"){
+      this.studentService.getAllAwards(this.studentId).subscribe((res) => {
+        this.awardsArr = res;
+        console.log(res);
+        this.loader = false;
+      },
+      (err) =>  console.log(err));
+    }else{
+      this.studentService.getAwards(this.studentId,activityId).subscribe((res) => {
+        this.awardsArr = res;
+        console.log(res);
+        this.loader = false;
+      },
+      (err) => console.log(err));
+    }
   }
 
   getDate(date) {

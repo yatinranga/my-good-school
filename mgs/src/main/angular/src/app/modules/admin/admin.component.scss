@@ -1,30 +1,5 @@
 @import '../../app.component.scss';
 
-nav.navbar.navbar-expand-sm
-{
-     background: $active;
-     display: inline-block;
-     width: 100%;
-     padding: 0;
-}
-button.btn-dark.my-sm-0{
-    float: right;
-    padding: 11px 20px;
-    border-radius: 0;
-    border: none;
-    background: $label-color;
-}
-ul.navbar-nav{
-    float: left;
-}
+@import '../signup/signup.component.scss';
 
-a.nav-link{
-    color: $light;
-    background: $active;
-    font-size: 19px;
-}
 
-li.nav-item.active .nav-link {
-    background: $label-color;
-    border: 1px solid $label-color;
-}

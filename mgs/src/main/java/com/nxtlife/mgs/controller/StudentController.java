@@ -1,5 +1,6 @@
 package com.nxtlife.mgs.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -15,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nxtlife.mgs.enums.ActivityStatus;
 import com.nxtlife.mgs.service.ActivityPerformedService;
 import com.nxtlife.mgs.service.StudentService;
-import com.nxtlife.mgs.view.AwardResponse;
 import com.nxtlife.mgs.view.StudentRequest;
 import com.nxtlife.mgs.view.StudentResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
@@ -32,10 +33,11 @@ public class StudentController {
 	@Autowired
 	ActivityPerformedService activityPerformedService;
 
-//	@RequestMapping(value = "importStudents", method = RequestMethod.POST)
-//	public List<StudentResponse> uploadStudentsFromExcel(@RequestParam("file") MultipartFile file) {
-//		return studentService.uploadStudentsFromExcel(file);
-//	}
+	// @RequestMapping(value = "importStudents", method = RequestMethod.POST)
+	// public List<StudentResponse>
+	// uploadStudentsFromExcel(@RequestParam("file") MultipartFile file) {
+	// return studentService.uploadStudentsFromExcel(file);
+	// }
 
 	@PostMapping(value = "/student/signUp")
 	public StudentResponse signUpStudent(@RequestBody StudentRequest studentRequest) {
@@ -53,19 +55,28 @@ public class StudentController {
 	}
 
 	@GetMapping("api/students")
-	public List<StudentResponse> getAll() {
-		return studentService.getAll();
+	public List<StudentResponse> getAll(@RequestParam(name = "schoolId", required = false) String schoolId,
+			@RequestParam(name = "gradeId", required = false) String gradeId) {
+		if (schoolId == null && gradeId == null) {
+			return studentService.getAll();
+		}else if(schoolId!=null){
+			return studentService.getAllBySchoolCid(schoolId);
+		}else if(gradeId!=null){
+			return studentService.getAllByGradeId(gradeId);
+		}else{
+			return new ArrayList<>();
+		}
 	}
 
-//	@GetMapping("api/students/name/{name}")
-//	public List<StudentResponse> findByName(@PathVariable String name) {
-//		return studentService.findByName(name);
-//	}
+	// @GetMapping("api/students/name/{name}")
+	// public List<StudentResponse> findByName(@PathVariable String name) {
+	// return studentService.findByName(name);
+	// }
 
-//	@GetMapping("/id/{cId}")
-//	public StudentResponse findByid(@PathVariable Long id) {
-//		return studentService.findByid(id);
-//	}
+	// @GetMapping("/id/{cId}")
+	// public StudentResponse findByid(@PathVariable Long id) {
+	// return studentService.findByid(id);
+	// }
 
 	@GetMapping("api/student/{cId}")
 	public StudentResponse findByCId(@PathVariable String cId) {
@@ -77,10 +88,21 @@ public class StudentController {
 		return studentService.getAllBySchoolCid(schoolCid);
 	}
 
-	@GetMapping(value = "api/student/{cid}/awards")
-	public List<AwardResponse> getAllAwardsOfStudentByActivityId(@PathVariable("cid") String studentCid,
-			@RequestParam(name = "activityCid", required = false) String activityCid) {
-		return studentService.getAllAwardsOfStudentByActivityId(studentCid, activityCid);
+	// @GetMapping(value = "api/student/{cid}/awards")
+	// public List<AwardResponse>
+	// getAllAwardsOfStudentByActivityId(@PathVariable("cid") String studentCid,
+	// @RequestParam(name = "activityCid", required = false) String activityCid)
+	// {
+	// return studentService.getAllAwardsOfStudentByActivityId(studentCid,
+	// activityCid);
+	// }
+
+	@GetMapping(value = "api/student/activity/{activityCid}")
+	public List<StudentResponse> getAllStudentsBySchoolAndActivityAndCoachAndStatusReviewed(
+			@RequestParam("schoolId") String schoolCid, @RequestParam("gradeId") String gradeCid,
+			@PathVariable("activityCid") String activityCid, @RequestParam("teacherId") String teacherCid) {
+		return studentService.getAllStudentsBySchoolAndActivityAndCoachAndStatusReviewed(schoolCid, gradeCid,
+				activityCid, ActivityStatus.Reviewed.toString(), teacherCid);
 	}
 
 	@DeleteMapping("api/students/{cid}")

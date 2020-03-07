@@ -6,15 +6,16 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.school.School;
@@ -41,7 +42,9 @@ public class Activity extends BaseEntity {
 
 	private Boolean active;
 
-	@ManyToMany
+	private Boolean isGeneral;
+
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "activity_focus_area", joinColumns = { @JoinColumn(name = "activity_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "focus_area_id") })
 	private List<FocusArea> focusAreas;
@@ -51,9 +54,11 @@ public class Activity extends BaseEntity {
 			@JoinColumn(name = "teacher_id") })
 	private List<Teacher> teachers;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "school_activity", joinColumns = { @JoinColumn(name = "activity_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "school_id") })
+			@JoinColumn(name = "school_id") }, uniqueConstraints = @UniqueConstraint(columnNames = { "activity_id",
+					"school_id" }))
+	@Fetch(value = FetchMode.SUBSELECT)
 	private List<School> schools;
 
 	public String getName() {
@@ -118,6 +123,14 @@ public class Activity extends BaseEntity {
 
 	public void setSchools(List<School> schools) {
 		this.schools = schools;
+	}
+
+	public Boolean getIsGeneral() {
+		return isGeneral;
+	}
+
+	public void setIsGeneral(Boolean isGeneral) {
+		this.isGeneral = isGeneral;
 	}
 
 	public Activity(@NotNull String name, FourS fourS, @NotNull String cid, String description, Boolean active,

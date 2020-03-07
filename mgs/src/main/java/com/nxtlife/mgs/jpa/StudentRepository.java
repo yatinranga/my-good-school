@@ -11,7 +11,9 @@ import com.nxtlife.mgs.enums.ActivityStatus;
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
-	Student getOneByCid(String cid);
+	Student getOneByCidAndActiveTrue(String cid);
+	
+	Student getByUserId(Long userId);
 
 	int countByEmail(String email);
 
@@ -28,6 +30,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 	void deleteByCid(String cid);
 
 	List<Student> findAllBySchoolCidAndActiveTrue(String schoolCid);
+	
+	List<Student> findAllByGradeCidAndActiveTrue(String gradeCid);
 
 	List<Student> findAllByActiveTrue();
 
@@ -41,8 +45,16 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
 	Student findByCid(String cid);
 
+
 	List<Student> findAllBySchoolCidAndSchoolActiveTrueAndGradeCidAndGradeActiveTrueAndActivitiesActivityCidAndActivitiesActivityActiveTrueAndActivitiesActivityStatusAndActivitiesTeacherCidAndActivitiesTeacherActiveTrueAndActiveTrue(
 			String schoolCid, String gradeCid, String activityCid, ActivityStatus activityStatus, String teacherCid);
+
+	List<Student> findAllBySchoolCidAndGradeCidAndActivitiesActivityCidAndActivitiesActivityStatusAndSchoolActiveTrueAndGradeActiveTrueAndActivitiesActivityActiveTrueAndActiveTrue(
+			String schoolCid, String gradeCid, String activityCid, ActivityStatus valueOf);
+
+	Boolean existsByCidAndActiveTrue(String studentCid);
+
+
 
 	/*
 	 * List<Student>

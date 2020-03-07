@@ -18,4 +18,12 @@ public abstract class BaseService {
 		}
 		return null;
 	}
+	
+	public static Long getUserId() {
+		User user = getUser();
+		if(user!=null){
+			return user.getUserId();
+		}
+		return null;
+	}
 }

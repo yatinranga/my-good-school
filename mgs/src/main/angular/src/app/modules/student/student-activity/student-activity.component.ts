@@ -15,6 +15,10 @@ export class StudentActivityComponent implements OnInit {
  
 
   changeActivityType(str) {
-    return this.activityType = !this.activityType;
+    return this.activityType = true ;
+  }
+
+  close(isCloed){
+    this.activityType = isCloed;
   }
 }

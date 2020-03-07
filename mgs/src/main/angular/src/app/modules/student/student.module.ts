@@ -10,14 +10,13 @@ import { HomeComponent } from './home/home.component';
 import { StudentAwardsComponent } from './student-awards/student-awards.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SavedActitvityComponent } from './student-activity/saved-actitvity/saved-actitvity.component';
-import { ReviewedActitvityComponent } from './student-activity/reviewed-actitvity/reviewed-actitvity.component';
 import { StudentActivityComponent } from './student-activity/student-activity.component';
 import { AddActivityComponent } from './student-activity/add-activity/add-activity.component';
 
 
 const routes: Routes = [
   {
-    path: ':id',
+    path: '',
     component: StudentComponent,  
     children: [
       {
@@ -35,23 +34,11 @@ const routes: Routes = [
           {
             path: '',
             component: SavedActitvityComponent
-          },
-          {
-            path: 'reviewed-activity',
-            component: ReviewedActitvityComponent
-          }]
-        //   {
-        //     path: 'add-activity',
-        //     component: AddActitvityComponent
-        //   },
-        //   {
-        //     path: '',
-        //     component: SavedActitvityComponent
-        //   }
-        // ]
+          }
+          ]
       },
       {
-        path: 'awards-achievment',
+        path: 'awards-achievement',
         component: StudentAwardsComponent
       },
       {
@@ -69,7 +56,6 @@ const routes: Routes = [
     StudentAwardsComponent,
     SidebarComponent,
     SavedActitvityComponent,
-    ReviewedActitvityComponent,
     StudentActivityComponent,
     ProfileComponent,
     AddActivityComponent

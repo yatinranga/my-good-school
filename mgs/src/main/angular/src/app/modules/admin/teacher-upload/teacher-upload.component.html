@@ -1,26 +1,27 @@
-
-<h3> Data Upload Form For Teachers</h3>
-<div class="card bg-light">
-  <div class="card-body text-center">
-    <form [formGroup]="teacherBulkForm" (ngSubmit)="uploadTeacher()">
-      Select School : <div class="input-field">
-        <select>
-          <option value="" disabled selected>Select School </option>
-          <option *ngFor="let school of schools; let i = index;" value={{school.id}}>{{school.name}}</option>
-        </select>
+<div class="teacher_upload">
+    <h2> Data Upload Form For Teachers</h2>
+    <div class="card bg-light">
+      <div class="card-body text-center">
+        <form [formGroup]="teacherBulkForm" (ngSubmit)="uploadTeacher()">
+          Select School : <div class="input-field">
+            <select>
+              <option value="" disabled selected>Select School </option>
+              <option *ngFor="let school of schools; let i = index;" value={{school.id}}>{{school.name}}</option>
+            </select>
+          </div>
+          <div class="input-field">
+    
+            <input class="choosefile" type="file" name="selectedFile" (change)="onFileSelect($event)" />
+            <span class="choosefile choosefile-custom"> <i class="fa fa-file"></i> </span>
+          </div>
+          <button class="upload btn" type="submit"> Upload </button>
+        </form>
+    
+        <div>
+    
+          <button class="download btn" type="button" name="" (click)="downloadTeacher()">Download Teacher Template</button>
+          <a style="display: none;" download #dwnld></a>
+        </div>
       </div>
-      <div class="input-field">
-
-        <input class="choosefile" type="file" name="selectedFile" (change)="onFileSelect($event)" />
-        <span class="choosefile choosefile-custom"> <i class="fa fa-file"></i> </span>
-      </div>
-      <button class="upload btn" type="submit"> Upload </button>
-    </form>
-
-    <div>
-
-      <button class="btn" type="button" name="" (click)="downloadTeacher()">Download Teacher Template</button>
-      <a style="display: none;" download #dwnld></a>
     </div>
-  </div>
 </div>

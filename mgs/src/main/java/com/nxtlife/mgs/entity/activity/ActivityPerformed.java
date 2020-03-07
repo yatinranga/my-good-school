@@ -9,10 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -28,6 +24,7 @@ import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.enums.ActivityStatus;
 
+@SuppressWarnings("serial")
 @Entity
 @DynamicUpdate(true)
 public class ActivityPerformed extends BaseEntity {
@@ -47,20 +44,20 @@ public class ActivityPerformed extends BaseEntity {
 
 	private Boolean active;
 
-	@Min(value = 0)
-	@Max(value = 10)
+	@Min(value = 0,message = "Minimum permissible value is 0.")
+	@Max(value = 10,message = "Maximum permissible value is 10.")
 	private Integer participationScore;
 
-	@Min(value = 0)
-	@Max(value = 10)
+	@Min(value = 0,message = "Minimum permissible value is 0.")
+	@Max(value = 10,message = "Maximum permissible value is 10.")
 	private Integer initiativeScore;
 
-	@Min(value = 0)
-	@Max(value = 5)
+	@Min(value = 0,message = "Minimum permissible value is 0.")
+	@Max(value = 5,message = "Maximum permissible value is 5.")
 	private Integer achievementScore;
 
-	@Min(value = 0)
-	@Max(value = 5)
+	@Min(value = 0,message = "Minimum permissible value is 0.")
+	@Max(value = 5,message = "Maximum permissible value is 5.")
 	private Integer star;
 
 	@NotNull

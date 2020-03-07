@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { StudentService } from 'src/app/services/student.service';
 import { AlertService } from 'src/app/services/alert.service';
@@ -18,6 +18,8 @@ export class AddActivityComponent implements OnInit {
   addActivityForm: FormGroup;
   file = [];
   schoolId = "";
+  @Output() isClosed = new EventEmitter<boolean>();
+  @Output() pushActivity = new EventEmitter();
 
   constructor(private formBuilder: FormBuilder, private studentService: StudentService,
     private alertService: AlertService, private router: Router) { }
@@ -63,14 +65,22 @@ export class AddActivityComponent implements OnInit {
   }
 
   saveActivity() {
+
+    const time = this.addActivityForm.value.dateOfActivity + " 00:00:00";
+    this.addActivityForm.value.dateOfActivity = time ;
+    
     const formData = new FormData();
-    let date = new Date(this.addActivityForm.value.dateOfActivity);
-    let activityDate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+    // let date = new Date(this.addActivityForm.value.dateOfActivity);
+    // let activityDate = date.getFullYear() + "-" + (date.getMonth()) + "-" + date.getDate();
+
+    // const time = this.studentSignup.value.dob + " 00:00:00";
+    // this.studentSignup.value.dob = time;
+    // console.log(time);
 
     formData.append('studentId', this.studentInfo.student.id);
     formData.append('activityId', this.addActivityForm.value.activityId);
     formData.append('coachId', this.addActivityForm.value.coachId);
-    formData.append('dateOfActivity', activityDate);
+    formData.append('dateOfActivity', time);
     formData.append('description', this.addActivityForm.value.description);
 
     if (this.addActivityForm.value.attachment.length > 0) {
@@ -81,13 +91,22 @@ export class AddActivityComponent implements OnInit {
 
     console.log(this.addActivityForm.value);
 
-    this.studentService.addActivity("/api/students/activities", formData).subscribe(
+    this.studentService.addActivity("/api/student/activities", formData).subscribe(
       (res) => {
         console.log(res);
         this.alertService.showSuccessToast('Activity Saved !');
+        this.closeModel(false);
+        this.addActi(formData);
       },
       (err) => console.log(err)
     );
+  }
+
+  closeModel(value: boolean) {
+    this.isClosed.emit(value);
+  }
+  addActi(value : FormData){
+    this.pushActivity.emit(value);
   }
 
 }

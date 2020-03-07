@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nxtlife.mgs.service.ActivityService;
@@ -22,14 +23,26 @@ public class ActivityController {
 	@Autowired
 	private ActivityService activityService;
 
-	@GetMapping(value = "activitiesOffered")
-	public List<ActivityRequestResponse> getAllActivities() {
-		return activityService.getAllOfferedActivities();
+	@PostMapping(value = "/api/activitiesOffered")
+	public ActivityRequestResponse saveActivity(@RequestBody ActivityRequestResponse request) {
+		return activityService.saveActivity(request);
 	}
 
-	@GetMapping(value = "activitiesOffered/{schoolCid}")
-	public List<ActivityRequestResponse> getAllActivitiesOfSchool(@PathVariable("schoolCid") String schoolCid) {
+//	@GetMapping(value = "activitiesOffered")
+//	public List<ActivityRequestResponse> getAllActivities(@RequestParam(defaultValue = "0") Integer pageNo,
+//			@RequestParam(defaultValue = "10") Integer pageSize) {
+//		return activityService.getAllOfferedActivities(pageNo, pageSize);
+//	}
+
+	@GetMapping(value = { "activitiesOffered/{schoolCid}", "activitiesOffered" })
+	public List<ActivityRequestResponse> getAllActivitiesOfSchool(
+			@PathVariable(name = "schoolCid", required = false) String schoolCid) {
 		return activityService.getAllOfferedActivitiesBySchool(schoolCid);
+	}
+
+	@GetMapping("generalActivities")
+	public List<ActivityRequestResponse> getAllGeneralActivities() {
+		return activityService.getAllGeneralActivities();
 	}
 
 	@DeleteMapping("api/activitiesOffered/{cid}")
@@ -47,8 +60,4 @@ public class ActivityController {
 //		return activityService.uploadActivityFromExcel(file);
 //	}
 
-	@PostMapping(value = "/api/activitiesOffered")
-	public ActivityRequestResponse saveActivity(@RequestBody ActivityRequestResponse request) {
-		return activityService.saveActivity(request);
-	}
 }

@@ -7,22 +7,24 @@ import { StudentService } from 'src/app/services/student.service';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit {  
+export class ProfileComponent implements OnInit {
 
-  studentProfile : FormGroup;
-  editForm = "Student Profile";
+  studentProfile: FormGroup;
+  editForm = 'Student Profile';
   studentDetails = {};
   studentInfo: any;
   studentId: any;
+  tabs = 'guardian0';
+  dob = "";
 
-  constructor(private formBuilder:FormBuilder,private studentService : StudentService) { }
+  constructor(private formBuilder: FormBuilder, private studentService: StudentService) { }
 
   ngOnInit() {
     this.studentInfo = JSON.parse(localStorage.getItem('user_info'));
-    this.studentId = this.studentInfo['student'].id
+    this.studentId = this.studentInfo['student'].id;
     this.studentService.getProfile(this.studentId).subscribe((res) => {
       this.studentDetails = res;
-      console.log(this.studentDetails);      
+      console.log(this.studentDetails);
     },
       (err) => console.log(err)
     );
@@ -39,7 +41,13 @@ export class ProfileComponent implements OnInit {
     //   guardianMob : [''],
     //   guardianRelationship : ['']
     // });
-    // // this.student 
+    // // this.student
+  }
+
+  switchTabs(t) {
+    console.log(t);
+    
+    this.tabs = t;
   }
 
   // setEditForm(value){

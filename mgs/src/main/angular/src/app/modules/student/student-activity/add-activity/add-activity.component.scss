@@ -1,8 +1,5 @@
 @import '../../../../app.component.scss';
 
-.form {
-    margin: 50px 0;
-}
 .upload.input-field{
     position: relative;
 }
@@ -22,24 +19,52 @@ span.choosefile.choosefile-custom {
     box-shadow: 0 0 10px $light;
     border-radius: 0px;
 }
-button.btn.btnSubmit.btn-success {
-    box-shadow: none;
-    border-radius: 0px;
-}
-
 .input-field{
     position: relative;
 }
-
 textarea.form-control.add.ng-untouched.ng-pristine.ng-valid {
     padding: 5px !important;
     line-height: 15px !important;
     font-size: 17px !important;
     text-align: left !important;
 }
-
 .choosefile_box {
     width: 100%;
     display: inline-block;
     text-align: center;
+}
+form.add_activity_form .register-form {
+    background: white;
+    border-radius: 5px;
+    position: relative;
+    top: 160px;
+    padding: 20px;
+    width: 100%;
+    max-width: 500px;
+}
+
+form.add_activity_form{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+}
+button.btn.cancel {
+    margin: 0 10px;
+    background: firebrick !important;
+    padding: 12px;
+    outline: none !important
+}
+.action-buttons{
+    display: inline-block;
+    float: right;
+}
+button.btn.saved.btnSubmit.btn-success{
+    margin-top: 0;
+}
+.action-buttons i.fa{
+    font-size: 15px;
+    margin: 5px;
 }

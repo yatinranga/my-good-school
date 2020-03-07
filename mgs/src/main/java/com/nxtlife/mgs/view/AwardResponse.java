@@ -1,5 +1,6 @@
 package com.nxtlife.mgs.view;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.nxtlife.mgs.entity.school.Award;
 import com.nxtlife.mgs.entity.school.AwardActivityPerformed;
+import com.nxtlife.mgs.enums.AwardStatus;
 
 @JsonInclude(value = Include.NON_ABSENT)
 public class AwardResponse {
@@ -15,11 +17,13 @@ public class AwardResponse {
 	private String id;
 	private String description;
 	private String createrId;
-//	private String assignerId;
-//	private List<String> activityPerformedIds;
-	private ActivityPerformedResponse activityPerformedResponse;
+	private String createdBy;
+	private List<ActivityPerformedResponse> activityPerformedResponses;
 	private Date dateOfReceipt;
-	private Boolean isVerified;
+	private AwardStatus status;
+	private String studentId;
+	private String studentName;
+	private ActivityRequestResponse activity;
 
 	public String getName() {
 		return name;
@@ -57,20 +61,12 @@ public class AwardResponse {
 
 	}
 
-	public ActivityPerformedResponse getActivityPerformedResponse() {
-		return activityPerformedResponse;
+	public List<ActivityPerformedResponse> getActivityPerformedResponses() {
+		return activityPerformedResponses;
 	}
 
-	public void setActivityPerformedResponse(ActivityPerformedResponse activityPerformedResponse) {
-		this.activityPerformedResponse = activityPerformedResponse;
-	}
-
-	public Boolean getIsVerified() {
-		return isVerified;
-	}
-
-	public void setIsVerified(Boolean isVerified) {
-		this.isVerified = isVerified;
+	public void setActivityPerformedResponses(List<ActivityPerformedResponse> activityPerformedResponses) {
+		this.activityPerformedResponses = activityPerformedResponses;
 	}
 
 	public Date getDateOfReceipt() {
@@ -81,20 +77,70 @@ public class AwardResponse {
 		this.dateOfReceipt = dateOfReceipt;
 	}
 
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public AwardStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(AwardStatus status) {
+		this.status = status;
+	}
+
+	public String getStudentId() {
+		return studentId;
+	}
+
+	public void setStudentId(String studentId) {
+		this.studentId = studentId;
+	}
+
+	public String getStudentName() {
+		return studentName;
+	}
+
+	public void setStudentName(String studentName) {
+		this.studentName = studentName;
+	}
+
+	public ActivityRequestResponse getActivity() {
+		return activity;
+	}
+
+	public void setActivity(ActivityRequestResponse activity) {
+		this.activity = activity;
+	}
+
 	public AwardResponse(Award award) {
 		this.id = award.getCid();
 		this.description = award.getDescription();
 		this.name = award.getName();
-		if (award.getTeacher() != null)
+		this.dateOfReceipt = award.getDateOfReceipt();
+		this.status = award.getStatus();
+		if (award.getTeacher() != null) {
 			this.createrId = award.getTeacher().getcId();
-
-	}
-
-	public AwardResponse(AwardActivityPerformed aap) {
-
-		this.name = aap.getAward().getName();
-		this.dateOfReceipt = aap.getDateOfReceipt();
-		this.description = aap.getActivityPerformed().getActivity().getName();
+			this.createdBy = award.getTeacher().getName();
+		}
+		if (award.getStudent() != null) {
+			this.studentId = award.getStudent().getCid();
+			this.studentName = award.getStudent().getName();
+		}
+		if (award.getAwardActivityPerformed() != null) {
+			this.activityPerformedResponses = new ArrayList<>();
+			for (AwardActivityPerformed awardActivityPerformed : award.getAwardActivityPerformed()) {
+				this.activityPerformedResponses
+						.add(new ActivityPerformedResponse(awardActivityPerformed.getActivityPerformed()));
+			}
+		}
+		if (award.getActivity() != null) {
+			activity = new ActivityRequestResponse(award.getActivity());
+		}
 	}
 
 }

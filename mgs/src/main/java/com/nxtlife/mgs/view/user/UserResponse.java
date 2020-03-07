@@ -20,7 +20,7 @@ public class UserResponse {
 	private StudentResponse student;
 	private TeacherResponse teacher;
 	private SchoolResponse school;
-
+	private String roleName;
 
 	public String getUserName() {
 		return userName;
@@ -69,7 +69,7 @@ public class UserResponse {
 	public void setRoleId(String roleId) {
 		this.roleId = roleId;
 	}
-	
+
 	public StudentResponse getStudent() {
 		return student;
 	}
@@ -94,29 +94,38 @@ public class UserResponse {
 		this.school = school;
 	}
 
+	public String getRoleName() {
+		return roleName;
+	}
+
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
+
 	public UserResponse(User user) {
 //		this.id = user.getId();
 		this.id = user.getCid();
 		this.email = user.getEmail();
-		if(user.getRoleForUser()!=null)
-		  this.roleId = user.getRoleForUser().getCid();
+		if (user.getRoleForUser() != null) {
+			this.roleId = user.getRoleForUser().getCid();
+			this.roleName = user.getRoleForUser().getName();
+		}
 		this.userName = user.getUserName();
-		if(user.getUserType()!=null)
-		  this.userType = user.getUserType().toString();
-		this.contactNumber = user.getContactNo();
-		if(user.getStudent()!=null) {
-			this.student = new StudentResponse(user.getStudent(),true);
+		if (user.getUserType() != null)
+			this.userType = user.getUserType().toString();
+		this.contactNumber = user.getMobileNo();
+		if (user.getStudent() != null) {
+			this.student = new StudentResponse(user.getStudent(), true);
 		}
-		if(user.getSchool()!=null)
-			this.school=new SchoolResponse(user.getSchool());
-		if(user.getTeacher()!=null) {
-			this.teacher = new TeacherResponse(user.getTeacher(),true);
+		if (user.getSchool() != null)
+			this.school = new SchoolResponse(user.getSchool());
+		if (user.getTeacher() != null) {
+			this.teacher = new TeacherResponse(user.getTeacher(), true);
 		}
-			
-		
+
 	}
-	
+
 	public UserResponse() {
-		
+
 	}
 }

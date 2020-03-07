@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.nxtlife.mgs.entity.activity.ActivityPerformed;
 import com.nxtlife.mgs.entity.activity.File;
+import com.nxtlife.mgs.filtering.filter.ActivityPerformedFilter;
 import com.nxtlife.mgs.view.ActivityPerformedRequest;
 import com.nxtlife.mgs.view.ActivityPerformedResponse;
 import com.nxtlife.mgs.view.FileRequest;
@@ -18,15 +19,11 @@ public interface ActivityPerformedService {
 
 	ActivityPerformedResponse saveActivity(ActivityPerformedRequest request);
 
-	List<ActivityPerformedResponse> getAllSavedActivitiesOfStudent(String studentCid);
-
-	List<ActivityPerformedResponse> getAllSubmittedActivityOfStudent(String studentCid);
-
-	List<ActivityPerformedResponse> getAllReviewedActivityOfStudent(String studentCid);
+	List<ActivityPerformedResponse> getAllSavedActivitiesOfStudent(String studentCid,Integer page , Integer pageSize);
 
 	ActivityPerformedResponse submitActivity(String activityPerformedCid);
 
-	List<ActivityPerformedResponse> getAllActivitiesOfStudentByStatus(String status, String studentCid);
+	List<ActivityPerformedResponse> getAllActivitiesOfStudentByStatus(String status, String studentCid,Integer page , Integer pageSize);
 
 	List<ActivityPerformedResponse> findAllByStudentCidAndTeacherCidAndActivityStatusAndActiveTrue(String studentCid,
 			String teacherCid, String activityStatus);
@@ -46,7 +43,7 @@ public interface ActivityPerformedService {
 
 	ActivityPerformedResponse submitActivityByCoach(String activityPerformedCid);
 
-	List<ActivityPerformedResponse> getAllActivitiesAssignedToCoachforReview(String coachCid);
+	List<ActivityPerformedResponse> getAllActivitiesAssignedToCoachforReview(String coachCid , String status);
 
 	List<ActivityPerformedResponse> getAllPendingActivitiesByClass(String coachCid, String gradeCid);
 
@@ -60,6 +57,12 @@ public interface ActivityPerformedService {
 
 	SuccessResponse deleteActivityOfStudent(String activityPerformedCid);
 
-	List<ActivityPerformedResponse> getAllPerformedActivitiesOfStudent(String studentCid);
+	List<ActivityPerformedResponse> getAllPerformedActivitiesOfStudent(String studentCid , Integer page , Integer pageSize);
+
+	List<ActivityPerformedResponse> getAllSubmittedActivityOfStudent(String studentCid, Integer page, Integer pageSize);
+
+	List<ActivityPerformedResponse> getAllReviewedActivityOfStudent(String studentCid, Integer page, Integer pageSize);
+
+	List<ActivityPerformedResponse> filter(String studentCid ,ActivityPerformedFilter filterRequest);
 
 }

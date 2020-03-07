@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CustomHttpService } from './custom-http-service.service';
-import { HttpHeaders } from '@angular/common/http';
+
 
 @Injectable({
   providedIn: 'root'
@@ -11,18 +11,18 @@ export class StudentService {
 
   // Single student signup
   uploadStudentDetails(data) {
-    const url = "/students/signUp"
+    const url = "/student/signUp"
     return this.http.post(url, data);
   }
   // Single teacher signup
   uploadTeacherDetails(data) {
-    const url = "/teachers/signUp"
+    const url = "/teacher/signUp"
     return this.http.post(url, data);
   }
 
   // to get profile of student
   getProfile(studentId) {
-    return this.http.get("/api/students/" + studentId);
+    return this.http.get("/api/student/" + studentId);
   }
 
   //  to get info about the student
@@ -30,9 +30,14 @@ export class StudentService {
     return this.http.get("/api/info");
   }
 
+  // get ALL AWARDS of student
+  getAllAwards(studentCid){
+    return this.http.get("/api/student/" + studentCid + "/awards");
+  }
+    
   // to get AWARDS of student
-  getAwarads(studentCid,activityId){
-    return this.http.get("/api/students/awards?studentId=" + studentCid + "&activityId=" + activityId);
+  getAwards(studentCid,activityId){
+    return this.http.get("/api/student/awards?studentId=" + studentCid + "&activityId=" + activityId);
   }
 
   // to get the list of all schools
@@ -40,29 +45,33 @@ export class StudentService {
     return this.http.get(url);
   }
 
-  // to get activities in particular school
+  getGradesOfSchool(schoolId){
+    return this.http.get("/grades?schoolId=" + schoolId);
+  }
+
+  // to get all activities in particular school
   getActivity(schoolId) {
     return this.http.get("/activitiesOffered/" + schoolId);
   }
 
   // to get SAVED activities of student
   getSavedActivity(studentCid) {
-    return this.http.get("/api/students/activities?status=saved&studentId=" + studentCid);
+    return this.http.get("/api/student/activities?status=saved&studentId=" + studentCid);
   }
 
   // to get SUBMITTED Activities of student
   getSubmittedActivity(studentCid) {
-    return this.http.get("/api/students/activities?status=submitted&studentId=" + studentCid);
+    return this.http.get("/api/student/activities?status=submitted&studentId=" + studentCid);
   }
 
   // to get REVIEWED Activities of student
   getReviewedActivity(studentCid) {
-    return this.http.get("/api/students/activities?status=reviewed&studentId=" + studentCid);
+    return this.http.get("/api/student/activities?status=reviewed&studentId=" + studentCid);
   }
 
   // to get ALL Activities of student
   getAllActivity(studentCid) {
-    return this.http.get("/api/students/activities?studentId=" + studentCid);
+    return this.http.get("/api/student/activities?studentId=" + studentCid);
   }
 
   // to get teacher/coaches who perform particular activity
@@ -77,12 +86,13 @@ export class StudentService {
 
   // to SUBMIT saved activity by student
   submitActivity(activityPerformedId) {
-    return this.http.post("/api/students/" + activityPerformedId + "/submit", {});    
+    return this.http.post("/api/student/" + activityPerformedId + "/submit", {});    
   }
+  
   // TO DELELTE saved activity by student
   deleteActivity(activityId) {
     console.log("Delete APi");
-    return this.http.delete("/api/students/activities/" + activityId);
+    return this.http.delete("/api/student/activity/" + activityId);
   }
 
 }

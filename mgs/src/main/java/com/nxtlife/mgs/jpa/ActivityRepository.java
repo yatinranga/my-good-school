@@ -2,6 +2,8 @@ package com.nxtlife.mgs.jpa;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,6 +19,8 @@ import com.nxtlife.mgs.enums.PSDArea;
 public interface ActivityRepository extends JpaRepository<Activity, Long> {
 
 	Activity getOneByNameAndActiveTrue(String name);
+	
+	String findCidByNameAndActiveTrue(String cid);
 
 	Activity getOneByCidAndActiveTrue(String cid);
 
@@ -46,5 +50,11 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
 	List<Activity> findAllBySchoolsCidAndFocusAreasPsdAreaAndActiveTrue(String schoolCid, PSDArea psdArea);
 
 	Activity findByCidAndActiveTrue(String activityCid);
+
+	Page<Activity> findAllByActiveTrue(Pageable paging);
+
+	Activity getOneByCid(String activity);
+
+	List<Activity> findAllByIsGeneralTrueAndActiveTrue();
 
 }
