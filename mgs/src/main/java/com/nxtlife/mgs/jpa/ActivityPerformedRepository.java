@@ -76,4 +76,6 @@ public interface ActivityPerformedRepository extends JpaRepository<ActivityPerfo
 			String coachCid, ActivityStatus submittedbystudent, ActivityStatus savedbyteacher, ActivityStatus reviewed);
 	
 	Long findIdByCidAndActiveTrue(String activityPerformedCid);
+
+	boolean existsByCidAndActiveTrue(String activityCid);
 }

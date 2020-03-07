@@ -5,12 +5,21 @@
     </div>
     <div class="menu">
       <ul>
-        <li class="cb" routerLinkActive='active'> <a routerLink='./home' class="cb menu_link"> <i class="fa fa-home"> </i> Home </a> </li>
-        <li class="pink" routerLinkActive='active'> <a routerLink='./profile' class="pink menu_link"> <i class="fa fa-id-badge"> </i> Profile </a> </li>
-        <li class="blue" routerLinkActive='active'> <a routerLink='./activity' class="blue menu_link"> <i class="fa fa-bar-chart"> </i> Activity</a></li>
+        <li class="cb" routerLinkActive='active'>
+          <a routerLink='./home' class="cb menu_link">
+            <i class="fa fa-home"> </i> Home </a>
+        </li>
+        <li class="pink" routerLinkActive='active'>
+          <a routerLink='./profile' class="pink menu_link">
+            <i class="fa fa-id-badge"> </i> Profile </a>
+        </li>
+        <li class="blue" routerLinkActive='active'>
+          <a routerLink='./activity' class="blue menu_link">
+            <i class="fa fa-bar-chart"> </i> Activity</a>
+        </li>
         <li class="green" routerLinkActive='active'>
-          <a routerLink='./awards-achievement' class="green menu_link"> <i class="fa fa-trophy"> </i> Awards and
-            Achievements </a>
+          <a routerLink='./awards-achievement' class="green menu_link">
+            <i class="fa fa-trophy"> </i> Awards and Achievements </a>
         </li>
       </ul>
     </div>
@@ -19,9 +28,12 @@
       <div class="dropdown">
         <i class="fa fa-user-circle"></i>
         <div class="dropdown-content">
-          <a href=""> <i class="fa fa-user"></i> My Profile </a>
-          <a href=""> <i class="fa fa-tasks"></i> My Activities </a>
-          <a href=""> <i class="fa fa-trophy"> </i> My Achievements </a>
+          <a routerLink='./profile'>
+            <i class="fa fa-user"></i> My Profile </a>
+          <a routerLink='./activity'>
+            <i class="fa fa-tasks"></i> My Activities </a>
+          <a routerLink='./awards-achievement'>
+            <i class="fa fa-trophy"> </i> My Achievements </a>
           <div class="divider"></div>
           <a routerLink='login' class="logout" (click)="authService.logoutUser();">
             <i class="fa fa-sign-out-alt"></i>Logout </a>
