@@ -124,17 +124,17 @@ export class CustomHttpService {
 
     showErrorAlert(errorInfo: any) {
         //check for 401 error so that a Logout btn can be given with that
-        if (errorInfo.status === 401) {
-            this.alertService.showErrorAlertWithBtn(
-                'Session Expired',
-                'Logout',
-                () => {
-                    localStorage.clear();
-                    window.location.reload();
-                }
-            );
-            return;
-        }
+        // if (errorInfo.status === 401) {
+        //     this.alertService.showErrorAlertWithBtn(
+        //         'Session Expired',
+        //         'Logout',
+        //         () => {
+        //             localStorage.clear();
+        //             window.location.reload();
+        //         }
+        //     );
+        //     return;
+        // }
         this.alertService.showErrorAlert(errorInfo.msg);
     }
 

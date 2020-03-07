@@ -34,7 +34,7 @@ public class SchoolController {
 		return schoolService.save(schoolRequest);
 	}
 
-	@GetMapping(value = "api/schools/{id}")
+	@GetMapping(value = "api/school/{id}")
 	public SchoolResponse getByCid(@PathVariable("id") String cid) {
 		return schoolService.findByCid(cid);
 	}
@@ -49,7 +49,7 @@ public class SchoolController {
 		return schoolService.update(request, cid);
 	}
 
-	@DeleteMapping(value = "api/schools/{id}")
+	@DeleteMapping(value = "api/school/{id}")
 	public SuccessResponse delete(@PathVariable("id") String cid) {
 		return schoolService.delete(cid);
 	}

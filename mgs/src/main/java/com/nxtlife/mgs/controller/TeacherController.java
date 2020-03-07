@@ -37,7 +37,7 @@ public class TeacherController {
 //		return teacherService.uploadTeachersFromExcel(file, true);
 //	}
 
-	@PostMapping("api/teachers/")
+	@PostMapping("api/teacher/")
 	public TeacherResponse saveTeacher(@RequestBody TeacherRequest teacherRequest) {
 		return teacherService.saveClassTeacher(teacherRequest);
 	}
@@ -49,7 +49,7 @@ public class TeacherController {
 		return teacherService.saveClassTeacher(teacherRequest);
 	}
 
-	@PutMapping("api/teachers/update/{cid}")
+	@PutMapping("api/teacher/update/{cid}")
 	public TeacherResponse update(@RequestBody TeacherRequest request, @PathVariable String cid) {
 		return teacherService.update(request, cid);
 	}
@@ -65,12 +65,12 @@ public class TeacherController {
 		return teacherService.getAllClassTeachers();
 	}
 
-	@GetMapping(value = "api/teachers/{cId}")
+	@GetMapping(value = "api/teacher/{cId}")
 	public TeacherResponse getTeacherByCId(@PathVariable("cId") String cId) {
 		return teacherService.findByCId(cId);
 	}
 
-	@GetMapping(value = "api/teachers/classTeacher/{cId}")
+	@GetMapping(value = "api/teacher/classTeacher/{cId}")
 	public TeacherResponse getClassTeacherByCId(@PathVariable("cId") String cId) {
 		return teacherService.findClassTeacherByCId(cId);
 	}
@@ -80,7 +80,7 @@ public class TeacherController {
 		return teacherService.getAllManagmentBySchool(schoolCid);
 	}
 
-	@DeleteMapping("api/teachers/{cid}")
+	@DeleteMapping("api/teacher/{cid}")
 	public SuccessResponse delete(@PathVariable String cid) {
 		return teacherService.delete(cid);
 	}

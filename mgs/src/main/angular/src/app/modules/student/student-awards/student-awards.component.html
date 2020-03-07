@@ -1,5 +1,5 @@
 <div class="sortby" style="float: right"> Filter by:
-    <select style="border: 1px solid #ddd" (ngModelChange)="getStudentAwards($event)">
+    <select style="border: 1px solid #ddd" (ngModelChange)="getStudentAwards($event)" ngModel>
         <option value="All" selected>All</option>
         <option *ngFor="let activity of activities; let i = index;" value={{activity.id}}>
             {{activity.name}}
@@ -27,7 +27,7 @@
                     <td>{{awards.description}}</td>
                     <td>{{awards.name}}</td>
                     <td>
-                        <div>{{getDate(awards.dateOfActivity) | date}}}</div>
+                        
                     </td>
                 </tr>
             </tbody>

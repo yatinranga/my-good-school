@@ -18,6 +18,7 @@ export class TeacherAwardsComponent implements OnInit {
   teacherInfo: any;
   schoolId = "";
   activities = [];
+  loader : boolean = false ;
 
   gradeId = "";
   activityId = ""

@@ -16,49 +16,49 @@ import com.nxtlife.mgs.util.DateUtil;
 @JsonInclude(value = Include.NON_ABSENT)
 public class ActivityPerformedResponse {
 
-    private String dateOfActivity;
-	
+	private String dateOfActivity;
+
 	private String id;
-	
+
 	private String description;
-	
+
 	private String coachRemark;
-	
+
 	private String coachRemarkDate;
-	
+
 	private Boolean active;
-	
+
 	private Integer participationScore;
-	
+
 	private Integer initiativeScore;
-	
+
 	private Integer achievementScore;
-	
+
 	private Integer star;
-	
+
 	private ActivityStatus activityStatus;
-	
+
 	private String activityId;
-	
+
 	private List<FileResponse> fileResponses;
-	
+
 	private String coachId;
-	
+
 	private String studentId;
-	
+
 	private String activityName;
-	
+
 	private String coachName;
-	
+
 	private String studentName;
-	
+
 	private String fourS;
-	
+
 	private Set<String> focusAreas;
-	
+
 	private Set<String> psdAreas;
 
-	
+	private String grade;
 
 	public String getDateOfActivity() {
 		return dateOfActivity;
@@ -228,39 +228,51 @@ public class ActivityPerformedResponse {
 		this.psdAreas = psdAreas;
 	}
 
+	public String getGrade() {
+		return grade;
+	}
+
+	public void setGrade(String grade) {
+		this.grade = grade;
+	}
+
 	public ActivityPerformedResponse(ActivityPerformed activityPerformed) {
 		this.id = activityPerformed.getCid();
 		this.active = activityPerformed.getActive();
-		if(activityPerformed.getActivity()!=null) {
-				  this.activityId = activityPerformed.getActivity().getCid();
-				  this.activityName = activityPerformed.getActivity().getName();
-				  this.fourS = activityPerformed.getActivity().getFourS().toString();
-			
-			  if(activityPerformed.getActivity().getFocusAreas()!=null && !activityPerformed.getActivity().getFocusAreas().isEmpty()) {
-				  this.focusAreas = new HashSet<String>();
-				  this.psdAreas = new HashSet<String>();
-				  for(FocusArea focusarea : activityPerformed.getActivity().getFocusAreas()) {
-					  this.focusAreas.add(focusarea.getName());
-					  this.psdAreas.add(focusarea.getPsdArea().toString());
-				  }
-			  }
+		if (activityPerformed.getActivity() != null) {
+			this.activityId = activityPerformed.getActivity().getCid();
+			this.activityName = activityPerformed.getActivity().getName();
+			this.fourS = activityPerformed.getActivity().getFourS().toString();
+
+			if (activityPerformed.getActivity().getFocusAreas() != null
+					&& !activityPerformed.getActivity().getFocusAreas().isEmpty()) {
+				this.focusAreas = new HashSet<String>();
+				this.psdAreas = new HashSet<String>();
+				for (FocusArea focusarea : activityPerformed.getActivity().getFocusAreas()) {
+					this.focusAreas.add(focusarea.getName());
+					this.psdAreas.add(focusarea.getPsdArea().toString());
+				}
+			}
 		}
 		this.description = activityPerformed.getDescription();
 		this.activityStatus = activityPerformed.getActivityStatus();
-		if(activityPerformed.getDateOfActivity()!=null)
-		   this.dateOfActivity = DateUtil.formatDate(activityPerformed.getDateOfActivity());
-		if(activityPerformed.getTeacher()!=null) {
+		if (activityPerformed.getDateOfActivity() != null)
+			this.dateOfActivity = DateUtil.formatDate(activityPerformed.getDateOfActivity());
+		if (activityPerformed.getTeacher() != null) {
 			this.coachId = activityPerformed.getTeacher().getcId();
-			this.coachName=activityPerformed.getTeacher().getName();
+			this.coachName = activityPerformed.getTeacher().getName();
 		}
-		  
-		if(activityPerformed.getStudent()!=null) {
-			 this.studentId=activityPerformed.getStudent().getCid();
-			 this.studentName=activityPerformed.getStudent().getName();
+
+		if (activityPerformed.getStudent() != null) {
+			this.studentId = activityPerformed.getStudent().getCid();
+			this.studentName = activityPerformed.getStudent().getName();
+			if (activityPerformed.getStudent().getGrade() != null)
+				this.grade = String.format("%s - %s", activityPerformed.getStudent().getGrade().getName(),
+						activityPerformed.getStudent().getGrade().getSection());
 		}
 		this.coachRemark = activityPerformed.getCoachRemark();
-		if(activityPerformed.getCoachRemarkDate()!=null)
-		  this.coachRemarkDate = DateUtil.formatDate(activityPerformed.getCoachRemarkDate());
+		if (activityPerformed.getCoachRemarkDate() != null)
+			this.coachRemarkDate = DateUtil.formatDate(activityPerformed.getCoachRemarkDate());
 		this.participationScore = activityPerformed.getParticipationScore();
 		this.initiativeScore = activityPerformed.getInitiativeScore();
 		this.achievementScore = activityPerformed.getAchievementScore();
@@ -269,11 +281,11 @@ public class ActivityPerformedResponse {
 		if (activityPerformed.getFiles() != null)
 			for (File file : activityPerformed.getFiles())
 				this.fileResponses.add(new FileResponse(file));
-		
+
 	}
-    
+
 	public ActivityPerformedResponse() {
-		
+
 	}
 
 }

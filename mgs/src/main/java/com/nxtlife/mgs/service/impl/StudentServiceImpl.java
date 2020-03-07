@@ -33,6 +33,7 @@ import com.nxtlife.mgs.enums.ActivityStatus;
 import com.nxtlife.mgs.enums.UserType;
 import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.ex.ValidationException;
+import com.nxtlife.mgs.jpa.ActivityPerformedRepository;
 import com.nxtlife.mgs.jpa.ActivityRepository;
 import com.nxtlife.mgs.jpa.AwardActivityPerformedRepository;
 import com.nxtlife.mgs.jpa.GradeRepository;
@@ -97,6 +98,9 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 	@Autowired
 	AwardActivityPerformedRepository awardActivityPerformedRepository;
+	
+	@Autowired
+	ActivityPerformedRepository activityPerformedRepository;
 
 	@Override
 	public StudentResponse save(StudentRequest request) {
@@ -674,6 +678,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 					school.getName(), teacher.getName(), activity.getName(), activityStatus));
 		return students.stream().distinct().map(StudentResponse::new).collect(Collectors.toList());
 
+
 	}
+
 
 }

@@ -10,4 +10,5 @@ public interface AwardActivityPerformedRepository
 		extends JpaRepository<AwardActivityPerformed, AwardActivityPerformedId>,
 		QueryDslPredicateExecutor<AwardActivityPerformed> {
 
+
 }

@@ -191,3 +191,23 @@ button.btn.saved.btnSubmit.btn-success{
 .edit_activity_buttons{
     float: right;
 }
+
+tbody tr{
+cursor: pointer;
+}
+
+.add_activity{
+    background: #5f9fd2;
+    padding: 5px 15px;
+    text-align: center;
+    border-radius: 0px;
+    margin: 20px;
+    color: $light;
+    border: none !important;
+    box-shadow: 0 0 10px #999;
+}
+button.add_activity{
+    position: fixed;
+    bottom: 0;
+    right: 0;
+}

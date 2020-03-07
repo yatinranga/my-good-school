@@ -88,15 +88,6 @@ public class StudentController {
 		return studentService.getAllBySchoolCid(schoolCid);
 	}
 
-	// @GetMapping(value = "api/student/{cid}/awards")
-	// public List<AwardResponse>
-	// getAllAwardsOfStudentByActivityId(@PathVariable("cid") String studentCid,
-	// @RequestParam(name = "activityCid", required = false) String activityCid)
-	// {
-	// return studentService.getAllAwardsOfStudentByActivityId(studentCid,
-	// activityCid);
-	// }
-
 	@GetMapping(value = "api/student/activity/{activityCid}")
 	public List<StudentResponse> getAllStudentsBySchoolAndActivityAndCoachAndStatusReviewed(
 			@RequestParam("schoolId") String schoolCid, @RequestParam("gradeId") String gradeCid,

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { AdminService } from 'src/app/services/admin.service';
 import { StudentService } from 'src/app/services/student.service';
 import { AlertService } from 'src/app/services/alert.service';
@@ -28,15 +28,15 @@ export class TeacherSignupComponent implements OnInit {
       (err) => console.log(err))
 
     this.teacherSignup = this.formBuilder.group({
-      name: [('')],
-      dob: [('')],
-      email: [('')],
-      mobileNumber: [('')],
-      qualification: [('')],
-      gender: [('')],
-      activityIds: [('')],
-      gradeIds: [('')],
-      schoolId: [('')],
+      name: [null,[Validators.required]],
+      dob: [null,[Validators.required]],
+      email: [null,[Validators.required,Validators.email]],
+      mobileNumber: [null],
+      qualification: [null],
+      gender: [null],
+      activityIds: [null],
+      gradeIds: [null],
+      schoolId: [null],
       isCoach: [('False')],
       isClassTeacher: [('True')],      
     })
@@ -62,8 +62,12 @@ export class TeacherSignupComponent implements OnInit {
     (err) => console.log(err));
   }
 
-  setIsCoach(){
-    this.teacherSignup.value.isCoach = "True"
+  setIsCoach(v:any[]){
+    if(v.length == 0){
+      this.teacherSignup.value.isCoach = "False"
+    } else {
+      this.teacherSignup.value.isCoach = "True"
+    }
   }
 
   onSubmit(){
@@ -74,11 +78,11 @@ export class TeacherSignupComponent implements OnInit {
     this.teacherSignup.value.dob = time;
     console.log(this.teacherSignup.value);
     
-    this.studentService.uploadTeacherDetails(this.teacherSignup.value).subscribe((res) => {
-      this.alertService.showSuccessToast('SignUp Successfully');
-      this.router.navigate(['./login']);
-    },
-    (err) => console.log(err) );
+    // this.studentService.uploadTeacherDetails(this.teacherSignup.value).subscribe((res) => {
+    //   this.alertService.showSuccessToast('SignUp Successfully');
+    //   this.router.navigate(['./login']);
+    // },
+    // (err) => console.log(err) );
   }
 
 }

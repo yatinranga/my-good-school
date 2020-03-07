@@ -20,6 +20,7 @@ export class TeacherActivityComponent implements OnInit {
   activityId = "";
   studentId = "";
   i: any;
+  loader:boolean = false;
 
   reviewForm: FormGroup;
 

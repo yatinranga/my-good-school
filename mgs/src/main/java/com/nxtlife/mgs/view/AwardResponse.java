@@ -141,6 +141,7 @@ public class AwardResponse {
 		if (award.getActivity() != null) {
 			activity = new ActivityRequestResponse(award.getActivity());
 		}
+
 	}
 
 }
