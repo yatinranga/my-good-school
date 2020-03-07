@@ -13,6 +13,8 @@ import com.nxtlife.mgs.entity.user.Teacher;
 public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 
 	Teacher getOneByCidAndActiveTrue(String cid);
+	
+	Teacher getByUserId(Long userId);
 
 	int countByEmailAndActiveTrue(String email);
 

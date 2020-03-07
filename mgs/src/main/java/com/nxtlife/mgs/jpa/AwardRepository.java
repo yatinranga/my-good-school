@@ -4,17 +4,13 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.school.Award;
+import com.nxtlife.mgs.enums.AwardStatus;
 
 public interface AwardRepository extends JpaRepository<Award, Long> {
-
-	Award getOneByCidAndActiveTrue(String cid);
-
-	Award getOneByNameAndActiveTrue(String name);
-
-	List<Award> findByTeacherSchoolCidAndActiveTrue(String schoolCid);
-
-	Award findByCidAndActiveTrue(String awardCid);
 	
-	Long findIdByCidAndActiveTrue(String awardCid);
+	List<Award> findByStudentIdAndStatus(Long studentId, AwardStatus status);
+	
+	List<Award> findByActivity(List<Activity> activities);
 }

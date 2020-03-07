@@ -67,8 +67,8 @@ export class AddActivityComponent implements OnInit {
   saveActivity() {
 
     const time = this.addActivityForm.value.dateOfActivity + " 00:00:00";
-    this.addActivityForm.value.dateOfActivity = time ;
-    
+    this.addActivityForm.value.dateOfActivity = time;
+
     const formData = new FormData();
     // let date = new Date(this.addActivityForm.value.dateOfActivity);
     // let activityDate = date.getFullYear() + "-" + (date.getMonth()) + "-" + date.getDate();
@@ -105,7 +105,7 @@ export class AddActivityComponent implements OnInit {
   closeModel(value: boolean) {
     this.isClosed.emit(value);
   }
-  addActi(value : FormData){
+  addActi(value: FormData) {
     this.pushActivity.emit(value);
   }
 

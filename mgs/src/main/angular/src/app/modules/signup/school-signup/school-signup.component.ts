@@ -21,11 +21,11 @@ export class SchoolSignupComponent implements OnInit {
 
   ngOnInit() {
     this.schoolSignup = this.formBuilder.group({
-      name: [(''), [Validators.required]],
-      address: [(''), [Validators.required]],
-      email: [(''), [Validators.email, Validators.required]],
-      contactNo: [('')],
-      logo: [('')],
+      name: [null, [Validators.required]],
+      address: [null, [Validators.required]],
+      email: [null, [Validators.email, Validators.required]],
+      contactNo: [null],
+      logo: [null],
       generalActivities: ['']
     })
 

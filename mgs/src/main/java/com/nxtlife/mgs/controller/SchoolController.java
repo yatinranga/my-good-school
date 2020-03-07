@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nxtlife.mgs.service.ActivityService;
 import com.nxtlife.mgs.service.SchoolService;
-import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.view.SchoolRequest;
 import com.nxtlife.mgs.view.SchoolResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
@@ -26,12 +24,6 @@ public class SchoolController {
 	@Autowired
 	SchoolService schoolService;
 
-	@Autowired
-	private ActivityService activityService;
-
-	@Autowired
-	private UserService userService;
-
 	@PostMapping(consumes = { "multipart/form-data" }, value = "school/signUp")
 	public SchoolResponse signUp(@ModelAttribute SchoolRequest schoolRequest) {
 		return schoolService.save(schoolRequest);
@@ -42,22 +34,13 @@ public class SchoolController {
 		return schoolService.save(schoolRequest);
 	}
 
-	@GetMapping(value = "api/schools/{id}")
+	@GetMapping(value = "api/school/{id}")
 	public SchoolResponse getByCid(@PathVariable("id") String cid) {
 		return schoolService.findByCid(cid);
 	}
 
 	@GetMapping("schools")
 	public List<SchoolResponse> getAll() {
-//		MailRequest request = new MailRequest("Test email", "testing email sending api", null, "laxmi.ssj4@gmail.com", "vtsefkon@gmail.com");
-//		userService.sendLoginCredentials(request);
-//		Mail mail = new Mail();
-//		mail.setMailFrom("laxminath@nxtlifetechnologies.com");
-//        mail.setMailTo("laxmi.ssj4@gmail.com");
-//        mail.setMailSubject("Spring Boot - Email Example");
-//        mail.setMailContent("Learn How to send Email using Spring Boot!!!\n\nThanks\nwww.technicalkeeda.com");
-//        userService.sendLoginCredentialsBySMTP(mail);
-
 		return schoolService.getAllSchools();
 	}
 
@@ -66,7 +49,7 @@ public class SchoolController {
 		return schoolService.update(request, cid);
 	}
 
-	@DeleteMapping(value = "api/schools/{id}")
+	@DeleteMapping(value = "api/school/{id}")
 	public SuccessResponse delete(@PathVariable("id") String cid) {
 		return schoolService.delete(cid);
 	}

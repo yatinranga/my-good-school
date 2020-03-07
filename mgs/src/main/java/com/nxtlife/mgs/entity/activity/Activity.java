@@ -2,15 +2,11 @@ package com.nxtlife.mgs.entity.activity;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -20,7 +16,6 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.tool.hbm2ddl.UniqueConstraintSchemaUpdateStrategy;
 
 import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.school.School;
@@ -61,7 +56,8 @@ public class Activity extends BaseEntity {
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "school_activity", joinColumns = { @JoinColumn(name = "activity_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "school_id") },uniqueConstraints = @UniqueConstraint(columnNames = {"activity_id","school_id"}))
+			@JoinColumn(name = "school_id") }, uniqueConstraints = @UniqueConstraint(columnNames = { "activity_id",
+					"school_id" }))
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<School> schools;
 
