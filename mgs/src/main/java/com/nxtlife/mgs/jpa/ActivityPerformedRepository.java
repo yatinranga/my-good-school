@@ -75,7 +75,8 @@ public interface ActivityPerformedRepository extends JpaRepository<ActivityPerfo
 	List<ActivityPerformed> findAllByTeacherCidAndActivityStatusOrActivityStatusOrActivityStatusAndActiveTrue(
 			String coachCid, ActivityStatus submittedbystudent, ActivityStatus savedbyteacher, ActivityStatus reviewed);
 	
-	Long findIdByCidAndActiveTrue(String activityPerformedCid);
+	@Query(value = "select ap.id from ActivityPerformed  ap where ap.cid =:activityPerformedCid and ap.active = true")
+	Long findIdByCidAndActiveTrue(@Param("activityPerformedCid") String activityPerformedCid);
 
 	boolean existsByCidAndActiveTrue(String activityCid);
 }

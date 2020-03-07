@@ -166,8 +166,11 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 				throw new ValidationException(
 						String.format("Activity with the id : %s is already submitted by you and cannot be edited.",
 								request.getId()));
-			if (request.getDateOfActivity() != null)
+			if (request.getDateOfActivity() != null) {
+				if(LocalDateTime.now().toDate().before(DateUtil.convertStringToDate(request.getDateOfActivity())))
+					throw new ValidationException("Date of activity cannot be a future date.");
 				activityPerformed.setDateOfActivity(DateUtil.convertStringToDate(request.getDateOfActivity()));
+			}
 			if (request.getDescription() != null)
 				activityPerformed.setDescription(request.getDescription());
 

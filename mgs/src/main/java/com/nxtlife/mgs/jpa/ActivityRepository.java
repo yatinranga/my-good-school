@@ -20,7 +20,8 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
 
 	Activity getOneByNameAndActiveTrue(String name);
 	
-	String findCidByNameAndActiveTrue(String cid);
+	@Query("select a.cid from Activity a where a.cid = :cid and a.active = true")
+	String findCidByNameAndActiveTrue(@Param("cid") String cid);
 
 	Activity getOneByCidAndActiveTrue(String cid);
 

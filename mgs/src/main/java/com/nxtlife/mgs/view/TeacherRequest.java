@@ -210,8 +210,8 @@ public class TeacherRequest {
 		if (this.isClassTeacher != null)
 			teacher.setIsClassTeacher(this.isClassTeacher);
 
-		teacher.setIsManagmentMember(isManagmentMember);
-		teacher.setDesignation(designation);
+		teacher.setIsManagmentMember(this.isManagmentMember);
+		teacher.setDesignation(this.designation);
 
 		return teacher;
 	}
