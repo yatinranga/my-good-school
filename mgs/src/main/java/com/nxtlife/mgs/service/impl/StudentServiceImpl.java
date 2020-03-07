@@ -23,7 +23,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.entity.activity.Activity;
-import com.nxtlife.mgs.entity.school.AwardActivityPerformed;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.user.Guardian;
@@ -53,7 +52,6 @@ import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.SequenceGenerator;
 import com.nxtlife.mgs.util.Utils;
-import com.nxtlife.mgs.view.AwardResponse;
 import com.nxtlife.mgs.view.GuardianRequest;
 import com.nxtlife.mgs.view.StudentRequest;
 import com.nxtlife.mgs.view.StudentResponse;
@@ -197,15 +195,17 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			student.setGuardians(guardians);
 		}
 
-		// here we're creating parent user for new guardians not for existing guardians
+		// here we're creating parent user for new guardians not for existing
+		// guardians
 
 		// adding newly created student to already presented guardian list
 
 		// setting all the existing and newely created guardians to student
 
 		/*
-		 * if (request.getSubscriptionEndDate().after(LocalDateTime.now().toDate())) {
-		 * student.setActive(true); }
+		 * if
+		 * (request.getSubscriptionEndDate().after(LocalDateTime.now().toDate())
+		 * ) { student.setActive(true); }
 		 */
 		User user = userService.createStudentUser(student);
 		if (StringUtils.isEmpty(user)) {
@@ -271,7 +271,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 		student = request.toEntity(student);
 
-		// here we're creating parent user for new guardians not for existing guardians
+		// here we're creating parent user for new guardians not for existing
+		// guardians
 
 		/*
 		 * if (request.getActive() == false && request.getActive() != null) {
@@ -327,7 +328,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			if (row.getPhysicalNumberOfCells() != columnSize) {
 				errors.add(String.format("Some of the cells (Row number : %d) are missing or extras in %s sheet", i + 1,
 						sheetName));
-//					continue;
+				// continue;
 				if (i == 0)
 					throw new ValidationException(String.format(
 							"Some of the cells (Row number : %d) are missing or extras in %s sheet", i + 1, sheetName));
@@ -335,7 +336,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			if (i == 0) {
 				row.forEach(c -> {
 					System.out.println(c.getStringCellValue());
-//					 c.getStringCellValue().trim();
+					// c.getStringCellValue().trim();
 					if (!columnTypes.containsKey(c.getStringCellValue().trim())) {
 						errors.add(String.format("This cell (%s) is not valid", c.getStringCellValue()));
 					} else {
@@ -366,7 +367,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 									columnTypes.get(headers.get(j)), cell.getCellType(), headers.get(j), sheetName));
 						}
 					} else {
-//						if(columnTypes.get(headers.get(j)).equals(cell.getCellType()))
+						// if(columnTypes.get(headers.get(j)).equals(cell.getCellType()))
 						if (headers.get(j).equalsIgnoreCase("NAME") || headers.get(j).equalsIgnoreCase("EMAIL")
 								|| headers.get(j).equalsIgnoreCase("MOBILE NUMBER")
 								|| headers.get(j).equalsIgnoreCase("FATHERS NAME")
@@ -390,15 +391,16 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	}
 
 	private List<Map<String, Object>> findSheetRowValues(XSSFWorkbook workbook, String sheetName, List<String> errors) {
-//		XSSFSheet sheet = workbook.getSheet(sheetName);
+		// XSSFSheet sheet = workbook.getSheet(sheetName);
 		XSSFSheet sheet = workbook.getSheetAt(0);
 		if (sheet == null) {
 			errors.add(sheetName + " sheet not found");
 			return null;
 		}
-//		if (sheet.getPhysicalNumberOfRows() > rowLimit) {
-//			errors.add(String.format("Number of row can't be more than %d for %s sheet", rowLimit, sheetName));
-//		}
+		// if (sheet.getPhysicalNumberOfRows() > rowLimit) {
+		// errors.add(String.format("Number of row can't be more than %d for %s
+		// sheet", rowLimit, sheetName));
+		// }
 		Map<String, CellType> columnTypes = ExcelUtil.sheetColumns(sheetName);
 		return fetchRowValues(columnTypes, sheet, errors, sheetName);
 
@@ -441,15 +443,19 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		}
 		StudentRequest studentRequest = new StudentRequest();
 		studentRequest.setName((String) studentDetails.get(0).get("NAME"));
-//		studentRequest.setUsername((String) studentDetails.get(0).get("USERNAME"));
-//		studentRequest.setDob(
-//				DateUtil.convertStringToDate(DateUtil.formatDate((Date) studentDetails.get(0).get("DOB"), null, null)));
+		// studentRequest.setUsername((String)
+		// studentDetails.get(0).get("USERNAME"));
+		// studentRequest.setDob(
+		// DateUtil.convertStringToDate(DateUtil.formatDate((Date)
+		// studentDetails.get(0).get("DOB"), null, null)));
 		studentRequest.setDob(DateUtil.formatDate((Date) studentDetails.get(0).get("DOB"), null, null));
 		School school = schoolRepository.findByCidAndActiveTrue(schoolCid);
-//		if (studentDetails.get(0).get("SCHOOL") != null)
-//			school = schoolRepository.findByName((String) studentDetails.get(0).get("SCHOOL"));
-//		if (studentDetails.get(0).get("SCHOOLS EMAIL") != null)
-//			school = schoolRepository.findByEmail((String) studentDetails.get(0).get("SCHOOLS EMAIL"));
+		// if (studentDetails.get(0).get("SCHOOL") != null)
+		// school = schoolRepository.findByName((String)
+		// studentDetails.get(0).get("SCHOOL"));
+		// if (studentDetails.get(0).get("SCHOOLS EMAIL") != null)
+		// school = schoolRepository.findByEmail((String)
+		// studentDetails.get(0).get("SCHOOLS EMAIL"));
 
 		if (school == null)
 			errors.add(String.format("School with id : %s not found ", schoolCid));
@@ -476,8 +482,9 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				DateUtil.convertStringToDate(DateUtil.formatDate((Date) studentDetails.get(0).get("DOB"), null, null)));
 		studentRequest.setEmail((String) studentDetails.get(0).get("EMAIL"));
 		if (studentDetails.get(0).get("ACTIVE") != null)
-//			studentRequest.setActive(Boolean.valueOf((Boolean) studentDetails.get(0).get("ACTIVE")));
-		studentRequest.setMobileNumber((String) studentDetails.get(0).get("MOBILE NUMBER"));
+			// studentRequest.setActive(Boolean.valueOf((Boolean)
+			// studentDetails.get(0).get("ACTIVE")));
+			studentRequest.setMobileNumber((String) studentDetails.get(0).get("MOBILE NUMBER"));
 		studentRequest.setGender((String) studentDetails.get(0).get("GENDER"));
 		studentRequest.setSubscriptionEndDate(DateUtil.convertStringToDate(
 				DateUtil.formatDate((Date) studentDetails.get(0).get("SUBSCRIPTION END DATE"), null, null)));
@@ -489,12 +496,18 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				(String) studentDetails.get(0).get("MOTHERS EMAIL"), "male",
 				(String) studentDetails.get(0).get("MOTHERS MOBILE NUMBER"), "Mother"));
 		studentRequest.setGuardians(guardians);
-//		studentRequest.setFathersName((String) studentDetails.get(0).get("FATHERS NAME"));
-//		studentRequest.setFathersEmail((String) studentDetails.get(0).get("FATHERS EMAIL"));
-//		studentRequest.setFathersMobileNumber((String) studentDetails.get(0).get("FATHERS MOBILE NUMBER"));
-//		studentRequest.setMothersName((String) studentDetails.get(0).get("MOTHERS NAME"));
-//		studentRequest.setMothersEmail((String) studentDetails.get(0).get("MOTHERS EMAIL"));
-//		studentRequest.setMothersMobileNumber((String) studentDetails.get(0).get("MOTHERS MOBILE NUMBER"));
+		// studentRequest.setFathersName((String)
+		// studentDetails.get(0).get("FATHERS NAME"));
+		// studentRequest.setFathersEmail((String)
+		// studentDetails.get(0).get("FATHERS EMAIL"));
+		// studentRequest.setFathersMobileNumber((String)
+		// studentDetails.get(0).get("FATHERS MOBILE NUMBER"));
+		// studentRequest.setMothersName((String)
+		// studentDetails.get(0).get("MOTHERS NAME"));
+		// studentRequest.setMothersEmail((String)
+		// studentDetails.get(0).get("MOTHERS EMAIL"));
+		// studentRequest.setMothersMobileNumber((String)
+		// studentDetails.get(0).get("MOTHERS MOBILE NUMBER"));
 
 		return studentRequest;
 	}
@@ -592,19 +605,27 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 	@Override
 	public List<StudentResponse> getAllBySchoolCid(String schoolCid) {
-
 		if (schoolCid == null) {
 			throw new NotFoundException("school id can't be null");
 		}
-
 		List<Student> studentsList = studentRepository.findAllBySchoolCidAndActiveTrue(schoolCid);
-
 		if (studentsList.isEmpty())
 			throw new NotFoundException(String.format("No student found for school having id [%s]", schoolCid));
-
 		List<StudentResponse> responseList = studentsList.stream().map(s -> new StudentResponse(s))
 				.collect(Collectors.toList());
-
+		return responseList;
+	}
+	
+	@Override
+	public List<StudentResponse> getAllByGradeId(String gradeId) {
+		if (gradeId == null) {
+			throw new NotFoundException("Grade id can't be null");
+		}
+		List<Student> studentsList = studentRepository.findAllByGradeCidAndActiveTrue(gradeId);
+		if (studentsList.isEmpty())
+			throw new NotFoundException(String.format("No student found for grade having id [%s]", gradeId));
+		List<StudentResponse> responseList = studentsList.stream().map(s -> new StudentResponse(s))
+				.collect(Collectors.toList());
 		return responseList;
 	}
 
@@ -655,47 +676,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			throw new ValidationException(String.format(
 					"No student found in the school : %s under teacher : %s having performed activity : %s and status is %s .",
 					school.getName(), teacher.getName(), activity.getName(), activityStatus));
-		List<StudentResponse> studentsResponse = new ArrayList<StudentResponse>();
-		students.forEach(s -> {
-			studentsResponse.add(new StudentResponse(s));
-		});
-		return studentsResponse;
+		return students.stream().distinct().map(StudentResponse::new).collect(Collectors.toList());
 
-	}
-
-	@Override
-	public List<AwardResponse> getAllAwardsOfStudentByActivityId(String studentCid, String activityCid) {
-		if(studentCid==null)
-			throw new ValidationException("Student id cannot be null.");
-		
-		if(!studentRepository.existsByCidAndActiveTrue(studentCid))
-			throw new ValidationException(String.format("Student having id : %s not found.", studentCid));
-		
-		List<AwardActivityPerformed> aap;
-		if(activityCid==null)
-			aap = awardActivityPerformedRepository.findAllByActivityPerformedStudentCidAndIsVerifiedTrueAndActiveTrue(studentCid);
-		else {
-			if(!activityPerformedRepository.existsByCidAndActiveTrue(activityCid))
-				throw new ValidationException(String.format("Activity Performed having id : %s not found.", activityCid));
-		 aap = awardActivityPerformedRepository
-				.findAllByActivityPerformedStudentCidAndActivityPerformedActivityCidAndIsVerifiedTrueAndActivityPerformedStudentActiveTrueAndActivityPerformedActivityActiveTrueAndActiveTrue(
-						studentCid, activityCid);
-		}
-
-		List<AwardResponse> responseList = new ArrayList<AwardResponse>();
-    if(aap == null || aap.isEmpty())
-    	throw new ValidationException(String.format("No awards assigned to student having id: %s", studentCid));
-    
-		for (AwardActivityPerformed awardActivityPerformed : aap) {
-			AwardResponse awardResponse = new AwardResponse(awardActivityPerformed);
-			if(awardActivityPerformed.getAssignerCid()!=null) {
-				Teacher teacher = teacherRepository.findByCidAndActiveTrue(awardActivityPerformed.getAssignerCid());
-				awardResponse.setAssignedBy(teacher.getName());
-			}
-			responseList.add(awardResponse);
-		}
-
-		return responseList;
 
 	}
 

@@ -12,6 +12,8 @@ import com.nxtlife.mgs.enums.ActivityStatus;
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
 	Student getOneByCidAndActiveTrue(String cid);
+	
+	Student getByUserId(Long userId);
 
 	int countByEmail(String email);
 
@@ -28,6 +30,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 	void deleteByCid(String cid);
 
 	List<Student> findAllBySchoolCidAndActiveTrue(String schoolCid);
+	
+	List<Student> findAllByGradeCidAndActiveTrue(String gradeCid);
 
 	List<Student> findAllByActiveTrue();
 

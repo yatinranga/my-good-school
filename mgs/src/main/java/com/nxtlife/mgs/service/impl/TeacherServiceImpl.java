@@ -37,6 +37,7 @@ import com.nxtlife.mgs.jpa.RoleRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
 import com.nxtlife.mgs.jpa.SequenceGeneratorRepo;
 import com.nxtlife.mgs.jpa.TeacherRepository;
+import com.nxtlife.mgs.jpa.UserRepository;
 import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.SequenceGeneratorService;
 import com.nxtlife.mgs.service.TeacherService;
@@ -77,6 +78,9 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	UserService userService;
 
 	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
 	Utils utils;
 
 	@Override
@@ -88,9 +92,13 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		if (request.getEmail() == null)
 			throw new ValidationException("Email can not be null");
 
-		if (teacherRepository.countByEmailAndActiveTrue(request.getEmail()) > 0)
+		//int emailCount = teacherRepository.countByEmailAndActiveTrue(request.getEmail());
+		if (userRepository.existsByEmail(request.getEmail()))
 			throw new ValidationException(String.format("Email %s already exists", request.getEmail()));
 
+		if(request.getMobileNumber()!=null && userRepository.existsByMobileNo(request.getMobileNumber())){
+			throw new ValidationException(String.format("Mobile number (%s) already exists", request.getMobileNumber()));
+		}
 //		if (request.getUsername() == null)
 //			request.setUsername(request.getEmail());
 
@@ -158,7 +166,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 
 		// saving activities
 
-		if (request.getActivitiyIds() != null && !request.getActivitiyIds().isEmpty()) {
+		if (request.getActivityIds() != null && !request.getActivityIds().isEmpty()) {
 
 			List<Activity> repoActivityList = activityRepository
 					.findAllBySchoolsCidAndActiveTrue(request.getSchoolId());
@@ -168,14 +176,13 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 			// validating activities present in request are also present in school activity
 			// list or not.
 
-			for (int i = 0; i < request.getActivitiyIds().size(); i++) {
+			for (int i = 0; i < request.getActivityIds().size(); i++) {
 
 				boolean flag = false, aptFlag = false;
-				;
 
 				for (Activity activity : repoActivityList) {
 
-					if (activity.getCid().equals(request.getActivitiyIds().get(i))) {
+					if (activity.getCid().equals(request.getActivityIds().get(i))) {
 						flag = true;
 						finalActivityList.add(activity);
 
@@ -198,7 +205,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 
 				if (flag == false) {
 					throw new NotFoundException(
-							String.format("activity having id [%s] didn't exist", request.getActivitiyIds().get(i)));
+							String.format("activity having id [%s] didn't exist", request.getActivityIds().get(i)));
 				}
 			}
 			teacher.setActivities(finalActivityList);
@@ -462,7 +469,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 					else
 						errors.add(String.format("Activity with name : %s does not exist.", activity));
 				}
-				teacherRequest.setActivitiyIds(activityCIds);
+				teacherRequest.setActivityIds(activityCIds);
 			} else
 				errors.add("No activities provided for the coach.");
 
