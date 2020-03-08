@@ -908,14 +908,14 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			throw new ValidationException(String.format("Student with id : %s does not exist.", studentCid));
 
 		List<ActivityPerformed> performedActivities = activityPerformedRepository
-				.findAll(new ActivityPerformedFilterBuilder().build(filterRequest));
+				.findAll(new ActivityPerformedFilterBuilder().build(filterRequest,studentCid));
 		// findAllByStudentCidAndActiveTrue(studentCid,new
 		// ActivityPerformedFilterBuilder().build(filterRequest));
 
-		performedActivities.stream().forEach(pa -> {
-			if (pa.getStudent() != null && !(pa.getStudent().getCid()).equals(studentCid) || !pa.getActive())
-				performedActivities.remove(pa);
-		});
+//		performedActivities.stream().forEach(pa -> {
+//			if (pa.getStudent() != null && !(pa.getStudent().getCid()).equals(studentCid) || !pa.getActive())
+//				performedActivities.remove(pa);
+//		});
 
 		if (performedActivities == null || performedActivities.isEmpty())
 			throw new ValidationException("No activities found after applying filter.");

@@ -29,4 +29,6 @@ public interface GradeRepository extends JpaRepository<Grade, Long>{
 	boolean existsByCidAndSchoolsCidAndSchoolsActiveTrueAndActiveTrue(String gradeId, String cid);
 	
 	Grade findByCidAndSchoolsCidAndSchoolsActiveTrueAndActiveTrue(String gradeId, String cid);
+
+	boolean existsByCidAndActiveTrue(String gradeCid);
 }

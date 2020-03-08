@@ -273,9 +273,11 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 						throw new ValidationException(String.format("You cannot delete the activty : %s as few student has already performed activity %s under you.", previousActivities.get(i).getName(),previousActivities.get(i).getName()));
 					}else {
 						List<Teacher> teachers = previousActivities.get(i).getTeachers();
-						teachers.remove(teacher);
-						previousActivities.get(i).setTeachers(teachers);
-						toBeDeletedActivities.add(previousActivities.get(i));
+						if(teachers!=null && !teachers.isEmpty()) {
+							teachers.remove(teacher);
+							previousActivities.get(i).setTeachers(teachers);
+							toBeDeletedActivities.add(previousActivities.get(i));
+						}
 						previousActivities.remove(i--);
 					}
 				}

@@ -26,6 +26,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.entity.activity.Activity;
+import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.user.Role;
 import com.nxtlife.mgs.entity.user.User;
@@ -33,6 +34,7 @@ import com.nxtlife.mgs.enums.UserType;
 import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.ActivityRepository;
+import com.nxtlife.mgs.jpa.GradeRepository;
 import com.nxtlife.mgs.jpa.RoleRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
 import com.nxtlife.mgs.jpa.UserRepository;
@@ -44,6 +46,7 @@ import com.nxtlife.mgs.store.FileStore;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.ActivityRequestResponse;
+import com.nxtlife.mgs.view.GradeRequest;
 import com.nxtlife.mgs.view.SchoolRequest;
 import com.nxtlife.mgs.view.SchoolResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
@@ -74,6 +77,9 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 
 	@Autowired
 	ActivityRepository activityRepository;
+	
+	@Autowired
+	GradeRepository gradeRepository;
 
 	@PostConstruct
 	public void init() {
@@ -436,9 +442,67 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			throw new NotFoundException(String.format("school havind id [%s] didn't exist", cid));
 
 		school = request.toEntity(school);
+		
+		if(request.getGradeRequests()!=null && !request.getGradeRequests().isEmpty()) {
+			List<GradeRequest> gradeRequests = request.getGradeRequests();
+			List<Grade> previousGrades = new ArrayList<Grade>();
+			List<Grade> gradesToDelete = new ArrayList<Grade>();
+			previousGrades = school.getGrades();
+			if(previousGrades.isEmpty()) {
+				updateGradesOfSchool(gradeRequests, previousGrades, school);
+			}else {
+				for(int i = 0; i<previousGrades.size();i++) {
+					String grdCid = previousGrades.get(i).getCid();
+					GradeRequest gradeRequest = gradeRequests.stream().filter(grd -> grd.getId()!=null && grd.getId().equals(grdCid)).findAny().orElse(null);
+					if(gradeRequest!=null) {
+						gradeRequests.remove(gradeRequest);
+					}else {
+						List<School> schools = previousGrades.get(i).getSchools();
+						if(!schools.isEmpty() && !schools.isEmpty()) {
+							schools.remove(school);
+							previousGrades.get(i).setSchools(schools);
+							gradesToDelete.add(previousGrades.get(i));
+						}
+						previousGrades.remove(i--);
+					}
+				}
+				
+				if(gradeRequests!=null && !gradeRequests.isEmpty())
+					updateGradesOfSchool(gradeRequests, previousGrades, school);
+
+			}
+			
+			school.setGrades(previousGrades);
+			gradeRepository.save(gradesToDelete);
+		}
+	
 		school = schoolRepository.save(school);
 
 		return new SchoolResponse(school);
+	}
+	
+	private void updateGradesOfSchool(List<GradeRequest> gradeRequests , List<Grade> previousGrades , School school ) {
+		for(GradeRequest gradeReq : gradeRequests) {
+			if(gradeReq.getId()!=null) {
+				if(!gradeRepository.existsByCidAndActiveTrue(gradeReq.getId()))
+					throw new ValidationException(String.format("Grade with id (%s) does not exist.", gradeReq.getId()));
+				Grade grade = gradeRepository.findByCidAndActiveTrue(gradeReq.getId());
+				List<School> schools = grade.getSchools();
+				schools.add(school);
+				grade.setSchools(schools);
+				previousGrades.add(grade);
+				
+			}else {
+				Grade grade =gradeReq.toEntity();
+				List<School> schools = new ArrayList<School>();
+				schools.add(school);
+				grade.setSchools(schools);
+				grade.setCid(utils.generateRandomAlphaNumString(8));
+				grade.setActive(true);
+				grade = gradeRepository.save(grade);
+				previousGrades.add(grade);
+			}
+		}
 	}
 
 }

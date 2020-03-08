@@ -28,6 +28,7 @@ public class ActivityPerformedFilterBuilder implements FilterBuilder<ActivityPer
 	@Override
 	public Predicate build(ActivityPerformedFilter filter, String studentId) {
 		return new OptionalBooleanBuilder(ActivityPerformed.isNotNull())
+				.notEmptyAnd(ActivityPerformed.student.cid::contains, studentId)
 				.notEmptyAnd(ActivityPerformed.teacher.cid::contains, filter.getTeacherId())
 				.notEmptyAnd(ActivityPerformed.activity.fourS.stringValue()::containsIgnoreCase, filter.getFourS())
 				.notEmptyAnd(ActivityPerformed.activityStatus.stringValue()::containsIgnoreCase, filter.getStatus())
@@ -37,6 +38,7 @@ public class ActivityPerformedFilterBuilder implements FilterBuilder<ActivityPer
 						filter.getPsdArea())
 				.notEmptyAnd(ActivityPerformed.dateOfActivity.year().stringValue()::containsIgnoreCase,
 						filter.getYear())
+				.notEmptyAnd(ActivityPerformed.active.stringValue()::containsIgnoreCase,"TRUE")
 				.build();
 	}
 }
