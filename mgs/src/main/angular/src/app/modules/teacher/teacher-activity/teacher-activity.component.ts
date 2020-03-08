@@ -129,9 +129,9 @@ export class TeacherActivityComponent implements OnInit {
 
     this.teacherSerivce.saveReviewedActivity(formData).subscribe((res) => {
       console.log(res);
-      // this.savedActivitiesArr = [...this.savedActivitiesArr, ...this.pendingActivitiesArr.splice(this.i, 1)];
-      this.reviewForm.reset();
+      this.savedActivitiesArr = [...this.savedActivitiesArr, ...this.pendingActivitiesArr.splice(this.i, 1)];
       $('#reviewModal').modal('hide');
+      this.reviewForm.reset();
       this.alertService.showSuccessToast('Review Saved !');
     },
       (err) => console.log(err)
