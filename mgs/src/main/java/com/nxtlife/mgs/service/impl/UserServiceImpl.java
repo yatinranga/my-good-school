@@ -220,7 +220,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@Override
 	public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
 		User user = userRepository.findByUserName(s);
-
+		user.setUserId(user.getId());
 		return user;
 	}
 

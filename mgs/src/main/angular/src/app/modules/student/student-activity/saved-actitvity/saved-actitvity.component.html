@@ -117,14 +117,29 @@
                                     <div *ngIf=" allActi.activityStatus === 'Reviewed'">
                                         <div class="row">
                                             <div class="col-6">
+                                                <div class="description">
+                                                    <p>
+                                                        <strong>Name : </strong>{{allActi.activityName}}</p>
+                                                    <p>
+                                                        <strong>Description : </strong>{{allActi.description}}</p>
+                                                    <p>
+                                                        <strong>Teacher : </strong>{{allActi.coachName}}</p>
+                                                    <p>
+                                                        <strong>Four S : </strong>{{allActi.fourS}}</p>
+                                                    <p>
+                                                        <strong>Focus Area : </strong>{{allActi.focusAreas}}</p>
+                                                    <p>
+                                                        <strong>PSD Area : </strong>{{allActi.psdAreas}}</p>
+                                                </div>
+                                                
+                                            </div>
+                                            <div class="col-6">
                                                 <p>
                                                     <strong>Participation Score :</strong>{{allActi.participationScore}}</p>
                                                 <p>
                                                     <strong>Initiative Score :</strong>{{allActi.initiativeScore}}</p>
                                                 <p>
                                                     <strong>Achievement Score :</strong>{{allActi.achievementScore}}</p>
-                                            </div>
-                                            <div class="col-6">
                                                 <p>
                                                     <strong>Star : </strong>{{allActi.star}}</p>
                                                 <p>
@@ -138,12 +153,17 @@
                         </tr>
                     </ng-container>
                 </tbody>
+                <tfoot *ngIf="allActivitiesArr.length == 0">
+                    <tr>
+                        <td colspan="6">No Activities</td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>
 </div>
 
-<div *ngIf="activityType === 'Submitted'">
+<div *ngIf="activityType === 'Submitted'">    
     <div class="content_main_com">
         <div class="table_main">
             <table class="table table-hover">
@@ -211,9 +231,15 @@
                     </ng-container>
 
                 </tbody>
+                <tfoot *ngIf="submittedActivitiesArr.length == 0">
+                    <tr>
+                        <td colspan="5">No Submitted Activities</td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>
+
 </div>
 
 <div *ngIf="activityType === 'Saved'">
@@ -230,7 +256,7 @@
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
-                <tbody id="accordionExample">
+                <tbody id="accordionExample">                    
                     <ng-container *ngFor="let sa of savedActivitiesArr ; let i = index;">
                         <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                             <td>{{i+1}}</td>
@@ -259,11 +285,17 @@
                                         <div class="col-6">
                                             <div class="description">
                                                 <p>
-                                                    <strong>Name : </strong> {{sa.activityName}}</p>
+                                                    <strong>Name : </strong>{{sa.activityName}}</p>
                                                 <p>
                                                     <strong>Description : </strong>{{sa.description}}</p>
                                                 <p>
                                                     <strong>Teacher : </strong>{{sa.coachName}}</p>
+                                                <p>
+                                                    <strong>Four S : </strong>{{sa.fourS}}</p>
+                                                <p>
+                                                    <strong>Focus Area : </strong>{{sa.focusAreas}}</p>
+                                                <p>
+                                                    <strong>PSD Area : </strong>{{sa.psdAreas}}</p>
                                             </div>
                                         </div>
                                         <div class="col-6">
@@ -288,6 +320,11 @@
                         </tr>
                     </ng-container>
                 </tbody>
+                <tfoot *ngIf="savedActivitiesArr.length == 0">
+                    <tr>
+                        <td colspan="6">No Saved Activities</td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>
@@ -320,14 +357,29 @@
                                 <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
                                     <div class="row">
                                         <div class="col-6">
+                                            <div class="description">
+                                                <p>
+                                                    <strong>Name : </strong>{{ra.activityName}}</p>
+                                                <p>
+                                                    <strong>Description : </strong>{{ra.description}}</p>
+                                                <p>
+                                                    <strong>Teacher : </strong>{{ra.coachName}}</p>
+                                                <p>
+                                                    <strong>Four S : </strong>{{ra.fourS}}</p>
+                                                <p>
+                                                    <strong>Focus Area : </strong>{{ra.focusAreas}}</p>
+                                                <p>
+                                                    <strong>PSD Area : </strong>{{ra.psdAreas}}</p>
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="col-6">
                                             <p>
                                                 <strong>Participation Score :</strong>{{ra.participationScore}}</p>
                                             <p>
                                                 <strong>Initiative Score :</strong>{{ra.initiativeScore}}</p>
                                             <p>
                                                 <strong>Achievement Score :</strong>{{ra.achievementScore}}</p>
-                                        </div>
-                                        <div class="col-6">
                                             <p>
                                                 <strong>Star : </strong>{{ra.star}}</p>
                                             <p>
@@ -341,6 +393,11 @@
                         </tr>
                     </ng-container>
                 </tbody>
+                <tfoot *ngIf="reviewedActivitiesArr.length == 0">
+                    <tr>
+                        <td colspan="5">No Reviewed Activities</td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>
@@ -363,12 +420,15 @@
                                 </select>
                             </div>
                             <div class="form-group">Teacher/Coach :
-                                <select class="form-control" formControlName="coachId">
+                                <select class="form-control" formControlName="coachId">                                                                       
                                     <option *ngFor="let coach of coaches; let i = index;" value={{coach.id}}>
                                         {{coach.name}}
                                     </option>
                                     <option disabled *ngIf="!coaches.length">Teacher/Coach available</option>
                                 </select>
+                                <div *ngIf="modal_loader" class="spinner-border text-dark" role="status">
+                                    <span class="sr-only">Data Loading</span>
+                                </div> 
                             </div>
                             <div class="form-group">Description :
                                 <textarea class="form-control add" formControlName="description" rows="3"></textarea>

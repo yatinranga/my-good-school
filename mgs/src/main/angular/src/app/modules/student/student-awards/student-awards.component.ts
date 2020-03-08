@@ -12,6 +12,7 @@ export class StudentAwardsComponent implements OnInit {
   activities: any;
   studentId: any;
   awardsArr = [];
+  activityId = "All";
   loader : boolean = false ;
 
   constructor(private studentService : StudentService) { }
@@ -21,6 +22,7 @@ export class StudentAwardsComponent implements OnInit {
     this.studentId = this.studentInfo['student'].id;
     this.schoolId = this.studentInfo['student'].schoolId;
     this.getStudentActivity();
+    this.getAwards();
   }
 
   getStudentActivity() {
@@ -30,26 +32,40 @@ export class StudentAwardsComponent implements OnInit {
     );
   }
 
-  getStudentAwards(activityId){
+  getAwards(){
     this.loader = true;
-    console.log(activityId);
-
-    if(activityId === "All"){
-      this.studentService.getAllAwards(this.studentId).subscribe((res) => {
-        this.awardsArr = res;
-        console.log(res);
-        this.loader = false;
-      },
-      (err) =>  console.log(err));
-    }else{
-      this.studentService.getAwards(this.studentId,activityId).subscribe((res) => {
-        this.awardsArr = res;
-        console.log(res);
-        this.loader = false;
-      },
-      (err) => console.log(err));
-    }
+    this.studentService.getAllAwards(this.studentId).subscribe((res) => {
+      this.awardsArr = res;
+      console.log(res);
+      this.loader = false;
+    },
+    (err) =>  {console.log(err)
+    this.loader = false });
   }
+
+
+  // getStudentAwards(activityId){
+  //   this.loader = true;
+  //   console.log(activityId);
+
+  //   if(activityId === "All"){
+  //     this.studentService.getAllAwards(this.studentId).subscribe((res) => {
+  //       this.awardsArr = res;
+  //       console.log(res);
+  //       this.loader = false;
+  //     },
+  //     (err) =>  {console.log(err)
+  //     this.loader = false });
+  //   }else{
+  //     this.studentService.getAwards(this.studentId,activityId).subscribe((res) => {
+  //       this.awardsArr = res;
+  //       console.log(res);
+  //       this.loader = false;
+  //     },
+  //     (err) =>  {console.log(err)
+  //       this.loader = false });
+  //   }
+  // }
 
   getDate(date) {
     return new Date(date)

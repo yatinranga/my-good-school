@@ -3,13 +3,16 @@
         <div class="content_main_com">
             <div class="teacher_activity_main">
                 <div class="sortby"> Filter by:
-                    <select style="border: 1px solid #ddd" (ngModelChange)="activityView($event)" ngModel>
+                    <select style="border: 1px solid #ddd" (ngModelChange)="activityView($event)" [(ngModel)]="activityType">
                         <option value="" disabled hidden> Choose here </option>
                         <option value="All"> All</option>
                         <option value="Pending" selected>Pending</option>
                         <option value="Saved">Saved</option>
                         <option value="Reviewed">Reviewed</option>
                     </select>
+                    <div *ngIf="loader" class="spinner-border text-dark" role="status">
+                        <span class="sr-only">Data Loading</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -17,9 +20,6 @@
 </div>
 
 <div *ngIf="activityType === 'All'">
-    <div *ngIf="loader" class="spinner-border text-dark" role="status">
-        <span class="sr-only">Data Loading</span>
-      </div>
     <div class="table_main">
         <table class="table">
             <thead class="thead-dark">
@@ -44,9 +44,9 @@
                         </td>
                         <td>
                             <button [disabled]="!(allacti.activityStatus === 'SavedByTeacher')" (click)="submitSavedActivity($event,i,'All')" >Submit</button>      
-                            <button [disabled]="!(allacti.activityStatus === 'SavedByTeacher')" data-toggle="modal" data-target="#exampleModal"
+                            <button [disabled]="!(allacti.activityStatus === 'SavedByTeacher')" data-toggle="modal" data-target="#reviewModal"
                                     (click)="editSavedActivity(allacti)">Edit</button>
-                            <button [disabled]="!(allacti.activityStatus === 'SubmittedByStudent')" data-toggle="modal" data-target="#exampleModal"
+                            <button [disabled]="!(allacti.activityStatus === 'SubmittedByStudent')" data-toggle="modal" data-target="#reviewModal"
                                     (click)="reviewActivity(allacti)">Review</button>                            
                         </td>
                     </tr>
@@ -107,15 +107,16 @@
                     </tr>
                 </ng-container>
             </tbody>
+            <tfoot *ngIf="allActivitiesArr.length == 0">
+                <tr>
+                    <td colspan="6">No Activities</td>
+                </tr>
+            </tfoot>
         </table>
     </div>
 </div>
 
-
 <div *ngIf="activityType === 'Pending'">
-    <div *ngIf="loader" class="spinner-border text-dark" role="status">
-        <span class="sr-only">Data Loading</span>
-      </div>
     <div class="table_main">
         <table class="table">
             <thead class="thead-dark">
@@ -138,7 +139,7 @@
                         </td>
                         <td>
                             <div>
-                                <button data-toggle="modal" data-target="#exampleModal"
+                                <button data-toggle="modal" data-target="#reviewModal"
                                     (click)="reviewActivity(pa)">Review</button>
                             </div>
                         </td>
@@ -164,14 +165,16 @@
                     </tr>
                 </ng-container>
             </tbody>
+            <tfoot *ngIf="pendingActivitiesArr.length == 0">
+                <tr>
+                    <td colspan="6">No Pending Activities</td>
+                </tr>
+            </tfoot>
         </table>
     </div>
 </div>
 
 <div *ngIf="activityType === 'Saved'">
-    <div *ngIf="loader" class="spinner-border text-dark" role="status">
-        <span class="sr-only">Data Loading</span>
-      </div>
 
     <div class="table_main">
         <table class="table">
@@ -197,7 +200,7 @@
                         <td>
                             <div>
                                 <button (click)="submitSavedActivity($event,i)">Submit</button>
-                                <button data-toggle="modal" data-target="#exampleModal"
+                                <button data-toggle="modal" data-target="#reviewModal"
                                     (click)="editSavedActivity(sa)">Edit</button>
                             </div>
                         </td>
@@ -223,14 +226,18 @@
                         </td>
                     </tr>
                 </ng-container>
+                </tbody>
+                <tfoot *ngIf="savedActivitiesArr.length == 0">
+                    <tr>
+                        <td colspan="6">No Saved Activities</td>
+                    </tr>
+                </tfoot>
         </table>
     </div>
 </div>
 
 <div *ngIf="activityType === 'Reviewed'">
-    <div *ngIf="loader" class="spinner-border text-dark" role="status">
-        <span class="sr-only">Data Loading</span>
-      </div>
+
     <div class="table_main">
         <table class="table">
             <thead class="thead-dark">
@@ -269,13 +276,18 @@
                     </tr>
                 </ng-container>
             </tbody>
+            <tfoot *ngIf="reviewedActivitiesArr.length == 0">
+                <tr>
+                    <td colspan="6">No Reviewed Activities</td>
+                </tr>
+            </tfoot>
         </table>
     </div>
 </div>
 
 <!-- Review Activity Modal-->
 <div>
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -332,70 +344,3 @@
 
 
 
-
-<!-- Review Activity -->
-<!-- <div>
-                                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Review Activity</h5>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form [formGroup]="reviewForm" (ngSubmit)="saveReview()">
-                                                        <div class="form-group">
-                                                            <label for="recipient-name"
-                                                                class="col-form-label">Participation Score
-                                                                :</label>
-                                                            <input type="number" class="form-control"
-                                                                formControlName="participationScore">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="recipient-name"
-                                                                class="col-form-label">Achievement Score
-                                                                :</label>
-                                                            <input type="number" class="form-control"
-                                                                formControlName="achievementScore">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="recipient-name"
-                                                                class="col-form-label">Initiative Score
-                                                                :</label>
-                                                            <input type="number" class="form-control"
-                                                                formControlName="initiativeScore">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="recipient-name" class="col-form-label">Star
-                                                                :</label>
-                                                            <input type="number" class="form-control"
-                                                                formControlName="star">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="message-text" class="col-form-label">Remark
-                                                                :</label>
-                                                            <textarea class="form-control"
-                                                                formControlName="coachRemark"></textarea>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary"
-                                                                data-dismiss="modal">Close</button>
-                                                            <button type="submit" class="btn btn-primary">Save
-                                                                changes</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        >>>>>>> 5a3a583661e43c504cf9cea3ef25d7fe4f4a277a
-                                    </div>
-                                </div>
-                            </div>
-
-                    </div>
-                </div>
-            </div> -->
