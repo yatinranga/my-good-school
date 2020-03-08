@@ -25,4 +25,8 @@ public interface GradeRepository extends JpaRepository<Grade, Long>{
 	Grade findByNameAndSectionAndActiveTrue(String grade, String section);
 
 	Grade findByNameAndSchoolsCidAndSection(String string, String schoolCid, String section);
+
+	boolean existsByCidAndSchoolsCidAndSchoolsActiveTrueAndActiveTrue(String gradeId, String cid);
+	
+	Grade findByCidAndSchoolsCidAndSchoolsActiveTrueAndActiveTrue(String gradeId, String cid);
 }

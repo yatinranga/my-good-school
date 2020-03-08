@@ -2,6 +2,7 @@ package com.nxtlife.mgs.entity.activity;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -49,9 +50,9 @@ public class Activity extends BaseEntity {
 			@JoinColumn(name = "focus_area_id") })
 	private List<FocusArea> focusAreas;
 
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "teacher_activity", joinColumns = { @JoinColumn(name = "activity_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "teacher_id") })
+			@JoinColumn(name = "teacher_id") },uniqueConstraints = {@UniqueConstraint(columnNames = {"activity_id","teacher_id"})})
 	private List<Teacher> teachers;
 
 	@ManyToMany(fetch = FetchType.EAGER)

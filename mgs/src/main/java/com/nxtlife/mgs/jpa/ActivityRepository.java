@@ -58,4 +58,6 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
 
 	List<Activity> findAllByIsGeneralTrueAndActiveTrue();
 
+	boolean existsByCidAndActiveTrue(String activityCid);
+
 }

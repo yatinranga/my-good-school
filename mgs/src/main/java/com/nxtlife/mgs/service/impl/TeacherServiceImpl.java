@@ -31,6 +31,7 @@ import com.nxtlife.mgs.entity.user.User;
 import com.nxtlife.mgs.enums.UserType;
 import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.ex.ValidationException;
+import com.nxtlife.mgs.jpa.ActivityPerformedRepository;
 import com.nxtlife.mgs.jpa.ActivityRepository;
 import com.nxtlife.mgs.jpa.GradeRepository;
 import com.nxtlife.mgs.jpa.RoleRepository;
@@ -82,6 +83,9 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	
 	@Autowired
 	Utils utils;
+	
+	@Autowired
+	ActivityPerformedRepository activityPerformedRepository;
 
 	@Override
 	public TeacherResponse save(TeacherRequest request) {
@@ -254,6 +258,74 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		}
 
 		teacher = request.toEntity(teacher);
+		
+		if(request.getActivityIds()!=null && !request.getActivityIds().isEmpty()) {
+			List<String> requestActivityIds = request.getActivityIds();
+			List<Activity> previousActivities = teacher.getActivities();
+			List<Activity> toBeDeletedActivities = new ArrayList<Activity>();
+			
+			for(int i=0; i<previousActivities.size();i++) {
+				
+				if(requestActivityIds.contains(previousActivities.get(i).getCid())) {
+					requestActivityIds.remove(previousActivities.get(i).getCid());
+				}else {
+					if(activityPerformedRepository.existsByTeacherCidAndActiveTrue(teacher.getcId())) {
+						throw new ValidationException(String.format("You cannot delete the activty : %s as few student has already performed activity %s under you.", previousActivities.get(i).getName(),previousActivities.get(i).getName()));
+					}else {
+						List<Teacher> teachers = previousActivities.get(i).getTeachers();
+						teachers.remove(teacher);
+						previousActivities.get(i).setTeachers(teachers);
+						toBeDeletedActivities.add(previousActivities.get(i));
+						previousActivities.remove(i--);
+					}
+				}
+			}
+			
+			if(requestActivityIds!=null && !requestActivityIds.isEmpty()) {
+				for(String actId : requestActivityIds) {
+					if(!activityRepository.existsByCidAndActiveTrue(actId))
+						throw new ValidationException(String.format("Activity with id (%s) not found .", actId));
+					Activity activity = activityRepository.findByCidAndActiveTrue(actId);
+					List<Teacher> teachers = new ArrayList<Teacher>();
+					teachers = activity.getTeachers();
+					teachers.add(teacher);
+					activity.setTeachers(teachers);
+					previousActivities.add(activity);
+				}
+			}
+			if(previousActivities!=null && !previousActivities.isEmpty())
+				teacher.setIsCoach(true);
+			teacher.setActivities(previousActivities);
+			activityRepository.save(toBeDeletedActivities);
+//			teacher.setActivities(activityRepository.save(previousActivities));
+			
+		}
+		
+		if(request.getGradeIds()!=null && !request.getGradeIds().isEmpty()) {
+			List<String> requestGradeIds = request.getGradeIds();
+			List<Grade> previousGrades = teacher.getGrades();
+			
+        for(int i=0;i<previousGrades.size(); i++ ) {
+				
+				if(requestGradeIds.contains(previousGrades.get(i).getCid())) {
+					requestGradeIds.remove(previousGrades.get(i).getCid());
+				}else {
+					previousGrades.remove(i--);
+				}
+			}
+        if(requestGradeIds!=null && !requestGradeIds.isEmpty())
+			for(String gradeId : requestGradeIds) {
+				if(!gradeRepository.existsByCidAndSchoolsCidAndSchoolsActiveTrueAndActiveTrue(gradeId,teacher.getSchool().getCid()))
+					throw new ValidationException(String.format("No grade with id (%s) found in your school (%s)",gradeId,teacher.getSchool().getName() ));
+				Grade  grade = gradeRepository.findByCidAndSchoolsCidAndSchoolsActiveTrueAndActiveTrue(gradeId, teacher.getSchool().getCid());
+				List<Teacher> teachers = new ArrayList<Teacher>();
+				teachers = grade.getTeachers();
+				teachers.add(teacher);
+				grade.setTeachers(teachers);
+				previousGrades.add(grade);
+			}
+        teacher.setGrades(previousGrades);
+		}
 
 		teacher = teacherRepository.save(teacher);
 
