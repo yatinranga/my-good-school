@@ -22,7 +22,7 @@ public interface ExcelUtil {
 		columnTypes.put("EMAIL", CellType.STRING);
 		columnTypes.put("MOBILE NUMBER", CellType.NUMERIC);
 		columnTypes.put("GENDER", CellType.STRING);
-		columnTypes.put("SUBSCRIPTION END DATE", CellType.NUMERIC);
+//		columnTypes.put("SUBSCRIPTION END DATE", CellType.NUMERIC);
 		columnTypes.put("GRADE", CellType.STRING);
 		columnTypes.put("SECTION", CellType.STRING);
 		columnTypes.put("FATHERS NAME", CellType.STRING);
@@ -31,7 +31,7 @@ public interface ExcelUtil {
 		columnTypes.put("MOTHERS NAME", CellType.STRING);
 		columnTypes.put("MOTHERS EMAIL", CellType.STRING);
 		columnTypes.put("MOTHERS MOBILE NUMBER", CellType.NUMERIC);
-		columnTypes.put("SESSION START DATE",CellType.NUMERIC);
+//		columnTypes.put("SESSION START DATE",CellType.NUMERIC);
 		
 		return columnTypes;
 	}

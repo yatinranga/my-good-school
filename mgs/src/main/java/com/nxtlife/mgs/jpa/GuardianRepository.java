@@ -13,8 +13,12 @@ public interface GuardianRepository extends JpaRepository<Guardian, Long> {
 	
 	Guardian getOneByEmail(String email);
 	
-	List<Guardian> findByEmailOrMobileNumber(String email, String mobileNumber);
+	Guardian findByEmailOrMobileNumber(String email, String mobileNumber);
 	
 	Guardian getOneByMobileNumber(String mobileNumber);
+
+	Guardian findByMobileNumberAndActiveTrue(String mobileNumber);
+
+	Guardian findByEmailAndActiveTrue(String email);
 
 }

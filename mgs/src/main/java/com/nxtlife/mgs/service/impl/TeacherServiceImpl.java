@@ -88,12 +88,14 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 
 		if (request == null)
 			throw new ValidationException("Request can not be null.");
+		if (request.getSchoolId() == null)
+			throw new ValidationException(String.format("School id cannot be null."));
 
 		if (request.getEmail() == null)
 			throw new ValidationException("Email can not be null");
 
 		//int emailCount = teacherRepository.countByEmailAndActiveTrue(request.getEmail());
-		if (userRepository.existsByEmail(request.getEmail()))
+		if (request.getEmail()!=null && userRepository.existsByEmail(request.getEmail()))
 			throw new ValidationException(String.format("Email %s already exists", request.getEmail()));
 
 
@@ -126,6 +128,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		}
 
 		// saving school
+		
 
 		if (request.getSchoolId() != null) {
 
@@ -153,6 +156,9 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 
 					if (grade.getCid().equals(request.getGradeIds().get(i))) {
 						flag = true;
+						List<Teacher> teachers = new ArrayList<Teacher>();
+						teachers = grade.getTeachers();
+						teachers.add(teacher);
 						finalGradeList.add(grade);
 						break;
 					}
@@ -272,7 +278,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 			XSSFWorkbook teachersSheet = new XSSFWorkbook(file.getInputStream());
 			if (isCoach == true) {
 				teacherRecords = findSheetRowValues(teachersSheet, "COACH", errors);
-				errors = (List<String>) teacherRecords.get(teacherRecords.size() - 1).get("errors");
+//				errors = (List<String>) teacherRecords.get(teacherRecords.size() - 1).get("errors");
 				for (int i = 0; i < teacherRecords.size(); i++) {
 					List<Map<String, Object>> tempStudentsRecords = new ArrayList<Map<String, Object>>();
 					tempStudentsRecords.add(teacherRecords.get(i));
@@ -410,7 +416,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 							errors.add(String.format("Cell at row %d and column %d is blank for header %s.", i + 1,
 									j + 1, headers.get(j)));
 						columnValues.put(headers.get(j), null);
-						columnValues.put(headers.get(j), null);
+//						columnValues.put(headers.get(j), null);
 					}
 				}
 
@@ -455,6 +461,8 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		if(designation != null) {
 			teacherRequest.setIsManagmentMember(true);
 			teacherRequest.setDesignation(designation);
+		}else {
+			teacherRequest.setIsManagmentMember(false);
 		}
 
 //		if (school == null)
@@ -487,7 +495,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 					teacherRequest.setActivityIds(activityCIds);
 				} else {
 					if(!teacherRequest.getIsManagmentMember())
-						errors.add("No activities provided.");
+						errors.add(String.format("No activities provided for %s.", teacherRequest.getName()));
 				}
 			}
 			
@@ -526,8 +534,8 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 				teacherRequest.setIsClassTeacher(true);
 				teacherRequest.setGradeIds(gradeCIds);
 			} else {
-				if(!teacherRequest.getIsManagmentMember() && !teacherRequest.getIsCoach())
-					errors.add("No grades provided.");
+				if(!teacherRequest.getIsManagmentMember())
+					errors.add(String.format("No grades provided for %s.", teacherRequest.getName()));
 			}
 //		}
 

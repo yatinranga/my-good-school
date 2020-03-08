@@ -147,50 +147,136 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		student.setSchool(school);
 		if (request.getGuardians() != null) {
 			for (GuardianRequest guardianRequest : request.getGuardians()) {
-				if (guardianRequest.getMobileNumber() != null) {
-					if ((guardian = guardianRepository
-							.getOneByMobileNumber(guardianRequest.getMobileNumber())) == null) {
+				List<Student> st;
+				if((guardianRequest.getMobileNumber()!=null && guardianRequest.getEmail()!=null)) {
+					guardian = guardianRepository.findByEmailOrMobileNumber(guardianRequest.getEmail(), guardianRequest.getMobileNumber());
+					if(guardian == null) {
 						guardian = guardianRequest.toEntity();
 						sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
 						guardian.setUsername(String.format("GRD%08d", sequence));
 						guardian.setCid(utils.generateRandomAlphaNumString(8));
-
+		
 						if (guardian.getStudents() == null) {
-							List<Student> st = new ArrayList<Student>();
+							 st = new ArrayList<Student>();
 							st.add(student);
 							guardian.setStudents(st);
 						} else {
-							guardian.getStudents().add(student);
+							st = guardian.getStudents();
+							st.add(student);
+							guardian.setStudents(st);
 						}
 
 						guardian.setUser(userService.createParentUser(guardian));
 						guardians.add(guardian);
-					} else {
-						guardian.getStudents().add(student);
+					}else {
+						st = guardian.getStudents();
+						st.add(student);
+						guardian.setStudents(st);
 						guardians.add(guardian);
 					}
-				} else if (guardianRequest.getEmail() != null) {
-					if ((guardian = guardianRepository.getOneByEmail(guardianRequest.getEmail())) == null) {
+				}else if(guardianRequest.getMobileNumber()!=null) {
+					guardian = guardianRepository.getOneByMobileNumber(guardianRequest.getMobileNumber());
+					
+					if(guardian == null) {
 						guardian = guardianRequest.toEntity();
 						sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
 						guardian.setUsername(String.format("GRD%08d", sequence));
 						guardian.setCid(utils.generateRandomAlphaNumString(8));
 
 						if (guardian.getStudents() == null) {
-							List<Student> st = new ArrayList<Student>();
+							st = new ArrayList<Student>();
 							st.add(student);
 							guardian.setStudents(st);
 						} else {
-							guardian.getStudents().add(student);
+							st = guardian.getStudents();
+							st.add(student);
+							guardian.setStudents(st);
 						}
 
 						guardian.setUser(userService.createParentUser(guardian));
 						guardians.add(guardian);
-					} else {
-						guardian.getStudents().add(student);
+					}else {
+						st = guardian.getStudents();
+						st.add(student);
+						guardian.setStudents(st);
+						guardians.add(guardian);
+					}
+					
+				}else if(guardianRequest.getEmail()!=null) {
+					guardian = guardianRepository.getOneByEmail(guardianRequest.getEmail());
+					
+					if(guardian == null) {
+						guardian = guardianRequest.toEntity();
+						sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
+						guardian.setUsername(String.format("GRD%08d", sequence));
+						guardian.setCid(utils.generateRandomAlphaNumString(8));
+
+						if (guardian.getStudents() == null) {
+							st = new ArrayList<Student>();
+							st.add(student);
+							guardian.setStudents(st);
+						} else {
+							st = guardian.getStudents();
+							st.add(student);
+							guardian.setStudents(st);
+						}
+
+						guardian.setUser(userService.createParentUser(guardian));
+						guardians.add(guardian);
+					}else {
+						st = guardian.getStudents();
+						st.add(student);
+						guardian.setStudents(st);
 						guardians.add(guardian);
 					}
 				}
+				
+				
+				
+//				if (guardianRequest.getMobileNumber() != null) {
+//					if ((guardian = guardianRepository
+//							.findByMobileNumberAndActiveTrue(guardianRequest.getMobileNumber())) == null) {
+//						guardian = guardianRequest.toEntity();
+//						sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
+//						guardian.setUsername(String.format("GRD%08d", sequence));
+//						guardian.setCid(utils.generateRandomAlphaNumString(8));
+//
+//						if (guardian.getStudents() == null) {
+//							List<Student> st = new ArrayList<Student>();
+//							st.add(student);
+//							guardian.setStudents(st);
+//						} else {
+//							guardian.getStudents().add(student);
+//						}
+//
+//						guardian.setUser(userService.createParentUser(guardian));
+//						guardians.add(guardian);
+//					} else {
+//						guardian.getStudents().add(student);
+//						guardians.add(guardian);
+//					}
+//				} else if (guardianRequest.getEmail() != null) {
+//					if ((guardian = guardianRepository.findByEmailAndActiveTrue(guardianRequest.getEmail())) == null) {
+//						guardian = guardianRequest.toEntity();
+//						sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
+//						guardian.setUsername(String.format("GRD%08d", sequence));
+//						guardian.setCid(utils.generateRandomAlphaNumString(8));
+//
+//						if (guardian.getStudents() == null) {
+//							List<Student> st = new ArrayList<Student>();
+//							st.add(student);
+//							guardian.setStudents(st);
+//						} else {
+//							guardian.getStudents().add(student);
+//						}
+//
+//						guardian.setUser(userService.createParentUser(guardian));
+//						guardians.add(guardian);
+//					} else {
+//						guardian.getStudents().add(student);
+//						guardians.add(guardian);
+//					}
+//				}
 			}
 			student.setGuardians(guardians);
 		}
@@ -479,6 +565,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			}
 			if (grade == null)
 				errors.add(String.format("Grade  %s not found ", (String) studentDetails.get(0).get("GRADE")));
+			else
 			studentRequest.setGradeId(grade.getCid());
 //		}
 		
