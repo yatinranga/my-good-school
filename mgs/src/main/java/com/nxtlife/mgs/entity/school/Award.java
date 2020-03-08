@@ -54,6 +54,11 @@ public class Award extends BaseEntity {
 	@ManyToOne
 	@JoinColumn(name = "student_id")
 	private Student student;
+	
+	@ManyToOne
+	private Teacher statusModifiedBy;
+	
+	private Date statusModifiedAt;
 
 	@ManyToOne
 	private Activity activity;
@@ -143,6 +148,22 @@ public class Award extends BaseEntity {
 
 	public void setActivity(Activity activity) {
 		this.activity = activity;
+	}
+
+	public Teacher getStatusModifiedBy() {
+		return statusModifiedBy;
+	}
+
+	public void setStatusModifiedBy(Teacher statusModifiedBy) {
+		this.statusModifiedBy = statusModifiedBy;
+	}
+
+	public Date getStatusModifiedAt() {
+		return statusModifiedAt;
+	}
+
+	public void setStatusModifiedAt(Date statusModifiedAt) {
+		this.statusModifiedAt = statusModifiedAt;
 	}
 
 	public Award(@NotNull String name, @NotNull String description, Boolean active, Teacher teacher) {

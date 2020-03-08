@@ -1,6 +1,7 @@
 package com.nxtlife.mgs.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,6 +18,8 @@ import com.nxtlife.mgs.entity.school.AwardActivityPerformed;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.enums.AwardStatus;
+import com.nxtlife.mgs.filtering.filter.AwardFilter;
+import com.nxtlife.mgs.filtering.filter.AwardFilterBuilder;
 import com.nxtlife.mgs.jpa.ActivityPerformedRepository;
 import com.nxtlife.mgs.jpa.ActivityRepository;
 import com.nxtlife.mgs.jpa.AwardActivityPerformedRepository;
@@ -90,6 +93,7 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 		award.setStatus(AwardStatus.PENDING);
 		award.setStudent(student);
 		award.setActivity(activity);
+		award.setActive(true);
 		award = awardRepository.save(award);
 		List<AwardActivityPerformed> awardActivityPerformedList = new ArrayList<>();
 		ActivityPerformed activityPerformed;
@@ -119,16 +123,68 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 	}
 
 	@Override
-	public List<AwardResponse> findAllByManagement(){
+	public List<AwardResponse> findAllByStudent(AwardFilter awardFilter) {
+		Long userId = getUserId();
+		Student student = studentRepository.getByUserId(userId);
+		if (student == null) {
+			throw new ValidationException("User not login as a student");
+		}
+		List<Award> awards = awardRepository
+				.findAll(new AwardFilterBuilder().build(awardFilter, student.getCid(), AwardStatus.VERIFIED));
+		return awards.stream().map(AwardResponse::new).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<AwardResponse> findAllByManagement() {
 		Long userId = getUserId();
 		Teacher teacher = teacherRepository.getByUserId(userId);
-		if(teacher==null){
+		if (teacher == null) {
 			throw new ValidationException("User not login as a management");
 		}
-		if(teacher.getActivities()==null || teacher.getActivities().isEmpty()){
+		if (teacher.getActivities() == null || teacher.getActivities().isEmpty()) {
 			throw new ValidationException("Management not assigned with any activity");
 		}
 		List<Award> awards = awardRepository.findByActivity(teacher.getActivities());
 		return awards.stream().map(AwardResponse::new).collect(Collectors.toList());
+	}
+	
+	@Override
+	public List<AwardResponse> findAllByManagement(AwardFilter awardFilter) {
+		Long userId = getUserId();
+		Teacher teacher = teacherRepository.getByUserId(userId);
+		if (teacher == null) {
+			throw new ValidationException("User not login as a management");
+		}
+		if (teacher.getActivities() == null || teacher.getActivities().isEmpty()) {
+			throw new ValidationException("Management not assigned with any activity");
+		}
+		List<Award> awards = awardRepository.findAll(new AwardFilterBuilder().build(awardFilter, teacher.getActivities()));
+		return awards.stream().map(AwardResponse::new).collect(Collectors.toList());
+	}
+
+	@Override
+	public AwardResponse updateStatus(String awardId, Boolean isVerified) {
+		Long userId = getUserId();
+		Teacher teacher = teacherRepository.getByUserId(userId);
+		if (teacher == null) {
+			throw new ValidationException("User not login as a management");
+		}
+		if (teacher.getIsManagmentMember() == null || !teacher.getIsManagmentMember()) {
+			throw new ValidationException(
+					"You aren't login as a school mannagement that's why you can't verify this award");
+		}
+		Award award = awardRepository.findByCidAndActiveTrue(awardId);
+		if (award == null) {
+			throw new ValidationException(String.format("This award not exist", awardId));
+		}
+		if (award.getStatus().equals(AwardStatus.PENDING)) {
+			award.setStatus(isVerified ? AwardStatus.VERIFIED : AwardStatus.REJECTED);
+			award.setStatusModifiedBy(teacher);
+			award.setStatusModifiedAt(new Date());
+		} else {
+			throw new ValidationException("This award already rejected or verified");
+		}
+		awardRepository.save(award);
+		return new AwardResponse(award);
 	}
 }

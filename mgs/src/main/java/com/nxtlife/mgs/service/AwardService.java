@@ -2,6 +2,7 @@ package com.nxtlife.mgs.service;
 
 import java.util.List;
 
+import com.nxtlife.mgs.filtering.filter.AwardFilter;
 import com.nxtlife.mgs.view.AwardRequest;
 import com.nxtlife.mgs.view.AwardResponse;
 
@@ -11,6 +12,12 @@ public interface AwardService {
 	
 	public List<AwardResponse> findAllByStudent();
 	
+	public List<AwardResponse> findAllByStudent(AwardFilter awardFilter) ;
+	
 	public List<AwardResponse> findAllByManagement();
+	
+	public List<AwardResponse> findAllByManagement(AwardFilter awardFilter) ;
+	
+	public AwardResponse updateStatus(String awardId, Boolean isVerified);
 	
 }

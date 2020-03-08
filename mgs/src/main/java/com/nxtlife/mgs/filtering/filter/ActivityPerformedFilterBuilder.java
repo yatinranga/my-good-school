@@ -24,4 +24,19 @@ public class ActivityPerformedFilterBuilder implements FilterBuilder<ActivityPer
 						filter.getYear())
 				.build();
 	}
+	
+	@Override
+	public Predicate build(ActivityPerformedFilter filter, String studentId) {
+		return new OptionalBooleanBuilder(ActivityPerformed.isNotNull())
+				.notEmptyAnd(ActivityPerformed.teacher.cid::contains, filter.getTeacherId())
+				.notEmptyAnd(ActivityPerformed.activity.fourS.stringValue()::containsIgnoreCase, filter.getFourS())
+				.notEmptyAnd(ActivityPerformed.activityStatus.stringValue()::containsIgnoreCase, filter.getStatus())
+				.notEmptyAnd(ActivityPerformed.activity.cid::contains, filter.getActivityId())
+				.notEmptyAnd(ActivityPerformed.activity.focusAreas.any().cid::contains, filter.getFocusAreaId())
+				.notEmptyAnd(ActivityPerformed.activity.focusAreas.any().psdArea.stringValue()::containsIgnoreCase,
+						filter.getPsdArea())
+				.notEmptyAnd(ActivityPerformed.dateOfActivity.year().stringValue()::containsIgnoreCase,
+						filter.getYear())
+				.build();
+	}
 }

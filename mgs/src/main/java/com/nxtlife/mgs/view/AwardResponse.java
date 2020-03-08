@@ -18,6 +18,9 @@ public class AwardResponse {
 	private String description;
 	private String createrId;
 	private String createdBy;
+	private String statusModifiedBy;
+	private String statusModifierId;
+	private Date statusModifiedAt;
 	private List<ActivityPerformedResponse> activityPerformedResponses;
 	private Date dateOfReceipt;
 	private AwardStatus status;
@@ -117,12 +120,37 @@ public class AwardResponse {
 		this.activity = activity;
 	}
 
+	public String getStatusModifiedBy() {
+		return statusModifiedBy;
+	}
+
+	public void setStatusModifiedBy(String statusModifiedBy) {
+		this.statusModifiedBy = statusModifiedBy;
+	}
+
+	public String getStatusModifierId() {
+		return statusModifierId;
+	}
+
+	public void setStatusModifierId(String statusModifierId) {
+		this.statusModifierId = statusModifierId;
+	}
+
+	public Date getStatusModifiedAt() {
+		return statusModifiedAt;
+	}
+
+	public void setStatusModifiedAt(Date statusModifiedAt) {
+		this.statusModifiedAt = statusModifiedAt;
+	}
+
 	public AwardResponse(Award award) {
 		this.id = award.getCid();
 		this.description = award.getDescription();
 		this.name = award.getName();
 		this.dateOfReceipt = award.getDateOfReceipt();
 		this.status = award.getStatus();
+		this.statusModifiedAt = award.getStatusModifiedAt();
 		if (award.getTeacher() != null) {
 			this.createrId = award.getTeacher().getcId();
 			this.createdBy = award.getTeacher().getName();
@@ -141,7 +169,10 @@ public class AwardResponse {
 		if (award.getActivity() != null) {
 			activity = new ActivityRequestResponse(award.getActivity());
 		}
-
+		if(award.getStatusModifiedBy()!=null){
+			this.statusModifiedBy=award.getStatusModifiedBy().getName();
+			this.statusModifierId=award.getStatusModifiedBy().getCid();
+		}
 	}
 
 }
