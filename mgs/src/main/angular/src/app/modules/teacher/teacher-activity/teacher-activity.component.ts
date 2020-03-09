@@ -131,10 +131,15 @@ export class TeacherActivityComponent implements OnInit {
       console.log(res);
       this.savedActivitiesArr = [...this.savedActivitiesArr, ...this.pendingActivitiesArr.splice(this.i, 1)];
       $('#reviewModal').modal('hide');
+      $('.modal-backdrop').remove();
       this.reviewForm.reset();
       this.alertService.showSuccessToast('Review Saved !');
     },
-      (err) => console.log(err)
+      (err) =>  {
+        console.log(err);
+        $('#reviewModal').modal('hide');
+        $('.modal-backdrop').remove();
+      }
     );
   }
 
