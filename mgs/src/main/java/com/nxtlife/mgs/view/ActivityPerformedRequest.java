@@ -6,7 +6,10 @@ import java.util.List;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
+import org.joda.time.LocalDateTime;
+
 import com.nxtlife.mgs.entity.activity.ActivityPerformed;
+import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.util.DateUtil;
 
 public class ActivityPerformedRequest {
@@ -173,8 +176,11 @@ public class ActivityPerformedRequest {
 		activityPerformed = activityPerformed == null ? new ActivityPerformed() : activityPerformed;
 		if (this.id != null)
 			activityPerformed.setCid(this.id);
-		if (this.dateOfActivity != null)
+		if (this.dateOfActivity != null) {
+			if(LocalDateTime.now().toDate().before(DateUtil.convertStringToDate(this.dateOfActivity)))
+				throw new ValidationException("Date of activity cannot be a future date.");
 			activityPerformed.setDateOfActivity(DateUtil.convertStringToDate(this.dateOfActivity));
+			}
 //		activityPerformed.setActivityStatus(this.activityStatus);
 		if (this.description != null)
 			activityPerformed.setDescription(this.description);

@@ -171,8 +171,11 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 				throw new ValidationException(
 						String.format("Activity with the id : %s is already submitted by you and cannot be edited.",
 								request.getId()));
-			if (request.getDateOfActivity() != null)
+			if (request.getDateOfActivity() != null) {
+				if(LocalDateTime.now().toDate().before(DateUtil.convertStringToDate(request.getDateOfActivity())))
+					throw new ValidationException("Date of activity cannot be a future date.");
 				activityPerformed.setDateOfActivity(DateUtil.convertStringToDate(request.getDateOfActivity()));
+			}
 			if (request.getDescription() != null)
 				activityPerformed.setDescription(request.getDescription());
 
@@ -905,14 +908,14 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			throw new ValidationException(String.format("Student with id : %s does not exist.", studentCid));
 
 		List<ActivityPerformed> performedActivities = activityPerformedRepository
-				.findAll(new ActivityPerformedFilterBuilder().build(filterRequest));
+				.findAll(new ActivityPerformedFilterBuilder().build(filterRequest,studentCid));
 		// findAllByStudentCidAndActiveTrue(studentCid,new
 		// ActivityPerformedFilterBuilder().build(filterRequest));
 
-		performedActivities.stream().forEach(pa -> {
-			if (pa.getStudent() != null && !(pa.getStudent().getCid()).equals(studentCid) || !pa.getActive())
-				performedActivities.remove(pa);
-		});
+//		performedActivities.stream().forEach(pa -> {
+//			if (pa.getStudent() != null && !(pa.getStudent().getCid()).equals(studentCid) || !pa.getActive())
+//				performedActivities.remove(pa);
+//		});
 
 		if (performedActivities == null || performedActivities.isEmpty())
 			throw new ValidationException("No activities found after applying filter.");

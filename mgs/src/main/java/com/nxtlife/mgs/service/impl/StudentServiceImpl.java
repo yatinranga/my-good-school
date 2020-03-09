@@ -147,50 +147,136 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		student.setSchool(school);
 		if (request.getGuardians() != null) {
 			for (GuardianRequest guardianRequest : request.getGuardians()) {
-				if (guardianRequest.getMobileNumber() != null) {
-					if ((guardian = guardianRepository
-							.getOneByMobileNumber(guardianRequest.getMobileNumber())) == null) {
+				List<Student> st;
+				if((guardianRequest.getMobileNumber()!=null && guardianRequest.getEmail()!=null)) {
+					guardian = guardianRepository.findByEmailOrMobileNumber(guardianRequest.getEmail(), guardianRequest.getMobileNumber());
+					if(guardian == null) {
 						guardian = guardianRequest.toEntity();
 						sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
 						guardian.setUsername(String.format("GRD%08d", sequence));
 						guardian.setCid(utils.generateRandomAlphaNumString(8));
-
+		
 						if (guardian.getStudents() == null) {
-							List<Student> st = new ArrayList<Student>();
+							 st = new ArrayList<Student>();
 							st.add(student);
 							guardian.setStudents(st);
 						} else {
-							guardian.getStudents().add(student);
+							st = guardian.getStudents();
+							st.add(student);
+							guardian.setStudents(st);
 						}
 
 						guardian.setUser(userService.createParentUser(guardian));
 						guardians.add(guardian);
-					} else {
-						guardian.getStudents().add(student);
+					}else {
+						st = guardian.getStudents();
+						st.add(student);
+						guardian.setStudents(st);
 						guardians.add(guardian);
 					}
-				} else if (guardianRequest.getEmail() != null) {
-					if ((guardian = guardianRepository.getOneByEmail(guardianRequest.getEmail())) == null) {
+				}else if(guardianRequest.getMobileNumber()!=null) {
+					guardian = guardianRepository.getOneByMobileNumber(guardianRequest.getMobileNumber());
+					
+					if(guardian == null) {
 						guardian = guardianRequest.toEntity();
 						sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
 						guardian.setUsername(String.format("GRD%08d", sequence));
 						guardian.setCid(utils.generateRandomAlphaNumString(8));
 
 						if (guardian.getStudents() == null) {
-							List<Student> st = new ArrayList<Student>();
+							st = new ArrayList<Student>();
 							st.add(student);
 							guardian.setStudents(st);
 						} else {
-							guardian.getStudents().add(student);
+							st = guardian.getStudents();
+							st.add(student);
+							guardian.setStudents(st);
 						}
 
 						guardian.setUser(userService.createParentUser(guardian));
 						guardians.add(guardian);
-					} else {
-						guardian.getStudents().add(student);
+					}else {
+						st = guardian.getStudents();
+						st.add(student);
+						guardian.setStudents(st);
+						guardians.add(guardian);
+					}
+					
+				}else if(guardianRequest.getEmail()!=null) {
+					guardian = guardianRepository.getOneByEmail(guardianRequest.getEmail());
+					
+					if(guardian == null) {
+						guardian = guardianRequest.toEntity();
+						sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
+						guardian.setUsername(String.format("GRD%08d", sequence));
+						guardian.setCid(utils.generateRandomAlphaNumString(8));
+
+						if (guardian.getStudents() == null) {
+							st = new ArrayList<Student>();
+							st.add(student);
+							guardian.setStudents(st);
+						} else {
+							st = guardian.getStudents();
+							st.add(student);
+							guardian.setStudents(st);
+						}
+
+						guardian.setUser(userService.createParentUser(guardian));
+						guardians.add(guardian);
+					}else {
+						st = guardian.getStudents();
+						st.add(student);
+						guardian.setStudents(st);
 						guardians.add(guardian);
 					}
 				}
+				
+				
+				
+//				if (guardianRequest.getMobileNumber() != null) {
+//					if ((guardian = guardianRepository
+//							.findByMobileNumberAndActiveTrue(guardianRequest.getMobileNumber())) == null) {
+//						guardian = guardianRequest.toEntity();
+//						sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
+//						guardian.setUsername(String.format("GRD%08d", sequence));
+//						guardian.setCid(utils.generateRandomAlphaNumString(8));
+//
+//						if (guardian.getStudents() == null) {
+//							List<Student> st = new ArrayList<Student>();
+//							st.add(student);
+//							guardian.setStudents(st);
+//						} else {
+//							guardian.getStudents().add(student);
+//						}
+//
+//						guardian.setUser(userService.createParentUser(guardian));
+//						guardians.add(guardian);
+//					} else {
+//						guardian.getStudents().add(student);
+//						guardians.add(guardian);
+//					}
+//				} else if (guardianRequest.getEmail() != null) {
+//					if ((guardian = guardianRepository.findByEmailAndActiveTrue(guardianRequest.getEmail())) == null) {
+//						guardian = guardianRequest.toEntity();
+//						sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
+//						guardian.setUsername(String.format("GRD%08d", sequence));
+//						guardian.setCid(utils.generateRandomAlphaNumString(8));
+//
+//						if (guardian.getStudents() == null) {
+//							List<Student> st = new ArrayList<Student>();
+//							st.add(student);
+//							guardian.setStudents(st);
+//						} else {
+//							guardian.getStudents().add(student);
+//						}
+//
+//						guardian.setUser(userService.createParentUser(guardian));
+//						guardians.add(guardian);
+//					} else {
+//						guardian.getStudents().add(student);
+//						guardians.add(guardian);
+//					}
+//				}
 			}
 			student.setGuardians(guardians);
 		}
@@ -411,6 +497,11 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	public ResponseEntity<?> uploadStudentsFromExcel(MultipartFile file, String schoolCid) {
 		if (file == null || file.isEmpty() || file.getSize() == 0)
 			throw new ValidationException("Pls upload valid excel file.");
+		
+		if(schoolCid==null)
+			throw new ValidationException("School id cannot be null.");
+		if(!schoolRepository.existsByCidAndActiveTrue(schoolCid))
+			throw new ValidationException(String.format("School with id : (%s) not found." , schoolCid));
 
 		List<String> errors = new ArrayList<String>();
 		List<StudentResponse> studentResponseList = new ArrayList<>();
@@ -443,24 +534,22 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		}
 		StudentRequest studentRequest = new StudentRequest();
 		studentRequest.setName((String) studentDetails.get(0).get("NAME"));
-		// studentRequest.setUsername((String)
-		// studentDetails.get(0).get("USERNAME"));
-		// studentRequest.setDob(
-		// DateUtil.convertStringToDate(DateUtil.formatDate((Date)
-		// studentDetails.get(0).get("DOB"), null, null)));
-		studentRequest.setDob(DateUtil.formatDate((Date) studentDetails.get(0).get("DOB"), null, null));
-		School school = schoolRepository.findByCidAndActiveTrue(schoolCid);
-		// if (studentDetails.get(0).get("SCHOOL") != null)
-		// school = schoolRepository.findByName((String)
-		// studentDetails.get(0).get("SCHOOL"));
-		// if (studentDetails.get(0).get("SCHOOLS EMAIL") != null)
-		// school = schoolRepository.findByEmail((String)
-		// studentDetails.get(0).get("SCHOOLS EMAIL"));
 
-		if (school == null)
-			errors.add(String.format("School with id : %s not found ", schoolCid));
-		else {
-			studentRequest.setSchoolId(school.getCid());
+//		studentRequest.setUsername((String) studentDetails.get(0).get("USERNAME"));
+//		studentRequest.setDob(
+//				DateUtil.convertStringToDate(DateUtil.formatDate((Date) studentDetails.get(0).get("DOB"), null, null)));
+		if((Date) studentDetails.get(0).get("DOB")!=null)
+		    studentRequest.setDob(DateUtil.formatDate((Date) studentDetails.get(0).get("DOB"), null, null));
+//		School school = schoolRepository.findByCidAndActiveTrue(schoolCid);
+//		if (studentDetails.get(0).get("SCHOOL") != null)
+//			school = schoolRepository.findByName((String) studentDetails.get(0).get("SCHOOL"));
+//		if (studentDetails.get(0).get("SCHOOLS EMAIL") != null)
+//			school = schoolRepository.findByEmail((String) studentDetails.get(0).get("SCHOOLS EMAIL"));
+
+//		if (school == null)
+//			errors.add(String.format("School with id : %s not found ", schoolCid));
+//		else {
+			studentRequest.setSchoolId(schoolCid);
 			String standard = (String) studentDetails.get(0).get("GRADE");
 			String section = (String) studentDetails.get(0).get("SECTION");
 			Grade grade = null;
@@ -468,25 +557,29 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				errors.add("GRADE and SECTION are empty.");
 			} else if (standard != null && section == null) {
 				errors.add("SECTION is empty");
-				grade = gradeRepository.findByNameAndSchoolsId(standard, school.getId());
+				grade = gradeRepository.findByNameAndSchoolsCid(standard, schoolCid);
 			} else if (section != null && standard == null) {
 				errors.add("GRADE is empty");
 			} else {
-				grade = gradeRepository.findByNameAndSchoolsIdAndSection(standard, school.getId(), section);
+				grade = gradeRepository.findByNameAndSchoolsCidAndSection(standard, schoolCid, section);
 			}
 			if (grade == null)
 				errors.add(String.format("Grade  %s not found ", (String) studentDetails.get(0).get("GRADE")));
+			else
 			studentRequest.setGradeId(grade.getCid());
-		}
-		studentRequest.setSessionStartDate(
-				DateUtil.convertStringToDate(DateUtil.formatDate((Date) studentDetails.get(0).get("DOB"), null, null)));
+//		}
+		
+		if((Date) studentDetails.get(0).get("SESSION START DATE")!=null )
+		   studentRequest.setSessionStartDate(
+				DateUtil.convertStringToDate(DateUtil.formatDate((Date) studentDetails.get(0).get("SESSION START DATE"), null, null)));
 		studentRequest.setEmail((String) studentDetails.get(0).get("EMAIL"));
 		if (studentDetails.get(0).get("ACTIVE") != null)
 			// studentRequest.setActive(Boolean.valueOf((Boolean)
 			// studentDetails.get(0).get("ACTIVE")));
 			studentRequest.setMobileNumber((String) studentDetails.get(0).get("MOBILE NUMBER"));
 		studentRequest.setGender((String) studentDetails.get(0).get("GENDER"));
-		studentRequest.setSubscriptionEndDate(DateUtil.convertStringToDate(
+		if((Date) studentDetails.get(0).get("SUBSCRIPTION END DATE")!=null)
+		   studentRequest.setSubscriptionEndDate(DateUtil.convertStringToDate(
 				DateUtil.formatDate((Date) studentDetails.get(0).get("SUBSCRIPTION END DATE"), null, null)));
 		List<GuardianRequest> guardians = new ArrayList<GuardianRequest>();
 		guardians.add(new GuardianRequest((String) studentDetails.get(0).get("FATHERS NAME"),

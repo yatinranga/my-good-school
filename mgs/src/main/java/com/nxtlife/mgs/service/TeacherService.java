@@ -58,4 +58,6 @@ public interface TeacherService {
 
 	List<TeacherResponse> getAllManagmentBySchool(String schoolCid);
 
+	ResponseEntity<?> uploadManagementFromExcel(MultipartFile file, String schoolCid);
+
 }

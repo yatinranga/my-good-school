@@ -43,8 +43,8 @@ public class User extends BaseEntity implements UserDetails {
 	@Column(nullable = false, unique = true)
 	private String userName;
 
-	@Column(unique = true)
-	@Size(min = 10, max = 10)
+	@Column(unique = true,nullable = true ,columnDefinition = "VARCHAR(10)")
+//	@Size(min = 10, max = 10)
 //	@Pattern(regexp = "^[6-9]{1}[0-9]]{9}$")
 	private String mobileNo;
 

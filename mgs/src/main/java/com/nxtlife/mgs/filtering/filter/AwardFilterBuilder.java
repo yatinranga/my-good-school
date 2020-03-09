@@ -16,10 +16,10 @@ public class AwardFilterBuilder {
 
 	public Predicate build(AwardFilter filter) {
 		return new OptionalBooleanBuilder(qAward.isNotNull())
-				.notEmptyAnd(qAward.activity.cid.stringValue()::containsIgnoreCase, filter.getActivityId())
-				.notEmptyAnd(qAward.dateOfReceipt.year().stringValue()::containsIgnoreCase, filter.getYear())
-				.notEmptyAnd(qAward.student.cid.stringValue()::containsIgnoreCase, filter.getStudentId())
-				.notEmptyAnd(qAward.teacher.cid.stringValue()::containsIgnoreCase, filter.getTeacherId())
+				.notEmptyAnd(qAward.activity.cid.stringValue()::contains, filter.getActivityId())
+				.notEmptyAnd(qAward.dateOfReceipt.year().stringValue()::contains, filter.getYear())
+				.notEmptyAnd(qAward.student.cid.stringValue()::contains, filter.getStudentId())
+				.notEmptyAnd(qAward.teacher.cid.stringValue()::contains, filter.getTeacherId())
 				.notEmptyAnd(qAward.activity.focusAreas.any().cid::contains, filter.getFocusAreaId())
 				.notEmptyAnd(qAward.activity.focusAreas.any().psdArea.stringValue()::containsIgnoreCase,
 						filter.getPsdArea())
@@ -28,14 +28,14 @@ public class AwardFilterBuilder {
 
 	public Predicate build(AwardFilter filter, String studentId, AwardStatus status) {
 		return new OptionalBooleanBuilder(qAward.isNotNull())
-				.notEmptyAnd(qAward.activity.cid.stringValue()::containsIgnoreCase, filter.getActivityId())
+				.notEmptyAnd(qAward.activity.cid.stringValue()::contains, filter.getActivityId())
 				.notEmptyAnd(qAward.dateOfReceipt.year().stringValue()::containsIgnoreCase, filter.getYear())
-				.notEmptyAnd(qAward.student.cid.stringValue()::containsIgnoreCase, filter.getStudentId())
-				.notEmptyAnd(qAward.teacher.cid.stringValue()::containsIgnoreCase, filter.getTeacherId())
+				.notEmptyAnd(qAward.student.cid.stringValue()::contains, filter.getStudentId())
+				.notEmptyAnd(qAward.teacher.cid.stringValue()::contains, filter.getTeacherId())
 				.notEmptyAnd(qAward.activity.focusAreas.any().cid::contains, filter.getFocusAreaId())
 				.notEmptyAnd(qAward.activity.focusAreas.any().psdArea.stringValue()::containsIgnoreCase,
 						filter.getPsdArea())
-				.notEmptyAnd(qAward.student.cid.stringValue()::containsIgnoreCase, studentId)
+				.notEmptyAnd(qAward.student.cid.stringValue()::contains, studentId)
 				.notEmptyAnd(qAward.active.stringValue()::containsIgnoreCase, "TRUE")
 				.notEmptyAnd(qAward.status.stringValue()::containsIgnoreCase, status.name())
 				.notEmptyAnd(qAward.activity.fourS.stringValue()::containsIgnoreCase, filter.getFourS()).build();
@@ -43,7 +43,7 @@ public class AwardFilterBuilder {
 
 	public Predicate build(AwardFilter filter, List<Activity> activities) {
 		return new OptionalBooleanBuilder(qAward.isNotNull())
-				.notEmptyAnd(qAward.activity.cid.stringValue()::containsIgnoreCase, filter.getActivityId())
+				.notEmptyAnd(qAward.activity.cid.stringValue()::contains, filter.getActivityId())
 				.notEmptyAnd(qAward.dateOfReceipt.year().stringValue()::containsIgnoreCase, filter.getYear())
 				.notEmptyAnd(qAward.student.cid.stringValue()::eq, filter.getStudentId())
 				.notEmptyAnd(qAward.teacher.cid.stringValue()::eq, filter.getTeacherId())

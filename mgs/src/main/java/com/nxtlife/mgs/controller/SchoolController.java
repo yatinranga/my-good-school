@@ -44,7 +44,7 @@ public class SchoolController {
 		return schoolService.getAllSchools();
 	}
 
-	@PutMapping(consumes = { "multipart/form-data" }, value = "api/update/{cid}")
+	@PostMapping(consumes = { "multipart/form-data" }, value = "api/school/update/{cid}")
 	public SchoolResponse update(@ModelAttribute SchoolRequest request, @PathVariable("cid") String cid) {
 		return schoolService.update(request, cid);
 	}
