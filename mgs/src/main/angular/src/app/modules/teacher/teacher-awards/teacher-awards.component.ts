@@ -126,13 +126,16 @@ export class TeacherAwardsComponent implements OnInit {
 
     this.teacherService.assignAward(this.assignAwardForm.value).subscribe((res) => {
       console.log(res);
-      $('#assignAwardModal').modal('hide');
+      $('#assignAwardModal').modal('toggle');
       this.performedActiArr = [];
       this.assignAwardForm.reset();
       this.alertService.showSuccessAlert("");      
     },
-      (err) => console.log(err));
-
+      (err) => {
+        console.log(err);
+        $('#assignAwardModal').modal('backdrop');
+      });
+      
   }
 
   // create NEW Award
