@@ -108,6 +108,8 @@ public class ExcelTemplateController {
 			return focusAreaService.uploadFocusAreasFromExcel(file);
 		else if(type.equalsIgnoreCase("ACTIVITY"))
 			return activityService.uploadActivityFromExcel(file ,schoolCid);
+		else if(type.equalsIgnoreCase("MANAGEMENT"))
+			return teacherService.uploadManagementFromExcel(file, schoolCid);
 		else
 			 return new ResponseEntity<String>("Something went wrong.", HttpStatus.INTERNAL_SERVER_ERROR);
 	}

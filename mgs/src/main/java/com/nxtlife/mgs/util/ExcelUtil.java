@@ -22,7 +22,7 @@ public interface ExcelUtil {
 		columnTypes.put("EMAIL", CellType.STRING);
 		columnTypes.put("MOBILE NUMBER", CellType.NUMERIC);
 		columnTypes.put("GENDER", CellType.STRING);
-		columnTypes.put("SUBSCRIPTION END DATE", CellType.NUMERIC);
+//		columnTypes.put("SUBSCRIPTION END DATE", CellType.NUMERIC);
 		columnTypes.put("GRADE", CellType.STRING);
 		columnTypes.put("SECTION", CellType.STRING);
 		columnTypes.put("FATHERS NAME", CellType.STRING);
@@ -31,7 +31,7 @@ public interface ExcelUtil {
 		columnTypes.put("MOTHERS NAME", CellType.STRING);
 		columnTypes.put("MOTHERS EMAIL", CellType.STRING);
 		columnTypes.put("MOTHERS MOBILE NUMBER", CellType.NUMERIC);
-		columnTypes.put("SESSION START DATE",CellType.NUMERIC);
+//		columnTypes.put("SESSION START DATE",CellType.NUMERIC);
 		
 		return columnTypes;
 	}
@@ -67,7 +67,7 @@ public interface ExcelUtil {
 		columnTypes.put("QUALIFICATION", CellType.STRING);
 		columnTypes.put("GRADE", CellType.STRING);
 //		columnTypes.put("SECTION", CellType.STRING);
-		columnTypes.put("ACTIVE", CellType.BOOLEAN);
+//		columnTypes.put("ACTIVE", CellType.BOOLEAN);
 		
 		return columnTypes;
 	}
@@ -75,8 +75,8 @@ public interface ExcelUtil {
 	public static Map<String, CellType> coachColumns() {
 		Map<String, CellType> columnTypes = new LinkedHashMap<>();
 		columnTypes.put("NAME", CellType.STRING);
-		columnTypes.put("SCHOOL", CellType.STRING);
-		columnTypes.put("SCHOOLS EMAIL", CellType.STRING);
+//		columnTypes.put("SCHOOL", CellType.STRING);
+//		columnTypes.put("SCHOOLS EMAIL", CellType.STRING);
 //		columnTypes.put("USERNAME", CellType.STRING);
 		columnTypes.put("DOB", CellType.NUMERIC);
 //		columnTypes.put("ACTIVE", CellType.BOOLEAN);
@@ -96,7 +96,7 @@ public interface ExcelUtil {
 	public static Map<String, CellType> managementColumns() {
 		Map<String, CellType> columnTypes = new LinkedHashMap<>();
 		columnTypes.put("NAME", CellType.STRING);
-		columnTypes.put("SCHOOL", CellType.STRING);
+//		columnTypes.put("SCHOOL", CellType.STRING);
 		columnTypes.put("DESIGNATION", CellType.STRING);
 		columnTypes.put("DOB", CellType.NUMERIC);
 		columnTypes.put("EMAIL", CellType.STRING);

@@ -30,8 +30,9 @@ export class SavedActitvityComponent implements OnInit {
   activityDate: any;
   file = [];
   url = '';
-  activityType = 'Submitted';
+  activityType = 'All';
   loader: boolean = false;
+  modal_loader = false;
 
   constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService) { }
 
@@ -175,10 +176,14 @@ export class SavedActitvityComponent implements OnInit {
 
   // to get teacher/coach who perform selected activity
   getStudentCoach(activityId) {
+    this.modal_loader = true;
     this.studentService.getCoach(this.schoolId, activityId).subscribe((res) => {
       this.coaches = res;
+      this.modal_loader = false;
     },
-      (err) => console.log(err)
+      (err) =>  {
+        console.log(err);
+        this.modal_loader = false; }
     );
   }
 

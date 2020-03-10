@@ -2,12 +2,14 @@ package com.nxtlife.mgs.view;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.nxtlife.mgs.entity.activity.Activity;
+import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
 
 @JsonInclude(value = Include.NON_ABSENT)
@@ -26,6 +28,8 @@ public class SchoolResponse {
 	private String logo;
 
 	private List<ActivityRequestResponse> activities;
+	
+	private List<GradeResponse> grades;
 
 	public String getName() {
 		return name;
@@ -83,6 +87,14 @@ public class SchoolResponse {
 		this.activities = activities;
 	}
 
+	public List<GradeResponse> getGrades() {
+		return grades;
+	}
+
+	public void setGrades(List<GradeResponse> grades) {
+		this.grades = grades;
+	}
+
 	public SchoolResponse(School school) {
 		this.setName(school.getName());
 		this.setAddress(school.getAddress());
@@ -96,6 +108,9 @@ public class SchoolResponse {
 
 		for (Activity activity : school.getActivities()) {
 			this.activities.add(new ActivityRequestResponse(activity));
+		}
+		if(school.getGrades()!=null && !school.getGrades().isEmpty()) {
+			this.grades = school.getGrades().stream().map(GradeResponse::new).collect(Collectors.toList());
 		}
 	}
 

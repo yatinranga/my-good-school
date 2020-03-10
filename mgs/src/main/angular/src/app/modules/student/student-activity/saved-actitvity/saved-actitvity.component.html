@@ -155,7 +155,7 @@
                 </tbody>
                 <tfoot *ngIf="allActivitiesArr.length == 0">
                     <tr>
-                        <td colspan="6">No Activities</td>
+                        <td colspan="6">{{loader ? 'Loading...' : 'No Activities'}}</td>
                     </tr>
                 </tfoot>
             </table>
@@ -233,7 +233,7 @@
                 </tbody>
                 <tfoot *ngIf="submittedActivitiesArr.length == 0">
                     <tr>
-                        <td colspan="5">No Submitted Activities</td>
+                        <td colspan="5">{{loader ? 'Loading...' : 'No Activities'}}</td>
                     </tr>
                 </tfoot>
             </table>
@@ -322,7 +322,7 @@
                 </tbody>
                 <tfoot *ngIf="savedActivitiesArr.length == 0">
                     <tr>
-                        <td colspan="6">No Saved Activities</td>
+                        <td colspan="6">{{loader ? 'Loading...' : 'No Activities'}}</td>
                     </tr>
                 </tfoot>
             </table>
@@ -395,7 +395,7 @@
                 </tbody>
                 <tfoot *ngIf="reviewedActivitiesArr.length == 0">
                     <tr>
-                        <td colspan="5">No Reviewed Activities</td>
+                        <td colspan="5">{{loader ? 'Loading...' : 'No Activities'}}</td>
                     </tr>
                 </tfoot>
             </table>
@@ -420,12 +420,15 @@
                                 </select>
                             </div>
                             <div class="form-group">Teacher/Coach :
-                                <select class="form-control" formControlName="coachId">
+                                <select class="form-control" formControlName="coachId">                                                                       
                                     <option *ngFor="let coach of coaches; let i = index;" value={{coach.id}}>
                                         {{coach.name}}
                                     </option>
                                     <option disabled *ngIf="!coaches.length">Teacher/Coach available</option>
                                 </select>
+                                <div *ngIf="modal_loader" class="spinner-border text-dark" role="status">
+                                    <span class="sr-only">Data Loading</span>
+                                </div> 
                             </div>
                             <div class="form-group">Description :
                                 <textarea class="form-control add" formControlName="description" rows="3"></textarea>

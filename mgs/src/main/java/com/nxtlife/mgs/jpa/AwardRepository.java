@@ -19,5 +19,5 @@ public interface AwardRepository extends JpaRepository<Award, Long>, QueryDslPre
 	public List<Award> findAll(Predicate predicate);
 
 	public Award findByCidAndActiveTrue(String cid);
-	
+
 }

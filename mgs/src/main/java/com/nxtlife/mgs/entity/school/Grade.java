@@ -49,9 +49,12 @@ public class Grade extends BaseEntity {
 			@JoinColumn(name = "school_id") })
 	private List<School> schools;
 
-	@ManyToOne
-	private Teacher teacher;
-
+//	@ManyToOne
+//	private Teacher teacher;
+	
+	@ManyToMany(mappedBy = "grades", cascade = CascadeType.ALL)
+	private List<Teacher> teachers;
+	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "grade")
 	private List<Student> students;
 
@@ -101,13 +104,13 @@ public class Grade extends BaseEntity {
 		this.students = students;
 	}
 
-	public Teacher getTeacher() {
-		return teacher;
-	}
-
-	public void setTeacher(Teacher teacher) {
-		this.teacher = teacher;
-	}
+//	public Teacher getTeacher() {
+//		return teacher;
+//	}
+//
+//	public void setTeacher(Teacher teacher) {
+//		this.teacher = teacher;
+//	}
 
 	public String getCid() {
 		return cid;
@@ -144,15 +147,23 @@ public class Grade extends BaseEntity {
 	public void setTeacherSchoolGrades(List<TeacherSchoolGrade> teacherSchoolGrades) {
 		this.teacherSchoolGrades = teacherSchoolGrades;
 	}
+	
 
-	public Grade(@NotNull String name, @NotNull String cid, String section, Boolean active, List<School> schools,
-			Teacher teacher, List<Student> students) {
+	public List<Teacher> getTeachers() {
+		return teachers;
+	}
+
+	public void setTeachers(List<Teacher> teachers) {
+		this.teachers = teachers;
+	}
+
+	public Grade(@NotNull String name, @NotNull String cid, String section, Boolean active, List<School> schools, List<Student> students) {
 		this.name = name;
 		this.cid = cid;
 		this.section = section;
 		this.active = active;
 		this.schools = schools;
-		this.teacher = teacher;
+//		this.teacher = teacher;
 		this.students = students;
 	}
 
