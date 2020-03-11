@@ -60,7 +60,9 @@ public class TeacherController {
 		return teacherService.getAllTeachers(pageNo, pageSize);
 	}
 
-	@GetMapping(value = "api/teachers/classTeachers")
+	@GetMapping(value = "q" +
+			"" +
+			"classTeachers")
 	public List<TeacherResponse> getAllClassTeachers() {
 		return teacherService.getAllClassTeachers();
 	}

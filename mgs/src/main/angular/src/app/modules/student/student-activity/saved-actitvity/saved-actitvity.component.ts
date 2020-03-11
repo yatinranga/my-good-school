@@ -28,7 +28,7 @@ export class SavedActitvityComponent implements OnInit {
   activityTeacher: any;
   activityId: any;
   activityDate: any;
-  file = [];
+  files = [];
   url = '';
   activityType = 'All';
   loader: boolean = false;
@@ -122,7 +122,7 @@ export class SavedActitvityComponent implements OnInit {
   addActivity() {
     this.savedActivityForm.reset();
     this.savedActivityForm.value.attachment = [];
-    this.file =[];
+    this.files = [];
     this.addActivityShow = true;
     this.editActivityShow = false;
   }
@@ -133,15 +133,13 @@ export class SavedActitvityComponent implements OnInit {
     if (submit) {
       e.stopPropagation();
       const activityId = this.savedActivitiesArr[index].id;
-
-      console.log(this.submittedActivitiesArr);
       this.studentService.submitActivity(activityId).subscribe((res) => {
         console.log(res);
         this.submittedActivitiesArr = [...this.submittedActivitiesArr, ...this.savedActivitiesArr.splice(index, 1)];
-        this.alertService.showSuccessToast('Activity Submitted !');
-      },
-        (err) => console.log(err)
-      );
+        this.alertService.showSuccessAlert('Activity Submitted !');
+      }, (err) => {
+        console.log(err)
+      });
     }
   }
 
@@ -181,18 +179,23 @@ export class SavedActitvityComponent implements OnInit {
       this.coaches = res;
       this.modal_loader = false;
     },
-      (err) =>  {
+      (err) => {
         console.log(err);
-        this.modal_loader = false; }
+        this.modal_loader = false;
+      }
     );
   }
 
   onFileSelect(event) {
     if (event.target.files.length > 0) {
-      this.file = [...event.target.files];
-      this.savedActivityForm.value.attachment = this.file;
-      console.log(this.file);
+      this.files = [...event.target.files];
+      // this.savedActivityForm.value.attachment = this.files;
+      // console.log(this.files);
     }
+  }
+
+  removeFile(index: number) {
+    this.files.splice(index, 1);
   }
 
   // to UPDATE the saved activity
@@ -226,6 +229,7 @@ export class SavedActitvityComponent implements OnInit {
     }
 
     if (this.addActivityShow) {
+      this.savedActivityForm.value.attachment = this.files;
       const time = this.savedActivityForm.value.dateOfActivity + " 00:00:00";
       this.savedActivityForm.value.dateOfActivity = time;
       const formData = new FormData();
@@ -260,21 +264,25 @@ export class SavedActitvityComponent implements OnInit {
     this.activityType = event;
     this.loader = true;
     switch (this.activityType) {
-      case "All":  {
+      case "All": {
         this.getStudentAllActivities(this.studentId);
-        break; }
+        break;
+      }
 
       case "Saved": {
         this.getStudentSavedActivities(this.studentId);
-        break; }
+        break;
+      }
 
       case "Reviewed": {
         this.getStudentReviewedActivities(this.studentId);
-        break; }
+        break;
+      }
 
       case "Submitted": {
         this.getStudentSubmittedActivities(this.studentId);
-        break; }
+        break;
+      }
     }
   }
 

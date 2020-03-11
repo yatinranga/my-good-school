@@ -25,7 +25,8 @@
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Name</th>
+                    <th scope="col">Student Name</th>
+                    <th scope="col">Performed Activity</th>
                     <th scope="col">Date</th>
                     <th scope="col">Status</th>
                     <th scope="col">Action</th>
@@ -36,6 +37,7 @@
                     <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                         <td>{{i+1}}</td>
                         <td>{{allacti.studentName}}</td>
+                        <td>{{allacti.activityName}}</td>
                         <td>{{getDate(allacti.dateOfActivity) | date}}</td>
                         <td>
                             <div *ngIf="allacti.activityStatus === 'SubmittedByStudent'">Pending</div>
@@ -43,11 +45,9 @@
                             <div *ngIf="allacti.activityStatus === 'Reviewed'">Reviewed</div>
                         </td>
                         <td>
-                            <button [disabled]="!(allacti.activityStatus === 'SavedByTeacher')" (click)="submitSavedActivity($event,i,'All')" >Submit</button>      
-                            <button [disabled]="!(allacti.activityStatus === 'SavedByTeacher')" data-toggle="modal" data-target="#reviewModal"
-                                    (click)="editSavedActivity(allacti)">Edit</button>
-                            <button [disabled]="!(allacti.activityStatus === 'SubmittedByStudent')" data-toggle="modal" data-target="#reviewModal"
-                                    (click)="reviewActivity(allacti)">Review</button>                            
+                            <button [disabled]="!(allacti.activityStatus === 'SavedByTeacher')" (click)="submitSavedActivity($event,i,'All')">Submit</button>
+                            <button [disabled]="!(allacti.activityStatus === 'SavedByTeacher')" data-toggle="modal" data-target="#reviewModal" (click)="editSavedActivity(allacti)">Edit</button>
+                            <button [disabled]="!(allacti.activityStatus === 'SubmittedByStudent')" data-toggle="modal" data-target="#reviewModal" (click)="reviewActivity(allacti)">Review</button>
                         </td>
                     </tr>
                     <tr>
@@ -57,14 +57,20 @@
                                 <div *ngIf="allacti.activityStatus === 'Reviewed'">
                                     <div class="row">
                                         <div class="col-6">
-                                            <p><strong>Participation Score :</strong>{{allacti.participationScore}}</p>
-                                            <p><strong>Initiative Score :</strong>{{allacti.initiativeScore}}</p>
-                                            <p><strong>Achievement Score :</strong>{{allacti.achievementScore}}</p>
+                                            <p>
+                                                <strong>Participation Score :</strong>{{allacti.participationScore}}</p>
+                                            <p>
+                                                <strong>Initiative Score :</strong>{{allacti.initiativeScore}}</p>
+                                            <p>
+                                                <strong>Achievement Score :</strong>{{allacti.achievementScore}}</p>
                                         </div>
                                         <div class="col-6">
-                                            <p><strong>Activity : </strong>{{allacti.activityName}}</p>
-                                            <p><strong>Star : </strong>{{allacti.star}}</p>
-                                            <p><strong>Remark : </strong>{{allacti.coachRemark}}</p>
+                                            <p>
+                                                <strong>Activity : </strong>{{allacti.activityName}}</p>
+                                            <p>
+                                                <strong>Star : </strong>{{allacti.star}}</p>
+                                            <p>
+                                                <strong>Remark : </strong>{{allacti.coachRemark}}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -72,12 +78,15 @@
                                 <div *ngIf="allacti.activityStatus === 'SavedByTeacher'">
                                     <div class="row">
                                         <div class="col-6">
-                                            <p><strong>Description :
+                                            <p>
+                                                <strong>Description :
                                                 </strong>{{allacti.description}}</p>
                                         </div>
                                         <div class="col-6">
                                             <div>
-                                                <p><strong>Attachments : </strong></p>
+                                                <p>
+                                                    <strong>Attachments : </strong>
+                                                </p>
                                                 <p *ngFor="let file of allacti.fileResponses">
                                                     {{file.name}}
                                                 </p>
@@ -90,12 +99,15 @@
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="description">
-                                                <p><strong>Description : </strong>{{allacti.description}}</p>
+                                                <p>
+                                                    <strong>Description : </strong>{{allacti.description}}</p>
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="attachment">
-                                                <p><strong>Attachments : </strong></p>
+                                                <p>
+                                                    <strong>Attachments : </strong>
+                                                </p>
                                                 <p *ngFor="let file of allacti.fileResponses">{{file.name}}</p>
                                             </div>
                                         </div>
@@ -122,7 +134,8 @@
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Name</th>
+                    <th scope="col">Student Name</th>
+                    <th scope="col">Performed Activity</th>
                     <th scope="col">Date</th>
                     <th scope="col">Status</th>
                     <th scope="col">Action</th>
@@ -133,14 +146,14 @@
                     <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                         <td>{{i+1}}</td>
                         <td>{{pa.studentName}}</td>
+                        <td>{{pa.activityName}}</td>
                         <td>{{getDate(pa.dateOfActivity) | date}}</td>
                         <td>
                             <div *ngIf="pa.activityStatus === 'SubmittedByStudent'">Pending</div>
                         </td>
                         <td>
                             <div>
-                                <button data-toggle="modal" data-target="#reviewModal"
-                                    (click)="reviewActivity(pa)">Review</button>
+                                <button data-toggle="modal" data-target="#reviewModal" (click)="reviewActivity(pa)">Review</button>
                             </div>
                         </td>
                     </tr>
@@ -150,12 +163,15 @@
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="description">
-                                            <p><strong>Description : </strong>{{pa.description}}</p>
+                                            <p>
+                                                <strong>Description : </strong>{{pa.description}}</p>
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="attachment">
-                                            <p><strong>Attachments : </strong></p>
+                                            <p>
+                                                <strong>Attachments : </strong>
+                                            </p>
                                             <p *ngFor="let file of pa.fileResponses">{{file.name}}</p>
                                         </div>
                                     </div>
@@ -181,7 +197,8 @@
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Name</th>
+                    <th scope="col">Student Name</th>
+                    <th scope="col">Performed Activity</th>
                     <th scope="col">Date</th>
                     <th scope="col">Status</th>
                     <th scope="col">Action</th>
@@ -192,6 +209,7 @@
                     <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                         <td>{{i+1}}</td>
                         <td>{{sa.studentName}}</td>
+                        <td>{{sa.activityName}}</td>
                         <td>{{getDate(sa.dateOfActivity) | date}}</td>
                         <td>
                             <div *ngIf="sa.activityStatus === 'SavedByTeacher'">Saved
@@ -200,8 +218,7 @@
                         <td>
                             <div>
                                 <button (click)="submitSavedActivity($event,i)">Submit</button>
-                                <button data-toggle="modal" data-target="#reviewModal"
-                                    (click)="editSavedActivity(sa)">Edit</button>
+                                <button data-toggle="modal" data-target="#reviewModal" (click)="editSavedActivity(sa)">Edit</button>
                             </div>
                         </td>
                     </tr>
@@ -210,12 +227,15 @@
                             <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
                                 <div class="row">
                                     <div class="col-6">
-                                        <p><strong>Description :
+                                        <p>
+                                            <strong>Description :
                                             </strong>{{sa.description}}</p>
                                     </div>
                                     <div class="col-6">
                                         <div>
-                                            <p><strong>Attachments : </strong></p>
+                                            <p>
+                                                <strong>Attachments : </strong>
+                                            </p>
                                             <p *ngFor="let file of sa.fileResponses">
                                                 {{file.name}}
                                             </p>
@@ -226,12 +246,12 @@
                         </td>
                     </tr>
                 </ng-container>
-                </tbody>
-                <tfoot *ngIf="savedActivitiesArr.length == 0">
-                    <tr>
-                        <td colspan="6">No Saved Activities</td>
-                    </tr>
-                </tfoot>
+            </tbody>
+            <tfoot *ngIf="savedActivitiesArr.length == 0">
+                <tr>
+                    <td colspan="6">No Saved Activities</td>
+                </tr>
+            </tfoot>
         </table>
     </div>
 </div>
@@ -243,7 +263,8 @@
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Name</th>
+                    <th scope="col">Student Name</th>
+                    <th scope="col">Performed Activity</th>
                     <th scope="col">Date</th>
                     <th scope="col">Status</th>
                 </tr>
@@ -253,6 +274,7 @@
                     <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                         <td>{{i+1}}</td>
                         <td>{{ra.studentName}}</td>
+                        <td>{{ra.activityName}}</td>
                         <td>{{ra.coachRemarkDate | date}}</td>
                         <td>Reviewed</td>
                     </tr>
@@ -261,14 +283,20 @@
                             <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
                                 <div class="row">
                                     <div class="col-6">
-                                        <p><strong>Participation Score :</strong>{{ra.participationScore}}</p>
-                                        <p><strong>Initiative Score :</strong>{{ra.initiativeScore}}</p>
-                                        <p><strong>Achievement Score :</strong>{{ra.achievementScore}}</p>
+                                        <p>
+                                            <strong>Participation Score :</strong>{{ra.participationScore}}</p>
+                                        <p>
+                                            <strong>Initiative Score :</strong>{{ra.initiativeScore}}</p>
+                                        <p>
+                                            <strong>Achievement Score :</strong>{{ra.achievementScore}}</p>
                                     </div>
                                     <div class="col-6">
-                                        <p><strong>Activity : </strong>{{ra.activityName}}</p>
-                                        <p><strong>Star : </strong>{{ra.star}}</p>
-                                        <p><strong>Remark :</strong>{{ra.coachRemark}}</p>
+                                        <p>
+                                            <strong>Activity : </strong>{{ra.activityName}}</p>
+                                        <p>
+                                            <strong>Star : </strong>{{ra.star}}</p>
+                                        <p>
+                                            <strong>Remark :</strong>{{ra.coachRemark}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -287,8 +315,7 @@
 
 <!-- Review Activity Modal-->
 <div>
-    <div class="modal" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
+    <div class="modal" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -302,20 +329,17 @@
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label">Achievement Score :</label>
                             <input type="number" class="form-control" formControlName="achievementScore">
-                            <small class="text-danger" *ngIf="reviewForm.controls.achievementScore.errors">*Between
-                                0-5 Sonly</small>
+                            <small class="text-danger" *ngIf="reviewForm.controls.achievementScore.errors">*Between 0-5 Sonly</small>
                         </div>
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label">Participation Score :</label>
                             <input type="number" class="form-control" formControlName="participationScore">
-                            <small class="text-danger" *ngIf="reviewForm.controls.participationScore.errors">*Between
-                                0-10 only</small>
+                            <small class="text-danger" *ngIf="reviewForm.controls.participationScore.errors">*Between 0-10 only</small>
                         </div>
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label">Initiative Score :</label>
                             <input type="number" class="form-control" min="1" max="5" formControlName="initiativeScore">
-                            <small class="text-danger" *ngIf="reviewForm.controls.initiativeScore.errors">*Between
-                                0-10 only</small>
+                            <small class="text-danger" *ngIf="reviewForm.controls.initiativeScore.errors">*Between 0-10 only</small>
                         </div>
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label">Star : </label>
@@ -330,10 +354,9 @@
                             <textarea class="form-control" formControlName="coachRemark"></textarea>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                                (click)="resetForm()">Reset</button>
-                            <button class="btn btn-primary" type="submit" [disabled]="reviewForm.invalid">Save
-                                changes</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="resetForm()">Reset</button>
+                            <button class="btn btn-primary" type="submit" [disabled]="reviewForm.invalid">Save changes
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -341,6 +364,3 @@
         </div>
     </div>
 </div>
-
-
-
