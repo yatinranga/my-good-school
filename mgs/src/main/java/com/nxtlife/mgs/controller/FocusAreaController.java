@@ -20,22 +20,22 @@ import com.nxtlife.mgs.view.ActivityRequestResponse;
 import com.nxtlife.mgs.view.FocusAreaRequestResponse;
 
 @RestController
-@RequestMapping("/api/focusAreas")
+@RequestMapping("/")
 public class FocusAreaController {
 	@Autowired
 	FocusAreaService focusAreaService;
 	
-	@GetMapping
+	@GetMapping(value = "focusAreas")
 	public List<FocusAreaRequestResponse> getAllFocusAreas(){
 		return focusAreaService.getAllFocusAreas();
 	}
 	
-	@GetMapping("/school/{schoolCid}")
+	@GetMapping("focusAreas/school/{schoolCid}")
 	public List<FocusAreaRequestResponse> getAllFocusAreas(@PathVariable("schoolCid") String schoolCid){
 		return focusAreaService.getAllFocusAreasBySchool(schoolCid);
 	}
 
-	@PostMapping()
+	@PostMapping(value = "api/focusAreas")
 	public FocusAreaRequestResponse saveFocusArea(@RequestBody FocusAreaRequestResponse request) {
 		return focusAreaService.save(request);
 	}

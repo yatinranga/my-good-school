@@ -9,6 +9,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.entity.user.Guardian;
 import com.nxtlife.mgs.entity.user.Student;
@@ -31,8 +32,8 @@ public class StudentRequest {
 	private String dob;
 
 	private Date sessionStartDate;
-
-	private String imageUrl;
+	
+	private MultipartFile profileImage;
 
 	@NotEmpty
 	@Email(message = "email pattern not vaild")
@@ -115,12 +116,12 @@ public class StudentRequest {
 		this.dob = dob;
 	}
 
-	public String getImageUrl() {
-		return imageUrl;
+	public MultipartFile getProfileImage() {
+		return profileImage;
 	}
 
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
+	public void setProfileImage(MultipartFile profileImage) {
+		this.profileImage = profileImage;
 	}
 
 	public String getEmail() {

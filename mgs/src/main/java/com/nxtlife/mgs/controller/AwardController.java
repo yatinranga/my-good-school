@@ -16,6 +16,7 @@ import com.nxtlife.mgs.filtering.filter.AwardFilter;
 import com.nxtlife.mgs.service.AwardService;
 import com.nxtlife.mgs.view.AwardRequest;
 import com.nxtlife.mgs.view.AwardResponse;
+import com.nxtlife.mgs.view.PropertyCount;
 
 @RestController
 @RequestMapping("/api/")
@@ -52,6 +53,11 @@ public class AwardController {
 	@PostMapping("/teacher/awards")
 	private List<AwardResponse> getAwardsByManagement(@RequestBody AwardFilter filter){
 		return awardService.findAllByManagement(filter);
+	}
+	
+	@GetMapping(value = "/student/{studentId}/awards/count" )
+	public List<PropertyCount> getCount(@PathVariable("studentId") String studentCid ,@RequestParam(name = "status" , required = false ,defaultValue = "Reviewed") String status ,@RequestParam("type") String type){
+		return awardService.getCount(studentCid , status,type);
 	}
 
 

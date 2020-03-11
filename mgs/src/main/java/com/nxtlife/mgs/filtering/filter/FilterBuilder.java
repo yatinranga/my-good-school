@@ -6,6 +6,6 @@ public interface FilterBuilder<T> {
   
 	Predicate build(T filter);
 	
-	Predicate build(T filter, String studentId);
+//	Predicate build(T filter, String studentId);
 	
 }

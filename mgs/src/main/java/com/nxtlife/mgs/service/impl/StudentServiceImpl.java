@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.CellType;
@@ -20,6 +21,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.entity.activity.Activity;
@@ -48,6 +51,7 @@ import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.SequenceGeneratorService;
 import com.nxtlife.mgs.service.StudentService;
 import com.nxtlife.mgs.service.UserService;
+import com.nxtlife.mgs.store.FileStore;
 import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.SequenceGenerator;
@@ -98,9 +102,12 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 	@Autowired
 	AwardActivityPerformedRepository awardActivityPerformedRepository;
-	
+
 	@Autowired
 	ActivityPerformedRepository activityPerformedRepository;
+
+	@Autowired
+	FileStore filestore;
 
 	@Override
 	public StudentResponse save(StudentRequest request) {
@@ -148,16 +155,17 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		if (request.getGuardians() != null) {
 			for (GuardianRequest guardianRequest : request.getGuardians()) {
 				List<Student> st;
-				if((guardianRequest.getMobileNumber()!=null && guardianRequest.getEmail()!=null)) {
-					guardian = guardianRepository.findByEmailOrMobileNumber(guardianRequest.getEmail(), guardianRequest.getMobileNumber());
-					if(guardian == null) {
+				if ((guardianRequest.getMobileNumber() != null && guardianRequest.getEmail() != null)) {
+					guardian = guardianRepository.findByEmailOrMobileNumber(guardianRequest.getEmail(),
+							guardianRequest.getMobileNumber());
+					if (guardian == null) {
 						guardian = guardianRequest.toEntity();
 						sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
 						guardian.setUsername(String.format("GRD%08d", sequence));
 						guardian.setCid(utils.generateRandomAlphaNumString(8));
-		
+
 						if (guardian.getStudents() == null) {
-							 st = new ArrayList<Student>();
+							st = new ArrayList<Student>();
 							st.add(student);
 							guardian.setStudents(st);
 						} else {
@@ -168,16 +176,16 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 						guardian.setUser(userService.createParentUser(guardian));
 						guardians.add(guardian);
-					}else {
+					} else {
 						st = guardian.getStudents();
 						st.add(student);
 						guardian.setStudents(st);
 						guardians.add(guardian);
 					}
-				}else if(guardianRequest.getMobileNumber()!=null) {
+				} else if (guardianRequest.getMobileNumber() != null) {
 					guardian = guardianRepository.getOneByMobileNumber(guardianRequest.getMobileNumber());
-					
-					if(guardian == null) {
+
+					if (guardian == null) {
 						guardian = guardianRequest.toEntity();
 						sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
 						guardian.setUsername(String.format("GRD%08d", sequence));
@@ -195,17 +203,17 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 						guardian.setUser(userService.createParentUser(guardian));
 						guardians.add(guardian);
-					}else {
+					} else {
 						st = guardian.getStudents();
 						st.add(student);
 						guardian.setStudents(st);
 						guardians.add(guardian);
 					}
-					
-				}else if(guardianRequest.getEmail()!=null) {
+
+				} else if (guardianRequest.getEmail() != null) {
 					guardian = guardianRepository.getOneByEmail(guardianRequest.getEmail());
-					
-					if(guardian == null) {
+
+					if (guardian == null) {
 						guardian = guardianRequest.toEntity();
 						sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
 						guardian.setUsername(String.format("GRD%08d", sequence));
@@ -223,16 +231,14 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 						guardian.setUser(userService.createParentUser(guardian));
 						guardians.add(guardian);
-					}else {
+					} else {
 						st = guardian.getStudents();
 						st.add(student);
 						guardian.setStudents(st);
 						guardians.add(guardian);
 					}
 				}
-				
-				
-				
+
 //				if (guardianRequest.getMobileNumber() != null) {
 //					if ((guardian = guardianRepository
 //							.findByMobileNumberAndActiveTrue(guardianRequest.getMobileNumber())) == null) {
@@ -289,10 +295,26 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		// setting all the existing and newely created guardians to student
 
 		/*
-		 * if
-		 * (request.getSubscriptionEndDate().after(LocalDateTime.now().toDate())
-		 * ) { student.setActive(true); }
+		 * if (request.getSubscriptionEndDate().after(LocalDateTime.now().toDate()) ) {
+		 * student.setActive(true); }
 		 */
+
+//		if (request.getProfileImage() != null) {
+//			String[] separatedItems = request.getProfileImage().getOriginalFilename().split("\\.");
+//			if(separatedItems.length<2)
+//			     throw new ValidationException("Not able to parse file extension from file name.");
+//			 
+//			String fileExtn = separatedItems[separatedItems.length-1];
+//				 
+//			String filename = UUID.randomUUID().toString() + "." + fileExtn;
+//			try {
+//				String logoUrl = filestore.store("schoolLogo", filename, request.getProfileImage().getBytes());
+//				school.setLogo(logoUrl);
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+
 		User user = userService.createStudentUser(student);
 		if (StringUtils.isEmpty(user)) {
 			throw new ValidationException("User not created successfully");
@@ -497,11 +519,11 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	public ResponseEntity<?> uploadStudentsFromExcel(MultipartFile file, String schoolCid) {
 		if (file == null || file.isEmpty() || file.getSize() == 0)
 			throw new ValidationException("Pls upload valid excel file.");
-		
-		if(schoolCid==null)
+
+		if (schoolCid == null)
 			throw new ValidationException("School id cannot be null.");
-		if(!schoolRepository.existsByCidAndActiveTrue(schoolCid))
-			throw new ValidationException(String.format("School with id : (%s) not found." , schoolCid));
+		if (!schoolRepository.existsByCidAndActiveTrue(schoolCid))
+			throw new ValidationException(String.format("School with id : (%s) not found.", schoolCid));
 
 		List<String> errors = new ArrayList<String>();
 		List<StudentResponse> studentResponseList = new ArrayList<>();
@@ -538,8 +560,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 //		studentRequest.setUsername((String) studentDetails.get(0).get("USERNAME"));
 //		studentRequest.setDob(
 //				DateUtil.convertStringToDate(DateUtil.formatDate((Date) studentDetails.get(0).get("DOB"), null, null)));
-		if((Date) studentDetails.get(0).get("DOB")!=null)
-		    studentRequest.setDob(DateUtil.formatDate((Date) studentDetails.get(0).get("DOB"), null, null));
+		if ((Date) studentDetails.get(0).get("DOB") != null)
+			studentRequest.setDob(DateUtil.formatDate((Date) studentDetails.get(0).get("DOB"), null, null));
 //		School school = schoolRepository.findByCidAndActiveTrue(schoolCid);
 //		if (studentDetails.get(0).get("SCHOOL") != null)
 //			school = schoolRepository.findByName((String) studentDetails.get(0).get("SCHOOL"));
@@ -549,38 +571,38 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 //		if (school == null)
 //			errors.add(String.format("School with id : %s not found ", schoolCid));
 //		else {
-			studentRequest.setSchoolId(schoolCid);
-			String standard = (String) studentDetails.get(0).get("GRADE");
-			String section = (String) studentDetails.get(0).get("SECTION");
-			Grade grade = null;
-			if (standard == null && section == null) {
-				errors.add("GRADE and SECTION are empty.");
-			} else if (standard != null && section == null) {
-				errors.add("SECTION is empty");
-				grade = gradeRepository.findByNameAndSchoolsCid(standard, schoolCid);
-			} else if (section != null && standard == null) {
-				errors.add("GRADE is empty");
-			} else {
-				grade = gradeRepository.findByNameAndSchoolsCidAndSection(standard, schoolCid, section);
-			}
-			if (grade == null)
-				errors.add(String.format("Grade  %s not found ", (String) studentDetails.get(0).get("GRADE")));
-			else
+		studentRequest.setSchoolId(schoolCid);
+		String standard = (String) studentDetails.get(0).get("GRADE");
+		String section = (String) studentDetails.get(0).get("SECTION");
+		Grade grade = null;
+		if (standard == null && section == null) {
+			errors.add("GRADE and SECTION are empty.");
+		} else if (standard != null && section == null) {
+			errors.add("SECTION is empty");
+			grade = gradeRepository.findByNameAndSchoolsCid(standard, schoolCid);
+		} else if (section != null && standard == null) {
+			errors.add("GRADE is empty");
+		} else {
+			grade = gradeRepository.findByNameAndSchoolsCidAndSection(standard, schoolCid, section);
+		}
+		if (grade == null)
+			errors.add(String.format("Grade  %s not found ", (String) studentDetails.get(0).get("GRADE")));
+		else
 			studentRequest.setGradeId(grade.getCid());
 //		}
-		
-		if((Date) studentDetails.get(0).get("SESSION START DATE")!=null )
-		   studentRequest.setSessionStartDate(
-				DateUtil.convertStringToDate(DateUtil.formatDate((Date) studentDetails.get(0).get("SESSION START DATE"), null, null)));
+
+		if ((Date) studentDetails.get(0).get("SESSION START DATE") != null)
+			studentRequest.setSessionStartDate(DateUtil.convertStringToDate(
+					DateUtil.formatDate((Date) studentDetails.get(0).get("SESSION START DATE"), null, null)));
 		studentRequest.setEmail((String) studentDetails.get(0).get("EMAIL"));
 		if (studentDetails.get(0).get("ACTIVE") != null)
 			// studentRequest.setActive(Boolean.valueOf((Boolean)
 			// studentDetails.get(0).get("ACTIVE")));
 			studentRequest.setMobileNumber((String) studentDetails.get(0).get("MOBILE NUMBER"));
 		studentRequest.setGender((String) studentDetails.get(0).get("GENDER"));
-		if((Date) studentDetails.get(0).get("SUBSCRIPTION END DATE")!=null)
-		   studentRequest.setSubscriptionEndDate(DateUtil.convertStringToDate(
-				DateUtil.formatDate((Date) studentDetails.get(0).get("SUBSCRIPTION END DATE"), null, null)));
+		if ((Date) studentDetails.get(0).get("SUBSCRIPTION END DATE") != null)
+			studentRequest.setSubscriptionEndDate(DateUtil.convertStringToDate(
+					DateUtil.formatDate((Date) studentDetails.get(0).get("SUBSCRIPTION END DATE"), null, null)));
 		List<GuardianRequest> guardians = new ArrayList<GuardianRequest>();
 		guardians.add(new GuardianRequest((String) studentDetails.get(0).get("FATHERS NAME"),
 				(String) studentDetails.get(0).get("FATHERS EMAIL"), "male",
@@ -708,7 +730,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				.collect(Collectors.toList());
 		return responseList;
 	}
-	
+
 	@Override
 	public List<StudentResponse> getAllByGradeId(String gradeId) {
 		if (gradeId == null) {
@@ -771,8 +793,34 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 					school.getName(), teacher.getName(), activity.getName(), activityStatus));
 		return students.stream().distinct().map(StudentResponse::new).collect(Collectors.toList());
 
-
 	}
 
+	@Override
+	public StudentResponse setProfilePic(MultipartFile file, String studentCid) {
+		if (file == null || file.getSize() == 0)
+			throw new ValidationException("profilePic cannot be null or empty.");
+		if (studentCid == null)
+			throw new ValidationException("Student id cannot be null.");
+		if (!studentRepository.existsByCidAndActiveTrue(studentCid))
+			throw new ValidationException(String.format("Student with id (%s) does not exist.", studentCid));
+		
+		Student student = studentRepository.findByCidAndActiveTrue(studentCid);
+		
+		String[] separatedItems = file.getOriginalFilename().split("\\.");
+		if(separatedItems.length<2)
+		     throw new ValidationException("Not able to parse file extension from file name.");
+		 
+		String fileExtn = separatedItems[separatedItems.length-1];
+			 
+		String filename = UUID.randomUUID().toString() + "." + fileExtn;
+		try {
+			String imageUrl = filestore.store("profilePic", filename, file.getBytes());
+			student.setImageUrl(imageUrl);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return new StudentResponse(studentRepository.save(student));
+	}
 
 }

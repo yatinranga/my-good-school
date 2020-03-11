@@ -42,6 +42,7 @@ import com.nxtlife.mgs.view.ActivityPerformedRequest;
 import com.nxtlife.mgs.view.ActivityPerformedResponse;
 import com.nxtlife.mgs.view.FileRequest;
 import com.nxtlife.mgs.view.FileResponse;
+import com.nxtlife.mgs.view.PropertyCount;
 import com.nxtlife.mgs.view.SuccessResponse;
 
 @Service
@@ -900,15 +901,21 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 	}
 
 	@Override
-	public List<ActivityPerformedResponse> filter(String studentCid, ActivityPerformedFilter filterRequest) {
-		if (studentCid == null)
-			throw new ValidationException("Student id cannot be null.");
-		Boolean studentFlag = studentRepository.existsByCidAndActiveTrue(studentCid);
-		if (!studentFlag)
-			throw new ValidationException(String.format("Student with id : %s does not exist.", studentCid));
+	public List<ActivityPerformedResponse> filter( ActivityPerformedFilter filterRequest) {
+		if (filterRequest.getStudentId() != null) {
+			Boolean studentFlag = studentRepository.existsByCidAndActiveTrue(filterRequest.getStudentId());
+			if (!studentFlag)
+				throw new ValidationException(String.format("Student with id : %s does not exist.", filterRequest.getStudentId()));
+		}
+		
+		if(filterRequest.getTeacherId()!=null) {
+			if(!teacherRepository.existsByCidAndActiveTrue(filterRequest.getTeacherId()))
+				throw new ValidationException(String.format("Teacher with id : %s does not exist.", filterRequest.getTeacherId()));
+		}
+		
 
 		List<ActivityPerformed> performedActivities = activityPerformedRepository
-				.findAll(new ActivityPerformedFilterBuilder().build(filterRequest,studentCid));
+				.findAll(new ActivityPerformedFilterBuilder().build(filterRequest));
 		// findAllByStudentCidAndActiveTrue(studentCid,new
 		// ActivityPerformedFilterBuilder().build(filterRequest));
 
@@ -924,6 +931,29 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			activityPerformedResponses.add(new ActivityPerformedResponse(act));
 		});
 		return activityPerformedResponses;
+	}
+	
+	
+	
+	@Override
+	public List<PropertyCount> getCount(String studentCid , String status ,String type){
+		if(studentCid == null)
+			throw new ValidationException("Student id cannot be null.");
+		
+		if(!studentRepository.existsByCidAndActiveTrue(studentCid))
+			throw new ValidationException(String.format("Student with id (%s) does not exist.", studentCid));
+		
+		if(!ActivityStatus.matches(status))
+			throw new ValidationException(String.format("The status (%s) provided by you is invalid.", status));
+		
+		if(type.equalsIgnoreCase("fourS"))
+		   return activityPerformedRepository.findFourSCount(studentCid , ActivityStatus.valueOf(status));
+		else if(type.equalsIgnoreCase("focusArea"))
+			return activityPerformedRepository.findFocusAreaCount(studentCid, ActivityStatus.valueOf(status));
+		else if(type.equalsIgnoreCase("psdArea"))
+			return activityPerformedRepository.findPsdAreaCount(studentCid, ActivityStatus.valueOf(status));
+		else 
+			throw new ValidationException(String.format("invalid type : (%s) , type can have following values [psdArea , focusArea , fourS]", type));
 	}
 
 }
