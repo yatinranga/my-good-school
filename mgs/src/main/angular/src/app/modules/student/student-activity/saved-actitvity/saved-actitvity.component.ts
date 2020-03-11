@@ -128,14 +128,18 @@ export class SavedActitvityComponent implements OnInit {
   }
 
   // to SUBMIT the activity
-  submitSavedActivity(e, index) {
+  submitSavedActivity(e, index, array) {
+    debugger
     const submit = confirm("Do you want to submit ?");
     if (submit) {
       e.stopPropagation();
-      const activityId = this.savedActivitiesArr[index].id;
+      const activityId = array[index].id;
       this.studentService.submitActivity(activityId).subscribe((res) => {
         console.log(res);
-        this.submittedActivitiesArr = [...this.submittedActivitiesArr, ...this.savedActivitiesArr.splice(index, 1)];
+        if (this.activityType == 'All')
+          array[index].activityStatus = 'SubmittedByStudent';
+        else
+          array.splice(index, 1);
         this.alertService.showSuccessAlert('Activity Submitted !');
       }, (err) => {
         console.log(err)
@@ -250,8 +254,8 @@ export class SavedActitvityComponent implements OnInit {
       this.studentService.addActivity("/api/student/activities", formData).subscribe(
         (res) => {
           console.log(res);
-          this.savedActivitiesArr.push(res);
-          this.allActivitiesArr.push(res);
+          this.savedActivitiesArr.unshift(res);
+          this.allActivitiesArr.unshift(res);
           this.alertService.showSuccessToast('Activity Saved !');
           this.addActivityShow = false;
         },
