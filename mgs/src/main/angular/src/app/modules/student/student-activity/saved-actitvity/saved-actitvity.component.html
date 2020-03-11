@@ -42,6 +42,7 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Activity</th>
+                        <th scope="col">Description</th>
                         <th scope="col">Date</th>
                         <th scope="col">Teacher</th>
                         <th scope="col">Status</th>
@@ -53,6 +54,7 @@
                         <tr data-toggle="collapse" [attr.data-target]="'#collapse' + i + 'all'">
                             <td>{{i+1}}</td>
                             <td>{{allActi.activityName}}</td>
+                            <td>{{allActi.description}}</td>
                             <td>{{getDate(allActi.dateOfActivity) | date}}</td>
                             <td>{{allActi.coachName}}</td>
                             <td>
@@ -67,7 +69,7 @@
                                     <button (click)="editSavedActivity($event,allActi)" class="saved icon_button">
                                         <i class="fa fa-edit"></i>
                                     </button>
-                                    <button (click)="submitSavedActivity($event,i)" class="submitted icon_button">
+                                    <button (click)="submitSavedActivity($event,i,allActivitiesArr)" class="submitted icon_button">
                                         <i class="fa fa-paper-plane"></i>
                                     </button>
                                     <button (click)="deleteSavedActivity($event,allActi,i)" class="reviewed icon_button">
@@ -85,7 +87,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="collapse-td" colspan="6">
+                            <td class="collapse-td" colspan="7">
                                 <div [attr.id]="'collapse' + i + 'all'" class="collapse" data-parent="#accordionExample1">
                                     <div *ngIf=" (allActi.activityStatus === 'SavedByStudent') || (allActi.activityStatus === 'SubmittedByStudent')">
                                         <div class="row">
@@ -112,10 +114,12 @@
                                                     </p>
                                                     <div *ngFor="let file of allActi.fileResponses">
                                                         <div>
-                                                            <i class="fa fa-file-audio" *ngIf="file.extension == 'mp3'"></i>
-                                                            <i class="fa fa-image" *ngIf="file.extension=='jpg'"></i>
-                                                            <i class="fa fa-video-camera" *ngIf="file.extension=='video'"></i>
-                                                            {{file.name}}
+                                                            <a [attr.href]="file.url">
+                                                                <i class="fa fa-file-audio" *ngIf="file.extension == 'mp3'"></i>
+                                                                <i class="fa fa-image" *ngIf="file.extension=='jpg'"></i>
+                                                                <i class="fa fa-video-camera" *ngIf="file.extension=='video'"></i>
+                                                                {{file.name}}
+                                                            </a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -180,6 +184,7 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Activity</th>
+                        <th scope="col">Description</th>
                         <th scope="col">Date</th>
                         <th scope="col">Teacher</th>
                         <th scope="col">Status</th>
@@ -191,6 +196,7 @@
                         <tr data-toggle="collapse" [attr.data-target]="'#collapse' + i + 'sub'">
                             <td>{{i+1}}</td>
                             <td>{{sa.activityName}}</td>
+                            <td>{{sa.description}}</td>
                             <td>{{getDate(sa.dateOfActivity) | date}}</td>
                             <td>{{sa.coachName}}</td>
                             <td class="submitted">Submitted
@@ -201,7 +207,7 @@
 
                         </tr>
                         <tr>
-                            <td class="collapse-td" colspan="5">
+                            <td class="collapse-td" colspan="6">
                                 <div [attr.id]="'collapse' + i + 'sub'" class="collapse" data-parent="#accordionExample2">
                                     <div class="row">
                                         <div class="col-6">
@@ -262,6 +268,7 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Activity</th>
+                        <th scope="col">Description</th>
                         <th scope="col">Date</th>
                         <th scope="col">Teacher</th>
                         <th scope="col">Status</th>
@@ -273,6 +280,7 @@
                         <tr data-toggle="collapse" [attr.data-target]="'#collapse' + i + 'sv'">
                             <td>{{i+1}}</td>
                             <td>{{sa.activityName}}</td>
+                            <td>{{sa.description}}</td>
                             <td>{{getDate(sa.dateOfActivity) | date}}</td>
                             <td>{{sa.coachName}}</td>
                             <td> Saved </td>
@@ -281,7 +289,7 @@
                                     <button (click)="editSavedActivity($event,sa)" class="saved icon_button">
                                         <i class="fa fa-edit"></i>
                                     </button>
-                                    <button (click)="submitSavedActivity($event,i)" class="submitted icon_button">
+                                    <button (click)="submitSavedActivity($event,i, savedActivitiesArr)" class="submitted icon_button">
                                         <i class="fa fa-paper-plane"></i>
                                     </button>
                                     <button (click)="deleteSavedActivity($event,sa,i)" class="reviewed icon_button">
@@ -294,7 +302,7 @@
                             </td>
                         </tr>
                         <tr style="border: none">
-                            <td class="collapse-td" colspan="6">
+                            <td class="collapse-td" colspan="7">
                                 <div [attr.id]="'collapse' + i + 'sv'" class="collapse" data-parent="#accordionExample3">
                                     <div class="row">
                                         <div class="col-6">
@@ -352,6 +360,7 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Activity</th>
+                        <th scope="col">Description</th>
                         <th scope="col">Date</th>
                         <th scope="col">Teacher</th>
                         <th scope="col">Status</th>
@@ -362,12 +371,13 @@
                         <tr data-toggle="collapse" [attr.data-target]="'#collapse' + i + 'rev'">
                             <td>{{i+1}}</td>
                             <td>{{ra.activityName}}</td>
+                            <td>{{ra.description}}</td>
                             <td>{{getDate(ra.dateOfActivity) | date}}</td>
                             <td>{{ra.coachName}}</td>
                             <td>Reviewed</td>
                         </tr>
                         <tr styole="border : none">
-                            <td class="collapse-td" colspan="5">
+                            <td class="collapse-td" colspan="6">
                                 <div [attr.id]="'collapse' + i + 'rev'" class="collapse" data-parent="#accordionExample4">
                                     <div class="row">
                                         <div class="col-6">

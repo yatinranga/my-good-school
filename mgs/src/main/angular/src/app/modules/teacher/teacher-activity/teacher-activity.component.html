@@ -46,8 +46,8 @@
                         </td>
                         <td>
                             <button [disabled]="!(allacti.activityStatus === 'SavedByTeacher')" (click)="submitSavedActivity($event,i,'All')">Submit</button>
-                            <button [disabled]="!(allacti.activityStatus === 'SavedByTeacher')" data-toggle="modal" data-target="#reviewModal" (click)="editSavedActivity(allacti)">Edit</button>
-                            <button [disabled]="!(allacti.activityStatus === 'SubmittedByStudent')" data-toggle="modal" data-target="#reviewModal" (click)="reviewActivity(allacti)">Review</button>
+                            <button [disabled]="!(allacti.activityStatus === 'SavedByTeacher')" (click)="editSavedActivity(allacti, $event)">Edit</button>
+                            <button [disabled]="!(allacti.activityStatus === 'SubmittedByStudent')" (click)="reviewActivity(allacti, $event)">Review</button>
                         </td>
                     </tr>
                     <tr>
@@ -315,7 +315,7 @@
 
 <!-- Review Activity Modal-->
 <div>
-    <div class="modal" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -343,11 +343,21 @@
                         </div>
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label">Star : </label>
-                            <input type="radio" name="star" value="1" formControlName="star">1
-                            <input type="radio" name="star" value="2" formControlName="star">2
-                            <input type="radio" name="star" value="3" formControlName="star">3
-                            <input type="radio" name="star" value="4" formControlName="star">4
-                            <input type="radio" name="star" value="5" formControlName="star">5
+                            <label>
+                                <input type="radio" name="star" value="1" formControlName="star"> 1
+                            </label>
+                            <label>
+                                <input type="radio" name="star" value="2" formControlName="star"> 2
+                            </label>
+                            <label>
+                                <input type="radio" name="star" value="3" formControlName="star"> 3
+                            </label>
+                            <label>
+                                <input type="radio" name="star" value="4" formControlName="star"> 4
+                            </label>
+                            <label>
+                                <input type="radio" name="star" value="5" formControlName="star"> 5
+                            </label>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Remark :</label>

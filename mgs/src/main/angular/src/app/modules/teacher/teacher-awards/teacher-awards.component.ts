@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { AlertService } from 'src/app/services/alert.service';
-declare let $:any;
+declare let $: any;
 
 @Component({
   selector: 'app-teacher-awards',
@@ -15,7 +15,7 @@ export class TeacherAwardsComponent implements OnInit {
   schoolGrades = [];
   studentList = [];
   performedActiArr = [];
-  
+
   awardViewType = "view";
   teacherInfo: any;
   schoolId = "";
@@ -29,11 +29,11 @@ export class TeacherAwardsComponent implements OnInit {
   teacherId = "";
 
 
-  award_loader : boolean;
+  award_loader: boolean;
   grade_loader: boolean;
-  stu_loader : boolean;
-  acti_loader : boolean;
-  pa_loader : boolean; // Performed Activities Details Loader
+  stu_loader: boolean;
+  acti_loader: boolean;
+  pa_loader: boolean; // Performed Activities Details Loader
 
 
   createAwardForm: FormGroup;
@@ -45,7 +45,7 @@ export class TeacherAwardsComponent implements OnInit {
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
     this.schoolId = this.teacherInfo['teacher'].schoolId;
     this.teacherId = this.teacherInfo['teacher'].id;
-    
+    this.awardView('view');
     this.assignAwardInit();
     this.getSchoolGrades();
     this.awardView(this.awardViewType);
@@ -62,11 +62,11 @@ export class TeacherAwardsComponent implements OnInit {
   assignAwardInit() {
     this.assignAwardForm = this.formbuilder.group({
       teacherId: [],
-      schoolId :[],
-      studentId :[],
-      activityId : [],
-      name : [,[Validators.required]],
-      description : [,[Validators.required,Validators.maxLength(255)]],
+      schoolId: [],
+      studentId: [],
+      activityId: [],
+      name: [, [Validators.required]],
+      description: [, [Validators.required, Validators.maxLength(255)]],
       activityPerformedIds: [([])],
     });
   }
@@ -90,7 +90,7 @@ export class TeacherAwardsComponent implements OnInit {
       console.log(res);
       this.stu_loader = false;
     },
-    (err) => console.log(err));
+      (err) => console.log(err));
   }
 
   // Assign Award to Students
@@ -101,7 +101,7 @@ export class TeacherAwardsComponent implements OnInit {
     this.assignAwardForm.value.studentId = this.studentId;
     this.assignAwardForm.value.activityPerformedIds = [];
     Object.keys(this.actiPerform).forEach((key) => {
-      if(this.actiPerform[key]) {
+      if (this.actiPerform[key]) {
         this.assignAwardForm.value.activityPerformedIds.push(key);
       }
     })
@@ -115,33 +115,33 @@ export class TeacherAwardsComponent implements OnInit {
       this.performedActiArr = [];
       this.assignAwardForm.reset();
       this.alertService.showSuccessAlert("");
-      this.studentActivityList = false;      
+      this.studentActivityList = false;
     },
       (err) => {
         console.log(err);
         $('#assignAwardModal').modal('hide');
         $('.modal-backdrop').remove();
       });
-      
+
   }
 
   // get ActivityId of selected from dropdown
   getActivityId(event) {
     this.activityId = event;
     this.getPerformedActivities();
-    this.studentActivityList = true;      
+    this.studentActivityList = true;
   }
 
   // get List of Performed activity by specific activityId
-  getPerformedActivities(){
+  getPerformedActivities() {
     this.pa_loader = true;
     this.performedActiArr = [];
-    this.teacherService.getStudentPerformedActivities(this.studentId,this.activityId).subscribe((res) => {
+    this.teacherService.getStudentPerformedActivities(this.studentId, this.activityId).subscribe((res) => {
       console.log(res);
       this.performedActiArr = res;
       this.pa_loader = false;
     },
-    (err) => console.log(err));
+      (err) => console.log(err));
   }
 
   // get StudentId of selected from dropdown
@@ -152,19 +152,19 @@ export class TeacherAwardsComponent implements OnInit {
     this.teacherService.getStudentActivities(studentId).subscribe((res) => {
       console.log(res);
       const activityIds = []
-      this.activities = res.filter( a => {
-        if(activityIds.includes(a.activityId))
+      this.activities = res.filter(a => {
+        if (activityIds.includes(a.activityId))
           return false;
-        else{
+        else {
           activityIds.push(a.activityId);
           return true;
         }
       });
       console.log(this.activities);
-      this.acti_loader=false;     
-      
+      this.acti_loader = false;
+
     },
-    (err) => console.log(err));
+      (err) => console.log(err));
 
 
     // to get performed activites of student
@@ -180,7 +180,7 @@ export class TeacherAwardsComponent implements OnInit {
   }
 
   // set award id in form 
-  setAwardId(event){
+  setAwardId(event) {
     this.assignAwardForm.value.id = event;
   }
 
@@ -192,30 +192,30 @@ export class TeacherAwardsComponent implements OnInit {
   // change award view
   awardView(type) {
     this.awardViewType = type;
-    console.log("Award View Type = "+this.awardViewType);
+    console.log("Award View Type = " + this.awardViewType);
     this.viewAwards();
   }
 
-  viewAwards(){
-    if(this.awardViewType == "view"){
+  viewAwards() {
+    if (this.awardViewType == "view") {
       this.award_loader = true;
       this.teacherService.getTeacherAwards().subscribe((res) => {
         console.log(res);
         this.awardsList = res;
         this.award_loader = false;
       },
-      (err) => {
-        console.log(err)
-        this.award_loader = false;
-      });
+        (err) => {
+          console.log(err)
+          this.award_loader = false;
+        });
     }
   }
 
   // Verify the Selected Award 
-  verifySelectedAward(e,i){
+  verifySelectedAward(e, i) {
     e.stopPropagation();
     const submit = confirm("Are you sure ?");
-    if(submit){
+    if (submit) {
       const awardId = this.awardsList[i].id;
       console.log(awardId);
 
@@ -224,10 +224,10 @@ export class TeacherAwardsComponent implements OnInit {
         this.alertService.showSuccessAlert("");
         this.awardsList[i].status = "VERIFIED";
       },
-      (err) => {
-        console.log(err);
+        (err) => {
+          console.log(err);
 
-      })
+        })
     }
 
 
@@ -235,7 +235,7 @@ export class TeacherAwardsComponent implements OnInit {
 
 
   // stop toogle of table
-  stopCollapse(e){
+  stopCollapse(e) {
     e.stopPropagation();
   }
 
