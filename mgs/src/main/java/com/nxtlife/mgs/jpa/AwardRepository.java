@@ -35,7 +35,7 @@ public interface AwardRepository extends JpaRepository<Award, Long>, QueryDslPre
 	 @Query("SELECT  " +
 	           "new com.nxtlife.mgs.view.PropertyCount(f.name, COUNT(DISTINCT aw.id)) " +
 	           "FROM " +
-	           "    Award aw JOIN aw.awardActivityPerformed awap JOIN awap.activityPerformed ap JOIN ap.activity a JOIN a.focusAreas f  " +"WHERE ap.student.cid =:cid AND a.activityStatus =:status AND aw.status =:awardStatus AND a.active = TRUE AND aw.active = TRUE  "+
+	           "    Award aw JOIN aw.awardActivityPerformed awap JOIN awap.activityPerformed ap JOIN ap.activity a JOIN a.focusAreas f  " +"WHERE ap.student.cid =:cid AND ap.activityStatus =:status AND aw.status =:awardStatus AND ap.active = TRUE AND aw.active = TRUE  "+
 	           "GROUP BY " +
 	           "   f.name" )
 	List<PropertyCount> findFocusAreaCount(@Param("cid") String cid, @Param("status") ActivityStatus status, @Param("awardStatus") AwardStatus awardStatus);
@@ -43,7 +43,7 @@ public interface AwardRepository extends JpaRepository<Award, Long>, QueryDslPre
 	 @Query("SELECT " +
 	           "new com.nxtlife.mgs.view.PropertyCount(f.psdArea, COUNT(DISTINCT aw.id)) " +
 	           "FROM " +
-	           "    Award aw JOIN aw.awardActivityPerformed awap JOIN awap.activityPerformed ap JOIN ap.activity a JOIN a.focusAreas f  " +"WHERE ap.student.cid =:cid AND a.activityStatus =:status AND aw.status =:awardStatus AND a.active = TRUE AND aw.active = TRUE  "+
+	           "    Award aw JOIN aw.awardActivityPerformed awap JOIN awap.activityPerformed ap JOIN ap.activity a JOIN a.focusAreas f  " +"WHERE ap.student.cid =:cid AND ap.activityStatus =:status AND aw.status =:awardStatus AND ap.active = TRUE AND aw.active = TRUE  "+
 	           "GROUP BY " +
 	           "   f.psdArea" )
 	List<PropertyCount> findPsdAreaCount(@Param("cid") String cid, @Param("status") ActivityStatus status ,@Param("awardStatus") AwardStatus awardStatus);
