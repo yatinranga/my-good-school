@@ -98,7 +98,7 @@ export class StudentService {
 
   // Get all Focus Area
   getFocusAreas(){
-    return this.http.get("/api/focusAreas");
+    return this.http.get("/focusAreas");
   }
   
   // Get all fourS

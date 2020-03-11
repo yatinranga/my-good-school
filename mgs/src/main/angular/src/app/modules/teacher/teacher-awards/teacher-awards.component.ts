@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { AlertService } from 'src/app/services/alert.service';
+import { Router } from '@angular/router';
 declare let $: any;
 
 @Component({
@@ -39,7 +40,8 @@ export class TeacherAwardsComponent implements OnInit {
   createAwardForm: FormGroup;
   assignAwardForm: FormGroup;
 
-  constructor(private teacherService: TeacherService, private formbuilder: FormBuilder, private alertService: AlertService) { }
+  constructor(private teacherService: TeacherService, private formbuilder: FormBuilder, private alertService: AlertService,
+    private router : Router) { }
 
   ngOnInit() {
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
@@ -116,6 +118,8 @@ export class TeacherAwardsComponent implements OnInit {
       this.assignAwardForm.reset();
       this.alertService.showSuccessAlert("");
       this.studentActivityList = false;
+      this.awardViewType = "view";
+      this.viewAwards();
     },
       (err) => {
         console.log(err);
@@ -160,7 +164,6 @@ export class TeacherAwardsComponent implements OnInit {
           return true;
         }
       });
-      console.log(this.activities);
       this.acti_loader = false;
 
     },

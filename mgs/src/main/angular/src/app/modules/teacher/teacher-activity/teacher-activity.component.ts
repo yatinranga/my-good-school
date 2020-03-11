@@ -133,6 +133,8 @@ export class TeacherActivityComponent implements OnInit {
 
     this.teacherSerivce.saveReviewedActivity(formData).subscribe((res) => {
       console.log(res);
+      if(this.activityType == "All")
+        
       this.savedActivitiesArr = [...this.savedActivitiesArr, ...this.pendingActivitiesArr.splice(this.i, 1)];
       $('#reviewModal').modal('hide');
       $('.modal-backdrop').remove();

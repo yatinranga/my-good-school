@@ -1,16 +1,28 @@
-<!-- <div class="sortby" style="float: right"> Filter by:
-    <select style="border: 1px solid #ddd" (ngModelChange)="getStudentAwards($event)" [(ngModel)]="activityId">
-        <option value="All" selected>All</option>
-        <option *ngFor="let activity of activities; let i = index;" value={{activity.id}}>
-            {{activity.name}}
-        </option>
+<div class="sortby"> PSD :
+    <select style="border: 1px solid #ddd" (change)="filterAwards()" [(ngModel)]="psdAreas">
+        <option value="" selected disabled> Choose here </option>
+        <option value="">None</option>
+        <option *ngFor="let ps of psdAreaArr" value={{ps}}>{{ps}}</option>
     </select>
-</div> -->
+</div>
+
+<div class="sortby"> Focus Area :
+    <select style="border: 1px solid #ddd" (change)="filterAwards()" [(ngModel)]="focusAreas">
+        <option value="" selected disabled> Choose here </option>
+        <option value="">None</option>
+        <option *ngFor="let ps of focusAreaArr" value={{ps.name}}>{{ps.name}}</option>
+    </select>
+</div>
+
+<div class="sortby"> 4S :
+    <select style="border: 1px solid #ddd" (change)="filterAwards()" [(ngModel)]="fourS">
+        <option value="" selected disabled> Choose here </option>
+        <option value="">None</option>
+        <option *ngFor="let ps of fourSArr" value={{ps}}>{{ps}}</option>
+    </select>
+</div>
 
 <div class="content_main_com">
-    <div *ngIf="loader" class="spinner-border text-dark" role="status">
-        <span class="sr-only">Data Loading</span>
-    </div>
     <div class="table_main">
         <table class="table">
             <thead class="thead-light">
@@ -77,7 +89,7 @@
                                             <p>
                                                 <strong>Star : </strong>{{ra.star}}</p>
                                             <p>
-                                                <strong>Remark :</strong>{{ra.coachRemark}}</p>
+                                                <strong>Remarks:</strong>{{ra.coachRemark}}</p>
                                         </div>
                                     </div><hr>
                                 </div>
@@ -88,7 +100,10 @@
             </tbody>
             <tfoot *ngIf="awardsArr.length == 0">
                 <tr>
-                    <td colspan="5">No Awards</td>
+                    <td colspan="5">
+                        <div *ngIf="loader" class="spinner-border text-dark" role="status">
+                        </div>{{loader ? 'Loading...' : 'No Awards'}}
+                    </td>
                 </tr>
             </tfoot>
         </table>

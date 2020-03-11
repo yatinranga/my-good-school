@@ -1,22 +1,22 @@
 <div class="sortby"> PSD :
     <select style="border: 1px solid #ddd" (change)="filterActivities()" [(ngModel)]="psdAreas">
         <option value="" selected disabled> Choose here </option>
-        <option value="" >None</option>
+        <option value="">None</option>
         <option *ngFor="let ps of psdAreaArr" value={{ps}}>{{ps}}</option>
     </select>
 </div>
 <div class="sortby"> Focus Area :
     <select style="border: 1px solid #ddd" (change)="filterActivities()" [(ngModel)]="focusAreas">
         <option value="" selected disabled> Choose here </option>
-        <option value="" >None</option>
+        <option value="">None</option>
         <option *ngFor="let ps of focusAreaArr" value={{ps.name}}>{{ps.name}}</option>
     </select>
 </div>
 <div class="sortby"> 4S :
     <select style="border: 1px solid #ddd" (change)="filterActivities()" [(ngModel)]="fourS">
         <option value="" selected disabled> Choose here </option>
-        <option value="" >None</option>
-        <option *ngFor="let ps of fourSArr"value={{ps}}>{{ps}}</option>
+        <option value="">None</option>
+        <option *ngFor="let ps of fourSArr" value={{ps}}>{{ps}}</option>
     </select>
 </div>
 
@@ -28,7 +28,7 @@
         <option value="Saved">Saved</option>
         <option value="Submitted">Submitted</option>
         <option value="Reviewed">Reviewed</option>
-    </select>    
+    </select>
 </div>
 
 <div *ngIf="activityType === 'All'">
@@ -66,10 +66,12 @@
                                     <button (click)="editSavedActivity($event,allActi)" class="saved icon_button">
                                         <i class="fa fa-edit"></i>
                                     </button>
-                                    <button (click)="submitSavedActivity($event,i,allActivitiesArr)" class="submitted icon_button">
+                                    <button (click)="submitSavedActivity($event,i,allActivitiesArr)"
+                                        class="submitted icon_button">
                                         <i class="fa fa-paper-plane"></i>
                                     </button>
-                                    <button (click)="deleteSavedActivity($event,allActi,i)" class="reviewed icon_button">
+                                    <button (click)="deleteSavedActivity($event,allActi,i)"
+                                        class="reviewed icon_button">
                                         <i class="fa fa-trash"></i>
                                     </button>
                                     <span class="pull-right" *ngIf="allActi.fileResponses.length">
@@ -85,8 +87,10 @@
                         </tr>
                         <tr>
                             <td class="collapse-td" colspan="7">
-                                <div [attr.id]="'collapse' + i + 'all'" class="collapse" data-parent="#accordionExample1">
-                                    <div *ngIf=" (allActi.activityStatus === 'SavedByStudent') || (allActi.activityStatus === 'SubmittedByStudent')">
+                                <div [attr.id]="'collapse' + i + 'all'" class="collapse"
+                                    data-parent="#accordionExample1">
+                                    <div
+                                        *ngIf=" (allActi.activityStatus === 'SavedByStudent') || (allActi.activityStatus === 'SubmittedByStudent')">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="description">
@@ -112,9 +116,12 @@
                                                     <div *ngFor="let file of allActi.fileResponses">
                                                         <div>
                                                             <a [attr.href]="file.url">
-                                                                <i class="fa fa-file-audio" *ngIf="file.extension == 'mp3'"></i>
-                                                                <i class="fa fa-image" *ngIf="file.extension=='jpg'"></i>
-                                                                <i class="fa fa-video-camera" *ngIf="file.extension=='video'"></i>
+                                                                <i class="fa fa-file-audio"
+                                                                    *ngIf="file.extension == 'mp3'"></i>
+                                                                <i class="fa fa-image"
+                                                                    *ngIf="file.extension=='jpg'"></i>
+                                                                <i class="fa fa-video-camera"
+                                                                    *ngIf="file.extension=='video'"></i>
                                                                 {{file.name}}
                                                             </a>
                                                         </div>
@@ -145,7 +152,8 @@
                                             </div>
                                             <div class="col-6">
                                                 <p>
-                                                    <strong>Participation Score :</strong>{{allActi.participationScore}}</p>
+                                                    <strong>Participation Score :</strong>{{allActi.participationScore}}
+                                                </p>
                                                 <p>
                                                     <strong>Initiative Score :</strong>{{allActi.initiativeScore}}</p>
                                                 <p>
@@ -153,7 +161,7 @@
                                                 <p>
                                                     <strong>Star : </strong>{{allActi.star}}</p>
                                                 <p>
-                                                    <strong>Remark :</strong>{{allActi.coachRemark}}</p>
+                                                    <strong>Remarks :</strong>{{allActi.coachRemark}}</p>
                                             </div>
                                         </div>
 
@@ -208,7 +216,8 @@
                         </tr>
                         <tr>
                             <td class="collapse-td" colspan="6">
-                                <div [attr.id]="'collapse' + i + 'sub'" class="collapse" data-parent="#accordionExample2">
+                                <div [attr.id]="'collapse' + i + 'sub'" class="collapse"
+                                    data-parent="#accordionExample2">
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="description">
@@ -235,7 +244,8 @@
                                                     <div>
                                                         <i class="fa fa-file-audio" *ngIf="file.extension == 'mp3'"></i>
                                                         <i class="fa fa-image" *ngIf="file.extension=='jpg'"></i>
-                                                        <i class="fa fa-video-camera" *ngIf="file.extension=='video'"></i>
+                                                        <i class="fa fa-video-camera"
+                                                            *ngIf="file.extension=='video'"></i>
                                                         {{file.name}}
                                                     </div>
 
@@ -292,7 +302,8 @@
                                     <button (click)="editSavedActivity($event,sa)" class="saved icon_button">
                                         <i class="fa fa-edit"></i>
                                     </button>
-                                    <button (click)="submitSavedActivity($event,i, savedActivitiesArr)" class="submitted icon_button">
+                                    <button (click)="submitSavedActivity($event,i, savedActivitiesArr)"
+                                        class="submitted icon_button">
                                         <i class="fa fa-paper-plane"></i>
                                     </button>
                                     <button (click)="deleteSavedActivity($event,sa,i)" class="reviewed icon_button">
@@ -306,7 +317,8 @@
                         </tr>
                         <tr style="border: none">
                             <td class="collapse-td" colspan="7">
-                                <div [attr.id]="'collapse' + i + 'sv'" class="collapse" data-parent="#accordionExample3">
+                                <div [attr.id]="'collapse' + i + 'sv'" class="collapse"
+                                    data-parent="#accordionExample3">
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="description">
@@ -333,7 +345,8 @@
                                                     <div>
                                                         <i class="fa fa-file-audio" *ngIf="file.extension == 'mp3'"></i>
                                                         <i class="fa fa-image" *ngIf="file.extension=='jpg'"></i>
-                                                        <i class="fa fa-video-camera" *ngIf="file.extension=='video'"></i>
+                                                        <i class="fa fa-video-camera"
+                                                            *ngIf="file.extension=='video'"></i>
                                                         {{file.name}}
                                                     </div>
                                                 </div>
@@ -384,7 +397,8 @@
                         </tr>
                         <tr styole="border : none">
                             <td class="collapse-td" colspan="6">
-                                <div [attr.id]="'collapse' + i + 'rev'" class="collapse" data-parent="#accordionExample4">
+                                <div [attr.id]="'collapse' + i + 'rev'" class="collapse"
+                                    data-parent="#accordionExample4">
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="description">
@@ -413,7 +427,7 @@
                                             <p>
                                                 <strong>Star : </strong>{{ra.star}}</p>
                                             <p>
-                                                <strong>Remark :</strong>{{ra.coachRemark}}</p>
+                                                <strong>Remarks :</strong>{{ra.coachRemark}}</p>
                                             <p>
                                                 <strong>Date : </strong>{{ra.remarkDate}}</p>
                                         </div>
@@ -446,12 +460,14 @@
                         <div class="col-md-12">
                             <h4> {{addActivityShow?'Add':'Edit'}} Activity </h4>
                             <div class="form-group">Activity Type:
-                                <select class="form-control" (ngModelChange)="getStudentCoach($event)" formControlName="activityId">
+                                <select class="form-control" (ngModelChange)="getStudentCoach($event)"
+                                    formControlName="activityId">
                                     <option *ngFor="let activity of activities; let i = index" value={{activity.id}}>
                                         {{activity.name}}</option>
                                     <option disabled *ngIf="!activities.length">No activities available</option>
                                 </select>
-                                <span *ngIf="savedActivityForm.value.activityId&&!modal_loader&&!coaches.length" style="color: red">No Teacher/Coaches for corresponding activity</span>
+                                <span *ngIf="savedActivityForm.value.activityId&&!modal_loader&&!coaches.length"
+                                    style="color: red">No Teacher/Coaches for corresponding activity</span>
                             </div>
                             <div class="form-group">Teacher/Coach :
                                 <select class="form-control" formControlName="coachId">
@@ -494,8 +510,15 @@
                         <div class="col-md-12">
                             <div class="edit_activity_buttons">
                                 <button class="btn cancel" type="button" (click)="onCancel()">Cancel</button>
-                                <button class="btn saved btnSubmit btn-success" type="submit" *ngIf="editActivityShow">Update</button>
-                                <button class="btn saved btnSubmit btn-success" type="submit" *ngIf="addActivityShow">Submit</button>
+                                <button class="btn saved btnSubmit btn-success" type="submit" *ngIf="editActivityShow">
+                                    <div *ngIf="submit_loader" class="spinner-border text-dark" role="status"></div>
+                                    {{submit_loader ? 'Updating...' : 'Update'}}
+                                </button>
+
+                                <button class="btn saved btnSubmit btn-success" type="submit" *ngIf="addActivityShow">
+                                    <div *ngIf="submit_loader" class="spinner-border text-dark" role="status">
+                                    </div>{{submit_loader ? 'Submitting...' : 'Submit'}}
+                                </button>
                             </div>
                         </div>
                     </div>

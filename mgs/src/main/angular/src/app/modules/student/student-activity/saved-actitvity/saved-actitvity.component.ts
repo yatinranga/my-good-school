@@ -40,6 +40,7 @@ export class SavedActitvityComponent implements OnInit {
 
   loader: boolean = false;
   modal_loader = false;
+  submit_loader = false;
 
   copySavedActi: any = [];
   copysubmitActi: any= [];
@@ -67,22 +68,20 @@ export class SavedActitvityComponent implements OnInit {
     });
   }
 
+  // get PSD , Focus Area and 4S
   getAreas() {
     this.studentService.getFocusAreas().subscribe((res) => {
       this.focusAreaArr = res;
-      console.log(res);
     },
       (err) => { console.log(err) });
 
     this.studentService.getPsdAreas().subscribe((res) => {
       this.psdAreaArr = res;
-      console.log(res);
     },
       (err) => { console.log(err) });
 
     this.studentService.getFourS().subscribe((res) => {
       this.fourSArr = res;
-      console.log(res);
     },
       (err) => { console.log(err) });
   }
@@ -194,7 +193,10 @@ export class SavedActitvityComponent implements OnInit {
       console.log(activityId);
       this.studentService.deleteActivity(activityId).subscribe((res) => {
         console.log(res);
-        this.savedActivitiesArr.splice(i, 1);
+        if (this.activityType == 'All')
+          this.allActivitiesArr.splice(i, 1);
+        else
+          this.savedActivitiesArr.splice(i, 1);
         this.alertService.showSuccessToast('Activity Deleted !');
       },
         (err) => console.log(err));
@@ -227,7 +229,14 @@ export class SavedActitvityComponent implements OnInit {
 
   // to UPDATE the saved activity
   updateActivity() {
+    // const submit = confirm("Do you want to Submit ?");
+    // if(submit) {
+      
+    // }
+    // else {    }
+
     if (this.editActivityShow) {
+      this.submit_loader = true;
       const formData = new FormData();
       const date = new Date(this.savedActivityForm.value.dateOfActivity);
       const activityDate = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
@@ -248,14 +257,18 @@ export class SavedActitvityComponent implements OnInit {
       this.studentService.addActivity('/api/student/activities', formData).subscribe(
         (res) => {
           console.log(res);
+          this.submit_loader = false;
           this.alertService.showSuccessToast('Activity Updated !');
           this.editActivityShow = false;
         },
-        (err) => console.log(err)
+        (err) => {
+          this.submit_loader = false;
+          console.log(err) }
       );
     }
 
     if (this.addActivityShow) {
+      this.submit_loader = true;
       this.savedActivityForm.value.attachment = this.files;
       const time = this.savedActivityForm.value.dateOfActivity + " 00:00:00";
       this.savedActivityForm.value.dateOfActivity = time;
@@ -279,12 +292,16 @@ export class SavedActitvityComponent implements OnInit {
           console.log(res);
           this.savedActivitiesArr.unshift(res);
           this.allActivitiesArr.unshift(res);
+          this.submit_loader = false;
           this.alertService.showSuccessToast('Activity Saved !');
           this.addActivityShow = false;
         },
-        (err) => console.log(err)
+        (err) => {
+          this.submit_loader = false;
+          console.log(err)}
       );
     }
+
   }
 
   onFileSelect(event) {

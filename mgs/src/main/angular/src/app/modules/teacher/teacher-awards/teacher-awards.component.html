@@ -74,9 +74,11 @@
                     <table class="table table-hover">
                         <thead class="thead-light">
                             <tr>
-                                <th scope="col">Select</th>
-                                <th scope="col">#</th>
-                                <th scope="col">Date</th>
+                                <th scope="col">Activity</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Performed Activity Date</th>
+                                <th scope="col">Remarks</th>
+                                <th scope="col">Remarks Date</th>
                             </tr>
                         </thead>
                         <tbody id="accordionExample">
@@ -89,11 +91,13 @@
                                             {{pa.activityName}}
                                         </label>
                                     </td>
-                                    <td>{{i+1}}</td>
+                                    <td>{{pa.description}}</td>
                                     <td>{{pa.dateOfActivity | date}}</td>
+                                    <td>{{pa.coachRemark}}</td>
+                                    <td>{{pa.coachRemarkDate | date}}</td>
                                 </tr>
                                 <tr>
-                                    <td class="collapse-td" colspan="3">
+                                    <td class="collapse-td" colspan="5">
                                         <div [attr.id]="'collapse' + i" class="collapse"
                                             data-parent="#accordionExample">
                                             <div class="row">
@@ -129,7 +133,7 @@
                                                     <p>
                                                         <strong>Achievement Score : </strong>{{pa.achievementScore}}</p>
                                                     <p>
-                                                        <strong>Coach Remark : </strong>{{pa.coachRemark}}</p>
+                                                        <strong>Coach Remarks : </strong>{{pa.coachRemark}}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -138,12 +142,16 @@
                             </ng-container>
 
                         </tbody>
+                        <tfoot *ngIf="performedActiArr.length == 0">
+                            <tr>
+                                <td colspan="5">
+                                    <div *ngIf="pa_loader" class="spinner-border text-dark" role="status">
+                                    </div>{{pa_loader ? 'Loading...' : 'No Activities'}}
+                                </td>
+                            </tr>
+                        </tfoot>                        
                     </table>
                 </div>
-                <span *ngIf="pa_loader">
-                    <div class="spinner-border" role="status">
-                    </div>
-                </span>
             </div>
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#assignAwardModal">Give
                 Award</button>
@@ -159,8 +167,9 @@
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Award</th>
+                            <th scope="col">Description</th>
                             <th scope="col">Activity</th>
-                            <th scope="col">Student Name</th>
+                            <th scope="col">Student Name & Grade</th>
                             <th scope="col">Status</th>
                             <th scope="col">Action</th>
                         </tr>
@@ -170,22 +179,23 @@
                             <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i" aria-expanded="false" [attr.aria-controls]="'#collapse'+i">
                                 <td>{{i+1}}</td>
                                 <td>{{al.name}}</td>
-                                <td>{{al.activity.name}}</td>
-                                <td>{{al.studentName}}</td>
+                                <td>{{al.description}}</td>
+                                <td>{{al.activity.name}} </td>
+                                <td>{{al.studentName}} {{al.studentGrade}}</td>
                                 <td>{{al.status}}</td>
                                 <td><button [disabled]="!(al.status == 'PENDING')" (click)="verifySelectedAward($event,i)">Verify</button></td>
                             </tr>
                             <tr>
-                                <td class="collapse-td" colspan="6">
+                                <td class="collapse-td" colspan="7">
                                     <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
                                         <div *ngFor="let ap of al.activityPerformedResponses">
                                             <div class="row">
-                                                <div class="col-4"><b>Award Deatils :</b>
+                                                <div class="col-4"><b>Award Details :</b>
                                                     <br><br>
                                                     <p><strong>Description : </strong>{{al.description}}</p>
                                                     <p><strong>Teacher : </strong>{{al.createdBy}}</p>
                                                 </div>
-                                                <div class="col-4"><b>Activity Deatils :</b>
+                                                <div class="col-4"><b>Activity Details :</b>
                                                     
                                                         <br><br>
                                                         <p>
@@ -225,7 +235,7 @@
                                                     <p>
                                                         <strong>Star : </strong>{{ap.star}}</p>
                                                     <p>
-                                                        <strong>Remark :</strong>{{ap.coachRemark}}</p>
+                                                        <strong>Remarks :</strong>{{ap.coachRemark}}</p>
 
                                                 </div>
                                             </div>
@@ -237,7 +247,7 @@
                     </tbody>
                     <tfoot *ngIf="awardsList.length == 0">
                         <tr>
-                            <td colspan="6">
+                            <td colspan="7">
                                 <div *ngIf="award_loader" class="spinner-border text-dark" role="status">
                                 </div>{{award_loader ? 'Loading...' : 'No Activities'}}
                             </td>
