@@ -34,9 +34,9 @@ export class SavedActitvityComponent implements OnInit {
   url = '';
 
   activityType = 'All';
-  fourS :  any = null;
-  psdAreas :  any = null;
-  focusAreas :  any = null;
+  fourS :  any = "";
+  psdAreas :  any = "";
+  focusAreas :  any = "";
 
   loader: boolean = false;
   modal_loader = false;
