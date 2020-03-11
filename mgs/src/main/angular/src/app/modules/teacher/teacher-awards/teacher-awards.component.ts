@@ -47,7 +47,8 @@ export class TeacherAwardsComponent implements OnInit {
     this.teacherId = this.teacherInfo['teacher'].id;
     
     this.assignAwardInit();
-    this.getSchoolGrades(); 
+    this.getSchoolGrades();
+    this.awardView(this.awardViewType);
 
     this.createAwardForm = this.formbuilder.group({
       name: [''],
