@@ -96,4 +96,20 @@ export class StudentService {
     return this.http.delete("/api/student/activity/" + activityId);
   }
 
+  // Get all Focus Area
+  getFocusAreas(){
+    return this.http.get("/api/focusAreas");
+  }
+  
+  // Get all fourS
+  getFourS(){
+    return this.http.get("/fourS");
+  }
+
+  // Get PSD Area 
+  getPsdAreas(){
+    return this.http.get("/psdAreas");
+  }  
+  
+
 }

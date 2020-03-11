@@ -47,7 +47,7 @@
 
                     <div class="guardian content">
                         <div [ngSwitch]="tabs">
-                            <ng-container *ngFor="let sd of studentDetails.guardianResponseList; let i = index">
+                            <ng-container *ngFor="let sd of studentDetails['guardianResponseList']; let i = index">
                                 <div *ngSwitchCase="'guardian' + i">
                                     <p>
                                         <label> Name - {{sd['name']}}</label>

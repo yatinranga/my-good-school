@@ -1,22 +1,22 @@
 <div class="sortby"> PSD :
-    <select style="border: 1px solid #ddd">
-        <option value="" disabled hidden> Choose here </option>
-        <option>Personal Development</option>
-        <option>Social Development</option>
+    <select style="border: 1px solid #ddd" (change)="filterActivities()" [(ngModel)]="psdAreas">
+        <option value="" selected disabled> Choose here </option>
+        <option value="" >None</option>
+        <option *ngFor="let ps of psdAreaArr" value={{ps}}>{{ps}}</option>
     </select>
 </div>
 <div class="sortby"> Focus Area :
-    <select style="border: 1px solid #ddd">
-        <option value="" disabled hidden> Choose here </option>
-        <option>Personal Development</option>
-        <option>Social Development</option>
+    <select style="border: 1px solid #ddd" (change)="filterActivities()" [(ngModel)]="focusAreas">
+        <option value="" selected disabled> Choose here </option>
+        <option value="" >None</option>
+        <option *ngFor="let ps of focusAreaArr" value={{ps.name}}>{{ps.name}}</option>
     </select>
 </div>
 <div class="sortby"> 4S :
-    <select style="border: 1px solid #ddd">
-        <option value="" disabled hidden> Choose here </option>
-        <option>Personal Development</option>
-        <option>Social Development</option>
+    <select style="border: 1px solid #ddd" (change)="filterActivities()" [(ngModel)]="fourS">
+        <option value="" selected disabled> Choose here </option>
+        <option value="" >None</option>
+        <option *ngFor="let ps of fourSArr"value={{ps}}>{{ps}}</option>
     </select>
 </div>
 
@@ -28,10 +28,7 @@
         <option value="Saved">Saved</option>
         <option value="Submitted">Submitted</option>
         <option value="Reviewed">Reviewed</option>
-    </select>
-    <div *ngIf="loader" class="spinner-border text-dark" role="status">
-        <span class="sr-only">Data Loading</span>
-    </div>
+    </select>    
 </div>
 
 <div *ngIf="activityType === 'All'">
@@ -168,7 +165,10 @@
                 </tbody>
                 <tfoot *ngIf="allActivitiesArr.length == 0">
                     <tr>
-                        <td colspan="6">{{loader ? 'Loading...' : 'No Activities'}}</td>
+                        <td colspan="7">
+                            <div *ngIf="loader" class="spinner-border text-dark" role="status">
+                            </div>{{loader ? 'Loading...' : 'No Activities'}}
+                        </td>
                     </tr>
                 </tfoot>
             </table>
@@ -251,7 +251,10 @@
                 </tbody>
                 <tfoot *ngIf="submittedActivitiesArr.length == 0">
                     <tr>
-                        <td colspan="5">{{loader ? 'Loading...' : 'No Activities'}}</td>
+                        <td colspan="6">
+                            <div *ngIf="loader" class="spinner-border text-dark" role="status">
+                            </div>{{loader ? 'Loading...' : 'No Activities'}}
+                        </td>
                     </tr>
                 </tfoot>
             </table>
@@ -344,7 +347,10 @@
                 </tbody>
                 <tfoot *ngIf="savedActivitiesArr.length == 0">
                     <tr>
-                        <td colspan="6">{{loader ? 'Loading...' : 'No Activities'}}</td>
+                        <td colspan="7">
+                            <div *ngIf="loader" class="spinner-border text-dark" role="status">
+                            </div>{{loader ? 'Loading...' : 'No Activities'}}
+                        </td>
                     </tr>
                 </tfoot>
             </table>
@@ -419,7 +425,10 @@
                 </tbody>
                 <tfoot *ngIf="reviewedActivitiesArr.length == 0">
                     <tr>
-                        <td colspan="5">{{loader ? 'Loading...' : 'No Activities'}}</td>
+                        <td colspan="6">
+                            <div *ngIf="loader" class="spinner-border text-dark" role="status">
+                            </div>{{loader ? 'Loading...' : 'No Activities'}}
+                        </td>
                     </tr>
                 </tfoot>
             </table>

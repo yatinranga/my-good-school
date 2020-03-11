@@ -121,7 +121,10 @@
             </tbody>
             <tfoot *ngIf="allActivitiesArr.length == 0">
                 <tr>
-                    <td colspan="6">No Activities</td>
+                    <td colspan="6">
+                        <div *ngIf="loader" class="spinner-border text-dark" role="status">
+                        </div>{{loader ? 'Loading...' : 'No Activities'}}
+                    </td>
                 </tr>
             </tfoot>
         </table>
@@ -183,7 +186,10 @@
             </tbody>
             <tfoot *ngIf="pendingActivitiesArr.length == 0">
                 <tr>
-                    <td colspan="6">No Pending Activities</td>
+                    <td colspan="6">
+                        <div *ngIf="loader" class="spinner-border text-dark" role="status">
+                        </div>{{loader ? 'Loading...' : 'No Activities'}}
+                    </td>
                 </tr>
             </tfoot>
         </table>
@@ -249,7 +255,10 @@
             </tbody>
             <tfoot *ngIf="savedActivitiesArr.length == 0">
                 <tr>
-                    <td colspan="6">No Saved Activities</td>
+                    <td colspan="6">
+                        <div *ngIf="loader" class="spinner-border text-dark" role="status">
+                        </div>{{loader ? 'Loading...' : 'No Activities'}}
+                    </td>
                 </tr>
             </tfoot>
         </table>
@@ -306,7 +315,10 @@
             </tbody>
             <tfoot *ngIf="reviewedActivitiesArr.length == 0">
                 <tr>
-                    <td colspan="6">No Reviewed Activities</td>
+                    <td colspan="6">
+                        <div *ngIf="loader" class="spinner-border text-dark" role="status">
+                        </div>{{loader ? 'Loading...' : 'No Activities'}}
+                    </td>
                 </tr>
             </tfoot>
         </table>

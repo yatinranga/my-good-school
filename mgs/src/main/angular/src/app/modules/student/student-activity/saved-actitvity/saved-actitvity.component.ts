@@ -18,21 +18,34 @@ export class SavedActitvityComponent implements OnInit {
   allActivitiesArr = [];
   activities = [];
   coaches = [];
+
+  psdAreaArr = [];
+  focusAreaArr = [];
+  fourSArr = [];
   schoolId: any;
   studentId: any;
   editActivityShow = false;
   savedActivityForm: FormGroup;
 
-  activityName: any;
-  activityDetails: any;
-  activityTeacher: any;
+
   activityId: any;
   activityDate: any;
   files = [];
   url = '';
+
   activityType = 'All';
+  fourS :  any = null;
+  psdAreas :  any = null;
+  focusAreas :  any = null;
+
   loader: boolean = false;
   modal_loader = false;
+
+  copySavedActi: any = [];
+  copysubmitActi: any= [];
+  copyAllActi: any= [];
+  copyReviewActi: any= [];
+
 
   constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService) { }
 
@@ -42,6 +55,7 @@ export class SavedActitvityComponent implements OnInit {
     this.schoolId = this.studentInfo['student'].schoolId;
     this.activityView(this.activityType);
     this.getStudentActivity(this.schoolId);
+    this.getAreas(); // to get PSD Areas, Focus Area and 4s 
 
     this.savedActivityForm = this.formBuilder.group({
       activityId: [''],
@@ -53,10 +67,31 @@ export class SavedActitvityComponent implements OnInit {
     });
   }
 
+  getAreas() {
+    this.studentService.getFocusAreas().subscribe((res) => {
+      this.focusAreaArr = res;
+      console.log(res);
+    },
+      (err) => { console.log(err) });
+
+    this.studentService.getPsdAreas().subscribe((res) => {
+      this.psdAreaArr = res;
+      console.log(res);
+    },
+      (err) => { console.log(err) });
+
+    this.studentService.getFourS().subscribe((res) => {
+      this.fourSArr = res;
+      console.log(res);
+    },
+      (err) => { console.log(err) });
+  }
+
   // to get the list of SAVED Activities of student
   getStudentSavedActivities(studentId) {
     this.studentService.getSavedActivity(studentId).subscribe((res) => {
       this.savedActivitiesArr = res;
+      this.copySavedActi = Object.assign([],res);
       console.log(res);
       this.loader = false;
     }, (err) => {
@@ -69,6 +104,7 @@ export class SavedActitvityComponent implements OnInit {
   getStudentSubmittedActivities(studentId) {
     this.studentService.getSubmittedActivity(studentId).subscribe((res) => {
       this.submittedActivitiesArr = res;
+      this.copysubmitActi = Object.assign([],res);
       this.loader = false;
     }, (err) => {
       this.loader = false;
@@ -81,6 +117,7 @@ export class SavedActitvityComponent implements OnInit {
     this.studentService.getAllActivity(studentId).subscribe((res) => {
       console.log(res);
       this.allActivitiesArr = res;
+      this.copyAllActi = Object.assign([],res);
       this.allActivitiesArr = this.allActivitiesArr.filter((e) => (e.activityStatus != "SavedByTeacher"));
       this.loader = false;
     }, (err) => {
@@ -94,6 +131,7 @@ export class SavedActitvityComponent implements OnInit {
   getStudentReviewedActivities(studentId) {
     this.studentService.getReviewedActivity(studentId).subscribe((res) => {
       this.reviewedActivitiesArr = res;
+      this.copyReviewActi = Object.assign([],res);
       this.loader = false;
     }, (err) => {
       this.loader = false;
@@ -147,6 +185,7 @@ export class SavedActitvityComponent implements OnInit {
     }
   }
 
+  // DELETE Activity
   deleteSavedActivity(e, activity, i) {
     const submit = confirm("Do you want to delete ?");
     if (submit) {
@@ -162,10 +201,6 @@ export class SavedActitvityComponent implements OnInit {
     }
   }
 
-  onCancel() {
-    this.editActivityShow = false;
-    this.addActivityShow = false;
-  }
 
   // to get all activities of particular school
   getStudentActivity(schoolId) {
@@ -188,18 +223,6 @@ export class SavedActitvityComponent implements OnInit {
         this.modal_loader = false;
       }
     );
-  }
-
-  onFileSelect(event) {
-    if (event.target.files.length > 0) {
-      this.files = [...event.target.files];
-      // this.savedActivityForm.value.attachment = this.files;
-      // console.log(this.files);
-    }
-  }
-
-  removeFile(index: number) {
-    this.files.splice(index, 1);
   }
 
   // to UPDATE the saved activity
@@ -264,6 +287,15 @@ export class SavedActitvityComponent implements OnInit {
     }
   }
 
+  onFileSelect(event) {
+    if (event.target.files.length > 0) {
+      this.files = [...event.target.files];
+      // this.savedActivityForm.value.attachment = this.files;
+      // console.log(this.files);
+    }
+  }
+
+  // call API for Saved , Submitted , Reviewed and All Activities
   activityView(event) {
     this.activityType = event;
     this.loader = true;
@@ -288,10 +320,77 @@ export class SavedActitvityComponent implements OnInit {
         break;
       }
     }
+    this.filterActivities();
+  }
+
+  // Filter Activities on the basis of PSD , Focus Area and 4S
+  filterActivities = () => {
+    switch (this.activityType) {
+      case "All": { 
+        this.allActivitiesArr = this.filter(Object.assign([],this.copyAllActi))
+        break;
+      }
+
+      case "Saved": {
+        this.savedActivitiesArr = this.filter(Object.assign([],this.copySavedActi))
+        break;
+      }
+
+      case "Reviewed": {
+        this.reviewedActivitiesArr = this.filter(Object.assign([],this.copyReviewActi))
+        break;
+      }
+
+      case "Submitted": {
+        this.submittedActivitiesArr = this.filter(Object.assign([],this.copysubmitActi))
+        break;
+      }
+    }
+  }
+
+  filter(array: any[]) {
+    let filterActivitiesArr = [];
+    if (this.psdAreas && this.fourS && this.focusAreas) {
+      filterActivitiesArr = array.filter(e => e.psdAreas && e.psdAreas.includes(this.psdAreas) && e.fourS == this.fourS && e.focusAreas && e.focusAreas.includes(this.focusAreas))
+    } 
+    else if (this.psdAreas && this.fourS) {
+      filterActivitiesArr = array.filter(e => e.psdAreas && e.psdAreas.includes(this.psdAreas) && e.fourS == this.fourS)
+    } 
+    else if (this.fourS && this.focusAreas) {
+      filterActivitiesArr = array.filter(e => e.fourS == this.fourS && e.focusAreas && e.focusAreas.includes(this.focusAreas))
+    } 
+    else if (this.psdAreas && this.focusAreas) {
+      filterActivitiesArr = array.filter(e => e.psdAreas && e.psdAreas.includes(this.psdAreas) && e.focusAreas && e.focusAreas.includes(this.focusAreas))
+    } 
+    else if (this.psdAreas) {
+      filterActivitiesArr = array.filter(e => e.psdAreas && e.psdAreas.includes(this.psdAreas))
+    } 
+    else if (this.fourS) {
+      filterActivitiesArr = array.filter(e => e.fourS == this.fourS)
+    } 
+    else if (this.focusAreas) {
+      filterActivitiesArr = array.filter(e => e.focusAreas && e.focusAreas.includes(this.focusAreas))
+    } 
+    else {
+
+      filterActivitiesArr = array;
+    }
+    
+    return filterActivitiesArr;
+    
   }
 
   getDate(date) {
     return new Date(date);
+  }
+
+  onCancel() {
+    this.editActivityShow = false;
+    this.addActivityShow = false;
+  }
+
+  removeFile(index: number) {
+    this.files.splice(index, 1);
   }
 
 }
