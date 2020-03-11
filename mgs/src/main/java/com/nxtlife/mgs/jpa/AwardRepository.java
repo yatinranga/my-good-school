@@ -10,13 +10,14 @@ import com.nxtlife.mgs.entity.school.Award;
 import com.nxtlife.mgs.enums.AwardStatus;
 import com.querydsl.core.types.Predicate;
 
-public interface AwardRepository extends JpaRepository<Award, Long> , QueryDslPredicateExecutor<Award>{
-	
-	List<Award> findByStudentIdAndStatus(Long studentId, AwardStatus status);
-	
-	List<Award> findByActivity(List<Activity> activities);
-	
-	List<Award> findAll(Predicate predicate);
-	
-	Award findByCidAndActiveTrue(String cid);
+public interface AwardRepository extends JpaRepository<Award, Long>, QueryDslPredicateExecutor<Award> {
+
+	public List<Award> findByStudentIdAndStatus(Long studentId, AwardStatus status);
+
+	public List<Award> findByActivityIn(List<Activity> activities);
+
+	public List<Award> findAll(Predicate predicate);
+
+	public Award findByCidAndActiveTrue(String cid);
+
 }

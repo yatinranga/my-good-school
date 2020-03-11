@@ -30,7 +30,6 @@ import com.nxtlife.mgs.enums.AwardStatus;
 public class Award extends BaseEntity {
 
 	@NotNull
-	@Column(unique = true)
 	private String name;
 
 	@NotNull
