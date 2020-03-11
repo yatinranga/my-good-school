@@ -17,6 +17,7 @@ import com.nxtlife.mgs.entity.school.Award;
 import com.nxtlife.mgs.entity.school.AwardActivityPerformed;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
+import com.nxtlife.mgs.enums.ActivityStatus;
 import com.nxtlife.mgs.enums.AwardStatus;
 import com.nxtlife.mgs.filtering.filter.AwardFilter;
 import com.nxtlife.mgs.filtering.filter.AwardFilterBuilder;
@@ -34,6 +35,7 @@ import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.AwardRequest;
 import com.nxtlife.mgs.view.AwardResponse;
+import com.nxtlife.mgs.view.PropertyCount;
 
 @Service("awardServiceImpl")
 @Transactional
@@ -186,5 +188,26 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 		}
 		awardRepository.save(award);
 		return new AwardResponse(award);
+	}
+	
+	@Override
+	public List<PropertyCount> getCount(String studentCid , String status ,String type){
+		if(studentCid == null)
+			throw new ValidationException("Student id cannot be null.");
+		
+		if(!studentRepository.existsByCidAndActiveTrue(studentCid))
+			throw new ValidationException(String.format("Student with id (%s) does not exist.", studentCid));
+		
+		if(!ActivityStatus.matches(status))
+			throw new ValidationException(String.format("The status (%s) provided by you is invalid.", status));
+		
+		if(type.equalsIgnoreCase("fourS"))
+		   return awardRepository.findFourSCount(studentCid , ActivityStatus.valueOf(status) , AwardStatus.VERIFIED);
+		else if(type.equalsIgnoreCase("focusArea"))
+			return awardRepository.findFocusAreaCount(studentCid, ActivityStatus.valueOf(status), AwardStatus.VERIFIED);
+		else if(type.equalsIgnoreCase("psdArea"))
+			return awardRepository.findPsdAreaCount(studentCid, ActivityStatus.valueOf(status), AwardStatus.VERIFIED);
+		else 
+			throw new ValidationException(String.format("invalid type : (%s) , type can have following values [psdArea , focusArea , fourS]", type));
 	}
 }

@@ -9,6 +9,7 @@ import com.nxtlife.mgs.view.ActivityPerformedRequest;
 import com.nxtlife.mgs.view.ActivityPerformedResponse;
 import com.nxtlife.mgs.view.FileRequest;
 import com.nxtlife.mgs.view.FileResponse;
+import com.nxtlife.mgs.view.PropertyCount;
 import com.nxtlife.mgs.view.SuccessResponse;
 
 public interface ActivityPerformedService {
@@ -63,6 +64,8 @@ public interface ActivityPerformedService {
 
 	List<ActivityPerformedResponse> getAllReviewedActivityOfStudent(String studentCid, Integer page, Integer pageSize);
 
-	List<ActivityPerformedResponse> filter(String studentCid ,ActivityPerformedFilter filterRequest);
+	List<ActivityPerformedResponse> filter(ActivityPerformedFilter filterRequest);
+
+	List<PropertyCount> getCount(String studentCid , String status ,String type);
 
 }

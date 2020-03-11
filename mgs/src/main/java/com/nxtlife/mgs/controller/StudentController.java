@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.glassfish.jersey.server.validation.ValidationError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.enums.ActivityStatus;
+import com.nxtlife.mgs.ex.ValidationException;
+import com.nxtlife.mgs.jpa.StudentRepository;
 import com.nxtlife.mgs.service.ActivityPerformedService;
 import com.nxtlife.mgs.service.StudentService;
 import com.nxtlife.mgs.view.StudentRequest;
@@ -99,6 +103,11 @@ public class StudentController {
 	@DeleteMapping("api/students/{cid}")
 	public SuccessResponse delete(@PathVariable String cid) {
 		return studentService.delete(cid);
+	}
+	
+	@PutMapping("api/student/{cid}/profilePic")
+	public StudentResponse setProfilePic(@RequestParam("profilePic") MultipartFile file, @PathVariable("cid") String studentCid) {
+		return studentService.setProfilePic(file, studentCid);
 	}
 
 }
