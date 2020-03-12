@@ -34,18 +34,18 @@ export class SavedActitvityComponent implements OnInit {
   url = '';
 
   activityType = 'All';
-  fourS :  any = "";
-  psdAreas :  any = "";
-  focusAreas :  any = "";
+  fourS: any = "";
+  psdAreas: any = "";
+  focusAreas: any = "";
 
   loader: boolean = false;
   modal_loader = false;
   submit_loader = false;
 
   copySavedActi: any = [];
-  copysubmitActi: any= [];
-  copyAllActi: any= [];
-  copyReviewActi: any= [];
+  copysubmitActi: any = [];
+  copyAllActi: any = [];
+  copyReviewActi: any = [];
 
 
   constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService) { }
@@ -90,7 +90,7 @@ export class SavedActitvityComponent implements OnInit {
   getStudentSavedActivities(studentId) {
     this.studentService.getSavedActivity(studentId).subscribe((res) => {
       this.savedActivitiesArr = res;
-      this.copySavedActi = Object.assign([],res);
+      this.copySavedActi = Object.assign([], res);
       console.log(res);
       this.loader = false;
     }, (err) => {
@@ -103,7 +103,7 @@ export class SavedActitvityComponent implements OnInit {
   getStudentSubmittedActivities(studentId) {
     this.studentService.getSubmittedActivity(studentId).subscribe((res) => {
       this.submittedActivitiesArr = res;
-      this.copysubmitActi = Object.assign([],res);
+      this.copysubmitActi = Object.assign([], res);
       this.loader = false;
     }, (err) => {
       this.loader = false;
@@ -116,7 +116,7 @@ export class SavedActitvityComponent implements OnInit {
     this.studentService.getAllActivity(studentId).subscribe((res) => {
       console.log(res);
       this.allActivitiesArr = res;
-      this.copyAllActi = Object.assign([],res);
+      this.copyAllActi = Object.assign([], res);
       this.allActivitiesArr = this.allActivitiesArr.filter((e) => (e.activityStatus != "SavedByTeacher"));
       this.loader = false;
     }, (err) => {
@@ -130,7 +130,7 @@ export class SavedActitvityComponent implements OnInit {
   getStudentReviewedActivities(studentId) {
     this.studentService.getReviewedActivity(studentId).subscribe((res) => {
       this.reviewedActivitiesArr = res;
-      this.copyReviewActi = Object.assign([],res);
+      this.copyReviewActi = Object.assign([], res);
       this.loader = false;
     }, (err) => {
       this.loader = false;
@@ -231,7 +231,7 @@ export class SavedActitvityComponent implements OnInit {
   updateActivity() {
     // const submit = confirm("Do you want to Submit ?");
     // if(submit) {
-      
+
     // }
     // else {    }
 
@@ -263,7 +263,8 @@ export class SavedActitvityComponent implements OnInit {
         },
         (err) => {
           this.submit_loader = false;
-          console.log(err) }
+          console.log(err)
+        }
       );
     }
 
@@ -298,7 +299,8 @@ export class SavedActitvityComponent implements OnInit {
         },
         (err) => {
           this.submit_loader = false;
-          console.log(err)}
+          console.log(err)
+        }
       );
     }
 
@@ -343,23 +345,23 @@ export class SavedActitvityComponent implements OnInit {
   // Filter Activities on the basis of PSD , Focus Area and 4S
   filterActivities = () => {
     switch (this.activityType) {
-      case "All": { 
-        this.allActivitiesArr = this.filter(Object.assign([],this.copyAllActi))
+      case "All": {
+        this.allActivitiesArr = this.filter(Object.assign([], this.copyAllActi))
         break;
       }
 
       case "Saved": {
-        this.savedActivitiesArr = this.filter(Object.assign([],this.copySavedActi))
+        this.savedActivitiesArr = this.filter(Object.assign([], this.copySavedActi))
         break;
       }
 
       case "Reviewed": {
-        this.reviewedActivitiesArr = this.filter(Object.assign([],this.copyReviewActi))
+        this.reviewedActivitiesArr = this.filter(Object.assign([], this.copyReviewActi))
         break;
       }
 
       case "Submitted": {
-        this.submittedActivitiesArr = this.filter(Object.assign([],this.copysubmitActi))
+        this.submittedActivitiesArr = this.filter(Object.assign([], this.copysubmitActi))
         break;
       }
     }
@@ -369,32 +371,32 @@ export class SavedActitvityComponent implements OnInit {
     let filterActivitiesArr = [];
     if (this.psdAreas && this.fourS && this.focusAreas) {
       filterActivitiesArr = array.filter(e => e.psdAreas && e.psdAreas.includes(this.psdAreas) && e.fourS == this.fourS && e.focusAreas && e.focusAreas.includes(this.focusAreas))
-    } 
+    }
     else if (this.psdAreas && this.fourS) {
       filterActivitiesArr = array.filter(e => e.psdAreas && e.psdAreas.includes(this.psdAreas) && e.fourS == this.fourS)
-    } 
+    }
     else if (this.fourS && this.focusAreas) {
       filterActivitiesArr = array.filter(e => e.fourS == this.fourS && e.focusAreas && e.focusAreas.includes(this.focusAreas))
-    } 
+    }
     else if (this.psdAreas && this.focusAreas) {
       filterActivitiesArr = array.filter(e => e.psdAreas && e.psdAreas.includes(this.psdAreas) && e.focusAreas && e.focusAreas.includes(this.focusAreas))
-    } 
+    }
     else if (this.psdAreas) {
       filterActivitiesArr = array.filter(e => e.psdAreas && e.psdAreas.includes(this.psdAreas))
-    } 
+    }
     else if (this.fourS) {
       filterActivitiesArr = array.filter(e => e.fourS == this.fourS)
-    } 
+    }
     else if (this.focusAreas) {
       filterActivitiesArr = array.filter(e => e.focusAreas && e.focusAreas.includes(this.focusAreas))
-    } 
+    }
     else {
 
       filterActivitiesArr = array;
     }
-    
+
     return filterActivitiesArr;
-    
+
   }
 
   getDate(date) {
@@ -408,6 +410,24 @@ export class SavedActitvityComponent implements OnInit {
 
   removeFile(index: number) {
     this.files.splice(index, 1);
+  }
+  order: boolean = false;
+  sortByStatus() {
+    this.order = !this.order;
+    // sort by activityStatus
+    this.allActivitiesArr.sort((a, b) => {
+      const nameA = a.activityStatus.toUpperCase(); // ignore upper and lowercase
+      const nameB = b.activityStatus.toUpperCase(); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return this.order ? -1 : 1;
+      }
+      if (nameA > nameB) {
+        return this.order ? 1 : -1;
+      }
+
+      // names must be equal
+      return 0;
+    });
   }
 
 }
