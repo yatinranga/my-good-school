@@ -65,12 +65,32 @@ export class TeacherService {
   }
 
   // get LIST of students who performed specific activity of particular grade
-  getStudents(schoolId, gradeId, activityId, teacherId) {
-    return this.http.get("/api/student/activity/" + activityId + "?schoolId=" + schoolId + "&gradeId=" + gradeId + "&teacherId=" + teacherId);
+  getStudents(gradeId) {
+    return this.http.get("/api/students/?gradeId=" + gradeId);
   }
 
   // Assign Award to Students
   assignAward(reqBody){
-    return this.http.post("api/award/assign",reqBody);
+    return this.http.post("/api/award",reqBody);
+  }
+
+  // List of Activities performed by student of particular activity
+  getStudentPerformedActivities(studentId,actiId){
+    return this.http.get("/api/student/"+studentId+"/activities?activityId="+actiId);
+  }
+
+  // to get activities of student whose status = REVIEWED
+  getStudentActivities(studentCid){
+    return this.http.get("/api/student/activities?status=reviewed&studentId=" + studentCid);
+  }
+
+  // Get the awards initiated/given by student
+  getTeacherAwards(){
+    return this.http.get("/api/teacher/awards");
+  }
+
+  // to verify the awards by teacher if is_management = TRUE;
+  verifyAwards(awardId){
+    return this.http.put("/api/teacher/award/"+ awardId +"?Verified=TRUE",{});
   }
 }

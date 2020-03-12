@@ -5,25 +5,22 @@ import java.util.List;
 import com.nxtlife.mgs.filtering.filter.AwardFilter;
 import com.nxtlife.mgs.view.AwardRequest;
 import com.nxtlife.mgs.view.AwardResponse;
+import com.nxtlife.mgs.view.PropertyCount;
 
 public interface AwardService {
 
 	AwardResponse createAward(AwardRequest request);
+	
+	public List<AwardResponse> findAllByStudent();
+	
+	public List<AwardResponse> findAllByStudent(AwardFilter awardFilter) ;
+	
+	public List<AwardResponse> findAllByManagement();
+	
+	public List<AwardResponse> findAllByManagement(AwardFilter awardFilter) ;
+	
+	public AwardResponse updateStatus(String awardId, Boolean isVerified);
 
-	List<AwardResponse> assignAward(AwardRequest request);
-
-	List<AwardResponse> getAllAwardsBySchool(String schoolCid);
-
-	List<AwardResponse> getAllUnverifiedAwardsOfSchool(String schoolCid);
-
-	List<AwardResponse> verifyAwards(AwardRequest request);
-
-	List<AwardResponse> filterAwardByYearPerformed(String year, String studentCid);
-
-	List<AwardResponse> getAllSoloUnverifiedAwardsOfSchool(String schoolCid, String awardCid);
-
-	List<AwardResponse> getAllAwardsAssignedByTeacher(AwardRequest request);
-
-	List<AwardResponse> filter(String studentCid, AwardFilter filterRequest);
-
+	List<PropertyCount> getCount(String studentCid, String status, String type);
+	
 }

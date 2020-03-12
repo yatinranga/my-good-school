@@ -34,7 +34,7 @@ public class TeacherRequest {
 
 	private String gender;
 
-	private List<String> activitiyIds;
+	private List<String> activityIds;
 
 	private List<String> gradeIds;
 
@@ -140,12 +140,12 @@ public class TeacherRequest {
 		this.gender = gender;
 	}
 
-	public List<String> getActivitiyIds() {
-		return activitiyIds;
+	public List<String> getActivityIds() {
+		return activityIds;
 	}
 
-	public void setActivitiyIds(List<String> activitiyIds) {
-		this.activitiyIds = activitiyIds;
+	public void setActivityIds(List<String> activityIds) {
+		this.activityIds = activityIds;
 	}
 
 	public List<String> getGradeIds() {
@@ -210,8 +210,8 @@ public class TeacherRequest {
 		if (this.isClassTeacher != null)
 			teacher.setIsClassTeacher(this.isClassTeacher);
 
-		teacher.setIsManagmentMember(isManagmentMember);
-		teacher.setDesignation(designation);
+		teacher.setIsManagmentMember(this.isManagmentMember);
+		teacher.setDesignation(this.designation);
 
 		return teacher;
 	}

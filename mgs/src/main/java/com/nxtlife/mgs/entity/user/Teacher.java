@@ -16,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.DynamicUpdate;
@@ -84,7 +85,9 @@ public class Teacher extends BaseEntity {
 	@ManyToOne
 	private School school;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "teacher")
+	@ManyToMany()
+	@JoinTable(name = "teacher_grade", joinColumns = { @JoinColumn(name = "teacher_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "grade_id") },uniqueConstraints = {@UniqueConstraint(columnNames = {"teacher_id","grade_id"})})
 	private List<Grade> grades;
 
 //	@ManyToMany(mappedBy = "teachers")

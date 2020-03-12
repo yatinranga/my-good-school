@@ -15,6 +15,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.engine.FetchTiming;
 import org.hibernate.validator.constraints.Email;
 
 import com.nxtlife.mgs.entity.BaseEntity;
@@ -66,7 +67,7 @@ public class Guardian extends BaseEntity {
 	 * @ManyToOne(cascade = CascadeType.PERSIST) private Student student;
 	 */
 
-	@ManyToMany()
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "student_guardian", joinColumns = { @JoinColumn(name = "guardian_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "student_id") })
 	private List<Student> students;

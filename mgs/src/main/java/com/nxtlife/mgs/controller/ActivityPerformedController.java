@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import com.nxtlife.mgs.enums.ActivityStatus;
 import com.nxtlife.mgs.filtering.filter.ActivityPerformedFilter;
 import com.nxtlife.mgs.service.ActivityPerformedService;
 import com.nxtlife.mgs.view.ActivityPerformedRequest;
 import com.nxtlife.mgs.view.ActivityPerformedResponse;
+import com.nxtlife.mgs.view.PropertyCount;
 import com.nxtlife.mgs.view.SuccessResponse;
 
 @RestController
@@ -52,8 +52,9 @@ public class ActivityPerformedController {
 	}
 
 	@GetMapping(value = "api/coach/activities")
-	public List<ActivityPerformedResponse> getAllPendingActivitiesByCoach(@RequestParam("coachId") String coachCid ,@RequestParam(name="status",required = false) String status) {
-		return activityPerformedService.getAllActivitiesAssignedToCoachforReview(coachCid , status);
+	public List<ActivityPerformedResponse> getAllPendingActivitiesByCoach(@RequestParam("coachId") String coachCid,
+			@RequestParam(name = "status", required = false) String status) {
+		return activityPerformedService.getAllActivitiesAssignedToCoachforReview(coachCid, status);
 	}
 
 	@GetMapping(value = "api/coach/activities/filterByClass")
@@ -78,8 +79,9 @@ public class ActivityPerformedController {
 	@GetMapping(value = "api/student/activities")
 	public List<ActivityPerformedResponse> getAllActivitiesOfStudentByStatus(
 			@RequestParam(value = "status", required = false) String status,
-			@RequestParam("studentId") String studentCid, @RequestParam(value = "page", required = false ,defaultValue = "0") Integer page,
-			@RequestParam(value = "pageSize", required = false ,defaultValue = "10") Integer pageSize) {
+			@RequestParam("studentId") String studentCid,
+			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+			@RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
 		return activityPerformedService.getAllActivitiesOfStudentByStatus(status, studentCid, page, pageSize);
 	}
 
@@ -116,19 +118,27 @@ public class ActivityPerformedController {
 			@RequestParam("studentId") String studentId) {
 		return activityPerformedService.filterActivityByYearPerformed(year, studentId);
 	}
-	
-	@GetMapping(value = "api/student/{studentCid}/activityPerformed/filter")
-	public List<ActivityPerformedResponse> filter(@PathVariable("studentCid") String studentCid , @RequestBody ActivityPerformedFilter filterRequest){
-		return activityPerformedService.filter(studentCid, filterRequest);
+
+	@GetMapping(value = "api/activityPerformed/filter")
+	public List<ActivityPerformedResponse> filter(@RequestBody ActivityPerformedFilter filterRequest) {
+		return activityPerformedService.filter( filterRequest);
 	}
-	
+
 	@GetMapping(value = "api/student/{studentId}/activities")
-	public List<ActivityPerformedResponse> getAllReviewedActivityOfStudentByActivityId(@RequestParam("activityId") String activityCid ,@PathVariable("studentId") String studentCid){
-		return activityPerformedService.getAllActivityOfStudentByActivityId(studentCid, activityCid, ActivityStatus.Reviewed.toString());
+	public List<ActivityPerformedResponse> getAllReviewedActivityOfStudentByActivityId(
+			@RequestParam("activityId") String activityCid, @PathVariable("studentId") String studentCid) {
+		return activityPerformedService.getAllActivityOfStudentByActivityId(studentCid, activityCid,
+				ActivityStatus.Reviewed.toString());
 	}
 
 	@DeleteMapping(value = "api/student/activity/{activityPerformedId}")
 	public SuccessResponse deleteActivityOfStudent(@PathVariable("activityPerformedId") String activityPerformedCid) {
 		return activityPerformedService.deleteActivityOfStudent(activityPerformedCid);
 	}
+	
+	@GetMapping(value = "api/student/{studentId}/activities/count" )
+	public List<PropertyCount> getCount(@PathVariable("studentId") String studentCid ,@RequestParam(name = "status" , required = false ,defaultValue = "Reviewed") String status ,@RequestParam("type") String type){
+		return activityPerformedService.getCount(studentCid , status,type);
+	}
+	
 }

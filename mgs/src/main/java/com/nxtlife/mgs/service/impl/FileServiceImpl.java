@@ -41,8 +41,13 @@ public class FileServiceImpl extends BaseService implements FileService{
 	    		throw new ValidationException("Media file missing");
 //       String orgFileName = imgReq.getImageFile().getOriginalFilename();
 		 fileRequest.setName(fileRequest.getFile().getOriginalFilename());
-       String fileExtn = fileRequest.getName().split("\\.")[1];
-       fileRequest.setExtension(fileExtn);
+		 String[] separatedItems = fileRequest.getName().split("\\.");
+		 if(separatedItems.length<2)
+		     throw new ValidationException("Not able to parse file extension from file name.");
+		 
+			 String fileExtn = separatedItems[separatedItems.length-1];
+		     fileRequest.setExtension(fileExtn);
+		 
        String filename = UUID.randomUUID().toString() + "." + fileExtn;
        List<String> allFileRepoUrls = new ArrayList<String>();
        File file = null;

@@ -9,6 +9,7 @@ public class ActivityPerformedFilter {
 	private String fourS;
 	private String psdArea;
 	private String teacherId;
+	private String studentId;
 	private String activityId;
 	private String focusAreaId;
 	
@@ -55,6 +56,12 @@ public class ActivityPerformedFilter {
 	}
 	public void setFocusAreaId(String focusAreaId) {
 		this.focusAreaId = focusAreaId;
+	}
+	public String getStudentId() {
+		return studentId;
+	}
+	public void setStudentId(String studentId) {
+		this.studentId = studentId;
 	}
 	
 

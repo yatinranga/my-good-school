@@ -13,6 +13,7 @@ import com.nxtlife.mgs.entity.activity.ActivityPerformed;
 import com.nxtlife.mgs.enums.ActivityStatus;
 import com.nxtlife.mgs.enums.FourS;
 import com.nxtlife.mgs.enums.PSDArea;
+import com.nxtlife.mgs.view.PropertyCount;
 import com.querydsl.core.types.Predicate;
 
 @Repository
@@ -75,7 +76,34 @@ public interface ActivityPerformedRepository extends JpaRepository<ActivityPerfo
 	List<ActivityPerformed> findAllByTeacherCidAndActivityStatusOrActivityStatusOrActivityStatusAndActiveTrue(
 			String coachCid, ActivityStatus submittedbystudent, ActivityStatus savedbyteacher, ActivityStatus reviewed);
 	
-	Long findIdByCidAndActiveTrue(String activityPerformedCid);
+	@Query(value = "select ap.id from ActivityPerformed  ap where ap.cid =:activityPerformedCid and ap.active = true")
+	Long findIdByCidAndActiveTrue(@Param("activityPerformedCid") String activityPerformedCid);
 
 	boolean existsByCidAndActiveTrue(String activityCid);
+	
+	boolean existsByTeacherCidAndActiveTrue(String teacherCid);
+	
+	 @Query("SELECT " +
+	           "new com.nxtlife.mgs.view.PropertyCount(a.activity.fourS, COUNT(DISTINCT a.id)) " +
+	           "FROM " +
+	           "    ActivityPerformed a " +"WHERE a.student.cid =:cid AND a.activityStatus =:status AND a.active = TRUE "+
+	           "GROUP BY " +
+	           "   a.activity.fourS" )
+	List<PropertyCount> findFourSCount(@Param("cid") String cid, @Param("status") ActivityStatus status);
+	 
+	 @Query("SELECT " +
+	           "new com.nxtlife.mgs.view.PropertyCount(f.name, COUNT(DISTINCT ap.id)) " +
+	           "FROM " +
+	           "    ActivityPerformed ap JOIN ap.activity a JOIN a.focusAreas f  " +"WHERE ap.student.cid =:cid AND ap.activityStatus =:status AND ap.active = TRUE "+
+	           "GROUP BY " +
+	           "   f.name" )
+	List<PropertyCount> findFocusAreaCount(@Param("cid") String cid, @Param("status") ActivityStatus status);
+	 
+	 @Query("SELECT " +
+	           "new com.nxtlife.mgs.view.PropertyCount(f.psdArea, COUNT(DISTINCT ap.id)) " +
+	           "FROM " +
+	           "    ActivityPerformed ap JOIN ap.activity a JOIN a.focusAreas f  " +"WHERE ap.student.cid =:cid AND ap.activityStatus =:status AND ap.active = TRUE "+
+	           "GROUP BY " +
+	           "   f.psdArea" )
+	List<PropertyCount> findPsdAreaCount(@Param("cid") String cid, @Param("status") ActivityStatus status);
 }

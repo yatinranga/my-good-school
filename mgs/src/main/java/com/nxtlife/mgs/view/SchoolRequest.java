@@ -31,6 +31,8 @@ public class SchoolRequest {
 	private List<String> generalActivities;
 
 	private List<ActivityRequestResponse> newActivities;
+	
+	private List<GradeRequest> gradeRequests;
 
 	public String getName() {
 		return name;
@@ -110,6 +112,14 @@ public class SchoolRequest {
 
 	public void setNewActivities(List<ActivityRequestResponse> newActivities) {
 		this.newActivities = newActivities;
+	}
+
+	public List<GradeRequest> getGradeRequests() {
+		return gradeRequests;
+	}
+
+	public void setGradeRequests(List<GradeRequest> gradeRequests) {
+		this.gradeRequests = gradeRequests;
 	}
 
 	public School toEntity(School school) {

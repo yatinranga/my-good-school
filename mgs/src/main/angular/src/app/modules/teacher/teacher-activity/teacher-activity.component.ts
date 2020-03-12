@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+declare let $: any;
 
 @Component({
   selector: 'app-teacher-activity',
@@ -9,7 +10,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./teacher-activity.component.scss']
 })
 export class TeacherActivityComponent implements OnInit {
-  activityType = "Pending";
+  activityType = "All";
   activities = []
   pendingActivitiesArr = [];
   savedActivitiesArr = [];
@@ -20,7 +21,7 @@ export class TeacherActivityComponent implements OnInit {
   activityId = "";
   studentId = "";
   i: any;
-  loader:boolean = false;
+  loader: boolean = false;
 
   reviewForm: FormGroup;
 
@@ -43,6 +44,7 @@ export class TeacherActivityComponent implements OnInit {
 
   // Toggle Activity View
   activityView(event) {
+    this.loader = true;
     this.activityType = event;
     switch (this.activityType) {
       case "All": this.allActivities(); break;
@@ -68,8 +70,12 @@ export class TeacherActivityComponent implements OnInit {
     this.teacherSerivce.getPendingActivity(this.teacherId).subscribe((res) => {
       this.activities = res;
       this.pendingActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SubmittedByStudent"));
+      this.loader = false;
     },
-      (err) => console.log(err));
+      (err) => {
+        console.log(err)
+        this.loader = false;
+      });
   }
 
   // Saved Activities of Teacher
@@ -77,8 +83,12 @@ export class TeacherActivityComponent implements OnInit {
     this.teacherSerivce.getPendingActivity(this.teacherId).subscribe((res) => {
       this.activities = res;
       this.savedActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SavedByTeacher"));
+      this.loader = false;
     },
-      (err) => console.log(err));
+      (err) => {
+        console.log(err)
+        this.loader = false;
+      });
   }
 
   // All activities of Teacher
@@ -86,8 +96,12 @@ export class TeacherActivityComponent implements OnInit {
     this.teacherSerivce.getAllActivity(this.teacherId).subscribe((res) => {
       console.log(res);
       this.allActivitiesArr = res;
+      this.loader = false;
     },
-      (err) => console.log(err));
+      (err) => {
+        console.log(err)
+        this.loader = false;
+      });
   }
 
   // REVIEWED Activities of Teacher
@@ -96,8 +110,12 @@ export class TeacherActivityComponent implements OnInit {
       console.log("reviewed");
       console.log(res);
       this.reviewedActivitiesArr = res;
+      this.loader = false;
     },
-      (err) => console.log(err))
+      (err) => {
+        console.log(err)
+        this.loader = false;
+      });
   }
 
   // Save/Review Pending Activity
@@ -115,20 +133,26 @@ export class TeacherActivityComponent implements OnInit {
 
     this.teacherSerivce.saveReviewedActivity(formData).subscribe((res) => {
       console.log(res);
-      // this.savedActivitiesArr = [...this.savedActivitiesArr, ...this.pendingActivitiesArr.splice(this.i, 1)];
+      if(this.activityType == "All")
+        
+      this.savedActivitiesArr = [...this.savedActivitiesArr, ...this.pendingActivitiesArr.splice(this.i, 1)];
+      $('#reviewModal').modal('hide');
+      $('.modal-backdrop').remove();
       this.reviewForm.reset();
       this.alertService.showSuccessToast('Review Saved !');
     },
-      (err) => console.log(err)
+      (err) => {
+        console.log(err);
+        $('#reviewModal').modal('hide');
+        $('.modal-backdrop').remove();
+      }
     );
   }
 
   // Edit the Saved activity by teacher
-  editSavedActivity(activity) {
+  editSavedActivity(activity, e) {
 
-    // e.stopPropagation();
-
-    console.log(activity);
+    e.stopPropagation();
     this.activityId = activity.id;
     this.studentId = activity.studentId;
 
@@ -139,6 +163,7 @@ export class TeacherActivityComponent implements OnInit {
       star: activity.star,
       coachRemark: activity.coachRemark
     })
+    $('#reviewModal').modal('show');
   }
 
   // SUBMIT the saved activity by teacher
@@ -154,20 +179,18 @@ export class TeacherActivityComponent implements OnInit {
     console.log(actCid);
     this.teacherSerivce.submitActivity(actCid).subscribe((res) => {
       console.log(res);
+      this.savedActivitiesArr.splice(index, 1);
       // this.savedActivitiesArr.splice(index,1); // to splice the selected activity and push into reviewedActivitesArr
       this.alertService.showSuccessToast('Activity Submitted !');
     },
       (err) => console.log(err));
   }
 
-  reviewActivity(activity) {
-    console.log(activity);
+  reviewActivity(activity, e) {
+    e.stopPropagation();
     this.activityId = activity.id
     this.studentId = activity.studentId;
-
-    // console.log(index)
-    console.log(this.activityId);
-    console.log(this.studentId);
+    $('#reviewModal').modal('show');
   }
 
   getDate(date) {

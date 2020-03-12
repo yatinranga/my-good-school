@@ -1,13 +1,11 @@
 package com.nxtlife.mgs.service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.util.ExcelUtil;
-import com.nxtlife.mgs.view.AwardResponse;
 import com.nxtlife.mgs.view.StudentRequest;
 import com.nxtlife.mgs.view.StudentResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
@@ -30,19 +28,24 @@ public interface StudentService extends ExcelUtil {
 
 	List<StudentResponse> getAll();
 
-	List<StudentResponse> getAllBySchoolCid(String schoolCid);
+	public List<StudentResponse> getAllBySchoolCid(String schoolCid);
+	
+	public List<StudentResponse> getAllByGradeId(String gradeCid);
 
 	StudentResponse update(StudentRequest request, String cid);
 
 	SuccessResponse delete(String cid);
 
-	List<StudentResponse> getAllStudentsBySchoolAndActivityAndCoachAndStatusReviewed(String schoolCid,String gradeCid,
+	List<StudentResponse> getAllStudentsBySchoolAndActivityAndCoachAndStatusReviewed(String schoolCid, String gradeCid,
 			String activityCid, String activityStatus, String teacherCid);
 
-	List<AwardResponse> getAllAwardsOfStudentByActivityId(String studentCid, String awardCid);
+	StudentResponse setProfilePic(MultipartFile file, String studentCid);
 
-//	List<StudentResponse> getAllBySchoolCid(String schoolCid);
+	// List<AwardResponse> getAllAwardsOfStudentByActivityId(String studentCid,
+	// String awardCid);
 
-//	ActivityPerformedResponse saveActivity(ActivityPerformedRequest request);
+	// List<StudentResponse> getAllBySchoolCid(String schoolCid);
+
+	// ActivityPerformedResponse saveActivity(ActivityPerformedRequest request);
 
 }

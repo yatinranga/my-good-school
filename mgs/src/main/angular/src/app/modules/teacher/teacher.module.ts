@@ -28,7 +28,7 @@ const routes: Routes = [
         component: TeacherActivityComponent
       },
       {
-        path: 'awards-achievment',
+        path: 'awards-achievement',
         component: TeacherAwardsComponent
       },
       {

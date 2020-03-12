@@ -1,6 +1,5 @@
 package com.nxtlife.mgs.service.impl;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.activity.ActivityPerformed;
@@ -44,6 +42,7 @@ import com.nxtlife.mgs.view.ActivityPerformedRequest;
 import com.nxtlife.mgs.view.ActivityPerformedResponse;
 import com.nxtlife.mgs.view.FileRequest;
 import com.nxtlife.mgs.view.FileResponse;
+import com.nxtlife.mgs.view.PropertyCount;
 import com.nxtlife.mgs.view.SuccessResponse;
 
 @Service
@@ -78,9 +77,9 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 
 	@Autowired
 	ActivityRepository activityRepository;
-	
-//	@Autowired
-//	ActivityPerformedFilterBuilder activityPerformedFilterBuilder;
+
+	// @Autowired
+	// ActivityPerformedFilterBuilder activityPerformedFilterBuilder;
 
 	@Override
 	public List<FileResponse> getAllFilesOfActivity(String activityCId) {
@@ -139,24 +138,31 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			throw new ValidationException(
 					String.format("Coach id is invalid no coach with id : %s found.", request.getCoachId()));
 
-		/* setting those fields in request to null which needs to filled by Coach */
+		/*
+		 * setting those fields in request to null which needs to filled by
+		 * Coach
+		 */
 		if (request.getCoachRemark() != null || request.getAchievementScore() != null
 				|| request.getParticipationScore() != null || request.getInitiativeScore() != null
 				|| request.getStar() != null) {
 			throw new ValidationException("student can't set remarks or fields which are meant to be set by coach");
-//			request.setCoachRemark(null);
-//			request.setCoachRemarkDate(null);
-//			request.setAchievementScore(null);
-//			request.setParticipationScore(null);
-//			request.setInitiativeScore(null);
-//			request.setStar(null);
+			// request.setCoachRemark(null);
+			// request.setCoachRemarkDate(null);
+			// request.setAchievementScore(null);
+			// request.setParticipationScore(null);
+			// request.setInitiativeScore(null);
+			// request.setStar(null);
 		}
-//		if(request.getDateOfActivity()==null || request.getDescription()==null || request.getFileRequests()==null|| request.getFileRequests().isEmpty())
-//			actStatus = ActivityStatus.SavedByStudent;
-//		else
-//			actStatus = ActivityStatus.SubmittedByStudent;
+		// if(request.getDateOfActivity()==null ||
+		// request.getDescription()==null || request.getFileRequests()==null||
+		// request.getFileRequests().isEmpty())
+		// actStatus = ActivityStatus.SavedByStudent;
+		// else
+		// actStatus = ActivityStatus.SubmittedByStudent;
 
-		/* writing logic to update if activity is already saved and is not new */
+		/*
+		 * writing logic to update if activity is already saved and is not new
+		 */
 
 		if (request.getId() != null) {
 			activityPerformed = activityPerformedRepository.findByCidAndActiveTrue(request.getId());
@@ -166,8 +172,11 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 				throw new ValidationException(
 						String.format("Activity with the id : %s is already submitted by you and cannot be edited.",
 								request.getId()));
-			if (request.getDateOfActivity() != null)
+			if (request.getDateOfActivity() != null) {
+				if(LocalDateTime.now().toDate().before(DateUtil.convertStringToDate(request.getDateOfActivity())))
+					throw new ValidationException("Date of activity cannot be a future date.");
 				activityPerformed.setDateOfActivity(DateUtil.convertStringToDate(request.getDateOfActivity()));
+			}
 			if (request.getDescription() != null)
 				activityPerformed.setDescription(request.getDescription());
 
@@ -178,8 +187,8 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			List<FileRequest> requestFiles = request.getFileRequests();
 			List<File> updatedFiles = new ArrayList<File>();
 			/*
-			 * write logic here to add new files if any and remove files which is not
-			 * present now but were present earlier
+			 * write logic here to add new files if any and remove files which
+			 * is not present now but were present earlier
 			 */
 
 			if (requestFiles != null && !requestFiles.isEmpty()) {
@@ -210,24 +219,24 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 
 			}
 			/*
-			 * logic to delete the files which were previously there but in new request have
-			 * been removed.
+			 * logic to delete the files which were previously there but in new
+			 * request have been removed.
 			 */
 			for (File f : allValidFilesOfActivity) {
 				fileRepository.updateFileSetActiveByCid(false, f.getCid());
 			}
 
 			// logic to save updated files
-//			if(updatedFiles!=null && !updatedFiles.isEmpty())
-//				for(File f : updatedFiles) {
-//					fileRepository.saveAndFlush(f);
-//				}
-//			
+			// if(updatedFiles!=null && !updatedFiles.isEmpty())
+			// for(File f : updatedFiles) {
+			// fileRepository.saveAndFlush(f);
+			// }
+			//
 			/*
-			 * clear updatedFiles list and iteratively add new request files to it after
-			 * saving them in next step
+			 * clear updatedFiles list and iteratively add new request files to
+			 * it after saving them in next step
 			 */
-//			updatedFiles.clear();
+			// updatedFiles.clear();
 
 			// Logic to save new files and then add it to List updatedFiles
 			if (requestFiles != null && !requestFiles.isEmpty())
@@ -255,7 +264,9 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 						activityPerformedMedia.add(file);
 					}
 				}
-			/* Assigned the returned files List set to ActivityPerformed entity */
+			/*
+			 * Assigned the returned files List set to ActivityPerformed entity
+			 */
 			activityPerformed.setFiles(activityPerformedMedia);
 
 			activityPerformed.setActive(true);
@@ -288,10 +299,11 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 					String.format("Activity with the id : %s is already submitted by you and cannot be edited.",
 							activityPerformedCid));
 
-		if (activity.getDateOfActivity() == null
-				|| activity.getDescription() == null/*
-													 * || activity.getFiles() == null || activity.getFiles().isEmpty()
-													 */)
+		if (activity.getDateOfActivity() == null || activity
+				.getDescription() == null/*
+											 * || activity.getFiles() == null ||
+											 * activity.getFiles().isEmpty()
+											 */)
 			throw new ValidationException("Activity cannot be submitted first fill all the mandatory fields.");
 
 		activity.setActivityStatus(ActivityStatus.SubmittedByStudent);
@@ -313,14 +325,15 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 		if (activity == null)
 			throw new ValidationException(String.format("No activity found with id : %s", request.getId()));
 
-		if (!(activity.getActivityStatus().equals(ActivityStatus.SubmittedByStudent))&& !(activity.getActivityStatus().equals(ActivityStatus.SavedByTeacher)))
+		if (!(activity.getActivityStatus().equals(ActivityStatus.SubmittedByStudent))
+				&& !(activity.getActivityStatus().equals(ActivityStatus.SavedByTeacher)))
 			throw new ValidationException("Activity cannot be reviewed yet.");
 
 		activity = request.toEntity(activity);
 
 		if (activity.getCoachRemark() != null)
 			activity.setCoachRemarkDate(LocalDateTime.now().toDate());
-		//DateUtil.convertStringToDate(LocalDate.now().toString())
+		// DateUtil.convertStringToDate(LocalDate.now().toString())
 
 		activity.setActivityStatus(ActivityStatus.SavedByTeacher);
 
@@ -886,28 +899,61 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			throw new RuntimeException("Something went wrong , Activity not deleted");
 		return new SuccessResponse(200, "Activity deleted successfuly.");
 	}
-	
+
 	@Override
-    public List<ActivityPerformedResponse> filter(String studentCid ,ActivityPerformedFilter filterRequest){
-		if(studentCid == null)
-			throw new ValidationException("Student id cannot be null.");
-		Boolean studentFlag = studentRepository.existsByCidAndActiveTrue(studentCid);
-		if(!studentFlag)
-			throw new ValidationException(String.format("Student with id : %s does not exist.", studentCid));
+	public List<ActivityPerformedResponse> filter( ActivityPerformedFilter filterRequest) {
+		if (filterRequest.getStudentId() != null) {
+			Boolean studentFlag = studentRepository.existsByCidAndActiveTrue(filterRequest.getStudentId());
+			if (!studentFlag)
+				throw new ValidationException(String.format("Student with id : %s does not exist.", filterRequest.getStudentId()));
+		}
 		
-    	List<ActivityPerformed> performedActivities = activityPerformedRepository.findAll(new ActivityPerformedFilterBuilder().build(filterRequest));
-//    			findAllByStudentCidAndActiveTrue(studentCid,new ActivityPerformedFilterBuilder().build(filterRequest));
-    	
-    	performedActivities.stream().forEach(pa -> {if(pa.getStudent()!=null && !(pa.getStudent().getCid()).equals(studentCid)|| !pa.getActive())
-    		performedActivities.remove(pa);});
-    	
-    	if (performedActivities == null || performedActivities.isEmpty())
+		if(filterRequest.getTeacherId()!=null) {
+			if(!teacherRepository.existsByCidAndActiveTrue(filterRequest.getTeacherId()))
+				throw new ValidationException(String.format("Teacher with id : %s does not exist.", filterRequest.getTeacherId()));
+		}
+		
+
+		List<ActivityPerformed> performedActivities = activityPerformedRepository
+				.findAll(new ActivityPerformedFilterBuilder().build(filterRequest));
+		// findAllByStudentCidAndActiveTrue(studentCid,new
+		// ActivityPerformedFilterBuilder().build(filterRequest));
+
+//		performedActivities.stream().forEach(pa -> {
+//			if (pa.getStudent() != null && !(pa.getStudent().getCid()).equals(studentCid) || !pa.getActive())
+//				performedActivities.remove(pa);
+//		});
+
+		if (performedActivities == null || performedActivities.isEmpty())
 			throw new ValidationException("No activities found after applying filter.");
 		List<ActivityPerformedResponse> activityPerformedResponses = new ArrayList<ActivityPerformedResponse>();
 		performedActivities.forEach(act -> {
 			activityPerformedResponses.add(new ActivityPerformedResponse(act));
 		});
 		return activityPerformedResponses;
-    }
+	}
+	
+	
+	
+	@Override
+	public List<PropertyCount> getCount(String studentCid , String status ,String type){
+		if(studentCid == null)
+			throw new ValidationException("Student id cannot be null.");
+		
+		if(!studentRepository.existsByCidAndActiveTrue(studentCid))
+			throw new ValidationException(String.format("Student with id (%s) does not exist.", studentCid));
+		
+		if(!ActivityStatus.matches(status))
+			throw new ValidationException(String.format("The status (%s) provided by you is invalid.", status));
+		
+		if(type.equalsIgnoreCase("fourS"))
+		   return activityPerformedRepository.findFourSCount(studentCid , ActivityStatus.valueOf(status));
+		else if(type.equalsIgnoreCase("focusArea"))
+			return activityPerformedRepository.findFocusAreaCount(studentCid, ActivityStatus.valueOf(status));
+		else if(type.equalsIgnoreCase("psdArea"))
+			return activityPerformedRepository.findPsdAreaCount(studentCid, ActivityStatus.valueOf(status));
+		else 
+			throw new ValidationException(String.format("invalid type : (%s) , type can have following values [psdArea , focusArea , fourS]", type));
+	}
 
 }

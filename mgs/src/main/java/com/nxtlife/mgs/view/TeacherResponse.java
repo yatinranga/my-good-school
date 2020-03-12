@@ -231,7 +231,9 @@ public class TeacherResponse {
 			this.schoolName = teacher.getSchool().getName();
 			this.schoolId = teacher.getSchool().getCid();
 		}
-
+		
+		this.isManagmentMember = teacher.getIsManagmentMember();
+		this.designation = teacher.getDesignation();
 	}
 
 }

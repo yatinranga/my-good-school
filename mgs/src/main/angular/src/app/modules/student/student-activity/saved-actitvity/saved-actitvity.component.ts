@@ -18,20 +18,35 @@ export class SavedActitvityComponent implements OnInit {
   allActivitiesArr = [];
   activities = [];
   coaches = [];
+
+  psdAreaArr = [];
+  focusAreaArr = [];
+  fourSArr = [];
   schoolId: any;
   studentId: any;
   editActivityShow = false;
   savedActivityForm: FormGroup;
 
-  activityName: any;
-  activityDetails: any;
-  activityTeacher: any;
+
   activityId: any;
   activityDate: any;
-  file = [];
+  files = [];
   url = '';
-  activityType = 'Submitted';
+
+  activityType = 'All';
+  fourS :  any = "";
+  psdAreas :  any = "";
+  focusAreas :  any = "";
+
   loader: boolean = false;
+  modal_loader = false;
+  submit_loader = false;
+
+  copySavedActi: any = [];
+  copysubmitActi: any= [];
+  copyAllActi: any= [];
+  copyReviewActi: any= [];
+
 
   constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService) { }
 
@@ -41,6 +56,7 @@ export class SavedActitvityComponent implements OnInit {
     this.schoolId = this.studentInfo['student'].schoolId;
     this.activityView(this.activityType);
     this.getStudentActivity(this.schoolId);
+    this.getAreas(); // to get PSD Areas, Focus Area and 4s 
 
     this.savedActivityForm = this.formBuilder.group({
       activityId: [''],
@@ -52,10 +68,29 @@ export class SavedActitvityComponent implements OnInit {
     });
   }
 
+  // get PSD , Focus Area and 4S
+  getAreas() {
+    this.studentService.getFocusAreas().subscribe((res) => {
+      this.focusAreaArr = res;
+    },
+      (err) => { console.log(err) });
+
+    this.studentService.getPsdAreas().subscribe((res) => {
+      this.psdAreaArr = res;
+    },
+      (err) => { console.log(err) });
+
+    this.studentService.getFourS().subscribe((res) => {
+      this.fourSArr = res;
+    },
+      (err) => { console.log(err) });
+  }
+
   // to get the list of SAVED Activities of student
   getStudentSavedActivities(studentId) {
     this.studentService.getSavedActivity(studentId).subscribe((res) => {
       this.savedActivitiesArr = res;
+      this.copySavedActi = Object.assign([],res);
       console.log(res);
       this.loader = false;
     }, (err) => {
@@ -68,6 +103,7 @@ export class SavedActitvityComponent implements OnInit {
   getStudentSubmittedActivities(studentId) {
     this.studentService.getSubmittedActivity(studentId).subscribe((res) => {
       this.submittedActivitiesArr = res;
+      this.copysubmitActi = Object.assign([],res);
       this.loader = false;
     }, (err) => {
       this.loader = false;
@@ -80,6 +116,7 @@ export class SavedActitvityComponent implements OnInit {
     this.studentService.getAllActivity(studentId).subscribe((res) => {
       console.log(res);
       this.allActivitiesArr = res;
+      this.copyAllActi = Object.assign([],res);
       this.allActivitiesArr = this.allActivitiesArr.filter((e) => (e.activityStatus != "SavedByTeacher"));
       this.loader = false;
     }, (err) => {
@@ -93,6 +130,7 @@ export class SavedActitvityComponent implements OnInit {
   getStudentReviewedActivities(studentId) {
     this.studentService.getReviewedActivity(studentId).subscribe((res) => {
       this.reviewedActivitiesArr = res;
+      this.copyReviewActi = Object.assign([],res);
       this.loader = false;
     }, (err) => {
       this.loader = false;
@@ -121,28 +159,32 @@ export class SavedActitvityComponent implements OnInit {
   addActivity() {
     this.savedActivityForm.reset();
     this.savedActivityForm.value.attachment = [];
+    this.files = [];
     this.addActivityShow = true;
     this.editActivityShow = false;
   }
 
   // to SUBMIT the activity
-  submitSavedActivity(e, index) {
+  submitSavedActivity(e, index, array) {
+    debugger
     const submit = confirm("Do you want to submit ?");
     if (submit) {
       e.stopPropagation();
-      const activityId = this.savedActivitiesArr[index].id;
-
-      console.log(this.submittedActivitiesArr);
+      const activityId = array[index].id;
       this.studentService.submitActivity(activityId).subscribe((res) => {
         console.log(res);
-        this.submittedActivitiesArr = [...this.submittedActivitiesArr, ...this.savedActivitiesArr.splice(index, 1)];
-        this.alertService.showSuccessToast('Activity Submitted !');
-      },
-        (err) => console.log(err)
-      );
+        if (this.activityType == 'All')
+          array[index].activityStatus = 'SubmittedByStudent';
+        else
+          array.splice(index, 1);
+        this.alertService.showSuccessAlert('Activity Submitted !');
+      }, (err) => {
+        console.log(err)
+      });
     }
   }
 
+  // DELETE Activity
   deleteSavedActivity(e, activity, i) {
     const submit = confirm("Do you want to delete ?");
     if (submit) {
@@ -151,17 +193,16 @@ export class SavedActitvityComponent implements OnInit {
       console.log(activityId);
       this.studentService.deleteActivity(activityId).subscribe((res) => {
         console.log(res);
-        this.savedActivitiesArr.splice(i, 1);
+        if (this.activityType == 'All')
+          this.allActivitiesArr.splice(i, 1);
+        else
+          this.savedActivitiesArr.splice(i, 1);
         this.alertService.showSuccessToast('Activity Deleted !');
       },
         (err) => console.log(err));
     }
   }
 
-  onCancel() {
-    this.editActivityShow = false;
-    this.addActivityShow = false;
-  }
 
   // to get all activities of particular school
   getStudentActivity(schoolId) {
@@ -174,24 +215,28 @@ export class SavedActitvityComponent implements OnInit {
 
   // to get teacher/coach who perform selected activity
   getStudentCoach(activityId) {
+    this.modal_loader = true;
     this.studentService.getCoach(this.schoolId, activityId).subscribe((res) => {
       this.coaches = res;
+      this.modal_loader = false;
     },
-      (err) => console.log(err)
+      (err) => {
+        console.log(err);
+        this.modal_loader = false;
+      }
     );
-  }
-
-  onFileSelect(event) {
-    if (event.target.files.length > 0) {
-      this.file = [...event.target.files];
-      this.savedActivityForm.value.attachment = this.file;
-      console.log(this.file);
-    }
   }
 
   // to UPDATE the saved activity
   updateActivity() {
+    // const submit = confirm("Do you want to Submit ?");
+    // if(submit) {
+      
+    // }
+    // else {    }
+
     if (this.editActivityShow) {
+      this.submit_loader = true;
       const formData = new FormData();
       const date = new Date(this.savedActivityForm.value.dateOfActivity);
       const activityDate = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
@@ -212,14 +257,19 @@ export class SavedActitvityComponent implements OnInit {
       this.studentService.addActivity('/api/student/activities', formData).subscribe(
         (res) => {
           console.log(res);
+          this.submit_loader = false;
           this.alertService.showSuccessToast('Activity Updated !');
           this.editActivityShow = false;
         },
-        (err) => console.log(err)
+        (err) => {
+          this.submit_loader = false;
+          console.log(err) }
       );
     }
 
     if (this.addActivityShow) {
+      this.submit_loader = true;
+      this.savedActivityForm.value.attachment = this.files;
       const time = this.savedActivityForm.value.dateOfActivity + " 00:00:00";
       this.savedActivityForm.value.dateOfActivity = time;
       const formData = new FormData();
@@ -240,36 +290,124 @@ export class SavedActitvityComponent implements OnInit {
       this.studentService.addActivity("/api/student/activities", formData).subscribe(
         (res) => {
           console.log(res);
-          this.savedActivitiesArr.push(res);
-          this.allActivitiesArr.push(res);
+          this.savedActivitiesArr.unshift(res);
+          this.allActivitiesArr.unshift(res);
+          this.submit_loader = false;
           this.alertService.showSuccessToast('Activity Saved !');
           this.addActivityShow = false;
         },
-        (err) => console.log(err)
+        (err) => {
+          this.submit_loader = false;
+          console.log(err)}
       );
+    }
+
+  }
+
+  onFileSelect(event) {
+    if (event.target.files.length > 0) {
+      this.files = [...event.target.files];
+      // this.savedActivityForm.value.attachment = this.files;
+      // console.log(this.files);
     }
   }
 
+  // call API for Saved , Submitted , Reviewed and All Activities
   activityView(event) {
     this.activityType = event;
     this.loader = true;
     switch (this.activityType) {
-      case "All": this.getStudentAllActivities(this.studentId);
+      case "All": {
+        this.getStudentAllActivities(this.studentId);
         break;
+      }
 
-      case "Saved": this.getStudentSavedActivities(this.studentId);
+      case "Saved": {
+        this.getStudentSavedActivities(this.studentId);
         break;
+      }
 
-      case "Reviewed": this.getStudentReviewedActivities(this.studentId);
+      case "Reviewed": {
+        this.getStudentReviewedActivities(this.studentId);
         break;
+      }
 
-      case "Submitted": this.getStudentSubmittedActivities(this.studentId);
+      case "Submitted": {
+        this.getStudentSubmittedActivities(this.studentId);
         break;
+      }
     }
+    this.filterActivities();
+  }
+
+  // Filter Activities on the basis of PSD , Focus Area and 4S
+  filterActivities = () => {
+    switch (this.activityType) {
+      case "All": { 
+        this.allActivitiesArr = this.filter(Object.assign([],this.copyAllActi))
+        break;
+      }
+
+      case "Saved": {
+        this.savedActivitiesArr = this.filter(Object.assign([],this.copySavedActi))
+        break;
+      }
+
+      case "Reviewed": {
+        this.reviewedActivitiesArr = this.filter(Object.assign([],this.copyReviewActi))
+        break;
+      }
+
+      case "Submitted": {
+        this.submittedActivitiesArr = this.filter(Object.assign([],this.copysubmitActi))
+        break;
+      }
+    }
+  }
+
+  filter(array: any[]) {
+    let filterActivitiesArr = [];
+    if (this.psdAreas && this.fourS && this.focusAreas) {
+      filterActivitiesArr = array.filter(e => e.psdAreas && e.psdAreas.includes(this.psdAreas) && e.fourS == this.fourS && e.focusAreas && e.focusAreas.includes(this.focusAreas))
+    } 
+    else if (this.psdAreas && this.fourS) {
+      filterActivitiesArr = array.filter(e => e.psdAreas && e.psdAreas.includes(this.psdAreas) && e.fourS == this.fourS)
+    } 
+    else if (this.fourS && this.focusAreas) {
+      filterActivitiesArr = array.filter(e => e.fourS == this.fourS && e.focusAreas && e.focusAreas.includes(this.focusAreas))
+    } 
+    else if (this.psdAreas && this.focusAreas) {
+      filterActivitiesArr = array.filter(e => e.psdAreas && e.psdAreas.includes(this.psdAreas) && e.focusAreas && e.focusAreas.includes(this.focusAreas))
+    } 
+    else if (this.psdAreas) {
+      filterActivitiesArr = array.filter(e => e.psdAreas && e.psdAreas.includes(this.psdAreas))
+    } 
+    else if (this.fourS) {
+      filterActivitiesArr = array.filter(e => e.fourS == this.fourS)
+    } 
+    else if (this.focusAreas) {
+      filterActivitiesArr = array.filter(e => e.focusAreas && e.focusAreas.includes(this.focusAreas))
+    } 
+    else {
+
+      filterActivitiesArr = array;
+    }
+    
+    return filterActivitiesArr;
+    
   }
 
   getDate(date) {
     return new Date(date);
+  }
+
+  onCancel() {
+    this.editActivityShow = false;
+    this.addActivityShow = false;
+  }
+
+  removeFile(index: number) {
+    this.files.splice(index, 1);
   }
 
 }

@@ -27,6 +27,7 @@ public class StudentResponse {
 	private String dob;
 	private String schoolName;
 	private List<GuardianResponse> guardianResponseList;
+	private String profileImage;
 
 	public String getId() {
 		return id;
@@ -148,6 +149,14 @@ public class StudentResponse {
 		this.schoolName = schoolName;
 	}
 
+	public String getProfileImage() {
+		return profileImage;
+	}
+
+	public void setProfileImage(String profileImage) {
+		this.profileImage = profileImage;
+	}
+
 	public StudentResponse(Student student) {
 		this.id = student.getCid();
 		this.name = student.getName();
@@ -158,6 +167,7 @@ public class StudentResponse {
 		this.gender = student.getGender();
 		this.mobileNumber = student.getMobileNumber();
 		this.active = student.getActive();
+		this.profileImage = student.getImageUrl();
 
 		if (student.getSubscriptionEndDate() != null)
 			this.subscriptionEndDate = DateUtil.formatDate(student.getSubscriptionEndDate());
@@ -193,6 +203,7 @@ public class StudentResponse {
 			this.gender = student.getGender();
 			this.mobileNumber = student.getMobileNumber();
 			this.active = student.getActive();
+			this.profileImage = student.getImageUrl();
 			if(student.getSubscriptionEndDate()!=null)
 			   this.subscriptionEndDate = DateUtil.formatDate(student.getSubscriptionEndDate());
 
