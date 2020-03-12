@@ -64,23 +64,23 @@
                             <td>
                                 <div *ngIf="allActi.activityStatus === 'SavedByStudent'">
                                     <button (click)="editSavedActivity($event,allActi)" class="saved icon_button">
-                                        <i class="fa fa-edit"></i>
+                                        <i class="fa fa-edit" title="Edit"></i>
                                     </button>
                                     <button (click)="submitSavedActivity($event,i,allActivitiesArr)"
                                         class="submitted icon_button">
-                                        <i class="fa fa-paper-plane"></i>
+                                        <i class="fa fa-paper-plane" title="Submit"></i>
                                     </button>
                                     <button (click)="deleteSavedActivity($event,allActi,i)"
                                         class="reviewed icon_button">
-                                        <i class="fa fa-trash"></i>
+                                        <i class="fa fa-trash" title="Delete"></i>
                                     </button>
                                     <span class="pull-right" *ngIf="allActi.fileResponses.length">
-                                        <i class="fa fa-paperclip" aria-hidden="true"></i>
+                                        <i class="fa fa-paperclip" title="Attachment" aria-hidden="true"></i>
                                     </span>
                                 </div>
                                 <div *ngIf="allActi.activityStatus !== 'SavedByStudent'">NA
                                     <span class="pull-right" *ngIf="allActi.fileResponses.length">
-                                        <i class="fa fa-paperclip" aria-hidden="true"></i>
+                                        <i class="fa fa-paperclip" title="Attachment" aria-hidden="true"></i>
                                     </span>
                                 </div>
                             </td>
@@ -300,17 +300,17 @@
                             <td>
                                 <div>
                                     <button (click)="editSavedActivity($event,sa)" class="saved icon_button">
-                                        <i class="fa fa-edit"></i>
+                                        <i class="fa fa-edit" title="Edit"> </i>
                                     </button>
                                     <button (click)="submitSavedActivity($event,i, savedActivitiesArr)"
                                         class="submitted icon_button">
-                                        <i class="fa fa-paper-plane"></i>
+                                        <i class="fa fa-paper-plane" title="Submit"> </i>
                                     </button>
                                     <button (click)="deleteSavedActivity($event,sa,i)" class="reviewed icon_button">
-                                        <i class="fa fa-trash"></i>
+                                        <i class="fa fa-trash" title="Delete"></i>
                                     </button>
                                     <span class="pull-right" *ngIf="sa.fileResponses.length">
-                                        <i class="fa fa-paperclip" aria-hidden="true"></i>
+                                        <i class="fa fa-paperclip" title="Attachment" aria-hidden="true"></i>
                                     </span>
                                 </div>
                             </td>
@@ -328,20 +328,16 @@
                                                     <strong>Description : </strong>{{sa.description}}</p>
                                                 <p *ngIf="sa.coachName">
                                                     <strong>Teacher : </strong>{{sa.coachName}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="description">
                                                 <p *ngIf="sa.focusAreas">
                                                     <strong>Focus Area : </strong>{{sa.focusAreas}}</p>
                                                 <p *ngIf="sa.psdAreas">
                                                     <strong>PSD Area : </strong>{{sa.psdAreas}}</p>
                                                 <p *ngIf="sa.fourS">
                                                     <strong>Four S : </strong>{{sa.fourS}}</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="description">
-                                                <p>
-                                                    <strong>Focus Area : </strong>{{sa.focusAreas}}</p>
-                                                <p>
-                                                    <strong>PSD Area : </strong>{{sa.psdAreas}}</p>
                                             </div>
                                         </div>
                                         <div class="col-4">

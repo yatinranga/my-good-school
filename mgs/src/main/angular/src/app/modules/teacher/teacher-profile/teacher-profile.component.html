@@ -7,7 +7,8 @@
             <div class="profile_text_main">
                 <div class="profile_text">
                         <h2> Teacher Profile </h2>
-                        <h3> Basic Info </h3>
+                        <div class="basic-info">
+                            <h3> Basic Info </h3>
                         <p><label>Name - {{teacherDetails['name']}}</label></p>
                         <p> <label>Mobile Number - {{teacherDetails['mobileNumber']}}</label> </p>
                         <p> <label>Email - {{teacherDetails['email']}}</label> </p>
@@ -17,11 +18,13 @@
                         <p> <label>Qualifications - {{teacherDetails['qualification']}}</label> </p>
                         <p> <label>Coach :  {{teacherDetails['isCoach'] ? "Yes" : "No" }} </label> </p>
                         <p> <label>Class Teacher : {{teacherDetails['isClassTeacher'] ? "Yes" : "No" }}</label></p>                       
+                        </div>
                             
-                        <div *ngIf="teacherDetails['activities']">Activities -
-                            <div *ngFor="let acti of teacherDetails['activities']">
-                                <label>{{acti}}</label>
-                            </div>
+                        <div *ngIf="teacherDetails['activities']" class="teacher-activities">
+                            <h3> Activities </h3>
+                            <ul *ngFor="let acti of teacherDetails['activities']">
+                                <li>{{acti}}</li>
+                            </ul>
                         </div>
 
                         <div *ngIf="teacherDetails['gradeIds']">Activities -

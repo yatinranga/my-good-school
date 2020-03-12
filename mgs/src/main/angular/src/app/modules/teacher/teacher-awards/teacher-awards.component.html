@@ -1,266 +1,307 @@
 <div class="main">
     <div class="content_main">
         <div class="content_main_com">
-            <div class="teacher-awards">
+            <div class="teacher_awards_main">
                 <div class="tabs">
                     <ul>
-                        <li> <a (click)="awardView('view')"> View Awards </a> </li>
-                        <li> <a (click)="awardView('assign')"> Assign Awards </a> </li>
+                        <li [ngClass]="{'active':awardViewType=='view'}">
+                            <a (click)="awardView('view')"> View Awards </a> </li>
+                        <li [ngClass]="{'active':awardViewType=='assign'}"> <a (click)="awardView('assign')"> Assign
+                                Awards </a> </li>
                     </ul>
                     <!-- <div>
-                        <button type="button" class="award-button btn btn-primary btn-lg"
-                            >Assign Award</button>
-                        <button type="button" class="award-button btn btn-secondary btn-lg"
-                            >Create New Award </button>
-                    </div> -->
+                                    <button type="button" class="award-button btn btn-primary btn-lg"
+                                        >Assign Award</button>
+                                    <button type="button" class="award-button btn btn-secondary btn-lg"
+                                        >Create New Award </button>
+                                </div> -->
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
+                <div [ngSwitch]="awardViewType">
 
-<div [ngSwitch]="awardViewType">
+                    <!-- Assign Award -->
+                    <div *ngSwitchCase="'assign'" class="popup-form">
+                        <div class="assign_main">
+                                <div class="assign-form">
+                                        <label for="exampleFormControlSelect1">Select Grade :</label>
+                                        <select class="" id="exampleFormControlSelect1" (ngModelChange)="getListOfStudent($event)"
+                                            ngModel>
+                                            <option value="" disabled selected>Select Grades </option>
+                                            <option *ngFor="let grade of schoolGrades" value={{grade.id}}>
+                                                {{grade.grade}} {{grade.section}}
+                                            </option>
+                                            <option disabled *ngIf="schoolGrades.length == 0">No Grades Found</option>
+                                        </select>
+                                        <span *ngIf="grade_loader">
+                                            <div class="spinner-border" role="status">
+                                            </div>
+                                        </span>
+                                    </div>
+            
+                                    <div class="assignsform">
+                                        <label for="exampleFormControlSelect2">Students :</label>
+                                        <select class="" id="exampleFormControlSelect1" (ngModelChange)="getStudentId($event)"
+                                            ngModel>
+                                            <option value="" selected>Select Student</option>
+                                            <option *ngFor="let stu of studentList;" value={{stu.id}}>
+                                                {{stu.name}}
+                                            </option>
+                                            <option disabled *ngIf="studentList.length == 0">No Student Found</option>
+                                        </select>
+                                        <span *ngIf="stu_loader">
+                                            <div class="spinner-border" role="status">
+                                            </div>
+                                        </span>
+                                    </div>
+            
+                                    <div class="assignsform">
+                                        <label for="exampleFormControlSelect3">Select Activity :</label>
+                                        <select class="" id="exampleFormControlSelect3" (ngModelChange)="getActivityId($event)"
+                                            ngModel>
+                                            <option value="" disabled selected>Select Activity </option>
+                                            <option *ngFor="let activity of activities; let i = index;"
+                                                value={{activity.activityId}}>
+                                                {{activity.activityName}}
+                                            </option>
+                                            <option disabled *ngIf="activities.length == 0">No Activity Found</option>
+                                        </select>
+                                        <span *ngIf="acti_loader">
+                                            <div class="spinner-border" role="status">
+                                            </div>
+                                        </span>
+                                    </div>
+                        </div>
+                        
+                        <!-- List of Performed Activity -->
+                        <div *ngIf="studentActivityList">
+                            <div class="content_main_com">
+                                <div class="table_main">
+                                    <table class="table table-hover">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th scope="col">Activity</th>
+                                                <th scope="col">Description</th>
+                                                <th scope="col">Performed Activity Date</th>
+                                                <th scope="col">Remarks</th>
+                                                <th scope="col">Remarks Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="accordionExample">
+                                            <ng-container *ngFor="let pa of performedActiArr ; let i = index;">
+                                                <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
+                                                    <td>
+                                                        <label>
+                                                            <input type="checkbox" (click)="stopCollapse($event)"
+                                                                [(ngModel)]="actiPerform[pa.id]">
+                                                            {{pa.activityName}}
+                                                        </label>
+                                                    </td>
+                                                    <td>{{pa.description}}</td>
+                                                    <td>{{pa.dateOfActivity | date}}</td>
+                                                    <td>{{pa.coachRemark}}</td>
+                                                    <td>{{pa.coachRemarkDate | date}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="collapse-td" colspan="5">
+                                                        <div [attr.id]="'collapse' + i" class="collapse"
+                                                            data-parent="#accordionExample">
+                                                            <div class="row">
+                                                                <div class="col-6">
+                                                                    <p>
+                                                                        <strong>Description :
+                                                                        </strong>{{pa.description}}</p>
+                                                                    <p>
+                                                                        <strong>Four S : </strong>{{pa.fourS}}</p>
+                                                                    <p>
+                                                                        <strong>Focus Area : </strong>{{pa.focusAreas}}
+                                                                    </p>
+                                                                    <p>
+                                                                        <strong>PSD Area : </strong>{{pa.psdAreas}}</p>
+                                                                    <p>
+                                                                        <strong>Attachments : </strong></p>
 
-    <!-- Assign Award -->
-    <div *ngSwitchCase="'assign'" class="popup-form">
-        <div class="">
-            <label for="exampleFormControlSelect1">Select Grade :</label>
-            <select class="" id="exampleFormControlSelect1" (ngModelChange)="getListOfStudent($event)" ngModel>
-                <option value="" disabled selected>Select Grades </option>
-                <option *ngFor="let grade of schoolGrades" value={{grade.id}}>
-                    {{grade.grade}} {{grade.section}}
-                </option>
-                <option disabled *ngIf="schoolGrades.length == 0">No Grades Found</option>
-            </select>
-            <span *ngIf="grade_loader">
-                <div class="spinner-border" role="status">
-                </div>
-            </span>
-        </div>
+                                                                    <div *ngFor="let file of pa.fileResponses">
+                                                                        <div class="audio"
+                                                                            *ngIf="file.extension == 'mp3'">
+                                                                            <i class="fa fa-file-audio"></i>
+                                                                            {{file.name}} </div>
+                                                                        <div class="image"
+                                                                            *ngIf="file.extension=='jpg'">
+                                                                            <i class="fa fa-image"></i> {{file.name}}
+                                                                        </div>
+                                                                        <div class="video"
+                                                                            *ngIf="file.extension=='video'">
+                                                                            <i class="fa fa-video-camera"
+                                                                                aria-hidden="true"></i>{{file.name}}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <p>
+                                                                        <strong>Participation Score :
+                                                                        </strong>{{pa.participationScore}}
+                                                                    </p>
+                                                                    <p>
+                                                                        <strong>Initiative Score :
+                                                                        </strong>{{pa.initiativeScore}}</p>
+                                                                    <p>
+                                                                        <strong>Achievement Score :
+                                                                        </strong>{{pa.achievementScore}}</p>
+                                                                    <p>
+                                                                        <strong>Coach Remarks :
+                                                                        </strong>{{pa.coachRemark}}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </ng-container>
 
-        <div class="">
-            <label for="exampleFormControlSelect2">Students :</label>
-            <select class="" id="exampleFormControlSelect1" (ngModelChange)="getStudentId($event)" ngModel>
-                <option value="" selected>Select Student</option>
-                <option *ngFor="let stu of studentList;" value={{stu.id}}>
-                    {{stu.name}}
-                </option>
-                <option disabled *ngIf="studentList.length == 0">No Student Found</option>
-            </select>
-            <span *ngIf="stu_loader">
-                <div class="spinner-border" role="status">
-                </div>
-            </span>
-        </div>
+                                        </tbody>
+                                        <tfoot *ngIf="performedActiArr.length == 0">
+                                            <tr>
+                                                <td colspan="5">
+                                                    <div *ngIf="pa_loader" class="spinner-border text-dark"
+                                                        role="status">
+                                                    </div>{{pa_loader ? 'Loading...' : 'No Activities'}}
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-success" data-toggle="modal"
+                                data-target="#assignAwardModal">Give
+                                Award</button>
+                        </div>
+                    </div>
 
-        <div class="">
-            <label for="exampleFormControlSelect3">Select Activity :</label>
-            <select class="" id="exampleFormControlSelect3" (ngModelChange)="getActivityId($event)" ngModel>
-                <option value="" disabled selected>Select Activity </option>
-                <option *ngFor="let activity of activities; let i = index;" value={{activity.activityId}}>
-                    {{activity.activityName}}
-                </option>
-                <option disabled *ngIf="activities.length == 0">No Activity Found</option>
-            </select>
-            <span *ngIf="acti_loader">
-                <div class="spinner-border" role="status">
-                </div>
-            </span>
-        </div>
-        <!-- List of Performed Activity -->
-        <div *ngIf="studentActivityList">
-            <div class="content_main_com">
-                <div class="table_main">
-                    <table class="table table-hover">
-                        <thead class="thead-light">
-                            <tr>
-                                <th scope="col">Activity</th>
-                                <th scope="col">Description</th>
-                                <th scope="col">Performed Activity Date</th>
-                                <th scope="col">Remarks</th>
-                                <th scope="col">Remarks Date</th>
-                            </tr>
-                        </thead>
-                        <tbody id="accordionExample">
-                            <ng-container *ngFor="let pa of performedActiArr ; let i = index;">
-                                <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
-                                    <td>
-                                        <label>
-                                            <input type="checkbox" (click)="stopCollapse($event)"
-                                                [(ngModel)]="actiPerform[pa.id]">
-                                            {{pa.activityName}}
-                                        </label>
-                                    </td>
-                                    <td>{{pa.description}}</td>
-                                    <td>{{pa.dateOfActivity | date}}</td>
-                                    <td>{{pa.coachRemark}}</td>
-                                    <td>{{pa.coachRemarkDate | date}}</td>
-                                </tr>
-                                <tr>
-                                    <td class="collapse-td" colspan="5">
-                                        <div [attr.id]="'collapse' + i" class="collapse"
-                                            data-parent="#accordionExample">
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    <p>
-                                                        <strong>Description : </strong>{{pa.description}}</p>
-                                                    <p>
-                                                        <strong>Four S : </strong>{{pa.fourS}}</p>
-                                                    <p>
-                                                        <strong>Focus Area : </strong>{{pa.focusAreas}}</p>
-                                                    <p>
-                                                        <strong>PSD Area : </strong>{{pa.psdAreas}}</p>
-                                                    <p>
-                                                        <strong>Attachments : </strong></p>
+                    <!-- View Awards -->
+                    <div *ngSwitchCase="'view'" class="popup-form">
+                        <div class="content_main_com">
+                            <div class="table_main">
+                                <table class="table table-hover">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Award</th>
+                                            <th scope="col">Description</th>
+                                            <th scope="col">Activity</th>
+                                            <th scope="col">Student Name & Grade</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="accordionExample">
+                                        <ng-container *ngFor="let al of awardsList ; let i = index;">
+                                            <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i"
+                                                aria-expanded="false" [attr.aria-controls]="'#collapse'+i">
+                                                <td>{{i+1}}</td>
+                                                <td>{{al.name}}</td>
+                                                <td>{{al.description}}</td>
+                                                <td>{{al.activity.name}} </td>
+                                                <td>{{al.studentName}} {{al.studentGrade}}</td>
+                                                <td>{{al.status}}</td>
+                                                <td><button [disabled]="!(al.status == 'PENDING')"
+                                                        (click)="verifySelectedAward($event,i)"
+                                                        class="verify">Verify</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="collapse-td" colspan="7">
+                                                    <div [attr.id]="'collapse' + i" class="collapse"
+                                                        data-parent="#accordionExample">
+                                                        <div *ngFor="let ap of al.activityPerformedResponses">
+                                                            <div class="row">
+                                                                <div class="col-4"><b>Award Details :</b>
+                                                                    <br><br>
+                                                                    <p><strong>Description : </strong>{{al.description}}
+                                                                    </p>
+                                                                    <p><strong>Teacher : </strong>{{al.createdBy}}</p>
+                                                                </div>
+                                                                <div class="col-4"><b>Activity Details :</b>
 
-                                                    <div *ngFor="let file of pa.fileResponses">
-                                                        <div class="audio" *ngIf="file.extension == 'mp3'">
-                                                            <i class="fa fa-file-audio"></i> {{file.name}} </div>
-                                                        <div class="image" *ngIf="file.extension=='jpg'">
-                                                            <i class="fa fa-image"></i> {{file.name}} </div>
-                                                        <div class="video" *ngIf="file.extension=='video'">
-                                                            <i class="fa fa-video-camera"
-                                                                aria-hidden="true"></i>{{file.name}}
+                                                                    <br><br>
+                                                                    <p>
+                                                                        <strong>Date :
+                                                                        </strong>{{ap.dateOfActivity | date}}</p>
+                                                                    <p>
+                                                                        <strong>Description :
+                                                                        </strong>{{ap.description}}</p>
+                                                                    <p>
+                                                                        <strong>Four S : </strong>{{ap.fourS}}</p>
+                                                                    <p>
+                                                                        <strong>Focus Area : </strong>{{ap.focusAreas}}
+                                                                    </p>
+                                                                    <p>
+                                                                        <strong>PSD Area : </strong>{{ap.psdAreas}}</p>
+
+                                                                    <p>
+                                                                        <strong>Attachments : </strong>
+                                                                    </p>
+                                                                    <div *ngFor="let file of ap.fileResponses">
+                                                                        <div class="audio"
+                                                                            *ngIf="file.extension == 'mp3'">
+                                                                            <i class="fa fa-file-audio"></i>
+                                                                            {{file.name}} </div>
+                                                                        <div class="image"
+                                                                            *ngIf="file.extension=='jpg'">
+                                                                            <i class="fa fa-image"></i> {{file.name}}
+                                                                        </div>
+                                                                        <div class="video"
+                                                                            *ngIf="file.extension=='video'">
+                                                                            <i class="fa fa-video-camera"
+                                                                                aria-hidden="true"></i>{{file.name}}
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                                <div class="col-4"><b>Reviews :</b>
+                                                                    <br><br>
+                                                                    <p>
+                                                                        <strong>Participation Score
+                                                                            :</strong>{{ap.participationScore}}
+                                                                    </p>
+                                                                    <p>
+                                                                        <strong>Initiative Score
+                                                                            :</strong>{{ap.initiativeScore}}</p>
+                                                                    <p>
+                                                                        <strong>Achievement Score
+                                                                            :</strong>{{ap.achievementScore}}</p>
+                                                                    <p>
+                                                                        <strong>Star : </strong>{{ap.star}}</p>
+                                                                    <p>
+                                                                        <strong>Remarks :</strong>{{ap.coachRemark}}</p>
+
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <p>
-                                                        <strong>Participation Score : </strong>{{pa.participationScore}}
-                                                    </p>
-                                                    <p>
-                                                        <strong>Initiative Score : </strong>{{pa.initiativeScore}}</p>
-                                                    <p>
-                                                        <strong>Achievement Score : </strong>{{pa.achievementScore}}</p>
-                                                    <p>
-                                                        <strong>Coach Remarks : </strong>{{pa.coachRemark}}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </ng-container>
+                                                </td>
+                                            </tr>
+                                        </ng-container>
+                                    </tbody>
+                                    <tfoot *ngIf="awardsList.length == 0">
+                                        <tr>
+                                            <td colspan="7">
+                                                <div *ngIf="award_loader" class="spinner-border text-dark"
+                                                    role="status">
+                                                </div>{{award_loader ? 'Loading...' : 'No Activities'}}
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
 
-                        </tbody>
-                        <tfoot *ngIf="performedActiArr.length == 0">
-                            <tr>
-                                <td colspan="5">
-                                    <div *ngIf="pa_loader" class="spinner-border text-dark" role="status">
-                                    </div>{{pa_loader ? 'Loading...' : 'No Activities'}}
-                                </td>
-                            </tr>
-                        </tfoot>                        
-                    </table>
+                            </div>
+                        </div>
+
+
+                    </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#assignAwardModal">Give
-                Award</button>
         </div>
-    </div>
-
-    <!-- View Awards -->
-    <div *ngSwitchCase="'view'" class="popup-form">
-        <div class="content_main_com">
-            <div class="table_main">
-                <table class="table table-hover">
-                    <thead class="thead-light">
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Award</th>
-                            <th scope="col">Description</th>
-                            <th scope="col">Activity</th>
-                            <th scope="col">Student Name & Grade</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="accordionExample">
-                        <ng-container *ngFor="let al of awardsList ; let i = index;">
-                            <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i" aria-expanded="false" [attr.aria-controls]="'#collapse'+i">
-                                <td>{{i+1}}</td>
-                                <td>{{al.name}}</td>
-                                <td>{{al.description}}</td>
-                                <td>{{al.activity.name}} </td>
-                                <td>{{al.studentName}} {{al.studentGrade}}</td>
-                                <td>{{al.status}}</td>
-                                <td><button [disabled]="!(al.status == 'PENDING')" (click)="verifySelectedAward($event,i)">Verify</button></td>
-                            </tr>
-                            <tr>
-                                <td class="collapse-td" colspan="7">
-                                    <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
-                                        <div *ngFor="let ap of al.activityPerformedResponses">
-                                            <div class="row">
-                                                <div class="col-4"><b>Award Details :</b>
-                                                    <br><br>
-                                                    <p><strong>Description : </strong>{{al.description}}</p>
-                                                    <p><strong>Teacher : </strong>{{al.createdBy}}</p>
-                                                </div>
-                                                <div class="col-4"><b>Activity Details :</b>
-                                                    
-                                                        <br><br>
-                                                        <p>
-                                                            <strong>Date : </strong>{{ap.dateOfActivity | date}}</p>
-                                                        <p>
-                                                            <strong>Description : </strong>{{ap.description}}</p>
-                                                        <p>
-                                                            <strong>Four S : </strong>{{ap.fourS}}</p>
-                                                        <p>
-                                                            <strong>Focus Area : </strong>{{ap.focusAreas}}</p>
-                                                        <p>
-                                                            <strong>PSD Area : </strong>{{ap.psdAreas}}</p>
-
-                                                        <p>
-                                                            <strong>Attachments : </strong>
-                                                        </p>
-                                                        <div *ngFor="let file of ap.fileResponses">
-                                                            <div class="audio" *ngIf="file.extension == 'mp3'">
-                                                                <i class="fa fa-file-audio"></i> {{file.name}} </div>
-                                                            <div class="image" *ngIf="file.extension=='jpg'">
-                                                                <i class="fa fa-image"></i> {{file.name}} </div>
-                                                            <div class="video" *ngIf="file.extension=='video'">
-                                                                <i class="fa fa-video-camera"
-                                                                    aria-hidden="true"></i>{{file.name}} </div>
-                                                        </div>
-                                                    
-                                                </div>
-                                                <div class="col-4"><b>Reviews :</b>
-                                                    <br><br>
-                                                    <p>
-                                                        <strong>Participation Score :</strong>{{ap.participationScore}}
-                                                    </p>
-                                                    <p>
-                                                        <strong>Initiative Score :</strong>{{ap.initiativeScore}}</p>
-                                                    <p>
-                                                        <strong>Achievement Score :</strong>{{ap.achievementScore}}</p>
-                                                    <p>
-                                                        <strong>Star : </strong>{{ap.star}}</p>
-                                                    <p>
-                                                        <strong>Remarks :</strong>{{ap.coachRemark}}</p>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </ng-container>
-                    </tbody>
-                    <tfoot *ngIf="awardsList.length == 0">
-                        <tr>
-                            <td colspan="7">
-                                <div *ngIf="award_loader" class="spinner-border text-dark" role="status">
-                                </div>{{award_loader ? 'Loading...' : 'No Activities'}}
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-
-            </div>
-        </div>
-
-
     </div>
 </div>
+
+
 
 
 <!-- Modal to Enter Award Name and Description -->
