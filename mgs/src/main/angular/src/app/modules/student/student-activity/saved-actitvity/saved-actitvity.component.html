@@ -1,22 +1,22 @@
 <div class="sortby"> PSD :
-    <select style="border: 1px solid #ddd">
-        <option value="" disabled hidden> Choose here </option>
-        <option>Personal Development</option>
-        <option>Social Development</option>
+    <select style="border: 1px solid #ddd" (change)="filterActivities()" [(ngModel)]="psdAreas">
+        <option value="" selected disabled> Choose here </option>
+        <option value="">None</option>
+        <option *ngFor="let ps of psdAreaArr" value={{ps}}>{{ps}}</option>
     </select>
 </div>
 <div class="sortby"> Focus Area :
-    <select style="border: 1px solid #ddd">
-        <option value="" disabled hidden> Choose here </option>
-        <option>Personal Development</option>
-        <option>Social Development</option>
+    <select style="border: 1px solid #ddd" (change)="filterActivities()" [(ngModel)]="focusAreas">
+        <option value="" selected disabled> Choose here </option>
+        <option value="">None</option>
+        <option *ngFor="let ps of focusAreaArr" value={{ps.name}}>{{ps.name}}</option>
     </select>
 </div>
 <div class="sortby"> 4S :
-    <select style="border: 1px solid #ddd">
-        <option value="" disabled hidden> Choose here </option>
-        <option>Personal Development</option>
-        <option>Social Development</option>
+    <select style="border: 1px solid #ddd" (change)="filterActivities()" [(ngModel)]="fourS">
+        <option value="" selected disabled> Choose here </option>
+        <option value="">None</option>
+        <option *ngFor="let ps of fourSArr" value={{ps}}>{{ps}}</option>
     </select>
 </div>
 
@@ -29,9 +29,6 @@
         <option value="Submitted">Submitted</option>
         <option value="Reviewed">Reviewed</option>
     </select>
-    <div *ngIf="loader" class="spinner-border text-dark" role="status">
-        <span class="sr-only">Data Loading</span>
-    </div>
 </div>
 
 <div *ngIf="activityType === 'All'">
@@ -45,7 +42,12 @@
                         <th scope="col">Description</th>
                         <th scope="col">Date</th>
                         <th scope="col">Teacher</th>
-                        <th scope="col">Status</th>
+                        <th scope="col">
+                            Status
+                            <button class="icon_button" (click)="sortByStatus()">
+                                <i class="fas fa-sort"></i>
+                            </button>
+                        </th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
@@ -148,7 +150,8 @@
                                             </div>
                                             <div class="col-6">
                                                 <p>
-                                                    <strong>Participation Score :</strong>{{allActi.participationScore}}</p>
+                                                    <strong>Participation Score :</strong>{{allActi.participationScore}}
+                                                </p>
                                                 <p>
                                                     <strong>Initiative Score :</strong>{{allActi.initiativeScore}}</p>
                                                 <p>
@@ -156,7 +159,7 @@
                                                 <p>
                                                     <strong>Star : </strong>{{allActi.star}}</p>
                                                 <p>
-                                                    <strong>Remark :</strong>{{allActi.coachRemark}}</p>
+                                                    <strong>Remarks :</strong>{{allActi.coachRemark}}</p>
                                             </div>
                                         </div>
 
@@ -168,7 +171,10 @@
                 </tbody>
                 <tfoot *ngIf="allActivitiesArr.length == 0">
                     <tr>
-                        <td colspan="6">{{loader ? 'Loading...' : 'No Activities'}}</td>
+                        <td colspan="7">
+                            <div *ngIf="loader" class="spinner-border text-dark" role="status">
+                            </div>{{loader ? 'Loading...' : 'No Activities'}}
+                        </td>
                     </tr>
                 </tfoot>
             </table>
@@ -251,7 +257,10 @@
                 </tbody>
                 <tfoot *ngIf="submittedActivitiesArr.length == 0">
                     <tr>
-                        <td colspan="5">{{loader ? 'Loading...' : 'No Activities'}}</td>
+                        <td colspan="6">
+                            <div *ngIf="loader" class="spinner-border text-dark" role="status">
+                            </div>{{loader ? 'Loading...' : 'No Activities'}}
+                        </td>
                     </tr>
                 </tfoot>
             </table>
@@ -344,7 +353,10 @@
                 </tbody>
                 <tfoot *ngIf="savedActivitiesArr.length == 0">
                     <tr>
-                        <td colspan="6">{{loader ? 'Loading...' : 'No Activities'}}</td>
+                        <td colspan="7">
+                            <div *ngIf="loader" class="spinner-border text-dark" role="status">
+                            </div>{{loader ? 'Loading...' : 'No Activities'}}
+                        </td>
                     </tr>
                 </tfoot>
             </table>
@@ -407,7 +419,7 @@
                                             <p>
                                                 <strong>Star : </strong>{{ra.star}}</p>
                                             <p>
-                                                <strong>Remark :</strong>{{ra.coachRemark}}</p>
+                                                <strong>Remarks :</strong>{{ra.coachRemark}}</p>
                                             <p>
                                                 <strong>Date : </strong>{{ra.remarkDate}}</p>
                                         </div>
@@ -419,7 +431,10 @@
                 </tbody>
                 <tfoot *ngIf="reviewedActivitiesArr.length == 0">
                     <tr>
-                        <td colspan="5">{{loader ? 'Loading...' : 'No Activities'}}</td>
+                        <td colspan="6">
+                            <div *ngIf="loader" class="spinner-border text-dark" role="status">
+                            </div>{{loader ? 'Loading...' : 'No Activities'}}
+                        </td>
                     </tr>
                 </tfoot>
             </table>
@@ -485,8 +500,15 @@
                         <div class="col-md-12">
                             <div class="edit_activity_buttons">
                                 <button class="btn cancel" type="button" (click)="onCancel()">Cancel</button>
-                                <button class="btn saved btnSubmit btn-success" type="submit" *ngIf="editActivityShow">Update</button>
-                                <button class="btn saved btnSubmit btn-success" type="submit" *ngIf="addActivityShow">Submit</button>
+                                <button class="btn saved btnSubmit btn-success" type="submit" *ngIf="editActivityShow">
+                                    <div *ngIf="submit_loader" class="spinner-border text-dark" role="status"></div>
+                                    {{submit_loader ? 'Updating...' : 'Update'}}
+                                </button>
+
+                                <button class="btn saved btnSubmit btn-success" type="submit" *ngIf="addActivityShow">
+                                    <div *ngIf="submit_loader" class="spinner-border text-dark" role="status">
+                                    </div>{{submit_loader ? 'Submitting...' : 'Submit'}}
+                                </button>
                             </div>
                         </div>
                     </div>

@@ -24,11 +24,11 @@ const routes: Routes = [
         component: TeacherProfileComponent
       },
       {
-        path: 'activity',
+        path: 'activities',
         component: TeacherActivityComponent
       },
       {
-        path: 'awards-achievment',
+        path: 'awards-achievement',
         component: TeacherAwardsComponent
       },
       {

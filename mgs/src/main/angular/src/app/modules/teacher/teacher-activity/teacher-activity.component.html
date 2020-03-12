@@ -10,9 +10,6 @@
                         <option value="Saved">Saved</option>
                         <option value="Reviewed">Reviewed</option>
                     </select>
-                    <div *ngIf="loader" class="spinner-border text-dark" role="status">
-                        <span class="sr-only">Data Loading</span>
-                    </div>
                 </div>
             </div>
         </div>
@@ -27,7 +24,8 @@
                     <th scope="col">#</th>
                     <th scope="col">Student Name</th>
                     <th scope="col">Performed Activity</th>
-                    <th scope="col">Date</th>
+                    <th scope="col">Description</th>                    
+                    <th scope="col">Performed Activity Date</th>
                     <th scope="col">Status</th>
                     <th scope="col">Action</th>
                 </tr>
@@ -36,8 +34,9 @@
                 <ng-container *ngFor="let allacti of allActivitiesArr; let i = index;">
                     <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                         <td>{{i+1}}</td>
-                        <td>{{allacti.studentName}}</td>
+                        <td>{{allacti.studentName}} {{allacti.grade}}</td>
                         <td>{{allacti.activityName}}</td>
+                        <td>{{allacti.description}}</td>
                         <td>{{getDate(allacti.dateOfActivity) | date}}</td>
                         <td>
                             <div *ngIf="allacti.activityStatus === 'SubmittedByStudent'">Pending</div>
@@ -51,11 +50,40 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="collapse-td" colspan="5">
+                        <td class="collapse-td" colspan="7">
                             <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
 
                                 <div *ngIf="allacti.activityStatus === 'Reviewed'">
                                     <div class="row">
+                                        <div class="col-6">
+                                            <div class="description">
+                                                <p>
+                                                    <strong>Name : </strong>{{allacti.activityName}}</p>
+                                                <p>
+                                                    <strong>Description : </strong>{{allacti.description}}</p>
+                                                <p>
+                                                    <strong>Four S : </strong>{{allacti.fourS}}</p>
+                                                <p>
+                                                    <strong>Focus Area : </strong>{{allacti.focusAreas}}</p>
+                                                <p>
+                                                    <strong>PSD Area : </strong>{{allacti.psdAreas}}</p>
+                                            </div>
+                                            <div class="attachment">
+                                                <p>
+                                                    <strong>Attachments : </strong>
+                                                </p>
+                                                <div *ngFor="let file of allacti.fileResponses">
+                                                    <div>
+                                                        <i class="fa fa-file-audio" *ngIf="file.extension == 'mp3'"></i>
+                                                        <i class="fa fa-image" *ngIf="file.extension=='jpg'"></i>
+                                                        <i class="fa fa-video-camera"
+                                                            *ngIf="file.extension=='video'"></i>
+                                                        {{file.name}}
+                                                    </div>
+    
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="col-6">
                                             <p>
                                                 <strong>Participation Score :</strong>{{allacti.participationScore}}</p>
@@ -63,14 +91,12 @@
                                                 <strong>Initiative Score :</strong>{{allacti.initiativeScore}}</p>
                                             <p>
                                                 <strong>Achievement Score :</strong>{{allacti.achievementScore}}</p>
-                                        </div>
-                                        <div class="col-6">
-                                            <p>
-                                                <strong>Activity : </strong>{{allacti.activityName}}</p>
                                             <p>
                                                 <strong>Star : </strong>{{allacti.star}}</p>
                                             <p>
-                                                <strong>Remark : </strong>{{allacti.coachRemark}}</p>
+                                                <strong>Remarks :</strong>{{allacti.coachRemark}}</p>
+                                            <p>
+                                                <strong>Date : </strong>{{allacti.coachRemarkDate | date }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -78,29 +104,68 @@
                                 <div *ngIf="allacti.activityStatus === 'SavedByTeacher'">
                                     <div class="row">
                                         <div class="col-6">
-                                            <p>
-                                                <strong>Description :
-                                                </strong>{{allacti.description}}</p>
-                                        </div>
-                                        <div class="col-6">
-                                            <div>
+                                            <div class="description">
+                                                <p>
+                                                    <strong>Name : </strong>{{allacti.activityName}}</p>
+                                                <p>
+                                                    <strong>Description : </strong>{{allacti.description}}</p>
+                                                <p>
+                                                    <strong>Four S : </strong>{{allacti.fourS}}</p>
+                                                <p>
+                                                    <strong>Focus Area : </strong>{{allacti.focusAreas}}</p>
+                                                <p>
+                                                    <strong>PSD Area : </strong>{{allacti.psdAreas}}</p>
+                                            </div>
+                                            <div class="attachment">
                                                 <p>
                                                     <strong>Attachments : </strong>
                                                 </p>
-                                                <p *ngFor="let file of allacti.fileResponses">
-                                                    {{file.name}}
-                                                </p>
+                                                <div *ngFor="let file of allacti.fileResponses">
+                                                    <div>
+                                                        <i class="fa fa-file-audio" *ngIf="file.extension == 'mp3'"></i>
+                                                        <i class="fa fa-image" *ngIf="file.extension=='jpg'"></i>
+                                                        <i class="fa fa-video-camera"
+                                                            *ngIf="file.extension=='video'"></i>
+                                                        {{file.name}}
+                                                    </div>
+    
+                                                </div>
                                             </div>
                                         </div>
+                                        <div class="col-6">
+                                            <p>
+                                                <strong>Participation Score :</strong>{{allacti.participationScore}}</p>
+                                            <p>
+                                                <strong>Initiative Score :</strong>{{allacti.initiativeScore}}</p>
+                                            <p>
+                                                <strong>Achievement Score :</strong>{{allacti.achievementScore}}</p>
+                                            <p>
+                                                <strong>Star : </strong>{{allacti.star}}</p>
+                                            <p>
+                                                <strong>Remarks :</strong>{{allacti.coachRemark}}</p>
+                                            <p>
+                                                <strong>Date : </strong>{{allacti.coachRemarkDate | date }}</p>
+                                        </div>
                                     </div>
+                                    
                                 </div>
 
                                 <div *ngIf="allacti.activityStatus === 'SubmittedByStudent'">
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="description">
-                                                <p>
+                                                <p *ngIf="allacti.activityName">
+                                                    <strong>Name : </strong>{{allacti.activityName}}</p>
+                                                <p *ngIf="allacti.description">
                                                     <strong>Description : </strong>{{allacti.description}}</p>
+                                                <p *ngIf="allacti.coachName">
+                                                    <strong>Teacher : </strong>{{allacti.coachName}}</p>
+                                                <p *ngIf="allacti.focusAreas">
+                                                    <strong>Focus Area : </strong>{{allacti.focusAreas}}</p>
+                                                <p *ngIf="allacti.psdAreas">
+                                                    <strong>PSD Area : </strong>{{allacti.psdAreas}}</p>
+                                                <p *ngIf="allacti.fourS">
+                                                    <strong>Four S : </strong>{{allacti.fourS}}</p>
                                             </div>
                                         </div>
                                         <div class="col-6">
@@ -108,7 +173,15 @@
                                                 <p>
                                                     <strong>Attachments : </strong>
                                                 </p>
-                                                <p *ngFor="let file of allacti.fileResponses">{{file.name}}</p>
+                                                <div *ngFor="let file of allacti.fileResponses">
+                                                    <div>
+                                                        <i class="fa fa-file-audio" *ngIf="file.extension == 'mp3'"></i>
+                                                        <i class="fa fa-image" *ngIf="file.extension=='jpg'"></i>
+                                                        <i class="fa fa-video-camera"
+                                                            *ngIf="file.extension=='video'"></i>
+                                                        {{file.name}}
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -121,7 +194,10 @@
             </tbody>
             <tfoot *ngIf="allActivitiesArr.length == 0">
                 <tr>
-                    <td colspan="6">No Activities</td>
+                    <td colspan="7">
+                        <div *ngIf="loader" class="spinner-border text-dark" role="status">
+                        </div>{{loader ? 'Loading...' : 'No Activities'}}
+                    </td>
                 </tr>
             </tfoot>
         </table>
@@ -136,7 +212,8 @@
                     <th scope="col">#</th>
                     <th scope="col">Student Name</th>
                     <th scope="col">Performed Activity</th>
-                    <th scope="col">Date</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Performed Activity Date</th>
                     <th scope="col">Status</th>
                     <th scope="col">Action</th>
                 </tr>
@@ -145,8 +222,9 @@
                 <ng-container *ngFor="let pa of pendingActivitiesArr; let i = index;">
                     <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                         <td>{{i+1}}</td>
-                        <td>{{pa.studentName}}</td>
+                        <td>{{pa.studentName}} {{pa.grade}}</td>
                         <td>{{pa.activityName}}</td>
+                        <td>{{pa.description}}</td>
                         <td>{{getDate(pa.dateOfActivity) | date}}</td>
                         <td>
                             <div *ngIf="pa.activityStatus === 'SubmittedByStudent'">Pending</div>
@@ -158,13 +236,23 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="collapse-td" colspan="5">
+                        <td class="collapse-td" colspan="7">
                             <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="description">
-                                            <p>
+                                            <p *ngIf="pa.activityName">
+                                                <strong>Name : </strong>{{pa.activityName}}</p>
+                                            <p *ngIf="pa.description">
                                                 <strong>Description : </strong>{{pa.description}}</p>
+                                            <p *ngIf="pa.coachName">
+                                                <strong>Teacher : </strong>{{pa.coachName}}</p>
+                                            <p *ngIf="pa.focusAreas">
+                                                <strong>Focus Area : </strong>{{pa.focusAreas}}</p>
+                                            <p *ngIf="pa.psdAreas">
+                                                <strong>PSD Area : </strong>{{pa.psdAreas}}</p>
+                                            <p *ngIf="pa.fourS">
+                                                <strong>Four S : </strong>{{pa.fourS}}</p>
                                         </div>
                                     </div>
                                     <div class="col-6">
@@ -172,7 +260,15 @@
                                             <p>
                                                 <strong>Attachments : </strong>
                                             </p>
-                                            <p *ngFor="let file of pa.fileResponses">{{file.name}}</p>
+                                            <div *ngFor="let file of pa.fileResponses">
+                                                <div>
+                                                    <i class="fa fa-file-audio" *ngIf="file.extension == 'mp3'"></i>
+                                                    <i class="fa fa-image" *ngIf="file.extension=='jpg'"></i>
+                                                    <i class="fa fa-video-camera"
+                                                        *ngIf="file.extension=='video'"></i>
+                                                    {{file.name}}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -183,7 +279,10 @@
             </tbody>
             <tfoot *ngIf="pendingActivitiesArr.length == 0">
                 <tr>
-                    <td colspan="6">No Pending Activities</td>
+                    <td colspan="7">
+                        <div *ngIf="loader" class="spinner-border text-dark" role="status">
+                        </div>{{loader ? 'Loading...' : 'No Activities'}}
+                    </td>
                 </tr>
             </tfoot>
         </table>
@@ -199,7 +298,8 @@
                     <th scope="col">#</th>
                     <th scope="col">Student Name</th>
                     <th scope="col">Performed Activity</th>
-                    <th scope="col">Date</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Performed Activity Date</th>
                     <th scope="col">Status</th>
                     <th scope="col">Action</th>
                 </tr>
@@ -208,8 +308,9 @@
                 <ng-container *ngFor="let sa of savedActivitiesArr; let i = index;">
                     <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                         <td>{{i+1}}</td>
-                        <td>{{sa.studentName}}</td>
+                        <td>{{sa.studentName}} {{sa.grade}}</td>
                         <td>{{sa.activityName}}</td>
+                        <td>{{sa.description}}</td>
                         <td>{{getDate(sa.dateOfActivity) | date}}</td>
                         <td>
                             <div *ngIf="sa.activityStatus === 'SavedByTeacher'">Saved
@@ -223,23 +324,51 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="collapse-td" colspan="5">
+                        <td class="collapse-td" colspan="7">
                             <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
                                 <div class="row">
                                     <div class="col-6">
-                                        <p>
-                                            <strong>Description :
-                                            </strong>{{sa.description}}</p>
-                                    </div>
-                                    <div class="col-6">
-                                        <div>
+                                        <div class="description">
+                                            <p>
+                                                <strong>Name : </strong>{{sa.activityName}}</p>
+                                            <p>
+                                                <strong>Description : </strong>{{sa.description}}</p>
+                                            <p>
+                                                <strong>Four S : </strong>{{sa.fourS}}</p>
+                                            <p>
+                                                <strong>Focus Area : </strong>{{sa.focusAreas}}</p>
+                                            <p>
+                                                <strong>PSD Area : </strong>{{sa.psdAreas}}</p>
+                                        </div>
+                                        <div class="attachment">
                                             <p>
                                                 <strong>Attachments : </strong>
                                             </p>
-                                            <p *ngFor="let file of sa.fileResponses">
-                                                {{file.name}}
-                                            </p>
+                                            <div *ngFor="let file of sa.fileResponses">
+                                                <div>
+                                                    <i class="fa fa-file-audio" *ngIf="file.extension == 'mp3'"></i>
+                                                    <i class="fa fa-image" *ngIf="file.extension=='jpg'"></i>
+                                                    <i class="fa fa-video-camera"
+                                                        *ngIf="file.extension=='video'"></i>
+                                                    {{file.name}}
+                                                </div>
+
+                                            </div>
                                         </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <p>
+                                            <strong>Participation Score :</strong>{{sa.participationScore}}</p>
+                                        <p>
+                                            <strong>Initiative Score :</strong>{{sa.initiativeScore}}</p>
+                                        <p>
+                                            <strong>Achievement Score :</strong>{{sa.achievementScore}}</p>
+                                        <p>
+                                            <strong>Star : </strong>{{sa.star}}</p>
+                                        <p>
+                                            <strong>Remarks :</strong>{{sa.coachRemark}}</p>
+                                        <p>
+                                            <strong>Date : </strong>{{sa.coachRemarkDate | date }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -249,7 +378,10 @@
             </tbody>
             <tfoot *ngIf="savedActivitiesArr.length == 0">
                 <tr>
-                    <td colspan="6">No Saved Activities</td>
+                    <td colspan="7">
+                        <div *ngIf="loader" class="spinner-border text-dark" role="status">
+                        </div>{{loader ? 'Loading...' : 'No Activities'}}
+                    </td>
                 </tr>
             </tfoot>
         </table>
@@ -265,7 +397,8 @@
                     <th scope="col">#</th>
                     <th scope="col">Student Name</th>
                     <th scope="col">Performed Activity</th>
-                    <th scope="col">Date</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Performed Activity Date</th>
                     <th scope="col">Status</th>
                 </tr>
             </thead>
@@ -273,15 +406,45 @@
                 <ng-container *ngFor="let ra of reviewedActivitiesArr; let i = index;">
                     <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                         <td>{{i+1}}</td>
-                        <td>{{ra.studentName}}</td>
+                        <td>{{ra.studentName}} {{ra.grade}}</td>
                         <td>{{ra.activityName}}</td>
+                        <td>{{ra.description}}</td>
                         <td>{{ra.coachRemarkDate | date}}</td>
                         <td>Reviewed</td>
                     </tr>
                     <tr>
-                        <td class="collapse-td" colspan="5">
+                        <td class="collapse-td" colspan="6">
                             <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
                                 <div class="row">
+                                    <div class="col-6">
+                                        <div class="description">
+                                            <p>
+                                                <strong>Name : </strong>{{ra.activityName}}</p>
+                                            <p>
+                                                <strong>Description : </strong>{{ra.description}}</p>
+                                            <p>
+                                                <strong>Four S : </strong>{{ra.fourS}}</p>
+                                            <p>
+                                                <strong>Focus Area : </strong>{{ra.focusAreas}}</p>
+                                            <p>
+                                                <strong>PSD Area : </strong>{{ra.psdAreas}}</p>
+                                        </div>
+                                        <div class="attachment">
+                                            <p>
+                                                <strong>Attachments : </strong>
+                                            </p>
+                                            <div *ngFor="let file of ra.fileResponses">
+                                                <div>
+                                                    <i class="fa fa-file-audio" *ngIf="file.extension == 'mp3'"></i>
+                                                    <i class="fa fa-image" *ngIf="file.extension=='jpg'"></i>
+                                                    <i class="fa fa-video-camera"
+                                                        *ngIf="file.extension=='video'"></i>
+                                                    {{file.name}}
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="col-6">
                                         <p>
                                             <strong>Participation Score :</strong>{{ra.participationScore}}</p>
@@ -289,14 +452,12 @@
                                             <strong>Initiative Score :</strong>{{ra.initiativeScore}}</p>
                                         <p>
                                             <strong>Achievement Score :</strong>{{ra.achievementScore}}</p>
-                                    </div>
-                                    <div class="col-6">
-                                        <p>
-                                            <strong>Activity : </strong>{{ra.activityName}}</p>
                                         <p>
                                             <strong>Star : </strong>{{ra.star}}</p>
                                         <p>
-                                            <strong>Remark :</strong>{{ra.coachRemark}}</p>
+                                            <strong>Remarks :</strong>{{ra.coachRemark}}</p>
+                                        <p>
+                                            <strong>Date : </strong>{{ra.coachRemarkDate | date }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -306,7 +467,10 @@
             </tbody>
             <tfoot *ngIf="reviewedActivitiesArr.length == 0">
                 <tr>
-                    <td colspan="6">No Reviewed Activities</td>
+                    <td colspan="6">
+                        <div *ngIf="loader" class="spinner-border text-dark" role="status">
+                        </div>{{loader ? 'Loading...' : 'No Activities'}}
+                    </td>
                 </tr>
             </tfoot>
         </table>
@@ -327,17 +491,17 @@
                 <div class="modal-body">
                     <form [formGroup]="reviewForm" (ngSubmit)="saveReview()">
                         <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">Achievement Score :</label>
+                            <label for="recipient-name" class="col-form-label">Achievement Score : (out of 5)</label>
                             <input type="number" class="form-control" formControlName="achievementScore">
                             <small class="text-danger" *ngIf="reviewForm.controls.achievementScore.errors">*Between 0-5 Sonly</small>
                         </div>
                         <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">Participation Score :</label>
+                            <label for="recipient-name" class="col-form-label">Participation Score : (out of 10)</label>
                             <input type="number" class="form-control" formControlName="participationScore">
                             <small class="text-danger" *ngIf="reviewForm.controls.participationScore.errors">*Between 0-10 only</small>
                         </div>
                         <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">Initiative Score :</label>
+                            <label for="recipient-name" class="col-form-label">Initiative Score : (out of 10)</label>
                             <input type="number" class="form-control" min="1" max="5" formControlName="initiativeScore">
                             <small class="text-danger" *ngIf="reviewForm.controls.initiativeScore.errors">*Between 0-10 only</small>
                         </div>
@@ -360,7 +524,7 @@
                             </label>
                         </div>
                         <div class="form-group">
-                            <label for="message-text" class="col-form-label">Remark :</label>
+                            <label for="message-text" class="col-form-label">Remarks :</label>
                             <textarea class="form-control" formControlName="coachRemark"></textarea>
                         </div>
                         <div class="modal-footer">

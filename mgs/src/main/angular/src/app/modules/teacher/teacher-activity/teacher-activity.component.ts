@@ -24,6 +24,7 @@ export class TeacherActivityComponent implements OnInit {
   loader: boolean = false;
 
   reviewForm: FormGroup;
+  selectedActivity: any;
 
 
   constructor(private teacherSerivce: TeacherService, private alertService: AlertService, private formBuilder: FormBuilder) { }
@@ -133,6 +134,10 @@ export class TeacherActivityComponent implements OnInit {
 
     this.teacherSerivce.saveReviewedActivity(formData).subscribe((res) => {
       console.log(res);
+      if(this.activityType == "All"){
+        this.selectedActivity.activityStatus = 'SavedByTeacher';
+      }
+        
       this.savedActivitiesArr = [...this.savedActivitiesArr, ...this.pendingActivitiesArr.splice(this.i, 1)];
       $('#reviewModal').modal('hide');
       $('.modal-backdrop').remove();
@@ -185,6 +190,7 @@ export class TeacherActivityComponent implements OnInit {
   }
 
   reviewActivity(activity, e) {
+    this.selectedActivity = activity;
     e.stopPropagation();
     this.activityId = activity.id
     this.studentId = activity.studentId;
