@@ -93,6 +93,7 @@ export class SavedActitvityComponent implements OnInit {
       this.copySavedActi = Object.assign([],res);
       console.log(res);
       this.loader = false;
+      this.filterActivities();
     }, (err) => {
       this.loader = false;
       console.log(err)
@@ -105,6 +106,7 @@ export class SavedActitvityComponent implements OnInit {
       this.submittedActivitiesArr = res;
       this.copysubmitActi = Object.assign([],res);
       this.loader = false;
+      this.filterActivities();
     }, (err) => {
       this.loader = false;
       console.log(err)
@@ -119,6 +121,7 @@ export class SavedActitvityComponent implements OnInit {
       this.copyAllActi = Object.assign([],res);
       this.allActivitiesArr = this.allActivitiesArr.filter((e) => (e.activityStatus != "SavedByTeacher"));
       this.loader = false;
+      this.filterActivities();
     }, (err) => {
       this.loader = false;
       console.log(err)
@@ -132,6 +135,7 @@ export class SavedActitvityComponent implements OnInit {
       this.reviewedActivitiesArr = res;
       this.copyReviewActi = Object.assign([],res);
       this.loader = false;
+      this.filterActivities();
     }, (err) => {
       this.loader = false;
       console.log(err)
@@ -337,7 +341,7 @@ export class SavedActitvityComponent implements OnInit {
         break;
       }
     }
-    this.filterActivities();
+
   }
 
   // Filter Activities on the basis of PSD , Focus Area and 4S
