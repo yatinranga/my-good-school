@@ -65,6 +65,7 @@ speed-measure-plugin.json
 /src/main/angular/yarn-error.log
 /src/main/angular/testem.log
 /src/main/angular/typings
+/src/main/angular/src/assets/js/config.js
 # System Files
 .DS_Store
 Thumbs.db
