@@ -143,8 +143,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 		 * Coach
 		 */
 		if (request.getCoachRemark() != null || request.getAchievementScore() != null
-				|| request.getParticipationScore() != null || request.getInitiativeScore() != null
-				|| request.getStar() != null) {
+				|| request.getParticipationScore() != null || request.getInitiativeScore() != null) {
 			throw new ValidationException("student can't set remarks or fields which are meant to be set by coach");
 			// request.setCoachRemark(null);
 			// request.setCoachRemarkDate(null);
@@ -362,8 +361,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 					activityPerformedCid));
 
 		if (activity.getCoachRemark() == null || activity.getAchievementScore() == null
-				|| activity.getInitiativeScore() == null || activity.getParticipationScore() == null
-				|| activity.getStar() == null)
+				|| activity.getInitiativeScore() == null || activity.getParticipationScore() == null)
 			throw new ValidationException("Activity cannot be submitted first fill all the mandatory fields.");
 
 		activity.setActivityStatus(ActivityStatus.Reviewed);

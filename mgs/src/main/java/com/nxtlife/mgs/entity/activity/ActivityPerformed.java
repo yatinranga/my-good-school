@@ -58,7 +58,7 @@ public class ActivityPerformed extends BaseEntity {
 
 	@Min(value = 0,message = "Minimum permissible value is 0.")
 	@Max(value = 5,message = "Maximum permissible value is 5.")
-	private Integer star;
+	private double star;
 
 	@NotNull
 	@Enumerated(EnumType.STRING)
@@ -146,11 +146,11 @@ public class ActivityPerformed extends BaseEntity {
 		this.achievementScore = achievementScore;
 	}
 
-	public Integer getStar() {
+	public double getStar() {
 		return star;
 	}
 
-	public void setStar(Integer star) {
+	public void setStar(double star) {
 		this.star = star;
 	}
 

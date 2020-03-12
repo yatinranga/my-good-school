@@ -34,7 +34,7 @@ public class ActivityPerformedResponse {
 
 	private Integer achievementScore;
 
-	private Integer star;
+	private double star;
 
 	private ActivityStatus activityStatus;
 
@@ -132,11 +132,11 @@ public class ActivityPerformedResponse {
 		this.achievementScore = achievementScore;
 	}
 
-	public Integer getStar() {
+	public double getStar() {
 		return star;
 	}
 
-	public void setStar(Integer star) {
+	public void setStar(double star) {
 		this.star = star;
 	}
 
