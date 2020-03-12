@@ -20,7 +20,7 @@
     </select>
 </div>
 
-<div class="sortby">
+<div class="sortby" style="float: right">
     Filter by:
     <select style="border: 1px solid #ddd" (ngModelChange)="activityView($event)" [(ngModel)]="activityType">
         <option value="" disabled> Choose here </option>
@@ -64,13 +64,16 @@
                             </td>
                             <td>
                                 <div>
-                                    <button [disabled]="!(allActi.activityStatus === 'SavedByStudent')" (click)="editSavedActivity($event,allActi)" class="saved icon_button">
+                                    <button [disabled]="!(allActi.activityStatus === 'SavedByStudent')"
+                                        (click)="editSavedActivity($event,allActi)" class="saved icon_button">
                                         <i class="fa fa-edit"></i>
                                     </button>
-                                    <button [disabled]="!(allActi.activityStatus === 'SavedByStudent')" (click)="submitSavedActivity($event,i)" class="submitted icon_button">
+                                    <button [disabled]="!(allActi.activityStatus === 'SavedByStudent')"
+                                        (click)="submitSavedActivity($event,i)" class="submitted icon_button">
                                         <i class="fa fa-paper-plane"></i>
                                     </button>
-                                    <button [disabled]="!(allActi.activityStatus === 'SavedByStudent')" (click)="deleteSavedActivity($event,allActi,i)" class="reviewed icon_button">
+                                    <button [disabled]="!(allActi.activityStatus === 'SavedByStudent')"
+                                        (click)="deleteSavedActivity($event,allActi,i)" class="reviewed icon_button">
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </div>
@@ -79,9 +82,10 @@
                         <tr>
                             <td class="collapse-td" colspan="6">
                                 <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
-                                    <div *ngIf=" (allActi.activityStatus === 'SavedByStudent') || (allActi.activityStatus === 'SubmittedByStudent')">
+                                    <div
+                                        *ngIf=" (allActi.activityStatus === 'SavedByStudent') || (allActi.activityStatus === 'SubmittedByStudent')">
                                         <div class="row">
-                                            <div class="col-6">
+                                            <div class="col-4">
                                                 <div class="description">
                                                     <p>
                                                         <strong>Name : </strong>{{allActi.activityName}}</p>
@@ -89,25 +93,34 @@
                                                         <strong>Description : </strong>{{allActi.description}}</p>
                                                     <p>
                                                         <strong>Teacher : </strong>{{allActi.coachName}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="description">
                                                     <p>
                                                         <strong>Focus Area : </strong>{{allActi.focusAreas}}</p>
                                                     <p>
                                                         <strong>PSD Area : </strong>{{allActi.psdAreas}}</p>
                                                 </div>
                                             </div>
-                                            <div class="col-6" *ngIf="allActi.fileResponses.length">
+                                            <div class="col-4" *ngIf="allActi.fileResponses.length">
                                                 <div class="attachment">
-
                                                     <p>
                                                         <strong>Attachments : </strong>
                                                     </p>
                                                     <div *ngFor="let file of allActi.fileResponses">
                                                         <div class="audio" *ngIf="file.extension == 'mp3'">
-                                                            <i class="fa fa-file-audio"></i> {{file.name}} </div>
+                                                            <i class="fa fa-file-audio">
+                                                                <span class="tooltip_text">{{file.name}}</span>
+                                                            </i> </div>
                                                         <div class="image" *ngIf="file.extension=='jpg'">
-                                                            <i class="fa fa-image"></i> {{file.name}} </div>
+                                                            <i class="fa fa-image"> <span class="tooltip_text">
+                                                                    {{file.name}} </span> </i> </div>
                                                         <div class="video" *ngIf="file.extension=='video'">
-                                                            <i class="fa fa-video-camera" aria-hidden="true"></i>{{file.name}} </div>
+                                                            <i class="fa fa-video-camera" title="{{file.name}}"
+                                                                aria-hidden="true"> <span
+                                                                    class="tooltip_text">{{file.name}}</span> </i>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -118,7 +131,8 @@
                                         <div class="row">
                                             <div class="col-6">
                                                 <p>
-                                                    <strong>Participation Score :</strong>{{allActi.participationScore}}</p>
+                                                    <strong>Participation Score :</strong>{{allActi.participationScore}}
+                                                </p>
                                                 <p>
                                                     <strong>Initiative Score :</strong>{{allActi.initiativeScore}}</p>
                                                 <p>
@@ -171,7 +185,7 @@
                             <td class="collapse-td" colspan="5">
                                 <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
                                     <div class="row">
-                                        <div class="col-6">
+                                        <div class="col-4">
                                             <div class="description">
                                                 <p>
                                                     <strong>Name : </strong>{{sa.activityName}}</p>
@@ -181,26 +195,34 @@
                                                     <strong>Teacher : </strong>{{sa.coachName}}</p>
                                                 <p>
                                                     <strong>Four S : </strong>{{sa.fourS}}</p>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="description">
                                                 <p>
                                                     <strong>Focus Area : </strong>{{sa.focusAreas}}</p>
                                                 <p>
                                                     <strong>PSD Area : </strong>{{sa.psdAreas}}</p>
                                             </div>
                                         </div>
-                                        <div class="col-6">
+                                        <div class="col-4">
                                             <div class="attachment">
-
                                                 <p>
                                                     <strong>Attachments : </strong>
                                                 </p>
-                                                <div *ngFor="let file of sa.fileResponses">
+                                                <div *ngFor="let file of allActi.fileResponses">
                                                     <div class="audio" *ngIf="file.extension == 'mp3'">
-                                                        <i class="fa fa-file-audio"></i> {{file.name}} </div>
+                                                        <i class="fa fa-file-audio">
+                                                            <span class="tooltip_text">{{file.name}}</span>
+                                                        </i> </div>
                                                     <div class="image" *ngIf="file.extension=='jpg'">
-                                                        <i class="fa fa-image"></i> {{file.name}} </div>
+                                                        <i class="fa fa-image"> <span class="tooltip_text">
+                                                                {{file.name}} </span> </i> </div>
                                                     <div class="video" *ngIf="file.extension=='video'">
-                                                        <i class="fa fa-video-camera" aria-hidden="true"></i>{{file.name}} </div>
-
+                                                        <i class="fa fa-video-camera" title="{{file.name}}"
+                                                            aria-hidden="true"> <span
+                                                                class="tooltip_text">{{file.name}}</span> </i> </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -256,7 +278,7 @@
                             <td class="collapse-td" colspan="6">
                                 <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
                                     <div class="row">
-                                        <div class="col-6">
+                                        <div class="col-4">
                                             <div class="description">
                                                 <p>
                                                     <strong>Name : </strong> {{sa.activityName}}</p>
@@ -266,19 +288,31 @@
                                                     <strong>Teacher : </strong>{{sa.coachName}}</p>
                                             </div>
                                         </div>
-                                        <div class="col-6">
-                                            <div>
+                                        <div class="col-4">
+                                            <div class="description">
+                                                <p>
+                                                    <strong>Focus Area : </strong>{{sa.focusAreas}}</p>
+                                                <p>
+                                                    <strong>PSD Area : </strong>{{sa.psdAreas}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="attachment">
                                                 <p>
                                                     <strong>Attachments : </strong>
                                                 </p>
-                                                <div *ngFor="let file of sa.fileResponses">
+                                                <div *ngFor="let file of allActi.fileResponses">
                                                     <div class="audio" *ngIf="file.extension == 'mp3'">
-                                                        <i class="fa fa-file-audio"></i> {{file.name}} </div>
+                                                        <i class="fa fa-file-audio">
+                                                            <span class="tooltip_text">{{file.name}}</span>
+                                                        </i> </div>
                                                     <div class="image" *ngIf="file.extension=='jpg'">
-                                                        <i class="fa fa-image"></i> {{file.name}} </div>
+                                                        <i class="fa fa-image"> <span class="tooltip_text">
+                                                                {{file.name}} </span> </i> </div>
                                                     <div class="video" *ngIf="file.extension=='video'">
-                                                        <i class="fa fa-video-camera" aria-hidden="true"></i>{{file.name}} </div>
-
+                                                        <i class="fa fa-video-camera" title="{{file.name}}"
+                                                            aria-hidden="true"> <span
+                                                                class="tooltip_text">{{file.name}}</span> </i> </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -356,7 +390,8 @@
                         <div class="col-md-12">
                             <h4> {{addActivityShow?'Add':'Edit'}} Activity </h4>
                             <div class="form-group">Activity :
-                                <select class="form-control" (ngModelChange)="getStudentCoach($event)" formControlName="activityId">
+                                <select class="form-control" (ngModelChange)="getStudentCoach($event)"
+                                    formControlName="activityId">
                                     <option *ngFor="let activity of activities; let i = index" value={{activity.id}}>
                                         {{activity.name}}</option>
                                     <option disabled *ngIf="!activities.length">No activities available</option>
@@ -396,8 +431,10 @@
                         <div class="col-md-12">
                             <div class="edit_activity_buttons">
                                 <button class="btn cancel" type="button" (click)="onCancel()">Cancel</button>
-                                <button class="btn saved btnSubmit btn-success" type="submit" *ngIf="editActivityShow">Update</button>
-                                <button class="btn saved btnSubmit btn-success" type="submit" *ngIf="addActivityShow">Submit</button>
+                                <button class="btn saved btnSubmit btn-success" type="submit"
+                                    *ngIf="editActivityShow">Update</button>
+                                <button class="btn saved btnSubmit btn-success" type="submit"
+                                    *ngIf="addActivityShow">Submit</button>
                             </div>
                         </div>
                     </div>

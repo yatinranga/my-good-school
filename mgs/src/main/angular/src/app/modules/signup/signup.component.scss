@@ -25,3 +25,16 @@ nav.navbar .navbar-nav li a {
 nav.navbar ul.navbar-nav li.nav-item.active .nav-link {
     background: $active;
 }
+
+button.btn.btnSubmit.btn-success{
+    background: #333 !important;
+}
+
+button.btnSubmit {
+    background: #7b7b7b;
+    border-radius: 0px;
+    color: white;
+    padding: 10px 20px;
+    font-size: 18px;
+    outline: none;
+}

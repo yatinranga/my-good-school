@@ -3,17 +3,19 @@
         <div class="content_main_com">
             <div class="profile_main">
                 <div class="student profile_card">
-                    <h2> Student Profile </h2>
-                    <div class="student_image">
-                        <img src="assets/images/student.jpg">
-                        <p> <label> {{studentDetails['name']}}</label> </p>
-                    </div>
-                    <div class="student content">
-                        <h3> Basic Info </h3>
-                        <p> <label> Gender - {{studentDetails['gender']}}</label> </p>
-                        <p> <label> Email - {{studentDetails['email']}}</label> </p>
-                        <p> <label> Date of Birth - {{studentDetails['dob'] | date}} </label> </p>
-                        <p> <label> Mobile Number - {{studentDetails['mobileNumber']}}</label> </p>
+                    <div class="nnn">
+                            <h2> Student Profile </h2>
+                            <div class="student_image">
+                                <img src="assets/images/student.jpg">
+                                <p> <label> {{studentDetails['name']}}</label> </p>
+                            </div>
+                            <div class="student content">
+                                <h3> Basic Info </h3>
+                                <p> <label> Gender - {{studentDetails['gender']}}</label> </p>
+                                <p> <label> Email - {{studentDetails['email']}}</label> </p>
+                                <p> <label> Date of Birth - {{studentDetails['dob'] | date}} </label> </p>
+                                <p> <label> Mobile Number - {{studentDetails['mobileNumber']}}</label> </p>
+                            </div>
                     </div>
                 </div>
                 <div class="guardian profile_card">
@@ -27,15 +29,12 @@
                             </ul>
                         </div>
                     </div>
-
                         <!-- <ul>
                             <li [ngClass]="{'active':tabs=='guardian' + i}"> <a (click)="switchTabs('guardian' + i)">
                                     Guardian One </a>
                             <li [ngClass]="{'active':tabs=='guardianTwo'}"> <a (click)="switchTabs('guardianTwo')">
                                     Guardian Two </a>
                         </ul> -->
-
-
                         <div class="guardian content">
                             <div [ngSwitch]="tabs">
                                 <ng-container *ngFor="let sd of studentDetails.guardianResponseList; let i = index">

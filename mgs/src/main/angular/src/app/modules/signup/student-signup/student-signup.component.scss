@@ -18,14 +18,18 @@
     border-bottom: 1px solid $box-shadow-color;
     padding-bottom: 30px;
 }
-button.btnSubmit {
-    background: #7b7b7b;
-    border-radius: 0px;
-    color: white;
-    padding: 10px 20px;
-    font-size: 18px;
-    outline: none;
-}
 .add{
     margin-top: 20px;
+}
+
+.add.text-right button.btnSubmit {
+    background: #969696;
+    color: #fafafa;
+    padding: 8px 12px;
+    font-size: 18px;
+}
+button.signup.btn.btnSubmit.btn-success{
+    background: #166b5d !important;
+    padding: 10px 15px;
+    font-size: 18px;
 }
