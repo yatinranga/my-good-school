@@ -192,7 +192,7 @@ public class ActivityPerformedRequest {
 
 		Integer totalScore = this.achievementScore + this.initiativeScore + this.participationScore;
 
-		double percentScore = ((double) totalScore / 25) * 100;
+		Double percentScore = ((double) totalScore / 25) * 100;
 		double fractionalStar = 0;
 
 		if (percentScore > 90.0)
