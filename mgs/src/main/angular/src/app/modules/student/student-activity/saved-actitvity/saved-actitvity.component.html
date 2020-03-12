@@ -42,7 +42,12 @@
                         <th scope="col">Description</th>
                         <th scope="col">Date</th>
                         <th scope="col">Teacher</th>
-                        <th scope="col">Status</th>
+                        <th scope="col">
+                            Status
+                            <button class="icon_button" (click)="sortByStatus()">
+                                <i class="fas fa-sort"></i>
+                            </button>
+                        </th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
@@ -66,12 +71,10 @@
                                     <button (click)="editSavedActivity($event,allActi)" class="saved icon_button">
                                         <i class="fa fa-edit"></i>
                                     </button>
-                                    <button (click)="submitSavedActivity($event,i,allActivitiesArr)"
-                                        class="submitted icon_button">
+                                    <button (click)="submitSavedActivity($event,i,allActivitiesArr)" class="submitted icon_button">
                                         <i class="fa fa-paper-plane"></i>
                                     </button>
-                                    <button (click)="deleteSavedActivity($event,allActi,i)"
-                                        class="reviewed icon_button">
+                                    <button (click)="deleteSavedActivity($event,allActi,i)" class="reviewed icon_button">
                                         <i class="fa fa-trash"></i>
                                     </button>
                                     <span class="pull-right" *ngIf="allActi.fileResponses.length">
@@ -87,10 +90,8 @@
                         </tr>
                         <tr>
                             <td class="collapse-td" colspan="7">
-                                <div [attr.id]="'collapse' + i + 'all'" class="collapse"
-                                    data-parent="#accordionExample1">
-                                    <div
-                                        *ngIf=" (allActi.activityStatus === 'SavedByStudent') || (allActi.activityStatus === 'SubmittedByStudent')">
+                                <div [attr.id]="'collapse' + i + 'all'" class="collapse" data-parent="#accordionExample1">
+                                    <div *ngIf=" (allActi.activityStatus === 'SavedByStudent') || (allActi.activityStatus === 'SubmittedByStudent')">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="description">
@@ -116,12 +117,9 @@
                                                     <div *ngFor="let file of allActi.fileResponses">
                                                         <div>
                                                             <a [attr.href]="file.url">
-                                                                <i class="fa fa-file-audio"
-                                                                    *ngIf="file.extension == 'mp3'"></i>
-                                                                <i class="fa fa-image"
-                                                                    *ngIf="file.extension=='jpg'"></i>
-                                                                <i class="fa fa-video-camera"
-                                                                    *ngIf="file.extension=='video'"></i>
+                                                                <i class="fa fa-file-audio" *ngIf="file.extension == 'mp3'"></i>
+                                                                <i class="fa fa-image" *ngIf="file.extension=='jpg'"></i>
+                                                                <i class="fa fa-video-camera" *ngIf="file.extension=='video'"></i>
                                                                 {{file.name}}
                                                             </a>
                                                         </div>
@@ -216,8 +214,7 @@
                         </tr>
                         <tr>
                             <td class="collapse-td" colspan="6">
-                                <div [attr.id]="'collapse' + i + 'sub'" class="collapse"
-                                    data-parent="#accordionExample2">
+                                <div [attr.id]="'collapse' + i + 'sub'" class="collapse" data-parent="#accordionExample2">
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="description">
@@ -244,8 +241,7 @@
                                                     <div>
                                                         <i class="fa fa-file-audio" *ngIf="file.extension == 'mp3'"></i>
                                                         <i class="fa fa-image" *ngIf="file.extension=='jpg'"></i>
-                                                        <i class="fa fa-video-camera"
-                                                            *ngIf="file.extension=='video'"></i>
+                                                        <i class="fa fa-video-camera" *ngIf="file.extension=='video'"></i>
                                                         {{file.name}}
                                                     </div>
 
@@ -302,8 +298,7 @@
                                     <button (click)="editSavedActivity($event,sa)" class="saved icon_button">
                                         <i class="fa fa-edit"></i>
                                     </button>
-                                    <button (click)="submitSavedActivity($event,i, savedActivitiesArr)"
-                                        class="submitted icon_button">
+                                    <button (click)="submitSavedActivity($event,i, savedActivitiesArr)" class="submitted icon_button">
                                         <i class="fa fa-paper-plane"></i>
                                     </button>
                                     <button (click)="deleteSavedActivity($event,sa,i)" class="reviewed icon_button">
@@ -317,8 +312,7 @@
                         </tr>
                         <tr style="border: none">
                             <td class="collapse-td" colspan="7">
-                                <div [attr.id]="'collapse' + i + 'sv'" class="collapse"
-                                    data-parent="#accordionExample3">
+                                <div [attr.id]="'collapse' + i + 'sv'" class="collapse" data-parent="#accordionExample3">
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="description">
@@ -345,8 +339,7 @@
                                                     <div>
                                                         <i class="fa fa-file-audio" *ngIf="file.extension == 'mp3'"></i>
                                                         <i class="fa fa-image" *ngIf="file.extension=='jpg'"></i>
-                                                        <i class="fa fa-video-camera"
-                                                            *ngIf="file.extension=='video'"></i>
+                                                        <i class="fa fa-video-camera" *ngIf="file.extension=='video'"></i>
                                                         {{file.name}}
                                                     </div>
                                                 </div>
@@ -397,8 +390,7 @@
                         </tr>
                         <tr styole="border : none">
                             <td class="collapse-td" colspan="6">
-                                <div [attr.id]="'collapse' + i + 'rev'" class="collapse"
-                                    data-parent="#accordionExample4">
+                                <div [attr.id]="'collapse' + i + 'rev'" class="collapse" data-parent="#accordionExample4">
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="description">
@@ -460,14 +452,12 @@
                         <div class="col-md-12">
                             <h4> {{addActivityShow?'Add':'Edit'}} Activity </h4>
                             <div class="form-group">Activity Type:
-                                <select class="form-control" (ngModelChange)="getStudentCoach($event)"
-                                    formControlName="activityId">
+                                <select class="form-control" (ngModelChange)="getStudentCoach($event)" formControlName="activityId">
                                     <option *ngFor="let activity of activities; let i = index" value={{activity.id}}>
                                         {{activity.name}}</option>
                                     <option disabled *ngIf="!activities.length">No activities available</option>
                                 </select>
-                                <span *ngIf="savedActivityForm.value.activityId&&!modal_loader&&!coaches.length"
-                                    style="color: red">No Teacher/Coaches for corresponding activity</span>
+                                <span *ngIf="savedActivityForm.value.activityId&&!modal_loader&&!coaches.length" style="color: red">No Teacher/Coaches for corresponding activity</span>
                             </div>
                             <div class="form-group">Teacher/Coach :
                                 <select class="form-control" formControlName="coachId">
