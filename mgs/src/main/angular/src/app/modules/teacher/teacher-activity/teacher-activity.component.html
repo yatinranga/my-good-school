@@ -12,17 +12,14 @@
                     </select>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
-
-<div *ngIf="activityType === 'All'">
+            <div *ngIf="activityType === 'All'">
     <div class="table_main">
         <table class="table">
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Student Name</th>
+                    <th scope="col">Grade</th>
                     <th scope="col">Performed Activity</th>
                     <th scope="col">Description</th>                    
                     <th scope="col">Performed Activity Date</th>
@@ -38,7 +35,8 @@
                 <ng-container *ngFor="let allacti of allActivitiesArr; let i = index;">
                     <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                         <td>{{i+1}}</td>
-                        <td>{{allacti.studentName}} {{allacti.grade}}</td>
+                        <td>{{allacti.studentName}} </td>
+                        <td>{{allacti.grade}}</td>
                         <td>{{allacti.activityName}}</td>
                         <td>{{allacti.description}}</td>
                         <td>{{getDate(allacti.dateOfActivity) | date}}</td>
@@ -48,13 +46,16 @@
                             <div *ngIf="allacti.activityStatus === 'Reviewed'">Reviewed</div>
                         </td>
                         <td>
-                            <button [disabled]="!(allacti.activityStatus === 'SavedByTeacher')" (click)="submitSavedActivity($event,i,'All')">Submit</button>
-                            <button [disabled]="!(allacti.activityStatus === 'SavedByTeacher')" (click)="editSavedActivity(allacti, $event)">Edit</button>
-                            <button [disabled]="!(allacti.activityStatus === 'SubmittedByStudent')" (click)="reviewActivity(allacti, $event)">Review</button>
-                        </td>
+                                <button [disabled]="!(allacti.activityStatus === 'SavedByTeacher')" 
+                                (click)="submitSavedActivity($event,i,'All')" class="submitted icon_button">  <i class="fa fa-paper-plane" title="Submit"> </i> </button>
+                                <button [disabled]="!(allacti.activityStatus === 'SavedByTeacher')" 
+                                (click)="editSavedActivity(allacti, $event)" class="saved icon_button">  <i class="fa fa-edit" title="Edit"> </i> </button>
+                                <button [disabled]="!(allacti.activityStatus === 'SubmittedByStudent')" 
+                                (click)="reviewActivity(allacti, $event)" class="reviewed icon_button">  <i class="fa fa-trash" title="Delete"></i> </button>
+                            </td>
                     </tr>
                     <tr>
-                        <td class="collapse-td" colspan="7">
+                        <td class="collapse-td" colspan="8">
                             <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
 
                                 <div *ngIf="allacti.activityStatus === 'Reviewed'">
@@ -198,7 +199,7 @@
             </tbody>
             <tfoot *ngIf="allActivitiesArr.length == 0">
                 <tr>
-                    <td colspan="7">
+                    <td colspan="8">
                         <div *ngIf="loader" class="spinner-border text-dark" role="status">
                         </div>{{loader ? 'Loading...' : 'No Activities'}}
                     </td>
@@ -215,6 +216,7 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Student Name</th>
+                    <th scope="col">Grade</th>
                     <th scope="col">Performed Activity</th>
                     <th scope="col">Description</th>
                     <th scope="col">Performed Activity Date</th>
@@ -226,7 +228,8 @@
                 <ng-container *ngFor="let pa of pendingActivitiesArr; let i = index;">
                     <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                         <td>{{i+1}}</td>
-                        <td>{{pa.studentName}} {{pa.grade}}</td>
+                        <td>{{pa.studentName}} </td>
+                        <td>{{pa.grade}}</td>
                         <td>{{pa.activityName}}</td>
                         <td>{{pa.description}}</td>
                         <td>{{getDate(pa.dateOfActivity) | date}}</td>
@@ -235,12 +238,14 @@
                         </td>
                         <td>
                             <div>
-                                <button data-toggle="modal" data-target="#reviewModal" (click)="reviewActivity(pa)">Review</button>
+                                <button data-toggle="modal" data-target="#reviewModal" (click)="reviewActivity(pa)" class="pending icon_button">
+                                        <i class="fa fa-comments" title="pending"></i>
+                                </button>
                             </div>
                         </td>
                     </tr>
                     <tr>
-                        <td class="collapse-td" colspan="7">
+                        <td class="collapse-td" colspan="8">
                             <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
                                 <div class="row">
                                     <div class="col-6">
@@ -283,7 +288,7 @@
             </tbody>
             <tfoot *ngIf="pendingActivitiesArr.length == 0">
                 <tr>
-                    <td colspan="7">
+                    <td colspan="8">
                         <div *ngIf="loader" class="spinner-border text-dark" role="status">
                         </div>{{loader ? 'Loading...' : 'No Activities'}}
                     </td>
@@ -301,6 +306,7 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Student Name</th>
+                    <th scope="col">Grade</th>
                     <th scope="col">Performed Activity</th>
                     <th scope="col">Description</th>
                     <th scope="col">Performed Activity Date</th>
@@ -312,7 +318,8 @@
                 <ng-container *ngFor="let sa of savedActivitiesArr; let i = index;">
                     <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                         <td>{{i+1}}</td>
-                        <td>{{sa.studentName}} {{sa.grade}}</td>
+                        <td>{{sa.studentName}}</td>
+                            <td> {{sa.grade}}</td>
                         <td>{{sa.activityName}}</td>
                         <td>{{sa.description}}</td>
                         <td>{{getDate(sa.dateOfActivity) | date}}</td>
@@ -328,7 +335,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="collapse-td" colspan="7">
+                        <td class="collapse-td" colspan="8">
                             <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
                                 <div class="row">
                                     <div class="col-6">
@@ -382,7 +389,7 @@
             </tbody>
             <tfoot *ngIf="savedActivitiesArr.length == 0">
                 <tr>
-                    <td colspan="7">
+                    <td colspan="8">
                         <div *ngIf="loader" class="spinner-border text-dark" role="status">
                         </div>{{loader ? 'Loading...' : 'No Activities'}}
                     </td>
@@ -400,6 +407,7 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Student Name</th>
+                    <th scope="col">Grade</th>
                     <th scope="col">Performed Activity</th>
                     <th scope="col">Description</th>
                     <th scope="col">Performed Activity Date</th>
@@ -410,14 +418,15 @@
                 <ng-container *ngFor="let ra of reviewedActivitiesArr; let i = index;">
                     <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                         <td>{{i+1}}</td>
-                        <td>{{ra.studentName}} {{ra.grade}}</td>
+                        <td>{{ra.studentName}}</td>
+                            <td> {{ra.grade}}</td>
                         <td>{{ra.activityName}}</td>
                         <td>{{ra.description}}</td>
                         <td>{{ra.coachRemarkDate | date}}</td>
                         <td>Reviewed</td>
                     </tr>
                     <tr>
-                        <td class="collapse-td" colspan="6">
+                        <td class="collapse-td" colspan="7">
                             <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
                                 <div class="row">
                                     <div class="col-6">
@@ -527,3 +536,7 @@
         </div>
     </div>
 </div>
+        </div>
+    </div>
+</div>
+

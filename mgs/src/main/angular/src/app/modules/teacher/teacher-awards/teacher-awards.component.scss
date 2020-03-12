@@ -1,3 +1,4 @@
+
 .teacher-awards.content {
     width: 50%;
     color: white;
@@ -14,7 +15,7 @@
 .tabs {
     width: 100%;
     display: inline-flex;
-    background: #46818d;
+    background: #737373;
 }
 
 .teacher-awards .popup-form {
@@ -30,13 +31,14 @@
     box-shadow: 0 0 10px #999;
 }
 .popup-form select {
-    background: none;
+    background: #ddd;
     border: none;
     color: #333;
     height: 30px;
     border-radius: 0 !important;
     border: 1px solid #333;
     margin: 20px 10px;
+    width: 200px;
 }
 
 button.assign-button {
@@ -78,3 +80,25 @@ img{
     padding: 0;
   }
 
+.tabs li {
+    padding: 10px 0;
+}
+li.active {
+    background: #8dc33a;
+}
+button.verify {
+    background: #8dc33a;
+}
+
+.teacher_awards_main .popup-form {
+    width: 100%;
+    display: inline-block;
+    margin-top: 20px;
+}
+.assign_form {
+    margin: 10px;
+}
+.assign_main{
+    display: inline-flex;
+    width: 100%;
+}
