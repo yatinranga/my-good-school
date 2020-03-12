@@ -26,21 +26,21 @@ public class ActivityPerformedRequest {
 
 	private Boolean active;
 
-	@Min(value = 0,message = "Minimum permissible value is 0.")
-	@Max(value = 10,message = "Maximum permissible value is 10.")
+	@Min(value = 0, message = "Minimum permissible value is 0.")
+	@Max(value = 10, message = "Maximum permissible value is 10.")
 	private Integer participationScore;
 
-	@Min(value = 0,message = "Minimum permissible value is 0.")
-	@Max(value = 10,message = "Maximum permissible value is 10.")
+	@Min(value = 0, message = "Minimum permissible value is 0.")
+	@Max(value = 10, message = "Maximum permissible value is 10.")
 	private Integer initiativeScore;
 
-	@Min(value = 0,message = "Minimum permissible value is 0.")
-	@Max(value = 5,message = "Maximum permissible value is 5.")
+	@Min(value = 0, message = "Minimum permissible value is 0.")
+	@Max(value = 5, message = "Maximum permissible value is 5.")
 	private Integer achievementScore;
 
-	@Min(value = 0,message = "Minimum permissible value is 0.")
-	@Max(value = 5,message = "Maximum permissible value is 5.")
-	private Integer star;
+//	@Min(value = 0,message = "Minimum permissible value is 0.")
+//	@Max(value = 5,message = "Maximum permissible value is 5.")
+//	private Integer star;
 
 //	private ActivityStatus activityStatus;
 
@@ -108,14 +108,6 @@ public class ActivityPerformedRequest {
 		this.achievementScore = achievementScore;
 	}
 
-	public Integer getStar() {
-		return star;
-	}
-
-	public void setStar(Integer star) {
-		this.star = star;
-	}
-
 //	public ActivityStatus getActivityStatus() {
 //		return activityStatus;
 //	}
@@ -177,10 +169,10 @@ public class ActivityPerformedRequest {
 		if (this.id != null)
 			activityPerformed.setCid(this.id);
 		if (this.dateOfActivity != null) {
-			if(LocalDateTime.now().toDate().before(DateUtil.convertStringToDate(this.dateOfActivity)))
+			if (LocalDateTime.now().toDate().before(DateUtil.convertStringToDate(this.dateOfActivity)))
 				throw new ValidationException("Date of activity cannot be a future date.");
 			activityPerformed.setDateOfActivity(DateUtil.convertStringToDate(this.dateOfActivity));
-			}
+		}
 //		activityPerformed.setActivityStatus(this.activityStatus);
 		if (this.description != null)
 			activityPerformed.setDescription(this.description);
@@ -188,14 +180,47 @@ public class ActivityPerformedRequest {
 			activityPerformed.setCoachRemark(this.coachRemark);
 //		activityPerformed.setCoachRemarkDate(DateUtil.convertStringToDate(this.coachRemarkDate));
 //		activityPerformed.setActive(this.active);
-		if (this.getInitiativeScore() != null)
-			activityPerformed.setInitiativeScore(this.initiativeScore);
-		if (this.getParticipationScore() != null)
-			activityPerformed.setParticipationScore(this.participationScore);
-		if (this.getAchievementScore() != null)
-			activityPerformed.setAchievementScore(this.achievementScore);
-		if (this.getStar() != null)
-			activityPerformed.setStar(this.star);
+
+		activityPerformed
+				.setInitiativeScore(this.initiativeScore = this.initiativeScore == null ? 0 : this.initiativeScore);
+
+		activityPerformed.setParticipationScore(
+				this.participationScore = this.participationScore == null ? 0 : this.participationScore);
+
+		activityPerformed
+				.setAchievementScore(this.achievementScore = this.achievementScore == null ? 0 : this.achievementScore);
+
+		Integer totalScore = this.achievementScore + this.initiativeScore + this.participationScore;
+
+		double percentScore = ((double) totalScore / 25) * 100;
+		double fractionalStar = 0;
+
+		if (percentScore > 90.0)
+			fractionalStar = 5.0;
+		else if (percentScore > 80 && percentScore <= 90)
+			fractionalStar = 4.5;
+		else if (percentScore > 70 && percentScore <= 80)
+			fractionalStar = 4;
+		else if (percentScore > 60 && percentScore <= 70)
+			fractionalStar = 3.5;
+		else if (percentScore > 50 && percentScore <= 60)
+			fractionalStar = 3;
+		else if (percentScore > 40 && percentScore <= 50)
+			fractionalStar = 2.5;
+		else if (percentScore > 30 && percentScore <= 40)
+			fractionalStar = 2;
+		else if (percentScore > 20 && percentScore <= 30)
+			fractionalStar = 1.5;
+		else if (percentScore > 10 && percentScore <= 20)
+			fractionalStar = 1;
+		else if (percentScore > 0 && percentScore <= 10)
+			fractionalStar = 0.5;
+		else
+			fractionalStar = 0;
+
+		System.out.println("fractionalStar :" + fractionalStar);
+
+		activityPerformed.setStar(fractionalStar);
 
 		return activityPerformed;
 	}
