@@ -170,7 +170,6 @@ export class SavedActitvityComponent implements OnInit {
 
   // to SUBMIT the activity
   submitSavedActivity(e, index, array) {
-    debugger
     const submit = confirm("Do you want to submit ?");
     if (submit) {
       e.stopPropagation();
@@ -186,6 +185,19 @@ export class SavedActitvityComponent implements OnInit {
         console.log(err)
       });
     }
+  }
+
+  directSubmitActivity(activityId){
+    this.alertService.confirmWithoutLoader('question',"Do you want to submit ?",'','Yes').then(res => {
+      this.studentService.submitActivity(activityId).subscribe((res) => {
+        console.log(res);
+        this.allActivitiesArr.shift();
+        this.allActivitiesArr.unshift(res);
+        this.alertService.showSuccessAlert('Activity Submitted !');
+      },(err) => {
+        console.log(err);
+      })
+    })
   }
 
   // DELETE Activity
@@ -233,12 +245,6 @@ export class SavedActitvityComponent implements OnInit {
 
   // to UPDATE the saved activity
   updateActivity() {
-    // const submit = confirm("Do you want to Submit ?");
-    // if(submit) {
-      
-    // }
-    // else {    }
-
     if (this.editActivityShow) {
       this.submit_loader = true;
       const formData = new FormData();
@@ -298,13 +304,14 @@ export class SavedActitvityComponent implements OnInit {
           this.allActivitiesArr.unshift(res);
           this.submit_loader = false;
           this.alertService.showSuccessToast('Activity Saved !');
+          this.directSubmitActivity(res.id)
           this.addActivityShow = false;
         },
         (err) => {
           this.submit_loader = false;
           console.log(err)}
-      );
-    }
+      )
+    };
 
   }
 
