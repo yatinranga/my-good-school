@@ -188,15 +188,17 @@ export class SavedActitvityComponent implements OnInit {
   }
 
   directSubmitActivity(activityId){
-    this.alertService.confirmWithoutLoader('question',"Do you want to submit ?",'','Yes').then(res => {
-      this.studentService.submitActivity(activityId).subscribe((res) => {
-        console.log(res);
-        this.allActivitiesArr.shift();
-        this.allActivitiesArr.unshift(res);
-        this.alertService.showSuccessAlert('Activity Submitted !');
-      },(err) => {
-        console.log(err);
-      })
+    this.alertService.confirmWithoutLoader('question',"Do you want to submit ?",'','Yes').then(result => {
+      console.log(result);
+      if(result.value)
+        this.studentService.submitActivity(activityId).subscribe((res) => {
+          console.log(res);
+          this.allActivitiesArr.shift();
+          this.allActivitiesArr.unshift(res);
+          this.alertService.showSuccessAlert('Activity Submitted !');
+        },(err) => {
+          console.log(err);
+        })
     })
   }
 
@@ -304,8 +306,9 @@ export class SavedActitvityComponent implements OnInit {
           this.savedActivitiesArr.unshift(res);
           this.allActivitiesArr.unshift(res);
           this.submit_loader = false;
-          this.alertService.showSuccessToast('Activity Saved !');
-          this.directSubmitActivity(res.id)
+          this.alertService.showSuccessToast('Activity Saved !').then((response) => {
+            this.directSubmitActivity(res.id)
+          })
           this.addActivityShow = false;
         },
         (err) => {
