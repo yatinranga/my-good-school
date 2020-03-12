@@ -50,8 +50,8 @@
                                             (click)="editSavedActivity(allacti, $event)" class="saved icon_button"> <i
                                                 class="fa fa-edit" title="Edit"> </i> </button>
                                         <button [disabled]="!(allacti.activityStatus === 'SubmittedByStudent')"
-                                            (click)="reviewActivity(allacti, $event)" class="reviewed icon_button"> <i
-                                                class="fa fa-trash" title="Delete"></i> </button>
+                                            (click)="reviewActivity(allacti, $event)" class="pending icon_button"> <i
+                                                class="fa fa-comments" title="Review"></i> </button>
                                     </td>
                                 </tr>
                                 <tr>
@@ -267,16 +267,12 @@
                                             data-parent="#accordionExample">
                                             <div class="row">
                                                 <div class="col-6">
-                                                    <div class="description">
                                                         <p *ngIf="pa.focusAreas">
                                                             <strong>Focus Area : </strong>{{pa.focusAreas}}</p>
                                                         <p *ngIf="pa.psdAreas">
                                                             <strong>PSD Area : </strong>{{pa.psdAreas}}</p>
                                                         <p *ngIf="pa.fourS">
                                                             <strong>Four S : </strong>{{pa.fourS}}</p>
-
-
-                                                    </div>
                                                 </div>
 
                                                 <div class="col-6">

@@ -77,3 +77,10 @@ button.icon_button {
 button.pending.icon_button{
     color: darkcyan;
 }
+.description {
+    border-right: 1px solid #333;
+    min-height: 260px;
+}
+.description:after, .attachment:before{
+    display: none !important;
+}
