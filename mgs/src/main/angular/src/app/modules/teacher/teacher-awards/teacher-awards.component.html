@@ -79,6 +79,7 @@
                                 <th scope="col">Performed Activity Date</th>
                                 <th scope="col">Remarks</th>
                                 <th scope="col">Remarks Date</th>
+                                <th scope="col">Stars</th>
                             </tr>
                         </thead>
                         <tbody id="accordionExample">
@@ -95,6 +96,7 @@
                                     <td>{{pa.dateOfActivity | date}}</td>
                                     <td>{{pa.coachRemark}}</td>
                                     <td>{{pa.coachRemarkDate | date}}</td>
+                                    <td>{{pa.star}}</td>
                                 </tr>
                                 <tr>
                                     <td class="collapse-td" colspan="5">
@@ -144,7 +146,7 @@
                         </tbody>
                         <tfoot *ngIf="performedActiArr.length == 0">
                             <tr>
-                                <td colspan="5">
+                                <td colspan="6">
                                     <div *ngIf="pa_loader" class="spinner-border text-dark" role="status">
                                     </div>{{pa_loader ? 'Loading...' : 'No Activities'}}
                                 </td>
