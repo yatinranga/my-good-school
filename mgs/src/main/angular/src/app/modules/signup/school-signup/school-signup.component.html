@@ -1,52 +1,55 @@
-<br>
 <form [formGroup]="schoolSignup" (ngSubmit)="onSubmit()">
     <div class="container register-form">
         <div class="form">
-            <p><b>School Registration Form</b></p>
+            <div class="note">
+                <p><b>School Registration Form</b></p>
+            </div>
         </div>
-
         <div class="form-content">
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">Enter Name :*
                         <input type="text" class="form-control" placeholder="Your Name" formControlName="name" />
-                        <small class="text-danger" *ngIf="!schoolSignup.get('name').valid && schoolSignup.get('name').touched">
+                        <small class="text-danger"
+                            *ngIf="!schoolSignup.get('name').valid && schoolSignup.get('name').touched">
                             Name Required
                         </small>
                     </div>
                     <div class="form-group">Enter Email :*
                         <input type="email" class="form-control" placeholder="Your Email" formControlName="email" />
-                        <small class="text-danger" *ngIf="!schoolSignup.get('email').valid && schoolSignup.get('email').touched">
+                        <small class="text-danger"
+                            *ngIf="!schoolSignup.get('email').valid && schoolSignup.get('email').touched">
                             Email Required
                         </small>
                     </div>
                     <div class="form-group">Enter Contact No :
-                        <input type="email" class="form-control" placeholder="Your Contact Number" formControlName="contactNo" />
-                    </div>
-                    <div class="form-group">Enter Address :*
-                        <textarea class="form-control" placeholder="Your Address" formControlName="address">
-                            <small class="text-danger" *ngIf="!schoolSignup.get('address').valid && schoolSignup.get('address').touched">
-                                Address Required
-                            </small>
-                    </textarea>
+                        <input type="email" class="form-control" placeholder="Your Contact Number"
+                            formControlName="contactNo" />
                     </div>
                 </div>
-
-
                 <div class="col-md-6">
-                    <div class="form-group">Logo :
-                        <input type="file" class="formControl" placeholder="Your Logo" name="logo" (change)="onImageSelect($event)">
-                        <img *ngIf="path" [src]="path" height="200">
+                    <div class="form-group">Enter Address :*
+                        <textarea class="form-control" placeholder="Your Address" formControlName="address">
+                                    <small class="text-danger" *ngIf="!schoolSignup.get('address').valid && schoolSignup.get('address').touched">
+                                        Address Required
+                                    </small>
+                            </textarea>
                     </div>
                     <div class="form-group">General Activities :
                         <select class="form-control" formControlName="generalActivities" multiple>
-                            <option *ngFor="let g of generalActivitiesArr" value={{g.id}} >{{g.name}}</option>
+                            <option *ngFor="let g of generalActivitiesArr" value={{g.id}}>{{g.name}}</option>
                         </select>
-
+                    </div>
+                </div>
+                <div class="col-md-12" style="text-align: center; margin-top: 15px;">
+                    <div class="form-group">Logo :
+                        <input type="file" class="formControl" placeholder="Your Logo" name="logo"
+                            (change)="onImageSelect($event)">
+                        <img *ngIf="path" [src]="path" height="200">
                     </div>
                 </div>
             </div>
         </div>
-        <button class="btn btnSubmit btn-success" type="submit" [disabled]="schoolSignup.invalid">Submit</button>
+        <button class="signup btn btnSubmit btn-success" type="submit" [disabled]="schoolSignup.invalid">Submit</button>
     </div>
-    </form>
+</form>

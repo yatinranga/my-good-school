@@ -224,5 +224,24 @@ export class TeacherActivityComponent implements OnInit {
     this.reviewForm.reset();
   }
 
+  order: boolean = false;
+  sortByStatus() {
+    this.order = !this.order;
+    // sort by activityStatus
+    this.allActivitiesArr.sort((a, b) => {
+      const nameA = a.activityStatus.toUpperCase(); // ignore upper and lowercase
+      const nameB = b.activityStatus.toUpperCase(); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return this.order ? -1 : 1;
+      }
+      if (nameA > nameB) {
+        return this.order ? 1 : -1;
+      }
+
+      // names must be equal
+      return 0;
+    });
+  }
+
 
 }

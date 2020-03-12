@@ -50,7 +50,7 @@ i.fa.fa-file {
     float: left;
     position: absolute;
     left: 26px;
-    top: 8px;
+    top: 18px;
     font-size: 15px;
 }
 
@@ -211,7 +211,7 @@ td.collapse-td
     background: #fafafa;
 }
 i.fa.fa-user-circle, i.fa.fa-bars{
-    padding: 25px 0px;
+    padding: 36px 0px;
     font-size: 22px !important;
 }
 tbody#accordionExample > tr[aria-expanded="true"] {
@@ -276,7 +276,7 @@ app-home{
     font-size: 40px;
     text-align: left;
     margin: 0 0 30px 0;
-    color: #38847c;
+    color: #4796a2;
 }
 
 .content_main_com h2{
@@ -322,7 +322,7 @@ app-home{
     margin: 5px 10px;
 }
 .menu_content h3:before {
-    content: url(assets/images/ff.jpg);
+    content: url(assets/images/f.png);
     position: absolute;
     top: 3px;
     left: -35px;
@@ -378,12 +378,12 @@ a.menu_link{
     text-align: left;
     width: 100%;
     display: inline-block;
-    padding: 31px 10px;
+    padding: 37px 10px;
     color: #555;
     margin: 0 10px;
 }
 i.fa {
-    margin: 10px;
+    margin: 0 10px;
 }
 .navbar .right{
     float: right;
@@ -407,7 +407,7 @@ i.fa {
     min-width: 250px;
     z-index: 1;
     transition: transform 0.6s;
-    top: 101px;
+    top: 102px;
 }
 .dropdown-content a {
     color: $light;
@@ -483,9 +483,12 @@ a.nav-link i.fa, button.logout.btn i.fa{
     margin: 0 7px;
 }
 
-
-
-
+li.nav-item{
+    list-style-type: none;
+    cursor: pointer;
+    display: -webkit-inline-box !important;
+    border-right: 1px solid #777;
+}
 /*-------------------------------------PROFILE-------------------------------------*/
 .profile_main{
     width: 100%;
@@ -510,7 +513,11 @@ a.nav-link i.fa, button.logout.btn i.fa{
     margin: 15px 0;
     color: $black;
 }
-
+.nnn{
+    width: 100%;
+    text-align: center;
+    display: inline-block;
+}
 .student_image {
     width: 80%;
     text-align: center;
@@ -528,10 +535,12 @@ a.nav-link i.fa, button.logout.btn i.fa{
     margin: 15px 0;
 }
 .student.content{
-    width: 70%;
     display: inline-block;
-    margin: auto;
+    margin: 0;
     text-align: left;
+    border-top: 2px solid #999;
+    padding: 30px 0 0 0;
+    line-height: 30px;
 }
 .content p {
     margin: 10px 0;
@@ -584,8 +593,8 @@ a.nav-link i.fa, button.logout.btn i.fa{
 }
 .student.content h3{
     font-size: 22px;
-    color: #333;
-    margin: 15px 0;
+    color: #e04090;
+    margin: 0px 0 15px 0;
 }
 .guardian.content h3 {
     font-size: 22px;

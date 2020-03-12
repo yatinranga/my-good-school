@@ -8,9 +8,9 @@
       <a class="nav-link" routerLink='teacher-upload'>
           <i class="fa fa-chalkboard-teacher"></i>Teacher</a>
     </li>
-    <li class="nav-item">
+    <li routerLinkActive='active' class="nav-item">
       <a class="nav-link" routerLink='school-upload'>
-          <i class=""></i>School</a>
+          <i class="fa fa-school"></i>School</a>
     </li>
   </ul>
   <button class="logout btn" (click)="authService.logoutUser();"> 

@@ -232,10 +232,8 @@ export class TeacherAwardsComponent implements OnInit {
       },
         (err) => {
           console.log(err);
-
         })
     }
-
 
   }
 

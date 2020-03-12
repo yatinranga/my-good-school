@@ -11,8 +11,8 @@
     height: calc(100vh - 107px);
 }
 .profile_text_main{
-    left: 40px;
-    width: 30%;
+    left: 20px;
+    width: 50%;
     float: left;
     background: #8cbbc5;
     position: absolute;
@@ -27,15 +27,36 @@
     text-align: left;
 }
 .profile_text label {
-    border-bottom: 1px solid #333;
     font-size: 17px;
     color: #333;
 }
 
 .profile_text h3{
+    width: 100px;
     font-size: 21px;
     color: #333;
     text-align: left;
-    margin-bottom: 20px;
-    font-weight: 400;
+    margin-bottom: 35px;
+    font-weight: 500;
+    border-bottom: 1px solid #555;
+}
+.profile_text{
+    width: 100%;
+    display: inline-block;
+}
+.basic-info {
+    float: left;
+    width: 65%;
+    margin: 0 5px;
+}
+.teacher-activities {
+    float: right;
+    width: 30%;
+    margin: 0 5px;
+}
+.teacher-activities ul {
+    padding: 0 17px;
+}
+.teacher-activities ul li{
+list-style: inherit;
 }
