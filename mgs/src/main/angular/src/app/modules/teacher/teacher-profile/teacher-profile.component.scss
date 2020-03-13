@@ -29,6 +29,7 @@
 .profile_text label {
     font-size: 17px;
     color: #333;
+    padding: 0px 15px;
 }
 
 .profile_text h3{
@@ -59,4 +60,7 @@
 }
 .teacher-activities ul li{
 list-style: inherit;
+}
+.basic-info i.fa {
+    margin: 0 15px 0 0px;
 }
