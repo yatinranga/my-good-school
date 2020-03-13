@@ -31,7 +31,6 @@ export class SavedActitvityComponent implements OnInit {
   activityId: any;
   activityDate: any;
   files = [];
-  url = '';
 
   activityType = 'All';
   fourS: any = "";
