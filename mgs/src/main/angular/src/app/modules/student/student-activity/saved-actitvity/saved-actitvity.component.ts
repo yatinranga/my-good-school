@@ -42,10 +42,12 @@ export class SavedActitvityComponent implements OnInit {
   modal_loader = false;
   submit_loader = false;
 
-  copySavedActi: any = [];
-  copysubmitActi: any = [];
-  copyAllActi: any = [];
-  copyReviewActi: any = [];
+  copySavedActi: any = []; //used for filter activity
+  copysubmitActi: any = []; //used for filter activity
+  copyAllActi: any = []; //used for filter activity
+  copyReviewActi: any = []; //used for filter activity
+
+  activitiesArr = []; //single arr for performed actvities
 
 
   constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService) { }
@@ -92,6 +94,7 @@ export class SavedActitvityComponent implements OnInit {
       this.savedActivitiesArr = res;
       this.copySavedActi = Object.assign([], res);
       console.log(res);
+      this.activitiesArr = this.savedActivitiesArr;
       this.loader = false;
       this.filterActivities();
     }, (err) => {
@@ -105,6 +108,7 @@ export class SavedActitvityComponent implements OnInit {
     this.studentService.getSubmittedActivity(studentId).subscribe((res) => {
       this.submittedActivitiesArr = res;
       this.copysubmitActi = Object.assign([], res);
+      this.activitiesArr = this.submittedActivitiesArr;
       this.loader = false;
       this.filterActivities();
     }, (err) => {
@@ -120,6 +124,7 @@ export class SavedActitvityComponent implements OnInit {
       this.allActivitiesArr = res;
       this.copyAllActi = Object.assign([], res);
       this.allActivitiesArr = this.allActivitiesArr.filter((e) => (e.activityStatus != "SavedByTeacher"));
+      this.activitiesArr = this.allActivitiesArr; 
       this.loader = false;
       this.filterActivities();
     }, (err) => {
@@ -134,6 +139,7 @@ export class SavedActitvityComponent implements OnInit {
     this.studentService.getReviewedActivity(studentId).subscribe((res) => {
       this.reviewedActivitiesArr = res;
       this.copyReviewActi = Object.assign([], res);
+      this.activitiesArr =  this.reviewedActivitiesArr;
       this.loader = false;
       this.filterActivities();
     }, (err) => {
@@ -170,33 +176,47 @@ export class SavedActitvityComponent implements OnInit {
 
   // to SUBMIT the activity
   submitSavedActivity(e, index, array) {
-    const submit = confirm("Do you want to submit ?");
-    if (submit) {
-      e.stopPropagation();
-      const activityId = array[index].id;
-      this.studentService.submitActivity(activityId).subscribe((res) => {
-        console.log(res);
-        if (this.activityType == 'All')
-          array[index].activityStatus = 'SubmittedByStudent';
-        else
-          array.splice(index, 1);
-        this.alertService.showSuccessAlert('Activity Submitted !');
-      }, (err) => {
-        console.log(err)
-      });
-    }
-  }
-
-  directSubmitActivity(activityId){
-    this.alertService.confirmWithoutLoader('question',"Do you want to submit ?",'','Yes').then(result => {
-      console.log(result);
-      if(result.value)
+    e.stopPropagation();
+    this.alertService.confirmWithoutLoader('question', "Do you want to submit ?", '', 'Yes').then(result => {
+      if (result.value) {
+        const activityId = array[index].id;
         this.studentService.submitActivity(activityId).subscribe((res) => {
           console.log(res);
-          this.allActivitiesArr.shift();
-          this.allActivitiesArr.unshift(res);
+          if (this.activityType == 'All'){
+            array.splice(index,1);
+            array.unshift(res);          
+            // array[index].activityStatus = 'SubmittedByStudent';
+          }
+          else{
+            array.splice(index, 1);
+          }
           this.alertService.showSuccessAlert('Activity Submitted !');
-        },(err) => {
+        }, (err) => {
+          console.log(err)
+        });
+
+      }
+    })
+
+  }
+
+  directSubmitActivity(activityId) {
+    this.alertService.confirmWithoutLoader('question', "Do you want to submit ?", '', 'Yes').then(result => {
+      console.log(result);
+      if (result.value)
+        this.studentService.submitActivity(activityId).subscribe((res) => {
+          console.log(res);
+          if(this.activityType == 'All')
+          {
+            this.activitiesArr.shift();
+            this.activitiesArr.unshift(res);
+          } else {
+            this.activitiesArr.shift();
+          }
+          // this.allActivitiesArr.shift();
+          // this.allActivitiesArr.unshift(res);
+          this.alertService.showSuccessAlert('Activity Submitted !');
+        }, (err) => {
           console.log(err);
         })
     })
@@ -204,21 +224,24 @@ export class SavedActitvityComponent implements OnInit {
 
   // DELETE Activity
   deleteSavedActivity(e, activity, i) {
-    const submit = confirm("Do you want to delete ?");
-    if (submit) {
-      e.stopPropagation();
-      const activityId = activity.id;
-      console.log(activityId);
-      this.studentService.deleteActivity(activityId).subscribe((res) => {
-        console.log(res);
-        if (this.activityType == 'All')
-          this.allActivitiesArr.splice(i, 1);
-        else
-          this.savedActivitiesArr.splice(i, 1);
-        this.alertService.showSuccessToast('Activity Deleted !');
-      },
-        (err) => console.log(err));
-    }
+    e.stopPropagation();
+    this.alertService.confirmWithoutLoader('question', "Are you sure you want to delete ?", '', 'Yes').then(result => {
+      if (result.value) {
+        const activityId = activity.id;
+        console.log(activityId);
+        this.studentService.deleteActivity(activityId).subscribe((res) => {
+          console.log(res);
+          this.activitiesArr.splice(i,1);
+          // if (this.activityType == 'All')
+          //   this.allActivitiesArr.splice(i, 1);
+          // else
+          //   this.savedActivitiesArr.splice(i, 1);
+          this.alertService.showSuccessToast('Activity Deleted !');
+        },
+          (err) => console.log(err));
+      }
+    })
+
   }
 
 
@@ -303,8 +326,9 @@ export class SavedActitvityComponent implements OnInit {
       this.studentService.addActivity("/api/student/activities", formData).subscribe(
         (res) => {
           console.log(res);
-          this.savedActivitiesArr.unshift(res);
-          this.allActivitiesArr.unshift(res);
+          this.activitiesArr.unshift(res);
+          // this.savedActivitiesArr.unshift(res);
+          // this.allActivitiesArr.unshift(res);
           this.submit_loader = false;
           this.alertService.showSuccessToast('Activity Saved !').then((response) => {
             this.directSubmitActivity(res.id)
@@ -313,7 +337,8 @@ export class SavedActitvityComponent implements OnInit {
         },
         (err) => {
           this.submit_loader = false;
-          console.log(err)}
+          console.log(err)
+        }
       )
     };
 
@@ -331,6 +356,7 @@ export class SavedActitvityComponent implements OnInit {
   activityView(event) {
     this.activityType = event;
     this.loader = true;
+    this.activitiesArr = [];
     switch (this.activityType) {
       case "All": {
         this.getStudentAllActivities(this.studentId);
@@ -359,22 +385,22 @@ export class SavedActitvityComponent implements OnInit {
   filterActivities = () => {
     switch (this.activityType) {
       case "All": {
-        this.allActivitiesArr = this.filter(Object.assign([], this.copyAllActi))
+        this.activitiesArr = this.filter(Object.assign([], this.copyAllActi))
         break;
       }
 
       case "Saved": {
-        this.savedActivitiesArr = this.filter(Object.assign([], this.copySavedActi))
+        this.activitiesArr = this.filter(Object.assign([], this.copySavedActi))
         break;
       }
 
       case "Reviewed": {
-        this.reviewedActivitiesArr = this.filter(Object.assign([], this.copyReviewActi))
+        this.activitiesArr = this.filter(Object.assign([], this.copyReviewActi))
         break;
       }
 
       case "Submitted": {
-        this.submittedActivitiesArr = this.filter(Object.assign([], this.copysubmitActi))
+        this.activitiesArr = this.filter(Object.assign([], this.copysubmitActi))
         break;
       }
     }
@@ -428,7 +454,7 @@ export class SavedActitvityComponent implements OnInit {
   sortByStatus() {
     this.order = !this.order;
     // sort by activityStatus
-    this.allActivitiesArr.sort((a, b) => {
+    this.activitiesArr.sort((a, b) => {
       const nameA = a.activityStatus.toUpperCase(); // ignore upper and lowercase
       const nameB = b.activityStatus.toUpperCase(); // ignore upper and lowercase
       if (nameA < nameB) {
