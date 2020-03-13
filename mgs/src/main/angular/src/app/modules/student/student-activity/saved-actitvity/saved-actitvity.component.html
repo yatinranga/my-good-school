@@ -31,7 +31,7 @@
     </select>
 </div>
 
-<div *ngIf="activityType === 'All'">
+<div *ngIf="activityType">
     <div class="content_main_com">
         <div class="table_main">
             <table class="table table-hover">
@@ -42,74 +42,84 @@
                         <th scope="col">Description</th>
                         <th scope="col">Date</th>
                         <th scope="col">Teacher</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Action</th>
+                        <th scope="col">
+                            Status
+                            <button *ngIf="activityType === 'All'" class="icon_button" (click)="sortByStatus()">
+                                <i class="fas fa-sort"></i>
+                            </button>
+                        </th>
+                        <th *ngIf="(activityType === 'All') || (activityType === 'Saved')" scope="col">Action</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody id="accordionExample1">
-                    <ng-container *ngFor="let allActi of allActivitiesArr ; let i = index;">
+                    <ng-container *ngFor="let activity of activitiesArr ; let i = index;">
                         <tr data-toggle="collapse" [attr.data-target]="'#collapse' + i + 'all'">
                             <td>{{i+1}}</td>
-                            <td>{{allActi.activityName}}</td>
-                            <td>{{allActi.description}}</td>
-                            <td>{{getDate(allActi.dateOfActivity) | date}}</td>
-                            <td>{{allActi.coachName}}</td>
+                            <td>{{activity.activityName}}</td>
+                            <td>{{activity.description}}</td>
+                            <td>{{getDate(activity.dateOfActivity) | date}}</td>
+                            <td>{{activity.coachName}}</td>
                             <td>
-                                <div *ngIf="allActi.activityStatus === 'SubmittedByStudent'" class="submitted">Submitted
+                                <div *ngIf="activity.activityStatus === 'SubmittedByStudent'" class="submitted">Submitted
                                 </div>
-                                <div *ngIf="allActi.activityStatus === 'SavedByStudent'" class="saved">Saved</div>
-                                <div *ngIf="allActi.activityStatus === 'Reviewed'" class="reviewed">Reviewed
+                                <div *ngIf="activity.activityStatus === 'SavedByStudent'" class="saved">Saved</div>
+                                <div *ngIf="activity.activityStatus === 'Reviewed'" class="reviewed">Reviewed
                                 </div>
                             </td>
-                            <td>
-                                <div *ngIf="allActi.activityStatus === 'SavedByStudent'">
-                                    <button (click)="editSavedActivity($event,allActi)" class="saved icon_button">
+                            <td *ngIf="(activityType === 'All') || (activityType === 'Saved')">                               
+                                <div *ngIf="activity.activityStatus === 'SavedByStudent'">
+                                    <button (click)="editSavedActivity($event,activity)" class="saved icon_button">
                                         <i class="fa fa-edit" title="Edit"></i>
                                     </button>
-                                    <button (click)="submitSavedActivity($event,i,allActivitiesArr)"
+                                    <button (click)="submitSavedActivity($event,i,activitiesArr)"
                                         class="submitted icon_button">
                                         <i class="fa fa-paper-plane" title="Submit"></i>
                                     </button>
-                                    <button (click)="deleteSavedActivity($event,allActi,i)"
+                                    <button (click)="deleteSavedActivity($event,activity,i)"
                                         class="reviewed icon_button">
                                         <i class="fa fa-trash" title="Delete"></i>
                                     </button>
-                                    <span class="pull-right" *ngIf="allActi.fileResponses.length">
-                                        <i class="fa fa-paperclip" title="Attachment" aria-hidden="true"></i>
-                                    </span>
+                                    
                                 </div>
-                                <div *ngIf="allActi.activityStatus !== 'SavedByStudent'">NA
-                                    <span class="pull-right" *ngIf="allActi.fileResponses.length">
-                                        <i class="fa fa-paperclip" title="Attachment" aria-hidden="true"></i>
-                                    </span>
-                                </div>
+                                <div *ngIf="activity.activityStatus !== 'SavedByStudent'">NA
+                                </div>                                
+                            </td>
+                            <td>
+                                <span class="pull-right" *ngIf="activity.fileResponses.length">
+                                    <i class="fa fa-paperclip" title="Attachment" aria-hidden="true"></i>
+                                </span>
                             </td>
                         </tr>
                         <tr>
-                            <td class="collapse-td" colspan="7">
+                            <td class="collapse-td" colspan="8">
                                 <div [attr.id]="'collapse' + i + 'all'" class="collapse"
                                     data-parent="#accordionExample1">
                                     <div
-                                        *ngIf=" (allActi.activityStatus === 'SavedByStudent') || (allActi.activityStatus === 'SubmittedByStudent')">
+                                        *ngIf=" (activity.activityStatus === 'SavedByStudent') || (activity.activityStatus === 'SubmittedByStudent')">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="description">
-                                                    <p *ngIf="allActi.focusAreas">
-                                                        <strong class="focusareas">Focus Area :
-                                                        </strong>{{allActi.focusAreas}}</p>
-                                                    <p *ngIf="allActi.psdAreas">
-                                                        <strong class="psdareas">PSD Area :
-                                                        </strong>{{allActi.psdAreas}}</p>
-                                                    <p *ngIf="allActi.fourS">
-                                                        <strong class="fourS">4's: </strong>{{allActi.fourS}}</p>
+                                                    <p *ngIf="activity.activityName">
+                                                        <strong>Name : </strong>{{activity.activityName}}</p>
+                                                    <p *ngIf="activity.description">
+                                                        <strong>Description : </strong>{{activity.description}}</p>
+                                                    <p *ngIf="activity.coachName">
+                                                        <strong>Teacher : </strong>{{activity.coachName}}</p>
+                                                    <p *ngIf="activity.focusAreas">
+                                                        <strong>Focus Area : </strong>{{activity.focusAreas}}</p>
+                                                    <p *ngIf="activity.psdAreas">
+                                                        <strong>PSD Area : </strong>{{activity.psdAreas}}</p>
+                                                    <p *ngIf="activity.fourS">
+                                                        <strong>4's: </strong>{{activity.fourS}}</p>
                                                 </div>
                                             </div>
-                                            <div class="col-6" *ngIf="allActi.fileResponses.length">
+                                            <div class="col-4" *ngIf="activity.fileResponses.length">
                                                 <div class="attachment">
                                                     <p>
                                                         <strong>Attachments : </strong>
                                                     </p>
-                                                    <div *ngFor="let file of allActi.fileResponses">
+                                                    <div *ngFor="let file of activity.fileResponses">
                                                         <div>
                                                             <a [attr.href]="file.url">
                                                                 <i class="fa fa-file-audio"
@@ -127,33 +137,37 @@
                                         </div>
                                     </div>
 
-                                    <div *ngIf=" allActi.activityStatus === 'Reviewed'">
+                                    <div *ngIf=" activity.activityStatus === 'Reviewed'">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="description">
-                                                    <p *ngIf="allActi.focusAreas">
-                                                        <strong class="focusareas">Focus Area :
-                                                        </strong>{{allActi.focusAreas}}</p>
-                                                    <p *ngIf="allActi.psdAreas">
-                                                        <strong class="psdareas">PSD Area :
-                                                        </strong>{{allActi.psdAreas}}</p>
-                                                    <p *ngIf="allActi.fourS">
-                                                        <strong class="fourS">Four S : </strong>{{allActi.fourS}}</p>
+                                                    <p *ngIf="activity.activityName">
+                                                        <strong>Name : </strong>{{activity.activityName}}</p>
+                                                    <p *ngIf="activity.description">
+                                                        <strong>Description : </strong>{{activity.description}}</p>
+                                                    <p *ngIf="activity.coachName">
+                                                        <strong>Teacher : </strong>{{activity.coachName}}</p>
+                                                    <p *ngIf="activity.focusAreas">
+                                                        <strong>Focus Area : </strong>{{activity.focusAreas}}</p>
+                                                    <p *ngIf="activity.psdAreas">
+                                                        <strong>PSD Area : </strong>{{activity.psdAreas}}</p>
+                                                    <p *ngIf="activity.fourS">
+                                                        <strong>Four S : </strong>{{activity.fourS}}</p>
                                                 </div>
 
                                             </div>
                                             <div class="col-6">
                                                 <p>
-                                                    <strong>Participation Score :</strong>{{allActi.participationScore}}
+                                                    <strong>Participation Score :</strong>{{activity.participationScore}}
                                                 </p>
                                                 <p>
-                                                    <strong>Initiative Score :</strong>{{allActi.initiativeScore}}</p>
+                                                    <strong>Initiative Score :</strong>{{activity.initiativeScore}}</p>
                                                 <p>
-                                                    <strong>Achievement Score :</strong>{{allActi.achievementScore}}</p>
+                                                    <strong>Achievement Score :</strong>{{activity.achievementScore}}</p>
                                                 <p>
-                                                    <strong>Star : </strong>{{allActi.star}}</p>
+                                                    <strong>Star : </strong>{{activity.star}}</p>
                                                 <p>
-                                                    <strong>Remarks :</strong>{{allActi.coachRemark}}</p>
+                                                    <strong>Remarks :</strong>{{activity.coachRemark}}</p>
                                             </div>
                                         </div>
 
@@ -163,9 +177,9 @@
                         </tr>
                     </ng-container>
                 </tbody>
-                <tfoot *ngIf="allActivitiesArr.length == 0">
+                <tfoot *ngIf="activitiesArr.length == 0">
                     <tr>
-                        <td colspan="7">
+                        <td colspan="8">
                             <div *ngIf="loader" class="spinner-border text-dark" role="status">
                             </div>{{loader ? 'Loading...' : 'No Activities'}}
                         </td>
@@ -175,6 +189,162 @@
         </div>
     </div>
 </div>
+
+<!-- <div *ngIf="activityType === 'All'">
+<div class="content_main_com">
+    <div class="table_main">
+        <table class="table table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Activity</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Teacher</th>
+                    <th scope="col">
+                        Status
+                        <button class="icon_button" (click)="sortByStatus()">
+                            <i class="fas fa-sort"></i>
+                        </button>
+                    </th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody id="accordionExample1">
+                <ng-container *ngFor="let activity of allActivitiesArr ; let i = index;">
+                    <tr data-toggle="collapse" [attr.data-target]="'#collapse' + i + 'all'">
+                        <td>{{i+1}}</td>
+                        <td>{{activity.activityName}}</td>
+                        <td>{{activity.description}}</td>
+                        <td>{{getDate(activity.dateOfActivity) | date}}</td>
+                        <td>{{activity.coachName}}</td>
+                        <td>
+                            <div *ngIf="activity.activityStatus === 'SubmittedByStudent'" class="submitted">Submitted
+                            </div>
+                            <div *ngIf="activity.activityStatus === 'SavedByStudent'" class="saved">Saved</div>
+                            <div *ngIf="activity.activityStatus === 'Reviewed'" class="reviewed">Reviewed
+                            </div>
+                        </td>
+                        <td>
+                            <div *ngIf="activity.activityStatus === 'SavedByStudent'">
+                                <button (click)="editSavedActivity($event,activity)" class="saved icon_button">
+                                    <i class="fa fa-edit" title="Edit"></i>
+                                </button>
+                                <button (click)="submitSavedActivity($event,i,allActivitiesArr)"
+                                    class="submitted icon_button">
+                                    <i class="fa fa-paper-plane" title="Submit"></i>
+                                </button>
+                                <button (click)="deleteSavedActivity($event,activity,i)" class="reviewed icon_button">
+                                    <i class="fa fa-trash" title="Delete"></i>
+                                </button>
+                                <span class="pull-right" *ngIf="activity.fileResponses.length">
+                                    <i class="fa fa-paperclip" title="Attachment" aria-hidden="true"></i>
+                                </span>
+                            </div>
+                            <div *ngIf="activity.activityStatus !== 'SavedByStudent'">NA
+                                <span class="pull-right" *ngIf="activity.fileResponses.length">
+                                    <i class="fa fa-paperclip" title="Attachment" aria-hidden="true"></i>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="collapse-td" colspan="7">
+                            <div [attr.id]="'collapse' + i + 'all'" class="collapse" data-parent="#accordionExample1">
+                                <div
+                                    *ngIf=" (activity.activityStatus === 'SavedByStudent') || (activity.activityStatus === 'SubmittedByStudent')">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <div class="description">
+                                                <p *ngIf="activity.activityName">
+                                                    <strong>Name : </strong>{{activity.activityName}}</p>
+                                                <p *ngIf="activity.description">
+                                                    <strong>Description : </strong>{{activity.description}}</p>
+                                                <p *ngIf="activity.coachName">
+                                                    <strong>Teacher : </strong>{{activity.coachName}}</p>
+                                                <p *ngIf="activity.focusAreas">
+                                                    <strong>Focus Area : </strong>{{activity.focusAreas}}</p>
+                                                <p *ngIf="activity.psdAreas">
+                                                    <strong>PSD Area : </strong>{{activity.psdAreas}}</p>
+                                                <p *ngIf="activity.fourS">
+                                                    <strong>4's: </strong>{{activity.fourS}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-4" *ngIf="activity.fileResponses.length">
+                                            <div class="attachment">
+                                                <p>
+                                                    <strong>Attachments : </strong>
+                                                </p>
+                                                <div *ngFor="let file of activity.fileResponses">
+                                                    <div>
+                                                        <a [attr.href]="file.url">
+                                                            <i class="fa fa-file-audio"
+                                                                *ngIf="file.extension == 'mp3'"></i>
+                                                            <i class="fa fa-image" *ngIf="file.extension=='jpg'"></i>
+                                                            <i class="fa fa-video-camera"
+                                                                *ngIf="file.extension=='video'"></i>
+                                                            {{file.name}}
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div *ngIf=" activity.activityStatus === 'Reviewed'">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="description">
+                                                <p *ngIf="activity.activityName">
+                                                    <strong>Name : </strong>{{activity.activityName}}</p>
+                                                <p *ngIf="activity.description">
+                                                    <strong>Description : </strong>{{activity.description}}</p>
+                                                <p *ngIf="activity.coachName">
+                                                    <strong>Teacher : </strong>{{activity.coachName}}</p>
+                                                <p *ngIf="activity.focusAreas">
+                                                    <strong>Focus Area : </strong>{{activity.focusAreas}}</p>
+                                                <p *ngIf="activity.psdAreas">
+                                                    <strong>PSD Area : </strong>{{activity.psdAreas}}</p>
+                                                <p *ngIf="activity.fourS">
+                                                    <strong>Four S : </strong>{{activity.fourS}}</p>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-6">
+                                            <p>
+                                                <strong>Participation Score :</strong>{{activity.participationScore}}
+                                            </p>
+                                            <p>
+                                                <strong>Initiative Score :</strong>{{activity.initiativeScore}}</p>
+                                            <p>
+                                                <strong>Achievement Score :</strong>{{activity.achievementScore}}</p>
+                                            <p>
+                                                <strong>Star : </strong>{{activity.star}}</p>
+                                            <p>
+                                                <strong>Remarks :</strong>{{activity.coachRemark}}</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-container>
+            </tbody>
+            <tfoot *ngIf="allActivitiesArr.length == 0">
+                <tr>
+                    <td colspan="7">
+                        <div *ngIf="loader" class="spinner-border text-dark" role="status">
+                        </div>{{loader ? 'Loading...' : 'No Activities'}}
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+</div>
+
 
 <div *ngIf="activityType === 'Submitted'">
     <div class="content_main_com">
@@ -208,8 +378,7 @@
                         </tr>
                         <tr>
                             <td class="collapse-td" colspan="6">
-                                <div [attr.id]="'collapse' + i + 'sub'" class="collapse"
-                                    data-parent="#accordionExample2">
+                                <div [attr.id]="'collapse' + i + 'sub'" class="collapse" data-parent="#accordionExample2">
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="description">
@@ -231,8 +400,7 @@
                                                     <div>
                                                         <i class="fa fa-file-audio" *ngIf="file.extension == 'mp3'"></i>
                                                         <i class="fa fa-image" *ngIf="file.extension=='jpg'"></i>
-                                                        <i class="fa fa-video-camera"
-                                                            *ngIf="file.extension=='video'"></i>
+                                                        <i class="fa fa-video-camera" *ngIf="file.extension=='video'"></i>
                                                         {{file.name}}
                                                     </div>
 
@@ -304,8 +472,7 @@
                         </tr>
                         <tr style="border: none">
                             <td class="collapse-td" colspan="7">
-                                <div [attr.id]="'collapse' + i + 'sv'" class="collapse"
-                                    data-parent="#accordionExample3">
+                                <div [attr.id]="'collapse' + i + 'sv'" class="collapse" data-parent="#accordionExample3">
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="description">
@@ -327,8 +494,7 @@
                                                     <div>
                                                         <i class="fa fa-file-audio" *ngIf="file.extension == 'mp3'"></i>
                                                         <i class="fa fa-image" *ngIf="file.extension=='jpg'"></i>
-                                                        <i class="fa fa-video-camera"
-                                                            *ngIf="file.extension=='video'"></i>
+                                                        <i class="fa fa-video-camera" *ngIf="file.extension=='video'"></i>
                                                         {{file.name}}
                                                     </div>
                                                 </div>
@@ -379,8 +545,7 @@
                         </tr>
                         <tr styole="border : none">
                             <td class="collapse-td" colspan="6">
-                                <div [attr.id]="'collapse' + i + 'rev'" class="collapse"
-                                    data-parent="#accordionExample4">
+                                <div [attr.id]="'collapse' + i + 'rev'" class="collapse" data-parent="#accordionExample4">
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="description">
@@ -424,7 +589,7 @@
             </table>
         </div>
     </div>
-</div>
+</div> -->
 
 <!-- Edit Activity Form  -->
 <div *ngIf="editActivityShow || addActivityShow">
@@ -465,7 +630,7 @@
                         </div>
                         <div class="col-md-12">
                             <div class="choosefile_box">
-                                <div class="form-group"> Select File :
+                                <div class="form-group">
                                     <div class="input-field">
                                         <input class="choosefile" type="file" accept="image/*, audio/*, video/*, application/pdf,application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
                                         text/plain" name="selectedFile" (change)="onFileSelect($event)" multiple />

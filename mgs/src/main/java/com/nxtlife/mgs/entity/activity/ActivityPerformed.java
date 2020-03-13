@@ -58,7 +58,8 @@ public class ActivityPerformed extends BaseEntity {
 
 	@Min(value = 0,message = "Minimum permissible value is 0.")
 	@Max(value = 5,message = "Maximum permissible value is 5.")
-	private Integer star;
+	@Column(columnDefinition = " default int 0 ")
+	private Double star= 0d;
 
 	@NotNull
 	@Enumerated(EnumType.STRING)
@@ -146,11 +147,11 @@ public class ActivityPerformed extends BaseEntity {
 		this.achievementScore = achievementScore;
 	}
 
-	public Integer getStar() {
+	public Double getStar() {
 		return star;
 	}
 
-	public void setStar(Integer star) {
+	public void setStar(Double star) {
 		this.star = star;
 	}
 
@@ -220,7 +221,7 @@ public class ActivityPerformed extends BaseEntity {
 
 	public ActivityPerformed(Date dateOfActivity, String cid, String description, String coachRemark,
 			Date coachRemarkDate, Boolean active, Integer participationScore, Integer initiativeScore,
-			Integer achievementScore, Integer star, ActivityStatus activityStatus, Activity activity, List<File> files,
+			Integer achievementScore, Double star, ActivityStatus activityStatus, Activity activity, List<File> files,
 			Student student, Teacher teacher) {
 		this.dateOfActivity = dateOfActivity;
 		this.cid = cid;

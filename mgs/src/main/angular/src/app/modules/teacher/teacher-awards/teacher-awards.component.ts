@@ -41,7 +41,7 @@ export class TeacherAwardsComponent implements OnInit {
   assignAwardForm: FormGroup;
 
   constructor(private teacherService: TeacherService, private formbuilder: FormBuilder, private alertService: AlertService,
-    private router : Router) { }
+    private router: Router) { }
 
   ngOnInit() {
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
@@ -167,7 +167,10 @@ export class TeacherAwardsComponent implements OnInit {
       this.acti_loader = false;
 
     },
-      (err) => console.log(err));
+      (err) => {
+        console.log(err)
+        this.acti_loader = false;
+      });
 
 
     // to get performed activites of student
@@ -229,10 +232,8 @@ export class TeacherAwardsComponent implements OnInit {
       },
         (err) => {
           console.log(err);
-
         })
     }
-
 
   }
 

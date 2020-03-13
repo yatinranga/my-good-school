@@ -24,14 +24,15 @@ export class TeacherActivityComponent implements OnInit {
   loader: boolean = false;
 
   reviewForm: FormGroup;
+  selectedActivity: any;
 
 
-  constructor(private teacherSerivce: TeacherService, private alertService: AlertService, private formBuilder: FormBuilder) { }
+  constructor(private teacherService: TeacherService, private alertService: AlertService, private formBuilder: FormBuilder) { }
 
   ngOnInit() {
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
     this.teacherId = this.teacherInfo['teacher'].id;
-    this.teacherSerivce.getPendingActivity(this.teacherId).subscribe((res) => {
+    this.teacherService.getPendingActivity(this.teacherId).subscribe((res) => {
       this.activities = res;
       this.pendingActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SubmittedByStudent"));
       this.savedActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SavedByTeacher"));
@@ -67,7 +68,7 @@ export class TeacherActivityComponent implements OnInit {
 
   // PENDING Activities of Teacher
   pendingActivities() {
-    this.teacherSerivce.getPendingActivity(this.teacherId).subscribe((res) => {
+    this.teacherService.getPendingActivity(this.teacherId).subscribe((res) => {
       this.activities = res;
       this.pendingActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SubmittedByStudent"));
       this.loader = false;
@@ -80,7 +81,7 @@ export class TeacherActivityComponent implements OnInit {
 
   // Saved Activities of Teacher
   savedActivities() {
-    this.teacherSerivce.getPendingActivity(this.teacherId).subscribe((res) => {
+    this.teacherService.getPendingActivity(this.teacherId).subscribe((res) => {
       this.activities = res;
       this.savedActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SavedByTeacher"));
       this.loader = false;
@@ -93,7 +94,7 @@ export class TeacherActivityComponent implements OnInit {
 
   // All activities of Teacher
   allActivities() {
-    this.teacherSerivce.getAllActivity(this.teacherId).subscribe((res) => {
+    this.teacherService.getAllActivity(this.teacherId).subscribe((res) => {
       console.log(res);
       this.allActivitiesArr = res;
       this.loader = false;
@@ -106,7 +107,7 @@ export class TeacherActivityComponent implements OnInit {
 
   // REVIEWED Activities of Teacher
   reviewedActivities() {
-    this.teacherSerivce.getReviewedActivity(this.teacherId).subscribe((res) => {
+    this.teacherService.getReviewedActivity(this.teacherId).subscribe((res) => {
       console.log("reviewed");
       console.log(res);
       this.reviewedActivitiesArr = res;
@@ -129,17 +130,22 @@ export class TeacherActivityComponent implements OnInit {
     formData.append('participationScore', this.reviewForm.value.participationScore);
     formData.append('initiativeScore', this.reviewForm.value.initiativeScore);
     formData.append('achievementScore', this.reviewForm.value.achievementScore);
-    formData.append('star', this.reviewForm.value.star);
+    // formData.append('star', this.reviewForm.value.star);
 
-    this.teacherSerivce.saveReviewedActivity(formData).subscribe((res) => {
+    this.teacherService.saveReviewedActivity(formData).subscribe((res) => {
       console.log(res);
-      if(this.activityType == "All")
+      if(this.activityType == "All"){
+        // this.selectedActivity.activityStatus = 'SavedByTeacher';
+        this.allActivitiesArr.unshift(res);
+      }
         
       this.savedActivitiesArr = [...this.savedActivitiesArr, ...this.pendingActivitiesArr.splice(this.i, 1)];
       $('#reviewModal').modal('hide');
       $('.modal-backdrop').remove();
       this.reviewForm.reset();
-      this.alertService.showSuccessToast('Review Saved !');
+      this.alertService.showSuccessToast('Review Saved !').then((response) => {
+        this.directSubmitReview(res.id);
+      })
     },
       (err) => {
         console.log(err);
@@ -160,7 +166,7 @@ export class TeacherActivityComponent implements OnInit {
       participationScore: activity.participationScore,
       achievementScore: activity.achievementScore,
       initiativeScore: activity.initiativeScore,
-      star: activity.star,
+      // star: activity.star,
       coachRemark: activity.coachRemark
     })
     $('#reviewModal').modal('show');
@@ -177,7 +183,7 @@ export class TeacherActivityComponent implements OnInit {
     }
 
     console.log(actCid);
-    this.teacherSerivce.submitActivity(actCid).subscribe((res) => {
+    this.teacherService.submitActivity(actCid).subscribe((res) => {
       console.log(res);
       this.savedActivitiesArr.splice(index, 1);
       // this.savedActivitiesArr.splice(index,1); // to splice the selected activity and push into reviewedActivitesArr
@@ -186,7 +192,24 @@ export class TeacherActivityComponent implements OnInit {
       (err) => console.log(err));
   }
 
+  directSubmitReview(activityId){
+    this.alertService.confirmWithoutLoader('question',"Do you want to submit ?",'','Yes').then(result => {
+      console.log(result);
+      if(result.value)
+        this.teacherService.submitActivity(activityId).subscribe((res) => {
+          console.log(res);
+          this.allActivitiesArr.shift();
+          this.allActivitiesArr.unshift(res);
+          this.alertService.showSuccessAlert('Review Submitted !');
+        },(err) => {
+          console.log(err);
+        })
+    })
+
+  }
+
   reviewActivity(activity, e) {
+    this.selectedActivity = activity;
     e.stopPropagation();
     this.activityId = activity.id
     this.studentId = activity.studentId;
@@ -199,6 +222,25 @@ export class TeacherActivityComponent implements OnInit {
 
   resetForm() {
     this.reviewForm.reset();
+  }
+
+  order: boolean = false;
+  sortByStatus() {
+    this.order = !this.order;
+    // sort by activityStatus
+    this.allActivitiesArr.sort((a, b) => {
+      const nameA = a.activityStatus.toUpperCase(); // ignore upper and lowercase
+      const nameB = b.activityStatus.toUpperCase(); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return this.order ? -1 : 1;
+      }
+      if (nameA > nameB) {
+        return this.order ? 1 : -1;
+      }
+
+      // names must be equal
+      return 0;
+    });
   }
 
 
