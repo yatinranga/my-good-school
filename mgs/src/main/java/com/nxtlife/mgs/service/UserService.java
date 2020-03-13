@@ -31,5 +31,7 @@ public interface UserService {
 	SuccessResponse forgotPassword(String username);
 
 	User createSchoolUser(School school);
+
+	Mail usernamePasswordSendContentBuilder(String username, String password, String mailFrom, String mailTo);
 	
 }

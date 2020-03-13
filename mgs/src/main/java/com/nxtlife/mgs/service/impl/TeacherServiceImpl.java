@@ -15,6 +15,7 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -86,6 +87,9 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	
 	@Autowired
 	ActivityPerformedRepository activityPerformedRepository;
+	
+	@Value("${spring.mail.username}")
+	private String emailUsername;
 
 	@Override
 	public TeacherResponse save(TeacherRequest request) {
@@ -240,6 +244,10 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 
 		if (teacher == null)
 			throw new RuntimeException("Something went wrong teacher not saved.");
+		
+		if (user.getEmail() != null)
+			userService.sendLoginCredentialsBySMTP(userService.usernamePasswordSendContentBuilder(user.getUsername(),
+					user.getRawPassword(), emailUsername, user.getEmail()));
 
 		return new TeacherResponse(teacher);
 	}

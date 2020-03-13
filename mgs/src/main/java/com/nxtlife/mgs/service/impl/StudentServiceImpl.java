@@ -17,6 +17,7 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -109,8 +110,14 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	@Autowired
 	FileStore filestore;
 
+	@Value("${spring.mail.username}")
+	private String emailUsername;
+
 	@Override
 	public StudentResponse save(StudentRequest request) {
+
+		if (request.getEmail() == null)
+			throw new ValidationException("Email cannot be null.");
 
 		if (studentRepository.countByEmail(request.getEmail()) > 0) {
 			throw new ValidationException(String.format("Email [%s] already exist", request.getEmail()));
@@ -152,140 +159,6 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		student.setUsername(String.format("STU%08d", studsequence));
 		student.setGrade(grade);
 		student.setSchool(school);
-		if (request.getGuardians() != null) {
-			for (GuardianRequest guardianRequest : request.getGuardians()) {
-				List<Student> st;
-				if ((guardianRequest.getMobileNumber() != null && guardianRequest.getEmail() != null)) {
-					guardian = guardianRepository.findByEmailOrMobileNumber(guardianRequest.getEmail(),
-							guardianRequest.getMobileNumber());
-					if (guardian == null) {
-						guardian = guardianRequest.toEntity();
-						sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
-						guardian.setUsername(String.format("GRD%08d", sequence));
-						guardian.setCid(utils.generateRandomAlphaNumString(8));
-
-						if (guardian.getStudents() == null) {
-							st = new ArrayList<Student>();
-							st.add(student);
-							guardian.setStudents(st);
-						} else {
-							st = guardian.getStudents();
-							st.add(student);
-							guardian.setStudents(st);
-						}
-
-						guardian.setUser(userService.createParentUser(guardian));
-						guardians.add(guardian);
-					} else {
-						st = guardian.getStudents();
-						st.add(student);
-						guardian.setStudents(st);
-						guardians.add(guardian);
-					}
-				} else if (guardianRequest.getMobileNumber() != null) {
-					guardian = guardianRepository.getOneByMobileNumber(guardianRequest.getMobileNumber());
-
-					if (guardian == null) {
-						guardian = guardianRequest.toEntity();
-						sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
-						guardian.setUsername(String.format("GRD%08d", sequence));
-						guardian.setCid(utils.generateRandomAlphaNumString(8));
-
-						if (guardian.getStudents() == null) {
-							st = new ArrayList<Student>();
-							st.add(student);
-							guardian.setStudents(st);
-						} else {
-							st = guardian.getStudents();
-							st.add(student);
-							guardian.setStudents(st);
-						}
-
-						guardian.setUser(userService.createParentUser(guardian));
-						guardians.add(guardian);
-					} else {
-						st = guardian.getStudents();
-						st.add(student);
-						guardian.setStudents(st);
-						guardians.add(guardian);
-					}
-
-				} else if (guardianRequest.getEmail() != null) {
-					guardian = guardianRepository.getOneByEmail(guardianRequest.getEmail());
-
-					if (guardian == null) {
-						guardian = guardianRequest.toEntity();
-						sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
-						guardian.setUsername(String.format("GRD%08d", sequence));
-						guardian.setCid(utils.generateRandomAlphaNumString(8));
-
-						if (guardian.getStudents() == null) {
-							st = new ArrayList<Student>();
-							st.add(student);
-							guardian.setStudents(st);
-						} else {
-							st = guardian.getStudents();
-							st.add(student);
-							guardian.setStudents(st);
-						}
-
-						guardian.setUser(userService.createParentUser(guardian));
-						guardians.add(guardian);
-					} else {
-						st = guardian.getStudents();
-						st.add(student);
-						guardian.setStudents(st);
-						guardians.add(guardian);
-					}
-				}
-
-//				if (guardianRequest.getMobileNumber() != null) {
-//					if ((guardian = guardianRepository
-//							.findByMobileNumberAndActiveTrue(guardianRequest.getMobileNumber())) == null) {
-//						guardian = guardianRequest.toEntity();
-//						sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
-//						guardian.setUsername(String.format("GRD%08d", sequence));
-//						guardian.setCid(utils.generateRandomAlphaNumString(8));
-//
-//						if (guardian.getStudents() == null) {
-//							List<Student> st = new ArrayList<Student>();
-//							st.add(student);
-//							guardian.setStudents(st);
-//						} else {
-//							guardian.getStudents().add(student);
-//						}
-//
-//						guardian.setUser(userService.createParentUser(guardian));
-//						guardians.add(guardian);
-//					} else {
-//						guardian.getStudents().add(student);
-//						guardians.add(guardian);
-//					}
-//				} else if (guardianRequest.getEmail() != null) {
-//					if ((guardian = guardianRepository.findByEmailAndActiveTrue(guardianRequest.getEmail())) == null) {
-//						guardian = guardianRequest.toEntity();
-//						sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
-//						guardian.setUsername(String.format("GRD%08d", sequence));
-//						guardian.setCid(utils.generateRandomAlphaNumString(8));
-//
-//						if (guardian.getStudents() == null) {
-//							List<Student> st = new ArrayList<Student>();
-//							st.add(student);
-//							guardian.setStudents(st);
-//						} else {
-//							guardian.getStudents().add(student);
-//						}
-//
-//						guardian.setUser(userService.createParentUser(guardian));
-//						guardians.add(guardian);
-//					} else {
-//						guardian.getStudents().add(student);
-//						guardians.add(guardian);
-//					}
-//				}
-			}
-			student.setGuardians(guardians);
-		}
 
 		// here we're creating parent user for new guardians not for existing
 		// guardians
@@ -321,9 +194,86 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		}
 		student.setUser(user);
 		student = studentRepository.save(student);
+
+		if (request.getGuardians() != null) {
+			for (GuardianRequest guardianRequest : request.getGuardians()) {
+				List<Student> st;
+				if ((guardianRequest.getMobileNumber() != null && guardianRequest.getEmail() != null)) {
+					guardian = guardianRepository.findByEmailOrMobileNumber(guardianRequest.getEmail(),
+							guardianRequest.getMobileNumber());
+					if (guardian == null) {
+						guardian = guardianRequest.toEntity();
+						sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
+						guardian.setUsername(String.format("GRD%08d", sequence));
+						guardian.setCid(utils.generateRandomAlphaNumString(8));
+						guardian.setUser(userService.createParentUser(guardian));
+						guardian = guardianRepository.save(guardian);
+						st = new ArrayList<Student>();
+						st.add(student);
+						guardian.setStudents(st);
+						guardians.add(guardian);
+					} else {
+						st = guardian.getStudents();
+						st.add(student);
+						guardian.setStudents(st);
+						guardians.add(guardian);
+					}
+				} else if (guardianRequest.getMobileNumber() != null) {
+					guardian = guardianRepository.getOneByMobileNumber(guardianRequest.getMobileNumber());
+
+					if (guardian == null) {
+						guardian = guardianRequest.toEntity();
+						sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
+						guardian.setUsername(String.format("GRD%08d", sequence));
+						guardian.setCid(utils.generateRandomAlphaNumString(8));
+						guardian.setUser(userService.createParentUser(guardian));
+						guardian = guardianRepository.save(guardian);
+						st = new ArrayList<Student>();
+						st.add(student);
+						guardian.setStudents(st);
+						guardians.add(guardian);
+					} else {
+						st = guardian.getStudents();
+						st.add(student);
+						guardian.setStudents(st);
+						guardians.add(guardian);
+					}
+
+				} else if (guardianRequest.getEmail() != null) {
+					guardian = guardianRepository.getOneByEmail(guardianRequest.getEmail());
+
+					if (guardian == null) {
+						guardian = guardianRequest.toEntity();
+						sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
+						guardian.setUsername(String.format("GRD%08d", sequence));
+						guardian.setCid(utils.generateRandomAlphaNumString(8));
+						guardian.setUser(userService.createParentUser(guardian));
+						guardian = guardianRepository.save(guardian);
+						st = new ArrayList<Student>();
+						st.add(student);
+						guardian.setStudents(st);
+						guardians.add(guardian);
+					} else {
+						st = guardian.getStudents();
+						st.add(student);
+						guardian.setStudents(st);
+						guardians.add(guardian);
+					}
+				}
+
+			}
+			student.setGuardians(guardians);
+		}
+
+		student = studentRepository.save(student);
 		if (student == null) {
 			throw new RuntimeException("Something went wrong student not saved.");
 		}
+
+		if (user.getEmail() != null)
+			userService.sendLoginCredentialsBySMTP(userService.usernamePasswordSendContentBuilder(user.getUsername(),
+					user.getRawPassword(), emailUsername, user.getEmail()));
+
 		return new StudentResponse(student);
 	}
 
@@ -533,7 +483,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			XSSFWorkbook studentsSheet = new XSSFWorkbook(file.getInputStream());
 			studentsRecords = findSheetRowValues(studentsSheet, "STUDENT", errors);
 			errors = (List<String>) studentsRecords.get(studentsRecords.size() - 1).get("errors");
-			for (int i = 0; i < studentsRecords.size(); i++) {
+			for (int i = 0; i < studentsRecords.size() - 1; i++) {
 				List<Map<String, Object>> tempStudentsRecords = new ArrayList<Map<String, Object>>();
 				tempStudentsRecords.add(studentsRecords.get(i));
 				studentResponseList.add(save(validateStudentRequest(tempStudentsRecords, errors, schoolCid)));
@@ -803,15 +753,15 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			throw new ValidationException("Student id cannot be null.");
 		if (!studentRepository.existsByCidAndActiveTrue(studentCid))
 			throw new ValidationException(String.format("Student with id (%s) does not exist.", studentCid));
-		
+
 		Student student = studentRepository.findByCidAndActiveTrue(studentCid);
-		
+
 		String[] separatedItems = file.getOriginalFilename().split("\\.");
-		if(separatedItems.length<2)
-		     throw new ValidationException("Not able to parse file extension from file name.");
-		 
-		String fileExtn = separatedItems[separatedItems.length-1];
-			 
+		if (separatedItems.length < 2)
+			throw new ValidationException("Not able to parse file extension from file name.");
+
+		String fileExtn = separatedItems[separatedItems.length - 1];
+
 		String filename = UUID.randomUUID().toString() + "." + fileExtn;
 		try {
 			String imageUrl = filestore.store("profilePic", filename, file.getBytes());

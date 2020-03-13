@@ -21,10 +21,6 @@ public class Mail {
 
 	private List<Object> attachments;
 
-	public Mail() {
-		contentType = "text/plain";
-	}
-
 	public String getContentType() {
 		return contentType;
 	}
@@ -92,5 +88,17 @@ public class Mail {
 	public void setAttachments(List<Object> attachments) {
 		this.attachments = attachments;
 	}
+	
+	public Mail() {
+		contentType = "text/plain";
+	}
 
+	public Mail(String mailFrom, String mailTo, String mailSubject, String mailContent) {
+		this.mailFrom = mailFrom;
+		this.mailTo = mailTo;
+		this.mailSubject = mailSubject;
+		this.mailContent = mailContent;
+	}
+
+	
 }
