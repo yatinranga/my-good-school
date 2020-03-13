@@ -152,8 +152,21 @@
                                                         <strong>Focus Area : </strong>{{activity.focusAreas}}</p>
                                                     <p *ngIf="activity.psdAreas">
                                                         <strong>PSD Area : </strong>{{activity.psdAreas}}</p>
-                                                    <p *ngIf="activity.fourS">
-                                                        <strong>Four S : </strong>{{activity.fourS}}</p>
+                                                        <p *ngIf="activity.fourS" id="fourSkills">
+                                                            <strong>4's: </strong>
+                                                            <span *ngIf="activity.fourS=='Skill'" style="color: #4bafa5;">
+                                                                {{activity.fourS}}                                                            
+                                                            </span>
+                                                            <span *ngIf="activity.fourS=='Sport'" style="color: #e04090;">
+                                                                {{activity.fourS}}                                                            
+                                                            </span>
+                                                            <span *ngIf="activity.fourS=='Study'" style="color: #1f69ad;">
+                                                                {{activity.fourS}}                                                            
+                                                            </span>
+                                                            <span *ngIf="activity.fourS=='Service'" style="color: #8dc33a;">
+                                                                {{activity.fourS}}                                                            
+                                                            </span>
+                                                        </p>
                                                 </div>
 
                                             </div>
