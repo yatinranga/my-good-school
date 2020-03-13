@@ -2,7 +2,7 @@
     <div class="content_main">
         <div class="content_main_com">
             <div class="profile_main">
-                <div class="student profile_card">
+                <div class="student_main">
                     <h2> Student Profile </h2>
                     <div class="student_image">
                         <img src="assets/images/student.jpg">
@@ -10,7 +10,7 @@
                             <label> {{studentDetails['name']}}</label>
                         </p>
                     </div>
-                    <div class="student content">
+                    <div class="student_content">
                         <h3> Basic Info </h3>
                         <p>
                             <label> Gender - {{studentDetails['gender']}}</label>
@@ -32,9 +32,10 @@
                         </p>
                     </div>
                 </div>
-                <div class="guardian profile_card">
+                <div class="guardian_main">
                     <h2> Guardian Profile </h2>
-                    <div class="tab_nav">
+                    <!--
+                        <div class="tab_nav">
                         <div class="tab_buttons" *ngFor="let sd of studentDetails['guardianResponseList']; let i = index">
                             <ul class="breadcrumb">
                                 <li [ngClass]="{'active':tabs=='guardian' + i}">
@@ -44,35 +45,44 @@
                             </ul>
                         </div>
                     </div>
-
-                    <div class="guardian content">
-                        <div [ngSwitch]="tabs">
-                            <ng-container *ngFor="let sd of studentDetails['guardianResponseList']; let i = index">
-                                <div *ngSwitchCase="'guardian' + i">
-                                    <p>
-                                        <label> Name - {{sd['name']}}</label>
-                                    </p>
-                                    <p>
-                                        <label> Email - {{sd['email']}}</label>
-                                    </p>
-                                    <p>
-                                        <label> Mobile Number - {{sd['mobileNumber']}}</label>
-                                    </p>
-                                    <p>
-                                        <label> Relationship - {{sd['relationship']}}</label>
-                                    </p>
-                                </div>
-                            </ng-container>
-                        </div>
+                    -->
+                    <div class="guardian_profile_card">
+                        <h3> {{studentDetails['guardianResponseList'][0]['relationship']}}</h3>
+                        <p>
+                            <label> Name - {{studentDetails['guardianResponseList'][0]['name']}}</label>
+                        </p>
+                        <p>
+                            <label> Email - {{studentDetails['guardianResponseList'][0]['email']}}</label>
+                        </p>
+                        <p>
+                            <label> Mobile Number -
+                                {{studentDetails['guardianResponseList'][0]['mobileNumber']}}</label>
+                        </p>
+                        <p>
+                            <label> Relationship - {{studentDetails['guardianResponseList'][0]['relationship']}}</label>
+                        </p>
                     </div>
-
+                    <div class="guardian_profile_card">
+                        <h3> {{studentDetails['guardianResponseList'][1]['relationship']}} </h3>
+                        <p>
+                            <label> Name - {{studentDetails['guardianResponseList'][1]['name']}}</label>
+                        </p>
+                        <p>
+                            <label> Email - {{studentDetails['guardianResponseList'][1]['email']}}</label>
+                        </p>
+                        <p>
+                            <label> Mobile Number -
+                                {{studentDetails['guardianResponseList'][1]['mobileNumber']}}</label>
+                        </p>
+                        <p>
+                            <label> Relationship - {{studentDetails['guardianResponseList'][1]['relationship']}}</label>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
 
 <!-- <br>
 <div *ngIf="editForm == 'Student Profile'">

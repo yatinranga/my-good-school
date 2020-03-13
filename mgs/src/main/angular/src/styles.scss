@@ -220,6 +220,13 @@ tbody#accordionExample > tr[aria-expanded="true"] {
     background: #ddd;
     color: #333;
 }
+.description {
+    border-right: 1px solid #333;
+    min-height: 260px;
+}
+.description:after, .attachment:before{
+    display: none !important;
+}
 
 /*-------------------------------------HOME-------------------------------------*/
 
@@ -495,30 +502,23 @@ li.nav-item{
 .profile_main{
     width: 100%;
     display: inline-block;
-    height: calc(100vh - 150px);
+    height: calc(100vh - 142px);
 }
-.profile_card{
+
+.student_main {
+    width: 25%;
+    float: left;
     display: inline-block;
-    background: #cecece;
     text-align: center;
-    box-shadow: 0 0 10px #333;
     padding: 0;
     height: 100%;
+    border-right: 2px solid #999;
 }
-.student.profile_card {
-    width: 33%;
-    float: left;
-}
-.profile_card h2 {
+.student_main h2, .guardian_main h2 {
     text-align: center;
     font-size: 30px;
     margin: 15px 0;
     color: $black;
-}
-.nnn{
-    width: 100%;
-    text-align: center;
-    display: inline-block;
 }
 .student_image {
     width: 80%;
@@ -534,73 +534,53 @@ li.nav-item{
 .student_image p {
     font-size: 21px;
     color: #e04090;
-    margin: 15px 0;
+    margin: 15px 0 0px 0;
 }
-.student.content{
+.student_content{
     display: inline-block;
     margin: 0;
     text-align: left;
     border-top: 2px solid #999;
-    padding: 30px 0 0 0;
+    padding: 20px 0 0 0;
     line-height: 30px;
 }
-.content p {
-    margin: 10px 0;
+.student_content p {
+    margin: 5px 0;
     font-size: 18px;
     color: #555;
 }
-.guardian.content p {
-    text-align: left;
+.guardian_main p {
+    margin: 15px 0;
+    font-size: 18px;
+    color: #555;
 }
-.guardian.profile_card {
-    width: 65%;
+.guardian_main {
+    width: 72%;
     float: right;
     padding: 0;
+    background: none;
 }
-.guardian.profile_card h2{
-    text-align: left;
-    padding: 0 10px;
-}
-.tab_nav {
-    width: 100%;
-    padding: 0;
-    margin-top: 10px;
-    display: inline-block;
-    text-align: left;
-}
-.tab_nav ul{
-    display: inline-flex;
-    margin: 0;
-    padding: 0;
-}
-
-.tab_buttons li.active a{
-    border-bottom: 2px solid #e04090; 
-}
-.tab_buttons {
-    display: inline-block;
-}
-.tab_nav a {
-    color: #e04090 !important;
-    width: 100%;
-    margin: 0;
-    font-size: 22px;
-    font-weight: 425;
-}
-.tab_nav a:hover{
-    text-decoration: none;
-}
-.guardian.content {
-    padding: 10px 20px;
-}
-.student.content h3{
+.student_content h3{
     font-size: 22px;
     color: #e04090;
     margin: 0px 0 15px 0;
 }
-.guardian.content h3 {
+.guardian_profile_card h3 {
     font-size: 22px;
-    font-weight: normal;
-    text-align: left;
-    margin: 20px 0;
+    color: #e04090;
+    position: absolute;
+    width: 100px;
+    background: #bfbfbf;
+    height: 35px;
+    top: -18px;
+    padding: 5px 10px;
+    border-radius: 2px;
+}
+.guardian_profile_card {
+    width: 45%;
+    padding: 35px 10px 0px 10px;
+    float: left;
+    margin: 35px 15px;
+    border: 2px solid #999;
+    position: relative;
 }

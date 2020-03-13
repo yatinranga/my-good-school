@@ -92,23 +92,19 @@
                                     <div
                                         *ngIf=" (allActi.activityStatus === 'SavedByStudent') || (allActi.activityStatus === 'SubmittedByStudent')">
                                         <div class="row">
-                                            <div class="col-4">
+                                            <div class="col-6">
                                                 <div class="description">
-                                                    <p *ngIf="allActi.activityName">
-                                                        <strong>Name : </strong>{{allActi.activityName}}</p>
-                                                    <p *ngIf="allActi.description">
-                                                        <strong>Description : </strong>{{allActi.description}}</p>
-                                                    <p *ngIf="allActi.coachName">
-                                                        <strong>Teacher : </strong>{{allActi.coachName}}</p>
                                                     <p *ngIf="allActi.focusAreas">
-                                                        <strong>Focus Area : </strong>{{allActi.focusAreas}}</p>
+                                                        <strong class="focusareas">Focus Area :
+                                                        </strong>{{allActi.focusAreas}}</p>
                                                     <p *ngIf="allActi.psdAreas">
-                                                        <strong>PSD Area : </strong>{{allActi.psdAreas}}</p>
+                                                        <strong class="psdareas">PSD Area :
+                                                        </strong>{{allActi.psdAreas}}</p>
                                                     <p *ngIf="allActi.fourS">
-                                                        <strong>4's: </strong>{{allActi.fourS}}</p>
+                                                        <strong class="fourS">4's: </strong>{{allActi.fourS}}</p>
                                                 </div>
                                             </div>
-                                            <div class="col-4" *ngIf="allActi.fileResponses.length">
+                                            <div class="col-6" *ngIf="allActi.fileResponses.length">
                                                 <div class="attachment">
                                                     <p>
                                                         <strong>Attachments : </strong>
@@ -135,18 +131,14 @@
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="description">
-                                                    <p *ngIf="allActi.activityName">
-                                                        <strong>Name : </strong>{{allActi.activityName}}</p>
-                                                    <p *ngIf="allActi.description">
-                                                        <strong>Description : </strong>{{allActi.description}}</p>
-                                                    <p *ngIf="allActi.coachName">
-                                                        <strong>Teacher : </strong>{{allActi.coachName}}</p>
                                                     <p *ngIf="allActi.focusAreas">
-                                                        <strong>Focus Area : </strong>{{allActi.focusAreas}}</p>
+                                                        <strong class="focusareas">Focus Area :
+                                                        </strong>{{allActi.focusAreas}}</p>
                                                     <p *ngIf="allActi.psdAreas">
-                                                        <strong>PSD Area : </strong>{{allActi.psdAreas}}</p>
+                                                        <strong class="psdareas">PSD Area :
+                                                        </strong>{{allActi.psdAreas}}</p>
                                                     <p *ngIf="allActi.fourS">
-                                                        <strong>Four S : </strong>{{allActi.fourS}}</p>
+                                                        <strong class="fourS">Four S : </strong>{{allActi.fourS}}</p>
                                                 </div>
 
                                             </div>
@@ -219,23 +211,18 @@
                                 <div [attr.id]="'collapse' + i + 'sub'" class="collapse"
                                     data-parent="#accordionExample2">
                                     <div class="row">
-                                        <div class="col-4">
+                                        <div class="col-6">
                                             <div class="description">
-                                                <p *ngIf="sa.activityName">
-                                                    <strong>Name : </strong>{{sa.activityName}}</p>
-                                                <p *ngIf="sa.description">
-                                                    <strong>Description : </strong>{{sa.description}}</p>
-                                                <p *ngIf="sa.coachName">
-                                                    <strong>Teacher : </strong>{{sa.coachName}}</p>
                                                 <p *ngIf="sa.focusAreas">
-                                                    <strong>Focus Area : </strong>{{sa.focusAreas}}</p>
+                                                    <strong class="focusareas">Focus Area : </strong>{{sa.focusAreas}}
+                                                </p>
                                                 <p *ngIf="sa.psdAreas">
-                                                    <strong>PSD Area : </strong>{{sa.psdAreas}}</p>
+                                                    <strong class="psdareas">PSD Area : </strong>{{sa.psdAreas}}</p>
                                                 <p *ngIf="sa.fourS">
-                                                    <strong>Four S : </strong>{{sa.fourS}}</p>
+                                                    <strong class="fourS"> 4S : </strong>{{sa.fourS}}</p>
                                             </div>
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-6">
                                             <div class="attachment">
                                                 <p>
                                                     <strong>Attachments : </strong>
@@ -320,27 +307,18 @@
                                 <div [attr.id]="'collapse' + i + 'sv'" class="collapse"
                                     data-parent="#accordionExample3">
                                     <div class="row">
-                                        <div class="col-4">
-                                            <div class="description">
-                                                <p *ngIf="sa.activityName">
-                                                    <strong>Name : </strong>{{sa.activityName}}</p>
-                                                <p *ngIf="sa.description">
-                                                    <strong>Description : </strong>{{sa.description}}</p>
-                                                <p *ngIf="sa.coachName">
-                                                    <strong>Teacher : </strong>{{sa.coachName}}</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
+                                        <div class="col-6">
                                             <div class="description">
                                                 <p *ngIf="sa.focusAreas">
-                                                    <strong>Focus Area : </strong>{{sa.focusAreas}}</p>
+                                                    <strong class="focusareas">Focus Area : </strong>{{sa.focusAreas}}
+                                                </p>
                                                 <p *ngIf="sa.psdAreas">
-                                                    <strong>PSD Area : </strong>{{sa.psdAreas}}</p>
+                                                    <strong class="pdsareas">PSD Area : </strong>{{sa.psdAreas}}</p>
                                                 <p *ngIf="sa.fourS">
-                                                    <strong>Four S : </strong>{{sa.fourS}}</p>
+                                                    <strong class="fourS"> 4S : </strong>{{sa.fourS}}</p>
                                             </div>
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-6">
                                             <div class="attachment">
                                                 <p>
                                                     <strong>Attachments : </strong>
@@ -407,17 +385,11 @@
                                         <div class="col-6">
                                             <div class="description">
                                                 <p>
-                                                    <strong>Name : </strong>{{ra.activityName}}</p>
+                                                    <strong class="focusareas">Four S : </strong>{{ra.fourS}}</p>
                                                 <p>
-                                                    <strong>Description : </strong>{{ra.description}}</p>
+                                                    <strong class="psdareas">Focus Area : </strong>{{ra.focusAreas}}</p>
                                                 <p>
-                                                    <strong>Teacher : </strong>{{ra.coachName}}</p>
-                                                <p>
-                                                    <strong>Four S : </strong>{{ra.fourS}}</p>
-                                                <p>
-                                                    <strong>Focus Area : </strong>{{ra.focusAreas}}</p>
-                                                <p>
-                                                    <strong>PSD Area : </strong>{{ra.psdAreas}}</p>
+                                                    <strong class="4S">PSD Area : </strong>{{ra.psdAreas}}</p>
                                             </div>
 
                                         </div>
