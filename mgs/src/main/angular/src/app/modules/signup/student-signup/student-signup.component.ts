@@ -26,15 +26,15 @@ export class StudentSignupComponent implements OnInit {
       (err) => console.log(err))
 
     this.studentSignup = new FormGroup({
-      name: new FormControl('',[Validators.required]),
-      dob: new FormControl('',[Validators.required]),
-      email: new FormControl('',[Validators.required,Validators.email]),
-      mobileNumber: new FormControl('',[Validators.min(10)]),
-      gender: new FormControl('',[Validators.required]),
-      schoolId: new FormControl('',[Validators.required]),
-      gradeId : new FormControl('',[Validators.required]),
-      sessionStartDate: new FormControl(''),
-      subscriptionEndDate: new FormControl(''),
+      name: new FormControl(null,[Validators.required]),
+      dob: new FormControl(null,[Validators.required]),
+      email: new FormControl(null,[Validators.required,Validators.email]),
+      mobileNumber: new FormControl(null,[Validators.min(10)]),
+      gender: new FormControl(null,[Validators.required]),
+      schoolId: new FormControl(null,[Validators.required]),
+      gradeId : new FormControl(null,[Validators.required]),
+      sessionStartDate: new FormControl(null),
+      subscriptionEndDate: new FormControl(null),
       guardians: new FormArray(this.giveGuardianFormArray())
     });
   }
