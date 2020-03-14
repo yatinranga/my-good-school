@@ -49,11 +49,11 @@ export class StudentSignupComponent implements OnInit {
   addGuardian() {
     console.log(this.studentSignup);
     const fg = new FormGroup({
-      name: new FormControl(''),
-      email: new FormControl(''),
-      gender: new FormControl(''),
-      mobileNumber: new FormControl(''),
-      relationship: new FormControl('')
+      name: new FormControl(null),
+      email: new FormControl(null),
+      gender: new FormControl(null),
+      mobileNumber: new FormControl(null),
+      relationship: new FormControl(null)
     });
     (this.studentSignup.get('guardians') as FormArray).push(fg);
   }
