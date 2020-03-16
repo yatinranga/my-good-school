@@ -96,20 +96,26 @@ export class StudentService {
     return this.http.delete("/api/student/activity/" + activityId);
   }
 
-  // Get all Focus Area
-  getFocusAreas(){
-    return this.http.get("/focusAreas");
-  }
-  
-  // Get all fourS
-  getFourS(){
-    return this.http.get("/fourS");
+  // get PSD , Focus Area and 4S
+  getActivityAreas(){
+    return this.http.get("/filters");
   }
 
-  // Get PSD Area 
-  getPsdAreas(){
-    return this.http.get("/psdAreas");
-  }  
+  // // Get all Focus Area
+  // getFocusAreas(){
+  //   return this.http.get("/focusAreas");
+  // }
+  
+  // // Get all fourS
+  // getFourS(){
+  //   return this.http.get("/fourS");
+  // }
+
+  // // Get PSD Area 
+  // getPsdAreas(){
+  //   return this.http.get("/psdAreas");
+  // }  
+
   
 
 }

@@ -71,20 +71,29 @@ export class SavedActitvityComponent implements OnInit {
 
   // get PSD , Focus Area and 4S
   getAreas() {
-    this.studentService.getFocusAreas().subscribe((res) => {
-      this.focusAreaArr = res;
-    },
-      (err) => { console.log(err) });
+    // this.studentService.getFocusAreas().subscribe((res) => {
+    //   this.focusAreaArr = res;
+    // },
+    //   (err) => { console.log(err) });
 
-    this.studentService.getPsdAreas().subscribe((res) => {
-      this.psdAreaArr = res;
-    },
-      (err) => { console.log(err) });
+    // this.studentService.getPsdAreas().subscribe((res) => {
+    //   this.psdAreaArr = res;
+    // },
+    //   (err) => { console.log(err) });
 
-    this.studentService.getFourS().subscribe((res) => {
-      this.fourSArr = res;
+    // this.studentService.getFourS().subscribe((res) => {
+    //   this.fourSArr = res;
+    // },
+    //   (err) => { console.log(err) });
+    this.studentService.getActivityAreas().subscribe((res) => {
+      console.log(res);
+      this.psdAreaArr = res["PSD AREAS"]
+      this.focusAreaArr = res["Focus Areas"]
+      this.fourSArr = res["Four S"]
+      console.log(this.fourSArr);
+
     },
-      (err) => { console.log(err) });
+    (err) => {console.log(err);});
   }
 
   // to get the list of SAVED Activities of student
@@ -119,7 +128,7 @@ export class SavedActitvityComponent implements OnInit {
   // to get the list of ALL Activities of student
   getStudentAllActivities(studentId) {
     this.studentService.getAllActivity(studentId).subscribe((res) => {
-      console.log(res);
+      // console.log(res);
       this.allActivitiesArr = res;
       this.copyAllActi = Object.assign([], res);
       this.allActivitiesArr = this.allActivitiesArr.filter((e) => (e.activityStatus != "SavedByTeacher"));
