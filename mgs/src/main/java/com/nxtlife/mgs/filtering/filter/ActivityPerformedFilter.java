@@ -11,7 +11,7 @@ public class ActivityPerformedFilter {
 	private String teacherId;
 	private String studentId;
 	private String activityId;
-	private String focusAreaId;
+	private String focusArea;
 	
 	
 	public String getYear() {
@@ -51,11 +51,12 @@ public class ActivityPerformedFilter {
 	public void setActivityId(String activityId) {
 		this.activityId = activityId;
 	}
-	public String getFocusAreaId() {
-		return focusAreaId;
+	
+	public String getFocusArea() {
+		return focusArea;
 	}
-	public void setFocusAreaId(String focusAreaId) {
-		this.focusAreaId = focusAreaId;
+	public void setFocusArea(String focusArea) {
+		this.focusArea = focusArea;
 	}
 	public String getStudentId() {
 		return studentId;

@@ -24,12 +24,14 @@ public interface UserService {
 	
 	void sendLoginCredentialsByGmailApi(MailRequest request);
 
-	void sendLoginCredentialsBySMTP(Mail request);
+	Boolean sendLoginCredentialsBySMTP(Mail request);
 
 	SuccessResponse changePassword(PasswordRequest request);
 
 	SuccessResponse forgotPassword(String username);
 
 	User createSchoolUser(School school);
+
+	Mail usernamePasswordSendContentBuilder(String username, String password, String mailFrom, String mailTo);
 	
 }

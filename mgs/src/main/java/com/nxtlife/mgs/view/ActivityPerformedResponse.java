@@ -59,6 +59,8 @@ public class ActivityPerformedResponse {
 	private Set<String> psdAreas;
 
 	private String grade;
+	
+	private Integer totalMarks;
 
 	public String getDateOfActivity() {
 		return dateOfActivity;
@@ -236,6 +238,14 @@ public class ActivityPerformedResponse {
 		this.grade = grade;
 	}
 
+	public Integer getTotalMarks() {
+		return totalMarks;
+	}
+
+	public void setTotalMarks(Integer totalMarks) {
+		this.totalMarks = totalMarks;
+	}
+
 	public ActivityPerformedResponse(ActivityPerformed activityPerformed) {
 		this.id = activityPerformed.getCid();
 		this.active = activityPerformed.getActive();
@@ -273,14 +283,15 @@ public class ActivityPerformedResponse {
 		this.coachRemark = activityPerformed.getCoachRemark();
 		if (activityPerformed.getCoachRemarkDate() != null)
 			this.coachRemarkDate = DateUtil.formatDate(activityPerformed.getCoachRemarkDate());
-		this.participationScore = activityPerformed.getParticipationScore();
-		this.initiativeScore = activityPerformed.getInitiativeScore();
-		this.achievementScore = activityPerformed.getAchievementScore();
+		this.participationScore = activityPerformed.getParticipationScore()== null? 0 : activityPerformed.getParticipationScore() ;
+		this.initiativeScore = activityPerformed.getInitiativeScore() == null ? 0 : activityPerformed.getInitiativeScore();
+		this.achievementScore = activityPerformed.getAchievementScore() == null ? 0 : activityPerformed.getAchievementScore();
 		this.star = activityPerformed.getStar();
 		this.fileResponses = new ArrayList<FileResponse>();
 		if (activityPerformed.getFiles() != null)
 			for (File file : activityPerformed.getFiles())
 				this.fileResponses.add(new FileResponse(file));
+		this.totalMarks = this.initiativeScore + this.achievementScore + this.participationScore;
 
 	}
 

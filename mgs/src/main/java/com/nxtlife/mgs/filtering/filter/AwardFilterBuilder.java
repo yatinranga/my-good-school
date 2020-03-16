@@ -20,7 +20,7 @@ public class AwardFilterBuilder {
 				.notEmptyAnd(qAward.dateOfReceipt.year().stringValue()::contains, filter.getYear())
 				.notEmptyAnd(qAward.student.cid.stringValue()::contains, filter.getStudentId())
 				.notEmptyAnd(qAward.teacher.cid.stringValue()::contains, filter.getTeacherId())
-				.notEmptyAnd(qAward.activity.focusAreas.any().cid::contains, filter.getFocusAreaId())
+				.notEmptyAnd(qAward.activity.focusAreas.any().cid::contains, filter.getFocusArea())
 				.notEmptyAnd(qAward.activity.focusAreas.any().psdArea.stringValue()::containsIgnoreCase,
 						filter.getPsdArea())
 				.notEmptyAnd(qAward.activity.fourS.stringValue()::containsIgnoreCase, filter.getFourS()).build();
@@ -32,7 +32,7 @@ public class AwardFilterBuilder {
 				.notEmptyAnd(qAward.dateOfReceipt.year().stringValue()::containsIgnoreCase, filter.getYear())
 				.notEmptyAnd(qAward.student.cid.stringValue()::contains, filter.getStudentId())
 				.notEmptyAnd(qAward.teacher.cid.stringValue()::contains, filter.getTeacherId())
-				.notEmptyAnd(qAward.activity.focusAreas.any().cid::contains, filter.getFocusAreaId())
+				.notEmptyAnd(qAward.activity.focusAreas.any().name::containsIgnoreCase, filter.getFocusArea())
 				.notEmptyAnd(qAward.activity.focusAreas.any().psdArea.stringValue()::containsIgnoreCase,
 						filter.getPsdArea())
 				.notEmptyAnd(qAward.student.cid.stringValue()::contains, studentId)
@@ -47,7 +47,7 @@ public class AwardFilterBuilder {
 				.notEmptyAnd(qAward.dateOfReceipt.year().stringValue()::containsIgnoreCase, filter.getYear())
 				.notEmptyAnd(qAward.student.cid.stringValue()::eq, filter.getStudentId())
 				.notEmptyAnd(qAward.teacher.cid.stringValue()::eq, filter.getTeacherId())
-				.notEmptyAnd(qAward.activity.focusAreas.any().cid::contains, filter.getFocusAreaId())
+				.notEmptyAnd(qAward.activity.focusAreas.any().name::containsIgnoreCase, filter.getFocusArea())
 				.notEmptyAnd(qAward.activity.focusAreas.any().psdArea.stringValue()::containsIgnoreCase,
 						filter.getPsdArea())
 				.notEmptyAnd(qAward.activity::in, activities)

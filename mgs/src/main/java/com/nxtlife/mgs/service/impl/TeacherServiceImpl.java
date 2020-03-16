@@ -15,6 +15,7 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -86,6 +87,9 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	
 	@Autowired
 	ActivityPerformedRepository activityPerformedRepository;
+	
+	@Value("${spring.mail.username}")
+	private String emailUsername;
 
 	@Override
 	public TeacherResponse save(TeacherRequest request) {
@@ -240,6 +244,18 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 
 		if (teacher == null)
 			throw new RuntimeException("Something went wrong teacher not saved.");
+		
+		Boolean emailFlag = false;
+		
+		if (user.getEmail() != null)
+			emailFlag = userService.sendLoginCredentialsBySMTP(userService.usernamePasswordSendContentBuilder(user.getUsername(),
+					user.getRawPassword(), emailUsername, user.getEmail()));
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put("Teacher", new TeacherResponse(teacher));
+		String emailMessage = emailFlag?String.format("Email sent successfully to (%s)", user.getEmail()):String.format("Email not sent successfully to (%s) , email address might be wrong.", user.getEmail());
+		int emailStatusCode = emailFlag?200:400;
+		response.put("MailResponse", new SuccessResponse(emailStatusCode,emailMessage));
+//		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 
 		return new TeacherResponse(teacher);
 	}

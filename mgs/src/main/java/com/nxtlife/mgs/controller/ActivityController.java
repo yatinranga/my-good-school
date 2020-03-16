@@ -1,7 +1,11 @@
 package com.nxtlife.mgs.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -48,22 +52,9 @@ public class ActivityController {
 		return activityService.getAllGeneralActivities();
 	}
 	
-	@GetMapping(value = "/fourS")
-	public List<String> getAllFours(){
-		List<String> fourS = new ArrayList<String>();
-		for(FourS fours : FourS.values()) {
-			fourS.add(fours.toString());
-		}
-		return fourS;
-	}
-	
-	@GetMapping(value = "/psdAreas")
-	public List<String> getAllpsdAreas(){
-		List<String> psdAreas = new ArrayList<String>();
-		for(PSDArea psd : PSDArea.values()) {
-			psdAreas.add(psd.toString());
-		}
-		return psdAreas;
+	@GetMapping(value = "/filters")
+	public Map<String , Object> getAvailableFilters(){	
+		return activityService.getAvailableFilters();
 	}
 
 	@DeleteMapping("api/activitiesOffered/{cid}")

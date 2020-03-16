@@ -20,10 +20,8 @@ public class Mail {
 	private String contentType;
 
 	private List<Object> attachments;
-
-	public Mail() {
-		contentType = "text/plain";
-	}
+	
+	private Boolean html;
 
 	public String getContentType() {
 		return contentType;
@@ -92,5 +90,25 @@ public class Mail {
 	public void setAttachments(List<Object> attachments) {
 		this.attachments = attachments;
 	}
+	
+	public Boolean getHtml() {
+		return html;
+	}
 
+	public void setHtml(Boolean html) {
+		this.html = html;
+	}
+
+	public Mail() {
+		contentType = "text/plain";
+	}
+
+	public Mail(String mailFrom, String mailTo, String mailSubject, String mailContent) {
+		this.mailFrom = mailFrom;
+		this.mailTo = mailTo;
+		this.mailSubject = mailSubject;
+		this.mailContent = mailContent;
+	}
+
+	
 }

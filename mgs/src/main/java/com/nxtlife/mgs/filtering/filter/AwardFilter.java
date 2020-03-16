@@ -12,7 +12,7 @@ public class AwardFilter {
 	private String fourS;
 	private String psdArea;
 	private String activityId;
-	private String focusAreaId;
+	private String focusArea;
 	private String studentId;
 	private String teacherId;
 
@@ -56,12 +56,12 @@ public class AwardFilter {
 		this.activityId = activityId;
 	}
 
-	public String getFocusAreaId() {
-		return focusAreaId;
+	public String getFocusArea() {
+		return focusArea;
 	}
 
-	public void setFocusAreaId(String focusAreaId) {
-		this.focusAreaId = focusAreaId;
+	public void setFocusArea(String focusArea) {
+		this.focusArea = focusArea;
 	}
 
 	public String getStudentId() {

@@ -11,7 +11,7 @@
         <select style="border: 1px solid #ddd" (change)="filterAwards()" [(ngModel)]="focusAreas">
             <option value="" selected disabled> Choose here </option>
             <option value="">None</option>
-            <option *ngFor="let ps of focusAreaArr" value={{ps.name}}>{{ps.name}}</option>
+            <option *ngFor="let ps of focusAreaArr" value={{ps}}>{{ps}}</option>
         </select>
     </div>
 
