@@ -36,6 +36,7 @@ public class ActivityPerformed extends BaseEntity {
 	@Column(unique = true)
 	private String cid;
 
+	@Column(columnDefinition = "VARCHAR ")
 	private String description;
 
 	private String coachRemark;
@@ -46,14 +47,17 @@ public class ActivityPerformed extends BaseEntity {
 
 	@Min(value = 0,message = "Minimum permissible value is 0.")
 	@Max(value = 10,message = "Maximum permissible value is 10.")
+	@Column(columnDefinition = " default INT 0 ")
 	private Integer participationScore;
 
 	@Min(value = 0,message = "Minimum permissible value is 0.")
 	@Max(value = 10,message = "Maximum permissible value is 10.")
+	@Column(columnDefinition = " default INT 0 ")
 	private Integer initiativeScore;
 
 	@Min(value = 0,message = "Minimum permissible value is 0.")
 	@Max(value = 5,message = "Maximum permissible value is 5.")
+	@Column(columnDefinition = " default INT 0 ")
 	private Integer achievementScore;
 
 	@Min(value = 0,message = "Minimum permissible value is 0.")

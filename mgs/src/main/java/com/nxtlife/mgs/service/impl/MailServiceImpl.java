@@ -21,26 +21,27 @@ public class MailServiceImpl extends BaseService implements MailService {
 	@Autowired
 	JavaMailSender mailSender;
 
-	public void sendEmail(Mail mail) {
+	public void sendEmail(Mail mail) throws UnsupportedEncodingException, MessagingException {
 		MimeMessage mimeMessage = mailSender.createMimeMessage();
 
-		try {
+//		try {
 
 			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
 
 			mimeMessageHelper.setSubject(mail.getMailSubject());
 			mimeMessageHelper.setFrom(new InternetAddress(mail.getMailFrom(), "my-good-school.com"));
 			mimeMessageHelper.setTo(mail.getMailTo());
-			mimeMessageHelper.setText(mail.getMailContent());
+//			mimeMessageHelper.setText(mail.getMailContent());
+			mimeMessageHelper.setText(mail.getMailContent(), mail.getHtml());
 //			mimeMessage.setFileName("");
 
 			mailSender.send(mimeMessageHelper.getMimeMessage());
 
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+//		} catch (MessagingException e) {
+//			e.printStackTrace();
+//		} catch (UnsupportedEncodingException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 }

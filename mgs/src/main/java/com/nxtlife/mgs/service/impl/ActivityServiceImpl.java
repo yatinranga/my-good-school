@@ -3,8 +3,10 @@ package com.nxtlife.mgs.service.impl;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
@@ -36,6 +38,7 @@ import com.nxtlife.mgs.jpa.FocusAreaRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
 import com.nxtlife.mgs.service.ActivityService;
 import com.nxtlife.mgs.service.BaseService;
+import com.nxtlife.mgs.service.FocusAreaService;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.ActivityRequestResponse;
@@ -55,6 +58,9 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 
 	@Autowired
 	Utils utils;
+	
+	@Autowired
+	FocusAreaService focusAreaService;
 
 	@PostConstruct
 	public void init() {
@@ -673,5 +679,28 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 		}
 
 		return responseList;
+	}
+	
+	@Override
+	public Map<String , Object> getAvailableFilters(){
+		Map<String, Object> response = new HashMap<String, Object>();
+		
+		Set<String> fourS = new HashSet<String>();
+		for(FourS fours : FourS.values()) {
+			fourS.add(fours.toString());
+		}
+		response.put("Four S", fourS);
+		
+		Set<String> psdAreas = new HashSet<String>();
+		for(PSDArea psd : PSDArea.values()) {
+			psdAreas.add(psd.toString());
+		}
+		response.put("PSD AREAS", psdAreas);
+		
+		Set<String> focusAreas = new HashSet<String>();
+		focusAreaService.getAllFocusAreas().forEach(fa -> {focusAreas.add(fa.getName());});
+		response.put("Focus Areas", focusAreas);
+		
+		return response;
 	}
 }

@@ -94,6 +94,9 @@ public class User extends BaseEntity implements UserDetails {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	private Guardian guardian;
+	
+	@Transient
+	private String rawPassword;
 
 	@PrePersist
 	public void prePersist() {
@@ -278,6 +281,14 @@ public class User extends BaseEntity implements UserDetails {
 
 	public void setGuardian(Guardian guardian) {
 		this.guardian = guardian;
+	}
+
+	public String getRawPassword() {
+		return rawPassword;
+	}
+
+	public void setRawPassword(String rawPassword) {
+		this.rawPassword = rawPassword;
 	}
 
 	public User(String cid, String userName,

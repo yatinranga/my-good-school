@@ -37,6 +37,7 @@ public class Award extends BaseEntity {
 	private String cid;
 
 	@NotNull
+	@Column(columnDefinition = "VARCHAR ")
 	private String description;
 
 	private Boolean active = true;

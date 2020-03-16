@@ -1,6 +1,7 @@
 package com.nxtlife.mgs.service.impl;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.security.GeneralSecurityException;
@@ -20,7 +21,9 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -75,6 +78,9 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Autowired
 	MailService mailService;
+	
+	@Value("${spring.mail.username}")
+	private String emailUsername;
 
 	private static Logger logger = LoggerFactory.getLogger(UserService.class);
 
@@ -153,13 +159,12 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		user.setRegisterType(RegisterType.MANUALLY);
 		user.setUserName(student.getUsername());
 		// setting encrypted password
-
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		String password = utils.generateRandomAlphaNumString(10);
 		String encodedPassword = encoder.encode(password);
-
 		user.setPassword(encodedPassword);
-		System.out.println("Password : " + user.getPassword());
+		user.setRawPassword(password);
+		System.out.println(String.format("Password : %s ANd EncodedPassword : %s", user.getRawPassword() , user.getPassword()) );
 		user.setCid(utils.generateRandomAlphaNumString(8));
 
 		if (student.getSubscriptionEndDate() != null) {
@@ -192,9 +197,11 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 		// setting encrypted password
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		String encodedPassword = encoder.encode(utils.generateRandomAlphaNumString(10));
+		String password = utils.generateRandomAlphaNumString(10);
+		String encodedPassword = encoder.encode(password);
 		user.setPassword(encodedPassword);
-		user.setCid(utils.generateRandomAlphaNumString(8));
+		user.setRawPassword(password);
+		System.out.println(String.format("Password : %s ANd EncodedPassword : %s", user.getRawPassword() , user.getPassword()) );
 
 		// if(teacher.getSubscriptionEndDate()!=null) {
 		// if(teacher.getSubscriptionEndDate().after(Date.from(java.time.LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())))
@@ -242,34 +249,32 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		user.setUserType(UserType.Parent);
 		user.setRegisterType(RegisterType.MANUALLY);
 		user.setUserName(guardian.getUsername());
-		// Setting encrypted password
-		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		String encodedPassword = encoder.encode(utils.generateRandomAlphaNumString(10));
 
-		/*
-		 * if(userRepository.findByPassword(encodedPassword)!=null) throw new
-		 * ValidationException("Password already exist please choose a different one.");
-		 */
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		String password = utils.generateRandomAlphaNumString(10);
+		String encodedPassword = encoder.encode(password);
 		user.setPassword(encodedPassword);
+		user.setRawPassword(password);
+		System.out.println(String.format("Password : %s ANd EncodedPassword : %s", user.getRawPassword() , user.getPassword()) );
 		// try {
 		user.setCid(utils.generateRandomAlphaNumString(8));
 		// } catch (ConstraintViolationException |
 		// javax.validation.ConstraintViolationException ce) {
 		// user.setCid(utils.generateRandomAlphaNumString(8));
 		// }
+		if (guardian.getStudents() != null && !guardian.getStudents().isEmpty())
+			for (Student s : guardian.getStudents()) {
 
-		for (Student s : guardian.getStudents()) {
+				if (s.getSubscriptionEndDate() != null) {
+					if (s.getSubscriptionEndDate().after(
+							Date.from(java.time.LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))) {
+						user.setIsPaid(true);
+						break;
+					}
 
-			if (s.getSubscriptionEndDate() != null) {
-				if (s.getSubscriptionEndDate()
-						.after(Date.from(java.time.LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))) {
-					user.setIsPaid(true);
-					break;
 				}
 
 			}
-
-		}
 
 		Role defaultRole = roleRepository.getOneByName("Guardian");
 		if (defaultRole == null)
@@ -290,6 +295,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		User user = getUser();
 		if (user == null)
 			throw new ValidationException("No user found.");
+		user = userRepository.findByIdAndActiveTrue(user.getId());
 		return new UserResponse(user);
 
 	}
@@ -310,14 +316,22 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	}
 
 	@Override
-	public void sendLoginCredentialsBySMTP(Mail request) {
+	@Async
+	public Boolean sendLoginCredentialsBySMTP(Mail request) {
 		if (request.getMailTo() == null || request.getMailFrom() == null || request.getMailSubject() == null)
 			throw new ValidationException("Please provide to , from and subject if not provided already.");
 		if (request.getMailContent() == null)
 			throw new ValidationException("Please provide email content to send.");
-		mailService.sendEmail(request);
+		try {
+			mailService.sendEmail(request);
+		} catch (UnsupportedEncodingException | MessagingException e) {
+			return false;
+			//throw new ValidationException(String.format("Something went wrong unable to send email to (%s)", request.getMailTo()));
+		}
 		logger.info(String.format("Email sent successfuly to email address %s ", request.getMailTo()));
 		System.out.println(String.format("Email sent successfuly to email address %s ", request.getMailTo()));
+		
+		return true;
 	}
 
 	public SuccessResponse changePassword(PasswordRequest request) {
@@ -326,16 +340,21 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 		User user = getUser();
 
+		if (user == null)
+			throw new ValidationException("No user found.");
+		user = userRepository.findByIdAndActiveTrue(user.getId());
+		
 		String encodedPassword = user.getPassword();
 
 		if (encodedPassword == null) {
 			throw new NotFoundException(
-					String.format("User[id-%s] not found or password already exist", user.getCid()));
+					String.format("Old Password of user having [id-%s] not set. ", user.getCid()));
 		}
+		
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 		if (!encoder.matches(request.getOldPassword(), encodedPassword)) {
-			throw new ValidationException(String.format("old password[%s] incorrect", request.getOldPassword()));
+			throw new ValidationException(String.format("old password[%s] is  incorrect", request.getOldPassword()));
 		}
 		user.setPassword(encoder.encode(request.getPassword()));
 		user = userRepository.save(user);
@@ -353,20 +372,27 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		User user = userRepository.findByUserNameAndActiveTrue(username);
 
 		if (user == null) {
-			throw new NotFoundException(String.format("no user found having username : [%s] ", username));
+			throw new NotFoundException(String.format("No user found having username : [%s] ", username));
 		}
 
 		if (user.getEmail() == null && user.getMobileNo() == null) {
-			throw new ValidationException("User email/contact not register with us");
+			throw new ValidationException("User email/contact not registered with us");
 		}
 
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
-		user.setPassword(encoder.encode(utils.generateRandomAlphaNumString(10)));
+		
+		String generatedPassword = utils.generateRandomAlphaNumString(8);
+		user.setPassword(encoder.encode(generatedPassword));
 		user = userRepository.save(user);
-
+		
+		if (user.getEmail() != null) {
+			Mail mail = usernamePasswordSendContentBuilder(user.getUsername(),
+					generatedPassword, emailUsername, user.getEmail());
+			mail.setMailSubject("Password reset successful.");
+			sendLoginCredentialsBySMTP(mail);
+		}
 		return new SuccessResponse(HttpStatus.OK.value(),
-				"new generated password has been sent to your email and contact number");
+				"New generated password has been sent to your email and/or contact number");
 
 	}
 
@@ -380,12 +406,13 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		user.setUserType(UserType.School);
 		user.setRegisterType(RegisterType.MANUALLY);
 		user.setUserName(school.getUsername());
+		user.setEmail(school.getEmail());
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		String password = utils.generateRandomAlphaNumString(10);
 		String encodedPassword = encoder.encode(password);
-
 		user.setPassword(encodedPassword);
-		System.out.println("Password : " + user.getPassword());
+		user.setRawPassword(password);
+		System.out.println(String.format("Password : %s ANd EncodedPassword : %s", user.getRawPassword() , user.getPassword()) );
 		user.setCid(utils.generateRandomAlphaNumString(8));
 
 		// user.setIsPaid(true);
@@ -396,9 +423,18 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 		user.setRoleForUser(defaultRole);
 		user.setSchool(school);
-		user.setEmail(school.getEmail());
 		user.setMobileNo(school.getContactNumber());
 		return user;
+	}
+
+	@Override
+	public Mail usernamePasswordSendContentBuilder(String username, String password, String mailFrom, String mailTo) {
+		String mailContent = String.format(
+				"<b> Login Credentials :</b> <br> <b> Username :</b> %s <br> <b> Password :</b> %s <br>", username,
+				password);
+		Mail mail = new Mail(mailFrom, mailTo, "My Good School Login Credentials", mailContent);
+		mail.setHtml(true);
+		return mail;
 	}
 
 }

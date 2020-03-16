@@ -18,6 +18,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -50,6 +51,7 @@ import com.nxtlife.mgs.view.GradeRequest;
 import com.nxtlife.mgs.view.SchoolRequest;
 import com.nxtlife.mgs.view.SchoolResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
+import com.nxtlife.mgs.view.TeacherResponse;
 
 @Service
 public class SchoolServiceImpl extends BaseService implements SchoolService {
@@ -77,9 +79,12 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 
 	@Autowired
 	ActivityRepository activityRepository;
-	
+
 	@Autowired
 	GradeRepository gradeRepository;
+
+	@Value("${spring.mail.username}")
+	private String emailUsername;
 
 	@PostConstruct
 	public void init() {
@@ -98,10 +103,11 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 		if (school == null) {
 			school = new School();
 			school.setName("my good school");
-			Long sequence = sequenceGeneratorService.findSequenceByUserType(UserType.School);
-			sequence = sequence == null ? 0 : sequence++;
-			school.setUsername(String.format("SCH%08d", sequence));
-			sequenceGeneratorService.updateSequenceByUserType(sequence, UserType.School);
+//			Long sequence = sequenceGeneratorService.findSequenceByUserType(UserType.School);
+//			sequence = sequence == null ? 0 : sequence++;
+//			school.setUsername(String.format("SCH%08d", sequence));
+			Long schoolsequence = sequenceGeneratorService.findSequenceByUserType(UserType.School);
+			sequenceGeneratorService.updateSequenceByUserType(schoolsequence, UserType.School);
 			school.setEmail("mygoodschool@gmail.com");
 			school.setCid(utils.generateRandomAlphaNumString(8));
 			school.setActive(true);
@@ -119,11 +125,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			String encodedPassword = encoder.encode("root");
 			user.setPassword(encodedPassword);
 //			user.setPassword("root");
-			try {
-				user.setCid(utils.generateRandomAlphaNumString(8));
-			} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
-				user.setCid(utils.generateRandomAlphaNumString(8));
-			}
+			user.setCid(utils.generateRandomAlphaNumString(8));
 			user.setActive(true);
 			user.setMobileNo(utils.generateRandomNumString(10));
 			user.setEmail(school.getEmail());
@@ -245,6 +247,22 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 
 		if (school == null)
 			throw new RuntimeException("Something went wrong school not saved.");
+
+		// sending login credentials
+		
+		Boolean emailFlag = false;
+		
+		if (user.getEmail() != null)
+			emailFlag = userService.sendLoginCredentialsBySMTP(userService.usernamePasswordSendContentBuilder(user.getUsername(),
+					user.getRawPassword(), emailUsername, user.getEmail()));
+		
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put("Teacher", new SchoolResponse(school));
+		String emailMessage = emailFlag?String.format("Email sent successfully to (%s)", user.getEmail()):String.format("Email not sent successfully to (%s) , email address might be wrong.", user.getEmail());
+		int emailStatusCode = emailFlag?200:400;
+		response.put("MailResponse", new SuccessResponse(emailStatusCode,emailMessage));
+//		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+		
 		return new SchoolResponse(school);
 
 	}
@@ -442,23 +460,24 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			throw new NotFoundException(String.format("school havind id [%s] didn't exist", cid));
 
 		school = request.toEntity(school);
-		
-		if(request.getGradeRequests()!=null && !request.getGradeRequests().isEmpty()) {
+
+		if (request.getGradeRequests() != null && !request.getGradeRequests().isEmpty()) {
 			List<GradeRequest> gradeRequests = request.getGradeRequests();
 			List<Grade> previousGrades = new ArrayList<Grade>();
 			List<Grade> gradesToDelete = new ArrayList<Grade>();
 			previousGrades = school.getGrades();
-			if(previousGrades.isEmpty()) {
+			if (previousGrades.isEmpty()) {
 				updateGradesOfSchool(gradeRequests, previousGrades, school);
-			}else {
-				for(int i = 0; i<previousGrades.size();i++) {
+			} else {
+				for (int i = 0; i < previousGrades.size(); i++) {
 					String grdCid = previousGrades.get(i).getCid();
-					GradeRequest gradeRequest = gradeRequests.stream().filter(grd -> grd.getId()!=null && grd.getId().equals(grdCid)).findAny().orElse(null);
-					if(gradeRequest!=null) {
+					GradeRequest gradeRequest = gradeRequests.stream()
+							.filter(grd -> grd.getId() != null && grd.getId().equals(grdCid)).findAny().orElse(null);
+					if (gradeRequest != null) {
 						gradeRequests.remove(gradeRequest);
-					}else {
+					} else {
 						List<School> schools = previousGrades.get(i).getSchools();
-						if(!schools.isEmpty() && !schools.isEmpty()) {
+						if (!schools.isEmpty() && !schools.isEmpty()) {
 							schools.remove(school);
 							previousGrades.get(i).setSchools(schools);
 							gradesToDelete.add(previousGrades.get(i));
@@ -466,34 +485,35 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 						previousGrades.remove(i--);
 					}
 				}
-				
-				if(gradeRequests!=null && !gradeRequests.isEmpty())
+
+				if (gradeRequests != null && !gradeRequests.isEmpty())
 					updateGradesOfSchool(gradeRequests, previousGrades, school);
 
 			}
-			
+
 			school.setGrades(previousGrades);
 			gradeRepository.save(gradesToDelete);
 		}
-	
+
 		school = schoolRepository.save(school);
 
 		return new SchoolResponse(school);
 	}
-	
-	private void updateGradesOfSchool(List<GradeRequest> gradeRequests , List<Grade> previousGrades , School school ) {
-		for(GradeRequest gradeReq : gradeRequests) {
-			if(gradeReq.getId()!=null) {
-				if(!gradeRepository.existsByCidAndActiveTrue(gradeReq.getId()))
-					throw new ValidationException(String.format("Grade with id (%s) does not exist.", gradeReq.getId()));
+
+	private void updateGradesOfSchool(List<GradeRequest> gradeRequests, List<Grade> previousGrades, School school) {
+		for (GradeRequest gradeReq : gradeRequests) {
+			if (gradeReq.getId() != null) {
+				if (!gradeRepository.existsByCidAndActiveTrue(gradeReq.getId()))
+					throw new ValidationException(
+							String.format("Grade with id (%s) does not exist.", gradeReq.getId()));
 				Grade grade = gradeRepository.findByCidAndActiveTrue(gradeReq.getId());
 				List<School> schools = grade.getSchools();
 				schools.add(school);
 				grade.setSchools(schools);
 				previousGrades.add(grade);
-				
-			}else {
-				Grade grade =gradeReq.toEntity();
+
+			} else {
+				Grade grade = gradeReq.toEntity();
 				List<School> schools = new ArrayList<School>();
 				schools.add(school);
 				grade.setSchools(schools);

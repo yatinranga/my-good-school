@@ -39,6 +39,7 @@ public class StudentRequest {
 	@Email(message = "email pattern not vaild")
 	private String email;
 
+	
 	@Size(min = 10, max = 10)
 	@Pattern(regexp = "^[0-9]*$", message = "Mobile no should contain only digit")
 	private String mobileNumber;

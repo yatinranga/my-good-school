@@ -33,7 +33,7 @@ public class ActivityPerformedFilterBuilder implements FilterBuilder<ActivityPer
 				.notEmptyAnd(ActivityPerformed.activity.fourS.stringValue()::containsIgnoreCase, filter.getFourS())
 				.notEmptyAnd(ActivityPerformed.activityStatus.stringValue()::containsIgnoreCase, filter.getStatus())
 				.notEmptyAnd(ActivityPerformed.activity.cid::contains, filter.getActivityId())
-				.notEmptyAnd(ActivityPerformed.activity.focusAreas.any().cid::contains, filter.getFocusAreaId())
+				.notEmptyAnd(ActivityPerformed.activity.focusAreas.any().name::containsIgnoreCase, filter.getFocusArea())
 				.notEmptyAnd(ActivityPerformed.activity.focusAreas.any().psdArea.stringValue()::containsIgnoreCase,
 						filter.getPsdArea())
 				.notEmptyAnd(ActivityPerformed.dateOfActivity.year().stringValue()::containsIgnoreCase,
