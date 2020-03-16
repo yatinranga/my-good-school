@@ -245,12 +245,16 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		if (teacher == null)
 			throw new RuntimeException("Something went wrong teacher not saved.");
 		
+		Boolean emailFlag = false;
+		
 		if (user.getEmail() != null)
-			userService.sendLoginCredentialsBySMTP(userService.usernamePasswordSendContentBuilder(user.getUsername(),
+			emailFlag = userService.sendLoginCredentialsBySMTP(userService.usernamePasswordSendContentBuilder(user.getUsername(),
 					user.getRawPassword(), emailUsername, user.getEmail()));
-//		Map<String, Object> response = new HashMap<String, Object>();
-//		response.put("Teacher", new TeacherResponse(teacher));
-//		response.put("MailResponse", new SuccessResponse(200,String.format("Email sent successfully to (%s)", user.getEmail())));
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put("Teacher", new TeacherResponse(teacher));
+		String emailMessage = emailFlag?String.format("Email sent successfully to (%s)", user.getEmail()):String.format("Email not sent successfully to (%s) , email address might be wrong.", user.getEmail());
+		int emailStatusCode = emailFlag?200:400;
+		response.put("MailResponse", new SuccessResponse(emailStatusCode,emailMessage));
 //		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 
 		return new TeacherResponse(teacher);

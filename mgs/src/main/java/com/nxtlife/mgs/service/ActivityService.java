@@ -1,6 +1,7 @@
 package com.nxtlife.mgs.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,5 +22,7 @@ public interface ActivityService {
 	SuccessResponse deleteActivityByCid(String cid);
 
 	List<ActivityRequestResponse> getAllGeneralActivities();
+
+	Map<String, Object> getAvailableFilters();
 
 }

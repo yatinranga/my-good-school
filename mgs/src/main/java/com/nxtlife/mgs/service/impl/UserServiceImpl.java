@@ -78,6 +78,9 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Autowired
 	MailService mailService;
+	
+	@Value("${spring.mail.username}")
+	private String emailUsername;
 
 	private static Logger logger = LoggerFactory.getLogger(UserService.class);
 
@@ -314,7 +317,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Override
 	@Async
-	public void sendLoginCredentialsBySMTP(Mail request) {
+	public Boolean sendLoginCredentialsBySMTP(Mail request) {
 		if (request.getMailTo() == null || request.getMailFrom() == null || request.getMailSubject() == null)
 			throw new ValidationException("Please provide to , from and subject if not provided already.");
 		if (request.getMailContent() == null)
@@ -322,11 +325,13 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		try {
 			mailService.sendEmail(request);
 		} catch (UnsupportedEncodingException | MessagingException e) {
-			e.printStackTrace();
-			throw new ValidationException(String.format("Something went wrong unable to send email to (%s)", request.getMailTo()));
+			return false;
+			//throw new ValidationException(String.format("Something went wrong unable to send email to (%s)", request.getMailTo()));
 		}
 		logger.info(String.format("Email sent successfuly to email address %s ", request.getMailTo()));
 		System.out.println(String.format("Email sent successfuly to email address %s ", request.getMailTo()));
+		
+		return true;
 	}
 
 	public SuccessResponse changePassword(PasswordRequest request) {
@@ -335,16 +340,21 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 		User user = getUser();
 
+		if (user == null)
+			throw new ValidationException("No user found.");
+		user = userRepository.findByIdAndActiveTrue(user.getId());
+		
 		String encodedPassword = user.getPassword();
 
 		if (encodedPassword == null) {
 			throw new NotFoundException(
-					String.format("User[id-%s] not found or password already exist", user.getCid()));
+					String.format("Old Password of user having [id-%s] not set. ", user.getCid()));
 		}
+		
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 		if (!encoder.matches(request.getOldPassword(), encodedPassword)) {
-			throw new ValidationException(String.format("old password[%s] incorrect", request.getOldPassword()));
+			throw new ValidationException(String.format("old password[%s] is  incorrect", request.getOldPassword()));
 		}
 		user.setPassword(encoder.encode(request.getPassword()));
 		user = userRepository.save(user);
@@ -362,20 +372,27 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		User user = userRepository.findByUserNameAndActiveTrue(username);
 
 		if (user == null) {
-			throw new NotFoundException(String.format("no user found having username : [%s] ", username));
+			throw new NotFoundException(String.format("No user found having username : [%s] ", username));
 		}
 
 		if (user.getEmail() == null && user.getMobileNo() == null) {
-			throw new ValidationException("User email/contact not register with us");
+			throw new ValidationException("User email/contact not registered with us");
 		}
 
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
-		user.setPassword(encoder.encode(utils.generateRandomAlphaNumString(10)));
+		
+		String generatedPassword = utils.generateRandomAlphaNumString(8);
+		user.setPassword(encoder.encode(generatedPassword));
 		user = userRepository.save(user);
-
+		
+		if (user.getEmail() != null) {
+			Mail mail = usernamePasswordSendContentBuilder(user.getUsername(),
+					generatedPassword, emailUsername, user.getEmail());
+			mail.setMailSubject("Password reset successful.");
+			sendLoginCredentialsBySMTP(mail);
+		}
 		return new SuccessResponse(HttpStatus.OK.value(),
-				"new generated password has been sent to your email and contact number");
+				"New generated password has been sent to your email and/or contact number");
 
 	}
 

@@ -196,7 +196,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 		if (request.getGuardians() != null) {
 			for (GuardianRequest guardianRequest : request.getGuardians()) {
-				List<Student> st;
+				List<Student> studList;
 				if ((guardianRequest.getMobileNumber() != null && guardianRequest.getEmail() != null)) {
 					guardian = guardianRepository.findByEmailOrMobileNumber(guardianRequest.getEmail(),
 							guardianRequest.getMobileNumber());
@@ -207,14 +207,14 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 						guardian.setCid(utils.generateRandomAlphaNumString(8));
 						guardian.setUser(userService.createParentUser(guardian));
 						guardian = guardianRepository.save(guardian);
-						st = new ArrayList<Student>();
-						st.add(student);
-						guardian.setStudents(st);
+						studList = new ArrayList<Student>();
+						studList.add(student);
+						guardian.setStudents(studList);
 						guardians.add(guardian);
 					} else {
-						st = guardian.getStudents();
-						st.add(student);
-						guardian.setStudents(st);
+						studList = guardian.getStudents();
+						studList.add(student);
+						guardian.setStudents(studList);
 						guardians.add(guardian);
 					}
 				} else if (guardianRequest.getMobileNumber() != null) {
@@ -227,14 +227,14 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 						guardian.setCid(utils.generateRandomAlphaNumString(8));
 						guardian.setUser(userService.createParentUser(guardian));
 						guardian = guardianRepository.save(guardian);
-						st = new ArrayList<Student>();
-						st.add(student);
-						guardian.setStudents(st);
+						studList = new ArrayList<Student>();
+						studList.add(student);
+						guardian.setStudents(studList);
 						guardians.add(guardian);
 					} else {
-						st = guardian.getStudents();
-						st.add(student);
-						guardian.setStudents(st);
+						studList = guardian.getStudents();
+						studList.add(student);
+						guardian.setStudents(studList);
 						guardians.add(guardian);
 					}
 
@@ -248,14 +248,14 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 						guardian.setCid(utils.generateRandomAlphaNumString(8));
 						guardian.setUser(userService.createParentUser(guardian));
 						guardian = guardianRepository.save(guardian);
-						st = new ArrayList<Student>();
-						st.add(student);
-						guardian.setStudents(st);
+						studList = new ArrayList<Student>();
+						studList.add(student);
+						guardian.setStudents(studList);
 						guardians.add(guardian);
 					} else {
-						st = guardian.getStudents();
-						st.add(student);
-						guardian.setStudents(st);
+						studList = guardian.getStudents();
+						studList.add(student);
+						guardian.setStudents(studList);
 						guardians.add(guardian);
 					}
 				}
@@ -268,17 +268,41 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		if (student == null) {
 			throw new RuntimeException("Something went wrong student not saved.");
 		}
+		
+		Boolean emailFlag = false;
 
 		if (user.getEmail() != null)
-			userService.sendLoginCredentialsBySMTP(userService.usernamePasswordSendContentBuilder(user.getUsername(),
+			emailFlag =userService.sendLoginCredentialsBySMTP(userService.usernamePasswordSendContentBuilder(user.getUsername(),
 					user.getRawPassword(), emailUsername, user.getEmail()));
 		
-//		Map<String, Object> response = new HashMap<String, Object>();
-//		response.put("Student", new StudentResponse(student));
-//		response.put("MailResponse", new SuccessResponse(200,String.format("Email sent successfully to (%s)", user.getEmail())));
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put("Student", new StudentResponse(student));
+		String emailMessage = emailFlag?String.format("Email sent successfully to (%s)", user.getEmail()):String.format("Email not sent successfully to (%s) , email address might be wrong.", user.getEmail());
+		int emailStatusCode = emailFlag?200:400;
+		response.put("MailResponse", new SuccessResponse(emailStatusCode,emailMessage));
 //		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 
 		return new StudentResponse(student);
+	}
+	
+	private void createOrSetGuardianUtility(Student student , Guardian guardian , List<Student> studList , List<Guardian> guardians ,Long sequence ,GuardianRequest guardianRequest) {
+		if (guardian == null) {
+			guardian = guardianRequest.toEntity();
+			sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
+			guardian.setUsername(String.format("GRD%08d", sequence));
+			guardian.setCid(utils.generateRandomAlphaNumString(8));
+			guardian.setUser(userService.createParentUser(guardian));
+			guardian = guardianRepository.save(guardian);
+			studList = new ArrayList<Student>();
+			studList.add(student);
+			guardian.setStudents(studList);
+			guardians.add(guardian);
+		} else {
+			studList = guardian.getStudents();
+			studList.add(student);
+			guardian.setStudents(studList);
+			guardians.add(guardian);
+		}
 	}
 
 	@Override

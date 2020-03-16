@@ -24,7 +24,7 @@ public interface UserService {
 	
 	void sendLoginCredentialsByGmailApi(MailRequest request);
 
-	void sendLoginCredentialsBySMTP(Mail request);
+	Boolean sendLoginCredentialsBySMTP(Mail request);
 
 	SuccessResponse changePassword(PasswordRequest request);
 
