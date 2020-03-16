@@ -26,18 +26,20 @@ export class TeacherActivityComponent implements OnInit {
   reviewForm: FormGroup;
   selectedActivity: any;
 
+  activitiesArr = []; //single arr for performed actvities
+
 
   constructor(private teacherService: TeacherService, private alertService: AlertService, private formBuilder: FormBuilder) { }
 
   ngOnInit() {
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
     this.teacherId = this.teacherInfo['teacher'].id;
-    this.teacherService.getPendingActivity(this.teacherId).subscribe((res) => {
-      this.activities = res;
-      this.pendingActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SubmittedByStudent"));
-      this.savedActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SavedByTeacher"));
-    },
-      (err) => console.log(err));
+    // this.teacherService.getPendingActivity(this.teacherId).subscribe((res) => {
+    //   this.activities = res;
+    //   this.pendingActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SubmittedByStudent"));
+    //   this.savedActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SavedByTeacher"));
+    // },
+    //   (err) => console.log(err));
 
     this.reviewFormInit();
     this.activityView(this.activityType);
@@ -68,9 +70,12 @@ export class TeacherActivityComponent implements OnInit {
 
   // PENDING Activities of Teacher
   pendingActivities() {
+    this.activitiesArr = [];
     this.teacherService.getPendingActivity(this.teacherId).subscribe((res) => {
-      this.activities = res;
-      this.pendingActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SubmittedByStudent"));
+      // this.activities = res;
+      // this.pendingActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SubmittedByStudent"));
+      this.pendingActivitiesArr = res.filter((e) => (e.activityStatus == "SubmittedByStudent"));
+      this.activitiesArr = this.pendingActivitiesArr;
       console.log(this.pendingActivitiesArr);
       this.loader = false;
     },
@@ -82,9 +87,12 @@ export class TeacherActivityComponent implements OnInit {
 
   // Saved Activities of Teacher
   savedActivities() {
+    this.activitiesArr = [];
     this.teacherService.getPendingActivity(this.teacherId).subscribe((res) => {
-      this.activities = res;
-      this.savedActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SavedByTeacher"));
+      // this.activities = res;
+      // this.savedActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SavedByTeacher"));
+      this.savedActivitiesArr = res.filter((e) => (e.activityStatus == "SavedByTeacher"));
+      this.activitiesArr = this.savedActivitiesArr;
       this.loader = false;
     },
       (err) => {
@@ -95,9 +103,11 @@ export class TeacherActivityComponent implements OnInit {
 
   // All activities of Teacher
   allActivities() {
+    this.activitiesArr = [];
     this.teacherService.getAllActivity(this.teacherId).subscribe((res) => {
       console.log(res);
-      this.allActivitiesArr = res;
+      this.allActivitiesArr = res.filter((e) => (e.activityStatus != "SavedByStudent"));
+      this.activitiesArr = this.allActivitiesArr;
       this.loader = false;
     },
       (err) => {
@@ -108,10 +118,11 @@ export class TeacherActivityComponent implements OnInit {
 
   // REVIEWED Activities of Teacher
   reviewedActivities() {
+    this.activitiesArr = [];
     this.teacherService.getReviewedActivity(this.teacherId).subscribe((res) => {
-      console.log("reviewed");
       console.log(res);
       this.reviewedActivitiesArr = res;
+      this.activitiesArr = this.reviewedActivitiesArr;
       this.loader = false;
     },
       (err) => {
