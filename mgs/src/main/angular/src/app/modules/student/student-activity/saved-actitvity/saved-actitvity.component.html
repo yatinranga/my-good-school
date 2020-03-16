@@ -99,6 +99,7 @@
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="description">
+                                                        <h5> Development Parameters </h5>
                                                     <p *ngIf="activity.focusAreas">
                                                         <strong>Focus Area : </strong>{{activity.focusAreas}}</p>
                                                     <p *ngIf="activity.psdAreas">
@@ -122,9 +123,7 @@
                                             </div>
                                             <div class="col-6" *ngIf="activity.fileResponses.length">
                                                 <div class="attachment">
-                                                    <p>
-                                                        <strong>Attachments : </strong>
-                                                    </p>
+                                                        <h5> Attachments </h5>
                                                     <div *ngFor="let file of activity.fileResponses">
                                                         <div>
                                                             <a [attr.href]="file.url">
@@ -145,8 +144,9 @@
 
                                     <div *ngIf=" activity.activityStatus === 'Reviewed'">
                                         <div class="row">
-                                            <div class="col-4">
+                                            <div class="col-6">
                                                 <div class="description">
+                                                        <h5> Development Parameters </h5>
                                                     <p *ngIf="activity.focusAreas">
                                                         <strong>Focus Area : </strong>{{activity.focusAreas}}</p>
                                                     <p *ngIf="activity.psdAreas">
@@ -169,26 +169,25 @@
                                                 </div>
 
                                             </div>
-                                            <div class="col-4">
+                                            <div class="col-6">
                                                 <div class="description">
+                                                    <h5> Scoring </h5>
                                                 <p>
-                                                    <strong>Participation Score :</strong>{{activity.participationScore}}
+                                                    <strong>Participation Score - </strong>{{activity.participationScore}}
                                                 </p>
                                                 <p>
-                                                    <strong>Initiative Score :</strong>{{activity.initiativeScore}}</p>
+                                                    <strong>Initiative Score - </strong>{{activity.initiativeScore}}</p>
                                                 <p>
-                                                    <strong>Achievement Score :</strong>{{activity.achievementScore}}</p>
+                                                    <strong>Achievement Score - </strong>{{activity.achievementScore}}</p>
                                                 <p>
-                                                    <strong>Star : </strong>{{activity.star}}</p>
+                                                    <strong>Star -  </strong>{{activity.star}}</p>
                                                 <p>
-                                                    <strong>Remarks :</strong>{{activity.coachRemark}}</p>
+                                                    <strong>Remarks - </strong>{{activity.coachRemark}}</p>
                                             </div>
                                             </div>
                                             <div class="col-4" *ngIf="activity.fileResponses.length">
                                                 <div class="attachment">
-                                                    <p>
-                                                        <strong>Attachments : </strong>
-                                                    </p>
+                                                        <h5> Attachments </h5>
                                                     <div *ngFor="let file of activity.fileResponses">
                                                         <div>
                                                             <a [attr.href]="file.url">
@@ -703,4 +702,4 @@
         </div>
     </form>
 </div>
-<button class="add_activity" (click)="addActivity()">Add Activity </button>
+<button class="add_activity" (click)="addActivity()"> <i class="fa fa-plus"></i> </button>

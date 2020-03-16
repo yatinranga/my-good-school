@@ -48,14 +48,15 @@
                                     </td>
                                     <td>
                                         <button [disabled]="!(allacti.activityStatus === 'SavedByTeacher')"
-                                            (click)="submitSavedActivity($event,i,'All')" class="submitted icon_button">
-                                            <i class="fa fa-paper-plane" title="Submit"> </i> </button>
-                                        <button [disabled]="!(allacti.activityStatus === 'SavedByTeacher')"
                                             (click)="editSavedActivity(allacti, $event)" class="saved icon_button"> <i
                                                 class="fa fa-edit" title="Edit"> </i> </button>
+                                        <button [disabled]="!(allacti.activityStatus === 'SavedByTeacher')"
+                                            (click)="submitSavedActivity($event,i,'All')" class="submitted icon_button">
+                                            <i class="fa fa-paper-plane" title="Submit"> </i> </button>
+
                                         <button [disabled]="!(allacti.activityStatus === 'SubmittedByStudent')"
-                                            (click)="reviewActivity(allacti, $event)" class="pending icon_button"> <i
-                                                class="fa fa-comments" title="Review"></i> </button>
+                                            (click)="reviewActivity(allacti, $event)" class="pending icon_button">
+                                            <i class="fa fa-comment" title="Review"></i> </button>
                                     </td>
                                 </tr>
                                 <tr>
@@ -65,26 +66,27 @@
 
                                             <div *ngIf="allacti.activityStatus === 'Reviewed'">
                                                 <div class="row">
-                                                        <div class="col-4">
-                                                            <div class="description">
-                                                                <p>
-                                                                    <strong>Participation Score
-                                                                        :</strong>{{allacti.participationScore}}</p>
-                                                                <p>
-                                                                    <strong>Initiative Score
-                                                                        :</strong>{{allacti.initiativeScore}}</p>
-                                                                <p>
-                                                                    <strong>Achievement Score
-                                                                        :</strong>{{allacti.achievementScore}}</p>
-                                                                <p>
-                                                                    <strong>Star : </strong>{{allacti.star}}</p>
-                                                                <p>
-                                                                    <strong>Remarks :</strong>{{allacti.coachRemark}}</p>
-                                                                <p>
-                                                                    <strong>Date : </strong>{{allacti.coachRemarkDate | date }}
-                                                                </p>
-                                                            </div>
+                                                    <div class="col-4">
+                                                        <div class="description">
+                                                            <p>
+                                                                <strong>Participation Score
+                                                                    :</strong>{{allacti.participationScore}}</p>
+                                                            <p>
+                                                                <strong>Initiative Score
+                                                                    :</strong>{{allacti.initiativeScore}}</p>
+                                                            <p>
+                                                                <strong>Achievement Score
+                                                                    :</strong>{{allacti.achievementScore}}</p>
+                                                            <p>
+                                                                <strong>Star : </strong>{{allacti.star}}</p>
+                                                            <p>
+                                                                <strong>Remarks :</strong>{{allacti.coachRemark}}</p>
+                                                            <p>
+                                                                <strong>Date :
+                                                                </strong>{{allacti.coachRemarkDate | date }}
+                                                            </p>
                                                         </div>
+                                                    </div>
                                                     <div class="col-4">
                                                         <div class="description">
                                                             <p>
@@ -114,32 +116,33 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    
+
                                                 </div>
                                             </div>
 
                                             <div *ngIf="allacti.activityStatus === 'SavedByTeacher'">
                                                 <div class="row">
-                                                        <div class="col-4">
-                                                                <div class="description">
-                                                                <p>
-                                                                    <strong>Participation Score
-                                                                        :</strong>{{allacti.participationScore}}</p>
-                                                                <p>
-                                                                    <strong>Initiative Score
-                                                                        :</strong>{{allacti.initiativeScore}}</p>
-                                                                <p>
-                                                                    <strong>Achievement Score
-                                                                        :</strong>{{allacti.achievementScore}}</p>
-                                                                <p>
-                                                                    <strong>Star : </strong>{{allacti.star}}</p>
-                                                                <p>
-                                                                    <strong>Remarks :</strong>{{allacti.coachRemark}}</p>
-                                                                <p>
-                                                                    <strong>Date : </strong>{{allacti.coachRemarkDate | date }}
-                                                                </p>
-                                                            </div>
+                                                    <div class="col-4">
+                                                        <div class="description">
+                                                            <p>
+                                                                <strong>Participation Score
+                                                                    :</strong>{{allacti.participationScore}}</p>
+                                                            <p>
+                                                                <strong>Initiative Score
+                                                                    :</strong>{{allacti.initiativeScore}}</p>
+                                                            <p>
+                                                                <strong>Achievement Score
+                                                                    :</strong>{{allacti.achievementScore}}</p>
+                                                            <p>
+                                                                <strong>Star : </strong>{{allacti.star}}</p>
+                                                            <p>
+                                                                <strong>Remarks :</strong>{{allacti.coachRemark}}</p>
+                                                            <p>
+                                                                <strong>Date :
+                                                                </strong>{{allacti.coachRemarkDate | date }}
+                                                            </p>
                                                         </div>
+                                                    </div>
 
                                                     <div class="col-4">
                                                         <div class="description">
@@ -171,7 +174,7 @@
                                                         </div>
                                                     </div>
 
-                                                   
+
                                                 </div>
 
                                             </div>
@@ -271,12 +274,12 @@
                                             data-parent="#accordionExample">
                                             <div class="row">
                                                 <div class="col-6">
-                                                        <p *ngIf="pa.focusAreas">
-                                                            <strong>Focus Area : </strong>{{pa.focusAreas}}</p>
-                                                        <p *ngIf="pa.psdAreas">
-                                                            <strong>PSD Area : </strong>{{pa.psdAreas}}</p>
-                                                        <p *ngIf="pa.fourS">
-                                                            <strong>Four S : </strong>{{pa.fourS}}</p>
+                                                    <p *ngIf="pa.focusAreas">
+                                                        <strong>Focus Area : </strong>{{pa.focusAreas}}</p>
+                                                    <p *ngIf="pa.psdAreas">
+                                                        <strong>PSD Area : </strong>{{pa.psdAreas}}</p>
+                                                    <p *ngIf="pa.fourS">
+                                                        <strong>Four S : </strong>{{pa.fourS}}</p>
                                                 </div>
 
                                                 <div class="col-6">
@@ -362,24 +365,27 @@
                                         <div [attr.id]="'collapse' + i" class="collapse"
                                             data-parent="#accordionExample">
                                             <div class="row">
-                                                    <div class="col-4">
-                                                            <div class="description">
-                                                            <p>
-                                                                <strong>Participation Score :</strong>{{sa.participationScore}}
-                                                            </p>
-                                                            <p>
-                                                                <strong>Initiative Score :</strong>{{sa.initiativeScore}}</p>
-                                                            <p>
-                                                                <strong>Achievement Score :</strong>{{sa.achievementScore}}</p>
-                                                            <p>
-                                                                <strong>Star : </strong>{{sa.star}}</p>
-                                                            <p>
-                                                                <strong>Remarks :</strong>{{sa.coachRemark}}</p>
-                                                            <p>
-                                                                <strong>Date : </strong>{{sa.coachRemarkDate | date }}</p>
-        
-                                                        </div>
+                                                <div class="col-4">
+                                                    <div class="description">
+                                                        <p>
+                                                            <strong>Participation Score
+                                                                :</strong>{{sa.participationScore}}
+                                                        </p>
+                                                        <p>
+                                                            <strong>Initiative Score :</strong>{{sa.initiativeScore}}
+                                                        </p>
+                                                        <p>
+                                                            <strong>Achievement Score :</strong>{{sa.achievementScore}}
+                                                        </p>
+                                                        <p>
+                                                            <strong>Star : </strong>{{sa.star}}</p>
+                                                        <p>
+                                                            <strong>Remarks :</strong>{{sa.coachRemark}}</p>
+                                                        <p>
+                                                            <strong>Date : </strong>{{sa.coachRemarkDate | date }}</p>
+
                                                     </div>
+                                                </div>
 
                                                 <div class="col-4">
                                                     <div class="description">
@@ -411,7 +417,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-           
+
                                             </div>
                                         </div>
                                     </td>

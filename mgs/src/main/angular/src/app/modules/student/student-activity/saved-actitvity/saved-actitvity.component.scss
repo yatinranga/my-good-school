@@ -74,7 +74,9 @@ button.icon_button {
     font-size: 20px;
     position: relative;
 }
-
+.attachment a{
+    color: #333 !important;
+}
 
 /*
 i.fa.fa-file-audio:hover span#audio, i.fa.fa-image:hover span#image, i.fa.fa-video-camera:hover span#video{
@@ -200,13 +202,15 @@ cursor: pointer;
 
 .add_activity{
     background: #5f9fd2;
-    padding: 5px 15px;
+    padding: 10px;
     text-align: center;
     border-radius: 0px;
     margin: 20px;
     color: $light;
     border: none !important;
-    box-shadow: 0 0 10px #999;
+    box-shadow: 0 0 10px #ddd;
+    border-radius: 50%;
+    font-size: 20px;
 }
 button.add_activity{
     position: fixed;

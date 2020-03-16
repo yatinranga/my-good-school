@@ -231,6 +231,12 @@ tbody#accordionExample > tr[aria-expanded="true"] {
 i.fa.fa-sort {
     filter: invert(1);
 }
+.table_main h5 {
+    font-size: 19px;
+    font-weight: 500;
+    color: #1f69ad;
+    margin: 0 0 15px 0;
+}
 /*-------------------------------------HOME-------------------------------------*/
 
 app-home{
