@@ -21,56 +21,56 @@
                     <!-- Assign Award -->
                     <div *ngSwitchCase="'assign'" class="popup-form">
                         <div class="assign_main">
-                                <div class="assign-form">
-                                        <label for="exampleFormControlSelect1">Select Grade :</label>
-                                        <select class="" id="exampleFormControlSelect1" (ngModelChange)="getListOfStudent($event)"
-                                            ngModel>
-                                            <option value="" disabled selected>Select Grades </option>
-                                            <option *ngFor="let grade of schoolGrades" value={{grade.id}}>
-                                                {{grade.grade}} {{grade.section}}
-                                            </option>
-                                            <option disabled *ngIf="schoolGrades.length == 0">No Grades Found</option>
-                                        </select>
-                                        <span *ngIf="grade_loader">
-                                            <div class="spinner-border" role="status">
-                                            </div>
-                                        </span>
+                            <div class="assign-form">
+                                <label for="exampleFormControlSelect1">Select Grade :</label>
+                                <select class="" id="exampleFormControlSelect1"
+                                    (ngModelChange)="getListOfStudent($event)" ngModel>
+                                    <option value="" disabled selected>Select Grades </option>
+                                    <option *ngFor="let grade of schoolGrades" value={{grade.id}}>
+                                        {{grade.grade}} {{grade.section}}
+                                    </option>
+                                    <option disabled *ngIf="schoolGrades.length == 0">No Grades Found</option>
+                                </select>
+                                <span *ngIf="grade_loader">
+                                    <div class="spinner-border" role="status">
                                     </div>
-            
-                                    <div class="assignsform">
-                                        <label for="exampleFormControlSelect2">Students :</label>
-                                        <select class="" id="exampleFormControlSelect1" (ngModelChange)="getStudentId($event)"
-                                            ngModel>
-                                            <option value="" selected>Select Student</option>
-                                            <option *ngFor="let stu of studentList;" value={{stu.id}}>
-                                                {{stu.name}}
-                                            </option>
-                                            <option disabled *ngIf="studentList.length == 0">No Student Found</option>
-                                        </select>
-                                        <span *ngIf="stu_loader">
-                                            <div class="spinner-border" role="status">
-                                            </div>
-                                        </span>
+                                </span>
+                            </div>
+
+                            <div class="assignsform">
+                                <label for="exampleFormControlSelect2">Students :</label>
+                                <select class="" id="exampleFormControlSelect1" (ngModelChange)="getStudentId($event)"
+                                    ngModel>
+                                    <option value="" selected>Select Student</option>
+                                    <option *ngFor="let stu of studentList;" value={{stu.id}}>
+                                        {{stu.name}}
+                                    </option>
+                                    <option disabled *ngIf="studentList.length == 0">No Student Found</option>
+                                </select>
+                                <span *ngIf="stu_loader">
+                                    <div class="spinner-border" role="status">
                                     </div>
-            
-                                    <div class="assignsform">
-                                        <label for="exampleFormControlSelect3">Select Activity :</label>
-                                        <select class="" id="exampleFormControlSelect3" (ngModelChange)="getActivityId($event)"
-                                            ngModel>
-                                            <option value="" disabled selected>Select Activity </option>
-                                            <option *ngFor="let activity of activities; let i = index;"
-                                                value={{activity.activityId}}>
-                                                {{activity.activityName}}
-                                            </option>
-                                            <option disabled *ngIf="activities.length == 0">No Activity Found</option>
-                                        </select>
-                                        <span *ngIf="acti_loader">
-                                            <div class="spinner-border" role="status">
-                                            </div>
-                                        </span>
+                                </span>
+                            </div>
+
+                            <div class="assignsform">
+                                <label for="exampleFormControlSelect3">Select Activity :</label>
+                                <select class="" id="exampleFormControlSelect3" (ngModelChange)="getActivityId($event)"
+                                    ngModel>
+                                    <option value="" disabled selected>Select Activity </option>
+                                    <option *ngFor="let activity of activities; let i = index;"
+                                        value={{activity.activityId}}>
+                                        {{activity.activityName}}
+                                    </option>
+                                    <option disabled *ngIf="activities.length == 0">No Activity Found</option>
+                                </select>
+                                <span *ngIf="acti_loader">
+                                    <div class="spinner-border" role="status">
                                     </div>
+                                </span>
+                            </div>
                         </div>
-                        
+
                         <!-- List of Performed Activity -->
                         <div *ngIf="studentActivityList">
                             <div class="content_main_com">
@@ -187,7 +187,12 @@
                                             <th scope="col">Description</th>
                                             <th scope="col">Activity</th>
                                             <th scope="col">Student Name & Grade</th>
-                                            <th scope="col">Status</th>
+                                            <th scope="col">
+                                                Status
+                                                <button class="icon_button" (click)="sortByStatus()">
+                                                    <i class="fas fa-sort"></i>
+                                                </button>
+                                            </th>
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>

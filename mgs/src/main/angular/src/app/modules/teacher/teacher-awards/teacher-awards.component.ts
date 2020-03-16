@@ -91,8 +91,9 @@ export class TeacherAwardsComponent implements OnInit {
       this.studentList = res;
       console.log(res);
       this.stu_loader = false;
-    },
-      (err) => console.log(err));
+    }, (err) => 
+    { console.log(err);
+      this.stu_loader = false; });
   }
 
   // Assign Award to Students
@@ -220,27 +221,46 @@ export class TeacherAwardsComponent implements OnInit {
   // Verify the Selected Award 
   verifySelectedAward(e, i) {
     e.stopPropagation();
-    const submit = confirm("Are you sure ?");
-    if (submit) {
-      const awardId = this.awardsList[i].id;
-      console.log(awardId);
+    const awardId = this.awardsList[i].id;
+    console.log(awardId);
 
-      this.teacherService.verifyAwards(awardId).subscribe((res) => {
-        console.log(res);
-        this.alertService.showSuccessAlert("");
-        this.awardsList[i].status = "VERIFIED";
-      },
-        (err) => {
-          console.log(err);
-        })
-    }
-
+    this.alertService.confirmWithoutLoader('question', "Verify Actvity", '', 'Yes').then(result => {
+      if (result.value) {
+        this.teacherService.verifyAwards(awardId).subscribe((res) => {
+          console.log(res);
+          this.alertService.showSuccessAlert("");
+          this.awardsList[i].status = "VERIFIED";
+        },
+          (err) => {
+            console.log(err);
+          });
+      }
+    })
   }
 
 
   // stop toogle of table
   stopCollapse(e) {
     e.stopPropagation();
+  }
+
+  order: boolean = false;
+  sortByStatus() {
+    this.order = !this.order;
+    // sort by activityStatus
+    this.awardsList.sort((a, b) => {
+      const nameA = a.status.toUpperCase(); // ignore upper and lowercase
+      const nameB = b.status.toUpperCase(); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return this.order ? -1 : 1;
+      }
+      if (nameA > nameB) {
+        return this.order ? 1 : -1;
+      }
+
+      // names must be equal
+      return 0;
+    });
   }
 
 }
