@@ -207,75 +207,68 @@
                                                 <td>{{al.studentName}} {{al.studentGrade}}</td>
                                                 <td>{{al.status}}</td>
                                                 <td><button [disabled]="!(al.status == 'PENDING')"
-                                                        (click)="verifySelectedAward($event,i)"
-                                                        class="verify">Verify</button></td>
+                                                        (click)="verifySelectedAward($event,i)" class="verify">
+                                                        <i class="fa fa-hourglass"></i> </button> </td>
                                             </tr>
                                             <tr>
                                                 <td class="collapse-td" colspan="7">
                                                     <div [attr.id]="'collapse' + i" class="collapse"
                                                         data-parent="#accordionExample">
-                                                        <div *ngFor="let ap of al.activityPerformedResponses">
+                                                        <div
+                                                            *ngFor="let ap of al.activityPerformedResponses; let j = index">
                                                             <div class="row">
-                                                                <div class="col-4"><b>Award Details :</b>
-                                                                    <br><br>
-                                                                    <p><strong>Description : </strong>{{al.description}}
-                                                                    </p>
-                                                                    <p><strong>Teacher : </strong>{{al.createdBy}}</p>
+                                                                <div class="col-4">
+                                                                    <div class="description">
+                                                                        <p id="title_award"> <strong> {{j + 1}} Activity
+                                                                                Details : </strong></p>
+                                                                        <p> <strong>Date :
+                                                                            </strong>{{ap.dateOfActivity | date}}</p>
+                                                                        <p> <strong>Description :
+                                                                            </strong>{{ap.description}}</p>
+                                                                    </div>
+                                                                    
                                                                 </div>
-                                                                <div class="col-4"><b>Activity Details :</b>
-
-                                                                    <br><br>
-                                                                    <p>
-                                                                        <strong>Date :
-                                                                        </strong>{{ap.dateOfActivity | date}}</p>
-                                                                    <p>
-                                                                        <strong>Description :
-                                                                        </strong>{{ap.description}}</p>
-                                                                    <p>
-                                                                        <strong>Four S : </strong>{{ap.fourS}}</p>
-                                                                    <p>
-                                                                        <strong>Focus Area : </strong>{{ap.focusAreas}}
-                                                                    </p>
-                                                                    <p>
-                                                                        <strong>PSD Area : </strong>{{ap.psdAreas}}</p>
-
-                                                                    <p>
-                                                                        <strong>Attachments : </strong>
-                                                                    </p>
-                                                                    <div *ngFor="let file of ap.fileResponses">
-                                                                        <div class="audio"
-                                                                            *ngIf="file.extension == 'mp3'">
-                                                                            <i class="fa fa-file-audio"></i>
-                                                                            {{file.name}} </div>
-                                                                        <div class="image"
-                                                                            *ngIf="file.extension=='jpg'">
-                                                                            <i class="fa fa-image"></i> {{file.name}}
-                                                                        </div>
-                                                                        <div class="video"
-                                                                            *ngIf="file.extension=='video'">
-                                                                            <i class="fa fa-video-camera"
-                                                                                aria-hidden="true"></i>{{file.name}}
+                                                                <div class="col-4">
+                                                                    <div class="description">
+                                                                        <p> <strong>Four S : </strong>{{ap.fourS}}</p>
+                                                                        <p> <strong>Focus Area :
+                                                                            </strong>{{ap.focusAreas}} </p>
+                                                                        <p> <strong>PSD Area : </strong>{{ap.psdAreas}}
+                                                                        </p>
+                                                                        <p> <strong>Attachments : </strong> </p>
+                                                                        <div *ngFor="let file of ap.fileResponses">
+                                                                            <div class="audio"
+                                                                                *ngIf="file.extension == 'mp3'">
+                                                                                <i class="fa fa-file-audio"></i>
+                                                                                {{file.name}} </div>
+                                                                            <div class="image"
+                                                                                *ngIf="file.extension=='jpg'">
+                                                                                <i class="fa fa-image"></i>
+                                                                                {{file.name}}
+                                                                            </div>
+                                                                            <div class="video"
+                                                                                *ngIf="file.extension=='video'">
+                                                                                <i class="fa fa-video-camera"
+                                                                                    aria-hidden="true"></i>{{file.name}}
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-
+                                                                    
                                                                 </div>
-                                                                <div class="col-4"><b>Reviews :</b>
-                                                                    <br><br>
-                                                                    <p>
-                                                                        <strong>Participation Score
-                                                                            :</strong>{{ap.participationScore}}
-                                                                    </p>
-                                                                    <p>
-                                                                        <strong>Initiative Score
-                                                                            :</strong>{{ap.initiativeScore}}</p>
-                                                                    <p>
-                                                                        <strong>Achievement Score
-                                                                            :</strong>{{ap.achievementScore}}</p>
-                                                                    <p>
-                                                                        <strong>Star : </strong>{{ap.star}}</p>
-                                                                    <p>
-                                                                        <strong>Remarks :</strong>{{ap.coachRemark}}</p>
-
+                                                                <div class="col-4">
+                                                                    <div class="description">
+                                                                        <h5> Reviews : </h5>
+                                                                        <p> <strong>Participation Score
+                                                                                :</strong>{{ap.participationScore}} </p>
+                                                                        <p> <strong>Initiative Score
+                                                                                :</strong>{{ap.initiativeScore}}</p>
+                                                                        <p> <strong>Achievement Score
+                                                                                :</strong>{{ap.achievementScore}}</p>
+                                                                        <p> <strong>Star : </strong>{{ap.star}}</p>
+                                                                        <p> <strong>Remarks :</strong>{{ap.coachRemark}}
+                                                                        </p>
+                                                                    </div>
+                                                                    
                                                                 </div>
                                                             </div>
                                                         </div>

@@ -86,8 +86,12 @@ img{
 li.active {
     background: #8dc33a;
 }
-button.verify {
-    background: #8dc33a;
+.table button.verify {
+    color: #333;
+    background: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
 }
 
 .teacher_awards_main .popup-form {
@@ -101,4 +105,13 @@ button.verify {
 .assign_main{
     display: inline-flex;
     width: 100%;
+}
+p#title_award {
+    font-size: 19px;
+    font-weight: 300;
+    color: #8dc33a;
+    margin: 5px 0 15px 0;
+}
+.description h5{
+    margin-bottom: 12px;
 }
