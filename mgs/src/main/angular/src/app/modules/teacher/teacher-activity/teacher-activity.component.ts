@@ -71,6 +71,7 @@ export class TeacherActivityComponent implements OnInit {
     this.teacherService.getPendingActivity(this.teacherId).subscribe((res) => {
       this.activities = res;
       this.pendingActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SubmittedByStudent"));
+      console.log(this.pendingActivitiesArr);
       this.loader = false;
     },
       (err) => {

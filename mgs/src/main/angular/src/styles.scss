@@ -19,6 +19,7 @@
     font-family: initial;
     font-size: 32px;
 }
+
 /*-------------------------------------FORM-------------------------------------*/
 
 .input-field {
@@ -227,7 +228,9 @@ tbody#accordionExample > tr[aria-expanded="true"] {
 .description:after, .attachment:before{
     display: none !important;
 }
-
+i.fa.fa-sort {
+    filter: invert(1);
+}
 /*-------------------------------------HOME-------------------------------------*/
 
 app-home{
