@@ -20,6 +20,8 @@ public class Mail {
 	private String contentType;
 
 	private List<Object> attachments;
+	
+	private Boolean html;
 
 	public String getContentType() {
 		return contentType;
@@ -89,6 +91,14 @@ public class Mail {
 		this.attachments = attachments;
 	}
 	
+	public Boolean getHtml() {
+		return html;
+	}
+
+	public void setHtml(Boolean html) {
+		this.html = html;
+	}
+
 	public Mail() {
 		contentType = "text/plain";
 	}

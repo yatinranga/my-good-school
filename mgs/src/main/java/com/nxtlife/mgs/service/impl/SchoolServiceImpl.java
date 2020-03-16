@@ -51,6 +51,7 @@ import com.nxtlife.mgs.view.GradeRequest;
 import com.nxtlife.mgs.view.SchoolRequest;
 import com.nxtlife.mgs.view.SchoolResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
+import com.nxtlife.mgs.view.TeacherResponse;
 
 @Service
 public class SchoolServiceImpl extends BaseService implements SchoolService {
@@ -251,6 +252,12 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 		if (user.getEmail() != null)
 			userService.sendLoginCredentialsBySMTP(userService.usernamePasswordSendContentBuilder(user.getUsername(),
 					user.getRawPassword(), emailUsername, user.getEmail()));
+		
+//		Map<String, Object> response = new HashMap<String, Object>();
+//		response.put("Teacher", new SchoolResponse(school));
+//		response.put("MailResponse", new SuccessResponse(200,String.format("Email sent successfully to (%s)", user.getEmail())));
+//		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+		
 		return new SchoolResponse(school);
 
 	}

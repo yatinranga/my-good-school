@@ -25,7 +25,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
@@ -273,6 +272,11 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		if (user.getEmail() != null)
 			userService.sendLoginCredentialsBySMTP(userService.usernamePasswordSendContentBuilder(user.getUsername(),
 					user.getRawPassword(), emailUsername, user.getEmail()));
+		
+//		Map<String, Object> response = new HashMap<String, Object>();
+//		response.put("Student", new StudentResponse(student));
+//		response.put("MailResponse", new SuccessResponse(200,String.format("Email sent successfully to (%s)", user.getEmail())));
+//		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 
 		return new StudentResponse(student);
 	}

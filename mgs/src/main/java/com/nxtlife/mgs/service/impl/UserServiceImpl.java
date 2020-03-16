@@ -1,6 +1,7 @@
 package com.nxtlife.mgs.service.impl;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.security.GeneralSecurityException;
@@ -318,7 +319,12 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			throw new ValidationException("Please provide to , from and subject if not provided already.");
 		if (request.getMailContent() == null)
 			throw new ValidationException("Please provide email content to send.");
-		mailService.sendEmail(request);
+		try {
+			mailService.sendEmail(request);
+		} catch (UnsupportedEncodingException | MessagingException e) {
+			e.printStackTrace();
+			throw new ValidationException(String.format("Something went wrong unable to send email to (%s)", request.getMailTo()));
+		}
 		logger.info(String.format("Email sent successfuly to email address %s ", request.getMailTo()));
 		System.out.println(String.format("Email sent successfuly to email address %s ", request.getMailTo()));
 	}
@@ -410,7 +416,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 				"<b> Login Credentials :</b> <br> <b> Username :</b> %s <br> <b> Password :</b> %s <br>", username,
 				password);
 		Mail mail = new Mail(mailFrom, mailTo, "My Good School Login Credentials", mailContent);
-		mail.setContentType("text/plain");
+		mail.setHtml(true);
 		return mail;
 	}
 

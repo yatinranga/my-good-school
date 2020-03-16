@@ -248,6 +248,10 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		if (user.getEmail() != null)
 			userService.sendLoginCredentialsBySMTP(userService.usernamePasswordSendContentBuilder(user.getUsername(),
 					user.getRawPassword(), emailUsername, user.getEmail()));
+//		Map<String, Object> response = new HashMap<String, Object>();
+//		response.put("Teacher", new TeacherResponse(teacher));
+//		response.put("MailResponse", new SuccessResponse(200,String.format("Email sent successfully to (%s)", user.getEmail())));
+//		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 
 		return new TeacherResponse(teacher);
 	}
