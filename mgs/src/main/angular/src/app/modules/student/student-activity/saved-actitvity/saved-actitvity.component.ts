@@ -71,23 +71,9 @@ export class SavedActitvityComponent implements OnInit {
 
   // get PSD , Focus Area and 4S
   getAreas() {
-    // this.studentService.getFocusAreas().subscribe((res) => {
-    //   this.focusAreaArr = res;
-    // },
-    //   (err) => { console.log(err) });
-
-    // this.studentService.getPsdAreas().subscribe((res) => {
-    //   this.psdAreaArr = res;
-    // },
-    //   (err) => { console.log(err) });
-
-    // this.studentService.getFourS().subscribe((res) => {
-    //   this.fourSArr = res;
-    // },
-    //   (err) => { console.log(err) });
     this.studentService.getActivityAreas().subscribe((res) => {
       console.log(res);
-      this.psdAreaArr = res["PSD AREAS"]
+      this.psdAreaArr = res["PSD Areas"]
       this.focusAreaArr = res["Focus Areas"]
       this.fourSArr = res["Four S"]
       console.log(this.fourSArr);
@@ -101,7 +87,6 @@ export class SavedActitvityComponent implements OnInit {
     this.studentService.getSavedActivity(studentId).subscribe((res) => {
       this.savedActivitiesArr = res;
       this.copySavedActi = Object.assign([], res);
-      console.log(res);
       this.activitiesArr = this.savedActivitiesArr;
       this.loader = false;
       this.filterActivities();
@@ -128,10 +113,8 @@ export class SavedActitvityComponent implements OnInit {
   // to get the list of ALL Activities of student
   getStudentAllActivities(studentId) {
     this.studentService.getAllActivity(studentId).subscribe((res) => {
-      // console.log(res);
       this.allActivitiesArr = res;
       this.copyAllActi = Object.assign([], res);
-      this.allActivitiesArr = this.allActivitiesArr.filter((e) => (e.activityStatus != "SavedByTeacher"));
       this.activitiesArr = this.allActivitiesArr; 
       this.loader = false;
       this.filterActivities();
@@ -208,6 +191,7 @@ export class SavedActitvityComponent implements OnInit {
 
   }
 
+  // Direct Submit Activity at the time of Add/Edit Activity
   directSubmitActivity(activityId) {
     this.alertService.confirmWithoutLoader('question', "Do you want to submit ?", '', 'Yes').then(result => {
       console.log(result);
@@ -221,8 +205,6 @@ export class SavedActitvityComponent implements OnInit {
           } else {
             this.activitiesArr.shift();
           }
-          // this.allActivitiesArr.shift();
-          // this.allActivitiesArr.unshift(res);
           this.alertService.showSuccessAlert('Activity Submitted !');
         }, (err) => {
           console.log(err);
@@ -240,16 +222,11 @@ export class SavedActitvityComponent implements OnInit {
         this.studentService.deleteActivity(activityId).subscribe((res) => {
           console.log(res);
           this.activitiesArr.splice(i,1);
-          // if (this.activityType == 'All')
-          //   this.allActivitiesArr.splice(i, 1);
-          // else
-          //   this.savedActivitiesArr.splice(i, 1);
           this.alertService.showSuccessToast('Activity Deleted !');
         },
           (err) => console.log(err));
       }
     })
-
   }
 
 
@@ -414,6 +391,7 @@ export class SavedActitvityComponent implements OnInit {
     }
   }
 
+  // Actual Filtering on the basis of PSD , Focus Area and 4S
   filter(array: any[]) {
     let filterActivitiesArr = [];
     if (this.psdAreas && this.fourS && this.focusAreas) {
@@ -458,6 +436,8 @@ export class SavedActitvityComponent implements OnInit {
   removeFile(index: number) {
     this.files.splice(index, 1);
   }
+
+  // Sorting Activities
   order: boolean = false;
   sortByStatus() {
     this.order = !this.order;

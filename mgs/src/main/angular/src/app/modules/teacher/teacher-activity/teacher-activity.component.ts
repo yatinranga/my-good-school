@@ -11,7 +11,7 @@ declare let $: any;
 })
 export class TeacherActivityComponent implements OnInit {
   activityType = "All";
-  activities = []
+
   pendingActivitiesArr = [];
   savedActivitiesArr = [];
   reviewedActivitiesArr = [];
@@ -20,7 +20,7 @@ export class TeacherActivityComponent implements OnInit {
   teacherId: any;
   activityId = "";
   studentId = "";
-  i: any;
+  index: any;
   loader: boolean = false;
 
   reviewForm: FormGroup;
@@ -60,11 +60,11 @@ export class TeacherActivityComponent implements OnInit {
   // Initialize Review Form
   reviewFormInit() {
     this.reviewForm = this.formBuilder.group({
-      achievementScore: ['', [Validators.min(0), Validators.max(5)]],
-      participationScore: ['', [Validators.min(0), Validators.max(10)]],
-      initiativeScore: ['', [Validators.min(0), Validators.max(10)]],
-      star: [''],
-      coachRemark: ['']
+      achievementScore: [, [Validators.min(0), Validators.max(5)]],
+      participationScore: [, [Validators.min(0), Validators.max(10)]],
+      initiativeScore: [, [Validators.min(0), Validators.max(10)]],
+      // star: [],
+      coachRemark: []
     })
   }
 
@@ -89,8 +89,6 @@ export class TeacherActivityComponent implements OnInit {
   savedActivities() {
     this.activitiesArr = [];
     this.teacherService.getPendingActivity(this.teacherId).subscribe((res) => {
-      // this.activities = res;
-      // this.savedActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SavedByTeacher"));
       this.savedActivitiesArr = res.filter((e) => (e.activityStatus == "SavedByTeacher"));
       this.activitiesArr = this.savedActivitiesArr;
       this.loader = false;
@@ -142,16 +140,16 @@ export class TeacherActivityComponent implements OnInit {
     formData.append('participationScore', this.reviewForm.value.participationScore);
     formData.append('initiativeScore', this.reviewForm.value.initiativeScore);
     formData.append('achievementScore', this.reviewForm.value.achievementScore);
-    // formData.append('star', this.reviewForm.value.star);
 
     this.teacherService.saveReviewedActivity(formData).subscribe((res) => {
       console.log(res);
-      if(this.activityType == "All"){
-        // this.selectedActivity.activityStatus = 'SavedByTeacher';
-        this.allActivitiesArr.unshift(res);
+      if(this.activityType == "All" || this.activityType == "Saved"){
+        this.activitiesArr.splice(this.index,1);
+        this.activitiesArr.unshift(res);
+      } else {
+        this.activitiesArr.splice(this.index,1);
       }
-        
-      this.savedActivitiesArr = [...this.savedActivitiesArr, ...this.pendingActivitiesArr.splice(this.i, 1)];
+
       $('#reviewModal').modal('hide');
       $('.modal-backdrop').remove();
       this.reviewForm.reset();
@@ -168,8 +166,8 @@ export class TeacherActivityComponent implements OnInit {
   }
 
   // Edit the Saved activity by teacher
-  editSavedActivity(activity, e) {
-
+  editSavedActivity(activity,index, e) {
+    this.index = index;
     e.stopPropagation();
     this.activityId = activity.id;
     this.studentId = activity.studentId;
@@ -178,30 +176,29 @@ export class TeacherActivityComponent implements OnInit {
       participationScore: activity.participationScore,
       achievementScore: activity.achievementScore,
       initiativeScore: activity.initiativeScore,
-      // star: activity.star,
       coachRemark: activity.coachRemark
     })
     $('#reviewModal').modal('show');
   }
 
   // SUBMIT the saved activity by teacher
-  submitSavedActivity(e, index, status?: any) {
+  submitSavedActivity(activity,index, e) {
     e.stopPropagation();
     var actCid: any;
-    if (status === 'All') {
-      actCid = this.allActivitiesArr[index].id;
-    } else {
-      actCid = this.savedActivitiesArr[index].id;
-    }
+    actCid = activity.id;
 
     console.log(actCid);
     this.teacherService.submitActivity(actCid).subscribe((res) => {
       console.log(res);
-      this.savedActivitiesArr.splice(index, 1);
-      // this.savedActivitiesArr.splice(index,1); // to splice the selected activity and push into reviewedActivitesArr
+      if (this.activityType == "All") {
+        this.activitiesArr.splice(index, 1);
+        this.activitiesArr.unshift(res);
+      } else {
+        this.activitiesArr.splice(index, 1);
+      }
       this.alertService.showSuccessToast('Activity Submitted !');
     },
-      (err) => console.log(err));
+      (err) => {console.log(err)});
   }
 
   directSubmitReview(activityId){
@@ -210,17 +207,22 @@ export class TeacherActivityComponent implements OnInit {
       if(result.value)
         this.teacherService.submitActivity(activityId).subscribe((res) => {
           console.log(res);
-          this.allActivitiesArr.shift();
-          this.allActivitiesArr.unshift(res);
+          if (this.activityType == "All") {
+            this.activitiesArr.shift();
+            this.activitiesArr.unshift(res);
+          } else if (this.activityType == "Saved") {
+            this.activitiesArr.shift();
+          }
           this.alertService.showSuccessAlert('Review Submitted !');
-        },(err) => {
+        }, (err) => {
           console.log(err);
         })
     })
 
   }
 
-  reviewActivity(activity, e) {
+  reviewActivity(activity,index, e) {
+    this.index = index;
     this.selectedActivity = activity;
     e.stopPropagation();
     this.activityId = activity.id

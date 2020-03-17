@@ -51,28 +51,29 @@
                                         <div
                                             *ngIf="(activityType === 'All') && (activity.activityStatus !== 'Reviewed')">
                                             <button [disabled]="!(activity.activityStatus === 'SavedByTeacher')"
-                                                (click)="submitSavedActivity($event,i,'All')"
+                                                (click)="submitSavedActivity(activity,i, $event)"
                                                 class="submitted icon_button">
                                                 <i class="fa fa-paper-plane" title="Submit"> </i> </button>
                                             <button [disabled]="!(activity.activityStatus === 'SavedByTeacher')"
-                                                (click)="editSavedActivity(activity, $event)" class="saved icon_button">
+                                                (click)="editSavedActivity(activity,i, $event)"
+                                                class="saved icon_button">
                                                 <i class="fa fa-edit" title="Edit"> </i> </button>
                                             <button [disabled]="!(activity.activityStatus === 'SubmittedByStudent')"
-                                                (click)="reviewActivity(activity, $event)" class="pending icon_button">
+                                                (click)="reviewActivity(activity,i, $event)" class="pending icon_button">
                                                 <i class="fa fa-comments" title="Review"></i> </button>
                                         </div>
 
                                         <div *ngIf="activityType === 'Pending'">
-                                            <button (click)="reviewActivity(activity, $event)"
+                                            <button (click)="reviewActivity(activity,i, $event)"
                                                 class="pending icon_button"> <i class="fa fa-comments"
                                                     title="Review"></i> </button>
                                         </div>
 
                                         <div *ngIf="activityType === 'Saved'">
-                                            <button (click)="submitSavedActivity($event,i,'All')"
+                                            <button (click)="submitSavedActivity(activity,i, $event)"
                                                 class="submitted icon_button">
                                                 <i class="fa fa-paper-plane" title="Submit"> </i> </button>
-                                            <button (click)="editSavedActivity(activity, $event)"
+                                            <button (click)="editSavedActivity(activity,i, $event)"
                                                 class="saved icon_button"> <i class="fa fa-edit" title="Edit">
                                                 </i> </button>
                                         </div>
@@ -100,6 +101,9 @@
                                                             <p>
                                                                 <strong>Achievement Score
                                                                     :</strong>{{activity.achievementScore}}</p>
+                                                            <p>
+                                                                <strong>Total Score :</strong>{{activity.totalMarks}}
+                                                            </p>
                                                             <p>
                                                                 <strong>Star : </strong>{{activity.star}}</p>
                                                             <p>
@@ -762,21 +766,23 @@
                                 <form [formGroup]="reviewForm" (ngSubmit)="saveReview()">
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Achievement Score :</label>
-                                        <input type="number" class="form-control" formControlName="achievementScore">
+                                        <input type="number" class="form-control" min="1" max="5"
+                                            formControlName="achievementScore">
                                         <small class="text-danger"
                                             *ngIf="reviewForm.controls.achievementScore.errors">*Between 0-5
-                                            Sonly</small>
+                                            only</small>
                                     </div>
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Participation Score :</label>
-                                        <input type="number" class="form-control" formControlName="participationScore">
+                                        <input type="number" class="form-control" min="1" max="10"
+                                            formControlName="participationScore">
                                         <small class="text-danger"
                                             *ngIf="reviewForm.controls.participationScore.errors">*Between 0-10
                                             only</small>
                                     </div>
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Initiative Score :</label>
-                                        <input type="number" class="form-control" min="1" max="5"
+                                        <input type="number" class="form-control" min="1" max="10"
                                             formControlName="initiativeScore">
                                         <small class="text-danger"
                                             *ngIf="reviewForm.controls.initiativeScore.errors">*Between 0-10
@@ -787,7 +793,7 @@
                                         <textarea class="form-control" formControlName="coachRemark"></textarea>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                        <button type="button" class="btn btn-secondary"
                                             (click)="resetForm()">Reset</button>
                                         <button class="btn btn-primary" type="submit"
                                             [disabled]="reviewForm.invalid">Save changes

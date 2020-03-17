@@ -100,22 +100,6 @@ export class StudentService {
   getActivityAreas(){
     return this.http.get("/filters");
   }
-
-  // // Get all Focus Area
-  // getFocusAreas(){
-  //   return this.http.get("/focusAreas");
-  // }
-  
-  // // Get all fourS
-  // getFourS(){
-  //   return this.http.get("/fourS");
-  // }
-
-  // // Get PSD Area 
-  // getPsdAreas(){
-  //   return this.http.get("/psdAreas");
-  // }  
-
-  
+ 
 
 }
