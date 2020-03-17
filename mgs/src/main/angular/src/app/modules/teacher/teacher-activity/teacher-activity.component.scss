@@ -59,8 +59,11 @@ button.submit {
     color: #f3cc08;
 }
 .reviewed{
-    color: indianred;
+    color: green;
 } 
+.pending {
+    color: indianred;
+}
 
 button.icon_button {
     padding: 5px;

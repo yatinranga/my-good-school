@@ -105,50 +105,70 @@
                                                         <div [attr.id]="'collapse' + i" class="collapse"
                                                             data-parent="#accordionExample">
                                                             <div class="row">
-                                                                <div class="col-6">
-                                                                    <p>
-                                                                        <strong>Description - 
-                                                                        </strong>{{pa.description}}</p>
-                                                                    <p>
-                                                                        <strong>Four S -  </strong>{{pa.fourS}}</p>
-                                                                    <p>
-                                                                        <strong>Focus Area -  </strong>{{pa.focusAreas}}
-                                                                    </p>
-                                                                    <p>
-                                                                        <strong>PSD Area -  </strong>{{pa.psdAreas}}</p>
-                                                                    <p>
-                                                                        <strong>Attachments -  </strong></p>
-
-                                                                    <div *ngFor="let file of pa.fileResponses">
-                                                                        <div class="audio"
-                                                                            *ngIf="file.extension == 'mp3'">
-                                                                            <i class="fa fa-file-audio"></i>
-                                                                            {{file.name}} </div>
-                                                                        <div class="image"
-                                                                            *ngIf="file.extension=='jpg'">
-                                                                            <i class="fa fa-image"></i> {{file.name}}
-                                                                        </div>
-                                                                        <div class="video"
-                                                                            *ngIf="file.extension=='video'">
-                                                                            <i class="fa fa-video-camera"
-                                                                                aria-hidden="true"></i>{{file.name}}
+                                                                <div class="col-4">
+                                                                    <div class="description">
+                                                                        <h5> Activity Details </h5>
+                                                                        <p> <strong>Description -
+                                                                            </strong>{{pa.description}}</p>
+                                                                        <p> <strong>Attachments - </strong></p>
+                                                                        <div *ngFor="let file of pa.fileResponses">
+                                                                            <div class="audio"
+                                                                                *ngIf="file.extension == 'mp3'">
+                                                                                <i class="fa fa-file-audio"></i>
+                                                                                {{file.name}} </div>
+                                                                            <div class="image"
+                                                                                *ngIf="file.extension=='jpg'">
+                                                                                <i class="fa fa-image"></i>
+                                                                                {{file.name}}
+                                                                            </div>
+                                                                            <div class="video"
+                                                                                *ngIf="file.extension=='video'">
+                                                                                <i class="fa fa-video-camera"
+                                                                                    aria-hidden="true"></i>{{file.name}}
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-6">
-                                                                    <p>
-                                                                        <strong>Participation Score - 
-                                                                        </strong>{{pa.participationScore}}
-                                                                    </p>
-                                                                    <p>
-                                                                        <strong>Initiative Score - 
-                                                                        </strong>{{pa.initiativeScore}}</p>
-                                                                    <p>
-                                                                        <strong>Achievement Score - 
-                                                                        </strong>{{pa.achievementScore}}</p>
-                                                                    <p>
-                                                                        <strong>Coach Remarks - 
-                                                                        </strong>{{pa.coachRemark}}</p>
+                                                                <div class="col-4">
+                                                                    <div class="description">
+                                                                        <h5> Development Parameters </h5>
+                                                                        <p> <strong>Focus Area -
+                                                                            </strong>{{pa.focusAreas}} </p>
+                                                                        <p> <strong>PSD Area - </strong>{{pa.psdAreas}}
+                                                                        </p>
+                                                                        <p *ngIf="pa.fourS" id="fourSkills">
+                                                                            <strong>4's - </strong>
+                                                                            <span *ngIf="pa.fourS=='Skill'"
+                                                                                style="color: #4bafa5;">
+                                                                                {{pa.fourS}}
+                                                                            </span>
+                                                                            <span *ngIf="pa.fourS=='Sport'"
+                                                                                style="color: #e04090;">
+                                                                                {{pa.fourS}}
+                                                                            </span>
+                                                                            <span *ngIf="pa.fourS=='Study'"
+                                                                                style="color: #1f69ad;">
+                                                                                {{pa.fourS}}
+                                                                            </span>
+                                                                            <span *ngIf="pa.fourS=='Service'"
+                                                                                style="color: #8dc33a;">
+                                                                                {{pa.fourS}}
+                                                                            </span>
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-4">
+                                                                    <div class="description">
+                                                                        <h5> Scoring </h5>
+                                                                        <p> <strong>Participation Score -
+                                                                            </strong>{{pa.participationScore}} </p>
+                                                                        <p> <strong>Initiative Score -
+                                                                            </strong>{{pa.initiativeScore}}</p>
+                                                                        <p> <strong>Achievement Score -
+                                                                            </strong>{{pa.achievementScore}}</p>
+                                                                        <p> <strong>Coach Remarks -
+                                                                            </strong>{{pa.coachRemark}}</p>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -169,7 +189,7 @@
                                     </table>
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-success" data-toggle="modal"
+                            <button type="button" class="award btn btn-success" data-toggle="modal"
                                 data-target="#assignAwardModal">Give
                                 Award</button>
                         </div>
@@ -208,7 +228,7 @@
                                                 <td>{{al.status}}</td>
                                                 <td><button [disabled]="!(al.status == 'PENDING')"
                                                         (click)="verifySelectedAward($event,i)" class="verify">
-                                                        <i class="fa fa-hourglass"></i> </button> </td>
+                                                        <i class="fa fa-hourglass-start"></i> </button> </td>
                                             </tr>
                                             <tr>
                                                 <td class="collapse-td" colspan="7">
@@ -219,23 +239,12 @@
                                                             <div class="row">
                                                                 <div class="col-4">
                                                                     <div class="description">
-                                                                        <p id="title_award"> <strong> {{j + 1}} Activity
-                                                                                Details -  </strong></p>
-                                                                        <p> <strong>Date - 
-                                                                            </strong>{{ap.dateOfActivity | date}}</p>
-                                                                        <p> <strong>Description - 
+                                                                        <h5> Activity Details </h5>
+                                                                        <p> <strong>Description -
                                                                             </strong>{{ap.description}}</p>
-                                                                    </div>
-
-                                                                </div>
-                                                                <div class="col-4">
-                                                                    <div class="description">
-                                                                        <p> <strong>Four S -  </strong>{{ap.fourS}}</p>
-                                                                        <p> <strong>Focus Area - 
-                                                                            </strong>{{ap.focusAreas}} </p>
-                                                                        <p> <strong>PSD Area -  </strong>{{ap.psdAreas}}
-                                                                        </p>
-                                                                        <p> <strong>Attachments -  </strong> </p>
+                                                                        <p> <strong>Date -
+                                                                            </strong>{{ap.dateOfActivity | date}}</p>
+                                                                        <p> <strong>Attachments - </strong> </p>
                                                                         <div *ngFor="let file of ap.fileResponses">
                                                                             <div class="audio"
                                                                                 *ngIf="file.extension == 'mp3'">
@@ -253,22 +262,46 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-
                                                                 </div>
                                                                 <div class="col-4">
                                                                     <div class="description">
-                                                                        <h5> Reviews -  </h5>
-                                                                        <p> <strong>Participation Score
-                                                                                - </strong>{{ap.participationScore}} </p>
-                                                                        <p> <strong>Initiative Score
-                                                                                - </strong>{{ap.initiativeScore}}</p>
-                                                                        <p> <strong>Achievement Score
-                                                                                - </strong>{{ap.achievementScore}}</p>
-                                                                                <p>
-                                                                                    <strong>Total Score - </strong>{{ap.totalMarks}}</p>
-                                                                        <p> <strong>Star -  </strong>{{ap.star}}</p>
-                                                                        <p> <strong>Remarks - </strong>{{ap.coachRemark}}
+                                                                        <h5> Development Parameters </h5>
+                                                                        <p> <strong>Focus Area -
+                                                                            </strong>{{ap.focusAreas}} </p>
+                                                                        <p> <strong>PSD Area -
+                                                                            </strong>{{ap.psdAreas}}
                                                                         </p>
+                                                                        <p *ngIf="ap.fourS" id="fourSkills">
+                                                                            <strong>4's - </strong>
+                                                                            <span *ngIf="ap.fourS=='Skill'"
+                                                                                style="color: #4bafa5;">
+                                                                                {{ap.fourS}}
+                                                                            </span>
+                                                                            <span *ngIf="ap.fourS=='Sport'"
+                                                                                style="color: #e04090;">
+                                                                                {{ap.fourS}}
+                                                                            </span>
+                                                                            <span *ngIf="ap.fourS=='Study'"
+                                                                                style="color: #1f69ad;">
+                                                                                {{ap.fourS}}
+                                                                            </span>
+                                                                            <span *ngIf="ap.fourS=='Service'"
+                                                                                style="color: #8dc33a;">
+                                                                                {{ap.fourS}}
+                                                                            </span>
+                                                                        </p>
+
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-4">
+                                                                    <div class="description">
+                                                                        <h5> Reviews </h5>
+                                                                        <p> <strong>Participation Score - </strong>{{ap.participationScore}} </p>
+                                                                        <p> <strong>Initiative Score - </strong>{{ap.initiativeScore}}</p>
+                                                                        <p> <strong>Achievement Score - </strong>{{ap.achievementScore}}</p>
+                                                                        <p> <strong>Total Score - </strong>{{ap.totalMarks}}</p>
+                                                                        <p> <strong>Star - </strong>{{ap.star}}</p>
+                                                                        <p> <strong style="color: green">Remarks - </strong>{{ap.coachRemark}} </p>
                                                                     </div>
 
                                                                 </div>
@@ -318,7 +351,7 @@
             <div class="modal-body">
                 <form [formGroup]="assignAwardForm" (ngSubmit)="assignAward()">
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Name- </label>
+                        <label for="recipient-name" class="col-form-label"> Award Name - </label>
                         <input type="text" class="form-control" id="recipient-name" formControlName="name">
                         <small class="text-danger"
                             *ngIf="!assignAwardForm.get('name').valid && assignAwardForm.get('name').touched">
@@ -326,7 +359,7 @@
                         </small>
                     </div>
                     <div class="form-group">
-                        <label for="message-text" class="col-form-label">Description- </label>
+                        <label for="message-text" class="col-form-label"> Description - </label>
                         <textarea class="form-control" id="message-text" formControlName="description"></textarea>
                         <small class="text-danger"
                             *ngIf="!assignAwardForm.get('description').valid && assignAwardForm.get('description').touched">
@@ -334,8 +367,8 @@
                         </small>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Done</button>
+                        <button type="button" class="reset btn btn-secondary" data-dismiss="modal"> Reset </button>
+                        <button type="submit" class="award btn btn-primary"> Done </button>
                     </div>
                 </form>
             </div>

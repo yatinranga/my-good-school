@@ -95,27 +95,24 @@
                                                 <div class="row">
                                                     <div class="col-4">
                                                         <div class="description">
-                                                            <h5> Scoring </h5>
-                                                            <p> <strong>Participation Score -
-                                                                </strong>{{activity.participationScore}}</p>
-                                                            <p> <strong>Initiative Score -
-                                                                </strong>{{activity.initiativeScore}}</p>
-                                                            <p> <strong>Achievement Score -
-                                                                </strong>{{activity.achievementScore}}</p>
-                                                            <p> <strong>Total Score - </strong>{{activity.totalMarks}}
-                                                            </p>
+                                                            <h5> Scoring : </h5>
+                                                            <p> <strong>Participation Score - </strong>{{activity.participationScore}}</p>
+                                                            <p> <strong>Initiative Score - </strong>{{activity.initiativeScore}}</p>
+                                                            <p> <strong>Achievement Score - </strong>{{activity.achievementScore}}</p>
+                                                            <p> <strong>Total Score - </strong>{{activity.totalMarks}} </p>
                                                             <p> <strong>Star - </strong>{{activity.star}}</p>
-                                                            <p> <strong>Remarks - </strong>{{activity.coachRemark}}</p>
+                                                            <p> <strong style="color: green">Remarks - </strong>{{activity.coachRemark}}</p>
+                                                            <p> <strong> Date Reviewed - </strong>{{activity.coachRemarkDate | date }} </p>
                                                         </div>
                                                     </div>
                                                     <div class="col-4">
                                                         <div class="description">
-                                                            <h5> Development Parameters </h5>
-                                                            <p> <strong>Focus Area : </strong>{{activity.focusAreas}}
+                                                            <h5> Development Parameters : </h5>
+                                                            <p> <strong>Focus Area - </strong>{{activity.focusAreas}}
                                                             </p>
-                                                            <p> <strong>PSD Area : </strong>{{activity.psdAreas}}</p>
+                                                            <p> <strong>PSD Area - </strong>{{activity.psdAreas}}</p>
                                                             <p *ngIf="activity.fourS" id="fourSkills">
-                                                                <strong>4's: </strong>
+                                                                <strong>4's - </strong>
                                                                 <span *ngIf="activity.fourS=='Skill'"
                                                                     style="color: #4bafa5;">
                                                                     {{activity.fourS}}
@@ -133,11 +130,9 @@
                                                                     {{activity.fourS}}
                                                                 </span>
                                                             </p>
-                                                            <p> <strong>Date -
-                                                                </strong>{{activity.coachRemarkDate | date }} </p>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4" *ngIf="activity.fileResponses.length">
+                                                    <div class="col-4">
                                                         <div class="attachment">
                                                             <h5> Attachments : </h5>
                                                             {{activity.fileResponses.length ? "" : "NA"}}
@@ -159,15 +154,22 @@
                                             </div>
                                             <div *ngIf="(activity.activityStatus === 'SubmittedByStudent')">
                                                 <div class="row">
-                                                    <div class="col-6">
+                                                    <div class="col-4">
                                                         <div class="description">
+                                                            <h5> Scoring : </h5>
+                                                            {{activity.fileResponses.length ? "" : "NA"}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="description">
+                                                            <h5> Development Parameters : </h5>
                                                             <p *ngIf="activity.focusAreas">
-                                                                <strong>Focus Area : </strong>{{activity.focusAreas}}
+                                                                <strong>Focus Area - </strong>{{activity.focusAreas}}
                                                             </p>
                                                             <p *ngIf="activity.psdAreas">
-                                                                <strong>PSD Area : </strong>{{activity.psdAreas}}</p>
+                                                                <strong>PSD Area  - </strong>{{activity.psdAreas}}</p>
                                                             <p *ngIf="activity.fourS" id="fourSkills">
-                                                                <strong>4's: </strong>
+                                                                <strong>4's - </strong>
                                                                 <span *ngIf="activity.fourS=='Skill'"
                                                                     style="color: #4bafa5;">
                                                                     {{activity.fourS}}
@@ -188,7 +190,7 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="col-6">
+                                                    <div class="col-4">
                                                         <div class="attachment">
                                                                 <h5> Attachments : </h5>
                                                                 {{activity.fileResponses.length ? "" : "NA"}}
