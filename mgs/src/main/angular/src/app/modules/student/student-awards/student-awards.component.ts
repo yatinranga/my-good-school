@@ -21,8 +21,8 @@ export class StudentAwardsComponent implements OnInit {
   fourSArr =[];
 
   fourS :  any = "";
-  psdAreas :  any = "";
-  focusAreas :  any = "";
+  psdAreas : any = "";
+  focusAreas : any = "";
 
   constructor(private studentService : StudentService) { }
 
@@ -33,43 +33,18 @@ export class StudentAwardsComponent implements OnInit {
     
     this.getAwards();
     this.getAreas();
-
-    // this.getStudentActivity();
   }
 
   // get PSD , Focus Area and 4S
   getAreas(){
-    // this.studentService.getFocusAreas().subscribe((res) => {
-    //   this.focusAreaArr = res;
-    // },
-    //   (err) => { console.log(err) });
-
-    // this.studentService.getPsdAreas().subscribe((res) => {
-    //   this.psdAreaArr = res;
-    // },
-    //   (err) => { console.log(err) });
-
-    // this.studentService.getFourS().subscribe((res) => {
-    //   this.fourSArr = res;
-    // },
-    //   (err) => { console.log(err) });
     this.studentService.getActivityAreas().subscribe((res) => {
       console.log(res);
-      this.psdAreaArr = res["PSD Areas"]
-      this.focusAreaArr = res["Focus Areas"]
-      this.fourSArr = res["Four S"]
-      console.log(this.fourSArr);
-
+      this.psdAreaArr = res["PSD Areas"];
+      this.focusAreaArr = res["Focus Areas"];
+      this.fourSArr = res["Four S"];
     },
     (err) => {console.log(err);});
   }
-
-  // getStudentActivity() {
-  //   this.studentService.getActivity(this.schoolId).subscribe(
-  //     (res) => this.activities = res ,
-  //     (err) => console.log(err)
-  //   );
-  // }
 
   getAwards(){
     this.loader = true;
@@ -121,36 +96,9 @@ export class StudentAwardsComponent implements OnInit {
     } 
     else {
       filterAwardsArr = array;
-    }
-
-    
-    return filterAwardsArr;
-    
+    }    
+    return filterAwardsArr;    
   }
-
-
-  // getStudentAwards(activityId){
-  //   this.loader = true;
-  //   console.log(activityId);
-
-  //   if(activityId === "All"){
-  //     this.studentService.getAllAwards(this.studentId).subscribe((res) => {
-  //       this.awardsArr = res;
-  //       console.log(res);
-  //       this.loader = false;
-  //     },
-  //     (err) =>  {console.log(err)
-  //     this.loader = false });
-  //   }else{
-  //     this.studentService.getAwards(this.studentId,activityId).subscribe((res) => {
-  //       this.awardsArr = res;
-  //       console.log(res);
-  //       this.loader = false;
-  //     },
-  //     (err) =>  {console.log(err)
-  //       this.loader = false });
-  //   }
-  // }
 
   getDate(date) {
     return new Date(date)
