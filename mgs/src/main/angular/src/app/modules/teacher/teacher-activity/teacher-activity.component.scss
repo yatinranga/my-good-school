@@ -59,8 +59,11 @@ button.submit {
     color: #f3cc08;
 }
 .reviewed{
-    color: firebrick;
+    color: green;
 } 
+.pending {
+    color: indianred;
+}
 
 button.icon_button {
     padding: 5px;
@@ -81,7 +84,7 @@ button.pending.icon_button{
     color: #1f69ad;
     font-size: 18px;
 }
-.teacher_activity_main .sortby select {
+.teacher_activity_main .sortby select, .table_main h5{
     color: #1f69ad;
     font-size: 17px;
 }
