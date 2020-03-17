@@ -26,6 +26,11 @@ export class TeacherActivityComponent implements OnInit {
   reviewForm: FormGroup;
   selectedActivity: any;
 
+  partiScore = 0; // Calc Participation Score
+  initScore = 0; // Calc Initiative Score
+  achiScore = 0; // Calc Achievement Score
+  totalScore = 0; // Calc Total Marks
+
   activitiesArr = []; //single arr for performed actvities
 
 
@@ -255,6 +260,33 @@ export class TeacherActivityComponent implements OnInit {
       // names must be equal
       return 0;
     });
+  }
+
+  // Calculate Total Marks
+  calTotalMarks(scoreType,value){
+    
+    if (scoreType == "achievement"){
+      console.log("Achi : " + value);
+      this.achiScore = value;     
+    }
+    if (scoreType == "participation"){
+      console.log("parti : " + value);
+      this.partiScore = value;            
+    }
+    if (scoreType == "initiative"){
+      console.log("init : " + value);
+      this.initScore = value;            
+    }
+
+    if ((this.initScore > -1) && (this.partiScore > -1) && (this.achiScore > -1) 
+        && (this.initScore < 11) && (this.partiScore < 11) && (this.achiScore < 6)) {
+      this.totalScore = this.initScore + this.partiScore + this.achiScore;
+      console.log("Total Score - " + this.totalScore);
+    } else if ( this.totalScore > 25){
+        this.totalScore  = 0;
+    } else {
+      this.totalScore = 0;
+    }
   }
 
 

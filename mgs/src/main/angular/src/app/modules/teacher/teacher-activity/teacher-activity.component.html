@@ -143,9 +143,7 @@
                                                     </div>
                                                     <div class="col-4" *ngIf="activity.fileResponses.length">
                                                         <div class="attachment">
-                                                            <p>
-                                                                <strong>Attachments : </strong>
-                                                            </p>
+                                                            <h5> Attachments : </h5> {{activity.fileResponses.length ? "" : "NA"}}
                                                             <div *ngFor="let file of activity.fileResponses">
                                                                 <div>
                                                                     <i class="fa fa-file-audio"
@@ -196,11 +194,7 @@
 
                                                     <div class="col-6">
                                                         <div class="attachment">
-                                                            <p *ngIf="activity.coachName">
-                                                                <strong>Teacher : </strong>{{activity.coachName}}</p>
-                                                            <p>
-                                                                <strong>Attachments : </strong>
-                                                            </p>
+                                                            <h5> Attachments : </h5> {{activity.fileResponses.length ? "" : "NA"}}
                                                             <div *ngFor="let file of activity.fileResponses">
                                                                 <div>
                                                                     <i class="fa fa-file-audio"
@@ -770,28 +764,32 @@
                             <div class="modal-body">
                                 <form [formGroup]="reviewForm" (ngSubmit)="saveReview()">
                                     <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label">Achievement Score :</label>
+                                        <label for="recipient-name" class="col-form-label">Achievement Score : (out of 5)</label>
                                         <input type="number" class="form-control" min="1" max="5"
-                                            formControlName="achievementScore">
+                                            formControlName="achievementScore" (ngModelChange)="calTotalMarks('achievement',$event)">
                                         <small class="text-danger"
                                             *ngIf="reviewForm.controls.achievementScore.errors">*Between 0-5
                                             only</small>
                                     </div>
                                     <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label">Participation Score :</label>
+                                        <label for="recipient-name" class="col-form-label">Participation Score : (out of 10)</label>
                                         <input type="number" class="form-control" min="1" max="10"
-                                            formControlName="participationScore">
+                                            formControlName="participationScore" (ngModelChange)="calTotalMarks('participation',$event)">
                                         <small class="text-danger"
                                             *ngIf="reviewForm.controls.participationScore.errors">*Between 0-10
                                             only</small>
                                     </div>
                                     <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label">Initiative Score :</label>
+                                        <label for="recipient-name" class="col-form-label">Initiative Score : (out of 10)</label>
                                         <input type="number" class="form-control" min="1" max="10"
-                                            formControlName="initiativeScore">
+                                            formControlName="initiativeScore" (ngModelChange)="calTotalMarks('initiative',$event)">
                                         <small class="text-danger"
                                             *ngIf="reviewForm.controls.initiativeScore.errors">*Between 0-10
                                             only</small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="message-text" class="col-form-label">Total Score : </label>
+                                        <label> {{ totalScore}} / 25</label>
                                     </div>
                                     <div class="form-group">
                                         <label for="message-text" class="col-form-label">Remarks :</label>
