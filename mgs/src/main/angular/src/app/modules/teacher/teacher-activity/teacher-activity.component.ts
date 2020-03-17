@@ -232,6 +232,7 @@ export class TeacherActivityComponent implements OnInit {
     e.stopPropagation();
     this.activityId = activity.id
     this.studentId = activity.studentId;
+    this.totalScore = activity.totalMarks;
     $('#reviewModal').modal('show');
   }
 
