@@ -4,9 +4,9 @@
             <div class="teacher_awards_main">
                 <div class="tabs">
                     <ul>
-                        <li [ngClass]="{'active':awardViewType=='view'}">
+                        <li [ngClass]="{'active': awardViewType=='view'}">
                             <a (click)="awardView('view')"> View Awards </a> </li>
-                        <li [ngClass]="{'active':awardViewType=='assign'}"> <a (click)="awardView('assign')"> Assign
+                        <li [ngClass]="{'active': awardViewType=='assign'}"> <a (click)="awardView('assign')"> Assign
                                 Awards </a> </li>
                     </ul>
                     <!-- <div>
@@ -22,7 +22,7 @@
                     <div *ngSwitchCase="'assign'" class="popup-form">
                         <div class="assign_main">
                             <div class="assign-form">
-                                <label for="exampleFormControlSelect1">Select Grade :</label>
+                                <label for="exampleFormControlSelect1">Select Grade - </label>
                                 <select class="" id="exampleFormControlSelect1"
                                     (ngModelChange)="getListOfStudent($event)" ngModel>
                                     <option value="" disabled selected>Select Grades </option>
@@ -38,7 +38,7 @@
                             </div>
 
                             <div class="assignsform">
-                                <label for="exampleFormControlSelect2">Students :</label>
+                                <label for="exampleFormControlSelect2">Students - </label>
                                 <select class="" id="exampleFormControlSelect1" (ngModelChange)="getStudentId($event)"
                                     ngModel>
                                     <option value="" selected>Select Student</option>
@@ -54,7 +54,7 @@
                             </div>
 
                             <div class="assignsform">
-                                <label for="exampleFormControlSelect3">Select Activity :</label>
+                                <label for="exampleFormControlSelect3">Select Activity - </label>
                                 <select class="" id="exampleFormControlSelect3" (ngModelChange)="getActivityId($event)"
                                     ngModel>
                                     <option value="" disabled selected>Select Activity </option>
@@ -107,17 +107,17 @@
                                                             <div class="row">
                                                                 <div class="col-6">
                                                                     <p>
-                                                                        <strong>Description :
+                                                                        <strong>Description - 
                                                                         </strong>{{pa.description}}</p>
                                                                     <p>
-                                                                        <strong>Four S : </strong>{{pa.fourS}}</p>
+                                                                        <strong>Four S -  </strong>{{pa.fourS}}</p>
                                                                     <p>
-                                                                        <strong>Focus Area : </strong>{{pa.focusAreas}}
+                                                                        <strong>Focus Area -  </strong>{{pa.focusAreas}}
                                                                     </p>
                                                                     <p>
-                                                                        <strong>PSD Area : </strong>{{pa.psdAreas}}</p>
+                                                                        <strong>PSD Area -  </strong>{{pa.psdAreas}}</p>
                                                                     <p>
-                                                                        <strong>Attachments : </strong></p>
+                                                                        <strong>Attachments -  </strong></p>
 
                                                                     <div *ngFor="let file of pa.fileResponses">
                                                                         <div class="audio"
@@ -137,17 +137,17 @@
                                                                 </div>
                                                                 <div class="col-6">
                                                                     <p>
-                                                                        <strong>Participation Score :
+                                                                        <strong>Participation Score - 
                                                                         </strong>{{pa.participationScore}}
                                                                     </p>
                                                                     <p>
-                                                                        <strong>Initiative Score :
+                                                                        <strong>Initiative Score - 
                                                                         </strong>{{pa.initiativeScore}}</p>
                                                                     <p>
-                                                                        <strong>Achievement Score :
+                                                                        <strong>Achievement Score - 
                                                                         </strong>{{pa.achievementScore}}</p>
                                                                     <p>
-                                                                        <strong>Coach Remarks :
+                                                                        <strong>Coach Remarks - 
                                                                         </strong>{{pa.coachRemark}}</p>
                                                                 </div>
                                                             </div>
@@ -162,7 +162,7 @@
                                                 <td colspan="5">
                                                     <div *ngIf="pa_loader" class="spinner-border text-dark"
                                                         role="status">
-                                                    </div>{{pa_loader ? 'Loading...' : 'No Activities'}}
+                                                    </div>{{pa_loader ? 'Loading...' :  'No Activities'}}
                                                 </td>
                                             </tr>
                                         </tfoot>
@@ -190,7 +190,7 @@
                                             <th scope="col">
                                                 Status
                                                 <button class="icon_button" (click)="sortByStatus()">
-                                                    <i class="fas fa-sort"></i>
+                                                    <i class="fa fa-sort"></i>
                                                 </button>
                                             </th>
                                             <th scope="col">Action</th>
@@ -220,22 +220,22 @@
                                                                 <div class="col-4">
                                                                     <div class="description">
                                                                         <p id="title_award"> <strong> {{j + 1}} Activity
-                                                                                Details : </strong></p>
-                                                                        <p> <strong>Date :
+                                                                                Details -  </strong></p>
+                                                                        <p> <strong>Date - 
                                                                             </strong>{{ap.dateOfActivity | date}}</p>
-                                                                        <p> <strong>Description :
+                                                                        <p> <strong>Description - 
                                                                             </strong>{{ap.description}}</p>
                                                                     </div>
 
                                                                 </div>
                                                                 <div class="col-4">
                                                                     <div class="description">
-                                                                        <p> <strong>Four S : </strong>{{ap.fourS}}</p>
-                                                                        <p> <strong>Focus Area :
+                                                                        <p> <strong>Four S -  </strong>{{ap.fourS}}</p>
+                                                                        <p> <strong>Focus Area - 
                                                                             </strong>{{ap.focusAreas}} </p>
-                                                                        <p> <strong>PSD Area : </strong>{{ap.psdAreas}}
+                                                                        <p> <strong>PSD Area -  </strong>{{ap.psdAreas}}
                                                                         </p>
-                                                                        <p> <strong>Attachments : </strong> </p>
+                                                                        <p> <strong>Attachments -  </strong> </p>
                                                                         <div *ngFor="let file of ap.fileResponses">
                                                                             <div class="audio"
                                                                                 *ngIf="file.extension == 'mp3'">
@@ -257,18 +257,17 @@
                                                                 </div>
                                                                 <div class="col-4">
                                                                     <div class="description">
-                                                                        <h5> Reviews : </h5>
+                                                                        <h5> Reviews -  </h5>
                                                                         <p> <strong>Participation Score
-                                                                                :</strong>{{ap.participationScore}} </p>
+                                                                                - </strong>{{ap.participationScore}} </p>
                                                                         <p> <strong>Initiative Score
-                                                                                :</strong>{{ap.initiativeScore}}</p>
+                                                                                - </strong>{{ap.initiativeScore}}</p>
                                                                         <p> <strong>Achievement Score
-                                                                                :</strong>{{ap.achievementScore}}</p>
-                                                                        <p>
-                                                                            <strong>Total Score
-                                                                                :</strong>{{ap.totalMarks}}</p>
-                                                                        <p> <strong>Star : </strong>{{ap.star}}</p>
-                                                                        <p> <strong>Remarks :</strong>{{ap.coachRemark}}
+                                                                                - </strong>{{ap.achievementScore}}</p>
+                                                                                <p>
+                                                                                    <strong>Total Score - </strong>{{ap.totalMarks}}</p>
+                                                                        <p> <strong>Star -  </strong>{{ap.star}}</p>
+                                                                        <p> <strong>Remarks - </strong>{{ap.coachRemark}}
                                                                         </p>
                                                                     </div>
 
@@ -285,7 +284,7 @@
                                             <td colspan="7">
                                                 <div *ngIf="award_loader" class="spinner-border text-dark"
                                                     role="status">
-                                                </div>{{award_loader ? 'Loading...' : 'No Activities'}}
+                                                </div>{{award_loader ? 'Loading...' :  'No Activities'}}
                                             </td>
                                         </tr>
                                     </tfoot>
@@ -311,7 +310,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Award Details :</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Award Details - </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -319,7 +318,7 @@
             <div class="modal-body">
                 <form [formGroup]="assignAwardForm" (ngSubmit)="assignAward()">
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Name:</label>
+                        <label for="recipient-name" class="col-form-label">Name- </label>
                         <input type="text" class="form-control" id="recipient-name" formControlName="name">
                         <small class="text-danger"
                             *ngIf="!assignAwardForm.get('name').valid && assignAwardForm.get('name').touched">
@@ -327,7 +326,7 @@
                         </small>
                     </div>
                     <div class="form-group">
-                        <label for="message-text" class="col-form-label">Description:</label>
+                        <label for="message-text" class="col-form-label">Description- </label>
                         <textarea class="form-control" id="message-text" formControlName="description"></textarea>
                         <small class="text-danger"
                             *ngIf="!assignAwardForm.get('description').valid && assignAwardForm.get('description').touched">

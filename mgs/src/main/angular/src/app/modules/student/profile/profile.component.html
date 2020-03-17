@@ -5,31 +5,19 @@
                 <div class="student_main">
                     <h2> Student Profile </h2>
                     <div class="student_image">
-                        <img src="assets/images/student.jpg">
-                        <p>
-                            <label> {{studentDetails['name']}}</label>
-                        </p>
+                        <img src="assets/images/childprofile.jpg">
+                        <p> <label> {{studentDetails['name']}}</label> </p>
                     </div>
                     <div class="student_content">
                         <h3> Basic Info </h3>
-                        <p>
-                            <label> Gender - {{studentDetails['gender']}}</label>
-                        </p>
-                        <p>
-                            <label> Email - {{studentDetails['email']}}</label>
-                        </p>
-                        <p>
-                            <label> Date of Birth - {{studentDetails['dob'] | date}} </label>
-                        </p>
-                        <p>
-                            <label> Mobile Number - {{studentDetails['mobileNumber']}}</label>
-                        </p>
-                        <p>
-                            <label> Grade - {{studentDetails['grade']}} {{studentDetails['section']}}</label>
-                        </p>
-                        <p>
-                            <label> School Name - {{studentDetails['schoolName']}}</label>
-                        </p>
+                        <p> <i class='fa fa-restroom'></i> <label> {{studentDetails['gender']}}</label> </p>
+                        <p> <i class="fa fa-chalkboard-teacher"></i><label> {{studentDetails['grade']}}
+                                {{studentDetails['section']}}</label> </p>
+                        <p> <i class="fa fa-school"></i><label> {{studentDetails['schoolName']}}</label> </p>
+                        <p> <i class="fa fa-calendar" aria-hidden="true"></i><label> {{studentDetails['dob'] | date}}
+                            </label> </p>
+                        <p> <i class="fa fa-envelope"></i><label> {{studentDetails['email']}}</label> </p>
+                        <p> <i class="fa fa-phone-alt"></i><label> {{studentDetails['mobileNumber']}}</label> </p>
                     </div>
                 </div>
                 <div class="guardian_main">
@@ -48,35 +36,25 @@
                     -->
                     <div class="guardian_profile_card">
                         <h3> {{studentDetails['guardianResponseList'][0]['relationship']}}</h3>
-                        <p>
-                            <label> Name - {{studentDetails['guardianResponseList'][0]['name']}}</label>
-                        </p>
-                        <p>
-                            <label> Email - {{studentDetails['guardianResponseList'][0]['email']}}</label>
-                        </p>
-                        <p>
-                            <label> Mobile Number -
-                                {{studentDetails['guardianResponseList'][0]['mobileNumber']}}</label>
-                        </p>
-                        <p>
-                            <label> Relationship - {{studentDetails['guardianResponseList'][0]['relationship']}}</label>
-                        </p>
+                        <p> <label> <i class="fa fa-user"></i>
+                                {{studentDetails['guardianResponseList'][0]['name']}}</label> </p>
+                        <p> <label> <i class="fa fa-envelope"></i>
+                                {{studentDetails['guardianResponseList'][0]['email']}}</label> </p>
+                        <p> <label> <i class="fa fa-phone-alt"></i>
+                                {{studentDetails['guardianResponseList'][0]['mobileNumber']}}</label> </p>
+                        <p> <label> <i class='fa fa-restroom'></i>
+                                {{studentDetails['guardianResponseList'][0]['relationship']}}</label> </p>
                     </div>
                     <div class="guardian_profile_card">
-                        <h3> {{studentDetails['guardianResponseList'][1]['relationship']}} </h3>
-                        <p>
-                            <label> Name - {{studentDetails['guardianResponseList'][1]['name']}}</label>
-                        </p>
-                        <p>
-                            <label> Email - {{studentDetails['guardianResponseList'][1]['email']}}</label>
-                        </p>
-                        <p>
-                            <label> Mobile Number -
-                                {{studentDetails['guardianResponseList'][1]['mobileNumber']}}</label>
-                        </p>
-                        <p>
-                            <label> Relationship - {{studentDetails['guardianResponseList'][1]['relationship']}}</label>
-                        </p>
+                        <h3> {{studentDetails['guardianResponseList'][1]['relationship']}}</h3>
+                        <p> <label> <i class="fa fa-user"></i>
+                                {{studentDetails['guardianResponseList'][1]['name']}}</label> </p>
+                        <p> <label> <i class="fa fa-envelope"></i>
+                                {{studentDetails['guardianResponseList'][1]['email']}}</label> </p>
+                        <p> <label> <i class="fa fa-phone-alt"></i>
+                                {{studentDetails['guardianResponseList'][1]['mobileNumber']}}</label> </p>
+                        <p> <label> <i class='fa fa-restroom'></i>
+                                {{studentDetails['guardianResponseList'][1]['relationship']}}</label> </p>
                     </div>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 <div class="main">
   <div class="navbar">
     <div class="logo">
-      <a routerLink='./home'> <img src="assets/images/logo.jpg"> </a>    
+      <a routerLink='./home'> <img src="assets/images/logo.jpg"> </a>
     </div>
     <div class="menu">
       <ul>
@@ -22,10 +22,17 @@
             <i class="fa fa-trophy"> </i> Awards and Achievements </a>
         </li>
       </ul>
+        <ul style="float: right"> 
+            <li>
+                <a routerLink='login' class="logout menu_link" (click)="authService.logoutUser();">
+                  <i class="fa fa-sign-out-alt"> </i> Logout </a>
+              </li>
+        </ul>
     </div>
 
+    <!--
     <div class="right">
-      <div class="dropdown">
+        <div class="dropdown">
         <i class="fa fa-user-circle"></i>
         <div class="dropdown-content">
           <a routerLink='./profile'>
@@ -38,8 +45,9 @@
           <a routerLink='login' class="logout" (click)="authService.logoutUser();">
             <i class="fa fa-sign-out-alt"></i>Logout </a>
         </div>
+        </div>
       </div>
-    </div>
+      -->
   </div>
 
   <div class="content_main">
