@@ -40,15 +40,6 @@ span.choosefile.choosefile-custom {
     padding: 0;
 }
 
-select{
-    background: none;
-    border: none;
-    color: #333;
-    height: 40px;
-    border-radius: 0 !important;
-    width: 120px;
-}
-
 button.submit {
     background: green;
 }
@@ -77,6 +68,12 @@ button.icon_button {
 .attachment a{
     color: #333 !important;
 }
+.table_main h5{
+    color: #1f69ad;
+}
+.sortby select{
+    color: #1f69ad;
+  }
 
 /*
 i.fa.fa-file-audio:hover span#audio, i.fa.fa-image:hover span#image, i.fa.fa-video-camera:hover span#video{

@@ -88,17 +88,13 @@ export class SavedActitvityComponent implements OnInit {
     //   (err) => { console.log(err) });
     this.studentService.getActivityAreas().subscribe((res) => {
       console.log(res);
-      this.psdAreaArr = res["PSD AREAS"]
+      this.psdAreaArr = res["PSD Areas"];
       this.focusAreaArr = res["Focus Areas"]
       this.fourSArr = res["Four S"]
       console.log(this.fourSArr);
 
     },
-<<<<<<< HEAD
-      (err) => { console.log(err); });
-=======
     (err) => {console.log(err);});
->>>>>>> 40d893aed6b5b440cce7269e6276139ad3b18161
   }
 
   // to get the list of SAVED Activities of student
@@ -133,10 +129,10 @@ export class SavedActitvityComponent implements OnInit {
   // to get the list of ALL Activities of student
   getStudentAllActivities(studentId) {
     this.studentService.getAllActivity(studentId).subscribe((res) => {
-      // console.log(res);
+      console.log(res);
       this.allActivitiesArr = res;
       this.copyAllActi = Object.assign([], res);
-      this.allActivitiesArr = this.allActivitiesArr.filter((e) => (e.activityStatus !== 'SavedByTeacher'));
+      this.allActivitiesArr = this.allActivitiesArr.filter((e) => e.activityStatus !== 'SavedByTeacher');
       this.activitiesArr = this.allActivitiesArr;
       this.loader = false;
       this.filterActivities();

@@ -55,7 +55,7 @@ export class StudentAwardsComponent implements OnInit {
     //   (err) => { console.log(err) });
     this.studentService.getActivityAreas().subscribe((res) => {
       console.log(res);
-      this.psdAreaArr = res["PSD AREAS"]
+      this.psdAreaArr = res["PSD Areas"]
       this.focusAreaArr = res["Focus Areas"]
       this.fourSArr = res["Four S"]
       console.log(this.fourSArr);

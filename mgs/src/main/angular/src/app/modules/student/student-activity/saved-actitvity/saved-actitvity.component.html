@@ -1,20 +1,20 @@
-<div class="sortby"> PSD :
-    <select style="border: 1px solid #ddd" (change)="filterActivities()" [(ngModel)]="psdAreas">
-        <option value="" selected disabled> Choose here </option>
+<div class="sortby">
+    <select (change)="filterActivities()" [(ngModel)]="psdAreas">
+        <option value="" selected disabled> PSD </option>
         <option value="">None</option>
         <option *ngFor="let ps of psdAreaArr" value={{ps}}>{{ps}}</option>
     </select>
 </div>
-<div class="sortby"> Focus Area :
-    <select style="border: 1px solid #ddd" (change)="filterActivities()" [(ngModel)]="focusAreas">
-        <option value="" selected disabled> Choose here </option>
+<div class="sortby">
+    <select (change)="filterActivities()" [(ngModel)]="focusAreas">
+        <option value="" selected disabled> Focus Areas </option>
         <option value="">None</option>
         <option *ngFor="let ps of focusAreaArr" value={{ps}}>{{ps}}</option>
     </select>
 </div>
-<div class="sortby"> 4S :
-    <select style="border: 1px solid #ddd" (change)="filterActivities()" [(ngModel)]="fourS">
-        <option value="" selected disabled> Choose here </option>
+<div class="sortby">
+    <select (change)="filterActivities()" [(ngModel)]="fourS">
+        <option value="" selected disabled> 4S </option>
         <option value="">None</option>
         <option *ngFor="let ps of fourSArr" value={{ps}}>{{ps}}</option>
     </select>
@@ -22,7 +22,7 @@
 
 <div class="sortby" style="float: right">
     Filter by:
-    <select style="border: 1px solid #ddd" (ngModelChange)="activityView($event)" [(ngModel)]="activityType">
+    <select (ngModelChange)="activityView($event)" [(ngModel)]="activityType">
         <option value="" disabled> Choose here </option>
         <option value="All"> All</option>
         <option value="Saved">Saved</option>
@@ -48,7 +48,8 @@
                                 <i class="fa fa-sort"></i>
                             </button>
                         </th>
-                        <th *ngIf="(activityType === 'All') || (activityType === 'Saved')" scope="col" colspan="2">Action</th>
+                        <th *ngIf="(activityType === 'All') || (activityType === 'Saved')" scope="col" colspan="2">
+                            Action</th>
                     </tr>
                 </thead>
                 <tbody id="accordionExample1">
@@ -60,13 +61,14 @@
                             <td>{{getDate(activity.dateOfActivity) | date}}</td>
                             <td>{{activity.coachName}}</td>
                             <td>
-                                <div *ngIf="activity.activityStatus === 'SubmittedByStudent'" class="submitted">Submitted
+                                <div *ngIf="activity.activityStatus === 'SubmittedByStudent'" class="submitted">
+                                    Submitted
                                 </div>
                                 <div *ngIf="activity.activityStatus === 'SavedByStudent'" class="saved">Saved</div>
                                 <div *ngIf="activity.activityStatus === 'Reviewed'" class="reviewed">Reviewed
                                 </div>
                             </td>
-                            <td *ngIf="(activityType === 'All') || (activityType === 'Saved')">                               
+                            <td *ngIf="(activityType === 'All') || (activityType === 'Saved')">
                                 <div *ngIf="activity.activityStatus === 'SavedByStudent'">
                                     <button (click)="editSavedActivity($event,activity)" class="saved icon_button">
                                         <i class="fa fa-edit" title="Edit"></i>
@@ -79,10 +81,10 @@
                                         class="reviewed icon_button">
                                         <i class="fa fa-trash" title="Delete"></i>
                                     </button>
-                                    
+
                                 </div>
                                 <div *ngIf="activity.activityStatus !== 'SavedByStudent'">NA
-                                </div>                                
+                                </div>
                             </td>
                             <td>
                                 <span class="pull-right" *ngIf="activity.fileResponses.length">
@@ -99,7 +101,7 @@
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="description">
-                                                        <h5> Development Parameters </h5>
+                                                    <h5> Development Parameters </h5>
                                                     <p *ngIf="activity.focusAreas">
                                                         <strong>Focus Area : </strong>{{activity.focusAreas}}</p>
                                                     <p *ngIf="activity.psdAreas">
@@ -107,23 +109,23 @@
                                                     <p *ngIf="activity.fourS" id="fourSkills">
                                                         <strong>4's: </strong>
                                                         <span *ngIf="activity.fourS=='Skill'" style="color: #4bafa5;">
-                                                            {{activity.fourS}}                                                            
+                                                            {{activity.fourS}}
                                                         </span>
                                                         <span *ngIf="activity.fourS=='Sport'" style="color: #e04090;">
-                                                            {{activity.fourS}}                                                            
+                                                            {{activity.fourS}}
                                                         </span>
                                                         <span *ngIf="activity.fourS=='Study'" style="color: #1f69ad;">
-                                                            {{activity.fourS}}                                                            
+                                                            {{activity.fourS}}
                                                         </span>
                                                         <span *ngIf="activity.fourS=='Service'" style="color: #8dc33a;">
-                                                            {{activity.fourS}}                                                            
+                                                            {{activity.fourS}}
                                                         </span>
                                                     </p>
                                                 </div>
                                             </div>
                                             <div class="col-6" *ngIf="activity.fileResponses.length">
                                                 <div class="attachment">
-                                                        <h5> Attachments </h5>
+                                                    <h5> Attachments </h5>
                                                     <div *ngFor="let file of activity.fileResponses">
                                                         <div>
                                                             <a [attr.href]="file.url">
@@ -144,65 +146,79 @@
 
                                     <div *ngIf=" activity.activityStatus === 'Reviewed'">
                                         <div class="row">
-                                            <div class="col-6">
+                                            
+                                            <div class="col-3">
                                                 <div class="description">
-                                                        <h5> Development Parameters </h5>
+                                                    <h5> Development Parameters : </h5>
                                                     <p *ngIf="activity.focusAreas">
                                                         <strong>Focus Area : </strong>{{activity.focusAreas}}</p>
                                                     <p *ngIf="activity.psdAreas">
                                                         <strong>PSD Area : </strong>{{activity.psdAreas}}</p>
-                                                        <p *ngIf="activity.fourS" id="fourSkills">
-                                                            <strong>4's: </strong>
-                                                            <span *ngIf="activity.fourS=='Skill'" style="color: #4bafa5;">
-                                                                {{activity.fourS}}                                                            
-                                                            </span>
-                                                            <span *ngIf="activity.fourS=='Sport'" style="color: #e04090;">
-                                                                {{activity.fourS}}                                                            
-                                                            </span>
-                                                            <span *ngIf="activity.fourS=='Study'" style="color: #1f69ad;">
-                                                                {{activity.fourS}}                                                            
-                                                            </span>
-                                                            <span *ngIf="activity.fourS=='Service'" style="color: #8dc33a;">
-                                                                {{activity.fourS}}                                                            
-                                                            </span>
-                                                        </p>
+                                                    <p *ngIf="activity.fourS" id="fourSkills">
+                                                        <strong>4's: </strong>
+                                                        <span *ngIf="activity.fourS=='Skill'" style="color: #4bafa5;">
+                                                            {{activity.fourS}}
+                                                        </span>
+                                                        <span *ngIf="activity.fourS=='Sport'" style="color: #e04090;">
+                                                            {{activity.fourS}}
+                                                        </span>
+                                                        <span *ngIf="activity.fourS=='Study'" style="color: #1f69ad;">
+                                                            {{activity.fourS}}
+                                                        </span>
+                                                        <span *ngIf="activity.fourS=='Service'" style="color: #8dc33a;">
+                                                            {{activity.fourS}}
+                                                        </span>
+                                                    </p>
                                                 </div>
 
                                             </div>
-                                            <div class="col-6">
+
+                                            <div class="col-3">
                                                 <div class="description">
-                                                    <h5> Scoring </h5>
-                                                <p>
-                                                    <strong>Participation Score - </strong>{{activity.participationScore}}
-                                                </p>
-                                                <p>
-                                                    <strong>Initiative Score - </strong>{{activity.initiativeScore}}</p>
-                                                <p>
-                                                    <strong>Achievement Score - </strong>{{activity.achievementScore}}</p>
-                                                <p>
-                                                    <strong>Star -  </strong>{{activity.star}}</p>
-                                                <p>
-                                                    <strong>Remarks - </strong>{{activity.coachRemark}}</p>
+                                                    <h5> Scoring : </h5>
+                                                    <p>
+                                                        <strong>Participation Score -
+                                                        </strong>{{activity.participationScore}}
+                                                    </p>
+                                                    <p>
+                                                        <strong>Initiative Score - </strong>{{activity.initiativeScore}}
+                                                    </p>
+                                                    <p>
+                                                        <strong>Achievement Score -
+                                                        </strong>{{activity.achievementScore}}</p>
+                                                    <p>
+                                                        <strong>Total Score - </strong>{{activity.totalMarks}}</p>
+                                                </div>
+
                                             </div>
-                                            </div>
-                                            <div class="col-4" *ngIf="activity.fileResponses.length">
-                                                <div class="attachment">
-                                                        <h5> Attachments </h5>
-                                                    <div *ngFor="let file of activity.fileResponses">
-                                                        <div>
-                                                            <a [attr.href]="file.url">
-                                                                <i class="fa fa-file-audio"
-                                                                    *ngIf="file.extension == 'mp3'"></i>
-                                                                <i class="fa fa-image"
-                                                                    *ngIf="file.extension=='jpg'"></i>
-                                                                <i class="fa fa-video-camera"
-                                                                    *ngIf="file.extension=='video'"></i>
-                                                                {{file.name}}
-                                                            </a>
-                                                        </div>
-                                                    </div>
+                                            <div class="col-3">
+                                                <div class="description">
+                                                    <h5> Remarks : </h5>
+                                                    <p>
+                                                        <strong>Star - </strong>{{activity.star}}</p>
+                                                    <p>
+                                                        <strong>Remarks - </strong>{{activity.coachRemark}}</p>
                                                 </div>
                                             </div>
+                                            <div class="col-3">
+                                                    <div class="attachment">
+                                                        <h5> Attachments : </h5> {{activity.fileResponses.length ? "" : "NA"}}
+                                                        <div *ngFor="let file of activity.fileResponses">
+                                                            <div>
+                                                                <a [attr.href]="file.url">
+                                                                    <i class="fa fa-file-audio"
+                                                                        *ngIf="file.extension == 'mp3'"></i>
+                                                                    <i class="fa fa-image"
+                                                                        *ngIf="file.extension=='jpg'"></i>
+                                                                    <i class="fa fa-video-camera"
+                                                                        *ngIf="file.extension=='video'"></i>
+                                                                    {{file.name}}
+                                                                </a>
+                                                            </div>
+                                                        </div> 
+                                                    </div>
+                                                </div>
+
                                         </div>
 
                                     </div>

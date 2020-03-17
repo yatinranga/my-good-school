@@ -23,9 +23,16 @@
               Achievements </a>
           </li>
         </ul>
+        <ul style="float: right"> 
+            <li>
+                <a routerLink='login' class="logout menu_link" (click)="authService.logoutUser();">
+                  <i class="fa fa-sign-out-alt"> </i> Logout </a>
+              </li>
+        </ul>
       </div>
   
-      <div class="right">
+      <!--
+        <div class="right">
         <div class="dropdown">
           <i class="fa fa-user-circle"></i>
           <div class="dropdown-content">
@@ -38,6 +45,7 @@
           </div>
         </div>
       </div>
+      -->
     </div>
   
     <div class="content_main">
