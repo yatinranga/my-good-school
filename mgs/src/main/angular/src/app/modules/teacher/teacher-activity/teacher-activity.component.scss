@@ -88,3 +88,11 @@ button.pending.icon_button{
     color: #1f69ad;
     font-size: 17px;
 }
+button.award.btn.btn-success, button.award.btn.btn-primary {
+    background: #8dc33a !important;
+    padding: 10px;
+    border-radius: 2px;
+}
+button.reset.btn.btn-secondary {
+    padding: 10px;
+}

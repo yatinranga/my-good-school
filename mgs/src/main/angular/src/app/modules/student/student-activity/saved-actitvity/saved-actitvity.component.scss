@@ -154,8 +154,6 @@ form.add_activity_form .register-form {
     border-radius: 5px;
     position: relative;
     top: 160px;
-    // transform: translateY(-50%);
-    
     padding: 20px;
     width: 100%;
     max-width: 500px;
@@ -171,17 +169,14 @@ form.add_activity_form{
 button.btn.cancel {
     margin: 0 10px;
     background: firebrick !important;
-    padding: 12px;
+    padding: 10px;
     outline: none !important
 }
 .action-buttons{
     display: inline-block;
     float: right;
 }
-button.btn.saved.btnSubmit.btn-success{
-    margin-top: 0;
-    color: #fafafa;
-}
+
 .action-buttons i.fa{
     font-size: 15px;
     margin: 5px;
@@ -214,8 +209,6 @@ button.add_activity{
     bottom: 0;
     right: 0;
 }
-
-
 
 span.tooltip_text{
     background-color: #888;
@@ -261,4 +254,9 @@ span.tooltip_text{
 .fourS{
     color: #8dc33a;
 }
-  
+button.btn.saved.btnSubmit.btn-success {
+    margin-top: 0;
+    color: #fafafa;
+    padding: 10px;
+    background: #8dc33a !important;
+}

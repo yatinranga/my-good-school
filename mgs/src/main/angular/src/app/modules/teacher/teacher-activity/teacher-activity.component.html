@@ -30,7 +30,7 @@
                                         <i class="fa fa-sort"></i>
                                     </button>
                                 </th>
-                                <th *ngIf="!(activityType === 'Reviewed')">Action</th>
+                                <th *ngIf="!(activityType === 'Reviewed')" colspan="2">Action</th>
                             </tr>
                         </thead>
                         <tbody id="accordionExample">
@@ -62,7 +62,8 @@
                                                 class="saved icon_button">
                                                 <i class="fa fa-edit" title="Edit"> </i> </button>
                                             <button [disabled]="!(activity.activityStatus === 'SubmittedByStudent')"
-                                                (click)="reviewActivity(activity,i, $event)" class="pending icon_button">
+                                                (click)="reviewActivity(activity,i, $event)"
+                                                class="pending icon_button">
                                                 <i class="fa fa-comments" title="Review"></i> </button>
                                         </div>
 
@@ -86,6 +87,11 @@
                                             NA
                                         </div>
                                     </td>
+                                    <td>
+                                        <span class="pull-right" *ngIf="activity.fileResponses.length">
+                                            <i class="fa fa-paperclip" title="Attachment" aria-hidden="true"></i>
+                                        </span>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td class="collapse-td" colspan="8">
@@ -96,13 +102,19 @@
                                                     <div class="col-4">
                                                         <div class="description">
                                                             <h5> Scoring : </h5>
-                                                            <p> <strong>Participation Score - </strong>{{activity.participationScore}}</p>
-                                                            <p> <strong>Initiative Score - </strong>{{activity.initiativeScore}}</p>
-                                                            <p> <strong>Achievement Score - </strong>{{activity.achievementScore}}</p>
-                                                            <p> <strong>Total Score - </strong>{{activity.totalMarks}} </p>
+                                                            <p> <strong>Participation Score -
+                                                                </strong>{{activity.participationScore}}</p>
+                                                            <p> <strong>Initiative Score -
+                                                                </strong>{{activity.initiativeScore}}</p>
+                                                            <p> <strong>Achievement Score -
+                                                                </strong>{{activity.achievementScore}}</p>
+                                                            <p> <strong>Total Score - </strong>{{activity.totalMarks}}
+                                                            </p>
                                                             <p> <strong>Star - </strong>{{activity.star}}</p>
-                                                            <p> <strong style="color: green">Remarks - </strong>{{activity.coachRemark}}</p>
-                                                            <p> <strong> Date Reviewed - </strong>{{activity.coachRemarkDate | date }} </p>
+                                                            <p> <strong style="color: green">Remarks -
+                                                                </strong>{{activity.coachRemark}}</p>
+                                                            <p> <strong> Date Reviewed -
+                                                                </strong>{{activity.coachRemarkDate | date }} </p>
                                                         </div>
                                                     </div>
                                                     <div class="col-4">
@@ -167,7 +179,7 @@
                                                                 <strong>Focus Area - </strong>{{activity.focusAreas}}
                                                             </p>
                                                             <p *ngIf="activity.psdAreas">
-                                                                <strong>PSD Area  - </strong>{{activity.psdAreas}}</p>
+                                                                <strong>PSD Area - </strong>{{activity.psdAreas}}</p>
                                                             <p *ngIf="activity.fourS" id="fourSkills">
                                                                 <strong>4's - </strong>
                                                                 <span *ngIf="activity.fourS=='Skill'"
@@ -192,8 +204,8 @@
 
                                                     <div class="col-4">
                                                         <div class="attachment">
-                                                                <h5> Attachments : </h5>
-                                                                {{activity.fileResponses.length ? "" : "NA"}}
+                                                            <h5> Attachments : </h5>
+                                                            {{activity.fileResponses.length ? "" : "NA"}}
                                                             <div *ngFor="let file of activity.fileResponses">
                                                                 <div>
                                                                     <i class="fa fa-file-audio"
@@ -795,9 +807,9 @@
                                         <textarea class="form-control" formControlName="coachRemark"></textarea>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
+                                        <button type="button" class="reset btn btn-secondary"
                                             (click)="resetForm()">Reset</button>
-                                        <button class="btn btn-primary" type="submit"
+                                        <button class="award btn btn-primary" type="submit"
                                             [disabled]="reviewForm.invalid">Save changes
                                         </button>
                                     </div>
