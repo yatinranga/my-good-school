@@ -48,6 +48,7 @@ export class TeacherActivityComponent implements OnInit {
 
     this.reviewFormInit();
     this.activityView(this.activityType);
+
   }
 
   // Toggle Activity View
@@ -136,6 +137,7 @@ export class TeacherActivityComponent implements OnInit {
 
   // Save/Review Pending Activity
   saveReview() {
+
     console.log(this.reviewForm.value);
     const formData = new FormData();
     formData.append('id', this.activityId);
@@ -183,6 +185,10 @@ export class TeacherActivityComponent implements OnInit {
       initiativeScore: activity.initiativeScore,
       coachRemark: activity.coachRemark
     })
+    $('#reviewModal').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
     $('#reviewModal').modal('show');
   }
 
@@ -233,6 +239,10 @@ export class TeacherActivityComponent implements OnInit {
     this.activityId = activity.id
     this.studentId = activity.studentId;
     this.totalScore = activity.totalMarks;
+    $('#reviewModal').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
     $('#reviewModal').modal('show');
   }
 
@@ -290,3 +300,10 @@ export class TeacherActivityComponent implements OnInit {
 
 
 }
+
+
+
+// $('#reviewModal').modal({
+//   backdrop: 'static',
+//   keyboard: false
+// });

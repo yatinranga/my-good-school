@@ -86,7 +86,13 @@ export class TeacherAwardsComponent implements OnInit {
 
   //  get LIST of students who performed specific activity of particular grade
   getListOfStudent(gradeId) {
+    this.studentActivityList = false; // List of performed activities
+    this.studentList = [];
+    this.studentId = "";
+    this.performedActiArr = [];
+    this.activities = [];
     this.stu_loader = true;
+
     this.teacherService.getStudents(gradeId).subscribe((res) => {
       this.studentList = res;
       console.log(res);
@@ -261,6 +267,11 @@ export class TeacherAwardsComponent implements OnInit {
       // names must be equal
       return 0;
     });
+  }
+
+  // Reset 
+  resetForm() {
+    this.assignAwardForm.reset();
   }
 
 }

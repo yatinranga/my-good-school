@@ -9,12 +9,6 @@
                         <li [ngClass]="{'active': awardViewType=='assign'}"> <a (click)="awardView('assign')"> Assign
                                 Awards </a> </li>
                     </ul>
-                    <!-- <div>
-                                    <button type="button" class="award-button btn btn-primary btn-lg"
-                                        >Assign Award</button>
-                                    <button type="button" class="award-button btn btn-secondary btn-lg"
-                                        >Create New Award </button>
-                                </div> -->
                 </div>
                 <div [ngSwitch]="awardViewType">
 
@@ -41,7 +35,7 @@
                                 <label for="exampleFormControlSelect2">Students - </label>
                                 <select class="" id="exampleFormControlSelect1" (ngModelChange)="getStudentId($event)"
                                     ngModel>
-                                    <option value="" selected>Select Student</option>
+                                    <option value="" disabled selected>Select Student</option>
                                     <option *ngFor="let stu of studentList;" value={{stu.id}}>
                                         {{stu.name}}
                                     </option>
@@ -226,9 +220,12 @@
                                                 <td>{{al.activity.name}} </td>
                                                 <td>{{al.studentName}} {{al.studentGrade}}</td>
                                                 <td>{{al.status}}</td>
-                                                <td><button [disabled]="!(al.status == 'PENDING')"
-                                                        (click)="verifySelectedAward($event,i)" class="verify">
-                                                        <i class="fa fa-hourglass-start"></i> </button> </td>
+                                                <td>
+                                                    <button *ngIf="al.status == 'PENDING'" (click)="verifySelectedAward($event,i)" class="verify">
+                                                        <i class="fa fa-hourglass-start"></i> </button>
+                                                    <button *ngIf="al.status == 'VERIFIED'" [disabled]="(al.status == 'VERIFIED')" (click)="verifySelectedAward($event,i)" class="verify">
+                                                        <i class="fa fa-hourglass-start"></i> </button> 
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td class="collapse-td" colspan="7">
@@ -367,8 +364,8 @@
                         </small>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="reset btn btn-secondary" data-dismiss="modal"> Reset </button>
-                        <button type="submit" class="award btn btn-primary"> Done </button>
+                        <button type="button" class="reset btn btn-secondary" data-dismiss="modal" (click)="resetForm()"> Reset </button>
+                        <button type="submit" class="award btn btn-primary" [disabled]="assignAwardForm.invalid"> Done </button>
                     </div>
                 </form>
             </div>
