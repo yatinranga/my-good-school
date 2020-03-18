@@ -240,6 +240,7 @@ export class TeacherActivityComponent implements OnInit {
     return new Date(date)
   }
 
+  // to reset the Review Form
   resetForm() {
     this.reviewForm.reset();
   }
@@ -267,15 +268,12 @@ export class TeacherActivityComponent implements OnInit {
   calTotalMarks(scoreType,value){
     
     if (scoreType == "achievement"){
-      console.log("Achi : " + value);
       this.achiScore = value;     
     }
     if (scoreType == "participation"){
-      console.log("parti : " + value);
       this.partiScore = value;            
     }
     if (scoreType == "initiative"){
-      console.log("init : " + value);
       this.initScore = value;            
     }
 
