@@ -14,11 +14,9 @@
     left: 20px;
     width: 50%;
     float: left;
-    background: #8cbbc5;
     position: absolute;
     top: 175px;
     padding: 10px;
-    box-shadow: 0 0 5px #999;
 }
 .profile_text h2{
     margin: 0 0 20px 0;
@@ -47,14 +45,10 @@
 }
 .basic-info {
     float: left;
-    width: 65%;
+    width: 55%;
     margin: 0 5px;
 }
-.teacher-activities {
-    float: right;
-    width: 30%;
-    margin: 0 5px;
-}
+
 .teacher-activities ul {
     padding: 0 17px;
 }
@@ -64,3 +58,8 @@ list-style: inherit;
 .basic-info i.fa {
     margin: 0 15px 0 0px;
 }
+/*
+.teacher-activities{
+    z-index: 222;
+}
+*/
