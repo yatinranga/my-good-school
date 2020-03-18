@@ -34,8 +34,8 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">Select Gender :*
-                            <select class="form-control" placeholder="Select one" formControlName="gender">
-                                <option value="" selected>Choose your option</option>
+                            <select class="form-control" placeholder="Select one" formControlName="gender" >
+                                <option [ngValue]="null" selected>Choose your option</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
                             </select>
@@ -54,7 +54,7 @@
                             </small>
                         </div>
                         <div class="form-group">Select Grade :*
-                            <select class="form-control" formControlName="gradeId">
+                            <select class="form-control" formControlName="gradeId" >
                                 <option value="" selected>Select Grade</option>
                                 <option *ngFor="let grade of gradesList; let i = index;" value={{grade.id}}>
                                     {{grade.grade}} {{grade.section}}</option>
