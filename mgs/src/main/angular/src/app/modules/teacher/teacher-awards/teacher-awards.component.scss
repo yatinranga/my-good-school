@@ -86,14 +86,27 @@ img{
 li.active {
     background: #8dc33a;
 }
+.verified{
+    color: #8dc33a;
+}
+.pending{
+    color: indianred;
+}
 .table button.verify {
-    color: #333;
+    color: #8dc33a;
     background: none;
     border: none;
     outline: none;
     box-shadow: none;
 }
-
+.table button.pending{
+    color: indianred;
+    background: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    font-size: 18px;
+}
 .teacher_awards_main .popup-form {
     width: 100%;
     display: inline-block;
@@ -124,10 +137,6 @@ button.icon_button {
     background: none !important;
     cursor: pointer;
     box-shadow: none !important;
-}
-i.fa.fa-hourglass-start {
-    color: #8dc33a;
-    font-size: 18px;
 }
 button.award.btn.btn-success, button.award.btn.btn-primary {
     background: #8dc33a !important;
