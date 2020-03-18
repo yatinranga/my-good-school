@@ -29,11 +29,13 @@
                             Class Teacher - <label> {{teacherDetails['isClassTeacher'] ? "Yes" : "No" }}</label></p>                       
                         </div>
                             
-                        <div *ngIf="teacherDetails['activities']" class="teacher-activities">
-                            <h3> Activities </h3>
-                            <ul *ngFor="let acti of teacherDetails['activities']">
-                                <li>{{acti}}</li>
-                            </ul>
+                        <div *ngIf="teacherDetails['activities']" class="teacher-activities-main">
+                            <div class="teacher-activities">
+                                    <h3> Activities </h3>
+                                    <ul *ngFor="let acti of teacherDetails['activities']">
+                                        <li>{{acti}}</li>
+                                    </ul>
+                            </div>
                         </div>
 
                         <div *ngIf="teacherDetails['gradeIds']">Activities -

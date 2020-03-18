@@ -94,7 +94,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="collapse-td" colspan="8">
+                                    <td class="collapse-td" colspan="9">
                                         <div [attr.id]="'collapse' + i " class="collapse"
                                             data-parent="#accordionExample">
                                             <div *ngIf="(activity.activityStatus != 'SubmittedByStudent')">
@@ -234,7 +234,7 @@
                         </tbody>
                         <tfoot *ngIf="activitiesArr.length == 0">
                             <tr>
-                                <td colspan="8">
+                                <td colspan="9">
                                     <div *ngIf="loader" class="spinner-border text-dark" role="status">
                                     </div>{{loader ? 'Loading...' : 'No Activities'}}
                                 </td>

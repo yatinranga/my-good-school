@@ -197,7 +197,8 @@
                                             <th scope="col">Award</th>
                                             <th scope="col">Description</th>
                                             <th scope="col">Activity</th>
-                                            <th scope="col">Student Name & Grade</th>
+                                            <th scope="col">Student Name</th>
+                                            <th scope="col">Grade</th>
                                             <th scope="col">
                                                 Status
                                                 <button class="icon_button" (click)="sortByStatus()">
@@ -215,7 +216,8 @@
                                                 <td>{{al.name}}</td>
                                                 <td>{{al.description}}</td>
                                                 <td>{{al.activity.name}} </td>
-                                                <td>{{al.studentName}} {{al.studentGrade}}</td>
+                                                <td>{{al.studentName}}</td>
+                                                    <td> {{al.studentGrade}}</td>
                                                 <td>
                                                     <div *ngIf="al.status === 'PENDING'" class="pending"> {{al.status}}
                                                     </div>
@@ -232,7 +234,7 @@
                                                         <i class="fa fa-check" aria-hidden="true"></i> </button> </td>
                                             </tr>
                                             <tr>
-                                                <td class="collapse-td" colspan="7">
+                                                <td class="collapse-td" colspan="8">
                                                     <div [attr.id]="'collapse' + i" class="collapse"
                                                         data-parent="#accordionExample">
                                                         <div
@@ -317,7 +319,7 @@
                                     </tbody>
                                     <tfoot *ngIf="awardsList.length == 0">
                                         <tr>
-                                            <td colspan="7">
+                                            <td colspan="8">
                                                 <div *ngIf="award_loader" class="spinner-border text-dark"
                                                     role="status">
                                                 </div>{{award_loader ? 'Loading...' :  'No Activities'}}

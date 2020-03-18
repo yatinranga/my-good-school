@@ -226,7 +226,7 @@ tbody#accordionExample > tr[aria-expanded="true"] {
 }
 .description {
     border-right: 1px solid #333;
-    min-height: 310px;
+    min-height: 330px;
 }
 .description:after, .attachment:before{
     display: none !important;
@@ -373,8 +373,8 @@ app-home{
 .logo {
     padding: 0;
     float: left;
-    margin: 8px 40px 8px 10px;
-    width: 4%;
+    margin: 8px 20px;
+    width: 10%;
 }
 .logo img{
     width: 90px;
@@ -382,9 +382,9 @@ app-home{
 }
 .menu {
     display: inline-block;
-    margin: 0px 10px;
+    margin: 0px auto;
     float: left;
-    width: 91%;
+    width: 85%;
 }
 .menu ul {
     padding: 0;
@@ -526,7 +526,7 @@ li.nav-item{
 .profile_main{
     width: 100%;
     display: inline-block;
-    height: calc(100vh - 142px);
+    height: calc(100vh - 145px);
 }
 
 .student_main {
@@ -550,8 +550,8 @@ li.nav-item{
     margin: 0 auto;
 }
 .student_image img {
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
     opacity: 0.9;
 }
@@ -594,7 +594,7 @@ li.nav-item{
     color: #e04090;
     position: absolute;
     width: 100px;
-    background: darkgray;
+    background: #b5b5b5;
     height: 35px;
     top: -18px;
     padding: 5px 10px;
@@ -608,4 +608,13 @@ li.nav-item{
     position: relative;
     background: lightgray;
     box-shadow: 0 0 10px #555;
+}
+
+.teacher-activities-main {
+    float: right;
+    width: 40%;
+    margin: 0 5px;
+    /* background: url(assets/images/activitybg.jpg); 
+    background: #91beca; */
+    padding: 0 5px;
 }
