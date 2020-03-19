@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StudentService } from 'src/app/services/student.service';
 import { AlertService } from 'src/app/services/alert.service';
 declare let $: any;
@@ -62,12 +62,12 @@ export class SavedActitvityComponent implements OnInit {
     this.getAreas(); // to get PSD Areas, Focus Area and 4s
 
     this.savedActivityForm = this.formBuilder.group({
-      activityId: [''],
-      description: [''],
-      dateOfActivity: [''],
-      coachId: [''],
+      activityId: [,[Validators.required]],
+      description: [,[Validators.required, Validators.minLength(100)]],
+      dateOfActivity: [,[Validators.required]],
+      coachId: [,[Validators.required]],
       attachment: [],
-      id: ['']
+      id: []
     });
   }
 
@@ -258,7 +258,6 @@ export class SavedActitvityComponent implements OnInit {
     this.modal_loader = true;
     this.studentService.getCoach(this.schoolId, activityId).subscribe((res) => {
       this.coaches = res;
-      console.log(this.coaches.length);
       this.modal_loader = false;
     },
       (err) => {

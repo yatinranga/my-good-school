@@ -674,7 +674,7 @@
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label"> Teacher/Coach:* </label>
-                            <select class="form-control" formControlName="coachId">
+                            <select class="form-control" formControlName="coachId" >
                                 <option *ngFor="let coach of coaches; let i = index;" value={{coach.id}}>
                                     {{coach.name}}
                                 </option>
@@ -686,8 +686,11 @@
                         </div>
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label"> Description:* </label>
-                            <textarea class="form-control add" formControlName="description" rows="3"
-                            [disabled]="coaches.length == 0" ></textarea>
+                            <textarea class="form-control add" formControlName="description" rows="3"></textarea>
+                            <small class="text-danger"
+                            *ngIf="!savedActivityForm.get('description').valid && savedActivityForm.get('description').touched">
+                            Minimum length 100 words.
+                        </small>
                         </div>
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label"> Date of Activity Performed:* </label>
@@ -716,12 +719,12 @@
                         </div>
                         <div class="modal-footer">
                             <button class="btn cancel" type="button" (click)="resetForm()">Reset</button>
-                            <button class="btn saved btnSubmit btn-success" type="submit" *ngIf="editActivityShow">
+                            <button class="btn saved btnSubmit btn-success" type="submit" *ngIf="editActivityShow" [disabled]="savedActivityForm.invalid">
                                 <div *ngIf="submit_loader" class="spinner-border text-dark" role="status"></div>
                                 {{submit_loader ? 'Updating...' : 'Update'}}
                             </button>
 
-                            <button class="btn saved btnSubmit btn-success" type="submit" *ngIf="addActivityShow">
+                            <button class="btn saved btnSubmit btn-success" type="submit" *ngIf="addActivityShow" [disabled]="savedActivityForm.invalid">
                                 <div *ngIf="submit_loader" class="spinner-border text-dark" role="status">
                                 </div>{{submit_loader ? 'Submitting...' : 'Submit'}}
                             </button>

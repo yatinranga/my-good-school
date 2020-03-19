@@ -16,6 +16,7 @@ export class TeacherAwardsComponent implements OnInit {
   schoolGrades = [];
   studentList = [];
   performedActiArr = [];
+  schoolAwards = []; // List of all Awards of a school
 
   awardViewType = "view";
   teacherInfo: any;
@@ -40,8 +41,6 @@ export class TeacherAwardsComponent implements OnInit {
   selectedStudent = "";
   selectedActivity = "";
 
-
-  createAwardForm: FormGroup;
   assignAwardForm: FormGroup;
 
   constructor(private teacherService: TeacherService, private formbuilder: FormBuilder, private alertService: AlertService,
@@ -55,12 +54,6 @@ export class TeacherAwardsComponent implements OnInit {
     this.getSchoolGrades();
     this.awardView(this.awardViewType);
 
-    this.createAwardForm = this.formbuilder.group({
-      name: [''],
-      description: [''],
-      teacherId: ['']
-    })
-
   }
 
   // initialize the Assign Award Form
@@ -70,7 +63,7 @@ export class TeacherAwardsComponent implements OnInit {
       schoolId: [],
       studentId: [],
       activityId: [],
-      name: [, [Validators.required]],
+      awardType: [, [Validators.required]],
       description: [, [Validators.required, Validators.maxLength(255)]],
       activityPerformedIds: [([])],
     });
@@ -81,6 +74,7 @@ export class TeacherAwardsComponent implements OnInit {
     this.grade_loader = true;
     this.teacherService.getGrades(this.schoolId).subscribe((res) => {
       this.schoolGrades = res;
+      console.log(this.schoolGrades);
       this.grade_loader = false;
     },
       (err) => console.log(err));
@@ -145,6 +139,7 @@ export class TeacherAwardsComponent implements OnInit {
 
   // Assign Award to Students
   assignAward() {
+    this.pa_loader = true;
     this.assignAwardForm.value.teacherId = this.teacherId;
     this.assignAwardForm.value.schoolId = this.schoolId;
     this.assignAwardForm.value.activityId = this.activityId;
@@ -168,11 +163,13 @@ export class TeacherAwardsComponent implements OnInit {
       this.studentActivityList = false;
       this.awardViewType = "view";
       this.viewAwards();
+      this.pa_loader = false;
     },
       (err) => {
         console.log(err);
         $('#assignAwardModal').modal('hide');
         $('.modal-backdrop').remove();
+        this.pa_loader = false;
       });
 
   }
@@ -223,6 +220,20 @@ export class TeacherAwardsComponent implements OnInit {
           this.award_loader = false;
         });
     }
+  }
+
+  // to get all awards of school
+  getSchoolAwards() {
+    this.award_loader = true;
+    this.teacherService.getAwards().subscribe((res) => {
+      this.schoolAwards = res;
+      console.log(res);
+      this.award_loader = false;
+    },
+      (err) => {
+        console.log(err);
+        this.award_loader = false;
+      });
   }
 
   // Verify the Selected Award 

@@ -180,7 +180,7 @@
                                 </div>
                             </div>
                             <button type="button" class="award btn btn-success" data-toggle="modal" data-backdrop="static" data-keyboard="false"
-                                data-target="#assignAwardModal">Give
+                                data-target="#assignAwardModal" (click)="getSchoolAwards()">Give
                                 Award</button>
                         </div>
                     </div>
@@ -356,11 +356,17 @@
                 <form [formGroup]="assignAwardForm" (ngSubmit)="assignAward()">
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label"> Award Name - </label>
-                        <input type="text" class="form-control" id="recipient-name" formControlName="name">
-                        <small class="text-danger"
-                            *ngIf="!assignAwardForm.get('name').valid && assignAwardForm.get('name').touched">
-                            Name Required
-                        </small>
+                        <select class="form-control" formControlName="awardType">
+                            <option [ngValue]="" disabled selected> Select Award </option>
+                            <option *ngFor="let award of schoolAwards" value={{award}}>
+                                {{award}} 
+                            </option>
+                            <option disabled *ngIf="schoolAwards.length == 0">No Awards Found</option>
+                        </select>
+                        <span *ngIf="award_loader">
+                            <div class="spinner-border" role="status">
+                            </div>
+                        </span>
                     </div>
                     <div class="form-group">
                         <label for="message-text" class="col-form-label"> Description - </label>
@@ -372,7 +378,11 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="reset btn btn-secondary" (click)="resetForm()"> Reset </button>
-                        <button type="submit" class="award btn btn-primary" [disabled]="assignAwardForm.invalid"> Done </button>
+                        <button type="submit" class="award btn btn-primary" [disabled]="assignAwardForm.invalid">
+                            <div *ngIf="pa_loader" class="spinner-border text-dark"
+                            role="status">
+                        </div>{{pa_loader ? 'Loading...' :  'Done'}}
+</button>
                     </div>
                 </form>
             </div>
