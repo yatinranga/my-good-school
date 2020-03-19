@@ -102,13 +102,16 @@
                                             <div class="col-6">
                                                 <div class="description">
                                                     <h5> Development Parameters </h5>
+                                                    <p *ngIf="activity.description">
+                                                        <strong> Description : </strong> {{activity.description}} </p>
                                                     <p *ngIf="activity.focusAreas">
                                                         <strong>Focus Area : </strong>{{activity.focusAreas}}</p>
                                                     <p *ngIf="activity.psdAreas">
                                                         <strong>PSD Area : </strong>{{activity.psdAreas}}</p>
                                                     <p *ngIf="activity.fourS" id="fourSkills">
-                                                        <strong>4's: </strong>
-                                                        <span *ngIf="activity.fourS=='Skill'" style="color: #4bafa5;">
+                                                        <strong> 4's : </strong> {{activity.fourS}}
+                                                        <!--
+                                                            <span *ngIf="activity.fourS=='Skill'" style="color: #4bafa5;">
                                                             {{activity.fourS}}
                                                         </span>
                                                         <span *ngIf="activity.fourS=='Sport'" style="color: #e04090;">
@@ -120,6 +123,7 @@
                                                         <span *ngIf="activity.fourS=='Service'" style="color: #8dc33a;">
                                                             {{activity.fourS}}
                                                         </span>
+                                                        -->
                                                     </p>
                                                 </div>
                                             </div>
@@ -150,13 +154,16 @@
                                             <div class="col-3">
                                                 <div class="description">
                                                     <h5> Development Parameters : </h5>
+                                                    <p *ngIf="activity.description">
+                                                        <strong> Description : </strong> {{activity.description}} </p>
                                                     <p *ngIf="activity.focusAreas">
                                                         <strong>Focus Area : </strong>{{activity.focusAreas}}</p>
                                                     <p *ngIf="activity.psdAreas">
                                                         <strong>PSD Area : </strong>{{activity.psdAreas}}</p>
                                                     <p *ngIf="activity.fourS" id="fourSkills">
-                                                        <strong>4's: </strong>
-                                                        <span *ngIf="activity.fourS=='Skill'" style="color: #4bafa5;">
+                                                        <strong>4's: </strong> {{activity.fourS}}
+                                                        <!--
+                                                            <span *ngIf="activity.fourS=='Skill'" style="color: #4bafa5;">
                                                             {{activity.fourS}}
                                                         </span>
                                                         <span *ngIf="activity.fourS=='Sport'" style="color: #e04090;">
@@ -168,6 +175,7 @@
                                                         <span *ngIf="activity.fourS=='Service'" style="color: #8dc33a;">
                                                             {{activity.fourS}}
                                                         </span>
+                                                        -->
                                                     </p>
                                                 </div>
 
