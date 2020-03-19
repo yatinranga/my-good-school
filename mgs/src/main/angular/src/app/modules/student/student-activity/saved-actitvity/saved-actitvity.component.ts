@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { StudentService } from 'src/app/services/student.service';
 import { AlertService } from 'src/app/services/alert.service';
+declare let $: any;
 
 @Component({
   selector: 'app-saved-actitvity',
@@ -143,6 +144,12 @@ export class SavedActitvityComponent implements OnInit {
 
   // on click of edit button
   editSavedActivity(e, activity) {
+    $('#addActivityModal').modal('show');
+    $('#addActivityModal').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+    
     e.stopPropagation();
     console.log(activity);
     this.activityId = activity.activityId;
@@ -156,14 +163,21 @@ export class SavedActitvityComponent implements OnInit {
     });
     this.editActivityShow = true;
     this.addActivityShow = false;
+    
   }
 
   addActivity() {
+    console.log("Add Activity Modal");
     this.savedActivityForm.reset();
     this.savedActivityForm.value.attachment = [];
     this.files = [];
     this.addActivityShow = true;
     this.editActivityShow = false;
+    // $('#addActivityModal').modal({
+    //   backdrop: 'static',
+    //   keyboard: false
+    // });
+    // $('#addActivityModal').modal('show');
   }
 
   // to SUBMIT the activity
@@ -244,6 +258,7 @@ export class SavedActitvityComponent implements OnInit {
     this.modal_loader = true;
     this.studentService.getCoach(this.schoolId, activityId).subscribe((res) => {
       this.coaches = res;
+      console.log(this.coaches.length);
       this.modal_loader = false;
     },
       (err) => {
@@ -278,12 +293,16 @@ export class SavedActitvityComponent implements OnInit {
         (res) => {
           console.log(res);
           this.submit_loader = false;
+          $('#addActivityModal').modal('hide');
+          $('.modal-backdrop').remove();
           this.alertService.showSuccessToast('Activity Updated !');
           this.editActivityShow = false;
         },
         (err) => {
           this.submit_loader = false;
           console.log(err);
+          $('#addActivityModal').modal('hide');
+          $('.modal-backdrop').remove();
         }
       );
     }
@@ -312,9 +331,9 @@ export class SavedActitvityComponent implements OnInit {
         (res) => {
           console.log(res);
           this.activitiesArr.unshift(res);
-          // this.savedActivitiesArr.unshift(res);
-          // this.allActivitiesArr.unshift(res);
           this.submit_loader = false;
+          $('#addActivityModal').modal('hide');
+          $('.modal-backdrop').remove();
           this.alertService.showSuccessToast('Activity Saved !').then((response) => {
             this.directSubmitActivity(res.id);
           });
@@ -323,6 +342,8 @@ export class SavedActitvityComponent implements OnInit {
         (err) => {
           this.submit_loader = false;
           console.log(err);
+          $('#addActivityModal').modal('hide');
+          $('.modal-backdrop').remove();
         }
       );
     }
@@ -449,4 +470,14 @@ export class SavedActitvityComponent implements OnInit {
     });
   }
 
+    // to reset the Add/Edit Form
+    resetForm() {
+      this.savedActivityForm.reset();
+    }
+
 }
+
+
+
+// $('#addActivityModal').modal('hide');
+// $('.modal-backdrop').remove();
