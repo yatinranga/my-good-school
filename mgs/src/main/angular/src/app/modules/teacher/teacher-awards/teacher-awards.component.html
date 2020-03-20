@@ -103,7 +103,8 @@
                                                                         <h5> Activity Details </h5>
                                                                         <p> <strong>Description -
                                                                             </strong>{{pa.description}}</p>
-                                                                        <p> <strong>Attachments - </strong></p>
+                                                                        <p *ngIf="pa.fileResponses.length"> 
+                                                                            <strong>Attachments - </strong></p>
                                                                         <div *ngFor="let file of pa.fileResponses">
                                                                             <div>
                                                                                 <a [attr.href]="file.url">
@@ -122,8 +123,12 @@
                                                                 <div class="col-4">
                                                                     <div class="description">
                                                                         <h5> Development Parameters </h5>
-                                                                        <p> <strong>Focus Area -
-                                                                            </strong>{{pa.focusAreas}} </p>
+                                                                        <p> <strong>Focus Area - </strong></p>
+                                                                        <div *ngFor="let fa of pa.focusAreas; let i = index">
+                                                                            <p>{{fa}}
+                                                                                <span *ngIf="i < pa.focusAreas.length-1">,</span>
+                                                                            </p>
+                                                                        </div>
                                                                         <p> <strong>PSD Area - </strong>{{pa.psdAreas}}
                                                                         </p>
                                                                         <p> <strong> 4's - </strong> {{pa.fourS}} </p>
@@ -244,7 +249,8 @@
                                                                             </strong>{{ap.description}}</p>
                                                                         <p> <strong>Date -
                                                                             </strong>{{ap.dateOfActivity | date}}</p>
-                                                                        <p> <strong>Attachments - </strong> </p>
+                                                                        <p *ngIf="ap.fileResponses.length"> 
+                                                                            <strong>Attachments - </strong> </p>
                                                                         <div *ngFor="let file of ap.fileResponses">
                                                                             <div>
                                                                                 <a [attr.href]="file.url">
@@ -263,9 +269,15 @@
                                                                 <div class="col-4">
                                                                     <div class="description">
                                                                         <h5> Development Parameters </h5>
-                                                                        <p> <strong>Focus Area -
-                                                                            </strong>{{ap.focusAreas}} </p>
-                                                                        <p> <strong>PSD Area - </strong>{{ap.psdAreas}}
+                                                                        <p> <strong>Focus Area - </strong></p>
+                                                                        <div *ngFor="let fa of ap.focusAreas; let i = index">
+                                                                            <p>{{fa}}
+                                                                                <span *ngIf="i < ap.focusAreas.length-1">,</span>
+                                                                            </p>
+                                                                        </div>
+
+                                                                        <p> <strong>PSD Area -
+                                                                            </strong>{{ap.psdAreas}}
                                                                         </p>
                                                                         <p> <strong> 4's - </strong> {{ap.fourS}} </p>
                                                                     </div>
