@@ -1,19 +1,19 @@
 <div class="sortby">
-    <select (change)="filterActivities()" [(ngModel)]="psdAreas">
+    <select (change)="filterActivities()" name="psdAreas" [(ngModel)]="psdAreas">
         <option value="" selected disabled> PSD </option>
         <option value="">None</option>
         <option *ngFor="let ps of psdAreaArr" value={{ps}}>{{ps}}</option>
     </select>
 </div>
 <div class="sortby">
-    <select (change)="filterActivities()" [(ngModel)]="focusAreas">
+    <select (change)="filterActivities()" name="focusAreas" [(ngModel)]="focusAreas">
         <option value="" selected disabled> Focus Areas </option>
         <option value="">None</option>
         <option *ngFor="let ps of focusAreaArr" value={{ps}}>{{ps}}</option>
     </select>
 </div>
 <div class="sortby">
-    <select (change)="filterActivities()" [(ngModel)]="fourS">
+    <select (change)="filterActivities()" name="fourS" [(ngModel)]="fourS">
         <option value="" selected disabled> 4S </option>
         <option value="">None</option>
         <option *ngFor="let ps of fourSArr" value={{ps}}>{{ps}}</option>
@@ -22,7 +22,7 @@
 
 <div class="sortby" style="float: right">
     Filter by:
-    <select (ngModelChange)="activityView($event)" [(ngModel)]="activityType">
+    <select (ngModelChange)="activityView($event)" name="activityType" [(ngModel)]="activityType">
         <option value="" disabled> Choose here </option>
         <option value="All"> All</option>
         <option value="Saved">Saved</option>
@@ -44,7 +44,7 @@
                         <th scope="col">Teacher</th>
                         <th scope="col">
                             Status
-                            <button *ngIf="activityType === 'All'" class="icon_button" (click)="sortByStatus()">
+                            <button *ngIf="activityType === 'All'" name="sort" class="icon_button" (click)="sortByStatus()">
                                 <i class="fa fa-sort"></i>
                             </button>
                         </th>
@@ -70,14 +70,14 @@
                             </td>
                             <td *ngIf="(activityType === 'All') || (activityType === 'Saved')">
                                 <div *ngIf="activity.activityStatus === 'SavedByStudent'">
-                                    <button (click)="editSavedActivity($event,activity)" class="saved icon_button">
+                                    <button (click)="editSavedActivity($event,activity)" class="saved icon_button" name="editActivity">
                                         <i class="fa fa-edit" title="Edit"></i>
                                     </button>
-                                    <button (click)="submitSavedActivity($event,i,activitiesArr)" class="submitted icon_button">
+                                    <button (click)="submitSavedActivity($event,i,activitiesArr)" class="submitted icon_button" name="submitActivity">
                                         <i class="fa fa-paper-plane" title="Submit"></i>
                                     </button>
-                                    <button (click)="deleteSavedActivity($event,activity,i)" class="reviewed icon_button">
-                                        <i class="fa fa-trash" title="Delete"></i>
+                                    <button (click)="deleteSavedActivity($event,activity,i)" class="reviewed icon_button" name="deleteActivity">
+                                        <i class="fa fa-trash" title="Delete"></i> 
                                     </button>
 
                                 </div>
@@ -655,7 +655,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">{{addActivityShow?'Add':'Edit'}} Activity </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetForm()">
+                    <button type="button" class="close" name="closeModal" data-dismiss="modal" aria-label="Close" (click)="resetForm()">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -663,7 +663,7 @@
                     <form [formGroup]="savedActivityForm" (ngSubmit)="updateActivity()">
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label"> Activity Type:* </label>
-                            <select class="form-control" (ngModelChange)="getStudentCoach($event)"
+                            <select class="form-control" name="activityName" (ngModelChange)="getStudentCoach($event)"
                                 formControlName="activityId">
                                 <option *ngFor="let activity of activities; let i = index" value={{activity.id}}>
                                     {{activity.name}}</option>
@@ -674,7 +674,7 @@
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label"> Teacher/Coach:* </label>
-                            <select class="form-control" formControlName="coachId">
+                            <select class="form-control" name="coachId" formControlName="coachId" >
                                 <option *ngFor="let coach of coaches; let i = index;" value={{coach.id}}>
                                     {{coach.name}}
                                 </option>
@@ -686,12 +686,15 @@
                         </div>
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label"> Description:* </label>
-                            <textarea class="form-control add" formControlName="description" rows="3"
-                            [disabled]="coaches.length == 0" ></textarea>
+                            <textarea class="form-control add" name="description" formControlName="description" rows="3" ></textarea>
+                            <small class="text-danger"
+                            *ngIf="!savedActivityForm.get('description').valid && savedActivityForm.get('description').touched">
+                            Minimum length 100 words.
+                        </small>
                         </div>
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label"> Date of Activity Performed:* </label>
-                            <input type="date" class="form-control" formControlName="dateOfActivity" />
+                            <input type="date" class="form-control" name="dateOfActivity" formControlName="dateOfActivity" />
                         </div>
                         <div class="form-group">
 
@@ -708,20 +711,20 @@
                             <label for="recipient-name" class="col-form-label"> </label>
                             <div *ngFor="let sf of files; let i = index;">
                                 <p>{{sf.name}}
-                                    <button type="button" (click)="removeFile(i)" class="reviewed icon_button">
+                                    <button type="button" name="removeFile" (click)="removeFile(i)" class="reviewed icon_button">
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </p>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn cancel" type="button" (click)="resetForm()">Reset</button>
-                            <button class="btn saved btnSubmit btn-success" type="submit" *ngIf="editActivityShow">
+                            <button class="btn cancel" type="button" name="resetForm" (click)="resetForm()">Reset</button>
+                            <button class="btn saved btnSubmit btn-success" type="submit" name="submitSavedActivity" *ngIf="editActivityShow" [disabled]="savedActivityForm.invalid">
                                 <div *ngIf="submit_loader" class="spinner-border text-dark" role="status"></div>
                                 {{submit_loader ? 'Updating...' : 'Update'}}
                             </button>
 
-                            <button class="btn saved btnSubmit btn-success" type="submit" *ngIf="addActivityShow">
+                            <button class="btn saved btnSubmit btn-success" type="submit" name="submitNewActivity" *ngIf="addActivityShow" [disabled]="savedActivityForm.invalid">
                                 <div *ngIf="submit_loader" class="spinner-border text-dark" role="status">
                                 </div>{{submit_loader ? 'Submitting...' : 'Submit'}}
                             </button>
@@ -812,5 +815,5 @@
     </form>
 </div> -->
 
-<button class="add_activity" data-toggle="modal" data-backdrop="static" data-keyboard="false"
+<button class="add_activity" type="button" name="addActivity" data-toggle="modal" data-backdrop="static" data-keyboard="false"
 data-target="#addActivityModal" (click)="addActivity()"> <i class="fa fa-plus"></i> </button>
