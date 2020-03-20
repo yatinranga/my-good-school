@@ -33,8 +33,9 @@
                         </div>
                     </div>
                     -->
-                    <div class="guardian_profile_card">
-                        <div *ngFor="let sd of studentDetails['guardianResponseList']; let i = index">
+
+                    <div *ngFor="let sd of studentDetails['guardianResponseList']; let i = index">
+                        <div class="guardian_profile_card">
                             <h3> {{sd['relationship']}}</h3>
                             <p> <label> <i class="fa fa-user"></i>
                                     {{sd['name']}}</label> </p>
