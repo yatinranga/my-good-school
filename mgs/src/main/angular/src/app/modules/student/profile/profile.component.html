@@ -34,22 +34,15 @@
                     </div>
                     -->
                     <div class="guardian_profile_card">
-                        <h3> {{studentDetails['guardianResponseList'][0]['relationship']}}</h3>
-                        <p> <label> <i class="fa fa-user"></i>
-                                {{studentDetails['guardianResponseList'][0]['name']}}</label> </p>
-                        <p> <label> <i class="fa fa-envelope"></i>
-                                {{studentDetails['guardianResponseList'][0]['email']}}</label> </p>
-                        <p> <label> <i class="fa fa-phone-alt"></i>
-                                {{studentDetails['guardianResponseList'][0]['mobileNumber']}}</label> </p>
-                    </div>
-                    <div class="guardian_profile_card">
-                        <h3> {{studentDetails['guardianResponseList'][1]['relationship']}}</h3>
-                        <p> <label> <i class="fa fa-user"></i>
-                                {{studentDetails['guardianResponseList'][1]['name']}}</label> </p>
-                        <p> <label> <i class="fa fa-envelope"></i>
-                                {{studentDetails['guardianResponseList'][1]['email']}}</label> </p>
-                        <p> <label> <i class="fa fa-phone-alt"></i>
-                                {{studentDetails['guardianResponseList'][1]['mobileNumber']}}</label> </p>
+                        <div *ngFor="let sd of studentDetails['guardianResponseList']; let i = index">
+                            <h3> {{sd['relationship']}}</h3>
+                            <p> <label> <i class="fa fa-user"></i>
+                                    {{sd['name']}}</label> </p>
+                            <p> <label> <i class="fa fa-envelope"></i>
+                                    {{sd['email']}}</label> </p>
+                            <p> <label> <i class="fa fa-phone-alt"></i>
+                                    {{sd['mobileNumber']}}</label> </p>
+                        </div>
                     </div>
                 </div>
             </div>

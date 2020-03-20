@@ -9,34 +9,34 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">Enter Name :*
-                        <input type="text" class="form-control" placeholder="Your Name" formControlName="name" />
+                        <input type="text" class="form-control"name="name" placeholder="Your Name" formControlName="name" />
                         <small class="text-danger"
                             *ngIf="!schoolSignup.get('name').valid && schoolSignup.get('name').touched">
                             Name Required
                         </small>
                     </div>
                     <div class="form-group">Enter Email :*
-                        <input type="email" class="form-control" placeholder="Your Email" formControlName="email" />
+                        <input type="email" class="form-control" name="email" placeholder="Your Email" formControlName="email" />
                         <small class="text-danger"
                             *ngIf="!schoolSignup.get('email').valid && schoolSignup.get('email').touched">
                             Email Required
                         </small>
                     </div>
                     <div class="form-group">Enter Contact No :
-                        <input type="email" class="form-control" placeholder="Your Contact Number"
+                        <input type="email" class="form-control" name="contactNo" placeholder="Your Contact Number"
                             formControlName="contactNo" />
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">Enter Address :*
-                        <textarea class="form-control" placeholder="Your Address" formControlName="address">
+                        <textarea class="form-control" name="address" placeholder="Your Address" formControlName="address">
                                     <small class="text-danger" *ngIf="!schoolSignup.get('address').valid && schoolSignup.get('address').touched">
                                         Address Required
                                     </small>
                             </textarea>
                     </div>
                     <div class="form-group">General Activities :
-                        <select class="form-control" formControlName="generalActivities" multiple>
+                        <select class="form-control" name="generalActivities" formControlName="generalActivities" multiple>
                             <option *ngFor="let g of generalActivitiesArr" value={{g.id}}>{{g.name}}</option>
                         </select>
                     </div>
@@ -51,6 +51,6 @@
                 </div>
             </div>
         </div>
-        <button class="signup btn btnSubmit btn-success" type="submit" [disabled]="schoolSignup.invalid">Submit</button>
+        <button class="signup btn btnSubmit btn-success" name="submit" type="submit" [disabled]="schoolSignup.invalid">Submit</button>
     </div>
 </form>

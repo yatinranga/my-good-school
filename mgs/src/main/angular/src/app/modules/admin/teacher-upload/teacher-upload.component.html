@@ -4,7 +4,7 @@
       <div class="card-body text-center">
         <form [formGroup]="teacherBulkForm" (ngSubmit)="uploadTeacher()">
           Select School : <div class="input-field">
-            <select>
+            <select name="schoolName">
               <option value="" disabled selected>Select School </option>
               <option *ngFor="let school of schools; let i = index;" value={{school.id}}>{{school.name}}</option>
             </select>
@@ -19,7 +19,7 @@
     
         <div>
     
-          <button class="download btn" type="button" name="" (click)="downloadTeacher()">Download Teacher Template</button>
+          <button class="download btn" type="button" name="downloadTeacher" (click)="downloadTeacher()">Download Teacher Template</button>
           <a style="display: none;" download #dwnld></a>
         </div>
       </div>

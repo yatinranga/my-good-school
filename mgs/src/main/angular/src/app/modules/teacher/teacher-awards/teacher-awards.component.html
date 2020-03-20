@@ -17,7 +17,7 @@
                         <div class="assign_main">
                             <div class="assign-form"> 
                                 <label for="exampleFormControlSelect1">Select Grade - </label>
-                                <select class="" [disabled]="grade_loader" id="exampleFormControlSelect1" (ngModelChange)="getListOfStudent($event)" [(ngModel)]="selectedGrade">
+                                <select class="" name="grade" [disabled]="grade_loader" id="exampleFormControlSelect1" (ngModelChange)="getListOfStudent($event)" [(ngModel)]="selectedGrade">
                                     <option value="" disabled selected>Select Grades </option>
                                     <option *ngFor="let grade of schoolGrades" value={{grade.id}}>
                                         {{grade.grade}} {{grade.section}}
@@ -32,7 +32,7 @@
 
                             <div class="assignsform">
                                 <label for="exampleFormControlSelect2">Students - </label>
-                                <select class="" [disabled]="stu_loader" id="exampleFormControlSelect1" (ngModelChange)="getStudentId($event)"
+                                <select class="" name="studentList" [disabled]="stu_loader" id="exampleFormControlSelect1" (ngModelChange)="getStudentId($event)"
                                     [(ngModel)]="selectedStudent">
                                     <option value="" disabled selected>Select Student</option>
                                     <option *ngFor="let stu of studentList;" value={{stu.id}}>
@@ -48,7 +48,7 @@
 
                             <div class="assignsform">
                                 <label for="exampleFormControlSelect3">Select Activity - </label>
-                                <select class="" [disabled]="acti_loader" id="exampleFormControlSelect3" (ngModelChange)="getActivityId($event)"
+                                <select class="" name="activityList" [disabled]="acti_loader" id="exampleFormControlSelect3" (ngModelChange)="getActivityId($event)"
                                     [(ngModel)]="selectedActivity">
                                     <option value="" disabled selected>Select Activity </option>
                                     <option *ngFor="let activity of activities; let i = index;"
@@ -83,7 +83,7 @@
                                                 <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                                                     <td>
                                                         <label>
-                                                            <input type="checkbox" (click)="stopCollapse($event)"
+                                                            <input type="checkbox" name="selectPerformedActivity" (click)="stopCollapse($event)"
                                                                 [(ngModel)]="actiPerform[pa.id]">
                                                             {{pa.activityName}}
                                                         </label>
@@ -179,7 +179,7 @@
                                     </table>
                                 </div>
                             </div>
-                            <button type="button" class="award btn btn-success" data-toggle="modal" data-backdrop="static" data-keyboard="false"
+                            <button type="button" name="giveAward" class="award btn btn-success" data-toggle="modal" data-backdrop="static" data-keyboard="false"
                                 data-target="#assignAwardModal" (click)="getSchoolAwards()">Give
                                 Award</button>
                         </div>
@@ -200,7 +200,7 @@
                                             <th scope="col">Grade</th>
                                             <th scope="col">
                                                 Status
-                                                <button class="icon_button" (click)="sortByStatus()">
+                                                <button class="icon_button" name="sort" (click)="sortByStatus()">
                                                     <i class="fa fa-sort"></i>
                                                 </button>
                                             </th>
@@ -224,12 +224,11 @@
                                                         {{al.status}}
                                                     </div>
                                                 </td>
-                                                <td><button *ngIf="al.status == 'PENDING'"
+                                                <td><button name="verifySelectedAward" *ngIf="al.status == 'PENDING'"
                                                         (click)="verifySelectedAward($event,i)" class="pending">
                                                         <i class="fa fa-hourglass-start"></i> </button>
-                                                    <button *ngIf="al.status == 'VERIFIED'"
-                                                        [disabled]="(al.status == 'VERIFIED')"
-                                                        (click)="verifySelectedAward($event,i)" class="verify">
+                                                    <button name="verifiedAward" *ngIf="al.status == 'VERIFIED'"
+                                                        [disabled]="(al.status == 'VERIFIED')" class="verify">
                                                         <i class="fa fa-check" aria-hidden="true"></i> </button> </td>
                                             </tr>
                                             <tr>
@@ -348,7 +347,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Award Details - </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetForm()">
+                <button type="button" name="closeModal" class="close" data-dismiss="modal" aria-label="Close" (click)="resetForm()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -356,7 +355,7 @@
                 <form [formGroup]="assignAwardForm" (ngSubmit)="assignAward()">
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label"> Award Name - </label>
-                        <select class="form-control" formControlName="awardType">
+                        <select class="form-control" name="awardType" formControlName="awardType">
                             <option [ngValue]="" disabled selected> Select Award </option>
                             <option *ngFor="let award of schoolAwards" value={{award}}>
                                 {{award}} 
@@ -370,15 +369,15 @@
                     </div>
                     <div class="form-group">
                         <label for="message-text" class="col-form-label"> Description - </label>
-                        <textarea class="form-control" id="message-text" formControlName="description"></textarea>
+                        <textarea class="form-control" name="description" id="message-text" formControlName="description"></textarea>
                         <small class="text-danger"
                             *ngIf="!assignAwardForm.get('description').valid && assignAwardForm.get('description').touched">
                             Max Length 255.
                         </small>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="reset btn btn-secondary" (click)="resetForm()"> Reset </button>
-                        <button type="submit" class="award btn btn-primary" [disabled]="assignAwardForm.invalid">
+                        <button type="button" name="resetForm" class="reset btn btn-secondary" (click)="resetForm()"> Reset </button>
+                        <button type="submit" name="submit" class="award btn btn-primary" [disabled]="assignAwardForm.invalid">
                             <div *ngIf="pa_loader" class="spinner-border text-dark"
                             role="status">
                         </div>{{pa_loader ? 'Loading...' :  'Done'}}

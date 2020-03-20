@@ -1,6 +1,6 @@
 <div class="awards">
     <div class="sortby">
-        <select (change)="filterAwards()" [(ngModel)]="psdAreas">
+        <select name="psdAreas" (change)="filterAwards()" [(ngModel)]="psdAreas">
             <option value="" selected disabled> PSD </option>
             <option value="">None</option>
             <option *ngFor="let ps of psdAreaArr" value={{ps}}>{{ps}}</option>
@@ -8,7 +8,7 @@
     </div>
 
     <div class="sortby">
-        <select (change)="filterAwards()" [(ngModel)]="focusAreas">
+        <select name="focusAreas" (change)="filterAwards()" [(ngModel)]="focusAreas">
             <option value="" selected disabled> Focus Areas </option>
             <option value="">None</option>
             <option *ngFor="let ps of focusAreaArr" value={{ps}}>{{ps}}</option>
@@ -16,7 +16,7 @@
     </div>
 
     <div class="sortby">
-        <select (change)="filterAwards()" [(ngModel)]="fourS">
+        <select name="fourS" (change)="filterAwards()" [(ngModel)]="fourS">
             <option value="" selected disabled> 4S </option>
             <option value="">None</option>
             <option *ngFor="let ps of fourSArr" value={{ps}}>{{ps}}</option>
