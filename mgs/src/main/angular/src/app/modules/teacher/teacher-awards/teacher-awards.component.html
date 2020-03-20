@@ -15,9 +15,10 @@
                     <!-- Assign Award -->
                     <div *ngSwitchCase="'assign'" class="popup-form">
                         <div class="assign_main">
-                            <div class="assign-form"> 
+                            <div class="assign-form">
                                 <label for="exampleFormControlSelect1">Select Grade - </label>
-                                <select class="" [disabled]="grade_loader" id="exampleFormControlSelect1" (ngModelChange)="getListOfStudent($event)" [(ngModel)]="selectedGrade">
+                                <select class="" [disabled]="grade_loader" id="exampleFormControlSelect1"
+                                    (ngModelChange)="getListOfStudent($event)" [(ngModel)]="selectedGrade">
                                     <option value="" disabled selected>Select Grades </option>
                                     <option *ngFor="let grade of schoolGrades" value={{grade.id}}>
                                         {{grade.grade}} {{grade.section}}
@@ -32,8 +33,8 @@
 
                             <div class="assignsform">
                                 <label for="exampleFormControlSelect2">Students - </label>
-                                <select class="" [disabled]="stu_loader" id="exampleFormControlSelect1" (ngModelChange)="getStudentId($event)"
-                                    [(ngModel)]="selectedStudent">
+                                <select class="" [disabled]="stu_loader" id="exampleFormControlSelect1"
+                                    (ngModelChange)="getStudentId($event)" [(ngModel)]="selectedStudent">
                                     <option value="" disabled selected>Select Student</option>
                                     <option *ngFor="let stu of studentList;" value={{stu.id}}>
                                         {{stu.name}}
@@ -48,8 +49,8 @@
 
                             <div class="assignsform">
                                 <label for="exampleFormControlSelect3">Select Activity - </label>
-                                <select class="" [disabled]="acti_loader" id="exampleFormControlSelect3" (ngModelChange)="getActivityId($event)"
-                                    [(ngModel)]="selectedActivity">
+                                <select class="" [disabled]="acti_loader" id="exampleFormControlSelect3"
+                                    (ngModelChange)="getActivityId($event)" [(ngModel)]="selectedActivity">
                                     <option value="" disabled selected>Select Activity </option>
                                     <option *ngFor="let activity of activities; let i = index;"
                                         value={{activity.activityId}}>
@@ -126,8 +127,8 @@
                                                                             </strong>{{pa.focusAreas}} </p>
                                                                         <p> <strong>PSD Area - </strong>{{pa.psdAreas}}
                                                                         </p>
-                                                                        <p *ngIf="pa.fourS" id="fourSkills">
-                                                                            <strong>4's - </strong>
+                                                                        <p> <strong> 4's - </strong> {{pa.fourS}} </p>
+                                                                        <!--
                                                                             <span *ngIf="pa.fourS=='Skill'"
                                                                                 style="color: #4bafa5;">
                                                                                 {{pa.fourS}}
@@ -144,7 +145,7 @@
                                                                                 style="color: #8dc33a;">
                                                                                 {{pa.fourS}}
                                                                             </span>
-                                                                        </p>
+                                                                        -->
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-4">
@@ -179,8 +180,8 @@
                                     </table>
                                 </div>
                             </div>
-                            <button type="button" class="award btn btn-success" data-toggle="modal" data-backdrop="static" data-keyboard="false"
-                                data-target="#assignAwardModal">Give
+                            <button type="button" class="award btn btn-success" data-toggle="modal"
+                                data-backdrop="static" data-keyboard="false" data-target="#assignAwardModal">Give
                                 Award</button>
                         </div>
                     </div>
@@ -221,8 +222,7 @@
                                                     <div *ngIf="al.status === 'PENDING'" class="pending"> {{al.status}}
                                                     </div>
                                                     <div *ngIf="al.status === 'VERIFIED'" class="verified">
-                                                        {{al.status}}
-                                                    </div>
+                                                        {{al.status}} </div>
                                                 </td>
                                                 <td><button *ngIf="al.status == 'PENDING'"
                                                         (click)="verifySelectedAward($event,i)" class="pending">
@@ -230,7 +230,8 @@
                                                     <button *ngIf="al.status == 'VERIFIED'"
                                                         [disabled]="(al.status == 'VERIFIED')"
                                                         (click)="verifySelectedAward($event,i)" class="verify">
-                                                        <i class="fa fa-check" aria-hidden="true"></i> </button> </td>
+                                                        <i class="fa fa-check" aria-hidden="true"></i> </button>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td class="collapse-td" colspan="8">
@@ -267,29 +268,9 @@
                                                                         <h5> Development Parameters </h5>
                                                                         <p> <strong>Focus Area -
                                                                             </strong>{{ap.focusAreas}} </p>
-                                                                        <p> <strong>PSD Area -
-                                                                            </strong>{{ap.psdAreas}}
+                                                                        <p> <strong>PSD Area - </strong>{{ap.psdAreas}}
                                                                         </p>
-                                                                        <p *ngIf="ap.fourS" id="fourSkills">
-                                                                            <strong>4's - </strong>
-                                                                            <span *ngIf="ap.fourS=='Skill'"
-                                                                                style="color: #4bafa5;">
-                                                                                {{ap.fourS}}
-                                                                            </span>
-                                                                            <span *ngIf="ap.fourS=='Sport'"
-                                                                                style="color: #e04090;">
-                                                                                {{ap.fourS}}
-                                                                            </span>
-                                                                            <span *ngIf="ap.fourS=='Study'"
-                                                                                style="color: #1f69ad;">
-                                                                                {{ap.fourS}}
-                                                                            </span>
-                                                                            <span *ngIf="ap.fourS=='Service'"
-                                                                                style="color: #8dc33a;">
-                                                                                {{ap.fourS}}
-                                                                            </span>
-                                                                        </p>
-
+                                                                        <p> <strong> 4's - </strong> {{ap.fourS}} </p>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-4">
@@ -307,7 +288,6 @@
                                                                         <p> <strong style="color: green">Remarks -
                                                                             </strong>{{ap.coachRemark}} </p>
                                                                     </div>
-
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -372,7 +352,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="reset btn btn-secondary" (click)="resetForm()"> Reset </button>
-                        <button type="submit" class="award btn btn-primary" [disabled]="assignAwardForm.invalid"> Done </button>
+                        <button type="submit" class="award btn btn-primary" [disabled]="assignAwardForm.invalid"> Done
+                        </button>
                     </div>
                 </form>
             </div>

@@ -7,7 +7,6 @@
 
 p#title_award {
   color: #8dc33a;
-  font-size: 23px;
   font-weight: 300;
   margin-bottom: 15px;
 }
@@ -16,12 +15,16 @@ p#title_award {
 }
 .horz {
   width: 100%;
-  background: burlywood;
   text-align: left;
   padding: 10px;
+  border-bottom: 1px solid;
 }
 .horz h5 {
-  color: black;
-  font-size: 22px;
+  color: #8dc33a;
+  font-weight: 400;
+  font-size: 27px;
   margin-bottom: 20px;
+}
+.awards .description{
+  min-height: 200px;
 }
