@@ -120,8 +120,12 @@
                                                     <div class="col-4">
                                                         <div class="description">
                                                             <h5> Development Parameters : </h5>
-                                                            <p> <strong>Focus Area - </strong>{{activity.focusAreas}}
-                                                            </p>
+                                                            <p> <strong>Focus Area - </strong></p>
+                                                            <div *ngFor="let fa of activity.focusAreas; let i = index">
+                                                                <p>{{fa}}
+                                                                    <span *ngIf="i < activity.focusAreas.length-1">,</span>
+                                                                </p>
+                                                            </div>
                                                             <p> <strong>PSD Area - </strong>{{activity.psdAreas}}</p>
                                                             <p *ngIf="activity.fourS" id="fourSkills">
                                                                 <strong>4's - </strong>
@@ -144,7 +148,7 @@
                                                             </p>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4">
+                                                    <div class="col-4" *ngIf="activity.fileResponses.length">
                                                         <div class="attachment">
                                                             <h5> Attachments : </h5>
                                                             {{activity.fileResponses.length ? "" : "NA"}}
@@ -175,9 +179,12 @@
                                                     <div class="col-4">
                                                         <div class="description">
                                                             <h5> Development Parameters : </h5>
-                                                            <p *ngIf="activity.focusAreas">
-                                                                <strong>Focus Area - </strong>{{activity.focusAreas}}
-                                                            </p>
+                                                            <p> <strong>Focus Area - </strong></p>
+                                                            <div *ngFor="let fa of activity.focusAreas; let i = index">
+                                                                <p>{{fa}}
+                                                                    <span *ngIf="i < activity.focusAreas.length-1">,</span>
+                                                                </p>
+                                                            </div>
                                                             <p *ngIf="activity.psdAreas">
                                                                 <strong>PSD Area - </strong>{{activity.psdAreas}}</p>
                                                             <p *ngIf="activity.fourS" id="fourSkills">
@@ -202,7 +209,7 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="col-4">
+                                                    <div class="col-4" *ngIf="activity.fileResponses.length">
                                                         <div class="attachment">
                                                             <h5> Attachments : </h5>
                                                             {{activity.fileResponses.length ? "" : "NA"}}

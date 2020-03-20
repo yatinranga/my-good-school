@@ -59,13 +59,13 @@ export class SavedActitvityComponent implements OnInit {
     this.schoolId = this.studentInfo.student.schoolId;
     this.activityView(this.activityType);
     this.getStudentActivity(this.schoolId);
-    this.getAreas(); // to get PSD Areas, Focus Area and 4s
+    this.getAreas(); // to get PSD Areas, Focus Area and 4s 
 
     this.savedActivityForm = this.formBuilder.group({
       activityId: [,[Validators.required]],
-      description: [,[Validators.required, Validators.minLength(100)]],
-      dateOfActivity: [,[Validators.required]],
-      coachId: [,[Validators.required]],
+      description: [{value:'',disabled: true},[Validators.required, Validators.minLength(100)]],
+      dateOfActivity: [{value:'',disabled: true},[Validators.required]],
+      coachId: [{value:'',disabled: true},[Validators.required]],
       attachment: [],
       id: []
     });
@@ -256,9 +256,15 @@ export class SavedActitvityComponent implements OnInit {
   // to get teacher/coach who perform selected activity
   getStudentCoach(activityId) {
     this.modal_loader = true;
+    this.coaches = [];
     this.studentService.getCoach(this.schoolId, activityId).subscribe((res) => {
       this.coaches = res;
-      this.modal_loader = false;
+      if(this.coaches.length){
+        this.savedActivityForm.get('coachId').enable();
+        this.savedActivityForm.get('description').enable();
+        this.savedActivityForm.get('dateOfActivity').enable();
+      }
+      this.modal_loader = false;      
     },
       (err) => {
         console.log(err);
