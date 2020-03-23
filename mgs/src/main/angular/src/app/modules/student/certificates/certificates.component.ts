@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StudentService } from 'src/app/services/student.service';
 import { AlertService } from 'src/app/services/alert.service';
-import { DomSanitizer, SafeUrl, SafeResourceUrl } from '@angular/platform-browser';
 declare let $: any;
 
 @Component({
@@ -11,6 +10,7 @@ declare let $: any;
   styleUrls: ['./certificates.component.scss']
 })
 export class CertificatesComponent implements OnInit {
+  
 
   certificateForm: FormGroup;
   certificatesArr = [];
@@ -18,11 +18,9 @@ export class CertificatesComponent implements OnInit {
   files: any[];
   path: any;
   add_loader = false;
-  temp : any;
+ 
 
-  
-
-  constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService, private sanitizer : DomSanitizer) {
+  constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService) {
     
    }
 
@@ -43,11 +41,6 @@ export class CertificatesComponent implements OnInit {
     this.studentService.getCertificates().subscribe((res) => {
       console.log(res);
       this.certificatesArr = res;
-
-      this.temp = this.certificatesArr[0]['imageUrl'];
-      this.temp = this.sanitizer.bypassSecurityTrustUrl(this.certificatesArr[0]['imageUrl']);
-      console.log(this.temp);
-
     }, (err) => { console.log(err) });
   }
 

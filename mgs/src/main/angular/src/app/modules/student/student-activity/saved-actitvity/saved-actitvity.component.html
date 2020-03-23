@@ -134,7 +134,7 @@
                                                     <h5> Attachments </h5>
                                                     <div *ngFor="let file of activity.fileResponses">
                                                         <div>
-                                                            <a [attr.href]="file.url">
+                                                            <a target="_blank" [attr.href]="file.url">
                                                                 <i class="fa fa-file-audio"
                                                                     *ngIf="file.extension == 'mp3'"></i>
                                                                 <i class="fa fa-image"
@@ -219,7 +219,7 @@
                                                         <h5> Attachments : </h5> {{activity.fileResponses.length ? "" : "NA"}}
                                                         <div *ngFor="let file of activity.fileResponses">
                                                             <div>
-                                                                <a [attr.href]="file.url">
+                                                                <a target="_blank" [attr.href]="file.url">
                                                                     <i class="fa fa-file-audio"
                                                                         *ngIf="file.extension == 'mp3'"></i>
                                                                     <i class="fa fa-image"
