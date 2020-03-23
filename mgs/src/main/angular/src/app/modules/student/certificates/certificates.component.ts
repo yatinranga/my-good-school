@@ -17,12 +17,9 @@ export class CertificatesComponent implements OnInit {
   fourSArr: any = [];
   files: any[];
   path: any;
-  add_loader = false;
- 
+  add_loader = false; 
 
-  constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService) {
-    
-   }
+  constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService) {}
 
   ngOnInit() {
     this.viewCertificate();
