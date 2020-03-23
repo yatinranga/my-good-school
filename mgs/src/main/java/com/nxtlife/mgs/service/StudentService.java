@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.util.ExcelUtil;
+import com.nxtlife.mgs.view.CertificateRequest;
+import com.nxtlife.mgs.view.CertificateResponse;
 import com.nxtlife.mgs.view.StudentRequest;
 import com.nxtlife.mgs.view.StudentResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
@@ -40,6 +42,10 @@ public interface StudentService extends ExcelUtil {
 			String activityCid, String activityStatus, String teacherCid);
 
 	StudentResponse setProfilePic(MultipartFile file, String studentCid);
+
+	CertificateResponse uploadCertificate(CertificateRequest request);
+
+	List<CertificateResponse> getAllCertificatesOfStudent();
 
 	// List<AwardResponse> getAllAwardsOfStudentByActivityId(String studentCid,
 	// String awardCid);

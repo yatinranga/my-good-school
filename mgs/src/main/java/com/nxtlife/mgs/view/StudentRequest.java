@@ -50,24 +50,12 @@ public class StudentRequest {
 
 	private List<GuardianRequest> guardians;
 
-	private List<String> guardianIds;
+//	private List<String> guardianIds;
 
 	private Boolean active;
 
 	@NotEmpty(message = "grade id can't be null or empty")
 	private String gradeId;
-
-//	private String fathersName;
-//
-//	private String fathersEmail;
-//
-//	private String fathersMobileNumber;
-//
-//	private String mothersName;
-//
-//	private String mothersEmail;
-//
-//	private String mothersMobileNumber;
 
 	public String getName() {
 		return name;
@@ -189,13 +177,13 @@ public class StudentRequest {
 		this.guardians = guardians;
 	}
 
-	public List<String> getGuardianIds() {
-		return guardianIds;
-	}
-
-	public void setGuardianIds(List<String> guardianIds) {
-		this.guardianIds = guardianIds;
-	}
+//	public List<String> getGuardianIds() {
+//		return guardianIds;
+//	}
+//
+//	public void setGuardianIds(List<String> guardianIds) {
+//		this.guardianIds = guardianIds;
+//	}
 
 	public Student toEntity(Student student) {
 		student = student == null ? new Student() : student;

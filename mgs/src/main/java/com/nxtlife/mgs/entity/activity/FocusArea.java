@@ -13,12 +13,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.enums.PSDArea;
 
+@SuppressWarnings("serial")
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name","psdArea" }))
 public class FocusArea extends BaseEntity{
 
 	

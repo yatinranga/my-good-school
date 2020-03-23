@@ -7,17 +7,11 @@ import java.lang.reflect.Modifier;
 import java.security.GeneralSecurityException;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
-
 import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
-
-import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,15 +115,6 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 		logger.info("attached Authorities to admin.");
 
-		// Role role = roleRepository.getOneByName("Admin");
-		// if (role == null) {
-		// role = new Role();
-		// role.setCid(utils.generateRandomAlphaNumString(8));
-		// role.setName("Admin");
-		// roleRepository.save(role);
-		// }
-		// // Logic for authorities missing
-
 		if (userRepository.findByUserName("mainAdmin") == null) {
 			User user = new User();
 			user.setRoleForUser(role);
@@ -189,6 +174,12 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		if (userRepository.countByUserNameAndActiveTrue(teacher.getUsername()) > 0) {
 			throw new ValidationException("This username is already registered");
 		}
+		if ((teacher.getMobileNumber() != null && (userRepository.countByMobileNo(teacher.getMobileNumber())) > 0)
+				|| (teacher.getEmail() != null && userRepository.countByEmail(teacher.getEmail()) > 0)) {
+			throw new ValidationException(String.format(
+					"mobile number [%s] or email [%s] for Teacher [%s] is already registered for some other guardian",
+					teacher.getMobileNumber(), teacher.getEmail(), teacher.getName()));
+		}
 		User user = new User();
 		user.setActive(true);
 		user.setUserType(UserType.Teacher);
@@ -203,10 +194,6 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		user.setRawPassword(password);
 		System.out.println(String.format("Password : %s ANd EncodedPassword : %s", user.getRawPassword() , user.getPassword()) );
 
-		// if(teacher.getSubscriptionEndDate()!=null) {
-		// if(teacher.getSubscriptionEndDate().after(Date.from(java.time.LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())))
-		// user.setIsPaid(true);
-		// }
 		Role defaultRole = roleRepository.getOneByName("Teacher");
 		if (defaultRole == null)
 			throw new ValidationException("Role Teacher does not exist");
@@ -224,12 +211,6 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		return user;
 	}
 
-	@Override
-	public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-		User user = userRepository.findByUserName(s);
-		user.setUserId(user.getId());
-		return user;
-	}
 
 	@Override
 	public User createParentUser(Guardian guardian) {
@@ -237,8 +218,8 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			throw new ValidationException("This username is already registered");
 		}
 
-		if ((userRepository.countByMobileNo(guardian.getMobileNumber())) > 0
-				|| userRepository.countByEmail(guardian.getEmail()) > 0) {
+		if ((guardian.getMobileNumber() != null && (userRepository.countByMobileNo(guardian.getMobileNumber())) > 0)
+				|| (guardian.getEmail() != null && userRepository.countByEmail(guardian.getEmail()) > 0)) {
 			throw new ValidationException(String.format(
 					"mobile number [%s] or email [%s] for guardian [%s] is already registered for some other guardian",
 					guardian.getMobileNumber(), guardian.getEmail(), guardian.getName()));
@@ -258,10 +239,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		System.out.println(String.format("Password : %s ANd EncodedPassword : %s", user.getRawPassword() , user.getPassword()) );
 		// try {
 		user.setCid(utils.generateRandomAlphaNumString(8));
-		// } catch (ConstraintViolationException |
-		// javax.validation.ConstraintViolationException ce) {
-		// user.setCid(utils.generateRandomAlphaNumString(8));
-		// }
+		
 		if (guardian.getStudents() != null && !guardian.getStudents().isEmpty())
 			for (Student s : guardian.getStudents()) {
 
@@ -271,9 +249,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 						user.setIsPaid(true);
 						break;
 					}
-
 				}
-
 			}
 
 		Role defaultRole = roleRepository.getOneByName("Guardian");
@@ -287,6 +263,50 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		// return userRepository.save(user);
 		return user;
 
+	}
+	
+	@Override
+	public User createSchoolUser(School school) {
+		if (userRepository.countByUserNameAndActiveTrue(school.getUsername()) > 0) {
+			throw new ValidationException("This username is already registered");
+		}
+		if ((school.getContactNumber() != null && (userRepository.countByMobileNo(school.getContactNumber())) > 0)
+				|| (school.getEmail() != null && userRepository.countByEmail(school.getEmail()) > 0)) {
+			throw new ValidationException(String.format(
+					"mobile number [%s] or email [%s] for School [%s] is already registered for some other guardian",
+					school.getContactNumber(), school.getEmail(), school.getName()));
+		}
+		User user = new User();
+		user.setActive(true);
+		user.setUserType(UserType.School);
+		user.setRegisterType(RegisterType.MANUALLY);
+		user.setUserName(school.getUsername());
+		user.setEmail(school.getEmail());
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		String password = utils.generateRandomAlphaNumString(10);
+		String encodedPassword = encoder.encode(password);
+		user.setPassword(encodedPassword);
+		user.setRawPassword(password);
+		System.out.println(String.format("Password : %s ANd EncodedPassword : %s", user.getRawPassword() , user.getPassword()) );
+		user.setCid(utils.generateRandomAlphaNumString(8));
+
+		// user.setIsPaid(true);
+
+		Role defaultRole = roleRepository.getOneByName("School");
+		if (defaultRole == null)
+			throw new ValidationException("Role School does not exist");
+
+		user.setRoleForUser(defaultRole);
+		user.setSchool(school);
+		user.setMobileNo(school.getContactNumber());
+		return user;
+	}
+	
+	@Override
+	public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+		User user = userRepository.findByUserName(s);
+		user.setUserId(user.getId());
+		return user;
 	}
 
 	@Override
@@ -396,36 +416,6 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	}
 
-	@Override
-	public User createSchoolUser(School school) {
-		if (userRepository.countByUserNameAndActiveTrue(school.getUsername()) > 0) {
-			throw new ValidationException("This username is already registered");
-		}
-		User user = new User();
-		user.setActive(true);
-		user.setUserType(UserType.School);
-		user.setRegisterType(RegisterType.MANUALLY);
-		user.setUserName(school.getUsername());
-		user.setEmail(school.getEmail());
-		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		String password = utils.generateRandomAlphaNumString(10);
-		String encodedPassword = encoder.encode(password);
-		user.setPassword(encodedPassword);
-		user.setRawPassword(password);
-		System.out.println(String.format("Password : %s ANd EncodedPassword : %s", user.getRawPassword() , user.getPassword()) );
-		user.setCid(utils.generateRandomAlphaNumString(8));
-
-		// user.setIsPaid(true);
-
-		Role defaultRole = roleRepository.getOneByName("School");
-		if (defaultRole == null)
-			throw new ValidationException("Role School does not exist");
-
-		user.setRoleForUser(defaultRole);
-		user.setSchool(school);
-		user.setMobileNo(school.getContactNumber());
-		return user;
-	}
 
 	@Override
 	public Mail usernamePasswordSendContentBuilder(String username, String password, String mailFrom, String mailTo) {

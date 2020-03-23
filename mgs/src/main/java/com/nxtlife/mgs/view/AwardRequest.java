@@ -10,8 +10,8 @@ import com.nxtlife.mgs.entity.school.Award;
 
 public class AwardRequest {
 
-	@NotEmpty(message = "Award name cannot be null or empty.")
-	private String name;
+	@NotEmpty(message = "Award Type cannot be null or empty.")
+	private String awardType;
 	private String id;
 	private String description;
 	@NotNull(message = "teacher id cannot be null.")
@@ -22,14 +22,6 @@ public class AwardRequest {
 	private String gradeId;
 	private String activityId;
 	private List<AwardActivityPerformedCid> awardActivityPerformedList;
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 
 	public String getId() {
 		return id;
@@ -107,10 +99,17 @@ public class AwardRequest {
 		return toEntity(null);
 	}
 
+	public String getAwardType() {
+		return awardType;
+	}
+
+	public void setAwardType(String awardType) {
+		this.awardType = awardType;
+	}
+
 	public Award toEntity(Award award) {
 		award = award == null ? new Award() : award;
 		award.setCid(this.id);
-		award.setName(this.name);
 		award.setDescription(this.description);
 		return award;
 	}

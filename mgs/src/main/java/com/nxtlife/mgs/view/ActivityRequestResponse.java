@@ -1,6 +1,8 @@
 package com.nxtlife.mgs.view;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
@@ -10,21 +12,26 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.enums.FourS;
+import com.nxtlife.mgs.ex.ValidationException;
 
-@JsonInclude(content = Include.NON_NULL)
+@JsonInclude(content = Include.NON_EMPTY )
 public class ActivityRequestResponse {
 
 	@NotEmpty(message = " activity name can't be null")
 	private String name;
 	private String description;
 	private String id;
-	@NotEmpty
+	
+	@NotEmpty(message = "fourS cannot be empty or null.")
 	private String fourS;
+	
 	private Boolean isGeneral;
-	@NotNull
 	private List<String> focusAreaIds;
 	private List<String> schoolIds;
 	private List<String> focusAreas;
+	
+	private List<FocusAreaRequestResponse> focusAreaRequests;
+	private Set<FocusAreaRequestResponse> focusAreaResponses;
 
 	public String getName() {
 		return name;
@@ -89,15 +96,33 @@ public class ActivityRequestResponse {
 	public void setSchoolIds(List<String> schoolIds) {
 		this.schoolIds = schoolIds;
 	}
+	
+	public List<FocusAreaRequestResponse> getFocusAreaRequests() {
+		return focusAreaRequests;
+	}
 
-	public Activity toEntitity() {
+	public void setFocusAreaRequests(List<FocusAreaRequestResponse> focusAreaRequests) {
+		this.focusAreaRequests = focusAreaRequests;
+	}
+
+	public Activity toEntity() {
 		return toEntity(null);
+	}
+
+	public Set<FocusAreaRequestResponse> getFocusAreaResponses() {
+		return focusAreaResponses;
+	}
+
+	public void setFocusAreaResponses(Set<FocusAreaRequestResponse> focusAreaResponses) {
+		this.focusAreaResponses = focusAreaResponses;
 	}
 
 	public Activity toEntity(Activity activity) {
 		activity = activity == null ? new Activity() : activity;
 		activity.setName(this.name);
 		activity.setDescription(this.description);
+		if(!FourS.matches(this.fourS))
+			throw new ValidationException("Invalid value for field fourS , it should belong to list : [Skill ,Sport ,Study ,Service]");
 		activity.setFourS(FourS.valueOf(this.fourS));
 		activity.setIsGeneral(this.isGeneral);
 		return activity;
@@ -111,6 +136,8 @@ public class ActivityRequestResponse {
 		this.name = activity.getName();
 		this.description = activity.getDescription();
 		this.isGeneral = activity.getIsGeneral();
+		
+		this.focusAreaResponses = activity.getFocusAreas().stream().map(FocusAreaRequestResponse :: new ).distinct().collect(Collectors.toSet());
 		// focusAreaIds = new ArrayList<String>();
 		/*
 		 * this.focusAreas = new ArrayList<String>(); for (FocusArea fa :

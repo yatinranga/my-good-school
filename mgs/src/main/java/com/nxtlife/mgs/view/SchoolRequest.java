@@ -33,6 +33,9 @@ public class SchoolRequest {
 	private List<ActivityRequestResponse> newActivities;
 	
 	private List<GradeRequest> gradeRequests;
+	
+	private List<ActivityRequestResponse> activities;
+	
 
 	public String getName() {
 		return name;
@@ -122,6 +125,14 @@ public class SchoolRequest {
 		this.gradeRequests = gradeRequests;
 	}
 
+	public List<ActivityRequestResponse> getActivities() {
+		return activities;
+	}
+
+	public void setActivities(List<ActivityRequestResponse> activities) {
+		this.activities = activities;
+	}
+
 	public School toEntity(School school) {
 		school = school == null ? new School() : school;
 		if (this.name != null)
@@ -139,6 +150,6 @@ public class SchoolRequest {
 
 	public School toEntity() {
 
-		return this.toEntity(null);
+		return toEntity(null);
 	}
 }

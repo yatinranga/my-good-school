@@ -1,12 +1,23 @@
 package com.nxtlife.mgs.view;
 
+import org.hibernate.annotations.NotFoundAction;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.nxtlife.mgs.entity.activity.FocusArea;
 import com.nxtlife.mgs.enums.PSDArea;
+import com.nxtlife.mgs.ex.ValidationException;
 
+@JsonInclude(content = Include.NON_NULL)
 public class FocusAreaRequestResponse {
 
+	@NotEmpty(message = "name of focus area cannot be null or empty.")
 	private String name;
+	
+	@NotEmpty(message = "Psd Area cannot be null or empty.")
 	private String psdArea;
+	
 	private String id;
 	private String description;
 	
@@ -40,6 +51,8 @@ public class FocusAreaRequestResponse {
 		focusArea.setName(this.name);
 		focusArea.setCid(this.id);
 		focusArea.setDescription(this.description);
+		if(!PSDArea.matches(this.psdArea))
+			throw new ValidationException(String.format("Invalid psdArea (%s) it should be from list [Personal Development , Social Development]",this.psdArea));
 		focusArea.setPsdArea(PSDArea.fromString(this.psdArea));
 		return focusArea;
 	}
@@ -53,7 +66,7 @@ public class FocusAreaRequestResponse {
     	this.name = focusArea.getName();
     	this.description = focusArea.getDescription();
     	if(focusArea.getPsdArea() != null)
-    	   this.psdArea = focusArea.getPsdArea().toString();
+    	   this.psdArea = focusArea.getPsdArea().getPsdArea();
     }
     public FocusAreaRequestResponse() {
     	

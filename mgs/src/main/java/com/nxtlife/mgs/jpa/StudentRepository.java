@@ -54,6 +54,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
 	Boolean existsByCidAndActiveTrue(String studentCid);
 
+	Student getByUserIdAndActiveTrue(Long userId);
+
 
 
 	/*

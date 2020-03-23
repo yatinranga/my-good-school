@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;import java.util.stream.Collector;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -13,13 +14,11 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.nxtlife.mgs.entity.activity.FocusArea;
 import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.ex.ValidationException;
@@ -29,73 +28,65 @@ import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.FocusAreaService;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.Utils;
-import com.nxtlife.mgs.view.ActivityRequestResponse;
 import com.nxtlife.mgs.view.FocusAreaRequestResponse;
 
 @Service
-public class FocusAreaServiceImpl extends BaseService implements FocusAreaService{
+public class FocusAreaServiceImpl extends BaseService implements FocusAreaService {
 
 	@Autowired
 	FocusAreaRepository focusAreaRepository;
-	
+
 	@Autowired
 	SchoolRepository schoolRepository;
-	
+
 	@Autowired
 	Utils utils;
-	
+
 	@Override
 	public FocusAreaRequestResponse save(FocusAreaRequestResponse request) {
-		
-		if(request == null)
+
+		if (request == null)
 			throw new ValidationException("request cannot be null.");
-		if(request.getName()==null)
+		if (request.getName() == null)
 			throw new ValidationException("Focus area name cannot be null.");
-		if(request.getPsdArea() == null)
+		if (request.getPsdArea() == null)
 			throw new ValidationException("PSD area cannot be null.");
-		
+
 		FocusArea focusArea = focusAreaRepository.findByNameAndActiveTrue(request.getName());
-		if(focusArea!= null)
+		if (focusArea != null)
 			throw new ValidationException("This focus Area already exists.");
 		focusArea = request.toEntity();
-		try {
-			focusArea.setCid(utils.generateRandomAlphaNumString(8));
-		} catch (ConstraintViolationException | javax.validation.ConstraintViolationException ce) {
-			focusArea.setCid(utils.generateRandomAlphaNumString(8));
-		}
+		focusArea.setCid(utils.generateRandomAlphaNumString(8));
 		focusArea = focusAreaRepository.save(focusArea);
-		if(focusArea == null)
+		if (focusArea == null)
 			throw new RuntimeException("Something went wrong Focus Area not saved.");
-		
+
 		return new FocusAreaRequestResponse(focusArea);
-		
+
 	}
-	
+
 	@Override
-	public List<FocusAreaRequestResponse> getAllFocusAreas(){
+	public List<FocusAreaRequestResponse> getAllFocusAreas() {
 		List<FocusArea> focusAreaList = focusAreaRepository.findAllByActiveTrue();
-		if(focusAreaList==null)
+		if (focusAreaList == null)
 			throw new ValidationException("No Focus Areas found.");
-		List<FocusAreaRequestResponse> focusAreaResponses = new ArrayList<FocusAreaRequestResponse>();
-		focusAreaList.forEach(f->{focusAreaResponses.add(new FocusAreaRequestResponse(f));});
-		return focusAreaResponses;
+		return focusAreaList.stream().map(FocusAreaRequestResponse::new).distinct().collect(Collectors.toList());
 	}
-	
+
 	@Override
-	public List<FocusAreaRequestResponse> getAllFocusAreasBySchool(String schoolCid){
-		if(schoolCid==null)
+	public List<FocusAreaRequestResponse> getAllFocusAreasBySchool(String schoolCid) {
+		if (schoolCid == null)
 			throw new ValidationException("school id cannot be null.");
 		School school = schoolRepository.findByCidAndActiveTrue(schoolCid);
-		if(school == null)
-			throw new ValidationException("School with id : "+schoolCid+" not found.");
+		if (school == null)
+			throw new ValidationException("School with id : " + schoolCid + " not found.");
 		List<FocusArea> focusAreaList = focusAreaRepository.findAllByActivitiesSchoolsCidAndActiveTrue(schoolCid);
-		if(focusAreaList==null)
+		if (focusAreaList == null)
 			throw new ValidationException("No Focus Areas found.");
-		List<FocusAreaRequestResponse> focusAreaResponses = new ArrayList<FocusAreaRequestResponse>();
-		focusAreaList.forEach(f->{focusAreaResponses.add(new FocusAreaRequestResponse(f));});
-		return focusAreaResponses;
+		return focusAreaList.stream().map(FocusAreaRequestResponse::new).distinct().collect(Collectors.toList());
 	}
-	
+
+	@SuppressWarnings("unchecked")
 	@Override
 	public ResponseEntity<?> uploadFocusAreasFromExcel(MultipartFile file) {
 		if (file == null || file.isEmpty() || file.getSize() == 0)
@@ -107,7 +98,7 @@ public class FocusAreaServiceImpl extends BaseService implements FocusAreaServic
 		try {
 			XSSFWorkbook gradesheet = new XSSFWorkbook(file.getInputStream());
 			focusAreaRecords = findSheetRowValues(gradesheet, "FOCUS AREA", errors);
-			errors = (List<String>) focusAreaRecords.get(focusAreaRecords.size()-1).get("errors");
+			errors = (List<String>) focusAreaRecords.get(focusAreaRecords.size() - 1).get("errors");
 			for (int i = 0; i < focusAreaRecords.size(); i++) {
 				List<Map<String, Object>> tempFocusAreaRecords = new ArrayList<Map<String, Object>>();
 				tempFocusAreaRecords.add(focusAreaRecords.get(i));
@@ -119,13 +110,14 @@ public class FocusAreaServiceImpl extends BaseService implements FocusAreaServic
 			throw new ValidationException("something wrong happened may be file not in acceptable format.");
 		}
 		Map<String, Object> responseMap = new HashMap<String, Object>();
-		responseMap.put("FocusAreaResponseList",focusAreaResponseList);
-		responseMap.put("errors",  errors);
+		responseMap.put("FocusAreaResponseList", focusAreaResponseList);
+		responseMap.put("errors", errors);
 		return new ResponseEntity<Map<String, Object>>(responseMap, HttpStatus.OK);
 	}
 
-	private FocusAreaRequestResponse validateFocusAreaRequest(List<Map<String, Object>> focusAreaDetails, List<String> errors) {
-		if(focusAreaDetails==null || focusAreaDetails.isEmpty())
+	private FocusAreaRequestResponse validateFocusAreaRequest(List<Map<String, Object>> focusAreaDetails,
+			List<String> errors) {
+		if (focusAreaDetails == null || focusAreaDetails.isEmpty())
 			errors.add("Focus Area details not found");
 		FocusAreaRequestResponse focusAreaRequest = new FocusAreaRequestResponse();
 		focusAreaRequest.setName((String) focusAreaDetails.get(0).get("NAME"));
@@ -173,7 +165,8 @@ public class FocusAreaServiceImpl extends BaseService implements FocusAreaServic
 					if (cell != null) {
 						if (columnTypes.get(headers.get(j)).equals(cell.getCellType())) {
 							if (cell.getCellType() == CellType.NUMERIC) {
-								if (headers.get(j).contains("DATE") || headers.get(j).contains("DOB")|| headers.get(j).contains("SESSION START DATE"))
+								if (headers.get(j).contains("DATE") || headers.get(j).contains("DOB")
+										|| headers.get(j).contains("SESSION START DATE"))
 									columnValues.put(headers.get(j), cell.getDateCellValue());
 								else
 									columnValues.put(headers.get(j), new DataFormatter().formatCellValue(cell));

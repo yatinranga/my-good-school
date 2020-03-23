@@ -2,6 +2,7 @@ package com.nxtlife.mgs.view;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
@@ -27,7 +28,7 @@ public class SchoolResponse {
 
 	private String logo;
 
-	private List<ActivityRequestResponse> activities;
+	private Set<ActivityRequestResponse> activities;
 	
 	private List<GradeResponse> grades;
 
@@ -79,11 +80,11 @@ public class SchoolResponse {
 		this.logo = logo;
 	}
 
-	public List<ActivityRequestResponse> getActivities() {
+	public Set<ActivityRequestResponse> getActivities() {
 		return activities;
 	}
 
-	public void setActivities(List<ActivityRequestResponse> activities) {
+	public void setActivities(Set<ActivityRequestResponse> activities) {
 		this.activities = activities;
 	}
 
@@ -102,13 +103,9 @@ public class SchoolResponse {
 		this.setContactNumber(school.getContactNumber());
 		this.setEmail(school.getEmail());
 		this.setLogo(school.getLogo());
-
-		if (this.getActivities() == null)
-			this.activities = new ArrayList<ActivityRequestResponse>();
-
-		for (Activity activity : school.getActivities()) {
-			this.activities.add(new ActivityRequestResponse(activity));
-		}
+		if(school.getActivities() != null && ! school.getActivities().isEmpty())
+			this.activities = school.getActivities().stream().map(ActivityRequestResponse :: new).distinct().collect(Collectors.toSet());
+			
 		if(school.getGrades()!=null && !school.getGrades().isEmpty()) {
 			this.grades = school.getGrades().stream().map(GradeResponse::new).collect(Collectors.toList());
 		}

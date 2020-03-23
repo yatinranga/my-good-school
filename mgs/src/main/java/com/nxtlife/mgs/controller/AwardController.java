@@ -1,6 +1,7 @@
 package com.nxtlife.mgs.controller;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,45 +20,50 @@ import com.nxtlife.mgs.view.AwardResponse;
 import com.nxtlife.mgs.view.PropertyCount;
 
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/")
 public class AwardController {
 
 	@Autowired
 	AwardService awardService;
 
-	@PostMapping("award")
+	@PostMapping("api/award")
 	public AwardResponse createAward(@RequestBody AwardRequest request) {
 		return awardService.createAward(request);
 	}
 	
-	@GetMapping("/student/awards")
+	@GetMapping("api/student/awards")
 	public List<AwardResponse> getAwardsByStudent(){
 		return awardService.findAllByStudent();
 	}
 	
-	@GetMapping("/teacher/awards")
+	@GetMapping("api/teacher/awards")
 	public List<AwardResponse> getAwardsByManagement(){
 		return awardService.findAllByManagement();
 	}
 
-	@PutMapping("/teacher/award/{awardId}")
+	@PutMapping("api/teacher/award/{awardId}")
 	public AwardResponse updateStatus(@PathVariable String awardId, @RequestParam(name="verified",defaultValue="true") Boolean verified){
 		return awardService.updateStatus(awardId, verified);
 	}
 	
-	@PostMapping("/student/awards")
+	@PostMapping("api/student/awards")
 	private List<AwardResponse> getAwardsByStudent(@RequestBody AwardFilter filter){
 		return awardService.findAllByStudent(filter);
 	}
 	
-	@PostMapping("/teacher/awards")
+	@PostMapping("api/teacher/awards")
 	private List<AwardResponse> getAwardsByManagement(@RequestBody AwardFilter filter){
 		return awardService.findAllByManagement(filter);
 	}
 	
-	@GetMapping(value = "/student/{studentId}/awards/count" )
+	@GetMapping(value = "api/student/{studentId}/awards/count" )
 	public List<PropertyCount> getCount(@PathVariable("studentId") String studentCid ,@RequestParam(name = "status" , required = false ,defaultValue = "Reviewed") String status ,@RequestParam("type") String type){
 		return awardService.getCount(studentCid , status,type);
+	}
+	
+	@GetMapping(value = "awardTypes")
+	public Set<String> getAllAwardTypes(){
+		return awardService.getAllAwardTypes();
 	}
 
 

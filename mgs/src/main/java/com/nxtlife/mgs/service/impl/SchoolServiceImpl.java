@@ -16,7 +16,6 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -39,7 +38,9 @@ import com.nxtlife.mgs.jpa.GradeRepository;
 import com.nxtlife.mgs.jpa.RoleRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
 import com.nxtlife.mgs.jpa.UserRepository;
+import com.nxtlife.mgs.service.ActivityService;
 import com.nxtlife.mgs.service.BaseService;
+import com.nxtlife.mgs.service.FileService;
 import com.nxtlife.mgs.service.SchoolService;
 import com.nxtlife.mgs.service.SequenceGeneratorService;
 import com.nxtlife.mgs.service.UserService;
@@ -51,7 +52,6 @@ import com.nxtlife.mgs.view.GradeRequest;
 import com.nxtlife.mgs.view.SchoolRequest;
 import com.nxtlife.mgs.view.SchoolResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
-import com.nxtlife.mgs.view.TeacherResponse;
 
 @Service
 public class SchoolServiceImpl extends BaseService implements SchoolService {
@@ -83,6 +83,12 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 	@Autowired
 	GradeRepository gradeRepository;
 
+	@Autowired
+	FileService fileService;
+
+	@Autowired
+	ActivityService activityService;
+
 	@Value("${spring.mail.username}")
 	private String emailUsername;
 
@@ -103,9 +109,6 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 		if (school == null) {
 			school = new School();
 			school.setName("my good school");
-//			Long sequence = sequenceGeneratorService.findSequenceByUserType(UserType.School);
-//			sequence = sequence == null ? 0 : sequence++;
-//			school.setUsername(String.format("SCH%08d", sequence));
 			Long schoolsequence = sequenceGeneratorService.findSequenceByUserType(UserType.School);
 			sequenceGeneratorService.updateSequenceByUserType(schoolsequence, UserType.School);
 			school.setEmail("mygoodschool@gmail.com");
@@ -124,13 +127,10 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 			String encodedPassword = encoder.encode("root");
 			user.setPassword(encodedPassword);
-//			user.setPassword("root");
 			user.setCid(utils.generateRandomAlphaNumString(8));
 			user.setActive(true);
 			user.setMobileNo(utils.generateRandomNumString(10));
 			user.setEmail(school.getEmail());
-//			school.setUser(user);
-//			user.setUserName("mainAdmin");
 			userRepository.save(user);
 			school.setUser(user);
 		}
@@ -216,7 +216,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 
 				} else {
 
-					activity = newActivity.toEntitity();
+					activity = newActivity.toEntity();
 
 					List<School> sl = new ArrayList<School>();
 					sl.add(school);
@@ -233,8 +233,9 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 		school.setActivities(allActivities);
 
 		if (request.getLogo() != null) {
-			String fileExtn = request.getLogo().getOriginalFilename().split("\\.")[1];
-			String filename = UUID.randomUUID().toString() + "." + fileExtn;
+//			String fileExtn = request.getLogo().getOriginalFilename().split("\\.")[1];
+			String filename = UUID.randomUUID().toString() + "."
+					+ fileService.getFileExtension(request.getLogo().getOriginalFilename());
 			try {
 				String logoUrl = filestore.store("schoolLogo", filename, request.getLogo().getBytes());
 				school.setLogo(logoUrl);
@@ -249,22 +250,276 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			throw new RuntimeException("Something went wrong school not saved.");
 
 		// sending login credentials
-		
+
 		Boolean emailFlag = false;
-		
+
 		if (user.getEmail() != null)
-			emailFlag = userService.sendLoginCredentialsBySMTP(userService.usernamePasswordSendContentBuilder(user.getUsername(),
-					user.getRawPassword(), emailUsername, user.getEmail()));
-		
+			emailFlag = userService.sendLoginCredentialsBySMTP(userService.usernamePasswordSendContentBuilder(
+					user.getUsername(), user.getRawPassword(), emailUsername, user.getEmail()));
+
 		Map<String, Object> response = new HashMap<String, Object>();
 		response.put("Teacher", new SchoolResponse(school));
-		String emailMessage = emailFlag?String.format("Email sent successfully to (%s)", user.getEmail()):String.format("Email not sent successfully to (%s) , email address might be wrong.", user.getEmail());
-		int emailStatusCode = emailFlag?200:400;
-		response.put("MailResponse", new SuccessResponse(emailStatusCode,emailMessage));
+		String emailMessage = emailFlag ? String.format("Email sent successfully to (%s)", user.getEmail())
+				: String.format("Email not sent successfully to (%s) , email address might be wrong.", user.getEmail());
+		int emailStatusCode = emailFlag ? 200 : 400;
+		response.put("MailResponse", new SuccessResponse(emailStatusCode, emailMessage));
 //		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
-		
+
 		return new SchoolResponse(school);
 
+	}
+
+	@Override
+	public SchoolResponse update(SchoolRequest request, String cid) {
+
+		if (cid == null) {
+			throw new ValidationException("School id can't be null");
+		}
+
+		School school = schoolRepository.findByCidAndActiveTrue(cid);
+
+		if (school == null)
+			throw new NotFoundException(String.format("school havind id [%s] didn't exist", cid));
+
+		school = request.toEntity(school);
+
+		if (request.getGradeRequests() != null && !request.getGradeRequests().isEmpty()) {
+			List<GradeRequest> gradeRequests = request.getGradeRequests();
+			List<Grade> previousGrades = new ArrayList<Grade>();
+			List<Grade> gradesToDelete = new ArrayList<Grade>();
+			previousGrades = school.getGrades();
+			if (previousGrades.isEmpty()) {
+				updateGradesOfSchool(gradeRequests, previousGrades, school);
+			} else {
+				for (int i = 0; i < previousGrades.size(); i++) {
+					String grdCid = previousGrades.get(i).getCid();
+					GradeRequest gradeRequest = gradeRequests.stream()
+							.filter(grd -> grd.getId() != null && grd.getId().equals(grdCid)).findAny().orElse(null);
+					if (gradeRequest != null) {
+						gradeRequests.remove(gradeRequest);
+					} else {
+						List<School> schools = previousGrades.get(i).getSchools();
+						if (!schools.isEmpty() && !schools.isEmpty()) {
+							schools.remove(school);
+							previousGrades.get(i).setSchools(schools);
+							gradesToDelete.add(previousGrades.get(i));
+						}
+						previousGrades.remove(i--);
+					}
+				}
+
+				if (gradeRequests != null && !gradeRequests.isEmpty())
+					updateGradesOfSchool(gradeRequests, previousGrades, school);
+
+			}
+
+			school.setGrades(previousGrades);
+			gradeRepository.save(gradesToDelete);
+		}
+
+		if (request.getLogo() != null) {
+//			String fileExtn = request.getLogo().getOriginalFilename().split("\\.")[1];
+			String filename = UUID.randomUUID().toString() + "."
+					+ fileService.getFileExtension(request.getLogo().getOriginalFilename());
+			try {
+				String logoUrl = filestore.store("schoolLogo", filename, request.getLogo().getBytes());
+				school.setLogo(logoUrl);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		if (request.getActivities() != null && !request.getActivities().isEmpty()) {
+			List<ActivityRequestResponse> activityRequests = request.getActivities();
+			List<Activity> previousActivities = new ArrayList<Activity>();
+			List<Activity> activitiesToDelete = new ArrayList<Activity>();
+			previousActivities = school.getActivities();
+			if (previousActivities.isEmpty()) {
+				updateActivitiesOfSchool(activityRequests, previousActivities, school);
+			} else {
+				for (int i = 0; i < previousActivities.size(); i++) {
+					String actCid = previousActivities.get(i).getCid();
+					ActivityRequestResponse activityRequest = activityRequests.stream()
+							.filter(act -> act.getId() != null && act.getId().equals(actCid)).findAny().orElse(null);
+					if (activityRequest != null) {
+						activityRequests.remove(activityRequest);
+					} else {
+						List<School> schools = previousActivities.get(i).getSchools();
+						if (!schools.isEmpty() && !schools.isEmpty()) {
+							schools.remove(school);
+							previousActivities.get(i).setSchools(schools);
+							activitiesToDelete.add(previousActivities.get(i));
+						}
+						previousActivities.remove(i--);
+					}
+				}
+
+				if (activityRequests != null && !activityRequests.isEmpty())
+					updateActivitiesOfSchool(activityRequests, previousActivities, school);
+
+			}
+
+			school.setActivities(previousActivities);
+			if(!activitiesToDelete.isEmpty())
+			   activityRepository.save(activitiesToDelete);
+		}
+
+		school = schoolRepository.save(school);
+
+		return new SchoolResponse(school);
+	}
+
+	private void updateActivitiesOfSchool(List<ActivityRequestResponse> activityRequests,
+			List<Activity> previousActivities, School school) {
+
+		for (ActivityRequestResponse actReq : activityRequests) {
+			if (actReq.getId() != null) {
+				Activity activity = activityRepository.getOneByCid(actReq.getId());
+				if (activity == null)
+					throw new ValidationException(String.format("Activity having id (%s) not found.", actReq.getId()));
+				if (!activity.getActive())
+					activity.setActive(true);
+				List<School> schools = activity.getSchools();
+				schools.add(school);
+				activity.setSchools(schools);
+				previousActivities.add(activity);
+
+			} else {
+				List<String> schoolCids = actReq.getSchoolIds();
+				if(schoolCids == null)
+					schoolCids = new ArrayList<String>();
+				schoolCids.add(school.getCid());
+				actReq.setSchoolIds(schoolCids);
+				ActivityRequestResponse actResponse = activityService.saveActivity(actReq);
+				if (actResponse == null)
+					throw new RuntimeException(String
+							.format("Something went wrong activity with name (%s) not created.", actReq.getName()));
+				previousActivities.add(activityRepository.getOneByCidAndActiveTrue(actResponse.getId()));
+			}
+		}
+
+	}
+
+	private void updateGradesOfSchool(List<GradeRequest> gradeRequests, List<Grade> previousGrades, School school) {
+		for (GradeRequest gradeReq : gradeRequests) {
+			if (gradeReq.getId() != null) {
+				if (!gradeRepository.existsByCidAndActiveTrue(gradeReq.getId()))
+					throw new ValidationException(
+							String.format("Grade with id (%s) does not exist.", gradeReq.getId()));
+				Grade grade = gradeRepository.findByCidAndActiveTrue(gradeReq.getId());
+				List<School> schools = grade.getSchools();
+				schools.add(school);
+				grade.setSchools(schools);
+				previousGrades.add(grade);
+
+			} else {
+				Grade grade = gradeReq.toEntity();
+				List<School> schools = new ArrayList<School>();
+				schools.add(school);
+				grade.setSchools(schools);
+				grade.setCid(utils.generateRandomAlphaNumString(8));
+				grade.setActive(true);
+				grade = gradeRepository.save(grade);
+				previousGrades.add(grade);
+			}
+		}
+	}
+
+	@Override
+	public SchoolResponse findById(Long id) {
+		if (id == null)
+			throw new ValidationException("id cannot be null.");
+		School school = schoolRepository.findById(id);
+		if (school == null)
+			throw new ValidationException("School not found.");
+
+		return new SchoolResponse(school);
+	}
+
+	@Override
+	public SchoolResponse findByCid(String cid) {
+		if (cid == null)
+			throw new ValidationException("id cannot be null.");
+		School school = schoolRepository.findByCidAndActiveTrue(cid);
+		if (school == null)
+			throw new ValidationException("School not found.");
+
+		return new SchoolResponse(school);
+	}
+
+	@Override
+	public List<SchoolResponse> getAllSchools() {
+		List<School> schoolList = schoolRepository.findAll();
+		List<SchoolResponse> schoolResponses = new ArrayList<SchoolResponse>();
+		if (schoolList == null || schoolList.isEmpty())
+			throw new ValidationException("No schools found.");
+		schoolList.forEach(s -> {
+			schoolResponses.add(new SchoolResponse(s));
+		});
+		return schoolResponses;
+	}
+
+	@Override
+	public SuccessResponse delete(String cid) {
+		if (cid == null)
+			throw new ValidationException("cid cannot be null.");
+		School school = schoolRepository.findByCidAndActiveTrue(cid);
+		if (school == null)
+			throw new ValidationException(String.format("School with id : %s not found", cid));
+		school.setActive(false);
+		school = schoolRepository.save(school);
+		if (school == null)
+			throw new RuntimeException("Something went wrong school not deleted successfully.");
+		return new SuccessResponse(200, String.format("School with id : %s deleted successfully", cid));
+	}
+
+	@Override
+	public ResponseEntity<?> uploadSchoolsFromExcel(MultipartFile file) {
+		if (file == null || file.isEmpty() || file.getSize() == 0)
+			throw new ValidationException("Pls upload valid excel file.");
+
+		List<String> errors = new ArrayList<String>();
+		List<SchoolResponse> schoolResponseList = new ArrayList<>();
+		List<Map<String, Object>> schoolRecords = new ArrayList<Map<String, Object>>();
+		try {
+			XSSFWorkbook studentsSheet = new XSSFWorkbook(file.getInputStream());
+			schoolRecords = findSheetRowValues(studentsSheet, "SCHOOL", errors);
+//			errors = (List<String>) schoolRecords.get(schoolRecords.size() - 1).get("errors");
+			for (int i = 0; i < schoolRecords.size(); i++) {
+				List<Map<String, Object>> tempSchoolRecords = new ArrayList<Map<String, Object>>();
+				tempSchoolRecords.add(schoolRecords.get(i));
+				schoolResponseList.add(save(validateSchoolRequest(tempSchoolRecords, errors)));
+			}
+
+		} catch (IOException e) {
+
+			throw new ValidationException("something wrong happened may be file not in acceptable format.");
+		}
+		Map<String, Object> responseMap = new HashMap<String, Object>();
+		responseMap.put("SchoolResponseList", schoolResponseList);
+		responseMap.put("errors", errors);
+		return new ResponseEntity<Map<String, Object>>(responseMap, HttpStatus.OK);
+	}
+
+	private SchoolRequest validateSchoolRequest(List<Map<String, Object>> schoolDetails, List<String> errors) {
+		if (schoolDetails == null || schoolDetails.isEmpty()) {
+			errors.add("School details not found");
+		}
+		SchoolRequest schoolRequest = new SchoolRequest();
+		if (schoolDetails.get(0).get("NAME") != null) {
+			schoolRequest.setName((String) schoolDetails.get(0).get("NAME"));
+		}
+//		if(schoolDetails.get(0).get("USERNAME")!=null)
+//		   schoolRequest.setUsername((String) schoolDetails.get(0).get("USERNAME"));
+
+		if (schoolDetails.get(0).get("EMAIL") != null)
+			schoolRequest.setEmail((String) schoolDetails.get(0).get("EMAIL"));
+
+		schoolRequest.setContactNumber((String) schoolDetails.get(0).get("CONTACT NUMBER"));
+
+		schoolRequest.setAddress((String) schoolDetails.get(0).get("ADDRESS"));
+
+		return schoolRequest;
 	}
 
 	private List<Map<String, Object>> fetchRowValues(Map<String, CellType> columnTypes, XSSFSheet sheet,
@@ -348,181 +603,6 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 //		}
 		Map<String, CellType> columnTypes = ExcelUtil.sheetColumns(sheetName);
 		return fetchRowValues(columnTypes, sheet, errors, sheetName);
-	}
-
-	@Override
-	public ResponseEntity<?> uploadSchoolsFromExcel(MultipartFile file) {
-		if (file == null || file.isEmpty() || file.getSize() == 0)
-			throw new ValidationException("Pls upload valid excel file.");
-
-		List<String> errors = new ArrayList<String>();
-		List<SchoolResponse> schoolResponseList = new ArrayList<>();
-		List<Map<String, Object>> schoolRecords = new ArrayList<Map<String, Object>>();
-		try {
-			XSSFWorkbook studentsSheet = new XSSFWorkbook(file.getInputStream());
-			schoolRecords = findSheetRowValues(studentsSheet, "SCHOOL", errors);
-			errors = (List<String>) schoolRecords.get(schoolRecords.size() - 1).get("errors");
-			for (int i = 0; i < schoolRecords.size(); i++) {
-				List<Map<String, Object>> tempSchoolRecords = new ArrayList<Map<String, Object>>();
-				tempSchoolRecords.add(schoolRecords.get(i));
-				schoolResponseList.add(save(validateSchoolRequest(tempSchoolRecords, errors)));
-			}
-
-		} catch (IOException e) {
-
-			throw new ValidationException("something wrong happened may be file not in acceptable format.");
-		}
-		Map<String, Object> responseMap = new HashMap<String, Object>();
-		responseMap.put("SchoolResponseList", schoolResponseList);
-		responseMap.put("errors", errors);
-		return new ResponseEntity<Map<String, Object>>(responseMap, HttpStatus.OK);
-	}
-
-	private SchoolRequest validateSchoolRequest(List<Map<String, Object>> schoolDetails, List<String> errors) {
-		if (schoolDetails == null || schoolDetails.isEmpty()) {
-			errors.add("School details not found");
-		}
-		SchoolRequest schoolRequest = new SchoolRequest();
-		if (schoolDetails.get(0).get("NAME") != null) {
-			schoolRequest.setName((String) schoolDetails.get(0).get("NAME"));
-		}
-//		if(schoolDetails.get(0).get("USERNAME")!=null)
-//		   schoolRequest.setUsername((String) schoolDetails.get(0).get("USERNAME"));
-
-		if (schoolDetails.get(0).get("EMAIL") != null)
-			schoolRequest.setEmail((String) schoolDetails.get(0).get("EMAIL"));
-
-		schoolRequest.setContactNumber((String) schoolDetails.get(0).get("CONTACT NUMBER"));
-
-		schoolRequest.setAddress((String) schoolDetails.get(0).get("ADDRESS"));
-
-		return schoolRequest;
-	}
-
-	@Override
-	public SchoolResponse findById(Long id) {
-		if (id == null)
-			throw new ValidationException("id cannot be null.");
-		School school = schoolRepository.findById(id);
-		if (school == null)
-			throw new ValidationException("School not found.");
-
-		return new SchoolResponse(school);
-	}
-
-	@Override
-	public SchoolResponse findByCid(String cid) {
-		if (cid == null)
-			throw new ValidationException("id cannot be null.");
-		School school = schoolRepository.findByCidAndActiveTrue(cid);
-		if (school == null)
-			throw new ValidationException("School not found.");
-
-		return new SchoolResponse(school);
-	}
-
-	@Override
-	public List<SchoolResponse> getAllSchools() {
-		List<School> schoolList = schoolRepository.findAll();
-		List<SchoolResponse> schoolResponses = new ArrayList<SchoolResponse>();
-		if (schoolList == null || schoolList.isEmpty())
-			throw new ValidationException("No schools found.");
-		schoolList.forEach(s -> {
-			schoolResponses.add(new SchoolResponse(s));
-		});
-		return schoolResponses;
-	}
-
-	@Override
-	public SuccessResponse delete(String cid) {
-		if (cid == null)
-			throw new ValidationException("cid cannot be null.");
-		School school = schoolRepository.findByCidAndActiveTrue(cid);
-		if (school == null)
-			throw new ValidationException(String.format("School with id : %s not found", cid));
-		school.setActive(false);
-		school = schoolRepository.save(school);
-		if (school == null)
-			throw new RuntimeException("Something went wrong school not deleted successfully.");
-		return new SuccessResponse(200, String.format("School with id : %s deleted successfully", cid));
-	}
-
-	@Override
-	public SchoolResponse update(SchoolRequest request, String cid) {
-
-		if (cid == null) {
-			throw new ValidationException("School id can't be null");
-		}
-
-		School school = schoolRepository.findByCidAndActiveTrue(cid);
-
-		if (school == null)
-			throw new NotFoundException(String.format("school havind id [%s] didn't exist", cid));
-
-		school = request.toEntity(school);
-
-		if (request.getGradeRequests() != null && !request.getGradeRequests().isEmpty()) {
-			List<GradeRequest> gradeRequests = request.getGradeRequests();
-			List<Grade> previousGrades = new ArrayList<Grade>();
-			List<Grade> gradesToDelete = new ArrayList<Grade>();
-			previousGrades = school.getGrades();
-			if (previousGrades.isEmpty()) {
-				updateGradesOfSchool(gradeRequests, previousGrades, school);
-			} else {
-				for (int i = 0; i < previousGrades.size(); i++) {
-					String grdCid = previousGrades.get(i).getCid();
-					GradeRequest gradeRequest = gradeRequests.stream()
-							.filter(grd -> grd.getId() != null && grd.getId().equals(grdCid)).findAny().orElse(null);
-					if (gradeRequest != null) {
-						gradeRequests.remove(gradeRequest);
-					} else {
-						List<School> schools = previousGrades.get(i).getSchools();
-						if (!schools.isEmpty() && !schools.isEmpty()) {
-							schools.remove(school);
-							previousGrades.get(i).setSchools(schools);
-							gradesToDelete.add(previousGrades.get(i));
-						}
-						previousGrades.remove(i--);
-					}
-				}
-
-				if (gradeRequests != null && !gradeRequests.isEmpty())
-					updateGradesOfSchool(gradeRequests, previousGrades, school);
-
-			}
-
-			school.setGrades(previousGrades);
-			gradeRepository.save(gradesToDelete);
-		}
-
-		school = schoolRepository.save(school);
-
-		return new SchoolResponse(school);
-	}
-
-	private void updateGradesOfSchool(List<GradeRequest> gradeRequests, List<Grade> previousGrades, School school) {
-		for (GradeRequest gradeReq : gradeRequests) {
-			if (gradeReq.getId() != null) {
-				if (!gradeRepository.existsByCidAndActiveTrue(gradeReq.getId()))
-					throw new ValidationException(
-							String.format("Grade with id (%s) does not exist.", gradeReq.getId()));
-				Grade grade = gradeRepository.findByCidAndActiveTrue(gradeReq.getId());
-				List<School> schools = grade.getSchools();
-				schools.add(school);
-				grade.setSchools(schools);
-				previousGrades.add(grade);
-
-			} else {
-				Grade grade = gradeReq.toEntity();
-				List<School> schools = new ArrayList<School>();
-				schools.add(school);
-				grade.setSchools(schools);
-				grade.setCid(utils.generateRandomAlphaNumString(8));
-				grade.setActive(true);
-				grade = gradeRepository.save(grade);
-				previousGrades.add(grade);
-			}
-		}
 	}
 
 }

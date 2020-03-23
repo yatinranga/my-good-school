@@ -5,24 +5,18 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.List;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
-
 import org.apache.poi.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.service.ActivityService;
 import com.nxtlife.mgs.service.ExcelTemplateService;
@@ -31,12 +25,6 @@ import com.nxtlife.mgs.service.GradeService;
 import com.nxtlife.mgs.service.SchoolService;
 import com.nxtlife.mgs.service.StudentService;
 import com.nxtlife.mgs.service.TeacherService;
-import com.nxtlife.mgs.view.ActivityRequestResponse;
-import com.nxtlife.mgs.view.FocusAreaRequestResponse;
-import com.nxtlife.mgs.view.GradeResponse;
-import com.nxtlife.mgs.view.SchoolResponse;
-import com.nxtlife.mgs.view.StudentResponse;
-import com.nxtlife.mgs.view.TeacherResponse;
 
 @RestController
 @RequestMapping("/")

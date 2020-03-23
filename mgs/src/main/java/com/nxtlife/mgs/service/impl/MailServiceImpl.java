@@ -24,8 +24,6 @@ public class MailServiceImpl extends BaseService implements MailService {
 	public void sendEmail(Mail mail) throws UnsupportedEncodingException, MessagingException {
 		MimeMessage mimeMessage = mailSender.createMimeMessage();
 
-//		try {
-
 			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
 
 			mimeMessageHelper.setSubject(mail.getMailSubject());
@@ -37,11 +35,6 @@ public class MailServiceImpl extends BaseService implements MailService {
 
 			mailSender.send(mimeMessageHelper.getMimeMessage());
 
-//		} catch (MessagingException e) {
-//			e.printStackTrace();
-//		} catch (UnsupportedEncodingException e) {
-//			e.printStackTrace();
-//		}
 	}
 
 }
