@@ -100,6 +100,10 @@ export class StudentService {
   getActivityAreas(){
     return this.http.get("/filters");
   }
- 
+
+  // Add Certificate
+  addCertificate(formData : FormData){
+    return this.http.post("/api/student/certificate",formData);
+  } 
 
 }

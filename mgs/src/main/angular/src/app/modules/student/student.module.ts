@@ -43,6 +43,10 @@ const routes: Routes = [
         component: StudentAwardsComponent
       },
       {
+        path: 'certificates',
+        component: CertificatesComponent
+      },
+      {
         path: '',
         redirectTo: 'home'
       }
