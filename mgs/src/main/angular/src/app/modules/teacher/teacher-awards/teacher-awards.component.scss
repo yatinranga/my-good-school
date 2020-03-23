@@ -116,8 +116,9 @@ li.active {
     margin: 10px;
 }
 .assign_main{
-    display: inline-flex;
+    display: inline-block;
     width: 100%;
+    text-align: center;
 }
 p#title_award {
     font-size: 20px;
@@ -145,4 +146,29 @@ button.award.btn.btn-success, button.award.btn.btn-primary {
 }
 button.reset.btn.btn-secondary {
     padding: 10px;
+}
+
+p#title_award {
+    color: #8dc33a;
+    font-weight: 300;
+    margin-bottom: 15px;
+  }
+  .horz {
+    width: 100%;
+    text-align: left;
+    padding: 10px;
+    border-bottom: 1px solid;
+  }
+  .horz h5 {
+    color: #8dc33a;
+    font-weight: 400;
+    font-size: 27px;
+    margin-bottom: 20px;
+  }
+  .assign-form label {
+    font-size: 20px;
+    text-align: left;
+}
+.assign-form label {
+    margin-bottom: 10px;
 }

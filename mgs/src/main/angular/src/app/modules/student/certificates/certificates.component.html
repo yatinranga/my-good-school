@@ -1,6 +1,4 @@
-
-  
-  <!-- Modal -->
+<!-- Modal -->
 <div class="modal fade" id="certificateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -16,18 +14,19 @@
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Title :* </label>
                         <input type="text" class="form-control" name="name" id="recipient-name" formControlName="title">
-                        <small class="text-danger" *ngIf="!certificateForm.get('title').valid && certificateForm.get('title').touched">
-                                        Title Required
-                                    </small>
-                    </div>
-                    <div class="form-group">
+                        <small class="text-danger"
+                            *ngIf="!certificateForm.get('title').valid && certificateForm.get('title').touched">
+                            Title Required
+                        </small>
                         <label for="recipient-name" class="col-form-label">Description :* </label>
                         <textarea class="form-control add" name="description" formControlName="description"
                             rows="3"></textarea>
-                            <small class="text-danger" *ngIf="!certificateForm.get('description').valid && certificateForm.get('description').touched">
-                                Description Required
-                            </small>
+                        <small class="text-danger"
+                            *ngIf="!certificateForm.get('description').valid && certificateForm.get('description').touched">
+                            Description Required
+                        </small>
                     </div>
+
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">4S :* </label>
                         <select class="form-control" name="fourS" formControlName="fourS">
@@ -35,31 +34,34 @@
                             <option *ngFor="let fourS of fourSArr" value={{fourS}}>{{fourS}}
                             </option>
                         </select>
-                        <small class="text-danger" *ngIf="!certificateForm.get('fourS').valid && certificateForm.get('fourS').touched">
+                        <small class="text-danger"
+                            *ngIf="!certificateForm.get('fourS').valid && certificateForm.get('fourS').touched">
                             4S Required
                         </small>
-                    </div>
-                    <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Authority :* </label>
                         <input type="text" name="certificationAuthority" class="form-control" id="recipient-name"
                             formControlName="certificationAuthority">
-                            <small class="text-danger" *ngIf="!certificateForm.get('certificationAuthority').valid && certificateForm.get('certificationAuthority').touched">
-                                Authority Required
-                            </small>
+                        <small class="text-danger"
+                            *ngIf="!certificateForm.get('certificationAuthority').valid && certificateForm.get('certificationAuthority').touched">
+                            Authority Required
+                        </small>
                     </div>
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label"></label>
-                        <input type="file" accept="image/*,application/pdf" name="selectedFile" formControlName="image" (change)="onFileSelect($event)" >   
-                        <img *ngIf="path" [src]="path" height="200">                         
+                        <input type="file" accept="image/*,application/pdf" name="selectedFile" formControlName="image"
+                            (change)="onFileSelect($event)">
+                        <img *ngIf="path" [src]="path" height="200">
                     </div>
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label"> </label>
-                        <small class="text-danger" *ngIf="!certificateForm.get('image').valid && certificateForm.get('image').touched">
+                        <small class="text-danger"
+                            *ngIf="!certificateForm.get('image').valid && certificateForm.get('image').touched">
                             Image Required
                         </small>
                         <div *ngFor="let sf of files; let i = index;">
                             <p>{{sf.name}}
-                                <button type="button" name="removeFile" (click)="removeFile()" class="reviewed icon_button">
+                                <button type="button" name="removeFile" (click)="removeFile()"
+                                    class="reviewed icon_button">
                                     <i class="fa fa-trash"></i>
                                 </button>
                             </p>
@@ -68,8 +70,10 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" (click)="resetForm()">Reset</button>
-                        <button type="submit" class="btn btn-success" [disabled]="certificateForm.invalid"><div *ngIf="add_loader" class="spinner-border text-dark" role="status">
-                        </div>{{add_loader ? 'Loading...' : 'Add'}}</button>
+                        <button type="submit" class="btn btn-success" [disabled]="certificateForm.invalid">
+                            <div *ngIf="add_loader" class="spinner-border text-dark" role="status">
+                            </div>{{add_loader ? 'Loading...' : 'Add'}}
+                        </button>
                     </div>
                 </form>
             </div>
@@ -77,7 +81,73 @@
     </div>
 </div>
 
-  <button class="add_activity" type="button" class="btn btn-primary" data-toggle="modal" data-target="#certificateModal">
+<section id="certi_card">
+    <h1> This is a Demo for View Purpose Only.</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-4">
+                <div class="card_box">
+                    <img src="assets/images/banner.jpg">
+                    <h2> Certificate Title</h2>
+                    <p> Certificate Brief</p>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card_box">
+                    <img src="assets/images/banner.jpg">
+                    <h2> Certificate Title</h2>
+                    <p> Certificate Brief</p>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card_box">
+                    <img src="assets/images/banner.jpg">
+                    <h2> Certificate Title</h2>
+                    <p> Certificate Brief</p>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card_box">
+                    <img src="assets/images/banner.jpg">
+                    <h2> Certificate Title</h2>
+                    <p> Certificate Brief</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <div class="card_box">
+                    <img src="assets/images/banner.jpg">
+                    <h2> Certificate Title</h2>
+                    <p> Certificate Brief</p>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card_box">
+                    <img src="assets/images/banner.jpg">
+                    <h2> Certificate Title</h2>
+                    <p> Certificate Brief</p>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card_box">
+                    <img src="assets/images/banner.jpg">
+                    <h2> Certificate Title</h2>
+                    <p> Certificate Brief</p>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card_box">
+                    <img src="assets/images/banner.jpg">
+                    <h2> Certificate Title</h2>
+                    <p> Certificate Brief</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<button class="add_activity" type="button" class="btn btn-primary" data-toggle="modal" data-target="#certificateModal">
     <i class="fa fa-plus"></i>
   </button>
 

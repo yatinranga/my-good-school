@@ -15,7 +15,7 @@
                     <!-- Assign Award -->
                     <div *ngSwitchCase="'assign'" class="popup-form">
                         <div class="assign_main">
-                            <div class="assign-form"> 
+                            <div class="assign-form">
                                 <label for="exampleFormControlSelect1">Select Grade - </label>
                                 <select class="" name="grade" [disabled]="grade_loader" id="exampleFormControlSelect1" (ngModelChange)="getListOfStudent($event)" [(ngModel)]="selectedGrade">
                                     <option value="" disabled selected>Select Grades </option>
@@ -30,8 +30,8 @@
                                 </span>
                             </div>
 
-                            <div class="assignsform">
-                                <label for="exampleFormControlSelect2">Students - </label>
+                            <div class="assign-form">
+                                <label for="exampleFormControlSelect2" id="mid"> Students - </label>
                                 <select class="" name="studentList" [disabled]="stu_loader" id="exampleFormControlSelect1" (ngModelChange)="getStudentId($event)"
                                     [(ngModel)]="selectedStudent">
                                     <option value="" disabled selected>Select Student</option>
@@ -46,7 +46,7 @@
                                 </span>
                             </div>
 
-                            <div class="assignsform">
+                            <div class="assign-form">
                                 <label for="exampleFormControlSelect3">Select Activity - </label>
                                 <select class="" name="activityList" [disabled]="acti_loader" id="exampleFormControlSelect3" (ngModelChange)="getActivityId($event)"
                                     [(ngModel)]="selectedActivity">
@@ -131,8 +131,8 @@
                                                                         </div>
                                                                         <p> <strong>PSD Area - </strong>{{pa.psdAreas}}
                                                                         </p>
-                                                                        <p *ngIf="pa.fourS" id="fourSkills">
-                                                                            <strong>4's - </strong>
+                                                                        <p> <strong> 4's - </strong> {{pa.fourS}} </p>
+                                                                        <!--
                                                                             <span *ngIf="pa.fourS=='Skill'"
                                                                                 style="color: #4bafa5;">
                                                                                 {{pa.fourS}}
@@ -149,7 +149,7 @@
                                                                                 style="color: #8dc33a;">
                                                                                 {{pa.fourS}}
                                                                             </span>
-                                                                        </p>
+                                                                        -->
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-4">
@@ -226,8 +226,7 @@
                                                     <div *ngIf="al.status === 'PENDING'" class="pending"> {{al.status}}
                                                     </div>
                                                     <div *ngIf="al.status === 'VERIFIED'" class="verified">
-                                                        {{al.status}}
-                                                    </div>
+                                                        {{al.status}} </div>
                                                 </td>
                                                 <td><button name="verifySelectedAward" *ngIf="al.status == 'PENDING'"
                                                         (click)="verifySelectedAward($event,i)" class="pending">
@@ -280,26 +279,7 @@
                                                                         <p> <strong>PSD Area -
                                                                             </strong>{{ap.psdAreas}}
                                                                         </p>
-                                                                        <p *ngIf="ap.fourS" id="fourSkills">
-                                                                            <strong>4's - </strong>
-                                                                            <span *ngIf="ap.fourS=='Skill'"
-                                                                                style="color: #4bafa5;">
-                                                                                {{ap.fourS}}
-                                                                            </span>
-                                                                            <span *ngIf="ap.fourS=='Sport'"
-                                                                                style="color: #e04090;">
-                                                                                {{ap.fourS}}
-                                                                            </span>
-                                                                            <span *ngIf="ap.fourS=='Study'"
-                                                                                style="color: #1f69ad;">
-                                                                                {{ap.fourS}}
-                                                                            </span>
-                                                                            <span *ngIf="ap.fourS=='Service'"
-                                                                                style="color: #8dc33a;">
-                                                                                {{ap.fourS}}
-                                                                            </span>
-                                                                        </p>
-
+                                                                        <p> <strong> 4's - </strong> {{ap.fourS}} </p>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-4">
@@ -317,7 +297,6 @@
                                                                         <p> <strong style="color: green">Remarks -
                                                                             </strong>{{ap.coachRemark}} </p>
                                                                     </div>
-
                                                                 </div>
                                                             </div>
                                                         </div>

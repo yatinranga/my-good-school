@@ -53,10 +53,10 @@
                                                 <div class="horz">
                                                     <h5> Activity Performed - {{awards.activity.name}} </h5>
                                                     <div class="para">
-                                                        <p> <strong>Focus Area - </strong></p>
-                                                        <div *ngFor="let fa of ra.focusAreas; let i = index">
+                                                        <p id="fa"> <strong>Focus Area - </strong></p>
+                                                        <div id="fa" *ngFor="let fa of ra.focusAreas; let i = index">
                                                             <p>{{fa}}
-                                                                <span *ngIf="i < ra.focusAreas.length-1">,</span>
+                                                                <span *ngIf="i < ra.focusAreas.length-1"> , </span>
                                                             </p>
                                                         </div>
                                                         <p> <strong>PSD Area - </strong>{{ra.psdAreas}}</p>
