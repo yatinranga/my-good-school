@@ -7,7 +7,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Add Certificate</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetForm()">
+                <button type="button" name="close" class="close" data-dismiss="modal" aria-label="Close" (click)="resetForm()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -80,3 +80,17 @@
   <button class="add_activity" type="button" class="btn btn-primary" data-toggle="modal" data-target="#certificateModal">
     <i class="fa fa-plus"></i>
   </button>
+
+<!-- <div *ngFor="let certi of certificatesArr; let i = index;">
+    <div>{{certi.title}}</div>
+    <a target="_blank" [attr.href]="certi.imageUrl">{{certi.imageUrl}}</a>
+    <img [src]="temp">  
+</div> -->
+
+    <!-- <a target="_blank" [href]="certi.imageUrl">
+        <img src="certi.imageUrl" alt="Forest">
+      </a> -->
+    <!-- <a [attr.href]="certi.imageUrl">{{certi.imageUrl}}</a> -->
+    <!-- <br><br>
+</div> -->
+
