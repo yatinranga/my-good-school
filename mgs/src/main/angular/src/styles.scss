@@ -112,18 +112,20 @@ span.choosefile.choosefile-custom:before {
     padding: 0px;
     font-size: 17px;
     font-weight: 600;
+    color: #e04090;
 }
 .sortby select {
     border: none !important;
-    height: 40px;
+    height: 35px;
     border-radius: 0 !important;
     text-align: center;
-    width: 205px;
+    width: 150px;
     font-weight: 600;
-    font-size: 18px;
+    font-size: 16px;
     background: #ddd;
-
+    color: #444;
 }
+
 button.btn.btnSubmit.btn-success {
     box-shadow: none;
     border-radius: 0px;
@@ -301,7 +303,7 @@ app-home{
     font-size: 40px;
     text-align: left;
     margin: 0 0 30px 0;
-    color: #4796a2;
+    color: #159487;
 }
 
 .content_main_com h2{
@@ -563,7 +565,7 @@ li.nav-item{
 }
 .student_image p {
     font-size: 21px;
-    color: #e04090;
+    color: #159487;
     margin: 15px 0 0px 0;
 }
 .student_content{
@@ -592,15 +594,15 @@ li.nav-item{
 }
 .student_content h3{
     font-size: 22px;
-    color: #e04090;
+    color: #159487;
     margin: 0px 0 15px 0;
 }
 .guardian_profile_card h3 {
     font-size: 22px;
-    color: #e04090;
+    color: #444;
     position: absolute;
     width: 100px;
-    background: #b5b5b5;
+    background: #3f9487;
     height: 35px;
     top: -18px;
     padding: 5px 10px;
@@ -612,7 +614,7 @@ li.nav-item{
     float: left;
     margin: 35px 15px;
     position: relative;
-    background: lightgray;
+    background: #adadad;
     box-shadow: 0 0 10px #555;
 }
 
