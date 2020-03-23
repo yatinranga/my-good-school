@@ -106,4 +106,9 @@ export class StudentService {
     return this.http.post("/api/student/certificate",formData);
   } 
 
+  // View Certificates
+  getCertificates(){
+    return this.http.get("/api/student/certificates");
+  }
+
 }

@@ -20,6 +20,7 @@ export class CertificatesComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService) { }
 
   ngOnInit() {
+    this.viewCertificate();
     this.getfourS();
 
     this.certificateForm = this.formBuilder.group({
@@ -31,6 +32,13 @@ export class CertificatesComponent implements OnInit {
     })
   }
 
+  viewCertificate() {
+    this.studentService.getCertificates().subscribe((res) => {
+      console.log(res);
+    }, (err) => { console.log(err) });
+  }
+
+  // get 4s Area
   getfourS() {
     this.studentService.getActivityAreas().subscribe((res) => {
       this.fourSArr = res["Four S"];
@@ -39,6 +47,7 @@ export class CertificatesComponent implements OnInit {
     });
   }
 
+  // On selecting the File(Certificate)
   onFileSelect(event) {
     if (event.target.files.length > 0) {
       this.files = [...event.target.files];
@@ -56,8 +65,8 @@ export class CertificatesComponent implements OnInit {
     }
   }
 
+  // add new certificate
   addCertificate() {
-    this.add_loader = true;
     console.log(this.certificateForm.value);
     const formData = new FormData();
     formData.append('title', this.certificateForm.value.title);
@@ -68,6 +77,7 @@ export class CertificatesComponent implements OnInit {
 
     this.alertService.confirmWithoutLoader('question', 'Are you sure you want to add certificate ?', '', 'Yes').then(result => {
       if (result.value) {
+        this.add_loader = true;
         this.studentService.addCertificate(formData).subscribe((res) => {
           console.log(res);
           this.alertService.showSuccessAlert("");
@@ -82,13 +92,15 @@ export class CertificatesComponent implements OnInit {
     })
   }
 
-  removeFile(){
+  // remove the selected file(certificate)
+  removeFile() {
     this.files.pop();
     this.files = [];
-    this.path="";
+    this.path = "";
   }
 
-  resetForm(){
+  // reset add certificate form
+  resetForm() {
     this.certificateForm.reset();
   }
 
