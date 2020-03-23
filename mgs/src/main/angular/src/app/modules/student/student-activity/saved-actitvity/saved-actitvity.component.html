@@ -102,10 +102,10 @@
                                                     <h5> Development Parameters </h5>
                                                     <p *ngIf="activity.description">
                                                         <strong> Description : </strong> {{activity.description}} </p>
-                                                    <p> <strong>Focus Area - </strong></p>
-                                                    <div *ngFor="let fa of activity.focusAreas; let i = index">
+                                                    <p id="fa"> <strong>Focus Area : </strong> </p>
+                                                    <div id="fa" *ngFor="let fa of activity.focusAreas; let i = index">
                                                         <p>{{fa}}
-                                                            <span *ngIf="i < activity.focusAreas.length-1">,</span>
+                                                            <span *ngIf="i < activity.focusAreas.length-1"> , </span>
                                                         </p>
                                                     </div>
                                                     <p *ngIf="activity.psdAreas">
@@ -158,10 +158,10 @@
                                                     <h5> Development Parameters : </h5>
                                                     <p *ngIf="activity.description">
                                                         <strong> Description : </strong> {{activity.description}} </p>
-                                                    <p> <strong>Focus Area - </strong></p>
-                                                    <div *ngFor="let fa of activity.focusAreas; let i = index">
+                                                    <p id="fa"> <strong>Focus Area : </strong></p>
+                                                    <div id="fa" *ngFor="let fa of activity.focusAreas; let i = index">
                                                         <p>{{fa}}
-                                                            <span *ngIf="i < activity.focusAreas.length-1">,</span>
+                                                            <span *ngIf="i < activity.focusAreas.length-1"> , </span>
                                                         </p>
                                                     </div>
                                                     <p *ngIf="activity.psdAreas">

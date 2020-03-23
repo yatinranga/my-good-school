@@ -30,8 +30,8 @@
                                 </span>
                             </div>
 
-                            <div class="assignsform">
-                                <label for="exampleFormControlSelect2">Students - </label>
+                            <div class="assign-form">
+                                <label for="exampleFormControlSelect2" id="mid"> Students - </label>
                                 <select class="" name="studentList" [disabled]="stu_loader" id="exampleFormControlSelect1" (ngModelChange)="getStudentId($event)"
                                     [(ngModel)]="selectedStudent">
                                     <option value="" disabled selected>Select Student</option>
@@ -46,7 +46,7 @@
                                 </span>
                             </div>
 
-                            <div class="assignsform">
+                            <div class="assign-form">
                                 <label for="exampleFormControlSelect3">Select Activity - </label>
                                 <select class="" name="activityList" [disabled]="acti_loader" id="exampleFormControlSelect3" (ngModelChange)="getActivityId($event)"
                                     [(ngModel)]="selectedActivity">

@@ -74,12 +74,9 @@ export class SavedActitvityComponent implements OnInit {
   // get PSD , Focus Area and 4S
   getAreas() {
     this.studentService.getActivityAreas().subscribe((res) => {
-      console.log(res);
       this.psdAreaArr = res["PSD Areas"]
       this.focusAreaArr = res["Focus Areas"]
       this.fourSArr = res["Four S"]
-      console.log(this.fourSArr);
-
     },
     (err) => {console.log(err);});
   }

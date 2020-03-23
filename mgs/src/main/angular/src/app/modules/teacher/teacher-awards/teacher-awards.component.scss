@@ -116,8 +116,9 @@ li.active {
     margin: 10px;
 }
 .assign_main{
-    display: inline-flex;
+    display: inline-block;
     width: 100%;
+    text-align: center;
 }
 p#title_award {
     font-size: 20px;
@@ -164,3 +165,10 @@ p#title_award {
     font-size: 27px;
     margin-bottom: 20px;
   }
+  .assign-form label {
+    font-size: 20px;
+    text-align: left;
+}
+.assign-form label {
+    margin-bottom: 10px;
+}
