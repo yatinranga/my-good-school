@@ -111,4 +111,8 @@ export class StudentService {
     return this.http.get("/api/student/certificates");
   }
 
+  putProfilePhoto(studentCid,formData){
+    return this.http.put("/api/student/"+studentCid+"/profilePic",formData);
+  }
+
 }

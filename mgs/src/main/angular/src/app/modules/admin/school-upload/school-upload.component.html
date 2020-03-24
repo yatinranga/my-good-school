@@ -3,18 +3,26 @@
   <div class="card bg-light">
     <div class="card-body text-center">
       <form [formGroup]="schoolBulkForm" (ngSubmit)="uploadSchool()">
-        Select School : 
+        <!-- Select School : 
         <div class="input-field">
-          <!-- <select name="schoolName">
+          <select name="schoolName">
              <option value="" disabled selected>Select School </option>
                 <option *ngFor="let school of schools; let i = index;" value={{school.id}}>{{school.name}}</option>
-          </select> -->
-        </div>
+          </select>
+        </div> -->
         <div class="input-field">
           <input class="choosefile" type="file" name="selectedFile" (change)="onFileSelect($event)" />
           <span class="choosefile choosefile-custom"> <i class="fa fa-file"></i> </span>
         </div>
+        
         <button class="upload btn" name="Submit"type="submit"> Upload </button>
+        <div *ngFor="let sf of files; let i = index;">
+          <p>{{sf.name}}
+              <button type="button" name="removeFile" (click)="removeFile()" class="reviewed icon_button">
+                  <i class="fa fa-trash"></i>
+              </button>
+          </p>
+      </div>
       </form>
       <div>
 

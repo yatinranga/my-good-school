@@ -19,6 +19,7 @@ export class StudentUploadComponent implements OnInit, AfterViewInit {
   schools = [];
 
   studentBulkForm : FormGroup;
+  files: any[];
 
   constructor(private adminService: AdminService,
     private formBuilder: FormBuilder,
@@ -55,13 +56,14 @@ export class StudentUploadComponent implements OnInit, AfterViewInit {
 
   onFileSelect(event) {
     if (event.target.files.length > 0) {
+      this.files = [];
       const file = event.target.files[0];
-      this.studentBulkForm.value['selectedFile'] = file;
-      console.log(this.studentBulkForm.value.selectedFile);      
+      this.files = [...event.target.files];
     }
   }
 
   uploadStudents() {
+    this.studentBulkForm.value['selectedFile'] =this.files;
     const formData = new FormData();
     formData.append('file', this.studentBulkForm.value.selectedFile);
     formData.append('type', this.studentBulkForm.value.type);
@@ -78,8 +80,13 @@ export class StudentUploadComponent implements OnInit, AfterViewInit {
   }
 
   downloadStudent() {
-    this.dwnld.nativeElement.href = BASE_URL + "/api/template/export?type=student&access_token=" + localStorage.getItem('access_token');
+    // this.dwnld.nativeElement.href = BASE_URL + "/api/template/export?type=student&access_token=" + localStorage.getItem('access_token');
+    this.dwnld.nativeElement.href = BASE_URL + "/template/export?type=student";
     this.dwnld.nativeElement.click();
+  }
+
+  removeFile(){
+    this.files = [];
   }
   
 }

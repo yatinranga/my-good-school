@@ -15,6 +15,8 @@ export class SchoolUploadComponent implements OnInit {
 
 
   schoolBulkForm : FormGroup;
+  files: any[];
+  
   constructor(private adminService : AdminService, private formBuilder : FormBuilder, private alertSerivce :  AlertService) { }
 
   ngOnInit() {
@@ -24,11 +26,12 @@ export class SchoolUploadComponent implements OnInit {
     })
   }
   
-  onFileSelect(event){  
+  onFileSelect(event) {
     if (event.target.files.length > 0) {
+      this.files = [];
       const file = event.target.files[0];
-      this.schoolBulkForm.get('selectedFile').setValue(file);
-    }  
+      this.files = [...event.target.files];
+    }
   }
   
   uploadSchool(){
@@ -42,7 +45,12 @@ export class SchoolUploadComponent implements OnInit {
   }
   
   downloadSchool(){
-    this.dwnld.nativeElement.href = BASE_URL + "/api/template/export?type=school&access_token=" + localStorage.getItem('access_token');
+    // this.dwnld.nativeElement.href = BASE_URL + "/api/template/export?type=school&access_token=" + localStorage.getItem('access_token');
+    this.dwnld.nativeElement.href = BASE_URL + "/template/export?type=school";
     this.dwnld.nativeElement.click();
+  }
+
+  removeFile(){
+    this.files = [];
   }
 }
