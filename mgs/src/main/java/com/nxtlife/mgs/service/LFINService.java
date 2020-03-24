@@ -1,12 +1,11 @@
 package com.nxtlife.mgs.service;
 
-import com.nxtlife.mgs.entity.user.LFIN;
-import com.nxtlife.mgs.view.AwardResponse;
+import com.nxtlife.mgs.view.ActivityRequestResponse;
 import com.nxtlife.mgs.view.LFINRequestResponse;
 
 public interface LFINService {
 
-	LFIN save(LFINRequestResponse request);
+	LFINRequestResponse save(LFINRequestResponse request);
 	
-	public AwardResponse updateActivityStatus(String awardId, Boolean isVerified);
+	public ActivityRequestResponse updateActivityStatus(String awardId, Boolean isVerified);
 }

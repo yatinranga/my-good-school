@@ -146,7 +146,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 				throw new ValidationException("This username is already registered");
 			}
 			
-			if ((((Student)entity).getMobileNumber() != null && (userRepository.countByMobileNo(((Student)entity).getMobileNumber())) > 0)
+			if ((((Student)entity).getMobileNumber() != null && (userRepository.countByContactNumber(((Student)entity).getMobileNumber())) > 0)
 					|| (((Student)entity).getEmail() != null && userRepository.countByEmail(((Student)entity).getEmail()) > 0)) {
 				throw new ValidationException(String.format(
 						"mobile number [%s] or email [%s] for Student [%s] is already registered for some other Student",
@@ -176,7 +176,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 				throw new ValidationException("This username is already registered");
 			}
 
-			if ((((Guardian)entity).getMobileNumber() != null && (userRepository.countByMobileNo(((Guardian)entity).getMobileNumber())) > 0)
+			if ((((Guardian)entity).getMobileNumber() != null && (userRepository.countByContactNumber(((Guardian)entity).getMobileNumber())) > 0)
 					|| (((Guardian)entity).getEmail() != null && userRepository.countByEmail(((Guardian)entity).getEmail()) > 0)) {
 				throw new ValidationException(String.format(
 						"mobile number [%s] or email [%s] for guardian [%s] is already registered for some other guardian",
@@ -211,7 +211,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			if (userRepository.countByUserNameAndActiveTrue(((Teacher)entity).getUsername()) > 0) {
 				throw new ValidationException("This username is already registered");
 			}
-			if ((((Teacher)entity).getMobileNumber() != null && (userRepository.countByMobileNo(((Teacher)entity).getMobileNumber())) > 0)
+			if ((((Teacher)entity).getMobileNumber() != null && (userRepository.countByContactNumber(((Teacher)entity).getMobileNumber())) > 0)
 					|| (((Teacher)entity).getEmail() != null && userRepository.countByEmail(((Teacher)entity).getEmail()) > 0)) {
 				throw new ValidationException(String.format(
 						"mobile number [%s] or email [%s] for Teacher [%s] is already registered for some other teacher",
@@ -238,7 +238,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			if (userRepository.countByUserNameAndActiveTrue(((School)entity).getUsername()) > 0) {
 				throw new ValidationException("This username is already registered");
 			}
-			if ((((School)entity).getContactNumber() != null && (userRepository.countByMobileNo(((School)entity).getContactNumber())) > 0)
+			if ((((School)entity).getContactNumber() != null && (userRepository.countByContactNumber(((School)entity).getContactNumber())) > 0)
 					|| (((School)entity).getEmail() != null && userRepository.countByEmail(((School)entity).getEmail()) > 0)) {
 				throw new ValidationException(String.format(
 						"mobile number [%s] or email [%s] for School [%s] is already registered for some other school",
@@ -259,7 +259,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			if (userRepository.countByUserNameAndActiveTrue(((LFIN)entity).getUsername()) > 0) {
 				throw new ValidationException("This username is already registered");
 			}
-			if ((((LFIN)entity).getContactNumber() != null && (userRepository.countByMobileNo(((LFIN)entity).getContactNumber())) > 0)
+			if ((((LFIN)entity).getContactNumber() != null && (userRepository.countByContactNumber(((LFIN)entity).getContactNumber())) > 0)
 					|| (((LFIN)entity).getEmail() != null && userRepository.countByEmail(((LFIN)entity).getEmail()) > 0)) {
 				throw new ValidationException(String.format(
 						"mobile number [%s] or email [%s] for School [%s] is already registered for some other school",
