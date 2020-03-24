@@ -5,7 +5,7 @@
                 <div class="student_main">
                     <div class="student_image">
                         <img [src]="path">
-                        <button (click)="photoInput.click()">Edit Profile Photo</button>
+                        <button class="edit_profile" (click)="photoInput.click()"> <i class="fa fa-edit" title="Edit" > </i> Edit Profile Photo </button>
                         <p> <label> {{studentDetails['name']}}</label> </p>
                     </div>
                     <div class="student_content">

@@ -1,124 +1,127 @@
 <!-- Modal -->
-<div class="modal fade" id="certificateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Certificate</h5>
-                <button type="button" name="close" class="close" data-dismiss="modal" aria-label="Close"
-                    (click)="resetForm()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form [formGroup]="certificateForm" (ngSubmit)="addCertificate()">
-                    <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Title :* </label>
-                        <input type="text" class="form-control" name="name" id="recipient-name" formControlName="title">
-                        <small class="text-danger"
-                            *ngIf="!certificateForm.get('title').valid && certificateForm.get('title').touched">
-                            Title Required
-                        </small>
+<div class="main">
+        <div class="content_main">
+            <div class="content_main_com">
+                    <div class="certi_box">
+                            <div *ngFor="let certi of certificatesArr">
+                                    <div class="card_box">
+                                        <img src="assets/images/banner.jpg">
+                                        <div class="certi_text">
+                                                <h2>{{certi.title}}</h2>
+                                                <p>{{certi.description}}</p>
+                                                <p>
+                                                    <span *ngIf="certi.fourS=='Skill'" style="color: #4bafa5;">
+                                                        {{certi.fourS}}
+                                                    </span>
+                                                    <span *ngIf="certi.fourS=='Sport'" style="color: #e04090;">
+                                                        {{certi.fourS}}
+                                                    </span>
+                                                    <span *ngIf="certi.fourS=='Study'" style="color: #1f69ad;">
+                                                        {{certi.fourS}}
+                                                    </span>
+                                                    <span *ngIf="certi.fourS=='Service'" style="color: #8dc33a;">
+                                                        {{certi.fourS}}
+                                                    </span>
+                                                </p>
+                                                <p>{{certi.certificationAuthority}}</p>
+                                        </div>
+                                    </div>
+                                </div>
                     </div>
-
-                    <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Description :* </label>
-                        <textarea class="form-control add" name="description" formControlName="description"
-                            rows="3"></textarea>
-                        <small class="text-danger"
-                            *ngIf="!certificateForm.get('description').valid && certificateForm.get('description').touched">
-                            Description Required
-                        </small>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">4S :* </label>
-                        <select class="form-control" name="fourS" formControlName="fourS">
-                            <option value="" Selected Disabled>Choose One</option>
-                            <option *ngFor="let fourS of fourSArr" value={{fourS}}>{{fourS}}
-                            </option>
-                        </select>
-                        <small class="text-danger"
-                            *ngIf="!certificateForm.get('fourS').valid && certificateForm.get('fourS').touched">
-                            4S Required
-                        </small>
-                    </div>
-                    <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Authority :* </label>
-                        <input type="text" name="certificationAuthority" class="form-control" id="recipient-name"
-                            formControlName="certificationAuthority">
-                        <small class="text-danger"
-                            *ngIf="!certificateForm.get('certificationAuthority').valid && certificateForm.get('certificationAuthority').touched">
-                            Authority Required
-                        </small>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="recipient-name" class="col-form-label"></label>
-                        <input type="file" accept=".png, .jpg, .jpeg" name="selectedFile" formControlName="image"
-                            (change)="onFileSelect($event)">
-                        <img *ngIf="path" [src]="path" height="200">
-                    </div>
-                    <div class="form-group">
-                        <label for="recipient-name" class="col-form-label"> </label>
-                        <small class="text-danger"
-                            *ngIf="!certificateForm.get('image').valid && certificateForm.get('image').touched">
-                            Image Required
-                        </small>
-                        <div *ngFor="let sf of files; let i = index;">
-                            <p>{{sf.name}}
-                                <button type="button" name="removeFile" (click)="removeFile()"
-                                    class="reviewed icon_button">
-                                    <i class="fa fa-trash"></i>
+                    
+                    <button id="add_certi" type="button" class="btn btn-primary" data-toggle="modal" data-target="#certificateModal">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                    
+                    <div class="modal fade" id="certificateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Add Certificate</h5>
+                                <button type="button" name="close" class="close" data-dismiss="modal" aria-label="Close"
+                                    (click)="resetForm()">
+                                    <span aria-hidden="true">&times;</span>
                                 </button>
-                            </p>
+                            </div>
+                            <div class="modal-body">
+                                <form [formGroup]="certificateForm" (ngSubmit)="addCertificate()">
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label">Title :* </label>
+                                        <input type="text" class="form-control" name="name" id="recipient-name" formControlName="title">
+                                        <small class="text-danger"
+                                            *ngIf="!certificateForm.get('title').valid && certificateForm.get('title').touched">
+                                            Title Required
+                                        </small>
+                                    </div>
+                
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label">Description :* </label>
+                                        <textarea class="form-control add" name="description" formControlName="description"
+                                            rows="3"></textarea>
+                                        <small class="text-danger"
+                                            *ngIf="!certificateForm.get('description').valid && certificateForm.get('description').touched">
+                                            Description Required
+                                        </small>
+                                    </div>
+                
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label">4S :* </label>
+                                        <select class="form-control" name="fourS" formControlName="fourS">
+                                            <option value="" Selected Disabled>Choose One</option>
+                                            <option *ngFor="let fourS of fourSArr" value={{fourS}}>{{fourS}}
+                                            </option>
+                                        </select>
+                                        <small class="text-danger"
+                                            *ngIf="!certificateForm.get('fourS').valid && certificateForm.get('fourS').touched">
+                                            4S Required
+                                        </small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label">Authority :* </label>
+                                        <input type="text" name="certificationAuthority" class="form-control" id="recipient-name"
+                                            formControlName="certificationAuthority">
+                                        <small class="text-danger"
+                                            *ngIf="!certificateForm.get('certificationAuthority').valid && certificateForm.get('certificationAuthority').touched">
+                                            Authority Required
+                                        </small>
+                                    </div>
+                
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label"></label>
+                                        <input type="file" accept="image/*,application/pdf" name="selectedFile" formControlName="image"
+                                            accept=".png, .jpg, .jpeg" (change)="onFileSelect($event)">
+                                        <img *ngIf="path" [src]="path" height="200">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label"> </label>
+                                        <small class="text-danger"
+                                            *ngIf="!certificateForm.get('image').valid && certificateForm.get('image').touched">
+                                            Image Required
+                                        </small>
+                                        <div *ngFor="let sf of files; let i = index;">
+                                            <p>{{sf.name}}
+                                                <button type="button" name="removeFile" (click)="removeFile()"
+                                                    class="reviewed icon_button">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </p>
+                                        </div>
+                                    </div>
+                
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" (click)="resetForm()">Reset</button>
+                                        <button type="submit" class="btn btn-success" [disabled]="certificateForm.invalid">
+                                            <div *ngIf="add_loader" class="spinner-border text-dark" role="status">
+                                            </div>{{add_loader ? 'Loading...' : 'Add'}}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" (click)="resetForm()">Reset</button>
-                        <button type="submit" class="btn btn-success" [disabled]="certificateForm.invalid">
-                            <div *ngIf="add_loader" class="spinner-border text-dark" role="status">
-                            </div>{{add_loader ? 'Loading...' : 'Add'}}
-                        </button>
                     </div>
-                </form>
             </div>
         </div>
-    </div>
 </div>
 
-<section id="certi_card">
-    <div class="container">
-        <div *ngFor="let certi of certificatesArr">
-            <div class="row">
-                <div class="col-4">
-                    <div class="card_box">
-                        <img src="assets/images/banner.jpg">
-                        <h2>{{certi.title}}</h2>
-                        <p>{{certi.description}}</p>
-                        <p>
-                            <span *ngIf="certi.fourS=='Skill'" style="color: #4bafa5;">
-                                {{certi.fourS}}
-                            </span>
-                            <span *ngIf="certi.fourS=='Sport'" style="color: #e04090;">
-                                {{certi.fourS}}
-                            </span>
-                            <span *ngIf="certi.fourS=='Study'" style="color: #1f69ad;">
-                                {{certi.fourS}}
-                            </span>
-                            <span *ngIf="certi.fourS=='Service'" style="color: #8dc33a;">
-                                {{certi.fourS}}
-                            </span>
-                        </p>
-                        <p>{{certi.certificationAuthority}}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<button id="add_certi" type="button" class="btn btn-primary" data-toggle="modal" data-target="#certificateModal">
-    <i class="fa fa-plus"></i>
-</button>

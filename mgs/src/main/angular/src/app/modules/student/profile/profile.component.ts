@@ -24,6 +24,7 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit() {
     this.path = "assets/images/childprofile.jpg";
+    // this.path = "assets/images/boy.jpg";
     this.profilePhotoForm = this.formBuilder.group({
       profilePic: []
     })
