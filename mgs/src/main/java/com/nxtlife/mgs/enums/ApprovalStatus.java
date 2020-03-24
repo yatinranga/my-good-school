@@ -1,6 +1,6 @@
 package com.nxtlife.mgs.enums;
 
-public enum AwardStatus {
+public enum ApprovalStatus {
 	
 	PENDING, VERIFIED, REJECTED;
 

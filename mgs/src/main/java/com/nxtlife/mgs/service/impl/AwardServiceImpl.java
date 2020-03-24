@@ -21,7 +21,7 @@ import com.nxtlife.mgs.entity.school.AwardType;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.enums.ActivityStatus;
-import com.nxtlife.mgs.enums.AwardStatus;
+import com.nxtlife.mgs.enums.ApprovalStatus;
 import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.filtering.filter.AwardFilter;
 import com.nxtlife.mgs.filtering.filter.AwardFilterBuilder;
@@ -130,7 +130,7 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 		award.setActive(true);
 		award.setCid(utils.generateRandomAlphaNumString(8));
 		award.setTeacher(teacher);
-		award.setStatus(AwardStatus.PENDING);
+		award.setStatus(ApprovalStatus.PENDING);
 		award.setStudent(student);
 		award.setActive(true);
 		award = awardRepository.save(award);
@@ -158,7 +158,7 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 		if (student == null) {
 			throw new ValidationException("User not login as a student");
 		}
-		List<Award> awards = awardRepository.findByStudentIdAndStatus(student.getId(), AwardStatus.VERIFIED);
+		List<Award> awards = awardRepository.findByStudentIdAndStatus(student.getId(), ApprovalStatus.VERIFIED);
 		if(awards == null || awards.isEmpty())
 			throw new NotFoundException(String.format("No Award given to student (%s) yet.",student.getName()));
 		return awards.stream().map(AwardResponse::new).distinct().collect(Collectors.toList());
@@ -172,7 +172,7 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 			throw new ValidationException("User not login as a student");
 		}
 		List<Award> awards = awardRepository
-				.findAll(new AwardFilterBuilder().build(awardFilter, student.getCid(), AwardStatus.VERIFIED));
+				.findAll(new AwardFilterBuilder().build(awardFilter, student.getCid(), ApprovalStatus.VERIFIED));
 		if(awards == null || awards.isEmpty())
 			throw new NotFoundException(String.format("No Award found for student (%s) after applying filters.",student.getName()));
 		return awards.stream().map(AwardResponse::new).distinct().collect(Collectors.toList());
@@ -221,8 +221,8 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 		if (award == null) {
 			throw new ValidationException(String.format("This award not exist", awardId));
 		}
-		if (award.getStatus().equals(AwardStatus.PENDING)) {
-			award.setStatus(isVerified ? AwardStatus.VERIFIED : AwardStatus.REJECTED);
+		if (award.getStatus().equals(ApprovalStatus.PENDING)) {
+			award.setStatus(isVerified ? ApprovalStatus.VERIFIED : ApprovalStatus.REJECTED);
 			award.setStatusModifiedBy(teacher);
 			award.setStatusModifiedAt(new Date());
 		} else {
@@ -244,11 +244,11 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 			throw new ValidationException(String.format("The status (%s) provided by you is invalid.", status));
 		
 		if(type.equalsIgnoreCase("fourS"))
-		   return awardRepository.findFourSCount(studentCid , ActivityStatus.valueOf(status) , AwardStatus.VERIFIED);
+		   return awardRepository.findFourSCount(studentCid , ActivityStatus.valueOf(status) , ApprovalStatus.VERIFIED);
 		else if(type.equalsIgnoreCase("focusArea"))
-			return awardRepository.findFocusAreaCount(studentCid, ActivityStatus.valueOf(status), AwardStatus.VERIFIED);
+			return awardRepository.findFocusAreaCount(studentCid, ActivityStatus.valueOf(status), ApprovalStatus.VERIFIED);
 		else if(type.equalsIgnoreCase("psdArea"))
-			return awardRepository.findPsdAreaCount(studentCid, ActivityStatus.valueOf(status), AwardStatus.VERIFIED);
+			return awardRepository.findPsdAreaCount(studentCid, ActivityStatus.valueOf(status), ApprovalStatus.VERIFIED);
 		else 
 			throw new ValidationException(String.format("invalid type : (%s) , type can have following values [psdArea , focusArea , fourS]", type));
 	}

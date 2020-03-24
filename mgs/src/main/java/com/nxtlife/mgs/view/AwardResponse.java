@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.nxtlife.mgs.entity.school.Award;
 import com.nxtlife.mgs.entity.school.AwardActivityPerformed;
-import com.nxtlife.mgs.enums.AwardStatus;
+import com.nxtlife.mgs.enums.ApprovalStatus;
 
 @JsonInclude(value = Include.NON_ABSENT)
 public class AwardResponse {
@@ -23,7 +23,7 @@ public class AwardResponse {
 	private Date statusModifiedAt;
 	private List<ActivityPerformedResponse> activityPerformedResponses;
 	private Date dateOfReceipt;
-	private AwardStatus status;
+	private ApprovalStatus status;
 	private String studentId;
 	private String studentName;
 	private String studentGrade;
@@ -81,11 +81,11 @@ public class AwardResponse {
 		this.createdBy = createdBy;
 	}
 
-	public AwardStatus getStatus() {
+	public ApprovalStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(AwardStatus status) {
+	public void setStatus(ApprovalStatus status) {
 		this.status = status;
 	}
 

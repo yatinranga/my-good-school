@@ -14,11 +14,13 @@ import com.nxtlife.mgs.view.user.UserResponse;
 
 public interface UserService {
 
-	User createStudentUser(Student student);
-
-	User createParentUser(Guardian guardian);
-	
-	public User createTeacherUser(Teacher teacher) ;
+//	User createStudentUser(Student student);
+//
+//	User createParentUser(Guardian guardian);
+//	
+//	User createTeacherUser(Teacher teacher) ;
+//	
+//	User createSchoolUser(School school);
 
 	UserResponse getLoggedInUser();
 	
@@ -30,8 +32,8 @@ public interface UserService {
 
 	SuccessResponse forgotPassword(String username);
 
-	User createSchoolUser(School school);
-
 	Mail usernamePasswordSendContentBuilder(String username, String password, String mailFrom, String mailTo);
+
+	User createUserForEntity(Object entity);
 	
 }

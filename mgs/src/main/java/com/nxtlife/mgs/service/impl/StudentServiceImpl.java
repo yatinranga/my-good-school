@@ -167,7 +167,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		student.setGrade(grade);
 		student.setSchool(school);
 
-		User user = userService.createStudentUser(student);
+//		User user = userService.createStudentUser(student);
+		User user = userService.createUserForEntity(student);
 		
 		if (StringUtils.isEmpty(user)) {
 			throw new ValidationException("User not created successfully");
@@ -229,7 +230,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
 			guardian.setUsername(String.format("GRD%08d", sequence));
 			guardian.setCid(utils.generateRandomAlphaNumString(8));
-			guardian.setUser(userService.createParentUser(guardian));
+//			guardian.setUser(userService.createParentUser(guardian));
+			guardian.setUser(userService.createUserForEntity(guardian));
 			guardian = guardianRepository.save(guardian);
 			studList = new ArrayList<Student>();
 			studList.add(student);
@@ -332,7 +334,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				Long sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
 				guardian.setUsername(String.format("GRD%08d", sequence));
 				guardian.setCid(utils.generateRandomAlphaNumString(8));
-				guardian.setUser(userService.createParentUser(guardian));
+//				guardian.setUser(userService.createParentUser(guardian));
+				guardian.setUser(userService.createUserForEntity(guardian));
 				List<Student> students = new ArrayList<Student>();
 				students.add(student);
 				guardian.setStudents(students);

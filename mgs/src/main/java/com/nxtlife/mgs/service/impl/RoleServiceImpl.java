@@ -25,7 +25,7 @@ public class RoleServiceImpl {
 	
 	@PostConstruct
 	public void init() {
-		String[] roles = { "Teacher", "Coach", "Guardian" , "School" ,"Student" };
+		String[] roles = { "Teacher", "Coach", "Guardian" , "School" ,"Student","Lfin" };
 		for (String r : roles) {
 			Role role = roleRepository.getOneByName(r);
 			if (role == null) {

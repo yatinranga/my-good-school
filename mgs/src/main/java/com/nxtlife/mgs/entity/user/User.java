@@ -46,7 +46,7 @@ public class User extends BaseEntity implements UserDetails {
 	@Column(unique = true,nullable = true ,columnDefinition = "VARCHAR(10)")
 //	@Size(min = 10, max = 10)
 //	@Pattern(regexp = "^[6-9]{1}[0-9]]{9}$")
-	private String mobileNo;
+	private String contactNumber;
 
 //	@Email
 	@Column(unique = true)
@@ -116,12 +116,12 @@ public class User extends BaseEntity implements UserDetails {
 		this.userName = userName;
 	}
 
-	public String getMobileNo() {
-		return mobileNo;
+	public String getContactNumber() {
+		return contactNumber;
 	}
 
-	public void setMobileNo(String mobileNo) {
-		this.mobileNo = mobileNo;
+	public void setContactNumber(String contactNumber) {
+		this.contactNumber = contactNumber;
 	}
 
 	public String getEmail() {
@@ -298,7 +298,7 @@ public class User extends BaseEntity implements UserDetails {
 			Student student, School school, Teacher teacher, LFIN lfin) {
 		this.cid = cid;
 		this.userName = userName;
-		this.mobileNo = mobileNo;
+		this.contactNumber = mobileNo;
 		this.email = email;
 		this.password = password;
 		this.picUrl = picUrl;

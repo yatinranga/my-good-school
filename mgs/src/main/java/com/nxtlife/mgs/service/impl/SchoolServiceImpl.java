@@ -129,7 +129,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			user.setPassword(encodedPassword);
 			user.setCid(utils.generateRandomAlphaNumString(8));
 			user.setActive(true);
-			user.setMobileNo(utils.generateRandomNumString(10));
+			user.setContactNumber(utils.generateRandomNumString(10));
 			user.setEmail(school.getEmail());
 			userRepository.save(user);
 			school.setUser(user);
@@ -161,7 +161,8 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 		school.setCid(utils.generateRandomAlphaNumString(8));
 		school.setActive(true);
 
-		User user = userService.createSchoolUser(school);
+//		User user = userService.createSchoolUser(school);
+		User user = userService.createUserForEntity(school);
 
 		if (StringUtils.isEmpty(user))
 			throw new ValidationException("User not created successfully");

@@ -21,7 +21,7 @@ import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
-import com.nxtlife.mgs.enums.AwardStatus;
+import com.nxtlife.mgs.enums.ApprovalStatus;
 
 @SuppressWarnings("serial")
 @Entity
@@ -45,7 +45,7 @@ public class Award extends BaseEntity {
 	private Date dateOfReceipt;
 
 	@Enumerated(EnumType.STRING)
-	private AwardStatus status;
+	private ApprovalStatus status;
 
 	@ManyToOne
 	@JoinColumn(name = "teacher_id")
@@ -121,11 +121,11 @@ public class Award extends BaseEntity {
 		this.dateOfReceipt = dateOfReceipt;
 	}
 
-	public AwardStatus getStatus() {
+	public ApprovalStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(AwardStatus status) {
+	public void setStatus(ApprovalStatus status) {
 		this.status = status;
 	}
 

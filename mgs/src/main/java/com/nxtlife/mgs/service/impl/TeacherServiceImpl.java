@@ -225,7 +225,8 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 
 		teacher.setcId(utils.generateRandomAlphaNumString(8));
 
-		User user = userService.createTeacherUser(teacher);
+//		User user = userService.createTeacherUser(teacher);
+		User user = userService.createUserForEntity(teacher);
 
 		if (user == null)
 			throw new ValidationException("User not created successfully");

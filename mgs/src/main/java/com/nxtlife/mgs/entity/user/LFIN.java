@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 
 import com.nxtlife.mgs.entity.BaseEntity;
 
+@SuppressWarnings("serial")
 @Entity
 public class LFIN extends BaseEntity{
 
@@ -37,7 +38,7 @@ public class LFIN extends BaseEntity{
 	private String email;
 	
 	@Column(unique = true)
-	private String mobileNumber;
+	private String contactNumber;
 	
 	private Boolean active;
 	
@@ -86,12 +87,12 @@ public class LFIN extends BaseEntity{
 		this.email = email;
 	}
 
-	public String getMobileNumber() {
-		return mobileNumber;
+	public String getContactNumber() {
+		return contactNumber;
 	}
 
-	public void setMobileNumber(String mobileNumber) {
-		this.mobileNumber = mobileNumber;
+	public void setContactNumber(String contactNumber) {
+		this.contactNumber = contactNumber;
 	}
 
 	public Boolean getActive() {
@@ -143,7 +144,7 @@ public class LFIN extends BaseEntity{
 		this.dob = dob;
 		this.imageUrl = imageUrl;
 		this.email = email;
-		this.mobileNumber = mobileNumber;
+		this.contactNumber = mobileNumber;
 		this.active = active;
 		this.gender = gender;
 	}

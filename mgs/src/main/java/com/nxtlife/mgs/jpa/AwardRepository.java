@@ -10,13 +10,13 @@ import org.springframework.data.repository.query.Param;
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.school.Award;
 import com.nxtlife.mgs.enums.ActivityStatus;
-import com.nxtlife.mgs.enums.AwardStatus;
+import com.nxtlife.mgs.enums.ApprovalStatus;
 import com.nxtlife.mgs.view.PropertyCount;
 import com.querydsl.core.types.Predicate;
 
 public interface AwardRepository extends JpaRepository<Award, Long>, QueryDslPredicateExecutor<Award> {
 
-	public List<Award> findByStudentIdAndStatus(Long studentId, AwardStatus status);
+	public List<Award> findByStudentIdAndStatus(Long studentId, ApprovalStatus status);
 
 	public List<Award> findByActivityIn(List<Activity> activities);
 
@@ -30,7 +30,7 @@ public interface AwardRepository extends JpaRepository<Award, Long>, QueryDslPre
 	           "   Award aw JOIN aw.awardActivityPerformed awap JOIN awap.activityPerformed a " +"WHERE a.student.cid =:cid AND a.activityStatus =:status AND aw.status =:awardStatus AND a.active = TRUE AND aw.active = TRUE "+
 	           "GROUP BY " +
 	           "   a.activity.fourS" )
-	List<PropertyCount> findFourSCount(@Param("cid") String cid, @Param("status") ActivityStatus status ,@Param("awardStatus") AwardStatus awardStatus);
+	List<PropertyCount> findFourSCount(@Param("cid") String cid, @Param("status") ActivityStatus status ,@Param("awardStatus") ApprovalStatus awardStatus);
 	 
 	 @Query("SELECT  " +
 	           "new com.nxtlife.mgs.view.PropertyCount(f.name, COUNT(DISTINCT aw.id)) " +
@@ -38,7 +38,7 @@ public interface AwardRepository extends JpaRepository<Award, Long>, QueryDslPre
 	           "    Award aw JOIN aw.awardActivityPerformed awap JOIN awap.activityPerformed ap JOIN ap.activity a JOIN a.focusAreas f  " +"WHERE ap.student.cid =:cid AND ap.activityStatus =:status AND aw.status =:awardStatus AND ap.active = TRUE AND aw.active = TRUE  "+
 	           "GROUP BY " +
 	           "   f.name" )
-	List<PropertyCount> findFocusAreaCount(@Param("cid") String cid, @Param("status") ActivityStatus status, @Param("awardStatus") AwardStatus awardStatus);
+	List<PropertyCount> findFocusAreaCount(@Param("cid") String cid, @Param("status") ActivityStatus status, @Param("awardStatus") ApprovalStatus awardStatus);
 	 
 	 @Query("SELECT " +
 	           "new com.nxtlife.mgs.view.PropertyCount(f.psdArea, COUNT(DISTINCT aw.id)) " +
@@ -46,6 +46,6 @@ public interface AwardRepository extends JpaRepository<Award, Long>, QueryDslPre
 	           "    Award aw JOIN aw.awardActivityPerformed awap JOIN awap.activityPerformed ap JOIN ap.activity a JOIN a.focusAreas f  " +"WHERE ap.student.cid =:cid AND ap.activityStatus =:status AND aw.status =:awardStatus AND ap.active = TRUE AND aw.active = TRUE  "+
 	           "GROUP BY " +
 	           "   f.psdArea" )
-	List<PropertyCount> findPsdAreaCount(@Param("cid") String cid, @Param("status") ActivityStatus status ,@Param("awardStatus") AwardStatus awardStatus);
+	List<PropertyCount> findPsdAreaCount(@Param("cid") String cid, @Param("status") ActivityStatus status ,@Param("awardStatus") ApprovalStatus awardStatus);
 
 }

@@ -113,7 +113,7 @@ public class UserResponse {
 		this.userName = user.getUserName();
 		if (user.getUserType() != null)
 			this.userType = user.getUserType().toString();
-		this.contactNumber = user.getMobileNo();
+		this.contactNumber = user.getContactNumber();
 		if (user.getStudent() != null) {
 			this.student = new StudentResponse(user.getStudent(), true);
 		}
