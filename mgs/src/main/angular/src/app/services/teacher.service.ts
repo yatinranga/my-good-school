@@ -34,8 +34,8 @@ export class TeacherService {
   }
   
   // get AWARDS of school
-  getAwards(schoolId) {
-    return this.http.get("/api/award?schoolId=" + schoolId);
+  getAwards() {
+    return this.http.get("/awardTypes");
   }
 
   // get all activities in particular school

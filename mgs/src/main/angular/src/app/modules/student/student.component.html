@@ -1,31 +1,41 @@
 <div class="main">
   <div class="navbar">
-    <div class="logo">
-      <a routerLink='./home'> <img src="assets/images/logo.jpg"> </a>    
-    </div>
+    <ul class="logo">
+        <li routerLinkActive='active'>
+            <a routerLink='./home'>
+              <img src="assets/images/logo.jpg"> </a>
+          </li>
+        </ul>
     <div class="menu">
       <ul>
         <li class="cb" routerLinkActive='active'>
-          <a routerLink='./home' class="cb menu_link">
-            <i class="fa fa-home"> </i> Home </a>
-        </li>
-        <li class="pink" routerLinkActive='active'>
           <a routerLink='./profile' class="pink menu_link">
             <i class="fa fa-id-badge"> </i> Profile </a>
         </li>
-        <li class="blue" routerLinkActive='active'>
+        <li class="pink" routerLinkActive='active'>
           <a routerLink='./activity' class="blue menu_link">
             <i class="fa fa-bar-chart"> </i> Activities</a>
         </li>
-        <li class="green" routerLinkActive='active'>
+        <li class="blue" routerLinkActive='active'>
           <a routerLink='./awards-achievement' class="green menu_link">
             <i class="fa fa-trophy"> </i> Awards and Achievements </a>
         </li>
+        <li class="green" routerLinkActive='active'>
+          <a routerLink='./certificates' class="green menu_link">
+            <i class="fa fa-trophy"> </i> Certificates </a>
+        </li>
       </ul>
+        <ul style="float: right"> 
+            <li>
+                <a routerLink='login' class="logout menu_link" (click)="authService.logoutUser();">
+                  <i class="fa fa-sign-out-alt"> </i> Logout </a>
+              </li>
+        </ul>
     </div>
 
+    <!--
     <div class="right">
-      <div class="dropdown">
+        <div class="dropdown">
         <i class="fa fa-user-circle"></i>
         <div class="dropdown-content">
           <a routerLink='./profile'>
@@ -38,8 +48,9 @@
           <a routerLink='login' class="logout" (click)="authService.logoutUser();">
             <i class="fa fa-sign-out-alt"></i>Logout </a>
         </div>
+        </div>
       </div>
-    </div>
+      -->
   </div>
 
   <div class="content_main">

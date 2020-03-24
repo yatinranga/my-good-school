@@ -5,7 +5,7 @@
             <div class="user_options-text">
                 <div class="user_options-unregistered">
                     <div class="user_unregistered-title">
-                        <img src="assets/images.jpg" class="logoImage">
+                        <img src="assets/images/logo.jpg" class="logoImage">
                     </div>
                     <h2 class="user_unregistered-text">My Good School</h2>
                 </div>
@@ -27,7 +27,7 @@
                     <form name="Login_Form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
                         <fieldset class="forms_fieldset">
                             <div class="forms_field">
-                                <input type="text" class="forms_field-input" placeholder="Username"
+                                <input type="text" name="username" class="forms_field-input" placeholder="Username"
                                     formControlName="username">
                                 <small class="text-danger"
                                     *ngIf="!loginForm.get('username').valid && loginForm.get('username').touched">
@@ -36,7 +36,7 @@
 
                             </div>
                             <div class="forms_field">
-                                <input type="password" formControlName="password" placeholder="Password"
+                                <input type="password" name="password" formControlName="password" placeholder="Password"
                                     class="forms_field-input">
                                 <small class="text-danger"
                                     *ngIf="!loginForm.get('password').valid && loginForm.get('password').touched">
@@ -46,7 +46,7 @@
                         </fieldset>
                         <div class="forms_buttons">
                             <a routerLink='/forgot-pwd'>Forgot Password ?</a>
-                            <button class="forms_buttons-action login-btn" type="submit">Login
+                            <button class="forms_buttons-action login-btn" name="Submit_Button" type="submit">Login
                                 <span *ngIf="loader">
                                     <div class="spinner-border" role="status">
                                     </div>

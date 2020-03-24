@@ -9,19 +9,19 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">Enter Name :*
-                            <input type="text" class="form-control" placeholder="Your Name" formControlName="name" />
+                            <input type="text" class="form-control" name="name" placeholder="Your Name" formControlName="name" />
                             <small class="text-danger" *ngIf="!teacherSignup.get('name').valid && teacherSignup.get('name').touched">
                                 Name Required
                             </small>
                         </div>
                         <div class="form-group">Enter DOB :*
-                            <input type="date" class="form-control" placeholder="Date of Birth" formControlName="dob" />
+                            <input type="date" class="form-control" name="dob" placeholder="Date of Birth" formControlName="dob" />
                             <small class="text-danger" *ngIf="!teacherSignup.get('dob').valid && teacherSignup.get('dob').touched">
                                 DOB Required
                             </small>
                         </div>
                         <div class="form-group">Enter Email :*
-                            <input type="email" class="form-control" placeholder="Your Email" formControlName="email" />
+                            <input type="email" class="form-control" name="email" placeholder="Your Email" formControlName="email" />
                             <!-- <small class="text-danger" *ngIf="!teacherSignup.get('email').valid && teacherSignup.get('email').touched">
                                 Email Required
                             </small> -->
@@ -30,12 +30,12 @@
                             </small>
                         </div>
                         <div class="form-group">Enter Mobile no. :
-                            <input type="number" class="form-control" placeholder="Your Mobile Number"
+                            <input type="number" class="form-control" name="mobileNumber" placeholder="Your Mobile Number"
                                 formControlName="mobileNumber" />
                             
                         </div>
                         <div class="form-group">Select Gender :
-                            <select class="form-control" placeholder="Select one" formControlName="gender">
+                            <select class="form-control" name="gender" placeholder="Select one" formControlName="gender">
                                 <option value="" disabled selected>Choose your option</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
@@ -44,24 +44,24 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">Enter Qualifications :
-                            <input type="text" class="form-control" placeholder="Your Qualifications" formControlName="qualification" />
+                            <input type="text" class="form-control" name="qualification" placeholder="Your Qualifications" formControlName="qualification" />
                         </div>
                         <div class="form-group">Select School :
-                            <select class="form-control" (ngModelChange)="getSchoolActivities($event)" formControlName="schoolId" >
+                            <select class="form-control" name="schoolId" (ngModelChange)="getSchoolActivities($event)" formControlName="schoolId" >
                                 <option value="" disabled selected>Select School </option>
                                 <option *ngFor="let school of schoolsList; let i = index;" value={{school.id}}>
                                     {{school.name}}</option>
                             </select>
                         </div>
                         <div class="form-group">Select Grades :
-                            <select class="form-control" formControlName="gradeIds" multiple>
+                            <select class="form-control" name="gradeIds" formControlName="gradeIds" multiple>
                                 <!-- <option value="" disabled selected>Select Grade </option> -->
                                 <option *ngFor="let grade of schoolGrades; let i = index;" value={{grade.id}}>
                                     {{grade.grade}} {{grade.section}}</option>
                             </select>
                         </div>
                         <div class="form-group">Select Activities :
-                            <select class="form-control" (ngModalChange)="setIsCoach($event)" formControlName="activityIds" multiple>
+                            <select class="form-control" name="activities" (ngModalChange)="setIsCoach($event)" formControlName="activityIds" multiple>
                                 <!-- <option value="" disabled selected>Select Activities </option> -->
                                 <option *ngFor="let activity of schoolActivities; let i = index;" value={{activity.id}}>
                                     {{activity.name}}</option>
@@ -71,7 +71,7 @@
                     </div>
                 </div>
             </div>
-            <button class="signup btn btnSubmit btn-success" type="submit" [disabled]="teacherSignup.invalid">Submit</button>
+            <button class="signup btn btnSubmit btn-success" name="submit" type="submit" [disabled]="teacherSignup.invalid">Submit</button>
         </div>
     </div>
 </form>

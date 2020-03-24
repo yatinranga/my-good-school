@@ -17,11 +17,11 @@
                             Email - <label> {{teacherDetails['email']}}</label> </p>
                         <p> <i class="fa fa-calendar" aria-hidden="true"></i>
                             DOB - <label> {{teacherDetails['dob'] | date }}</label></p>
-                        <p> <i class="fa fa-user-friends"></i>
+                        <p> <i class='fa fa-restroom'></i>
                             Gender - <label> {{teacherDetails['gender']}}</label> </p>
                         <p> <i class="fa fa-school"></i>
                             School Name - <label> {{teacherDetails['schoolName']}}</label> </p>
-                        <p> <i class="fa fa-university"></i>
+                        <p> <i class="fa fa-user-graduate"></i>
                             Qualifications - <label> {{teacherDetails['qualification']}}</label> </p>
                         <p> <i class="fa fa-running"></i>
                             Coach - <label>  {{teacherDetails['isCoach'] ? "Yes" : "No" }} </label> </p>
@@ -29,11 +29,13 @@
                             Class Teacher - <label> {{teacherDetails['isClassTeacher'] ? "Yes" : "No" }}</label></p>                       
                         </div>
                             
-                        <div *ngIf="teacherDetails['activities']" class="teacher-activities">
-                            <h3> Activities </h3>
-                            <ul *ngFor="let acti of teacherDetails['activities']">
-                                <li>{{acti}}</li>
-                            </ul>
+                        <div *ngIf="teacherDetails['activities']" class="teacher-activities-main">
+                            <div class="teacher-activities">
+                                    <h3> Activities </h3>
+                                    <ul *ngFor="let acti of teacherDetails['activities']">
+                                        <li>{{acti}}</li>
+                                    </ul>
+                            </div>
                         </div>
 
                         <div *ngIf="teacherDetails['gradeIds']">Activities -

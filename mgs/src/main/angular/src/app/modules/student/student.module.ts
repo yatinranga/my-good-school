@@ -12,6 +12,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { SavedActitvityComponent } from './student-activity/saved-actitvity/saved-actitvity.component';
 import { StudentActivityComponent } from './student-activity/student-activity.component';
 import { AddActivityComponent } from './student-activity/add-activity/add-activity.component';
+import { CertificatesComponent } from './certificates/certificates.component';
 
 
 const routes: Routes = [
@@ -42,6 +43,10 @@ const routes: Routes = [
         component: StudentAwardsComponent
       },
       {
+        path: 'certificates',
+        component: CertificatesComponent
+      },
+      {
         path: '',
         redirectTo: 'home'
       }
@@ -58,7 +63,8 @@ const routes: Routes = [
     SavedActitvityComponent,
     StudentActivityComponent,
     ProfileComponent,
-    AddActivityComponent
+    AddActivityComponent,
+    CertificatesComponent
   ],
   imports: [
     CommonModule,

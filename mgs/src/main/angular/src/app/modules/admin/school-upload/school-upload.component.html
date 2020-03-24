@@ -5,20 +5,20 @@
       <form [formGroup]="schoolBulkForm" (ngSubmit)="uploadSchool()">
         Select School : 
         <div class="input-field">
-          <select>
+          <!-- <select name="schoolName">
              <option value="" disabled selected>Select School </option>
                 <option *ngFor="let school of schools; let i = index;" value={{school.id}}>{{school.name}}</option>
-          </select>
+          </select> -->
         </div>
         <div class="input-field">
           <input class="choosefile" type="file" name="selectedFile" (change)="onFileSelect($event)" />
           <span class="choosefile choosefile-custom"> <i class="fa fa-file"></i> </span>
         </div>
-        <button class="upload btn" type="submit"> Upload </button>
+        <button class="upload btn" name="Submit"type="submit"> Upload </button>
       </form>
       <div>
 
-        <button class="download btn" type="button" name="" (click)="downloadSchool()">Download School Template</button>
+        <button class="download btn" type="button" name="downloadSchool" (click)="downloadSchool()">Download School Template</button>
         <a style="display: none;" download #dwnld></a>
       </div>
     </div>

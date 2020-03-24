@@ -1,6 +1,30 @@
 .collapse-td{
   padding: 0;
 }
-.awards .sortby {
+.awards .sortby select{
+  color: #7baf2c;
+}
+
+p#title_award {
   color: #8dc33a;
+  font-weight: 300;
+  margin-bottom: 15px;
+}
+.table_main h5{
+  color: #333;
+}
+.horz {
+  width: 100%;
+  text-align: left;
+  padding: 10px;
+  border-bottom: 1px solid;
+}
+.horz h5 {
+  color: #8dc33a;
+  font-weight: 400;
+  font-size: 27px;
+  margin-bottom: 20px;
+}
+.awards .description{
+  min-height: 200px;
 }

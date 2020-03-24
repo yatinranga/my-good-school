@@ -11,7 +11,7 @@ declare let $: any;
 })
 export class TeacherActivityComponent implements OnInit {
   activityType = "All";
-  activities = []
+
   pendingActivitiesArr = [];
   savedActivitiesArr = [];
   reviewedActivitiesArr = [];
@@ -20,11 +20,18 @@ export class TeacherActivityComponent implements OnInit {
   teacherId: any;
   activityId = "";
   studentId = "";
-  i: any;
+  index: any;
   loader: boolean = false;
 
   reviewForm: FormGroup;
   selectedActivity: any;
+
+  partiScore = 0; // Calc Participation Score
+  initScore = 0; // Calc Initiative Score
+  achiScore = 0; // Calc Achievement Score
+  totalScore = 0; // Calc Total Marks
+
+  activitiesArr = []; //single arr for performed actvities
 
 
   constructor(private teacherService: TeacherService, private alertService: AlertService, private formBuilder: FormBuilder) { }
@@ -32,15 +39,16 @@ export class TeacherActivityComponent implements OnInit {
   ngOnInit() {
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
     this.teacherId = this.teacherInfo['teacher'].id;
-    this.teacherService.getPendingActivity(this.teacherId).subscribe((res) => {
-      this.activities = res;
-      this.pendingActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SubmittedByStudent"));
-      this.savedActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SavedByTeacher"));
-    },
-      (err) => console.log(err));
+    // this.teacherService.getPendingActivity(this.teacherId).subscribe((res) => {
+    //   this.activities = res;
+    //   this.pendingActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SubmittedByStudent"));
+    //   this.savedActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SavedByTeacher"));
+    // },
+    //   (err) => console.log(err));
 
     this.reviewFormInit();
     this.activityView(this.activityType);
+
   }
 
   // Toggle Activity View
@@ -58,19 +66,22 @@ export class TeacherActivityComponent implements OnInit {
   // Initialize Review Form
   reviewFormInit() {
     this.reviewForm = this.formBuilder.group({
-      achievementScore: ['', [Validators.min(0), Validators.max(5)]],
-      participationScore: ['', [Validators.min(0), Validators.max(10)]],
-      initiativeScore: ['', [Validators.min(0), Validators.max(10)]],
-      star: [''],
-      coachRemark: ['']
+      achievementScore: [, [Validators.min(0), Validators.max(5)]],
+      participationScore: [, [Validators.min(0), Validators.max(10)]],
+      initiativeScore: [, [Validators.min(0), Validators.max(10)]],
+      // star: [],
+      coachRemark: []
     })
   }
 
   // PENDING Activities of Teacher
   pendingActivities() {
+    this.activitiesArr = [];
     this.teacherService.getPendingActivity(this.teacherId).subscribe((res) => {
-      this.activities = res;
-      this.pendingActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SubmittedByStudent"));
+      // this.activities = res;
+      // this.pendingActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SubmittedByStudent"));
+      this.pendingActivitiesArr = res.filter((e) => (e.activityStatus == "SubmittedByStudent"));
+      this.activitiesArr = this.pendingActivitiesArr;
       console.log(this.pendingActivitiesArr);
       this.loader = false;
     },
@@ -82,9 +93,10 @@ export class TeacherActivityComponent implements OnInit {
 
   // Saved Activities of Teacher
   savedActivities() {
+    this.activitiesArr = [];
     this.teacherService.getPendingActivity(this.teacherId).subscribe((res) => {
-      this.activities = res;
-      this.savedActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SavedByTeacher"));
+      this.savedActivitiesArr = res.filter((e) => (e.activityStatus == "SavedByTeacher"));
+      this.activitiesArr = this.savedActivitiesArr;
       this.loader = false;
     },
       (err) => {
@@ -95,9 +107,11 @@ export class TeacherActivityComponent implements OnInit {
 
   // All activities of Teacher
   allActivities() {
+    this.activitiesArr = [];
     this.teacherService.getAllActivity(this.teacherId).subscribe((res) => {
       console.log(res);
-      this.allActivitiesArr = res;
+      this.allActivitiesArr = res.filter((e) => (e.activityStatus != "SavedByStudent"));
+      this.activitiesArr = this.allActivitiesArr;
       this.loader = false;
     },
       (err) => {
@@ -108,10 +122,11 @@ export class TeacherActivityComponent implements OnInit {
 
   // REVIEWED Activities of Teacher
   reviewedActivities() {
+    this.activitiesArr = [];
     this.teacherService.getReviewedActivity(this.teacherId).subscribe((res) => {
-      console.log("reviewed");
       console.log(res);
       this.reviewedActivitiesArr = res;
+      this.activitiesArr = this.reviewedActivitiesArr;
       this.loader = false;
     },
       (err) => {
@@ -122,6 +137,7 @@ export class TeacherActivityComponent implements OnInit {
 
   // Save/Review Pending Activity
   saveReview() {
+
     console.log(this.reviewForm.value);
     const formData = new FormData();
     formData.append('id', this.activityId);
@@ -131,16 +147,16 @@ export class TeacherActivityComponent implements OnInit {
     formData.append('participationScore', this.reviewForm.value.participationScore);
     formData.append('initiativeScore', this.reviewForm.value.initiativeScore);
     formData.append('achievementScore', this.reviewForm.value.achievementScore);
-    // formData.append('star', this.reviewForm.value.star);
 
     this.teacherService.saveReviewedActivity(formData).subscribe((res) => {
       console.log(res);
-      if(this.activityType == "All"){
-        // this.selectedActivity.activityStatus = 'SavedByTeacher';
-        this.allActivitiesArr.unshift(res);
+      if(this.activityType == "All" || this.activityType == "Saved"){
+        this.activitiesArr.splice(this.index,1);
+        this.activitiesArr.unshift(res);
+      } else {
+        this.activitiesArr.splice(this.index,1);
       }
-        
-      this.savedActivitiesArr = [...this.savedActivitiesArr, ...this.pendingActivitiesArr.splice(this.i, 1)];
+
       $('#reviewModal').modal('hide');
       $('.modal-backdrop').remove();
       this.reviewForm.reset();
@@ -157,8 +173,8 @@ export class TeacherActivityComponent implements OnInit {
   }
 
   // Edit the Saved activity by teacher
-  editSavedActivity(activity, e) {
-
+  editSavedActivity(activity,index, e) {
+    this.index = index;
     e.stopPropagation();
     this.activityId = activity.id;
     this.studentId = activity.studentId;
@@ -167,30 +183,33 @@ export class TeacherActivityComponent implements OnInit {
       participationScore: activity.participationScore,
       achievementScore: activity.achievementScore,
       initiativeScore: activity.initiativeScore,
-      // star: activity.star,
       coachRemark: activity.coachRemark
     })
+    $('#reviewModal').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
     $('#reviewModal').modal('show');
   }
 
   // SUBMIT the saved activity by teacher
-  submitSavedActivity(e, index, status?: any) {
+  submitSavedActivity(activity,index, e) {
     e.stopPropagation();
     var actCid: any;
-    if (status === 'All') {
-      actCid = this.allActivitiesArr[index].id;
-    } else {
-      actCid = this.savedActivitiesArr[index].id;
-    }
+    actCid = activity.id;
 
     console.log(actCid);
     this.teacherService.submitActivity(actCid).subscribe((res) => {
       console.log(res);
-      this.savedActivitiesArr.splice(index, 1);
-      // this.savedActivitiesArr.splice(index,1); // to splice the selected activity and push into reviewedActivitesArr
+      if (this.activityType == "All") {
+        this.activitiesArr.splice(index, 1);
+        this.activitiesArr.unshift(res);
+      } else {
+        this.activitiesArr.splice(index, 1);
+      }
       this.alertService.showSuccessToast('Activity Submitted !');
     },
-      (err) => console.log(err));
+      (err) => {console.log(err)});
   }
 
   directSubmitReview(activityId){
@@ -199,21 +218,31 @@ export class TeacherActivityComponent implements OnInit {
       if(result.value)
         this.teacherService.submitActivity(activityId).subscribe((res) => {
           console.log(res);
-          this.allActivitiesArr.shift();
-          this.allActivitiesArr.unshift(res);
+          if (this.activityType == "All") {
+            this.activitiesArr.shift();
+            this.activitiesArr.unshift(res);
+          } else if (this.activityType == "Saved") {
+            this.activitiesArr.shift();
+          }
           this.alertService.showSuccessAlert('Review Submitted !');
-        },(err) => {
+        }, (err) => {
           console.log(err);
         })
     })
 
   }
 
-  reviewActivity(activity, e) {
+  reviewActivity(activity,index, e) {
+    this.index = index;
     this.selectedActivity = activity;
     e.stopPropagation();
     this.activityId = activity.id
     this.studentId = activity.studentId;
+    this.totalScore = activity.totalMarks;
+    $('#reviewModal').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
     $('#reviewModal').modal('show');
   }
 
@@ -221,6 +250,7 @@ export class TeacherActivityComponent implements OnInit {
     return new Date(date)
   }
 
+  // to reset the Review Form
   resetForm() {
     this.reviewForm.reset();
   }
@@ -244,5 +274,36 @@ export class TeacherActivityComponent implements OnInit {
     });
   }
 
+  // Calculate Total Marks
+  calTotalMarks(scoreType,value){
+    
+    if (scoreType == "achievement"){
+      this.achiScore = value;     
+    }
+    if (scoreType == "participation"){
+      this.partiScore = value;            
+    }
+    if (scoreType == "initiative"){
+      this.initScore = value;            
+    }
+
+    if ((this.initScore > -1) && (this.partiScore > -1) && (this.achiScore > -1) 
+        && (this.initScore < 11) && (this.partiScore < 11) && (this.achiScore < 6)) {
+      this.totalScore = this.initScore + this.partiScore + this.achiScore;
+      console.log("Total Score - " + this.totalScore);
+    } else if ( this.totalScore > 25){
+        this.totalScore  = 0;
+    } else {
+      this.totalScore = 0;
+    }
+  }
+
 
 }
+
+
+
+// $('#reviewModal').modal({
+//   backdrop: 'static',
+//   keyboard: false
+// });

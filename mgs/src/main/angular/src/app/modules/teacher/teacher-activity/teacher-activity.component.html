@@ -3,7 +3,7 @@
         <div class="content_main_com">
             <div class="teacher_activity_main">
                 <div class="sortby"> Filter by:
-                    <select style="border: 1px solid #ddd" (ngModelChange)="activityView($event)"
+                    <select style="border: 1px solid #ddd" name="activityType" (ngModelChange)="activityView($event)"
                         [(ngModel)]="activityType">
                         <option value="" disabled hidden> Choose here </option>
                         <option value="All"> All</option>
@@ -13,7 +13,246 @@
                     </select>
                 </div>
             </div>
-            <div *ngIf="activityType === 'All'">
+
+            <div *ngIf="activityType">
+                <div class="table_main">
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Student Name</th>
+                                <th scope="col">Grade</th>
+                                <th scope="col">Performed Activity</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Performed Activity Date</th>
+                                <th scope="col">Status
+                                    <button *ngIf="activityType === 'All'" name="sort" class="icon_button" (click)="sortByStatus()">
+                                        <i class="fa fa-sort"></i>
+                                    </button>
+                                </th>
+                                <th *ngIf="!(activityType === 'Reviewed')" colspan="2">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="accordionExample">
+                            <ng-container *ngFor="let activity of activitiesArr; let i = index;">
+                                <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
+                                    <td>{{i+1}}</td>
+                                    <td>{{activity.studentName}} </td>
+                                    <td>{{activity.grade}}</td>
+                                    <td>{{activity.activityName}}</td>
+                                    <td>{{activity.description}}</td>
+                                    <td>{{getDate(activity.dateOfActivity) | date}}</td>
+                                    <td>
+                                        <div *ngIf="activity.activityStatus === 'SubmittedByStudent'" class="pending">
+                                            Pending</div>
+                                        <div *ngIf="activity.activityStatus === 'SavedByTeacher'" class="saved">Saved
+                                        </div>
+                                        <div *ngIf="activity.activityStatus === 'Reviewed'" class="reviewed">Reviewed
+                                        </div>
+                                    </td>
+                                    <td *ngIf="!(activityType === 'Reviewed')">
+                                        <div
+                                            *ngIf="(activityType === 'All') && (activity.activityStatus !== 'Reviewed')">
+                                            <button name="submitSavedActivity" [disabled]="!(activity.activityStatus === 'SavedByTeacher')"
+                                                (click)="submitSavedActivity(activity,i, $event)"
+                                                class="submitted icon_button">
+                                                <i class="fa fa-paper-plane" title="Submit"> </i> </button>
+                                            <button name="editSavedActivity" [disabled]="!(activity.activityStatus === 'SavedByTeacher')"
+                                                (click)="editSavedActivity(activity,i, $event)"
+                                                class="saved icon_button">
+                                                <i class="fa fa-edit" title="Edit"> </i> </button>
+                                            <button name="reviewActivity" [disabled]="!(activity.activityStatus === 'SubmittedByStudent')"
+                                                (click)="reviewActivity(activity,i, $event)"
+                                                class="pending icon_button">
+                                                <i class="fa fa-comments" title="Review"></i> </button>
+                                        </div>
+
+                                        <div *ngIf="activityType === 'Pending'">
+                                            <button name="reviewActivity" (click)="reviewActivity(activity,i, $event)"
+                                                class="pending icon_button"> <i class="fa fa-comments"
+                                                    title="Review"></i> </button>
+                                        </div>
+
+                                        <div *ngIf="activityType === 'Saved'">
+                                            <button name="submitSavedActivity" (click)="submitSavedActivity(activity,i, $event)"
+                                                class="submitted icon_button">
+                                                <i class="fa fa-paper-plane" title="Submit"> </i> </button>
+                                            <button name="editSavedActivity" (click)="editSavedActivity(activity,i, $event)"
+                                                class="saved icon_button"> <i class="fa fa-edit" title="Edit">
+                                                </i> </button>
+                                        </div>
+
+                                        <div
+                                            *ngIf="(activityType === 'All') && (activity.activityStatus === 'Reviewed')">
+                                            NA
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="pull-right" *ngIf="activity.fileResponses.length">
+                                            <i class="fa fa-paperclip" title="Attachment" aria-hidden="true"></i>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="collapse-td" colspan="9">
+                                        <div [attr.id]="'collapse' + i " class="collapse"
+                                            data-parent="#accordionExample">
+                                            <div *ngIf="(activity.activityStatus != 'SubmittedByStudent')">
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <div class="description">
+                                                            <h5> Scoring : </h5>
+                                                            <p> <strong>Participation Score -
+                                                                </strong>{{activity.participationScore}}</p>
+                                                            <p> <strong>Initiative Score -
+                                                                </strong>{{activity.initiativeScore}}</p>
+                                                            <p> <strong>Achievement Score -
+                                                                </strong>{{activity.achievementScore}}</p>
+                                                            <p> <strong>Total Score - </strong>{{activity.totalMarks}}
+                                                            </p>
+                                                            <p> <strong>Star - </strong>{{activity.star}}</p>
+                                                            <p> <strong style="color: green">Remarks -
+                                                                </strong>{{activity.coachRemark}}</p>
+                                                            <p> <strong> Date Reviewed -
+                                                                </strong>{{activity.coachRemarkDate | date }} </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="description">
+                                                            <h5> Development Parameters : </h5>
+                                                            <p> <strong>Focus Area - </strong></p>
+                                                            <div *ngFor="let fa of activity.focusAreas; let i = index">
+                                                                <p>{{fa}}
+                                                                    <span *ngIf="i < activity.focusAreas.length-1">,</span>
+                                                                </p>
+                                                            </div>
+                                                            <p> <strong>PSD Area - </strong>{{activity.psdAreas}}</p>
+                                                            <p *ngIf="activity.fourS" id="fourSkills">
+                                                                <strong>4's - </strong>
+                                                                <span *ngIf="activity.fourS=='Skill'"
+                                                                    style="color: #4bafa5;">
+                                                                    {{activity.fourS}}
+                                                                </span>
+                                                                <span *ngIf="activity.fourS=='Sport'"
+                                                                    style="color: #e04090;">
+                                                                    {{activity.fourS}}
+                                                                </span>
+                                                                <span *ngIf="activity.fourS=='Study'"
+                                                                    style="color: #1f69ad;">
+                                                                    {{activity.fourS}}
+                                                                </span>
+                                                                <span *ngIf="activity.fourS=='Service'"
+                                                                    style="color: #8dc33a;">
+                                                                    {{activity.fourS}}
+                                                                </span>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4" *ngIf="activity.fileResponses.length">
+                                                        <div class="attachment">
+                                                            <h5> Attachments : </h5>
+                                                            {{activity.fileResponses.length ? "" : "NA"}}
+                                                            <div *ngFor="let file of activity.fileResponses">
+                                                                <div>
+                                                                    <i class="fa fa-file-audio"
+                                                                        *ngIf="file.extension == 'mp3'"></i>
+                                                                    <i class="fa fa-image"
+                                                                        *ngIf="file.extension=='jpg'"></i>
+                                                                    <i class="fa fa-video-camera"
+                                                                        *ngIf="file.extension=='video'"></i>
+                                                                    {{file.name}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div *ngIf="(activity.activityStatus === 'SubmittedByStudent')">
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <div class="description">
+                                                            <h5> Scoring : </h5>
+                                                            {{activity.fileResponses.length ? "" : "NA"}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="description">
+                                                            <h5> Development Parameters : </h5>
+                                                            <p> <strong>Focus Area - </strong></p>
+                                                            <div *ngFor="let fa of activity.focusAreas; let i = index">
+                                                                <p>{{fa}}
+                                                                    <span *ngIf="i < activity.focusAreas.length-1">,</span>
+                                                                </p>
+                                                            </div>
+                                                            <p *ngIf="activity.psdAreas">
+                                                                <strong>PSD Area - </strong>{{activity.psdAreas}}</p>
+                                                            <p *ngIf="activity.fourS" id="fourSkills">
+                                                                <strong>4's - </strong>
+                                                                <span *ngIf="activity.fourS=='Skill'"
+                                                                    style="color: #4bafa5;">
+                                                                    {{activity.fourS}}
+                                                                </span>
+                                                                <span *ngIf="activity.fourS=='Sport'"
+                                                                    style="color: #e04090;">
+                                                                    {{activity.fourS}}
+                                                                </span>
+                                                                <span *ngIf="activity.fourS=='Study'"
+                                                                    style="color: #1f69ad;">
+                                                                    {{activity.fourS}}
+                                                                </span>
+                                                                <span *ngIf="activity.fourS=='Service'"
+                                                                    style="color: #8dc33a;">
+                                                                    {{activity.fourS}}
+                                                                </span>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-4" *ngIf="activity.fileResponses.length">
+                                                        <div class="attachment">
+                                                            <h5> Attachments : </h5>
+                                                            {{activity.fileResponses.length ? "" : "NA"}}
+                                                            <div *ngFor="let file of activity.fileResponses">
+                                                                <div>
+                                                                    <i class="fa fa-file-audio"
+                                                                        *ngIf="file.extension == 'mp3'"></i>
+                                                                    <i class="fa fa-image"
+                                                                        *ngIf="file.extension=='jpg'"></i>
+                                                                    <i class="fa fa-video-camera"
+                                                                        *ngIf="file.extension=='video'"></i>
+                                                                    {{file.name}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!--
+                                                            <p *ngIf="activity.coachName">
+                                                                <strong>Teacher : </strong>{{activity.coachName}}</p>
+                                                        -->
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                        <tfoot *ngIf="activitiesArr.length == 0">
+                            <tr>
+                                <td colspan="9">
+                                    <div *ngIf="loader" class="spinner-border text-dark" role="status">
+                                    </div>{{loader ? 'Loading...' : 'No Activities'}}
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+
+            <!-- <div *ngIf="activityType === 'All'">
                 <div class="table_main">
                     <table class="table">
                         <thead class="thead-dark">
@@ -33,7 +272,7 @@
                             </tr>
                         </thead>
                         <tbody id="accordionExample">
-                            <ng-container *ngFor="let allacti of allActivitiesArr; let i = index;">
+                            <ng-container *ngFor="let allActi of allActivitiesArr; let i = index;">
                                 <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                                     <td>{{i+1}}</td>
                                     <td>{{allacti.studentName}} </td>
@@ -48,14 +287,15 @@
                                     </td>
                                     <td>
                                         <button [disabled]="!(allacti.activityStatus === 'SavedByTeacher')"
-                                            (click)="submitSavedActivity($event,i,'All')" class="submitted icon_button">
-                                            <i class="fa fa-paper-plane" title="Submit"> </i> </button>
-                                        <button [disabled]="!(allacti.activityStatus === 'SavedByTeacher')"
                                             (click)="editSavedActivity(allacti, $event)" class="saved icon_button"> <i
                                                 class="fa fa-edit" title="Edit"> </i> </button>
+                                        <button [disabled]="!(allacti.activityStatus === 'SavedByTeacher')"
+                                            (click)="submitSavedActivity($event,i,'All')" class="submitted icon_button">
+                                            <i class="fa fa-paper-plane" title="Submit"> </i> </button>
+
                                         <button [disabled]="!(allacti.activityStatus === 'SubmittedByStudent')"
-                                            (click)="reviewActivity(allacti, $event)" class="pending icon_button"> <i
-                                                class="fa fa-comments" title="Review"></i> </button>
+                                            (click)="reviewActivity(allacti, $event)" class="pending icon_button">
+                                            <i class="fa fa-comment" title="Review"></i> </button>
                                     </td>
                                 </tr>
                                 <tr>
@@ -65,26 +305,27 @@
 
                                             <div *ngIf="allacti.activityStatus === 'Reviewed'">
                                                 <div class="row">
-                                                        <div class="col-4">
-                                                            <div class="description">
-                                                                <p>
-                                                                    <strong>Participation Score
-                                                                        :</strong>{{allacti.participationScore}}</p>
-                                                                <p>
-                                                                    <strong>Initiative Score
-                                                                        :</strong>{{allacti.initiativeScore}}</p>
-                                                                <p>
-                                                                    <strong>Achievement Score
-                                                                        :</strong>{{allacti.achievementScore}}</p>
-                                                                <p>
-                                                                    <strong>Star : </strong>{{allacti.star}}</p>
-                                                                <p>
-                                                                    <strong>Remarks :</strong>{{allacti.coachRemark}}</p>
-                                                                <p>
-                                                                    <strong>Date : </strong>{{allacti.coachRemarkDate | date }}
-                                                                </p>
-                                                            </div>
+                                                    <div class="col-4">
+                                                        <div class="description">
+                                                            <p>
+                                                                <strong>Participation Score
+                                                                    :</strong>{{allacti.participationScore}}</p>
+                                                            <p>
+                                                                <strong>Initiative Score
+                                                                    :</strong>{{allacti.initiativeScore}}</p>
+                                                            <p>
+                                                                <strong>Achievement Score
+                                                                    :</strong>{{allacti.achievementScore}}</p>
+                                                            <p>
+                                                                <strong>Star : </strong>{{allacti.star}}</p>
+                                                            <p>
+                                                                <strong>Remarks :</strong>{{allacti.coachRemark}}</p>
+                                                            <p>
+                                                                <strong>Date :
+                                                                </strong>{{allacti.coachRemarkDate | date }}
+                                                            </p>
                                                         </div>
+                                                    </div>
                                                     <div class="col-4">
                                                         <div class="description">
                                                             <p>
@@ -114,32 +355,33 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    
+
                                                 </div>
                                             </div>
 
                                             <div *ngIf="allacti.activityStatus === 'SavedByTeacher'">
                                                 <div class="row">
-                                                        <div class="col-4">
-                                                                <div class="description">
-                                                                <p>
-                                                                    <strong>Participation Score
-                                                                        :</strong>{{allacti.participationScore}}</p>
-                                                                <p>
-                                                                    <strong>Initiative Score
-                                                                        :</strong>{{allacti.initiativeScore}}</p>
-                                                                <p>
-                                                                    <strong>Achievement Score
-                                                                        :</strong>{{allacti.achievementScore}}</p>
-                                                                <p>
-                                                                    <strong>Star : </strong>{{allacti.star}}</p>
-                                                                <p>
-                                                                    <strong>Remarks :</strong>{{allacti.coachRemark}}</p>
-                                                                <p>
-                                                                    <strong>Date : </strong>{{allacti.coachRemarkDate | date }}
-                                                                </p>
-                                                            </div>
+                                                    <div class="col-4">
+                                                        <div class="description">
+                                                            <p>
+                                                                <strong>Participation Score
+                                                                    :</strong>{{allacti.participationScore}}</p>
+                                                            <p>
+                                                                <strong>Initiative Score
+                                                                    :</strong>{{allacti.initiativeScore}}</p>
+                                                            <p>
+                                                                <strong>Achievement Score
+                                                                    :</strong>{{allacti.achievementScore}}</p>
+                                                            <p>
+                                                                <strong>Star : </strong>{{allacti.star}}</p>
+                                                            <p>
+                                                                <strong>Remarks :</strong>{{allacti.coachRemark}}</p>
+                                                            <p>
+                                                                <strong>Date :
+                                                                </strong>{{allacti.coachRemarkDate | date }}
+                                                            </p>
                                                         </div>
+                                                    </div>
 
                                                     <div class="col-4">
                                                         <div class="description">
@@ -171,7 +413,7 @@
                                                         </div>
                                                     </div>
 
-                                                   
+
                                                 </div>
 
                                             </div>
@@ -271,12 +513,12 @@
                                             data-parent="#accordionExample">
                                             <div class="row">
                                                 <div class="col-6">
-                                                        <p *ngIf="pa.focusAreas">
-                                                            <strong>Focus Area : </strong>{{pa.focusAreas}}</p>
-                                                        <p *ngIf="pa.psdAreas">
-                                                            <strong>PSD Area : </strong>{{pa.psdAreas}}</p>
-                                                        <p *ngIf="pa.fourS">
-                                                            <strong>Four S : </strong>{{pa.fourS}}</p>
+                                                    <p *ngIf="pa.focusAreas">
+                                                        <strong>Focus Area : </strong>{{pa.focusAreas}}</p>
+                                                    <p *ngIf="pa.psdAreas">
+                                                        <strong>PSD Area : </strong>{{pa.psdAreas}}</p>
+                                                    <p *ngIf="pa.fourS">
+                                                        <strong>Four S : </strong>{{pa.fourS}}</p>
                                                 </div>
 
                                                 <div class="col-6">
@@ -362,24 +604,27 @@
                                         <div [attr.id]="'collapse' + i" class="collapse"
                                             data-parent="#accordionExample">
                                             <div class="row">
-                                                    <div class="col-4">
-                                                            <div class="description">
-                                                            <p>
-                                                                <strong>Participation Score :</strong>{{sa.participationScore}}
-                                                            </p>
-                                                            <p>
-                                                                <strong>Initiative Score :</strong>{{sa.initiativeScore}}</p>
-                                                            <p>
-                                                                <strong>Achievement Score :</strong>{{sa.achievementScore}}</p>
-                                                            <p>
-                                                                <strong>Star : </strong>{{sa.star}}</p>
-                                                            <p>
-                                                                <strong>Remarks :</strong>{{sa.coachRemark}}</p>
-                                                            <p>
-                                                                <strong>Date : </strong>{{sa.coachRemarkDate | date }}</p>
-        
-                                                        </div>
+                                                <div class="col-4">
+                                                    <div class="description">
+                                                        <p>
+                                                            <strong>Participation Score
+                                                                :</strong>{{sa.participationScore}}
+                                                        </p>
+                                                        <p>
+                                                            <strong>Initiative Score :</strong>{{sa.initiativeScore}}
+                                                        </p>
+                                                        <p>
+                                                            <strong>Achievement Score :</strong>{{sa.achievementScore}}
+                                                        </p>
+                                                        <p>
+                                                            <strong>Star : </strong>{{sa.star}}</p>
+                                                        <p>
+                                                            <strong>Remarks :</strong>{{sa.coachRemark}}</p>
+                                                        <p>
+                                                            <strong>Date : </strong>{{sa.coachRemarkDate | date }}</p>
+
                                                     </div>
+                                                </div>
 
                                                 <div class="col-4">
                                                     <div class="description">
@@ -411,7 +656,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-           
+
                                             </div>
                                         </div>
                                     </td>
@@ -524,7 +769,7 @@
                         </tfoot>
                     </table>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Review Activity Modal-->
             <div>
@@ -534,42 +779,48 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Review Activity</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <button type="button" name="closeModal" class="close" data-dismiss="modal" aria-label="Close" (click)="resetForm()">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
                                 <form [formGroup]="reviewForm" (ngSubmit)="saveReview()">
                                     <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label">Achievement Score :</label>
-                                        <input type="number" class="form-control" formControlName="achievementScore">
+                                        <label for="recipient-name" class="col-form-label">Achievement Score : (out of 5)</label>
+                                        <input type="number" name="achievementScore" class="form-control" min="1" max="5"
+                                            formControlName="achievementScore" (ngModelChange)="calTotalMarks('achievement',$event)">
                                         <small class="text-danger"
                                             *ngIf="reviewForm.controls.achievementScore.errors">*Between 0-5
-                                            Sonly</small>
+                                            only</small>
                                     </div>
                                     <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label">Participation Score :</label>
-                                        <input type="number" class="form-control" formControlName="participationScore">
+                                        <label for="recipient-name" class="col-form-label">Participation Score : (out of 10)</label>
+                                        <input type="number" name="participationScore" class="form-control" min="1" max="10"
+                                            formControlName="participationScore" (ngModelChange)="calTotalMarks('participation',$event)">
                                         <small class="text-danger"
                                             *ngIf="reviewForm.controls.participationScore.errors">*Between 0-10
                                             only</small>
                                     </div>
                                     <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label">Initiative Score :</label>
-                                        <input type="number" class="form-control" min="1" max="5"
-                                            formControlName="initiativeScore">
+                                        <label for="recipient-name" class="col-form-label">Initiative Score : (out of 10)</label>
+                                        <input type="number" name="initiativeScore" class="form-control" min="1" max="10"
+                                            formControlName="initiativeScore" (ngModelChange)="calTotalMarks('initiative',$event)">
                                         <small class="text-danger"
                                             *ngIf="reviewForm.controls.initiativeScore.errors">*Between 0-10
                                             only</small>
                                     </div>
                                     <div class="form-group">
+                                        <label for="message-text" class="col-form-label">Total Score : </label>
+                                        <label> {{ totalScore}} / 25</label>
+                                    </div>
+                                    <div class="form-group">
                                         <label for="message-text" class="col-form-label">Remarks :</label>
-                                        <textarea class="form-control" formControlName="coachRemark"></textarea>
+                                        <textarea class="form-control" name="coachRemark" formControlName="coachRemark"></textarea>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                        <button type="button" name="resetForm" class="reset btn btn-secondary"
                                             (click)="resetForm()">Reset</button>
-                                        <button class="btn btn-primary" type="submit"
+                                        <button class="award btn btn-primary" type="submit" name="submit"
                                             [disabled]="reviewForm.invalid">Save changes
                                         </button>
                                     </div>

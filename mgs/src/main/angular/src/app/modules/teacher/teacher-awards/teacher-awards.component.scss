@@ -86,14 +86,27 @@ img{
 li.active {
     background: #8dc33a;
 }
+.verified{
+    color: #8dc33a;
+}
+.pending{
+    color: indianred;
+}
 .table button.verify {
-    color: #333;
+    color: #8dc33a;
     background: none;
     border: none;
     outline: none;
     box-shadow: none;
 }
-
+.table button.pending{
+    color: indianred;
+    background: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    font-size: 18px;
+}
 .teacher_awards_main .popup-form {
     width: 100%;
     display: inline-block;
@@ -103,15 +116,59 @@ li.active {
     margin: 10px;
 }
 .assign_main{
-    display: inline-flex;
+    display: inline-block;
     width: 100%;
+    text-align: center;
 }
 p#title_award {
-    font-size: 19px;
+    font-size: 20px;
     font-weight: 300;
     color: #8dc33a;
     margin: 5px 0 15px 0;
 }
 .description h5{
     margin-bottom: 12px;
+    font-size: 17px;
+    text-decoration: underline;
+}
+button.icon_button {
+    padding: 5px;
+    margin: 0 5px;
+    border: none !important;
+    background: none !important;
+    cursor: pointer;
+    box-shadow: none !important;
+}
+button.award.btn.btn-success, button.award.btn.btn-primary {
+    background: #8dc33a !important;
+    padding: 10px;
+    border-radius: 2px;
+}
+button.reset.btn.btn-secondary {
+    padding: 10px;
+}
+
+p#title_award {
+    color: #8dc33a;
+    font-weight: 300;
+    margin-bottom: 15px;
+  }
+  .horz {
+    width: 100%;
+    text-align: left;
+    padding: 10px;
+    border-bottom: 1px solid;
+  }
+  .horz h5 {
+    color: #8dc33a;
+    font-weight: 400;
+    font-size: 27px;
+    margin-bottom: 20px;
+  }
+  .assign-form label {
+    font-size: 20px;
+    text-align: left;
+}
+.assign-form label {
+    margin-bottom: 10px;
 }
