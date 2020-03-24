@@ -21,4 +21,8 @@ public interface GuardianRepository extends JpaRepository<Guardian, Long> {
 
 	Guardian findByEmailAndActiveTrue(String email);
 
+	boolean existsByCidAndActiveTrue(String cid);
+
+	Guardian findByCidAndActiveTrue(String id);
+
 }

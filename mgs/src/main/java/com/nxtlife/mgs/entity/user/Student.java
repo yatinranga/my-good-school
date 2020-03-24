@@ -24,6 +24,7 @@ import org.hibernate.validator.constraints.Email;
 
 import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.activity.ActivityPerformed;
+import com.nxtlife.mgs.entity.activity.Certificate;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.school.AwardActivityPerformed;
@@ -94,6 +95,9 @@ public class Student  extends BaseEntity {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "student")
 	private List<StudentSchoolGrade> studentSchoolGrades;
+	
+	@OneToMany(cascade = CascadeType.ALL , mappedBy = "student")
+	List<Certificate> certificates;
 
 //	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "student")
 //	private List<AwardActivityPerformed> StudentAwards;
@@ -241,6 +245,14 @@ public class Student  extends BaseEntity {
 
 	public void setStudentSchoolGrades(List<StudentSchoolGrade> studentSchoolGrades) {
 		this.studentSchoolGrades = studentSchoolGrades;
+	}
+
+	public List<Certificate> getCertificates() {
+		return certificates;
+	}
+
+	public void setCertificates(List<Certificate> certificates) {
+		this.certificates = certificates;
 	}
 
 	public Student(@NotNull String name, @NotNull String cid, @NotNull String username, Date dob, String imageUrl,

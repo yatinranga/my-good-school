@@ -21,7 +21,7 @@ import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
-import com.nxtlife.mgs.enums.AwardStatus;
+import com.nxtlife.mgs.enums.ApprovalStatus;
 
 @SuppressWarnings("serial")
 @Entity
@@ -29,15 +29,15 @@ import com.nxtlife.mgs.enums.AwardStatus;
 @DynamicUpdate(true)
 public class Award extends BaseEntity {
 
-	@NotNull
-	private String name;
+//	@NotNull
+//	private String name;
 
 	@NotNull
 	@Column(unique = true)
 	private String cid;
 
 	@NotNull
-	@Column(columnDefinition = "VARCHAR ")
+	@Column(columnDefinition = "TEXT ")
 	private String description;
 
 	private Boolean active = true;
@@ -45,7 +45,7 @@ public class Award extends BaseEntity {
 	private Date dateOfReceipt;
 
 	@Enumerated(EnumType.STRING)
-	private AwardStatus status;
+	private ApprovalStatus status;
 
 	@ManyToOne
 	@JoinColumn(name = "teacher_id")
@@ -65,17 +65,12 @@ public class Award extends BaseEntity {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "award")
 	private List<AwardActivityPerformed> awardActivityPerformed;
+	
+	@ManyToOne
+	private AwardType awardType;
 
 	public Award() {
 		super();
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getDescription() {
@@ -126,11 +121,11 @@ public class Award extends BaseEntity {
 		this.dateOfReceipt = dateOfReceipt;
 	}
 
-	public AwardStatus getStatus() {
+	public ApprovalStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(AwardStatus status) {
+	public void setStatus(ApprovalStatus status) {
 		this.status = status;
 	}
 
@@ -166,8 +161,16 @@ public class Award extends BaseEntity {
 		this.statusModifiedAt = statusModifiedAt;
 	}
 
-	public Award(@NotNull String name, @NotNull String description, Boolean active, Teacher teacher) {
-		this.name = name;
+	public AwardType getAwardType() {
+		return awardType;
+	}
+
+	public void setAwardType(AwardType awardType) {
+		this.awardType = awardType;
+	}
+
+	public Award(@NotNull AwardType awardType, @NotNull String description, Boolean active, Teacher teacher) {
+		this.awardType = awardType;
 		this.description = description;
 		this.active = active;
 		this.teacher = teacher;

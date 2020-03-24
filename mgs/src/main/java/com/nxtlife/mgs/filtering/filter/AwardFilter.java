@@ -1,6 +1,6 @@
 package com.nxtlife.mgs.filtering.filter;
 
-import com.nxtlife.mgs.enums.AwardStatus;
+import com.nxtlife.mgs.enums.ApprovalStatus;
 
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import lombok.Data;
 public class AwardFilter {
 
 	private String year;
-	private AwardStatus status;
+	private ApprovalStatus status;
 	private String fourS;
 	private String psdArea;
 	private String activityId;
@@ -24,11 +24,11 @@ public class AwardFilter {
 		this.year = year;
 	}
 
-	public AwardStatus getStatus() {
+	public ApprovalStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(AwardStatus status) {
+	public void setStatus(ApprovalStatus status) {
 		this.status = status;
 	}
 

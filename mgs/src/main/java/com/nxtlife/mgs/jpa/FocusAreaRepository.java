@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.nxtlife.mgs.entity.activity.FocusArea;
+import com.nxtlife.mgs.enums.PSDArea;
 
 @Repository
 public interface FocusAreaRepository extends JpaRepository<FocusArea, Long> {
@@ -19,4 +20,12 @@ public interface FocusAreaRepository extends JpaRepository<FocusArea, Long> {
 	List<FocusArea> findAllByActivitiesSchoolsCidAndActiveTrue(String schoolCid);
 
 	List<FocusArea> findAllByActiveTrue();
+	
+	boolean existsByCidAndActiveTrue(String cid);
+
+	FocusArea findByNameAndPsdAreaAndActiveTrue(String name, PSDArea psdArea);
+
+	FocusArea findByCid(String id);
+
+	FocusArea findByNameAndPsdArea(String name, PSDArea psdArea);
 	}

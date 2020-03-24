@@ -55,6 +55,7 @@ public class ExcelTemplateServiceImpl extends BaseService implements ExcelTempla
 		File file = new File(filename);
 		try {
 		workbook.write(new FileOutputStream(file));
+		workbook.close();
 		} catch (IOException e) {
 		logger.error("error in creating ", e);
 		}

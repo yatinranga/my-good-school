@@ -2,6 +2,7 @@ package com.nxtlife.mgs.service.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -22,10 +23,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import com.nxtlife.mgs.entity.activity.Activity;
+import com.nxtlife.mgs.entity.activity.Certificate;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.user.Guardian;
@@ -39,6 +39,7 @@ import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.ActivityPerformedRepository;
 import com.nxtlife.mgs.jpa.ActivityRepository;
 import com.nxtlife.mgs.jpa.AwardActivityPerformedRepository;
+import com.nxtlife.mgs.jpa.CertificateRepository;
 import com.nxtlife.mgs.jpa.GradeRepository;
 import com.nxtlife.mgs.jpa.GuardianRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
@@ -48,14 +49,16 @@ import com.nxtlife.mgs.jpa.StudentSchoolGradeRepository;
 import com.nxtlife.mgs.jpa.TeacherRepository;
 import com.nxtlife.mgs.service.ActivityPerformedService;
 import com.nxtlife.mgs.service.BaseService;
+import com.nxtlife.mgs.service.FileService;
 import com.nxtlife.mgs.service.SequenceGeneratorService;
 import com.nxtlife.mgs.service.StudentService;
 import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.store.FileStore;
 import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.ExcelUtil;
-import com.nxtlife.mgs.util.SequenceGenerator;
 import com.nxtlife.mgs.util.Utils;
+import com.nxtlife.mgs.view.CertificateRequest;
+import com.nxtlife.mgs.view.CertificateResponse;
 import com.nxtlife.mgs.view.GuardianRequest;
 import com.nxtlife.mgs.view.StudentRequest;
 import com.nxtlife.mgs.view.StudentResponse;
@@ -108,6 +111,12 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 	@Autowired
 	FileStore filestore;
+	
+	@Autowired
+	CertificateRepository certificateRepository;
+	
+	@Autowired
+	FileService fileService; 
 
 	@Value("${spring.mail.username}")
 	private String emailUsername;
@@ -152,42 +161,15 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 		List<Guardian> guardians = new ArrayList<>();
 		Guardian guardian;
-		Long sequence;
 		Student student = request.toEntity();
 		student.setCid(utils.generateRandomAlphaNumString(8));
 		student.setUsername(String.format("STU%08d", studsequence));
 		student.setGrade(grade);
 		student.setSchool(school);
 
-		// here we're creating parent user for new guardians not for existing
-		// guardians
-
-		// adding newly created student to already presented guardian list
-
-		// setting all the existing and newely created guardians to student
-
-		/*
-		 * if (request.getSubscriptionEndDate().after(LocalDateTime.now().toDate()) ) {
-		 * student.setActive(true); }
-		 */
-
-//		if (request.getProfileImage() != null) {
-//			String[] separatedItems = request.getProfileImage().getOriginalFilename().split("\\.");
-//			if(separatedItems.length<2)
-//			     throw new ValidationException("Not able to parse file extension from file name.");
-//			 
-//			String fileExtn = separatedItems[separatedItems.length-1];
-//				 
-//			String filename = UUID.randomUUID().toString() + "." + fileExtn;
-//			try {
-//				String logoUrl = filestore.store("schoolLogo", filename, request.getProfileImage().getBytes());
-//				school.setLogo(logoUrl);
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-
-		User user = userService.createStudentUser(student);
+//		User user = userService.createStudentUser(student);
+		User user = userService.createUserForEntity(student);
+		
 		if (StringUtils.isEmpty(user)) {
 			throw new ValidationException("User not created successfully");
 		}
@@ -196,70 +178,24 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 		if (request.getGuardians() != null) {
 			for (GuardianRequest guardianRequest : request.getGuardians()) {
-				List<Student> studList;
 				if ((guardianRequest.getMobileNumber() != null && guardianRequest.getEmail() != null)) {
 					guardian = guardianRepository.findByEmailOrMobileNumber(guardianRequest.getEmail(),
 							guardianRequest.getMobileNumber());
-					if (guardian == null) {
-						guardian = guardianRequest.toEntity();
-						sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
-						guardian.setUsername(String.format("GRD%08d", sequence));
-						guardian.setCid(utils.generateRandomAlphaNumString(8));
-						guardian.setUser(userService.createParentUser(guardian));
-						guardian = guardianRepository.save(guardian);
-						studList = new ArrayList<Student>();
-						studList.add(student);
-						guardian.setStudents(studList);
-						guardians.add(guardian);
-					} else {
-						studList = guardian.getStudents();
-						studList.add(student);
-						guardian.setStudents(studList);
-						guardians.add(guardian);
-					}
+					
+					createOrSetGuardianUtility(student, guardian, guardians,  guardianRequest);
+					
 				} else if (guardianRequest.getMobileNumber() != null) {
+					
 					guardian = guardianRepository.getOneByMobileNumber(guardianRequest.getMobileNumber());
-
-					if (guardian == null) {
-						guardian = guardianRequest.toEntity();
-						sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
-						guardian.setUsername(String.format("GRD%08d", sequence));
-						guardian.setCid(utils.generateRandomAlphaNumString(8));
-						guardian.setUser(userService.createParentUser(guardian));
-						guardian = guardianRepository.save(guardian);
-						studList = new ArrayList<Student>();
-						studList.add(student);
-						guardian.setStudents(studList);
-						guardians.add(guardian);
-					} else {
-						studList = guardian.getStudents();
-						studList.add(student);
-						guardian.setStudents(studList);
-						guardians.add(guardian);
-					}
+					
+					createOrSetGuardianUtility(student, guardian, guardians,  guardianRequest);
 
 				} else if (guardianRequest.getEmail() != null) {
+					
 					guardian = guardianRepository.getOneByEmail(guardianRequest.getEmail());
 
-					if (guardian == null) {
-						guardian = guardianRequest.toEntity();
-						sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
-						guardian.setUsername(String.format("GRD%08d", sequence));
-						guardian.setCid(utils.generateRandomAlphaNumString(8));
-						guardian.setUser(userService.createParentUser(guardian));
-						guardian = guardianRepository.save(guardian);
-						studList = new ArrayList<Student>();
-						studList.add(student);
-						guardian.setStudents(studList);
-						guardians.add(guardian);
-					} else {
-						studList = guardian.getStudents();
-						studList.add(student);
-						guardian.setStudents(studList);
-						guardians.add(guardian);
-					}
+					createOrSetGuardianUtility(student, guardian, guardians,  guardianRequest);
 				}
-
 			}
 			student.setGuardians(guardians);
 		}
@@ -285,13 +221,17 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		return new StudentResponse(student);
 	}
 	
-	private void createOrSetGuardianUtility(Student student , Guardian guardian , List<Student> studList , List<Guardian> guardians ,Long sequence ,GuardianRequest guardianRequest) {
+	private void createOrSetGuardianUtility(Student student , Guardian guardian ,  List<Guardian> guardians ,GuardianRequest guardianRequest) {
+		 List<Student> studList;
+		 Long sequence;
+		 
 		if (guardian == null) {
 			guardian = guardianRequest.toEntity();
 			sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
 			guardian.setUsername(String.format("GRD%08d", sequence));
 			guardian.setCid(utils.generateRandomAlphaNumString(8));
-			guardian.setUser(userService.createParentUser(guardian));
+//			guardian.setUser(userService.createParentUser(guardian));
+			guardian.setUser(userService.createUserForEntity(guardian));
 			guardian = guardianRepository.save(guardian);
 			studList = new ArrayList<Student>();
 			studList.add(student);
@@ -317,86 +257,361 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		if (student == null) {
 			throw new NotFoundException(String.format("student having id [%s] didn't exist", cid));
 		}
-
-		List<Guardian> alreadyPresentGuardiansList = new ArrayList<Guardian>();
-
-		if (request.getGuardians() != null) {
-
-			List<Guardian> repoGuardians = guardianRepository.findAll();
-
-			for (int i = 0; i < request.getGuardians().size(); i++) {
-				GuardianRequest guardian = request.getGuardians().get(i);
-
-				if (repoGuardians.isEmpty()) {
-					break;
-				}
-				for (Guardian g : repoGuardians) {
-					if (g.getEmail().equals(guardian.getEmail())
-							|| g.getMobileNumber().equals(guardian.getMobileNumber())) {
-						alreadyPresentGuardiansList.add(g);
-						request.getGuardians().remove(i);
-						i--;
-						break;
-					}
-				}
-
-			}
+		
+		School school = null;
+		Grade grade = null;
+		if (request.getSchoolId() != null) {
+			school = schoolRepository.getOneByCidAndActiveTrue(request.getSchoolId());
+			if (school == null)
+				throw new ValidationException(String.format("School with id : %s not found.", request.getSchoolId()));
 		}
-
-		if (request.getGuardians() != null) {
-			for (GuardianRequest greq : request.getGuardians()) {
-				Long sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
-				if (sequence == null) {
-					sequenceGeneratorRepo.save(new SequenceGenerator(UserType.Parent, 0l));
-				}
-				++sequence;
-				greq.setUsername(String.format("GRD%08d", sequence));
-				sequenceGeneratorService.updateSequenceByUserType(sequence, UserType.Parent);
+		if (request.getGradeId() != null) {
+			grade = gradeRepository.getOneByCid(request.getGradeId());
+			if (grade == null) {
+				throw new ValidationException(String.format("Grade (%s) not found", request.getGradeId()));
 			}
+
 		}
 
 		student = request.toEntity(student);
+		
+		if (request.getGuardians() != null && !request.getGuardians().isEmpty()) {
+			List<GuardianRequest> guardianRequests = request.getGuardians();
+			List<Guardian> previousGuardians = new ArrayList<Guardian>();
+			List<Guardian> guardiansToDelete = new ArrayList<Guardian>();
+			previousGuardians = student.getGuardians();
+			if (previousGuardians.isEmpty()) {
+				updateGuardiansOfStudent(guardianRequests, previousGuardians, student);
+			} else {
+				for (int i = 0; i < previousGuardians.size(); i++) {
+					String grdCid = previousGuardians.get(i).getCid();
+					GuardianRequest guardianRequest = guardianRequests.stream()
+							.filter(grd -> grd.getId() != null && grd.getId().equals(grdCid)).findAny().orElse(null);
+					if (guardianRequest != null) {
+						guardianRequests.remove(guardianRequest);
+					} else {
+						List<Student> students = previousGuardians.get(i).getStudents();
+						if (!students.isEmpty() && !students.isEmpty()) {
+							students.remove(student);
+							previousGuardians.get(i).setStudents(students);
+							guardiansToDelete.add(previousGuardians.get(i));
+						}
+						previousGuardians.remove(i--);
+					}
+				}
 
-		// here we're creating parent user for new guardians not for existing
-		// guardians
+				if (guardianRequests != null && !guardianRequests.isEmpty())
+					updateGuardiansOfStudent(guardianRequests, previousGuardians, student);
 
-		/*
-		 * if (request.getActive() == false && request.getActive() != null) {
-		 * student.setActive(false); studentRepository.save(student); return new
-		 * StudentResponse(student); }
-		 */
-
-		if (student.getGuardians() != null) {
-			for (Guardian gua : student.getGuardians()) {
-				List<Student> studentList = new ArrayList<Student>();
-				studentList.add(student);
-				gua.setStudents(studentList);
-				gua.setCid(utils.generateRandomAlphaNumString(8));
-				gua.setUser(userService.createParentUser(gua));
 			}
+
+			student.setGuardians(previousGuardians);
+			guardianRepository.save(guardiansToDelete);
 		}
-
-		// adding newly created student to already presented guardian list
-
-		for (Guardian alreadyPresentGuardian : alreadyPresentGuardiansList) {
-			List<Student> tempList = alreadyPresentGuardian.getStudents();
-			tempList.add(student);
-			alreadyPresentGuardian.setStudents(tempList);
-		}
-
-		// setting all the existing and newely created guardians to student
-
-		if (student.getGuardians() != null) {
-			alreadyPresentGuardiansList.addAll(student.getGuardians());
-		}
-
-		student.setGuardians(alreadyPresentGuardiansList);
-
-		// student = request.toEntity(student);
-
+		
+		student.setSchool(school);
+		student.setGrade(grade);
 		student = studentRepository.save(student);
 
 		return new StudentResponse(student);
+	}
+
+	private void updateGuardiansOfStudent(List<GuardianRequest> guardianRequests, List<Guardian> previousGuardians,
+			Student student) {
+		for (GuardianRequest guardReq : guardianRequests) {
+			if (guardReq.getId() != null) {
+				if (!guardianRepository.existsByCidAndActiveTrue(guardReq.getId()))
+					throw new ValidationException(
+							String.format("Guardian with id (%s) does not exist.", guardReq.getId()));
+				Guardian guardian = guardianRepository.findByCidAndActiveTrue(guardReq.getId());
+				List<Student> students = guardian.getStudents();
+				students.add(student);
+				guardian.setStudents(students);
+				previousGuardians.add(guardian);
+
+			} else {
+				Guardian guardian = guardReq.toEntity();
+				Long sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
+				guardian.setUsername(String.format("GRD%08d", sequence));
+				guardian.setCid(utils.generateRandomAlphaNumString(8));
+//				guardian.setUser(userService.createParentUser(guardian));
+				guardian.setUser(userService.createUserForEntity(guardian));
+				List<Student> students = new ArrayList<Student>();
+				students.add(student);
+				guardian.setStudents(students);
+				guardian.setActive(true);
+				guardian = guardianRepository.save(guardian);
+				previousGuardians.add(guardian);
+			}
+		}
+		
+	}
+	
+	@Override
+	public List<StudentResponse> findByName(String name) {
+
+		if (name == null)
+			throw new ValidationException("name can't be null");
+
+		List<Student> studentList = studentRepository.findByNameAndActiveTrue(name);
+		
+		if (studentList.isEmpty())
+			throw new NotFoundException(String.format("students having name [%s] didn't exist", name));
+
+		return studentList.stream().map(StudentResponse::new).collect(Collectors.toList());
+	}
+
+	@Override
+	public StudentResponse findByid(Long id) {
+
+		if (id == null)
+			throw new ValidationException("id can't be null");
+
+		Student student = studentRepository.findByIdAndActiveTrue(id);
+
+		if (student == null)
+			throw new NotFoundException(String.format("Student having id [%d] didn't exist", id));
+
+		return new StudentResponse(student);
+	}
+
+	public StudentResponse findByCId(String cId) {
+
+		if (cId == null)
+			throw new ValidationException("Id can't be null");
+
+		Student student = studentRepository.findByCidAndActiveTrue(cId);
+
+		if (student == null)
+			throw new NotFoundException(String.format("Student having cId [%s] didn't exist", cId));
+
+		return new StudentResponse(student);
+	}
+
+	@Override
+	public StudentResponse findByMobileNumber(String mobileNumber) {
+
+		if (mobileNumber.isEmpty())
+			throw new ValidationException("mobile number can't be null");
+
+		Student student = studentRepository.findByMobileNumberAndActiveTrue(mobileNumber);
+
+		if (student == null)
+			throw new ValidationException(
+					String.format("Student having mobile number [%s] didn't exist", mobileNumber));
+
+		return new StudentResponse(student);
+	}
+
+	@Override
+	public StudentResponse findByUsername(String username) {
+
+		if (username.isEmpty())
+			throw new ValidationException("username can't be null");
+
+		Student student = studentRepository.findByUsernameAndActiveTrue(username);
+
+		if (student == null)
+			throw new NotFoundException(String.format("student having username [%s] didn't exist", username));
+
+		return new StudentResponse(student);
+	}
+
+	@Override
+	public List<StudentResponse> getAll() {
+
+		List<Student> studentList = studentRepository.findAllByActiveTrue();
+
+		if (studentList.isEmpty())
+			throw new NotFoundException("No student found");
+
+		return studentList.stream().map(StudentResponse :: new)
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<StudentResponse> getAllBySchoolCid(String schoolCid) {
+		if (schoolCid == null) {
+			throw new NotFoundException("school id can't be null");
+		}
+		List<Student> studentsList = studentRepository.findAllBySchoolCidAndActiveTrue(schoolCid);
+		if (studentsList.isEmpty())
+			throw new NotFoundException(String.format("No student found for school having id [%s]", schoolCid));
+		return studentsList.stream().map(StudentResponse :: new)
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<StudentResponse> getAllByGradeId(String gradeId) {
+		if (gradeId == null) {
+			throw new NotFoundException("Grade id can't be null");
+		}
+		List<Student> studentsList = studentRepository.findAllByGradeCidAndActiveTrue(gradeId);
+		if (studentsList.isEmpty())
+			throw new NotFoundException(String.format("No student found for grade having id [%s]", gradeId));
+		return studentsList.stream().map(StudentResponse :: new)
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<StudentResponse> getAllStudentsBySchoolAndActivityAndCoachAndStatusReviewed(String schoolCid,
+			String gradeCid, String activityCid, String activityStatus, String teacherCid) {
+		if (schoolCid == null)
+			throw new ValidationException("School id cannot be null.");
+		if (activityCid == null)
+			throw new ValidationException("Activity id cannot be null.");
+		if (teacherCid == null)
+			throw new ValidationException("Teacher id cannot be null.");
+		if (gradeCid == null)
+			throw new ValidationException("Grade id cannot be null.");
+		School school = schoolRepository.findByCidAndActiveTrue(schoolCid);
+		if (school == null)
+			throw new ValidationException(String.format("School with id : %s not found.", schoolCid));
+		Grade grade = gradeRepository.findByCidAndActiveTrue(gradeCid);
+		if (grade == null)
+			throw new ValidationException(
+					String.format("Grade with id : %s not found in school : %s", gradeCid, school.getName()));
+		Activity activity = activityRepository.findByCidAndActiveTrue(activityCid);
+		if (activity == null)
+			throw new ValidationException(String.format("Activity with id : %s not found.", activityCid));
+		Teacher teacher = teacherRepository.findByCidAndActiveTrue(teacherCid);
+		if (teacher == null)
+			throw new ValidationException(String.format("Teacher with id : %s not found.", teacherCid));
+		if (activityStatus == null)
+			activityStatus = ActivityStatus.Reviewed.toString();
+		List<Student> students = studentRepository
+				.findAllBySchoolCidAndGradeCidAndActivitiesActivityCidAndActivitiesActivityStatusAndSchoolActiveTrueAndGradeActiveTrueAndActivitiesActivityActiveTrueAndActiveTrue(
+						schoolCid, gradeCid, activityCid, ActivityStatus.valueOf(activityStatus));
+		if (students == null)
+			throw new ValidationException(String.format(
+					"No student found in the school : %s under teacher : %s having performed activity : %s and status is %s .",
+					school.getName(), teacher.getName(), activity.getName(), activityStatus));
+		return students.stream().distinct().map(StudentResponse::new).collect(Collectors.toList());
+
+	}
+
+	@Override
+	public StudentResponse setProfilePic(MultipartFile file, String studentCid) {
+		if (file == null || file.getSize() == 0)
+			throw new ValidationException("profilePic cannot be null or empty.");
+		if (studentCid == null)
+			throw new ValidationException("Student id cannot be null.");
+		if (!studentRepository.existsByCidAndActiveTrue(studentCid))
+			throw new ValidationException(String.format("Student with id (%s) does not exist.", studentCid));
+
+		Student student = studentRepository.findByCidAndActiveTrue(studentCid);
+
+		String filename = UUID.randomUUID().toString() + "." + fileService.getFileExtension(file.getOriginalFilename());
+		try {
+			String imageUrl = filestore.store("profilePic", filename, file.getBytes());
+			student.setImageUrl(imageUrl);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return new StudentResponse(studentRepository.save(student));
+	}
+	
+	@Override
+	public CertificateResponse uploadCertificate(CertificateRequest request) {
+		Long userId = getUserId();
+		Student student = studentRepository.getByUserIdAndActiveTrue(userId);
+		if (student == null) {
+			throw new ValidationException("User not login as a student.");
+		}
+		
+		if(request == null)
+			throw new ValidationException("Request cannot be null.");
+		if(request.getImage() == null || request.getImage().isEmpty())
+			throw new ValidationException("Image file cannot be null or empty.");
+		final List<String> contentTypes = Arrays.asList("image/png", "image/jpeg", "image/gif");
+		if(!contentTypes.contains(request.getImage().getContentType()))
+			throw new ValidationException("Please select image file only to upload not of any other type.");
+		
+		if(certificateRepository.existsByStudentCidAndTitleAndDescriptionAndActiveTrue(student.getCid(), request.getTitle(), request.getDescription()))
+			throw new ValidationException(String.format("A certificate for you under title : (%s) and description (%s) already exist.", request.getTitle(), request.getDescription()));
+		
+		Certificate certificate = request.toEntity();
+
+		String filename = UUID.randomUUID().toString() + "." + fileService.getFileExtension(request.getImage().getOriginalFilename());
+		try {
+			String imageUrl = filestore.store("certificate", filename, request.getImage().getBytes());
+			certificate.setImageUrl(imageUrl);
+			certificate.setStudent(student);
+//			List<Certificate> certificates = new ArrayList<Certificate>();
+//			certificates = student.getCertificates();
+//			certificates.add(certificate);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		certificate.setCid(utils.generateRandomAlphaNumString(8));
+		certificate = certificateRepository.save(certificate);
+		if(certificate == null)
+			throw new RuntimeException("Something went wrong certificate not uploaded.");
+		return new CertificateResponse(certificate);
+	}
+	
+	@Override
+	public List<CertificateResponse> getAllCertificatesOfStudent(){
+		Long userId = getUserId();
+		Student student = studentRepository.getByUserIdAndActiveTrue(userId);
+		if (student == null) {
+			throw new ValidationException("User not login as a student.");
+		}
+		List<CertificateResponse> responseList = certificateRepository.findAllByStudentCidAndActiveTrue(student.getCid());
+		if(responseList == null || responseList.isEmpty())
+			throw new ValidationException(String.format("No certificates found for student (%s)", student.getName()));
+		
+		return responseList;	
+	}
+	
+	@Override
+	public SuccessResponse delete(String cid) {
+		if (cid == null) {
+			throw new ValidationException("student id can't be null");
+		}
+		Student student = studentRepository.findByCidAndActiveTrue(cid);
+		if (student == null) {
+			throw new NotFoundException(String.format("student having id [%s] can't exist", cid));
+		}
+		student.setActive(false);
+		studentRepository.save(student);
+		return new SuccessResponse(org.springframework.http.HttpStatus.OK.value(), "student deleted successfully");
+	}
+	
+	
+	@Override
+	public ResponseEntity<?> uploadStudentsFromExcel(MultipartFile file, String schoolCid) {
+		if (file == null || file.isEmpty() || file.getSize() == 0)
+			throw new ValidationException("Pls upload valid excel file.");
+
+		if (schoolCid == null)
+			throw new ValidationException("School id cannot be null.");
+		if (!schoolRepository.existsByCidAndActiveTrue(schoolCid))
+			throw new ValidationException(String.format("School with id : (%s) not found.", schoolCid));
+
+		List<String> errors = new ArrayList<String>();
+		List<StudentResponse> studentResponseList = new ArrayList<>();
+		List<Map<String, Object>> studentsRecords = new ArrayList<Map<String, Object>>();
+
+		try {
+			XSSFWorkbook studentsSheet = new XSSFWorkbook(file.getInputStream());
+			studentsRecords = findSheetRowValues(studentsSheet, "STUDENT", errors);
+//			errors = (List<String>) studentsRecords.get(studentsRecords.size() - 1).get("errors");
+			for (int i = 0; i < studentsRecords.size() - 1; i++) {
+				List<Map<String, Object>> tempStudentsRecords = new ArrayList<Map<String, Object>>();
+				tempStudentsRecords.add(studentsRecords.get(i));
+				studentResponseList.add(save(validateStudentRequest(tempStudentsRecords, errors, schoolCid)));
+			}
+
+		} catch (IOException e) {
+
+			throw new ValidationException("something wrong happened may be file not in acceptable format.");
+		}
+		Map<String, Object> responseMap = new HashMap<String, Object>();
+		responseMap.put("StudentResponseList", studentResponseList);
+		responseMap.put("errors", errors);
+		return new ResponseEntity<Map<String, Object>>(responseMap, HttpStatus.OK);
 	}
 
 	private List<Map<String, Object>> fetchRowValues(Map<String, CellType> columnTypes, XSSFSheet sheet,
@@ -492,40 +707,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public ResponseEntity<?> uploadStudentsFromExcel(MultipartFile file, String schoolCid) {
-		if (file == null || file.isEmpty() || file.getSize() == 0)
-			throw new ValidationException("Pls upload valid excel file.");
-
-		if (schoolCid == null)
-			throw new ValidationException("School id cannot be null.");
-		if (!schoolRepository.existsByCidAndActiveTrue(schoolCid))
-			throw new ValidationException(String.format("School with id : (%s) not found.", schoolCid));
-
-		List<String> errors = new ArrayList<String>();
-		List<StudentResponse> studentResponseList = new ArrayList<>();
-		List<Map<String, Object>> studentsRecords = new ArrayList<Map<String, Object>>();
-
-		try {
-			XSSFWorkbook studentsSheet = new XSSFWorkbook(file.getInputStream());
-			studentsRecords = findSheetRowValues(studentsSheet, "STUDENT", errors);
-			errors = (List<String>) studentsRecords.get(studentsRecords.size() - 1).get("errors");
-			for (int i = 0; i < studentsRecords.size() - 1; i++) {
-				List<Map<String, Object>> tempStudentsRecords = new ArrayList<Map<String, Object>>();
-				tempStudentsRecords.add(studentsRecords.get(i));
-				studentResponseList.add(save(validateStudentRequest(tempStudentsRecords, errors, schoolCid)));
-			}
-
-		} catch (IOException e) {
-
-			throw new ValidationException("something wrong happened may be file not in acceptable format.");
-		}
-		Map<String, Object> responseMap = new HashMap<String, Object>();
-		responseMap.put("StudentResponseList", studentResponseList);
-		responseMap.put("errors", errors);
-		return new ResponseEntity<Map<String, Object>>(responseMap, HttpStatus.OK);
-	}
+	
 
 	private StudentRequest validateStudentRequest(List<Map<String, Object>> studentDetails, List<String> errors,
 			String schoolCid) {
@@ -535,20 +717,9 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		StudentRequest studentRequest = new StudentRequest();
 		studentRequest.setName((String) studentDetails.get(0).get("NAME"));
 
-//		studentRequest.setUsername((String) studentDetails.get(0).get("USERNAME"));
-//		studentRequest.setDob(
-//				DateUtil.convertStringToDate(DateUtil.formatDate((Date) studentDetails.get(0).get("DOB"), null, null)));
 		if ((Date) studentDetails.get(0).get("DOB") != null)
 			studentRequest.setDob(DateUtil.formatDate((Date) studentDetails.get(0).get("DOB"), null, null));
-//		School school = schoolRepository.findByCidAndActiveTrue(schoolCid);
-//		if (studentDetails.get(0).get("SCHOOL") != null)
-//			school = schoolRepository.findByName((String) studentDetails.get(0).get("SCHOOL"));
-//		if (studentDetails.get(0).get("SCHOOLS EMAIL") != null)
-//			school = schoolRepository.findByEmail((String) studentDetails.get(0).get("SCHOOLS EMAIL"));
 
-//		if (school == null)
-//			errors.add(String.format("School with id : %s not found ", schoolCid));
-//		else {
 		studentRequest.setSchoolId(schoolCid);
 		String standard = (String) studentDetails.get(0).get("GRADE");
 		String section = (String) studentDetails.get(0).get("SECTION");
@@ -567,7 +738,6 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			errors.add(String.format("Grade  %s not found ", (String) studentDetails.get(0).get("GRADE")));
 		else
 			studentRequest.setGradeId(grade.getCid());
-//		}
 
 		if ((Date) studentDetails.get(0).get("SESSION START DATE") != null)
 			studentRequest.setSessionStartDate(DateUtil.convertStringToDate(
@@ -589,216 +759,9 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				(String) studentDetails.get(0).get("MOTHERS EMAIL"), "male",
 				(String) studentDetails.get(0).get("MOTHERS MOBILE NUMBER"), "Mother"));
 		studentRequest.setGuardians(guardians);
-		// studentRequest.setFathersName((String)
-		// studentDetails.get(0).get("FATHERS NAME"));
-		// studentRequest.setFathersEmail((String)
-		// studentDetails.get(0).get("FATHERS EMAIL"));
-		// studentRequest.setFathersMobileNumber((String)
-		// studentDetails.get(0).get("FATHERS MOBILE NUMBER"));
-		// studentRequest.setMothersName((String)
-		// studentDetails.get(0).get("MOTHERS NAME"));
-		// studentRequest.setMothersEmail((String)
-		// studentDetails.get(0).get("MOTHERS EMAIL"));
-		// studentRequest.setMothersMobileNumber((String)
-		// studentDetails.get(0).get("MOTHERS MOBILE NUMBER"));
-
 		return studentRequest;
 	}
 
-	@Override
-	public List<StudentResponse> findByName(String name) {
-
-		if (name == null)
-			throw new ValidationException("name can't be null");
-
-		List<Student> studentList = studentRepository.findByNameAndActiveTrue(name);
-
-		List<StudentResponse> studentResponseList = new ArrayList<StudentResponse>();
-
-		if (studentList.isEmpty())
-			throw new NotFoundException(String.format("students having name [%s] didn't exist", name));
-
-		for (Student student : studentList) {
-			studentResponseList.add(new StudentResponse(student));
-		}
-
-		return studentResponseList;
-	}
-
-	@Override
-	public StudentResponse findByid(Long id) {
-
-		if (id == null)
-			throw new ValidationException("id can't be null");
-
-		Student student = studentRepository.findByIdAndActiveTrue(id);
-
-		if (student == null)
-			throw new NotFoundException(String.format("Student having id [%d] didn't exist", id));
-
-		return new StudentResponse(student);
-
-	}
-
-	public StudentResponse findByCId(String cId) {
-
-		if (cId == null)
-			throw new ValidationException("Id can't be null");
-
-		Student student = studentRepository.findByCidAndActiveTrue(cId);
-
-		if (student == null)
-			throw new NotFoundException(String.format("Student having cId [%s] didn't exist", cId));
-
-		return new StudentResponse(student);
-	}
-
-	@Override
-	public StudentResponse findByMobileNumber(String mobileNumber) {
-
-		if (mobileNumber.isEmpty())
-			throw new ValidationException("mobile number can't be null");
-
-		Student student = studentRepository.findByMobileNumberAndActiveTrue(mobileNumber);
-
-		if (student == null)
-			throw new ValidationException(
-					String.format("Student having mobile number [%s] didn't exist", mobileNumber));
-
-		return new StudentResponse(student);
-	}
-
-	@Override
-	public StudentResponse findByUsername(String username) {
-
-		if (username.isEmpty())
-			throw new ValidationException("username can't be null");
-
-		Student student = studentRepository.findByUsernameAndActiveTrue(username);
-
-		if (student == null)
-			throw new NotFoundException(String.format("student having username [%s] didn't exist", username));
-
-		return new StudentResponse(student);
-	}
-
-	@Override
-	public List<StudentResponse> getAll() {
-
-		List<Student> studentList = studentRepository.findAllByActiveTrue();
-
-		if (studentList.isEmpty())
-			throw new NotFoundException("No student found");
-
-		List<StudentResponse> studentResponseList = studentList.stream().map(s -> new StudentResponse(s))
-				.collect(Collectors.toList());
-
-		return studentResponseList;
-	}
-
-	@Override
-	public List<StudentResponse> getAllBySchoolCid(String schoolCid) {
-		if (schoolCid == null) {
-			throw new NotFoundException("school id can't be null");
-		}
-		List<Student> studentsList = studentRepository.findAllBySchoolCidAndActiveTrue(schoolCid);
-		if (studentsList.isEmpty())
-			throw new NotFoundException(String.format("No student found for school having id [%s]", schoolCid));
-		List<StudentResponse> responseList = studentsList.stream().map(s -> new StudentResponse(s))
-				.collect(Collectors.toList());
-		return responseList;
-	}
-
-	@Override
-	public List<StudentResponse> getAllByGradeId(String gradeId) {
-		if (gradeId == null) {
-			throw new NotFoundException("Grade id can't be null");
-		}
-		List<Student> studentsList = studentRepository.findAllByGradeCidAndActiveTrue(gradeId);
-		if (studentsList.isEmpty())
-			throw new NotFoundException(String.format("No student found for grade having id [%s]", gradeId));
-		List<StudentResponse> responseList = studentsList.stream().map(s -> new StudentResponse(s))
-				.collect(Collectors.toList());
-		return responseList;
-	}
-
-	@Override
-	public SuccessResponse delete(String cid) {
-		if (cid == null) {
-			throw new ValidationException("student id can't be null");
-		}
-		Student student = studentRepository.findByCidAndActiveTrue(cid);
-		if (student == null) {
-			throw new NotFoundException(String.format("student having id [%s] can't exist", cid));
-		}
-		student.setActive(false);
-		studentRepository.save(student);
-		return new SuccessResponse(org.springframework.http.HttpStatus.OK.value(), "student deleted successfully");
-	}
-
-	@Override
-	public List<StudentResponse> getAllStudentsBySchoolAndActivityAndCoachAndStatusReviewed(String schoolCid,
-			String gradeCid, String activityCid, String activityStatus, String teacherCid) {
-		if (schoolCid == null)
-			throw new ValidationException("School id cannot be null.");
-		if (activityCid == null)
-			throw new ValidationException("Activity id cannot be null.");
-		if (teacherCid == null)
-			throw new ValidationException("Teacher id cannot be null.");
-		if (gradeCid == null)
-			throw new ValidationException("Grade id cannot be null.");
-		School school = schoolRepository.findByCidAndActiveTrue(schoolCid);
-		if (school == null)
-			throw new ValidationException(String.format("School with id : %s not found.", schoolCid));
-		Grade grade = gradeRepository.findByCidAndActiveTrue(gradeCid);
-		if (grade == null)
-			throw new ValidationException(
-					String.format("Grade with id : %s not found in school : %s", gradeCid, school.getName()));
-		Activity activity = activityRepository.findByCidAndActiveTrue(activityCid);
-		if (activity == null)
-			throw new ValidationException(String.format("Activity with id : %s not found.", activityCid));
-		Teacher teacher = teacherRepository.findByCidAndActiveTrue(teacherCid);
-		if (teacher == null)
-			throw new ValidationException(String.format("Teacher with id : %s not found.", teacherCid));
-		if (activityStatus == null)
-			activityStatus = ActivityStatus.Reviewed.toString();
-		List<Student> students = studentRepository
-				.findAllBySchoolCidAndGradeCidAndActivitiesActivityCidAndActivitiesActivityStatusAndSchoolActiveTrueAndGradeActiveTrueAndActivitiesActivityActiveTrueAndActiveTrue(
-						schoolCid, gradeCid, activityCid, ActivityStatus.valueOf(activityStatus));
-		if (students == null)
-			throw new ValidationException(String.format(
-					"No student found in the school : %s under teacher : %s having performed activity : %s and status is %s .",
-					school.getName(), teacher.getName(), activity.getName(), activityStatus));
-		return students.stream().distinct().map(StudentResponse::new).collect(Collectors.toList());
-
-	}
-
-	@Override
-	public StudentResponse setProfilePic(MultipartFile file, String studentCid) {
-		if (file == null || file.getSize() == 0)
-			throw new ValidationException("profilePic cannot be null or empty.");
-		if (studentCid == null)
-			throw new ValidationException("Student id cannot be null.");
-		if (!studentRepository.existsByCidAndActiveTrue(studentCid))
-			throw new ValidationException(String.format("Student with id (%s) does not exist.", studentCid));
-
-		Student student = studentRepository.findByCidAndActiveTrue(studentCid);
-
-		String[] separatedItems = file.getOriginalFilename().split("\\.");
-		if (separatedItems.length < 2)
-			throw new ValidationException("Not able to parse file extension from file name.");
-
-		String fileExtn = separatedItems[separatedItems.length - 1];
-
-		String filename = UUID.randomUUID().toString() + "." + fileExtn;
-		try {
-			String imageUrl = filestore.store("profilePic", filename, file.getBytes());
-			student.setImageUrl(imageUrl);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return new StudentResponse(studentRepository.save(student));
-	}
+	
 
 }

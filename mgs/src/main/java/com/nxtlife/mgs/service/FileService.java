@@ -20,4 +20,6 @@ public interface FileService {
 	public FileResponse getFileByUrl(String url);
 	
 	public FileResponse getFileByCId(String cId);
+
+	String getFileExtension(String fileName);
 }

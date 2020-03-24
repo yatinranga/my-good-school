@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.school.QAward;
-import com.nxtlife.mgs.enums.AwardStatus;
+import com.nxtlife.mgs.enums.ApprovalStatus;
 import com.querydsl.core.types.Predicate;
 
 @Component
@@ -26,7 +26,7 @@ public class AwardFilterBuilder {
 				.notEmptyAnd(qAward.activity.fourS.stringValue()::containsIgnoreCase, filter.getFourS()).build();
 	}
 
-	public Predicate build(AwardFilter filter, String studentId, AwardStatus status) {
+	public Predicate build(AwardFilter filter, String studentId, ApprovalStatus status) {
 		return new OptionalBooleanBuilder(qAward.isNotNull())
 				.notEmptyAnd(qAward.activity.cid.stringValue()::contains, filter.getActivityId())
 				.notEmptyAnd(qAward.dateOfReceipt.year().stringValue()::containsIgnoreCase, filter.getYear())

@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -42,6 +43,7 @@ import com.nxtlife.mgs.service.FocusAreaService;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.ActivityRequestResponse;
+import com.nxtlife.mgs.view.FocusAreaRequestResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
 
 @Service
@@ -66,17 +68,10 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 	public void init() {
 		List<FocusArea> focusAreaRepoList = focusAreaRepository.findAllByActiveTrue();
 		List<FocusArea> focusAreaList = new ArrayList<FocusArea>();
-//		List<FocusArea> focusAreasForPD = new ArrayList<FocusArea>();
-//		List<FocusArea> focusAreasForSD = new ArrayList<FocusArea>();
 		String[] focusAreasPd = { "Identity", "Spiritual & Aesthetic Awareness", "Decision Making", "Health",
 				"Intellectual Growth" };
 		String[] focusAreasSD = { "Community Skills", "Employment Skills", "Citizenship", "Environmental Awareness" };
 
-//		for(FocusArea foc : focusAreasForPD ) {
-//			foc.setPsdArea(PSDArea.PersonalDevelopment);
-//			foc.setActive(true);
-//			foc.setCid(utils.generateRandomAlphaNumString(8));
-//		}
 
 		for (String foc : focusAreasPd) {
 			Boolean flag = false;
@@ -380,16 +375,9 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 
 			}
 		}
+		
 		activityList = activityRepository.save(activityList);
 
-		
-//		activityList = activityRepository.findAllByIsGeneralTrueAndActiveTrue();
-//		List<School> schoolList = schoolRepository.findAllByActiveTrue();
-//		
-//		activityList.forEach(act-> {act.getSchools().addAll(schoolList);});
-//		final List<Activity> activities = activityList;
-//		schoolList.forEach(sch -> { sch.setActivities(activities);});
-//		 activityRepository.save(activities);
 		School school = schoolRepository.findByNameAndActiveTrue("my good school");
 		if(school != null) {
 			activityList.forEach(act -> {
@@ -422,39 +410,6 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 	}
 
 	@Override
-	public List<ActivityRequestResponse> getAllOfferedActivities(Integer pageNo, Integer pageSize) {
-
-		Pageable paging = new PageRequest(pageNo, pageSize);
-
-		Page<Activity> activities = activityRepository.findAllByActiveTrue(paging);
-		List<ActivityRequestResponse> activityResponses = new ArrayList<ActivityRequestResponse>();
-		if (activities == null)
-			throw new ValidationException("No activities found.");
-		activities.forEach(activity -> {
-			activityResponses.add(new ActivityRequestResponse(activity));
-		});
-		return activityResponses;
-	}
-
-	@Override
-	public List<ActivityRequestResponse> getAllOfferedActivitiesBySchool(String schoolCid) {
-		List<Activity> activities;
-		if (schoolCid == null)
-			activities = activityRepository.findAllByActiveTrue();
-		else
-			activities = activityRepository.findAllBySchoolsCidAndActiveTrue(schoolCid);
-
-		List<ActivityRequestResponse> activityResponses = new ArrayList<ActivityRequestResponse>();
-
-		if (activities == null || activities.isEmpty())
-			throw new ValidationException("No general or school specific activities found.");
-		activities.forEach(activity -> {
-			activityResponses.add(new ActivityRequestResponse(activity));
-		});
-		return activityResponses;
-	}
-
-	@Override
 	public ActivityRequestResponse saveActivity(ActivityRequestResponse request) {
 		if (request == null)
 			throw new ValidationException("Request cannot be null");
@@ -462,42 +417,169 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 			throw new ValidationException("Activity name cannot be null");
 		if (request.getFourS() == null)
 			throw new ValidationException("Four S cannot be null.");
-		if (request.getFocusAreaIds() == null)
-			throw new ValidationException("Focus area ids cannot be null.");
+//		if (request.getFocusAreaIds() == null)
+//			throw new ValidationException("Focus area ids cannot be null.");
 		Activity activity = activityRepository.findByNameAndActiveTrue(request.getName());
 		if (activity != null)
 			throw new ValidationException("Activity already exist.");
-		List<FocusArea> focusAreaList = focusAreaRepository.findAll();
-		if (focusAreaList == null)
-			throw new ValidationException("No Focus Areas found.");
-//		for(int i =0;i<focusAreaList.size();i++) {
-//			if(!request.getFocusAreaIds().contains(focusAreaList.get(i).getCid()))
-//				focusAreaList.remove(i);
-//		}
-		List<FocusArea> focusAreas = new ArrayList<>();
-		for (int i = 0; i < request.getFocusAreaIds().size(); i++) {
-			for (int j = 0; j < focusAreaList.size(); j++)
-				if (focusAreaList.get(j).getCid().equals(request.getFocusAreaIds().get(i)))
-					focusAreas.add(focusAreaList.get(j));
-		}
-		activity = request.toEntitity();
-		activity.setFocusAreas(focusAreas);
-		List<School> schools = schoolRepository.findAll();
-		if (request.getSchoolIds() != null && !request.getSchoolIds().isEmpty()) {
-			for (int i = 0; i < schools.size(); i++) {
-				if (!request.getSchoolIds().contains(schools.get(i).getCid()))
-					schools.remove(i);
-			}
-		}
+//		List<FocusArea> focusAreaList = focusAreaRepository.findAll();
+//		if (focusAreaList == null)
+//			throw new ValidationException("No Focus Areas found.");
 
+		List<FocusArea> focusAreas = new ArrayList<>();
+//		for(int i = 0 ; i < request.getFocusAreaIds().size() ; i++) {
+//			if(!focusAreaRepository.existsByCidAndActiveTrue(request.getFocusAreaIds().get(i)))
+//				throw new ValidationException(String.format("Focus Area with id (%s) does not exist.", request.getFocusAreaIds().get(i)));
+//			else
+//				focusAreas.add(focusAreaRepository.findByCidAndActiveTrue(request.getFocusAreaIds().get(i)));
+//		}
+		
+		activity = request.toEntity();
 		activity.setCid(utils.generateRandomAlphaNumString(8));
 		activity.setActive(true);
+		
+		if (request.getSchoolIds() != null && !request.getSchoolIds().isEmpty()) {
+			List<School> schools = new ArrayList<School>();
+			
+			for(String schoolId : request.getSchoolIds()) {
+				if(!schoolRepository.existsByCidAndActiveTrue(schoolId))
+					throw new ValidationException(String.format("School with id (%s) not found", schoolId));
+				School school = schoolRepository.findByCidAndActiveTrue(schoolId);
+				List<Activity> activities = school.getActivities();
+				activities.add(activity);
+				school.setActivities(activities);
+				schools.add(school);
+			}
+			
+			activity.setSchools(schools);
+			
+		}else {
+			activity.setIsGeneral(true);
+		}
+//		activity = activityRepository.save(activity);
+		
+		if(request.getFocusAreaRequests() != null && !request.getFocusAreaRequests().isEmpty()) {
+			addOrCreateFocusAreas(request.getFocusAreaRequests(), focusAreas, activity);
+		}
+		
+		activity.setFocusAreas(focusAreas);
+		
+		
+
 		activity = activityRepository.save(activity);
 		if (activity == null)
 			throw new RuntimeException("Something went wrong activity not created.");
 
 		return new ActivityRequestResponse(activity);
 
+	}
+	
+	private void addOrCreateFocusAreas(List<FocusAreaRequestResponse> focusAreaRequests , List<FocusArea> focusAreas , Activity activity) {
+		for(FocusAreaRequestResponse  focusAreaReq : focusAreaRequests) {
+			FocusArea focusArea;
+			if(focusAreaReq.getId() == null) {
+				focusArea = focusAreaRepository.findByNameAndPsdArea(focusAreaReq.getName(),focusAreaReq.toEntity().getPsdArea());
+				if(focusArea == null) {
+					focusArea = focusAreaReq.toEntity();
+					focusArea.setCid(utils.generateRandomAlphaNumString(8));
+					focusArea.setActive(true);
+					
+					focusArea = focusAreaRepository.save(focusArea);
+					
+					List<Activity> activities = new ArrayList<Activity>();
+					activities.add(activity);
+					focusArea.setActivities(activities);
+					focusAreas.add(focusArea);
+				}else {/*Indicates that FocusArea with this name and psdArea exists but may be inactive*/
+					if (!focusArea.getActive())
+						focusArea.setActive(true);
+					
+					List<Activity> activities  = focusArea.getActivities();
+					if(activities == null)
+						activities = new ArrayList<Activity>();
+					
+					activities.add(activity);
+					focusArea.setActivities(activities);
+//					focusArea = focusAreaRepository.save(focusArea);
+					focusAreas.add(focusArea);
+				}
+			}else {/*Outer else loop to indicate that id of focusArea is not null and its not a new focusArea*/
+				focusArea = focusAreaRepository.findByCid(focusAreaReq.getId());
+				if(focusArea == null)
+					throw new ValidationException(String.format("Focus Area having id (%s) not found.", focusAreaReq.getId()));
+				
+				if (!focusArea.getActive())
+					focusArea.setActive(true);
+
+				List<Activity> activities  = focusArea.getActivities();
+				if(activities == null)
+					activities = new ArrayList<Activity>();
+				activities.add(activity);
+				focusArea.setActivities(activities);
+//				focusArea = focusAreaRepository.save(focusArea);
+				focusAreas.add(focusArea);
+				
+			}
+		}
+	}
+	@Override
+	public List<ActivityRequestResponse> getAllOfferedActivities(Integer pageNo, Integer pageSize) {
+
+		Pageable paging = new PageRequest(pageNo, pageSize);
+
+		Page<Activity> activities = activityRepository.findAllByActiveTrue(paging);
+		if (activities == null)
+			throw new ValidationException("No activities found.");
+		return activities.getContent().stream().map(ActivityRequestResponse:: new).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<ActivityRequestResponse> getAllOfferedActivitiesBySchool(String schoolCid) {
+		List<Activity> activities;
+		if (schoolCid == null)
+			activities = activityRepository.findAllByIsGeneralTrueAndActiveTrue();
+		else
+			activities = activityRepository.findAllBySchoolsCidAndActiveTrue(schoolCid);
+
+		if (activities == null || activities.isEmpty())
+			throw new ValidationException("No general or school specific activities found.");
+		
+		return activities.stream().map(ActivityRequestResponse:: new).collect(Collectors.toList());
+	}
+	
+	@Override
+	public List<ActivityRequestResponse> getAllGeneralActivities() {
+
+		List<Activity> generalActivities = activityRepository.findAllByIsGeneralTrueAndActiveTrue();
+
+		if (generalActivities == null || generalActivities.isEmpty()) {
+			throw new NotFoundException("no general activities found");
+		}
+	
+		return generalActivities.stream().map(ActivityRequestResponse::new).collect(Collectors.toList());
+	}
+	
+	@Override
+	public Map<String , Object> getAvailableFilters(){
+		Map<String, Object> response = new HashMap<String, Object>();
+		
+		Set<String> fourS = new HashSet<String>();
+		for(FourS fours : FourS.values()) {
+			fourS.add(fours.toString());
+		}
+		response.put("Four S", fourS);
+		
+		Set<String> psdAreas = new HashSet<String>();
+		for(PSDArea psd : PSDArea.values()) {
+			psdAreas.add(psd.toString());
+		}
+		response.put("PSD Areas", psdAreas);
+		
+		Set<String> focusAreas = new HashSet<String>();
+		focusAreaService.getAllFocusAreas().forEach(fa -> {focusAreas.add(fa.getName());});
+		response.put("Focus Areas", focusAreas);
+		
+		return response;
 	}
 
 	@Override
@@ -579,8 +661,6 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 			activityRequest.setSchoolIds(activityReqSchoolCids);
 		}
 
-//     NAME DESCRIPTION FOUR S FOCUS AREAS		
-
 		return activityRequest;
 	}
 
@@ -661,46 +741,4 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 
 	}
 
-	@Override
-	public List<ActivityRequestResponse> getAllGeneralActivities() {
-
-		List<Activity> generalActivities = activityRepository.findAllByIsGeneralTrueAndActiveTrue();
-
-		if (generalActivities == null || generalActivities.isEmpty()) {
-			throw new NotFoundException("no general activities found");
-		}
-
-		List<ActivityRequestResponse> responseList = new ArrayList<ActivityRequestResponse>();
-
-		for (Activity activity : generalActivities) {
-
-			responseList.add(new ActivityRequestResponse(activity));
-
-		}
-
-		return responseList;
-	}
-	
-	@Override
-	public Map<String , Object> getAvailableFilters(){
-		Map<String, Object> response = new HashMap<String, Object>();
-		
-		Set<String> fourS = new HashSet<String>();
-		for(FourS fours : FourS.values()) {
-			fourS.add(fours.toString());
-		}
-		response.put("Four S", fourS);
-		
-		Set<String> psdAreas = new HashSet<String>();
-		for(PSDArea psd : PSDArea.values()) {
-			psdAreas.add(psd.toString());
-		}
-		response.put("PSD AREAS", psdAreas);
-		
-		Set<String> focusAreas = new HashSet<String>();
-		focusAreaService.getAllFocusAreas().forEach(fa -> {focusAreas.add(fa.getName());});
-		response.put("Focus Areas", focusAreas);
-		
-		return response;
-	}
 }

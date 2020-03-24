@@ -69,7 +69,7 @@ public class UserRequest {
 
 	public User toEntity(User user) {
 		user = user == null ? new User() : user;
-		user.setMobileNo(contactNumber);
+		user.setContactNumber(contactNumber);
 		user.setEmail(email);
 		if (!UserType.matches(type)) {
 			throw new ValidationException("Type not found");

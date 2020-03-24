@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
@@ -26,6 +27,7 @@ import com.nxtlife.mgs.enums.FourS;
 @SuppressWarnings("serial")
 @Entity
 @DynamicUpdate(true)
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name","fourS"}))
 public class Activity extends BaseEntity {
 
 	@NotNull
@@ -47,7 +49,7 @@ public class Activity extends BaseEntity {
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "activity_focus_area", joinColumns = { @JoinColumn(name = "activity_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "focus_area_id") })
+			@JoinColumn(name = "focus_area_id") },uniqueConstraints = @UniqueConstraint(columnNames = {"activity_id" , "focus_area_id"}))
 	private List<FocusArea> focusAreas;
 
 	@ManyToMany(cascade = CascadeType.ALL)

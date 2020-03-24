@@ -3,6 +3,7 @@ package com.nxtlife.mgs.service.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,19 +79,13 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 	@Autowired
 	ActivityRepository activityRepository;
 
-	// @Autowired
-	// ActivityPerformedFilterBuilder activityPerformedFilterBuilder;
-
 	@Override
 	public List<FileResponse> getAllFilesOfActivity(String activityCId) {
-		List<FileResponse> fileResponseList = new ArrayList<>();
 		List<File> files = fileRepository.findAllByActiveTrueAndActivityPerformedCidAndActiveTrue(activityCId);
 		if (files == null || files.isEmpty())
 			throw new NotFoundException("No files found for this activity.");
-		for (File file : files) {
-			fileResponseList.add(new FileResponse(file));
-		}
-		return fileResponseList;
+
+		return files.stream().map(FileResponse::new).collect(Collectors.toList());
 	}
 
 	@Override
@@ -139,25 +134,13 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 					String.format("Coach id is invalid no coach with id : %s found.", request.getCoachId()));
 
 		/*
-		 * setting those fields in request to null which needs to filled by
-		 * Coach
+		 * setting those fields in request to null which needs to filled by Coach
 		 */
 		if (request.getCoachRemark() != null || request.getAchievementScore() != null
 				|| request.getParticipationScore() != null || request.getInitiativeScore() != null) {
 			throw new ValidationException("student can't set remarks or fields which are meant to be set by coach");
-			// request.setCoachRemark(null);
-			// request.setCoachRemarkDate(null);
-			// request.setAchievementScore(null);
-			// request.setParticipationScore(null);
-			// request.setInitiativeScore(null);
-			// request.setStar(null);
+
 		}
-		// if(request.getDateOfActivity()==null ||
-		// request.getDescription()==null || request.getFileRequests()==null||
-		// request.getFileRequests().isEmpty())
-		// actStatus = ActivityStatus.SavedByStudent;
-		// else
-		// actStatus = ActivityStatus.SubmittedByStudent;
 
 		/*
 		 * writing logic to update if activity is already saved and is not new
@@ -172,7 +155,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 						String.format("Activity with the id : %s is already submitted by you and cannot be edited.",
 								request.getId()));
 			if (request.getDateOfActivity() != null) {
-				if(LocalDateTime.now().toDate().before(DateUtil.convertStringToDate(request.getDateOfActivity())))
+				if (LocalDateTime.now().toDate().before(DateUtil.convertStringToDate(request.getDateOfActivity())))
 					throw new ValidationException("Date of activity cannot be a future date.");
 				activityPerformed.setDateOfActivity(DateUtil.convertStringToDate(request.getDateOfActivity()));
 			}
@@ -186,8 +169,8 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			List<FileRequest> requestFiles = request.getFileRequests();
 			List<File> updatedFiles = new ArrayList<File>();
 			/*
-			 * write logic here to add new files if any and remove files which
-			 * is not present now but were present earlier
+			 * write logic here to add new files if any and remove files which is not
+			 * present now but were present earlier
 			 */
 
 			if (requestFiles != null && !requestFiles.isEmpty()) {
@@ -218,24 +201,12 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 
 			}
 			/*
-			 * logic to delete the files which were previously there but in new
-			 * request have been removed.
+			 * logic to delete the files which were previously there but in new request have
+			 * been removed.
 			 */
 			for (File f : allValidFilesOfActivity) {
 				fileRepository.updateFileSetActiveByCid(false, f.getCid());
 			}
-
-			// logic to save updated files
-			// if(updatedFiles!=null && !updatedFiles.isEmpty())
-			// for(File f : updatedFiles) {
-			// fileRepository.saveAndFlush(f);
-			// }
-			//
-			/*
-			 * clear updatedFiles list and iteratively add new request files to
-			 * it after saving them in next step
-			 */
-			// updatedFiles.clear();
 
 			// Logic to save new files and then add it to List updatedFiles
 			if (requestFiles != null && !requestFiles.isEmpty())
@@ -298,11 +269,10 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 					String.format("Activity with the id : %s is already submitted by you and cannot be edited.",
 							activityPerformedCid));
 
-		if (activity.getDateOfActivity() == null || activity
-				.getDescription() == null/*
-											 * || activity.getFiles() == null ||
-											 * activity.getFiles().isEmpty()
-											 */)
+		if (activity.getDateOfActivity() == null
+				|| activity.getDescription() == null/*
+													 * || activity.getFiles() == null || activity.getFiles().isEmpty()
+													 */)
 			throw new ValidationException("Activity cannot be submitted first fill all the mandatory fields.");
 
 		activity.setActivityStatus(ActivityStatus.SubmittedByStudent);
@@ -435,13 +405,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			}
 		}
 
-		List<ActivityPerformedResponse> submittedActivityResponses = new ArrayList<ActivityPerformedResponse>();
-
-		submittedActivities.forEach(act -> {
-			submittedActivityResponses.add(new ActivityPerformedResponse(act));
-		});
-
-		return submittedActivityResponses;
+		return submittedActivities.stream().map(ActivityPerformedResponse::new).collect(Collectors.toList());
 	}
 
 	@Override
@@ -459,13 +423,10 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 		List<ActivityPerformed> submittedActivities = activityPerformedRepository
 				.findAllByTeacherCidAndStudentGradeCidAndActivityStatusOrActivityStatusAndActiveTrue(coachCid, gradeCid,
 						ActivityStatus.SubmittedByStudent, ActivityStatus.SavedByTeacher);
-		List<ActivityPerformedResponse> submittedActivityResponses = new ArrayList<ActivityPerformedResponse>();
 		if (submittedActivities == null || submittedActivities.isEmpty())
 			throw new ValidationException("No activities assigned to review yet.");
-		submittedActivities.forEach(act -> {
-			submittedActivityResponses.add(new ActivityPerformedResponse(act));
-		});
-		return submittedActivityResponses;
+
+		return submittedActivities.stream().map(ActivityPerformedResponse::new).collect(Collectors.toList());
 	}
 
 	@Override
@@ -483,13 +444,10 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 		List<ActivityPerformed> submittedActivities = activityPerformedRepository
 				.findAllByTeacherCidAndActivityCidAndActivityStatusOrActivityStatusAndActiveTrue(coachCid, activityCid,
 						ActivityStatus.SubmittedByStudent, ActivityStatus.SavedByTeacher);
-		List<ActivityPerformedResponse> submittedActivityResponses = new ArrayList<ActivityPerformedResponse>();
 		if (submittedActivities == null || submittedActivities.isEmpty())
 			throw new ValidationException("No activities assigned to review yet.");
-		submittedActivities.forEach(act -> {
-			submittedActivityResponses.add(new ActivityPerformedResponse(act));
-		});
-		return submittedActivityResponses;
+
+		return submittedActivities.stream().map(ActivityPerformedResponse::new).collect(Collectors.toList());
 	}
 
 	@Override
@@ -514,32 +472,12 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 				.findAllByTeacherCidAndStudentGradeCidAndActivityCidAndActivityStatusOrActivityStatusAndActiveTrue(
 						coachCid, gradeCid, activityCid, ActivityStatus.SubmittedByStudent,
 						ActivityStatus.SavedByTeacher);
-		List<ActivityPerformedResponse> submittedActivityResponses = new ArrayList<ActivityPerformedResponse>();
 		if (submittedActivities == null || submittedActivities.isEmpty())
 			throw new ValidationException("No activities assigned to review yet.");
-		submittedActivities.forEach(act -> {
-			submittedActivityResponses.add(new ActivityPerformedResponse(act));
-		});
-		return submittedActivityResponses;
+
+		return submittedActivities.stream().map(ActivityPerformedResponse::new).collect(Collectors.toList());
 	}
 
-	/*
-	 * List<ActivityPerformed>
-	 * findAllByStudentCidAndActivityFourSAndActivityStatusAndActiveTrue(String
-	 * studentCid ,FourS fourS, ActivityStatus activityStatus);
-	 * 
-	 * List<ActivityPerformed>
-	 * findAllByStudentCidAndActivityFocusAreasCidAndActivityStatusAndActiveTrue(
-	 * String studentCid ,String focusAreaCid, ActivityStatus activityStatus);
-	 * 
-	 * List<ActivityPerformed>
-	 * findAllByStudentCidAndActivityFocusAreasPsdAreaAndActivityStatusAndActiveTrue
-	 * (String studentCid ,PSDArea psdArea, ActivityStatus activityStatus);
-	 * 
-	 * List<ActivityPerformed>
-	 * findAllByStudentCidAndTeacherCidAndActivityStatusAndActiveTrue(String
-	 * studentCid, String teacherCid ,ActivityStatus activityStatus);
-	 */
 	@Override
 	public List<ActivityPerformedResponse> findAllByStudentCidAndActivityFourSAndActivityStatusAndActiveTrue(
 			String studentCid, String fourS, String activityStatus) {
@@ -548,7 +486,6 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 		if (studentRepository.findByCidAndActiveTrue(studentCid) == null)
 			throw new ValidationException("No student found with id : " + studentCid);
 		List<ActivityPerformed> performedActivities;
-		List<ActivityPerformedResponse> performedActivityResponses = new ArrayList<ActivityPerformedResponse>();
 		switch (activityStatus) {
 		case "saved":
 		case "SAVED":
@@ -557,10 +494,8 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 							ActivityStatus.SavedByStudent);
 			if (performedActivities == null || performedActivities.isEmpty())
 				throw new ValidationException("No activities saved by student.");
-			performedActivities.forEach(act -> {
-				performedActivityResponses.add(new ActivityPerformedResponse(act));
-			});
-			return performedActivityResponses;
+
+			return performedActivities.stream().map(ActivityPerformedResponse::new).collect(Collectors.toList());
 		case "submitted":
 		case "SUBMITTED":
 			performedActivities = activityPerformedRepository
@@ -568,10 +503,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 							ActivityStatus.SubmittedByStudent);
 			if (performedActivities == null || performedActivities.isEmpty())
 				throw new ValidationException("No activities submitted by student.");
-			performedActivities.forEach(act -> {
-				performedActivityResponses.add(new ActivityPerformedResponse(act));
-			});
-			return performedActivityResponses;
+			return performedActivities.stream().map(ActivityPerformedResponse::new).collect(Collectors.toList());
 		case "reviewed":
 		case "REVIEWED":
 			performedActivities = activityPerformedRepository
@@ -579,10 +511,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 							ActivityStatus.Reviewed);
 			if (performedActivities == null || performedActivities.isEmpty())
 				throw new ValidationException("No activities reviewed yet.");
-			performedActivities.forEach(act -> {
-				performedActivityResponses.add(new ActivityPerformedResponse(act));
-			});
-			return performedActivityResponses;
+			return performedActivities.stream().map(ActivityPerformedResponse::new).collect(Collectors.toList());
 		default:
 			throw new ValidationException("Not a valid status.");
 		}
@@ -601,7 +530,6 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 		if (focusAreaRepository.getOneByCidAndActiveTrue(focusAreaCid) == null)
 			throw new ValidationException("No focus area with id : " + focusAreaCid + " found");
 		List<ActivityPerformed> performedActivities;
-		List<ActivityPerformedResponse> performedActivityResponses = new ArrayList<ActivityPerformedResponse>();
 		switch (activityStatus) {
 		case "saved":
 		case "SAVED":
@@ -610,10 +538,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 							ActivityStatus.SavedByStudent);
 			if (performedActivities == null || performedActivities.isEmpty())
 				throw new ValidationException("No activities saved by student.");
-			performedActivities.forEach(act -> {
-				performedActivityResponses.add(new ActivityPerformedResponse(act));
-			});
-			return performedActivityResponses;
+			return performedActivities.stream().map(ActivityPerformedResponse::new).collect(Collectors.toList());
 		case "submitted":
 		case "SUBMITTED":
 			performedActivities = activityPerformedRepository
@@ -621,10 +546,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 							ActivityStatus.SubmittedByStudent);
 			if (performedActivities == null || performedActivities.isEmpty())
 				throw new ValidationException("No activities submitted by student.");
-			performedActivities.forEach(act -> {
-				performedActivityResponses.add(new ActivityPerformedResponse(act));
-			});
-			return performedActivityResponses;
+			return performedActivities.stream().map(ActivityPerformedResponse::new).collect(Collectors.toList());
 		case "reviewed":
 		case "REVIEWED":
 			performedActivities = activityPerformedRepository
@@ -632,10 +554,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 							ActivityStatus.Reviewed);
 			if (performedActivities == null || performedActivities.isEmpty())
 				throw new ValidationException("No activities reviewed yet.");
-			performedActivities.forEach(act -> {
-				performedActivityResponses.add(new ActivityPerformedResponse(act));
-			});
-			return performedActivityResponses;
+			return performedActivities.stream().map(ActivityPerformedResponse::new).collect(Collectors.toList());
 		default:
 			throw new ValidationException("Not a valid status.");
 		}
@@ -654,7 +573,6 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 		if (!PSDArea.matches(psdArea))
 			throw new ValidationException("Not a valid PSD Area.");
 		List<ActivityPerformed> performedActivities;
-		List<ActivityPerformedResponse> performedActivityResponses = new ArrayList<ActivityPerformedResponse>();
 		switch (activityStatus) {
 		case "saved":
 		case "SAVED":
@@ -663,10 +581,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 							PSDArea.valueOf(psdArea), ActivityStatus.SavedByStudent);
 			if (performedActivities == null || performedActivities.isEmpty())
 				throw new ValidationException("No activities saved by student.");
-			performedActivities.forEach(act -> {
-				performedActivityResponses.add(new ActivityPerformedResponse(act));
-			});
-			return performedActivityResponses;
+			return performedActivities.stream().map(ActivityPerformedResponse::new).collect(Collectors.toList());
 		case "submitted":
 		case "SUBMITTED":
 			performedActivities = activityPerformedRepository
@@ -674,10 +589,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 							PSDArea.valueOf(psdArea), ActivityStatus.SubmittedByStudent);
 			if (performedActivities == null || performedActivities.isEmpty())
 				throw new ValidationException("No activities submitted by student.");
-			performedActivities.forEach(act -> {
-				performedActivityResponses.add(new ActivityPerformedResponse(act));
-			});
-			return performedActivityResponses;
+			return performedActivities.stream().map(ActivityPerformedResponse::new).collect(Collectors.toList());
 		case "reviewed":
 		case "REVIEWED":
 			performedActivities = activityPerformedRepository
@@ -685,10 +597,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 							PSDArea.valueOf(psdArea), ActivityStatus.Reviewed);
 			if (performedActivities == null || performedActivities.isEmpty())
 				throw new ValidationException("No activities reviewed yet.");
-			performedActivities.forEach(act -> {
-				performedActivityResponses.add(new ActivityPerformedResponse(act));
-			});
-			return performedActivityResponses;
+			return performedActivities.stream().map(ActivityPerformedResponse::new).collect(Collectors.toList());
 		default:
 			throw new ValidationException("Not a valid status.");
 		}
@@ -706,7 +615,6 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 		if (teacherRepository.findByCidAndActiveTrue(teacherCid) == null)
 			throw new ValidationException("No teacher found with id : " + teacherCid);
 		List<ActivityPerformed> performedActivities;
-		List<ActivityPerformedResponse> performedActivityResponses = new ArrayList<ActivityPerformedResponse>();
 		switch (activityStatus) {
 		case "saved":
 		case "SAVED":
@@ -715,10 +623,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 							ActivityStatus.SavedByStudent);
 			if (performedActivities == null || performedActivities.isEmpty())
 				throw new ValidationException("No activities saved by student.");
-			performedActivities.forEach(act -> {
-				performedActivityResponses.add(new ActivityPerformedResponse(act));
-			});
-			return performedActivityResponses;
+			return performedActivities.stream().map(ActivityPerformedResponse::new).collect(Collectors.toList());
 		case "submitted":
 		case "SUBMITTED":
 			performedActivities = activityPerformedRepository
@@ -726,10 +631,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 							ActivityStatus.SubmittedByStudent);
 			if (performedActivities == null || performedActivities.isEmpty())
 				throw new ValidationException("No activities submitted by student.");
-			performedActivities.forEach(act -> {
-				performedActivityResponses.add(new ActivityPerformedResponse(act));
-			});
-			return performedActivityResponses;
+			return performedActivities.stream().map(ActivityPerformedResponse::new).collect(Collectors.toList());
 		case "reviewed":
 		case "REVIEWED":
 			performedActivities = activityPerformedRepository
@@ -737,10 +639,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 							ActivityStatus.Reviewed);
 			if (performedActivities == null || performedActivities.isEmpty())
 				throw new ValidationException("No activities reviewed yet.");
-			performedActivities.forEach(act -> {
-				performedActivityResponses.add(new ActivityPerformedResponse(act));
-			});
-			return performedActivityResponses;
+			return performedActivities.stream().map(ActivityPerformedResponse::new).collect(Collectors.toList());
 		default:
 			throw new ValidationException("Not a valid status.");
 		}
@@ -762,11 +661,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 				student.getId());
 		if (performedActivities == null || performedActivities.isEmpty())
 			throw new ValidationException("No activities performed in year : " + year);
-		List<ActivityPerformedResponse> activityPerformedResponses = new ArrayList<ActivityPerformedResponse>();
-		performedActivities.forEach(act -> {
-			activityPerformedResponses.add(new ActivityPerformedResponse(act));
-		});
-		return activityPerformedResponses;
+		return performedActivities.stream().map(ActivityPerformedResponse::new).collect(Collectors.toList());
 	}
 
 	@Override
@@ -781,13 +676,9 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 				.findAllByStudentCidAndActivityStatusAndActiveTrue(studentCid, ActivityStatus.SavedByStudent,
 						(Pageable) new PageRequest(page, pageSize,
 								new Sort(Direction.DESC, Arrays.asList("dateOfActivity"))));
-		List<ActivityPerformedResponse> performedActivityResponses = new ArrayList<ActivityPerformedResponse>();
 		if (performedActivities == null || performedActivities.isEmpty())
 			throw new ValidationException("No activities saved by student.");
-		performedActivities.forEach(act -> {
-			performedActivityResponses.add(new ActivityPerformedResponse(act));
-		});
-		return performedActivityResponses;
+		return performedActivities.stream().map(ActivityPerformedResponse::new).collect(Collectors.toList());
 	}
 
 	@Override
@@ -801,13 +692,23 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 		List<ActivityPerformed> performedActivities = activityPerformedRepository.findAllByStudentCidAndActiveTrue(
 				studentCid,
 				(Pageable) new PageRequest(page, pageSize, new Sort(Direction.DESC, Arrays.asList("dateOfActivity"))));
-		List<ActivityPerformedResponse> performedActivityResponses = new ArrayList<ActivityPerformedResponse>();
 		if (performedActivities == null || performedActivities.isEmpty())
 			throw new ValidationException("No activities performed by student.");
-		performedActivities.forEach(act -> {
-			performedActivityResponses.add(new ActivityPerformedResponse(act));
-		});
-		return performedActivityResponses;
+
+//		performedActivities.stream().forEach(act -> {
+//			if (act.getActivityStatus()!=null && !act.getActivityStatus().equals(ActivityStatus.SavedByStudent)
+//					&& !act.getActivityStatus().equals(ActivityStatus.SubmittedByStudent)
+//					&& !act.getActivityStatus().equals(ActivityStatus.Reviewed))
+//				performedActivities.remove(act);
+//			else
+//				performedActivityResponses.add(new ActivityPerformedResponse(act));
+//		});
+		performedActivities.removeIf(act -> 
+			act.getActivityStatus()!=null && !act.getActivityStatus().equals(ActivityStatus.SavedByStudent)
+					&& !act.getActivityStatus().equals(ActivityStatus.SubmittedByStudent)
+					&& !act.getActivityStatus().equals(ActivityStatus.Reviewed));
+		
+		return performedActivities.stream().map(ActivityPerformedResponse::new).collect(Collectors.toList());
 	}
 
 	@Override
@@ -819,13 +720,9 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 				.findAllByStudentCidAndActivityStatusAndActiveTrue(studentCid, ActivityStatus.SubmittedByStudent,
 						(Pageable) new PageRequest(page, pageSize,
 								new Sort(Direction.DESC, Arrays.asList("dateOfActivity"))));
-		List<ActivityPerformedResponse> performedActivityResponses = new ArrayList<ActivityPerformedResponse>();
 		if (performedActivities == null || performedActivities.isEmpty())
 			throw new ValidationException("No activities submitted by student.");
-		performedActivities.forEach(act -> {
-			performedActivityResponses.add(new ActivityPerformedResponse(act));
-		});
-		return performedActivityResponses;
+		return performedActivities.stream().map(ActivityPerformedResponse::new).collect(Collectors.toList());
 	}
 
 	@Override
@@ -837,13 +734,9 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 				.findAllByStudentCidAndActivityStatusAndActiveTrue(studentCid, ActivityStatus.Reviewed,
 						(Pageable) new PageRequest(page, pageSize,
 								new Sort(Direction.DESC, Arrays.asList("dateOfActivity"))));
-		List<ActivityPerformedResponse> performedActivityResponses = new ArrayList<ActivityPerformedResponse>();
 		if (performedActivities == null || performedActivities.isEmpty())
 			throw new ValidationException("No activities Reviewed yet.");
-		performedActivities.forEach(act -> {
-			performedActivityResponses.add(new ActivityPerformedResponse(act));
-		});
-		return performedActivityResponses;
+		return performedActivities.stream().map(ActivityPerformedResponse::new).collect(Collectors.toList());
 	}
 
 	@Override
@@ -870,12 +763,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			throw new ValidationException(String.format("No activity reviewed for category : %s of Student : %s ",
 					activity.getName(), student.getName()));
 
-		List<ActivityPerformedResponse> activityPerformedResponses = new ArrayList<ActivityPerformedResponse>();
-		activitiesPerformed.forEach(act -> {
-			activityPerformedResponses.add(new ActivityPerformedResponse(act));
-		});
-
-		return activityPerformedResponses;
+		return activitiesPerformed.stream().map(ActivityPerformedResponse::new).collect(Collectors.toList());
 	}
 
 	@Override
@@ -899,59 +787,50 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 	}
 
 	@Override
-	public List<ActivityPerformedResponse> filter( ActivityPerformedFilter filterRequest) {
+	public List<ActivityPerformedResponse> filter(ActivityPerformedFilter filterRequest) {
 		if (filterRequest.getStudentId() != null) {
 			Boolean studentFlag = studentRepository.existsByCidAndActiveTrue(filterRequest.getStudentId());
 			if (!studentFlag)
-				throw new ValidationException(String.format("Student with id : %s does not exist.", filterRequest.getStudentId()));
+				throw new ValidationException(
+						String.format("Student with id : %s does not exist.", filterRequest.getStudentId()));
 		}
-		
-		if(filterRequest.getTeacherId()!=null) {
-			if(!teacherRepository.existsByCidAndActiveTrue(filterRequest.getTeacherId()))
-				throw new ValidationException(String.format("Teacher with id : %s does not exist.", filterRequest.getTeacherId()));
+
+		if (filterRequest.getTeacherId() != null) {
+			if (!teacherRepository.existsByCidAndActiveTrue(filterRequest.getTeacherId()))
+				throw new ValidationException(
+						String.format("Teacher with id : %s does not exist.", filterRequest.getTeacherId()));
 		}
-		
 
 		List<ActivityPerformed> performedActivities = activityPerformedRepository
 				.findAll(new ActivityPerformedFilterBuilder().build(filterRequest));
-		// findAllByStudentCidAndActiveTrue(studentCid,new
-		// ActivityPerformedFilterBuilder().build(filterRequest));
-
-//		performedActivities.stream().forEach(pa -> {
-//			if (pa.getStudent() != null && !(pa.getStudent().getCid()).equals(studentCid) || !pa.getActive())
-//				performedActivities.remove(pa);
-//		});
 
 		if (performedActivities == null || performedActivities.isEmpty())
 			throw new ValidationException("No activities found after applying filter.");
-		List<ActivityPerformedResponse> activityPerformedResponses = new ArrayList<ActivityPerformedResponse>();
-		performedActivities.forEach(act -> {
-			activityPerformedResponses.add(new ActivityPerformedResponse(act));
-		});
-		return activityPerformedResponses;
+		return performedActivities.stream().map(ActivityPerformedResponse::new).collect(Collectors.toList());
 	}
-	
-	
-	
+
 	@Override
-	public List<PropertyCount> getCount(String studentCid , String status ,String type){
-		if(studentCid == null)
+	public List<PropertyCount> getCount(String studentCid, String status, String type) {
+		if (studentCid == null)
 			throw new ValidationException("Student id cannot be null.");
-		
-		if(!studentRepository.existsByCidAndActiveTrue(studentCid))
+
+		if (!studentRepository.existsByCidAndActiveTrue(studentCid))
 			throw new ValidationException(String.format("Student with id (%s) does not exist.", studentCid));
-		
-		if(!ActivityStatus.matches(status))
-			throw new ValidationException(String.format("The status (%s) provided by you is invalid.", status));
-		
-		if(type.equalsIgnoreCase("fourS"))
-		   return activityPerformedRepository.findFourSCount(studentCid , ActivityStatus.valueOf(status));
-		else if(type.equalsIgnoreCase("focusArea"))
+
+		if (!ActivityStatus.matches(status))
+			throw new ValidationException(String.format(
+					"The status (%s) provided by you is invalid it should be from [fourS ,psdArea ,focusArea] .",
+					status));
+
+		if (type.equalsIgnoreCase("fourS"))
+			return activityPerformedRepository.findFourSCount(studentCid, ActivityStatus.valueOf(status));
+		else if (type.equalsIgnoreCase("focusArea"))
 			return activityPerformedRepository.findFocusAreaCount(studentCid, ActivityStatus.valueOf(status));
-		else if(type.equalsIgnoreCase("psdArea"))
+		else if (type.equalsIgnoreCase("psdArea"))
 			return activityPerformedRepository.findPsdAreaCount(studentCid, ActivityStatus.valueOf(status));
-		else 
-			throw new ValidationException(String.format("invalid type : (%s) , type can have following values [psdArea , focusArea , fourS]", type));
+		else
+			throw new ValidationException(String.format(
+					"invalid type : (%s) , type can have following values [psdArea , focusArea , fourS]", type));
 	}
 
 }

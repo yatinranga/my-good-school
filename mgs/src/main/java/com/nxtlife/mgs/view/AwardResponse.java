@@ -8,12 +8,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.nxtlife.mgs.entity.school.Award;
 import com.nxtlife.mgs.entity.school.AwardActivityPerformed;
-import com.nxtlife.mgs.enums.AwardStatus;
+import com.nxtlife.mgs.enums.ApprovalStatus;
 
 @JsonInclude(value = Include.NON_ABSENT)
 public class AwardResponse {
 
-	private String name;
+	private String awardType;
 	private String id;
 	private String description;
 	private String createrId;
@@ -23,18 +23,11 @@ public class AwardResponse {
 	private Date statusModifiedAt;
 	private List<ActivityPerformedResponse> activityPerformedResponses;
 	private Date dateOfReceipt;
-	private AwardStatus status;
+	private ApprovalStatus status;
 	private String studentId;
 	private String studentName;
+	private String studentGrade;
 	private ActivityRequestResponse activity;
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 
 	public String getId() {
 		return id;
@@ -88,11 +81,11 @@ public class AwardResponse {
 		this.createdBy = createdBy;
 	}
 
-	public AwardStatus getStatus() {
+	public ApprovalStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(AwardStatus status) {
+	public void setStatus(ApprovalStatus status) {
 		this.status = status;
 	}
 
@@ -144,10 +137,27 @@ public class AwardResponse {
 		this.statusModifiedAt = statusModifiedAt;
 	}
 
+	public String getStudentGrade() {
+		return studentGrade;
+	}
+
+	public void setStudentGrade(String studentGrade) {
+		this.studentGrade = studentGrade;
+	}
+
+	public String getAwardType() {
+		return awardType;
+	}
+
+	public void setAwardType(String awardType) {
+		this.awardType = awardType;
+	}
+
 	public AwardResponse(Award award) {
 		this.id = award.getCid();
 		this.description = award.getDescription();
-		this.name = award.getName();
+		if(award.getAwardType() != null)
+		this.awardType = award.getAwardType().getName();
 		this.dateOfReceipt = award.getDateOfReceipt();
 		this.status = award.getStatus();
 		this.statusModifiedAt = award.getStatusModifiedAt();
@@ -158,6 +168,8 @@ public class AwardResponse {
 		if (award.getStudent() != null) {
 			this.studentId = award.getStudent().getCid();
 			this.studentName = award.getStudent().getName();
+			if(award.getStudent().getGrade()!=null)
+			  this.studentGrade = String.format("%s-%s", award.getStudent().getGrade().getName(),award.getStudent().getGrade().getSection());
 		}
 		if (award.getAwardActivityPerformed() != null) {
 			this.activityPerformedResponses = new ArrayList<>();
@@ -173,6 +185,8 @@ public class AwardResponse {
 			this.statusModifiedBy=award.getStatusModifiedBy().getName();
 			this.statusModifierId=award.getStatusModifiedBy().getCid();
 		}
+		
+		
 	}
 
 }

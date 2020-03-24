@@ -13,7 +13,6 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
-import com.nxtlife.mgs.entity.user.Guardian;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.GradeRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
@@ -32,8 +30,6 @@ import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.GradeRequest;
 import com.nxtlife.mgs.view.GradeResponse;
-import com.nxtlife.mgs.view.SchoolResponse;
-import com.nxtlife.mgs.view.StudentResponse;
 
 @Service
 public class GradeServiceImpl extends BaseService implements GradeService {
@@ -91,13 +87,36 @@ public class GradeServiceImpl extends BaseService implements GradeService {
 	}
 
 	@Override
-	public GradeResponse findById(Long id) {
-		return null;
+	public GradeResponse findByCid(String cid) {
+		if(cid == null)
+			throw new ValidationException("Grade id cannot be null.");
+		if(!gradeRepository.existsByCidAndActiveTrue(cid))
+			throw new ValidationException(String.format("Grade having id (%s) does not exist", cid));
+		return new GradeResponse(gradeRepository.findByCidAndActiveTrue(cid));
 	}
-
+	
 	@Override
-	public GradeResponse findByCid(String cId) {
-		return null;
+	public List<GradeResponse> getAllGradesOfSchool(String schoolCid) {
+
+		if (schoolCid == null)
+			throw new ValidationException("School Id cannot be null.");
+
+		School school = schoolRepository.findByCidAndActiveTrue(schoolCid);
+
+		if (school == null)
+			throw new ValidationException("School not found.");
+
+		List<Grade> gradeList = gradeRepository.findAllBySchoolsCidAndActiveTrue(schoolCid);
+		List<GradeResponse> gradeResponseList = new ArrayList<GradeResponse>();
+
+		if (gradeList == null)
+			throw new ValidationException("No Grades found in this school.");
+
+		gradeList.forEach(g -> {
+			gradeResponseList.add(new GradeResponse(g));
+		});
+
+		return gradeResponseList;
 	}
 
 	@Override
@@ -111,7 +130,7 @@ public class GradeServiceImpl extends BaseService implements GradeService {
 		try {
 			XSSFWorkbook gradesheet = new XSSFWorkbook(file.getInputStream());
 			gradeRecords = findSheetRowValues(gradesheet, "GRADE", errors);
-			errors = (List<String>) gradeRecords.get(gradeRecords.size() - 1).get("errors");
+//			errors = (List<String>) gradeRecords.get(gradeRecords.size() - 1).get("errors");
 			for (int i = 0; i < gradeRecords.size(); i++) {
 				List<Map<String, Object>> tempGradesRecords = new ArrayList<Map<String, Object>>();
 				tempGradesRecords.add(gradeRecords.get(i));
@@ -140,17 +159,6 @@ public class GradeServiceImpl extends BaseService implements GradeService {
 		School school = schoolRepository.findByCidAndActiveTrue(schoolCid);
 		if (school == null)
 			throw new ValidationException(String.format("No School found with id : %s ", schoolCid));
-
-//		School school = null;
-//		if (gradeDetails.get(0).get("SCHOOL") != null)
-//			school = schoolRepository.findByName((String) gradeDetails.get(0).get("SCHOOL"));
-//		if (gradeDetails.get(0).get("SCHOOLS EMAIL") != null)
-//			school = schoolRepository.findByEmail((String) gradeDetails.get(0).get("SCHOOLS EMAIL"));
-//
-//		if (school == null)
-//			errors.add(String.format("School %s not found ", (String) gradeDetails.get(0).get("SCHOOL")));
-//		else
-//			gradeRequest.setSchoolId(school.getCid());
 
 		return gradeRequest;
 	}
@@ -232,28 +240,5 @@ public class GradeServiceImpl extends BaseService implements GradeService {
 
 	}
 
-	@Override
-	public List<GradeResponse> getAllGradesOfSchool(String schoolCid) {
-
-		if (schoolCid == null)
-			throw new ValidationException("School Id cannot be null.");
-
-		School school = schoolRepository.findByCidAndActiveTrue(schoolCid);
-
-		if (school == null)
-			throw new ValidationException("School not found.");
-
-		List<Grade> gradeList = gradeRepository.findAllBySchoolsCidAndActiveTrue(schoolCid);
-		List<GradeResponse> gradeResponseList = new ArrayList<GradeResponse>();
-
-		if (gradeList == null)
-			throw new ValidationException("No Grades found in this school.");
-
-		gradeList.forEach(g -> {
-			gradeResponseList.add(new GradeResponse(g));
-		});
-
-		return gradeResponseList;
-	}
 
 }

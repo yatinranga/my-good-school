@@ -3,8 +3,10 @@ package com.nxtlife.mgs.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import javax.validation.ValidationException;
 
@@ -15,16 +17,19 @@ import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.activity.ActivityPerformed;
 import com.nxtlife.mgs.entity.school.Award;
 import com.nxtlife.mgs.entity.school.AwardActivityPerformed;
+import com.nxtlife.mgs.entity.school.AwardType;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.enums.ActivityStatus;
-import com.nxtlife.mgs.enums.AwardStatus;
+import com.nxtlife.mgs.enums.ApprovalStatus;
+import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.filtering.filter.AwardFilter;
 import com.nxtlife.mgs.filtering.filter.AwardFilterBuilder;
 import com.nxtlife.mgs.jpa.ActivityPerformedRepository;
 import com.nxtlife.mgs.jpa.ActivityRepository;
 import com.nxtlife.mgs.jpa.AwardActivityPerformedRepository;
 import com.nxtlife.mgs.jpa.AwardRepository;
+import com.nxtlife.mgs.jpa.AwardTypeRepository;
 import com.nxtlife.mgs.jpa.FocusAreaRepository;
 import com.nxtlife.mgs.jpa.GradeRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
@@ -70,6 +75,27 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 
 	@Autowired
 	FocusAreaRepository focusAreaRepository;
+	
+	@Autowired
+	AwardTypeRepository awardTypeRepository;
+	
+	@PostConstruct
+	public void init() {
+		String[] awardTypes = { "Ist Position", "IInd Position", "IIIrd Position", "Participation Prize" };
+		
+		Set<AwardType> repoAwardTypes = awardTypeRepository.findAll().stream().collect(Collectors.toSet());
+		for(String type : awardTypes) {
+			AwardType awardType = repoAwardTypes.stream().filter(at -> at.getName().equalsIgnoreCase(type)).findFirst().orElse(null);
+			if(awardType == null) {
+				repoAwardTypes.add(new AwardType(type));
+			}else {
+				awardType.setActive(true);
+				repoAwardTypes.add(awardType);
+			}
+		}
+		
+		awardTypeRepository.save(repoAwardTypes);
+	}
 
 	@Override
 	public AwardResponse createAward(AwardRequest request) {
@@ -84,22 +110,33 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 		if (student == null) {
 			throw new ValidationException(String.format("Student (%s) doesn't exist.", request.getStudentId()));
 		}
-		Activity activity = activityRepository.findByCidAndActiveTrue(request.getActivityId());
-		if (activity == null) {
-			throw new ValidationException(String.format("Activity (%s) doesn't exist", request.getActivityId()));
-		}
+		if(request.getAwardType()==null)
+			throw new ValidationException("Award Type cannot be null.");
+		AwardType awardType = awardTypeRepository.getByNameAndActiveTrue(request.getAwardType());
+		if(awardType == null)
+			throw new ValidationException(String.format("AwardType (%s) not found.", request.getAwardType()));
+		
 		Award award = request.toEntity();
+		
+		if(request.getActivityId() != null) {
+			Activity activity = activityRepository.findByCidAndActiveTrue(request.getActivityId());
+			if (activity == null) {
+				throw new ValidationException(String.format("Activity (%s) doesn't exist", request.getActivityId()));
+			}
+			award.setActivity(activity);
+		}
+		
+		award.setAwardType(awardType);
 		award.setActive(true);
 		award.setCid(utils.generateRandomAlphaNumString(8));
 		award.setTeacher(teacher);
-		award.setStatus(AwardStatus.PENDING);
+		award.setStatus(ApprovalStatus.PENDING);
 		award.setStudent(student);
-		award.setActivity(activity);
 		award.setActive(true);
 		award = awardRepository.save(award);
-		List<AwardActivityPerformed> awardActivityPerformedList = new ArrayList<>();
-		ActivityPerformed activityPerformed;
 		if (request.getActivityPerformedIds() != null && !request.getActivityPerformedIds().isEmpty()) {
+			List<AwardActivityPerformed> awardActivityPerformedList = new ArrayList<>();
+			ActivityPerformed activityPerformed;
 			for (String activityPerformedId : request.getActivityPerformedIds()) {
 				activityPerformed = activityPerformedRepository.findByCidAndActiveTrue(activityPerformedId);
 				if (activityPerformed == null) {
@@ -108,8 +145,9 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 				}
 				awardActivityPerformedList.add(new AwardActivityPerformed(award.getId(), activityPerformed.getId()));
 			}
+			award.setAwardActivityPerformed(awardActivityPerformedRepository.save(awardActivityPerformedList));
 		}
-		award.setAwardActivityPerformed(awardActivityPerformedRepository.save(awardActivityPerformedList));
+		
 		return new AwardResponse(award);
 	}
 
@@ -120,8 +158,10 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 		if (student == null) {
 			throw new ValidationException("User not login as a student");
 		}
-		List<Award> awards = awardRepository.findByStudentIdAndStatus(student.getId(), AwardStatus.VERIFIED);
-		return awards.stream().map(AwardResponse::new).collect(Collectors.toList());
+		List<Award> awards = awardRepository.findByStudentIdAndStatus(student.getId(), ApprovalStatus.VERIFIED);
+		if(awards == null || awards.isEmpty())
+			throw new NotFoundException(String.format("No Award given to student (%s) yet.",student.getName()));
+		return awards.stream().map(AwardResponse::new).distinct().collect(Collectors.toList());
 	}
 
 	@Override
@@ -132,8 +172,10 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 			throw new ValidationException("User not login as a student");
 		}
 		List<Award> awards = awardRepository
-				.findAll(new AwardFilterBuilder().build(awardFilter, student.getCid(), AwardStatus.VERIFIED));
-		return awards.stream().map(AwardResponse::new).collect(Collectors.toList());
+				.findAll(new AwardFilterBuilder().build(awardFilter, student.getCid(), ApprovalStatus.VERIFIED));
+		if(awards == null || awards.isEmpty())
+			throw new NotFoundException(String.format("No Award found for student (%s) after applying filters.",student.getName()));
+		return awards.stream().map(AwardResponse::new).distinct().collect(Collectors.toList());
 	}
 
 	@Override
@@ -179,8 +221,8 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 		if (award == null) {
 			throw new ValidationException(String.format("This award not exist", awardId));
 		}
-		if (award.getStatus().equals(AwardStatus.PENDING)) {
-			award.setStatus(isVerified ? AwardStatus.VERIFIED : AwardStatus.REJECTED);
+		if (award.getStatus().equals(ApprovalStatus.PENDING)) {
+			award.setStatus(isVerified ? ApprovalStatus.VERIFIED : ApprovalStatus.REJECTED);
 			award.setStatusModifiedBy(teacher);
 			award.setStatusModifiedAt(new Date());
 		} else {
@@ -202,12 +244,20 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 			throw new ValidationException(String.format("The status (%s) provided by you is invalid.", status));
 		
 		if(type.equalsIgnoreCase("fourS"))
-		   return awardRepository.findFourSCount(studentCid , ActivityStatus.valueOf(status) , AwardStatus.VERIFIED);
+		   return awardRepository.findFourSCount(studentCid , ActivityStatus.valueOf(status) , ApprovalStatus.VERIFIED);
 		else if(type.equalsIgnoreCase("focusArea"))
-			return awardRepository.findFocusAreaCount(studentCid, ActivityStatus.valueOf(status), AwardStatus.VERIFIED);
+			return awardRepository.findFocusAreaCount(studentCid, ActivityStatus.valueOf(status), ApprovalStatus.VERIFIED);
 		else if(type.equalsIgnoreCase("psdArea"))
-			return awardRepository.findPsdAreaCount(studentCid, ActivityStatus.valueOf(status), AwardStatus.VERIFIED);
+			return awardRepository.findPsdAreaCount(studentCid, ActivityStatus.valueOf(status), ApprovalStatus.VERIFIED);
 		else 
 			throw new ValidationException(String.format("invalid type : (%s) , type can have following values [psdArea , focusArea , fourS]", type));
+	}
+	
+	@Override
+	public Set<String> getAllAwardTypes(){
+		List<String> awardTypeNames = awardTypeRepository.findAllNameByActiveTrue();
+		if(awardTypeNames == null || awardTypeNames.isEmpty())
+			throw new NotFoundException("No award types found.");
+		return awardTypeNames.stream().collect(Collectors.toSet());
 	}
 }
