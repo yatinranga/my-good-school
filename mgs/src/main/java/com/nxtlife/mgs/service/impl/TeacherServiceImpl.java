@@ -109,7 +109,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		if (request.getEmail() != null && userRepository.existsByEmail(request.getEmail()))
 			throw new ValidationException(String.format("Email %s already exists", request.getEmail()));
 
-		if (request.getMobileNumber() != null && userRepository.existsByMobileNo(request.getMobileNumber())) {
+		if (request.getMobileNumber() != null && userRepository.existsByContactNumber(request.getMobileNumber())) {
 			throw new ValidationException(
 					String.format("Mobile number (%s) already exists", request.getMobileNumber()));
 		}

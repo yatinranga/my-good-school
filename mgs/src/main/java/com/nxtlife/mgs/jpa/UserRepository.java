@@ -17,13 +17,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	
 	public User findOneByUserName(String username);
 
-    User findByEmailOrMobileNo(String email,String contact);
+    User findByEmailOrContactNumber(String email,String contact);
 
     boolean existsByEmail(String email);
 
-    boolean existsByMobileNo(String email);
+    boolean existsByContactNumber(String email);
 
-    User findByMobileNo(String contactNo);
+    User findByContactNumber(String contactNo);
 
     User findByEmail(String email);
 
@@ -31,7 +31,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	User findByUserNameAndActiveTrue(String username);
 
-	int countByMobileNo(String string);
+	int countByContactNumber(String string);
 
 	int countByEmail(String email);
 
