@@ -10,21 +10,22 @@ import { StudentService } from 'src/app/services/student.service';
 export class ProfileComponent implements OnInit {
 
   studentProfile: FormGroup;
-  profilePhotoForm : FormGroup;
+  profilePhotoForm: FormGroup;
   editForm = 'Student Profile';
   studentDetails = {};
   studentInfo: any;
   studentId: any;
   tabs = 'guardian0';
-  dob = "";
+
   files: any[];
   path: any;
 
   constructor(private formBuilder: FormBuilder, private studentService: StudentService) { }
 
   ngOnInit() {
+    this.path = "assets/images/childprofile.jpg";
     this.profilePhotoForm = this.formBuilder.group({
-      profilePic : []
+      profilePic: []
     })
 
     this.studentInfo = JSON.parse(localStorage.getItem('user_info'));
@@ -32,6 +33,10 @@ export class ProfileComponent implements OnInit {
     this.studentService.getProfile(this.studentId).subscribe((res) => {
       this.studentDetails = res;
       console.log(this.studentDetails);
+      // Profile Photo is there it will be added
+      // if(res.profileImage){
+      //   this.path  = this.studentDetails["profileImage"];
+      // }
     },
       (err) => console.log(err)
     );
@@ -53,7 +58,7 @@ export class ProfileComponent implements OnInit {
 
   switchTabs(t) {
     console.log(t);
-    
+
     this.tabs = t;
   }
   // Select Profile Photo
@@ -63,7 +68,6 @@ export class ProfileComponent implements OnInit {
 
       const file = this.files[0];
       this.profilePhotoForm.value['profilePic'] = file;
-      console.log(this.profilePhotoForm.value.image);
 
       var reader = new FileReader();
       reader.readAsDataURL(event.target.files[0]);
@@ -72,13 +76,16 @@ export class ProfileComponent implements OnInit {
     } else {
       this.path = null;
     }
+
+    this.editProfilePhoto();
   }
 
   // Edit Profile Photo of Student
-  editProfilePhoto(){
+  editProfilePhoto() {
     const formData = new FormData();
     formData.append('profilePic', this.profilePhotoForm.value.profilePic);
     this.studentService.putProfilePhoto(this.studentId, formData).subscribe((res) => {
+      console.log("Profile Photo Changed");
       console.log(res);
     }, (err) => {
       console.log(err);
