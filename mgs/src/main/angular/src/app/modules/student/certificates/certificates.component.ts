@@ -86,6 +86,9 @@ export class CertificatesComponent implements OnInit {
           this.alertService.showSuccessAlert("");
           $('#certificateModal').modal('hide');
           $('.modal-backdrop').remove();
+          this.certificateForm.reset();
+          this.files = [];
+          this.certificatesArr.unshift(res);
           this.add_loader = false;
         }, (err) => {
           console.log(err);
