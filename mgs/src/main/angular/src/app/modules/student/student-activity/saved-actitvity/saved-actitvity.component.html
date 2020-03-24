@@ -1,20 +1,20 @@
-<div class="sortby">
+<div class="sortby"> PSD :
     <select (change)="filterActivities()" name="psdAreas" [(ngModel)]="psdAreas">
-        <option value="" selected disabled> PSD </option>
+        <option value="" selected disabled> Choose Here </option>
         <option value="">None</option>
         <option *ngFor="let ps of psdAreaArr" value={{ps}}>{{ps}}</option>
     </select>
 </div>
-<div class="sortby">
+<div class="sortby"> Focus Areas :
     <select (change)="filterActivities()" name="focusAreas" [(ngModel)]="focusAreas">
-        <option value="" selected disabled> Focus Areas </option>
+        <option value="" selected disabled> Choose Here</option>
         <option value="">None</option>
         <option *ngFor="let ps of focusAreaArr" value={{ps}}>{{ps}}</option>
     </select>
 </div>
-<div class="sortby">
+<div class="sortby"> 4S :
     <select (change)="filterActivities()" name="fourS" [(ngModel)]="fourS">
-        <option value="" selected disabled> 4S </option>
+        <option value="" selected disabled> Choose Here </option>
         <option value="">None</option>
         <option *ngFor="let ps of fourSArr" value={{ps}}>{{ps}}</option>
     </select>
@@ -134,7 +134,7 @@
                                                     <h5> Attachments </h5>
                                                     <div *ngFor="let file of activity.fileResponses">
                                                         <div>
-                                                            <a [attr.href]="file.url">
+                                                            <a target="_blank" [attr.href]="file.url">
                                                                 <i class="fa fa-file-audio"
                                                                     *ngIf="file.extension == 'mp3'"></i>
                                                                 <i class="fa fa-image"
@@ -219,7 +219,7 @@
                                                         <h5> Attachments : </h5> {{activity.fileResponses.length ? "" : "NA"}}
                                                         <div *ngFor="let file of activity.fileResponses">
                                                             <div>
-                                                                <a [attr.href]="file.url">
+                                                                <a target="_blank" [attr.href]="file.url">
                                                                     <i class="fa fa-file-audio"
                                                                         *ngIf="file.extension == 'mp3'"></i>
                                                                     <i class="fa fa-image"
