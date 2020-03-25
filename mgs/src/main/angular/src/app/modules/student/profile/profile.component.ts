@@ -23,8 +23,7 @@ export class ProfileComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private studentService: StudentService) { }
 
   ngOnInit() {
-    this.path = "assets/images/childprofile.jpg";
-    // this.path = "assets/images/boy.jpg";
+
     this.profilePhotoForm = this.formBuilder.group({
       profilePic: []
     })
@@ -34,6 +33,12 @@ export class ProfileComponent implements OnInit {
     this.studentService.getProfile(this.studentId).subscribe((res) => {
       this.studentDetails = res;
       console.log(this.studentDetails);
+
+      if(res.gender = "Female"){
+        this.path = "assets/images/childprofile.jpg";
+      }else {
+        this.path = "assets/images/boy.jpg";
+      }
       // Profile Photo is there it will be added
       // if(res.profileImage){
       //   this.path  = this.studentDetails["profileImage"];

@@ -39,7 +39,7 @@
                     <ng-container *ngFor="let awards of awardsArr ; let i = index;">
                         <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                             <td>{{i+1}}</td>
-                            <td>{{awards.name}}</td>
+                            <td>{{awards.awardType}}</td>
                             <td>{{awards.description}}</td>
                             <td>{{awards.activity.name}}</td>
                             <td>{{awards.createdBy}}</td>

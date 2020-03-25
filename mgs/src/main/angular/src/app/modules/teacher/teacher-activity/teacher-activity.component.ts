@@ -195,21 +195,25 @@ export class TeacherActivityComponent implements OnInit {
   // SUBMIT the saved activity by teacher
   submitSavedActivity(activity,index, e) {
     e.stopPropagation();
-    var actCid: any;
-    actCid = activity.id;
-
-    console.log(actCid);
-    this.teacherService.submitActivity(actCid).subscribe((res) => {
-      console.log(res);
-      if (this.activityType == "All") {
-        this.activitiesArr.splice(index, 1);
-        this.activitiesArr.unshift(res);
-      } else {
-        this.activitiesArr.splice(index, 1);
+    this.alertService.confirmWithoutLoader('question',"Do you want to submit ?",'','Yes').then(result => {
+      if(result.value){
+        var actCid: any;
+        actCid = activity.id;
+    
+        console.log(actCid);
+        this.teacherService.submitActivity(actCid).subscribe((res) => {
+          console.log(res);
+          if (this.activityType == "All") {
+            this.activitiesArr.splice(index, 1);
+            this.activitiesArr.unshift(res);
+          } else {
+            this.activitiesArr.splice(index, 1);
+          }
+          this.alertService.showSuccessToast('Activity Submitted !');
+        },
+          (err) => {console.log(err)});
       }
-      this.alertService.showSuccessToast('Activity Submitted !');
-    },
-      (err) => {console.log(err)});
+    })
   }
 
   directSubmitReview(activityId){

@@ -84,6 +84,7 @@ export class SavedActitvityComponent implements OnInit {
   // to get the list of SAVED Activities of student
   getStudentSavedActivities(studentId) {
     this.studentService.getSavedActivity(studentId).subscribe((res) => {
+      console.log(res);
       this.savedActivitiesArr = res;
       this.copySavedActi = Object.assign([], res);
       this.activitiesArr = this.savedActivitiesArr;

@@ -45,6 +45,7 @@ export class StudentAwardsComponent implements OnInit {
     (err) => {console.log(err);});
   }
 
+  // get All awards of Student
   getAwards(){
     this.loader = true;
     this.studentService.getAllAwards(this.studentId).subscribe((res) => {
@@ -75,7 +76,7 @@ export class StudentAwardsComponent implements OnInit {
     } 
     else if (this.fourS && this.focusAreas) {
       filterAwardsArr = array.filter(e => e.activity.fourS == this.fourS && e.focusAreas && e.focusAreas.includes(this.focusAreas));
-      this.loader = false;
+      this.loader = false; 
     } 
     else if (this.psdAreas && this.focusAreas) {
       filterAwardsArr = array.filter(e => e.psdAreas && e.psdAreas.includes(this.psdAreas) && e.focusAreas && e.focusAreas.includes(this.focusAreas));
