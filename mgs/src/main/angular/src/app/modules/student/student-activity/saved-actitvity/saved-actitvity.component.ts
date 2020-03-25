@@ -12,6 +12,8 @@ declare let $: any;
 export class SavedActitvityComponent implements OnInit {
 
 
+  maxDate: string;
+  minDate: string;
   constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService) { }
 
   addActivityShow: boolean;
@@ -54,6 +56,8 @@ export class SavedActitvityComponent implements OnInit {
   order = false;
 
   ngOnInit() {
+    this.setMinDate();
+    this.setMaxDate();
     this.studentInfo = JSON.parse(localStorage.getItem('user_info'));
     this.studentId = this.studentInfo.student.id;
     this.schoolId = this.studentInfo.student.schoolId;
@@ -62,10 +66,10 @@ export class SavedActitvityComponent implements OnInit {
     this.getAreas(); // to get PSD Areas, Focus Area and 4s 
 
     this.savedActivityForm = this.formBuilder.group({
-      activityId: [,[Validators.required]],
-      description: [{value:'',disabled: true},[Validators.required, Validators.minLength(100)]],
-      dateOfActivity: [{value:'',disabled: true},[Validators.required]],
-      coachId: [{value:'',disabled: true},[Validators.required]],
+      activityId: [, [Validators.required]],
+      description: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(100)]],
+      dateOfActivity: [{ value: '', disabled: true }, [Validators.required]],
+      coachId: [{ value: '', disabled: true }, [Validators.required]],
       attachment: [],
       id: []
     });
@@ -78,7 +82,7 @@ export class SavedActitvityComponent implements OnInit {
       this.focusAreaArr = res["Focus Areas"]
       this.fourSArr = res["Four S"]
     },
-    (err) => {console.log(err);});
+      (err) => { console.log(err); });
   }
 
   // to get the list of SAVED Activities of student
@@ -114,7 +118,7 @@ export class SavedActitvityComponent implements OnInit {
     this.studentService.getAllActivity(studentId).subscribe((res) => {
       this.allActivitiesArr = res;
       this.copyAllActi = Object.assign([], res);
-      this.activitiesArr = this.allActivitiesArr; 
+      this.activitiesArr = this.allActivitiesArr;
       this.loader = false;
       this.filterActivities();
     }, (err) => {
@@ -129,7 +133,7 @@ export class SavedActitvityComponent implements OnInit {
     this.studentService.getReviewedActivity(studentId).subscribe((res) => {
       this.reviewedActivitiesArr = res;
       this.copyReviewActi = Object.assign([], res);
-      this.activitiesArr =  this.reviewedActivitiesArr;
+      this.activitiesArr = this.reviewedActivitiesArr;
       this.loader = false;
       this.filterActivities();
     }, (err) => {
@@ -146,7 +150,7 @@ export class SavedActitvityComponent implements OnInit {
       backdrop: 'static',
       keyboard: false
     });
-    
+
     e.stopPropagation();
     console.log(activity);
     this.activityId = activity.activityId;
@@ -160,7 +164,7 @@ export class SavedActitvityComponent implements OnInit {
     });
     this.editActivityShow = true;
     this.addActivityShow = false;
-    
+
   }
 
   addActivity() {
@@ -232,7 +236,7 @@ export class SavedActitvityComponent implements OnInit {
         console.log(activityId);
         this.studentService.deleteActivity(activityId).subscribe((res) => {
           console.log(res);
-          this.activitiesArr.splice(i,1);
+          this.activitiesArr.splice(i, 1);
           this.alertService.showSuccessToast('Activity Deleted !');
         },
           (err) => console.log(err));
@@ -256,12 +260,16 @@ export class SavedActitvityComponent implements OnInit {
     this.coaches = [];
     this.studentService.getCoach(this.schoolId, activityId).subscribe((res) => {
       this.coaches = res;
-      if(this.coaches.length){
+      if (this.coaches.length) {
         this.savedActivityForm.get('coachId').enable();
         this.savedActivityForm.get('description').enable();
         this.savedActivityForm.get('dateOfActivity').enable();
+      } else {
+        this.savedActivityForm.get('coachId').disable();
+        this.savedActivityForm.get('description').disable();
+        this.savedActivityForm.get('dateOfActivity').disable();
       }
-      this.modal_loader = false;      
+      this.modal_loader = false;
     },
       (err) => {
         console.log(err);
@@ -472,14 +480,35 @@ export class SavedActitvityComponent implements OnInit {
     });
   }
 
-    // to reset the Add/Edit Form
-    resetForm() {
-      this.savedActivityForm.reset();
-    }
+  // to reset the Add/Edit Form
+  resetForm() {
+    this.savedActivityForm.reset();
+  }
 
+  setMinDate() {
+    const minDate = new Date();
+    minDate.setDate(minDate.getDate() - 30);
+    let month: any = minDate.getMonth() + 1;
+    let day: any = minDate.getDate();
+    let year: any = minDate.getFullYear();
+
+    if (month < 10)
+      month = '0' + month.toString();
+    if (day < 10)
+      day = '0' + day.toString();
+    this.minDate = [year, month, day].join('-');
+  }
+
+  setMaxDate() {
+    const minDate = new Date();
+    let month: any = minDate.getMonth() + 1;
+    let day: any = minDate.getDate();
+    let year: any = minDate.getFullYear();
+
+    if (month < 10)
+      month = '0' + month.toString();
+    if (day < 10)
+      day = '0' + day.toString();
+    this.maxDate = [year, month, day].join('-');
+  }
 }
-
-
-
-// $('#addActivityModal').modal('hide');
-// $('.modal-backdrop').remove();
