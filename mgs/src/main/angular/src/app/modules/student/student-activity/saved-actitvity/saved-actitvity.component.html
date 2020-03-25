@@ -41,7 +41,7 @@
                         <th scope="col">Activity</th>
                         <th scope="col">Description</th>
                         <th scope="col">Date</th>
-                        <th scope="col">Teacher</th>
+                        <th scope="col">Coach</th>
                         <th scope="col">
                             Status
                             <button *ngIf="activityType === 'All'" name="sort" class="icon_button" (click)="sortByStatus()">
@@ -101,7 +101,7 @@
                                                     <p *ngIf="activity.description">
                                                         <strong> Description : </strong> {{activity.description}} </p>
                                                     <p id="fa">
-                                                        <strong>Focus Area : </strong>
+                                                        <strong>Focus Area : </strong> 
                                                     </p>
                                                     <div id="fa" *ngFor="let fa of activity.focusAreas; let i = index">
                                                         <p>{{fa}}
@@ -131,7 +131,7 @@
                                             </div>
                                             <div class="col-6" *ngIf="activity.fileResponses.length">
                                                 <div class="attachment">
-                                                    <h5> Attachments </h5>
+                                                    <h5> Attachments : </h5> {{activity.fileResponses.length ? "" : "NA"}}
                                                     <div *ngFor="let file of activity.fileResponses">
                                                         <div>
                                                             <a target="_blank" [attr.href]="file.url">
