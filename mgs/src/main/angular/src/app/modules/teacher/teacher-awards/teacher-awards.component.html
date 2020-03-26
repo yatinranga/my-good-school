@@ -17,7 +17,8 @@
                         <div class="assign_main">
                             <div class="assign-form">
                                 <label for="exampleFormControlSelect1">Select Grade - </label>
-                                <select class="" name="grade" [disabled]="grade_loader" id="exampleFormControlSelect1" (ngModelChange)="getListOfStudent($event)" [(ngModel)]="selectedGrade">
+                                <select class="" name="grade" [disabled]="grade_loader" id="exampleFormControlSelect1"
+                                    (ngModelChange)="getListOfStudent($event)" [(ngModel)]="selectedGrade">
                                     <option value="" disabled selected>Select Grades </option>
                                     <option *ngFor="let grade of schoolGrades" value={{grade.id}}>
                                         {{grade.grade}} {{grade.section}}
@@ -32,7 +33,8 @@
 
                             <div class="assign-form">
                                 <label for="exampleFormControlSelect2" id="mid"> Students - </label>
-                                <select class="" name="studentList" [disabled]="stu_loader" id="exampleFormControlSelect1" (ngModelChange)="getStudentId($event)"
+                                <select class="" name="studentList" [disabled]="stu_loader"
+                                    id="exampleFormControlSelect1" (ngModelChange)="getStudentId($event)"
                                     [(ngModel)]="selectedStudent">
                                     <option value="" disabled selected>Select Student</option>
                                     <option *ngFor="let stu of studentList;" value={{stu.id}}>
@@ -48,7 +50,8 @@
 
                             <div class="assign-form">
                                 <label for="exampleFormControlSelect3">Select Activity - </label>
-                                <select class="" name="activityList" [disabled]="acti_loader" id="exampleFormControlSelect3" (ngModelChange)="getActivityId($event)"
+                                <select class="" name="activityList" [disabled]="acti_loader"
+                                    id="exampleFormControlSelect3" (ngModelChange)="getActivityId($event)"
                                     [(ngModel)]="selectedActivity">
                                     <option value="" disabled selected>Select Activity </option>
                                     <option *ngFor="let activity of activities; let i = index;"
@@ -83,7 +86,8 @@
                                                 <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                                                     <td>
                                                         <label>
-                                                            <input type="checkbox" name="selectPerformedActivity" (click)="stopCollapse($event)"
+                                                            <input type="checkbox" name="selectPerformedActivity"
+                                                                (click)="stopCollapse($event)"
                                                                 [(ngModel)]="actiPerform[pa.id]">
                                                             {{pa.activityName}}
                                                         </label>
@@ -99,15 +103,16 @@
                                                             data-parent="#accordionExample">
                                                             <div class="row">
                                                                 <div class="col-4">
-                                                                    <div class="description">
+                                                                    <div class="assign description">
                                                                         <h5> Activity Details </h5>
                                                                         <p> <strong>Description -
                                                                             </strong>{{pa.description}}</p>
-                                                                        <p *ngIf="pa.fileResponses.length"> 
+                                                                        <p *ngIf="pa.fileResponses.length">
                                                                             <strong>Attachments - </strong> </p>
                                                                         <div *ngFor="let file of pa.fileResponses">
                                                                             <div>
-                                                                                <a target="_blank" [attr.href]="file.url">
+                                                                                <a target="_blank"
+                                                                                    [attr.href]="file.url">
                                                                                     <i class="fa fa-file-audio"
                                                                                         *ngIf="file.extension == 'mp3'"></i>
                                                                                     <i class="fa fa-image"
@@ -121,10 +126,12 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-4">
-                                                                    <div class="description">
+                                                                    <div class="assign description">
                                                                         <h5> Development Parameters </h5>
-                                                                        <p> <strong>Focus Area - </strong>{{pa.focusAreas}}</p>
-                                                                        <p> <strong>PSD Area - </strong>{{pa.psdAreas}}</p>
+                                                                        <p> <strong>Focus Area -
+                                                                            </strong>{{pa.focusAreas}}</p>
+                                                                        <p> <strong>PSD Area - </strong>{{pa.psdAreas}}
+                                                                        </p>
                                                                         <p> <strong> 4's - </strong> {{pa.fourS}} </p>
                                                                         <!--
                                                                             <span *ngIf="pa.fourS=='Skill'"
@@ -147,7 +154,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-4">
-                                                                    <div class="description">
+                                                                    <div class="assign description">
                                                                         <h5> Scoring </h5>
                                                                         <p> <strong>Participation Score -
                                                                             </strong>{{pa.participationScore}} </p>
@@ -155,7 +162,7 @@
                                                                             </strong>{{pa.initiativeScore}}</p>
                                                                         <p> <strong>Achievement Score -
                                                                             </strong>{{pa.achievementScore}}</p>
-                                                                            <p> <strong>Total Score -
+                                                                        <p> <strong>Total Score -
                                                                             </strong>{{pa.totalMarks}}</p>
                                                                         <p> <strong>Coach Remarks -
                                                                             </strong>{{pa.coachRemark}}</p>
@@ -180,8 +187,9 @@
                                     </table>
                                 </div>
                             </div>
-                            <button type="button" name="giveAward" class="award btn btn-success" data-toggle="modal" data-backdrop="static" data-keyboard="false"
-                                data-target="#assignAwardModal" (click)="getSchoolAwards()">Give
+                            <button type="button" name="giveAward" class="award btn btn-success" data-toggle="modal"
+                                data-backdrop="static" data-keyboard="false" data-target="#assignAwardModal"
+                                (click)="getSchoolAwards()">Give
                                 Award</button>
                         </div>
                     </div>
@@ -238,47 +246,29 @@
                                                         <div
                                                             *ngFor="let ap of al.activityPerformedResponses; let j = index">
                                                             <div class="row">
-                                                                <div class="col-4">
-                                                                    <div class="description">
-                                                                        <h5> Activity {{j+1}} Details </h5>
-                                                                        <p> <strong>Description -
-                                                                            </strong>{{ap.description}}</p>
-                                                                        <p> <strong>Date -
-                                                                            </strong>{{ap.dateOfActivity | date}}</p>
-                                                                        <p *ngIf="ap.fileResponses.length"> 
-                                                                            <strong>Attachments - </strong> </p> 
-                                                                        <div *ngFor="let file of ap.fileResponses">
-                                                                            <div>
-                                                                                <a target="_blank" [attr.href]="file.url">
-                                                                                    <i class="fa fa-file-audio"
-                                                                                        *ngIf="file.extension == 'mp3'"></i>
-                                                                                    <i class="fa fa-image"
-                                                                                        *ngIf="file.extension=='jpg'"></i>
-                                                                                    <i class="fa fa-video-camera"
-                                                                                        *ngIf="file.extension=='video'"></i>
-                                                                                    {{file.name}}
-                                                                                </a>
+                                                                <div class="col-12" *ngIf="j==0">
+                                                                    <div class="horz">
+                                                                        <h5> Activity Performed - {{al.activity.name}} </h5>
+                                                                        <div class="para">
+                                                                                <p id="fa"> <strong> Focus Area - </strong> </p>
+                                                                                <div id="fa"
+                                                                                    *ngFor="let fa of ap.focusAreas; let i = index">
+                                                                                    <p>{{fa}} <span *ngIf="i < ap.focusAreas.length-1"> , </span> </p>
+                                                                                </div>
+                                                                                <p> <strong>PSD Area - </strong>{{ap.psdAreas}}</p>
+                                                                                <p> <strong>4's: </strong> {{ap.fourS}} </p>
                                                                             </div>
-                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-4">
                                                                     <div class="description">
-                                                                        <h5> Development Parameters </h5>
-                                                                        <p> <strong>Focus Area - </strong></p>
-
-                                                                        <!-- Work Here -->
-                                                                        <div *ngFor="let fa of ap.focusAreas; let i = index">
-                                                                            <p>{{fa}}
-                                                                                <!-- <span *ngIf="i < ap.focusAreas.length-1">,</span> -->
-                                                                            </p>
-                                                                        </div>
-                                                                        <p> <strong>PSD Area -</strong></p>
-                                                                        <div *ngFor="let psd of ap.psdAreas;">
-                                                                            <p>{{psd}}</p>
-                                                                        </div>
-                                                                        
-                                                                        <p> <strong> 4's - </strong> {{ap.fourS}} </p>
+                                                                        <p id="title_award"> Activity {{j+1}} Details :
+                                                                        </p>
+                                                                        <p> <strong>Description -
+                                                                            </strong>{{ap.description}}</p>
+                                                                        <p> <strong>Date -
+                                                                            </strong>{{ap.dateOfActivity | date}}
+                                                                        </p>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-4">
@@ -297,6 +287,28 @@
                                                                             </strong>{{ap.coachRemark}} </p>
                                                                     </div>
                                                                 </div>
+                                                                <div class="col-4">
+                                                                    <div class="attachment">
+                                                                        <p *ngIf="ap.fileResponses.length">
+                                                                            <strong style="text-decoration: underline;">
+                                                                                Attachments - </strong> </p>
+                                                                        <div *ngFor="let file of ap.fileResponses">
+                                                                            <div>
+                                                                                <a target="_blank"
+                                                                                    [attr.href]="file.url">
+                                                                                    <i class="fa fa-file-audio"
+                                                                                        *ngIf="file.extension == 'mp3'"></i>
+                                                                                    <i class="fa fa-image"
+                                                                                        *ngIf="file.extension=='jpg'"></i>
+                                                                                    <i class="fa fa-video-camera"
+                                                                                        *ngIf="file.extension=='video'"></i>
+                                                                                    {{file.name}}
+                                                                                </a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -336,7 +348,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Award Details - </h5>
-                <button type="button" name="closeModal" class="close" data-dismiss="modal" aria-label="Close" (click)="resetForm()">
+                <button type="button" name="closeModal" class="close" data-dismiss="modal" aria-label="Close"
+                    (click)="resetForm()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -347,7 +360,7 @@
                         <select class="form-control" name="awardType" formControlName="awardType">
                             <option [ngValue]="" disabled selected> Select Award </option>
                             <option *ngFor="let award of schoolAwards" value={{award}}>
-                                {{award}} 
+                                {{award}}
                             </option>
                             <option disabled *ngIf="schoolAwards.length == 0">No Awards Found</option>
                         </select>
@@ -358,19 +371,21 @@
                     </div>
                     <div class="form-group">
                         <label for="message-text" class="col-form-label"> Description - </label>
-                        <textarea class="form-control" name="description" id="message-text" formControlName="description"></textarea>
+                        <textarea class="form-control" name="description" id="message-text"
+                            formControlName="description"></textarea>
                         <small class="text-danger"
                             *ngIf="!assignAwardForm.get('description').valid && assignAwardForm.get('description').touched">
                             Max Length 255.
                         </small>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" name="resetForm" class="reset btn btn-secondary" (click)="resetForm()"> Reset </button>
-                        <button type="submit" name="submit" class="award btn btn-primary" [disabled]="assignAwardForm.invalid">
-                            <div *ngIf="pa_loader" class="spinner-border text-dark"
-                            role="status">
-                        </div>{{pa_loader ? 'Loading...' :  'Done'}}
-</button>
+                        <button type="button" name="resetForm" class="reset btn btn-secondary" (click)="resetForm()">
+                            Reset </button>
+                        <button type="submit" name="submit" class="award btn btn-primary"
+                            [disabled]="assignAwardForm.invalid">
+                            <div *ngIf="pa_loader" class="spinner-border text-dark" role="status">
+                            </div>{{pa_loader ? 'Loading...' :  'Done'}}
+                        </button>
                     </div>
                 </form>
             </div>
