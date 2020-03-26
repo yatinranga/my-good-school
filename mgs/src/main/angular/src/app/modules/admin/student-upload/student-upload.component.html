@@ -3,7 +3,6 @@
   <div class="card bg-light">
     <div class="card-body text-center">
       <form [formGroup]="studentBulkForm" (ngSubmit)="uploadStudents()">
-        Select School :
         <div class="input-field">
           <select formControlName="schoolId" name="schoolId">
             <option value="" disabled selected>Select School </option>

@@ -84,7 +84,18 @@ button.pending.icon_button{
     color: #1f69ad;
     font-size: 18px;
 }
-.teacher_activity_main .sortby select, .table_main h5{
+.teacher_activity_main .sortby select{
+    border: none !important;
+    height: 35px;
+    border-radius: 0 !important;
+    text-align: center;
+    width: 150px;
+    font-weight: 600;
+    font-size: 16px;
+    background: #ddd;
+    color: #444;
+}
+ .table_main h5{
     color: #1f69ad;
     font-size: 17px;
 }
