@@ -125,7 +125,10 @@ export class CustomHttpService {
     showErrorAlert(errorInfo: any) {
         if(errorInfo.status === 401){
             this.alertService.showErrorAlert("Invalid Username/Password");
-        } else {
+        } else if (errorInfo.status === 400){
+            this.alertService.showErrorAlert("Invalid Password");
+        }
+         else {
             this.alertService.showErrorAlert(errorInfo.msg);
         }
         //check for 401 error so that a Logout btn can be given with that

@@ -218,8 +218,7 @@
                                     </thead>
                                     <tbody id="accordionExample">
                                         <ng-container *ngFor="let al of awardsList ; let i = index;">
-                                            <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i"
-                                                aria-expanded="false" [attr.aria-controls]="'#collapse'+i">
+                                            <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                                                 <td>{{i+1}}</td>
                                                 <td>{{al.awardType}}</td>
                                                 <td>{{al.description}}</td>
@@ -237,27 +236,39 @@
                                                         <i class="fa fa-hourglass-start"></i> </button>
                                                     <button name="verifiedAward" *ngIf="al.status == 'VERIFIED'"
                                                         [disabled]="(al.status == 'VERIFIED')" class="verify">
-                                                        <i class="fa fa-check" aria-hidden="true"></i> </button> </td>
+                                                        <i class="fa fa-check" aria-hidden="true"></i> </button>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td class="collapse-td" colspan="8">
-                                                    <div [attr.id]="'collapse' + i" class="collapse"
+                                                    <div [attr.id]="'collapse' + i " class="collapse"
                                                         data-parent="#accordionExample">
                                                         <div
                                                             *ngFor="let ap of al.activityPerformedResponses; let j = index">
                                                             <div class="row">
                                                                 <div class="col-12" *ngIf="j==0">
                                                                     <div class="horz">
-                                                                        <h5> Activity Performed - {{al.activity.name}} </h5>
+                                                                        <h5> Activity Performed - {{al.activity.name}}
+                                                                        </h5>
                                                                         <div class="para">
-                                                                                <p id="fa"> <strong> Focus Area - </strong> </p>
-                                                                                <div id="fa"
-                                                                                    *ngFor="let fa of ap.focusAreas; let i = index">
-                                                                                    <p>{{fa}} <span *ngIf="i < ap.focusAreas.length-1"> , </span> </p>
-                                                                                </div>
-                                                                                <p> <strong>PSD Area - </strong>{{ap.psdAreas}}</p>
-                                                                                <p> <strong>4's: </strong> {{ap.fourS}} </p>
+                                                                            <p id="fa"> <strong> Focus Area - </strong>
+                                                                            </p>
+                                                                            <div id="fa"
+                                                                                *ngFor="let fa of ap.focusAreas; let i = index">
+                                                                                <p>{{fa}} <span
+                                                                                        *ngIf="i < ap.focusAreas.length-1">
+                                                                                        , </span> </p>
+                                                                            </div><br>
+                                                                            <p id="fa"> <strong> PSD Area - </strong>
+                                                                            </p>
+                                                                            <div id="fa"
+                                                                                *ngFor="let fa of ap.psdAreas; let i = index">
+                                                                                <p>{{fa}} <span
+                                                                                        *ngIf="i < ap.psdAreas.length-1">
+                                                                                        , </span> </p>
                                                                             </div>
+                                                                            <p> <strong>4's: </strong> {{ap.fourS}} </p>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-4">
