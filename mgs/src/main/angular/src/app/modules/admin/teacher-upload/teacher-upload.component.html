@@ -1,5 +1,5 @@
 <div class="teacher_upload">
-  <h2> Data Upload Form For Teachers</h2>
+  <h2> Data Upload Form For Supervisors</h2>
   <div class="card bg-light">
     <div class="card-body text-center">
       <form [formGroup]="teacherBulkForm" (ngSubmit)="uploadTeacher()">
@@ -26,7 +26,7 @@
 
       <div>
 
-        <button class="download btn" type="button" name="downloadTeacher" (click)="downloadTeacher()">Download Teacher
+        <button class="download btn" type="button" name="downloadTeacher" (click)="downloadTeacher()">Download Supervisor
           Template</button>
         <a style="display: none;" download #dwnld></a>
       </div>
