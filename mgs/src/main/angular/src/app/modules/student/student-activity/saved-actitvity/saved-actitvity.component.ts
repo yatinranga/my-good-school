@@ -54,6 +54,7 @@ export class SavedActitvityComponent implements OnInit {
 
   activitiesArr = []; // single arr for performed actvities
   order = false;
+  temp = 5;
 
   ngOnInit() {
     this.setMinDate();
@@ -67,7 +68,7 @@ export class SavedActitvityComponent implements OnInit {
 
     this.savedActivityForm = this.formBuilder.group({
       activityId: [, [Validators.required]],
-      description: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(100)]],
+      description: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(25), Validators.maxLength(250)]],
       dateOfActivity: [{ value: '', disabled: true }, [Validators.required]],
       coachId: [{ value: '', disabled: true }, [Validators.required]],
       attachment: [],
