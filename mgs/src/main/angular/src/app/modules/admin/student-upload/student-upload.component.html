@@ -9,7 +9,7 @@
             <option *ngFor="let school of schools; let i = index;" value={{school.id}}>{{school.name}}</option>
           </select>
         </div>
-        <div class="input-field">
+        <div class="choosefield input-field">
           <input class="choosefile" type="file" name="selectedFile" (change)="onFileSelect($event)" />
           <span class="choosefile choosefile-custom"> <i class="fa fa-file"></i> </span>
         </div>

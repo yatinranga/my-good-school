@@ -306,7 +306,7 @@
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label"> </label>
                             <div *ngFor="let sf of files; let i = index;">
-                                <p>{{sf.name}}
+                                <p id="attachment_name"> {{sf.name}}
                                     <button type="button" name="removeFile" (click)="removeFile(i)" class="reviewed icon_button">
                                         <i class="fa fa-trash"></i>
                                     </button>

@@ -2,3 +2,22 @@
 @import '../../../app.component.scss';
 
 @import '../../signup/student-signup/student-signup.component.scss';
+
+span.choosefile.choosefile-custom{
+    top: 0;
+    width: 30%;
+    background: #699e96;
+}
+i.fa.fa-file{
+    left: 0;
+}
+input.choosefile.formControl{
+    padding: 15px;
+}
+span.choosefile.choosefile-custom:after{
+    content: "Choose School Logo...";
+    width: 75%;
+}
+span.choosefile.choosefile-custom:before{
+    background-color: gainsboro;
+}

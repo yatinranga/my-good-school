@@ -12,7 +12,7 @@
 .card.bg-light {
     margin: 15px 0;
 }
-.student_upload h2, .teacher_upload h2 {
+.student_upload h2, .teacher_upload h2{
     text-align: center;
     margin: 35px 0;
     color: #333;
@@ -23,42 +23,58 @@
     background: none !important;
     border: none !important;
 }
+.container.register-form h2 {
+    color: #409688;
+    font-size: 30px;
+    margin-bottom: 30px;
+    font-weight: 400;
+    font-family: serif;
+}
+
+/*-------------------------------------MAIN ADMIN-------------------------------------*/
+
+button.download.btn {
+    background: #409688;
+    color: white;
+    padding: 15px 25px;
+    font-size: 17px;
+    margin-top: 20px;
+}
+button.upload.btn{
+    background: #409688;
+    color: white;
+    padding: 12px 20px;
+    font-size: 17px;
+}
+button.upload.btn{
+    margin-left: 20px;
+}
+button.btn.logout{
+    float: right;
+    padding: 15px;
+    font-size: 20px;
+    background: #969696;
+}
+
 
 /*-------------------------------------FORM-------------------------------------*/
+
+.btn {
+    display: inline-block;
+    border-radius: 0 !important;
+    outline: none !important;
+    color: $light;
+    border: none !important;
+}
 
 .input-field {
     display: inline-block;
     background: white;
     border: solid 1px #ddd;
-    padding: 10px 10px;
+    padding: 10px 5px;
     margin: 10px;
     border-radius: 0px;
 }
-.btn {
-    padding: 16px 12px ;
-    display: inline-block;
-    font-size: 19px;
-    border-radius: 0 !important;
-    background: $btn !important;
-    outline: none !important;
-    color: $light;
-    border: none !important;
-}
-button.upload.btn{
-    margin-left: 20px;
-}
-
-button.btn.logout{
-    float: right;
-}
-i.fa.fa-file {
-    float: left;
-    position: absolute;
-    left: 26px;
-    top: 18px;
-    font-size: 15px;
-}
-
 input.choosefile {
     opacity: 0;
     position: relative;
@@ -67,25 +83,34 @@ input.choosefile {
     width: 100%;
     display: inline-block;
 }
+.choosefield.input-field {
+    position: relative;
+}
+span.choosefile.choosefile-custom i.fa.fa-file {
+    float: left;
+    position: absolute;
+    left: 17px;
+    top: 17px;
+    font-size: 15px;
+}
 span.choosefile.choosefile-custom {
     position: absolute;
     content: "";
     background: none;
     z-index: 1;
     opacity: 1;
-    width: 23.9%;
-    height: 40px;
-    right: 459px;
+    width: 100%;
+    right: 0;
     height: 50px;
-    left: inherit;
-    top: 31px;
+    left: 0;
+    top: 0;
     box-shadow: 0 0 10px white;
     border-radius: 0px;
 }
 span.choosefile.choosefile-custom:after {
     content: "Choose file...";
     position: absolute;
-    width: 65%;
+    width: 70%;
     left: 0;
     padding: 13px 0px;
     color: $black;
@@ -95,8 +120,8 @@ span.choosefile.choosefile-custom:before {
     content: "Browse";
     position: absolute;
     background: gainsboro;
-    width: 35%;
-    right: -18px;
+    width: 30%;
+    right: 0;
     padding: 13px 0px;
     color: $black;
     border-radius: 0px;
@@ -618,6 +643,9 @@ li.nav-item{
     box-shadow: 0 0 10px #555;
 }
 
+/*-------------------------------------ACTIVITY-------------------------------------*/
+
+
 .teacher-activities-main {
     float: right;
     width: 40%;
@@ -633,5 +661,11 @@ div#fa, p#fa {
     background: url(assets/images/board.jpg);
     color: #fafafa;
     padding: 5px 10px;
+    opacity: 0.8;
+}
+
+p#attachment_name {
+    padding: 0 10px;
+    text-decoration: underline;
 }
 

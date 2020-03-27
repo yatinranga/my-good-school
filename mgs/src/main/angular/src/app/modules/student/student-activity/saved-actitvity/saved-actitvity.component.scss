@@ -148,7 +148,7 @@ textarea.form-control.add.ng-untouched.ng-pristine.ng-valid {
     text-align: center;
     position: relative;
     padding: 10px;
-    margin-top: 10px;
+    margin-top: 20px;
 }
 .add-act.choosefile_box span.choosefile.choosefile-custom {
     position: absolute;
@@ -210,7 +210,6 @@ form.add_activity_form{
 }
 button.btn.cancel {
     margin: 0 10px;
-    background: firebrick !important;
     padding: 10px;
     outline: none !important
 }
@@ -323,4 +322,7 @@ button.btn.saved.btnSubmit.btn-success {
     position: relative;
     top: 50px;
     outline: none !important;
+}
+button.close span {
+    color: #dd343d;
 }

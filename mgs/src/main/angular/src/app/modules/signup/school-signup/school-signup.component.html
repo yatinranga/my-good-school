@@ -1,21 +1,17 @@
 <form [formGroup]="schoolSignup" (ngSubmit)="onSubmit()">
     <div class="container register-form">
-        <div class="form">
-            <div class="note">
-                <p><b>School Registration Form</b></p>
-            </div>
-        </div>
+        <h2> School Registration Form </h2>
         <div class="form-content">
             <div class="row">
                 <div class="col-md-6">
-                    <div class="form-group">Enter Name :*
+                    <div class="form-group">Enter Name : <span style="color: red"> * </span>
                         <input type="text" class="form-control"name="name" placeholder="Your Name" formControlName="name" />
                         <small class="text-danger"
                             *ngIf="!schoolSignup.get('name').valid && schoolSignup.get('name').touched">
                             Name Required
                         </small>
                     </div>
-                    <div class="form-group">Enter Email :*
+                    <div class="form-group">Enter Email : <span style="color: red"> * </span>
                         <input type="email" class="form-control" name="email" placeholder="Your Email" formControlName="email" />
                         <small class="text-danger"
                             *ngIf="!schoolSignup.get('email').valid && schoolSignup.get('email').touched">
@@ -28,7 +24,7 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="form-group">Enter Address :*
+                    <div class="form-group">Enter Address : <span style="color: red"> * </span>
                         <textarea class="form-control" name="address" placeholder="Your Address" formControlName="address">
                                     <small class="text-danger" *ngIf="!schoolSignup.get('address').valid && schoolSignup.get('address').touched">
                                         Address Required
@@ -42,12 +38,12 @@
                     </div>
                 </div>
                 <div class="col-md-12" style="text-align: center; margin-top: 15px;">
-                    <div class="form-group">Logo :
-                        <input type="file" class="formControl" placeholder="Your Logo" name="logo"
-                            (change)="onImageSelect($event)">
+                    <div class="form-group"> 
+                                <input type="file" class="choosefile formControl" placeholder="Your Logo" name="logo"
+                                (change)="onImageSelect($event)">
+                                <span class="choosefile choosefile-custom"> <i class="fa fa-file"> </i> </span>
                         <img *ngIf="path" [src]="path" height="200">
                     </div>
-                    
                 </div>
             </div>
         </div>
