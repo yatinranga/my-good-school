@@ -93,4 +93,9 @@ export class TeacherService {
   verifyAwards(awardId){
     return this.http.put("/api/teacher/award/"+ awardId +"?Verified=TRUE",{});
   }
+
+  // DOWNLOAD Attachmeents
+  downloadAttachment(filePath){
+    return this.http.get("/file/download?filePath="+filePath);
+  }
 }

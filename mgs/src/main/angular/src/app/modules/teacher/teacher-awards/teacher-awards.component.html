@@ -112,7 +112,7 @@
                                                                         <div *ngFor="let file of pa.fileResponses">
                                                                             <div>
                                                                                 <a target="_blank"
-                                                                                    [attr.href]="file.url">
+                                                                                    [attr.href]="file.url" (click)="downloadFile(file.url)">
                                                                                     <i class="fa fa-file-audio"
                                                                                         *ngIf="file.extension == 'mp3'"></i>
                                                                                     <i class="fa fa-image"
@@ -298,7 +298,7 @@
                                                                         <div *ngFor="let file of ap.fileResponses">
                                                                             <div>
                                                                                 <a target="_blank"
-                                                                                    [attr.href]="file.url">
+                                                                                    [attr.href]="file.url" (click)="downloadFile(file.url)">
                                                                                     <i class="fa fa-file-audio"
                                                                                         *ngIf="file.extension == 'mp3'"></i>
                                                                                     <i class="fa fa-image"
@@ -361,7 +361,7 @@
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label"> Award Name - </label>
                         <select class="form-control" name="awardType" formControlName="awardType">
-                            <option [ngValue]="" disabled selected> Select Award </option>
+                            <option value="" disabled selected> Select Award </option>
                             <option *ngFor="let award of schoolAwards" value={{award}}>
                                 {{award}}
                             </option>
@@ -378,7 +378,7 @@
                             formControlName="description"></textarea>
                         <small class="text-danger"
                             *ngIf="!assignAwardForm.get('description').valid && assignAwardForm.get('description').touched">
-                            Max Length 255.
+                            Min Length 10 words.
                         </small>
                     </div>
                     <div class="modal-footer">
