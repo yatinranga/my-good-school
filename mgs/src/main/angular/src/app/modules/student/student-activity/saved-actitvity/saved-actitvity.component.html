@@ -132,7 +132,8 @@
                                                     <h5> Attachments </h5> 
                                                     <div *ngFor="let file of activity.fileResponses"> {{activity.fileResponses.length ? "" : "NA"}}
                                                         <div>
-                                                            <a target="_blank" [attr.href]="file.url">
+                                                            <!-- insert target="_blank" in a tag -->
+                                                            <a [attr.href]="file.url" (click)="downloadFile(file.url)">
                                                                 <i class="fa fa-file-audio" *ngIf="file.extension == 'mp3'"></i>
                                                                 <i class="fa fa-image" *ngIf="file.extension=='jpg'"></i>
                                                                 <i class="fa fa-video-camera" *ngIf="file.extension=='video'"></i>
@@ -216,7 +217,7 @@
                                                     <h5> Attachments : </h5> {{activity.fileResponses.length ? "" : "NA"}}
                                                     <div *ngFor="let file of activity.fileResponses">
                                                         <div>
-                                                            <a target="_blank" [attr.href]="file.url">
+                                                            <a target="_blank" [attr.href]="file.url" (click)="downloadFile(file.url)">
                                                                 <i class="fa fa-file-audio" *ngIf="file.extension == 'mp3'"></i>
                                                                 <i class="fa fa-image" *ngIf="file.extension=='jpg'"></i>
                                                                 <i class="fa fa-video-camera" *ngIf="file.extension=='video'"></i>
@@ -299,7 +300,7 @@
                         </div>
                         <div class="form-group">
                             <div class="add-act choosefile_box">
-                            <input class="choosefile" type="file" [attr.max]="temp" accept="image/*, audio/*, video/*, application/pdf,application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
+                            <input class="choosefile" type="file" accept="image/*, audio/*, video/*, application/pdf,application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
                                     text/plain" name="selectedFile" (change)="onFileSelect($event)" multiple />
                                     <span class="choosefile choosefile-custom"> <i class="fa fa-file"> </i> </span>
                         </div>

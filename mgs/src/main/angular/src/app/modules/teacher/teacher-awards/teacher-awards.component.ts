@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { AlertService } from 'src/app/services/alert.service';
-import { Router } from '@angular/router';
+
 declare let $: any;
 
 @Component({
@@ -43,8 +43,7 @@ export class TeacherAwardsComponent implements OnInit {
 
   assignAwardForm: FormGroup;
 
-  constructor(private teacherService: TeacherService, private formbuilder: FormBuilder, private alertService: AlertService,
-    private router: Router) { }
+  constructor(private teacherService: TeacherService, private formbuilder: FormBuilder, private alertService: AlertService) { }
 
   ngOnInit() {
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
@@ -64,7 +63,7 @@ export class TeacherAwardsComponent implements OnInit {
       studentId: [],
       activityId: [],
       awardType: [, [Validators.required]],
-      description: [, [Validators.required, Validators.maxLength(255)]],
+      description: [, [Validators.required, Validators.minLength(10)]],
       activityPerformedIds: [([])],
     });
   }
@@ -283,6 +282,13 @@ export class TeacherAwardsComponent implements OnInit {
   // Reset Award Details Form
   resetForm() {
     this.assignAwardForm.reset();
+  }
+
+  // to DOWNLOAD the Attachments
+  downloadFile(url){
+    this.teacherService.downloadAttachment(url).subscribe((res) => {
+      console.log(res);
+    }, (err) => {console.log(err)});
   }
 
 }

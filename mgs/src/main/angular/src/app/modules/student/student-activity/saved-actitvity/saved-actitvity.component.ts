@@ -54,7 +54,6 @@ export class SavedActitvityComponent implements OnInit {
 
   activitiesArr = []; // single arr for performed actvities
   order = false;
-  temp = 5;
 
   ngOnInit() {
     this.setMinDate();
@@ -186,7 +185,7 @@ export class SavedActitvityComponent implements OnInit {
   // to SUBMIT the activity
   submitSavedActivity(e, index, array) {
     e.stopPropagation();
-    this.alertService.confirmWithoutLoader('question', 'Do you want to submit ?', '', 'Yes').then(result => {
+    this.alertService.confirmWithoutLoader('question', 'Once submitted you will not be able to edit,\nSure you want to submit?', '', 'Confirm').then(result => {
       if (result.value) {
         const activityId = array[index].id;
         this.studentService.submitActivity(activityId).subscribe((res) => {
@@ -209,25 +208,25 @@ export class SavedActitvityComponent implements OnInit {
   }
 
   // Direct Submit Activity at the time of Add/Edit Activity
-  directSubmitActivity(activityId) {
-    this.alertService.confirmWithoutLoader('question', 'Do you want to submit ?', '', 'Yes').then(result => {
-      console.log(result);
-      if (result.value) {
-        this.studentService.submitActivity(activityId).subscribe((res) => {
-          console.log(res);
-          if (this.activityType === 'All') {
-            this.activitiesArr.shift();
-            this.activitiesArr.unshift(res);
-          } else {
-            this.activitiesArr.shift();
-          }
-          this.alertService.showSuccessAlert('Activity Submitted !');
-        }, (err) => {
-          console.log(err);
-        });
-      }
-    });
-  }
+  // directSubmitActivity(activityId) {
+  //   this.alertService.confirmWithoutLoader('question', 'Do you want to submit ?', '', 'Yes').then(result => {
+  //     console.log(result);
+  //     if (result.value) {
+  //       this.studentService.submitActivity(activityId).subscribe((res) => {
+  //         console.log(res);
+  //         if (this.activityType === 'All') {
+  //           this.activitiesArr.shift();
+  //           this.activitiesArr.unshift(res);
+  //         } else {
+  //           this.activitiesArr.shift();
+  //         }
+  //         this.alertService.showSuccessAlert('Activity Submitted !');
+  //       }, (err) => {
+  //         console.log(err);
+  //       });
+  //     }
+  //   });
+  // }
 
   // DELETE Activity
   deleteSavedActivity(e, activity, i) {
@@ -346,9 +345,10 @@ export class SavedActitvityComponent implements OnInit {
           this.submit_loader = false;
           $('#addActivityModal').modal('hide');
           $('.modal-backdrop').remove();
-          this.alertService.showSuccessToast('Activity Saved !').then((response) => {
-            this.directSubmitActivity(res.id);
-          });
+          this.alertService.showSuccessToast('Activity Saved');
+          // this.alertService.showSuccessToast('Activity Saved !').then((response) => {
+          //   this.directSubmitActivity(res.id);
+          // });
           this.addActivityShow = false;
         },
         (err) => {
@@ -363,10 +363,16 @@ export class SavedActitvityComponent implements OnInit {
   }
 
   onFileSelect(event) {
-    if (event.target.files.length > 0) {
-      this.files = [...event.target.files];
-      // this.savedActivityForm.value.attachment = this.files;
-      // console.log(this.files);
+    if (event.target.files.length < 5) {
+      if (event.target.files.length > 0) {
+        this.files = [...event.target.files];
+        console.log(this.files.length);
+        // this.savedActivityForm.value.attachment = this.files;
+        // console.log(this.files);
+      }
+    } else {
+      console.log("error");
+      this.alertService.showErrorAlert("Cannot select files more than 5");
     }
   }
 
@@ -485,6 +491,13 @@ export class SavedActitvityComponent implements OnInit {
   // to reset the Add/Edit Form
   resetForm() {
     this.savedActivityForm.reset();
+  }
+
+  // to DOWNLOAD the Attachments
+  downloadFile(url){
+    this.studentService.downloadAttachment(url).subscribe((res) => {
+      console.log(res);
+    }, (err) => {console.log(err)});
   }
 
   setMinDate() {

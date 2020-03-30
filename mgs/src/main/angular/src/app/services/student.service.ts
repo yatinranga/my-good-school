@@ -111,6 +111,11 @@ export class StudentService {
     return this.http.get("/api/student/certificates");
   }
 
+  // DOWNLOAD Attachmeents
+  downloadAttachment(filePath){
+    return this.http.get("/file/download?filePath="+filePath);
+  }
+
   putProfilePhoto(studentCid,formData){
     return this.http.put("/api/student/"+studentCid+"/profilePic",formData);
   }
