@@ -162,7 +162,9 @@ export class SavedActitvityComponent implements OnInit {
       description: activity.description,
       coachId: activity.coachId,
       id: activity.id,
+      attachment: activity.fileResponses
     });
+    this.files=activity.fileResponses;      
     this.editActivityShow = true;
     this.addActivityShow = false;
 
@@ -283,6 +285,8 @@ export class SavedActitvityComponent implements OnInit {
   updateActivity() {
     if (this.editActivityShow) {
       this.submit_loader = true;
+      this.savedActivityForm.value.attachment = this.files;
+      console.log(this.savedActivityForm.value.attachment);
       const formData = new FormData();
       const date = new Date(this.savedActivityForm.value.dateOfActivity);
       const activityDate = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
@@ -299,6 +303,7 @@ export class SavedActitvityComponent implements OnInit {
           formData.append('fileRequests[' + index + '].file', element);
         });
       }
+      console.log(this.savedActivityForm.value);  
 
       this.studentService.addActivity('/api/student/activities', formData).subscribe(
         (res) => {
@@ -321,6 +326,7 @@ export class SavedActitvityComponent implements OnInit {
     if (this.addActivityShow) {
       this.submit_loader = true;
       this.savedActivityForm.value.attachment = this.files;
+      console.log(this.savedActivityForm.value.attachment);
       const time = this.savedActivityForm.value.dateOfActivity + ' 00:00:00';
       this.savedActivityForm.value.dateOfActivity = time;
       const formData = new FormData();
@@ -363,10 +369,11 @@ export class SavedActitvityComponent implements OnInit {
   }
 
   onFileSelect(event) {
-    if (event.target.files.length < 5) {
+    if (event.target.files.length <= 5 && (this.files.length+event.target.files.length)<=5) {
       if (event.target.files.length > 0) {
-        this.files = [...event.target.files];
+        this.files = [...this.files,...event.target.files];
         console.log(this.files.length);
+        console.log(this.files);
         // this.savedActivityForm.value.attachment = this.files;
         // console.log(this.files);
       }

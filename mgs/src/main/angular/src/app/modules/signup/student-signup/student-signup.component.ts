@@ -26,36 +26,37 @@ export class StudentSignupComponent implements OnInit {
       (err) => console.log(err))
 
     this.studentSignup = new FormGroup({
-      name: new FormControl(null,[Validators.required]),
+      name: new FormControl(null,[Validators.required,Validators.pattern('[a-zA-Z ]*')]),
       dob: new FormControl(null,[Validators.required]),
       email: new FormControl(null,[Validators.required,Validators.email]),
-      mobileNumber: new FormControl(null,[Validators.min(10)]),
+      mobileNumber: new FormControl(null,[Validators.minLength(10),Validators.pattern("[0-9]*")]),
       gender: new FormControl(null,[Validators.required]),
       schoolId: new FormControl(null,[Validators.required]),
       gradeId : new FormControl(null,[Validators.required]),
       sessionStartDate: new FormControl(null),
       subscriptionEndDate: new FormControl(null),
-      guardians: new FormArray(this.giveGuardianFormArray())
+      guardians: new FormArray([])
     });
   }
 
   get guardians() { return this.studentSignup.get('guardians') as FormArray }
 
-  giveGuardianFormArray() {
-    const arr = [];
-    return arr;
-  }
 
   addGuardian() {
-    console.log(this.studentSignup);
+    console.log(this.studentSignup.controls);
+    if(this.guardians.valid){      
+    // console.log(this.studentSignup);
     const fg = new FormGroup({
-      name: new FormControl(null),
-      email: new FormControl(null),
-      gender: new FormControl(null),
-      mobileNumber: new FormControl(null),
-      relationship: new FormControl(null)
+      name: new FormControl(null,[Validators.required,Validators.pattern('[a-zA-Z ]*')]),
+      email: new FormControl(null,[Validators.required,Validators.email]),
+      gender: new FormControl(null,[Validators.required]),
+      mobileNumber: new FormControl(null,[Validators.required,Validators.minLength(10),Validators.pattern("[0-9]*")]),
+      relationship: new FormControl(null,[Validators.required])
     });
     (this.studentSignup.get('guardians') as FormArray).push(fg);
+  } else  {
+    this.alertService.showErrorAlert("Kindly fill all the details of the Guardian");
+  }
   }
 
   deleteGuardian(index){
@@ -65,6 +66,7 @@ export class StudentSignupComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log(this.studentSignup.value.guardians.length);
     const time = this.studentSignup.value.dob + " 00:00:00";
     this.studentSignup.value.dob = time;
     console.log(time);
@@ -72,11 +74,11 @@ export class StudentSignupComponent implements OnInit {
     // this.studentSignup.value.dob = time;
     const payload =  this.studentSignup.value;
     console.log(payload);
-    this.studentService.uploadStudentDetails(payload).subscribe((res) => {
-      this.alertService.showSuccessAlert(""); 
-      this.router.navigate(['./login'])
-    },
-    (err) => console.log(err) )
+    // this.studentService.uploadStudentDetails(payload).subscribe((res) => {
+    //   this.alertService.showSuccessAlert(""); 
+    //   this.router.navigate(['./login'])
+    // },
+    // (err) => console.log(err) )
   }
 
   getGrades(schoolId){

@@ -101,13 +101,14 @@
                                                     <p *ngIf="activity.description">
                                                         <strong> Description : </strong> {{activity.description}} </p>
                                                     <p id="fa"> <strong> Focus Area : </strong> </p>
-                                                    <div id="fa" *ngFor="let fa of activity.focusAreas; let i = index">
-                                                        <p> {{fa}}
-                                                            <span *ngIf="i < activity.focusAreas.length-1"> , </span>
-                                                        </p>
-                                                    </div>
+                                                    <span id="fa" *ngFor="let fa of activity.focusAreas; let i = index">                                                        
+                                                        {{ (i === activity.focusAreas.length-1) ? fa : fa + "," + ' '}}                                                        
+                                                    </span>
                                                     <p *ngIf="activity.psdAreas">
-                                                        <strong>PSD Area : </strong>{{activity.psdAreas}}</p>
+                                                        <strong>PSD Area : </strong></p>
+                                                        <span id="fa" *ngFor="let fa of activity.psdAreas let i = index">                                                        
+                                                            {{ (i === activity.psdAreas.length-1) ? fa : fa + "," + ' '}}                                                        
+                                                        </span>
                                                     <p *ngIf="activity.fourS" id="fourSkills">
                                                         <strong> 4's : </strong> {{activity.fourS}}
                                                         <!--
@@ -157,13 +158,14 @@
                                                     <p id="fa">
                                                         <strong>Focus Area : </strong>
                                                     </p>
-                                                    <div id="fa" *ngFor="let fa of activity.focusAreas; let i = index">
-                                                        <p>{{fa}}
-                                                            <span *ngIf="i < activity.focusAreas.length-1"> , </span>
-                                                        </p>
-                                                    </div>
+                                                    <span id="fa" *ngFor="let fa of activity.focusAreas; let i = index">                                                        
+                                                        {{ (i === activity.focusAreas.length-1) ? fa : fa + "," + ' '}}                                                        
+                                                    </span>
                                                     <p *ngIf="activity.psdAreas">
-                                                        <strong>PSD Area : </strong>{{activity.psdAreas}}</p>
+                                                        <strong>PSD Area : </strong></p>
+                                                        <span id="fa" *ngFor="let fa of activity.psdAreas let i = index">                                                        
+                                                            {{ (i === activity.psdAreas.length-1) ? fa : fa + "," + ' '}}                                                        
+                                                        </span>
                                                     <p *ngIf="activity.fourS" id="fourSkills">
                                                         <strong>4's: </strong> {{activity.fourS}}
                                                         <!--

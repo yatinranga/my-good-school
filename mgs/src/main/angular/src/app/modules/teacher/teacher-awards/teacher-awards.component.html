@@ -129,9 +129,14 @@
                                                                     <div class="assign description">
                                                                         <h5> Development Parameters </h5>
                                                                         <p> <strong>Focus Area -
-                                                                            </strong>{{pa.focusAreas}}</p>
-                                                                        <p> <strong>PSD Area - </strong>{{pa.psdAreas}}
-                                                                        </p>
+                                                                            </strong></p>
+                                                                            <span id="fa" *ngFor="let fa of pa.focusAreas; let i = index">                                                        
+                                                                                {{ (i === pa.focusAreas.length-1) ? fa : fa + "," + ' '}}                                                        
+                                                                            </span>
+                                                                            <p><strong>PSD Area : </strong></p>
+                                                                            <span id="fa" *ngFor="let fa of pa.psdAreas let i = index">                                                        
+                                                                                {{ (i === pa.psdAreas.length-1) ? fa : fa + "," + ' '}}                                                        
+                                                                            </span>
                                                                         <p> <strong> 4's - </strong> {{pa.fourS}} </p>
                                                                         <!--
                                                                             <span *ngIf="pa.fourS=='Skill'"
@@ -250,15 +255,13 @@
                                                                         <h5> Activity Performed - {{al.activity.name}} </h5>
                                                                         <div class="para">
                                                                                 <p id="fa"> <strong> Focus Area - </strong> </p>
-                                                                                <div id="fa"
-                                                                                    *ngFor="let fa of ap.focusAreas; let i = index">
-                                                                                    <p>{{fa}} <span *ngIf="i < ap.focusAreas.length-1"> , </span> </p>
-                                                                                </div><br>
-                                                                                <p id="fa"> <strong> PSD Area - </strong> </p>
-                                                                                <div id="fa"
-                                                                                    *ngFor="let fa of ap.psdAreas; let i = index">
-                                                                                    <p>{{fa}} <span *ngIf="i < ap.psdAreas.length-1"> , </span> </p>
-                                                                                </div>
+                                                                                <span id="fa" *ngFor="let fa of ap.focusAreas; let i = index">                                                        
+                                                                                    {{ (i === ap.focusAreas.length-1) ? fa : fa + "," + ' '}}                                                        
+                                                                                </span>
+                                                                                <p id="fa"><strong>PSD Area : </strong></p>
+                                                                                <span id="fa" *ngFor="let fa of ap.psdAreas let i = index">                                                        
+                                                                                    {{ (i === ap.psdAreas.length-1) ? fa : fa + "," + ' '}}                                                        
+                                                                                </span>
                                                                                 <p> <strong>4's: </strong> {{ap.fourS}} </p>
                                                                             </div>
                                                                     </div>
