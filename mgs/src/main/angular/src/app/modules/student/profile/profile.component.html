@@ -4,7 +4,8 @@
             <div class="profile_main">
                 <div class="student_main">
                     <div class="student_image">
-                        <img src="assets/images/childprofile.jpg">
+                        <img [src]="path">
+                        <button class="edit_profile" (click)="photoInput.click()"> <i class="fa fa-edit" title="Edit" > </i> Edit Profile Photo </button>
                         <p> <label> {{studentDetails['name']}}</label> </p>
                     </div>
                     <div class="student_content">
@@ -48,6 +49,9 @@
         </div>
     </div>
 </div>
+
+<input style="display : none" name="profilePhoto" type="file" accept=".png, .jpg, .jpeg" #photoInput (change)="onFileSelect($event)">
+
 
 <!-- <br>
 <div *ngIf="editForm == 'Student Profile'">

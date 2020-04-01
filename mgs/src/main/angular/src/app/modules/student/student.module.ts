@@ -11,14 +11,13 @@ import { StudentAwardsComponent } from './student-awards/student-awards.componen
 import { ProfileComponent } from './profile/profile.component';
 import { SavedActitvityComponent } from './student-activity/saved-actitvity/saved-actitvity.component';
 import { StudentActivityComponent } from './student-activity/student-activity.component';
-import { AddActivityComponent } from './student-activity/add-activity/add-activity.component';
 import { CertificatesComponent } from './certificates/certificates.component';
 
 
 const routes: Routes = [
   {
     path: '',
-    component: StudentComponent,  
+    component: StudentComponent,
     children: [
       {
         path: 'home',
@@ -30,13 +29,13 @@ const routes: Routes = [
       },
       {
         path: 'activity',
-        component : StudentActivityComponent,
+        component: StudentActivityComponent,
         children: [
           {
             path: '',
             component: SavedActitvityComponent
           }
-          ]
+        ]
       },
       {
         path: 'awards-achievement',
@@ -51,7 +50,7 @@ const routes: Routes = [
         redirectTo: 'home'
       }
     ]
-  },  
+  },
 ]
 
 @NgModule({
@@ -63,7 +62,6 @@ const routes: Routes = [
     SavedActitvityComponent,
     StudentActivityComponent,
     ProfileComponent,
-    AddActivityComponent,
     CertificatesComponent
   ],
   imports: [

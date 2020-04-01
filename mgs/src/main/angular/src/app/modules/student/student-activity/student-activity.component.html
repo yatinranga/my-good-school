@@ -1,15 +1,1 @@
-<!-- <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
-    <ul class="navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link" (click)="changeActivityType('saved')" >Saved Activity</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" (click)="changeActivityType('reviewed')" >Reviewed Activity</a>
-      </li>
-    </ul>
-  </nav> -->
-<!-- <app-saved-actitvity *ngIf="activityType === 'saved'"></app-saved-actitvity>
- <app-reviewed-actitvity *ngIf="activityType === 'reviewed'"></app-reviewed-actitvity> -->
 <router-outlet></router-outlet>
-<app-add-activity *ngIf="activityType" (isClosed)="close($event)"></app-add-activity>
-<!-- <button (click)="changeActivityType()" class="add_activity"> Add Activity </button> -->

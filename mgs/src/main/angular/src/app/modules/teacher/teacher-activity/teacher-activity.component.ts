@@ -22,6 +22,7 @@ export class TeacherActivityComponent implements OnInit {
   studentId = "";
   index: any;
   loader: boolean = false;
+  save_loader: boolean = true;
 
   reviewForm: FormGroup;
   selectedActivity: any;
@@ -137,8 +138,8 @@ export class TeacherActivityComponent implements OnInit {
 
   // Save/Review Pending Activity
   saveReview() {
-
     console.log(this.reviewForm.value);
+    this.save_loader = true;
     const formData = new FormData();
     formData.append('id', this.activityId);
     formData.append('coachId', this.teacherId);
@@ -161,13 +162,13 @@ export class TeacherActivityComponent implements OnInit {
       $('.modal-backdrop').remove();
       this.reviewForm.reset();
       this.alertService.showSuccessToast('Review Saved !').then((response) => {
+        this.save_loader = false;
         this.directSubmitReview(res.id);
       })
     },
       (err) => {
         console.log(err);
-        $('#reviewModal').modal('hide');
-        $('.modal-backdrop').remove();
+        this.save_loader = false;
       }
     );
   }
@@ -195,21 +196,25 @@ export class TeacherActivityComponent implements OnInit {
   // SUBMIT the saved activity by teacher
   submitSavedActivity(activity,index, e) {
     e.stopPropagation();
-    var actCid: any;
-    actCid = activity.id;
-
-    console.log(actCid);
-    this.teacherService.submitActivity(actCid).subscribe((res) => {
-      console.log(res);
-      if (this.activityType == "All") {
-        this.activitiesArr.splice(index, 1);
-        this.activitiesArr.unshift(res);
-      } else {
-        this.activitiesArr.splice(index, 1);
+    this.alertService.confirmWithoutLoader('question',"Do you want to submit ?",'','Yes').then(result => {
+      if(result.value){
+        var actCid: any;
+        actCid = activity.id;
+    
+        console.log(actCid);
+        this.teacherService.submitActivity(actCid).subscribe((res) => {
+          console.log(res);
+          if (this.activityType == "All") {
+            this.activitiesArr.splice(index, 1);
+            this.activitiesArr.unshift(res);
+          } else {
+            this.activitiesArr.splice(index, 1);
+          }
+          this.alertService.showSuccessToast('Activity Submitted !');
+        },
+          (err) => {console.log(err)});
       }
-      this.alertService.showSuccessToast('Activity Submitted !');
-    },
-      (err) => {console.log(err)});
+    })
   }
 
   directSubmitReview(activityId){
@@ -218,6 +223,7 @@ export class TeacherActivityComponent implements OnInit {
       if(result.value)
         this.teacherService.submitActivity(activityId).subscribe((res) => {
           console.log(res);
+          this.save_loader = false;
           if (this.activityType == "All") {
             this.activitiesArr.shift();
             this.activitiesArr.unshift(res);
@@ -227,6 +233,7 @@ export class TeacherActivityComponent implements OnInit {
           this.alertService.showSuccessAlert('Review Submitted !');
         }, (err) => {
           console.log(err);
+          this.save_loader = false;
         })
     })
 
@@ -278,13 +285,14 @@ export class TeacherActivityComponent implements OnInit {
   calTotalMarks(scoreType,value){
     
     if (scoreType == "achievement"){
-      this.achiScore = value;     
+      this.achiScore = Number(value);
+      console.log(typeof(value));     
     }
     if (scoreType == "participation"){
-      this.partiScore = value;            
+      this.partiScore = Number(value);            
     }
     if (scoreType == "initiative"){
-      this.initScore = value;            
+      this.initScore = Number(value);            
     }
 
     if ((this.initScore > -1) && (this.partiScore > -1) && (this.achiScore > -1) 
@@ -298,12 +306,13 @@ export class TeacherActivityComponent implements OnInit {
     }
   }
 
+  // to DOWNLOAD the Attachments
+  downloadFile(url){
+    this.teacherService.downloadAttachment(url).subscribe((res) => {
+      console.log(res);
+    }, (err) => {console.log(err)});
+  }
+
 
 }
 
-
-
-// $('#reviewModal').modal({
-//   backdrop: 'static',
-//   keyboard: false
-// });

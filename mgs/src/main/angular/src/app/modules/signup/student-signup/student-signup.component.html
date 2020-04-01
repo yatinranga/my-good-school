@@ -1,39 +1,43 @@
 <form [formGroup]="studentSignup" (ngSubmit)="onSubmit()">
     <div class="container register-form">
-        <div class="form">
-            <div class="note">
-                <p><b>Student Registration Form</b></p>
-            </div>
+            <h2> Student Registration Form </h2>
             <div class="form-content">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="form-group">Enter Name :*
+                        <div class="form-group">Enter Name : <span style="color: red"> * </span>
                             <input type="text" class="form-control" name="name" placeholder="Your Name" formControlName="name" />
                             <small class="text-danger" *ngIf="!studentSignup.get('name').valid && studentSignup.get('name').touched">
                                 Name Required
                             </small>
+                            <small class="text-danger" *ngIf="studentSignup.controls['name'].hasError('pattern')">
+                                Only Alphabets allowed
+                            </small>
                         </div>
-                        <div class="form-group">Enter DOB :*
+                        <div class="form-group">Enter DOB : <span style="color: red"> * </span>
                             <input type="date" class="form-control" name="dob" placeholder="Date of Birth" formControlName="dob" />
                             <small class="text-danger" *ngIf="!studentSignup.get('dob').valid && studentSignup.get('dob').touched">
                                 DOB Required
                             </small>
                         </div>
-                        <div class="form-group">Enter Email :*
+                        <div class="form-group">Enter Email : <span style="color: red"> * </span>
                             <input type="email" class="form-control" name="email" placeholder="Your Email" formControlName="email" />
                             <small class="text-danger" *ngIf="!studentSignup.get('email').valid && studentSignup.get('email').touched">
                                 Email Required
                             </small>
                         </div>
                         <div class="form-group">Enter Mobile no. :
-                            <input type="number" class="form-control" name="mobileNumber" placeholder="Your Mobile Number"
+                            <input type="tel" class="form-control" maxlength="10" name="mobileNumber" placeholder="Your Mobile Number"
                                 formControlName="mobileNumber" />
-                                <small class="text-danger" *ngIf="!studentSignup.get('mobileNumber').valid">Mobile Number can only be 10 digits</small>
-                                
+                                <small class="text-danger" *ngIf="!studentSignup.get('mobileNumber').valid && studentSignup.get('mobileNumber').touched">
+                                    Mobile Number can only be 10 digits
+                                </small><br>
+                                <small class="text-danger" *ngIf="studentSignup.controls['mobileNumber'].hasError('pattern')">
+                                    Only Digits allowed
+                                </small>                               
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="form-group">Select Gender :*
+                        <div class="form-group">Select Gender : <span style="color: red"> * </span>
                             <select class="form-control" name="gender" placeholder="Select one" formControlName="gender" >
                                 <option [ngValue]="null" selected>Choose your option</option>
                                 <option value="Male">Male</option>
@@ -43,7 +47,7 @@
                                 Gender Required
                             </small>
                         </div>
-                        <div class="form-group">Select School :*
+                        <div class="form-group">Select School : <span style="color: red"> * </span>
                             <select class="form-control" name="schoolId" formControlName="schoolId" (ngModelChange)="getGrades($event)">
                                 <option value="" disabled selected>Select School </option>
                                 <option *ngFor="let school of schoolsList; let i = index;" value={{school.id}}>
@@ -53,7 +57,7 @@
                                 School Required
                             </small>
                         </div>
-                        <div class="form-group">Select Grade :*
+                        <div class="form-group">Select Grade : <span style="color: red"> * </span>
                             <select class="form-control" name="gradeId" formControlName="gradeId" >
                                 <option value="" selected>Select Grade</option>
                                 <option *ngFor="let grade of gradesList; let i = index;" value={{grade.id}}>
@@ -84,29 +88,34 @@
                     </div>
                     <div class="row" formGroupName="{{i}}">
                         <div class="col-md-6">
-                            <div class="form-group">Enter Name :
+                            <div class="form-group">Enter Name : <span style="color: red"> * </span>
                                 <input type="text" class="form-control" name="'guradianName'+{{i}}" placeholder="Your Name"
                                     formControlName="name" />
+                                    <small class="text-danger" *ngIf="gud.get('name').hasError('pattern')">
+                                        Only Alphabets allowed
+                                    </small>
                             </div>
-                            <div class="form-group">Enter Email :
+                            <div class="form-group">Enter Email : <span style="color: red"> * </span>
                                 <input type="email" class="form-control" name="'guradianEmail'+{{i}}" placeholder="Your Email"
                                     formControlName="email" />
                             </div>
-                            <div class="form-group">Enter Mobile no. :
-                                <input type="number" class="form-control" name="'guradianMob'+{{i}}" placeholder="Your Mobile Number"
+                            <div class="form-group">Enter Mobile no. : <span style="color: red"> * </span>
+                                <input type="tel" class="form-control" maxlength="10" name="'guradianMob'+{{i}}" placeholder="Your Mobile Number"
                                     formControlName="mobileNumber" />
-                                    
+                                    <small class="text-danger" *ngIf="gud.get('mobileNumber').hasError('pattern')">
+                                        Only Digits allowed
+                                    </small>                                    
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">Select Gender :
+                            <div class="form-group">Select Gender : <span style="color: red"> * </span>
                                 <select class="form-control" placeholder="Select one" name="'guradianGender'+{{i}}" formControlName="gender">
                                     <option value="" disabled selected>Choose your option</option>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
                                 </select>
                             </div>
-                            <div class="form-group">Select Relationship :
+                            <div class="form-group">Select Relationship : <span style="color: red"> * </span>
                                 <select class="form-control" placeholder="Select one" name="relationship" formControlName="relationship">
                                     <option value="" disabled selected>Choose your option</option>
                                     <option value="Father">Father</option>
@@ -125,6 +134,5 @@
                 </div>
             </div>
             <button class="signup btn btnSubmit btn-success" namw="submit" type="submit" [disabled]="studentSignup.invalid">Submit</button>
-        </div>
     </div>
 </form>

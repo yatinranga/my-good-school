@@ -32,14 +32,14 @@
                         <th scope="col">Name</th>
                         <th scope="col">Description</th>
                         <th scope="col">Activity</th>
-                        <th scope="col">Teacher</th>
+                        <th scope="col">Coach</th>
                     </tr>
                 </thead>
                 <tbody id="accordionExample">
                     <ng-container *ngFor="let awards of awardsArr ; let i = index;">
                         <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                             <td>{{i+1}}</td>
-                            <td>{{awards.name}}</td>
+                            <td>{{awards.awardType}}</td>
                             <td>{{awards.description}}</td>
                             <td>{{awards.activity.name}}</td>
                             <td>{{awards.createdBy}}</td>
@@ -54,12 +54,13 @@
                                                     <h5> Activity Performed - {{awards.activity.name}} </h5>
                                                     <div class="para">
                                                         <p id="fa"> <strong>Focus Area - </strong></p>
-                                                        <div id="fa" *ngFor="let fa of ra.focusAreas; let i = index">
-                                                            <p>{{fa}}
-                                                                <span *ngIf="i < ra.focusAreas.length-1"> , </span>
-                                                            </p>
-                                                        </div>
-                                                        <p> <strong>PSD Area - </strong>{{ra.psdAreas}}</p>
+                                                        <span id="fa" *ngFor="let fa of ra.focusAreas; let i = index">                                                        
+                                                            {{ (i === ra.focusAreas.length-1) ? fa : fa + "," + ' '}}                                                        
+                                                        </span>
+                                                        <p><strong>PSD Area : </strong></p>
+                                                        <span id="fa" *ngFor="let fa of ra.psdAreas let i = index">                                                        
+                                                            {{ (i === ra.psdAreas.length-1) ? fa : fa + "," + ' '}}                                                        
+                                                        </span>
                                                         <p> <strong>4's: </strong> {{ra.fourS}} </p>
                                                     </div>
                                                 </div>
