@@ -49,3 +49,88 @@
         </div>
     </div>
 </div>
+
+
+
+<!--
+    <div class="profile_text_main">
+                <div class="basic_info">
+                            <div class="teacher_img">
+                                <img src="assets/images/boy.jpg">
+                            </div>
+                            <h3> <label> {{teacherDetails['name']}} </label> </h3>
+                        <div class="teacher_text">
+                            <div class="text_com"> 
+                                    <p> <i class='fa fa-restroom'></i>
+                                         <label> {{teacherDetails['gender']}}</label> </p>
+                                    <p> <i class="fa fa-calendar" aria-hidden="true"></i>
+                                         <label> {{teacherDetails['dob'] | date }}</label></p>
+                            </div>
+                            <div class="text_com">
+                                    <p> <i class="fa fa-phone-alt"></i>
+                                        <label> {{teacherDetails['mobileNumber']}}</label> </p>
+                                    <p> <i class="fa fa-envelope"></i>
+                                        <label> {{teacherDetails['email']}}</label> </p>
+                            </div>
+                            <div class="text_com"> 
+                                    <p> <i class="fa fa-school"></i>
+                                        <label> {{teacherDetails['schoolName']}}</label> </p>
+                                    <p> <i class="fa fa-user-graduate"></i>
+                                        <label> {{teacherDetails['qualification']}}</label> </p>
+                            </div>
+                            <div class="text_com">
+                                    <p> <i class="fa fa-running"></i>
+                                        <label>  {{teacherDetails['isCoach'] ? "Yes" : "No" }} </label> </p>
+                                    <p> <i class="fa fa-chalkboard-teacher"></i>
+                                        <label> {{teacherDetails['isClassTeacher'] ? "Yes" : "No" }}</label></p>  
+                            </div>                     
+                                
+                        </div>
+                </div>
+                            
+                        <div *ngIf="teacherDetails['activities']" class="teacher-activities-main">
+                            <div class="teacher-activities">
+                                    <h3> Activities </h3>
+                                    <ul *ngFor="let acti of teacherDetails['activities']">
+                                        <li>{{acti}}</li>
+                                    </ul>
+                            </div>
+                        </div>
+
+                        <div *ngIf="teacherDetails['gradeIds']">Activities -
+                                <div *ngFor="let grade of teacherDetails['gradeIds']">
+                                    <p>{{grade.name}}</p>
+                                    <p>{{grade.grade}} {{grade.section}}</p>
+                                </div>
+                        </div>
+                
+            </div>
+
+
+
+
+            .basic_info {
+    width: 100%;
+    display: inline-block;
+}
+ .teacher_img {
+    float: left;
+    width: 45%;
+}
+.teacher_text{
+    float: right;
+    width: 55%;
+    padding: 10px;
+}
+.basic_info h3 {
+    margin: 0;
+}
+.text_com {
+    display: inline-flex;
+    margin: 10px 0;
+    width: 100%;
+}
+.text_com p{
+    margin: 0 5px;
+}
+-->
