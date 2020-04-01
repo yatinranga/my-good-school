@@ -15,6 +15,7 @@ public class LFINRequestResponse {
 
 	private String dob;
 
+	@NotEmpty(message = "Name cannot be empty or null.")
 	private String name;
 
 	@Email
@@ -103,7 +104,8 @@ public class LFINRequestResponse {
 		lfin.setEmail(this.email);
 		lfin.setContactNumber(this.contactNumber);
 		lfin.setGender(this.gender);
-		lfin.setDob(DateUtil.convertStringToDate(this.dob));
+		if(this.dob != null)
+		   lfin.setDob(DateUtil.convertStringToDate(this.dob));
 		return lfin;
 	}
 

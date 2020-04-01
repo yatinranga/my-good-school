@@ -1,6 +1,7 @@
 package com.nxtlife.mgs.jpa;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -39,22 +40,27 @@ public interface ActivityPerformedRepository extends JpaRepository<ActivityPerfo
 
 	ActivityPerformed findByCidAndActiveTrue(String id);
 
-	List<ActivityPerformed> findAllByTeacherCidAndActivityStatusOrActivityStatusAndActiveTrue(String teacherCid,
-			ActivityStatus activityStatus, ActivityStatus status2);
+	@Query(value = "Select ap from ActivityPerformed ap where ap.teacher.cid =:teacherCid and (ap.activityStatus =:activityStatus or ap.activityStatus =:status2 ) and ap.active = true")
+	List<ActivityPerformed> findAllByTeacherCidAndActivityStatusOrActivityStatusAndActiveTrue(@Param("teacherCid") String teacherCid,
+			@Param("activityStatus") ActivityStatus activityStatus,@Param("status2") ActivityStatus status2);
 
+	@Query(value = "Select ap from ActivityPerformed ap where ap.teacher.cid =:teacherCid and ap.student.grade.cid = :gradeCid and (ap.activityStatus =:activityStatus or ap.activityStatus =:status2 ) and ap.active = true")
 	List<ActivityPerformed> findAllByTeacherCidAndStudentGradeCidAndActivityStatusOrActivityStatusAndActiveTrue(
-			String teacherCid, String gradeCid, ActivityStatus activityStatus, ActivityStatus status2);
+			@Param("teacherCid") String teacherCid,@Param("gradeCid") String gradeCid,@Param("activityStatus") ActivityStatus activityStatus,@Param("status2") ActivityStatus status2);
 
 	@Query(value = "SELECT * FROM mgs.activity_performed a where (select extract(year from a.date_of_activity)) = :yearOfActivity and a.student_id = :studentId", nativeQuery = true)
 	List<ActivityPerformed> findAllByYearOfActivity(@Param("yearOfActivity") String yearOfActivity,
 			@Param("studentId") Long studentId);
 
+	@Query(value = "Select ap from ActivityPerformed ap where ap.teacher.cid =:coachCid and  ap.activity.cid =:activityCid and (ap.activityStatus =:status1 or ap.activityStatus =:status2 ) and ap.active = true")
 	List<ActivityPerformed> findAllByTeacherCidAndActivityCidAndActivityStatusOrActivityStatusAndActiveTrue(
-			String coachCid, String activityCid, ActivityStatus status1, ActivityStatus status2);
+			@Param("coachCid")String coachCid,@Param("activityCid") String activityCid,@Param("status1") ActivityStatus status1,@Param("status2") ActivityStatus status2);
 
+	@Query(value = "Select ap from ActivityPerformed ap where ap.teacher.cid =:coachCid and ap.student.grade.cid = :gradeCid and ap.activity.cid =:activityCid and (ap.activityStatus =:status1 or ap.activityStatus =:status2 ) and ap.active = true")
 	List<ActivityPerformed> findAllByTeacherCidAndStudentGradeCidAndActivityCidAndActivityStatusOrActivityStatusAndActiveTrue(
-			String coachCid, String gradeCid, String activityCid, ActivityStatus status1, ActivityStatus status2);
+			@Param("coachCid") String coachCid,@Param("gradeCid") String gradeCid,@Param("activityCid") String activityCid,@Param("status1") ActivityStatus status1,@Param("status2") ActivityStatus status2);
 
+	
 	List<ActivityPerformed> findAllByStudentCidAndStudentActiveTrueAndActivityCidAndActivityActiveTrueAndActivityStatusAndActiveTrue(
 			String studentCid, String activityCid, ActivityStatus activityStatus);
 
@@ -73,8 +79,9 @@ public interface ActivityPerformedRepository extends JpaRepository<ActivityPerfo
 
 	List<ActivityPerformed> findAllByStudentCidAndActiveTrue(String studentCid, Predicate predicate);
 
+	@Query(value = "Select ap from ActivityPerformed ap where ap.teacher.cid =:coachCid and (ap.activityStatus =:submittedbystudent or ap.activityStatus =:savedbyteacher or ap.activityStatus =:reviewed) and ap.active = true")
 	List<ActivityPerformed> findAllByTeacherCidAndActivityStatusOrActivityStatusOrActivityStatusAndActiveTrue(
-			String coachCid, ActivityStatus submittedbystudent, ActivityStatus savedbyteacher, ActivityStatus reviewed);
+			@Param("coachCid") String coachCid, @Param("submittedbystudent") ActivityStatus submittedbystudent,@Param("savedbyteacher") ActivityStatus savedbyteacher,@Param("reviewed") ActivityStatus reviewed);
 	
 	@Query(value = "select ap.id from ActivityPerformed  ap where ap.cid =:activityPerformedCid and ap.active = true")
 	Long findIdByCidAndActiveTrue(@Param("activityPerformedCid") String activityPerformedCid);
@@ -106,4 +113,20 @@ public interface ActivityPerformedRepository extends JpaRepository<ActivityPerfo
 	           "GROUP BY " +
 	           "   f.psdArea" )
 	List<PropertyCount> findPsdAreaCount(@Param("cid") String cid, @Param("status") ActivityStatus status);
+	 
+	 Set<ActivityPerformed> findAllByStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasPsdAreaAndActivityStatusAndActiveTrue(String schoolCid , String gradeCid,PSDArea psdArea,ActivityStatus status);
+	 
+	 Set<ActivityPerformed> findAllByStudentSchoolCidAndActivityFocusAreasPsdAreaAndActivityStatusAndActiveTrue(String schoolCid ,PSDArea psdArea,ActivityStatus status);
+	 
+	 Set<ActivityPerformed> findAllByStudentSchoolCidAndStudentGradeCidAndActivityFourSAndActivityStatusAndActiveTrue(String schoolCid , String gradeCid,FourS fourS ,ActivityStatus status);
+	 
+	 Set<ActivityPerformed> findAllByStudentSchoolCidAndActivityFourSAndActivityStatusAndActiveTrue(String schoolCid , FourS fourS ,ActivityStatus status);
+	 
+	 Set<ActivityPerformed> findAllByStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasNameAndActivityStatusAndActiveTrue(String schoolCid , String gradeCid,String focusAreaName,ActivityStatus status);
+	 
+	 Set<ActivityPerformed> findAllByStudentSchoolCidAndActivityFocusAreasNameAndActivityStatusAndActiveTrue(String schoolCid , String focusAreaName,ActivityStatus status);
+	 
+	 Set<ActivityPerformed> findAllByStudentSchoolCidAndStudentGradeCidAndActivityNameAndActivityStatusAndActiveTrue(String schoolCid , String gradeCid,String activityName,ActivityStatus status);
+	 
+	 Set<ActivityPerformed> findAllByStudentSchoolCidAndActivityNameAndActivityStatusAndActiveTrue(String schoolCid , String activityName,ActivityStatus status);
 }

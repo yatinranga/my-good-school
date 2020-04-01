@@ -240,8 +240,11 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			try {
 				String logoUrl = filestore.store("schoolLogo", filename, request.getLogo().getBytes());
 				school.setLogo(logoUrl);
+				if(school.getUser() != null)
+					school.getUser().setImagePath(logoUrl);
 			} catch (IOException e) {
 				e.printStackTrace();
+				throw new ValidationException("Something went wromg image not saved/uploaded.");
 			}
 		}
 
@@ -325,8 +328,11 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			try {
 				String logoUrl = filestore.store("schoolLogo", filename, request.getLogo().getBytes());
 				school.setLogo(logoUrl);
+				if(school.getUser() != null)
+					school.getUser().setImagePath(logoUrl);
 			} catch (IOException e) {
 				e.printStackTrace();
+				throw new ValidationException("Something went wromg image not saved/uploaded.");
 			}
 		}
 

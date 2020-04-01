@@ -1,7 +1,9 @@
 package com.nxtlife.mgs.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -10,6 +12,7 @@ import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import javax.validation.ValidationException;
 
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +25,7 @@ import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.enums.ActivityStatus;
 import com.nxtlife.mgs.enums.ApprovalStatus;
+import com.nxtlife.mgs.enums.AwardCriterion;
 import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.filtering.filter.AwardFilter;
 import com.nxtlife.mgs.filtering.filter.AwardFilterBuilder;
@@ -96,6 +100,13 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 		
 		awardTypeRepository.save(repoAwardTypes);
 	}
+	
+	@Override
+	public Set<String> getAwardCriterias(){
+		Set<String> awardCriterias = new HashSet<String>();
+		Arrays.asList(AwardCriterion.values()).stream().distinct().forEach(ac -> {awardCriterias.add(ac.getAwardCriterion());});
+		return awardCriterias;
+	}
 
 	@Override
 	public AwardResponse createAward(AwardRequest request) {
@@ -106,12 +117,18 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 		Teacher teacher = teacherRepository.findByCidAndActiveTrue(request.getTeacherId());
 		if (teacher == null)
 			throw new ValidationException(String.format("Teacher (%s) does not exist.", request.getTeacherId()));
-		Student student = studentRepository.findByCidAndActiveTrue(request.getStudentId());
-		if (student == null) {
-			throw new ValidationException(String.format("Student (%s) doesn't exist.", request.getStudentId()));
-		}
 		if(request.getAwardType()==null)
 			throw new ValidationException("Award Type cannot be null.");
+		if(request.getStudentId()==null && (request.getActivityPerformedIds() == null || request.getActivityPerformedIds().isEmpty()))
+			throw new ValidationException("Student and ActivityPerformedIds both cannot be empty/null simultaneously.");
+		Student student = null;
+		if(request.getStudentId()!=null) {
+			 student = studentRepository.findByCidAndActiveTrue(request.getStudentId());
+			if (student == null) {
+				throw new ValidationException(String.format("Student (%s) doesn't exist.", request.getStudentId()));
+			}
+		}
+		
 		AwardType awardType = awardTypeRepository.getByNameAndActiveTrue(request.getAwardType());
 		if(awardType == null)
 			throw new ValidationException(String.format("AwardType (%s) not found.", request.getAwardType()));
@@ -223,6 +240,16 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 		}
 		if (award.getStatus().equals(ApprovalStatus.PENDING)) {
 			award.setStatus(isVerified ? ApprovalStatus.VERIFIED : ApprovalStatus.REJECTED);
+			if(award.getStatus().equals(ApprovalStatus.VERIFIED)) {
+				award.setDateOfReceipt(new Date());
+				
+//				if(award.getValidFrom() == null && award.getValidUntil() == null) {
+//					LocalDateTime currentDate = LocalDateTime.now();
+//					award.setValidFrom(currentDate.toDate());
+//					award.setValidUntil(currentDate.minusMonths(4).toDate());
+//				}
+			}
+				
 			award.setStatusModifiedBy(teacher);
 			award.setStatusModifiedAt(new Date());
 		} else {

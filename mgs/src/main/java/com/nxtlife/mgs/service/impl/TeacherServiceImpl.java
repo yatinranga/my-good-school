@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.CellType;
@@ -28,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
+import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.entity.user.User;
 import com.nxtlife.mgs.enums.UserType;
@@ -42,13 +44,16 @@ import com.nxtlife.mgs.jpa.SequenceGeneratorRepo;
 import com.nxtlife.mgs.jpa.TeacherRepository;
 import com.nxtlife.mgs.jpa.UserRepository;
 import com.nxtlife.mgs.service.BaseService;
+import com.nxtlife.mgs.service.FileService;
 import com.nxtlife.mgs.service.SequenceGeneratorService;
 import com.nxtlife.mgs.service.TeacherService;
 import com.nxtlife.mgs.service.UserService;
+import com.nxtlife.mgs.store.FileStore;
 import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.ActivityRequestResponse;
+import com.nxtlife.mgs.view.StudentResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
 import com.nxtlife.mgs.view.TeacherRequest;
 import com.nxtlife.mgs.view.TeacherResponse;
@@ -91,6 +96,12 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 
 	@Value("${spring.mail.username}")
 	private String emailUsername;
+
+	@Autowired
+	private FileService fileService;
+
+	@Autowired
+	private FileStore filestore;
 
 	@Override
 	public TeacherResponse save(TeacherRequest request) {
@@ -173,7 +184,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 			}
 
 			teacher.setGrades(finalGradeList);
-
+			teacher.setIsClassTeacher(true);
 		}
 
 		// saving activities
@@ -221,6 +232,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 				}
 			}
 			teacher.setActivities(finalActivityList);
+			teacher.setIsCoach(true);
 		}
 
 		teacher.setcId(utils.generateRandomAlphaNumString(8));
@@ -344,6 +356,21 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 				}
 			teacher.setGrades(previousGrades);
 		}
+		
+		if(request.getMobileNumber() != null) {
+			if(userRepository.existsByContactNumber(request.getMobileNumber()))
+					throw new ValidationException(String.format("Mobile Number (%s) already belongs to some other user.",request.getMobileNumber()));
+			teacher.setMobileNumber(request.getMobileNumber());
+			teacher.getUser().setContactNumber(request.getMobileNumber());
+		}
+		
+		if(request.getEmail() != null) {
+			if(userRepository.existsByEmail(request.getEmail()))
+					throw new ValidationException(String.format("Email (%s) already belongs to some other user.",request.getEmail()));
+			teacher.setEmail(request.getEmail());
+			teacher.getUser().setEmail(request.getEmail());
+		}
+		
 
 		teacher = teacherRepository.save(teacher);
 
@@ -533,10 +560,15 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	@Override
 	public List<TeacherResponse> findCoachesBySchoolCidAndActivityCid(String schoolCid, String activityCid) {
 
+		if(!schoolRepository.existsByCidAndActiveTrue(schoolCid))
+			throw new ValidationException(String.format("School having id (%s) does not exist.", schoolCid));
+		if(!activityRepository.existsByCidAndActiveTrue(activityCid))
+			throw new ValidationException(String.format("Activity having id (%s) does not exist.", activityCid));
+		
 		List<Teacher> teachers = teacherRepository
 				.findAllBySchoolCidAndActivitiesCidAndIsCoachTrueAndActiveTrue(schoolCid, activityCid);
 		if (teachers == null)
-			throw new ValidationException("No coaches found.");
+			throw new ValidationException(String.format("No coaches found for activity having id (%s) in school having id (%s)." , activityCid , schoolCid));
 
 		return teachers.stream().map(TeacherResponse::new).distinct().collect(Collectors.toList());
 	}
@@ -578,6 +610,34 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 					String.format("something went wrong teacher having id [%s] can't be deleted", cid));
 
 		return new SuccessResponse(org.springframework.http.HttpStatus.OK.value(), "teacher deleted successfully");
+	}
+	
+	@Override
+	public TeacherResponse setProfilePic(MultipartFile file) {
+		if (file == null || file.getSize() == 0)
+			throw new ValidationException("profilePic cannot be null or empty.");
+		
+		Long userId = getUserId();
+		if(userId == null)
+			throw new ValidationException("No user logged in currently.");
+		
+		Teacher teacher = teacherRepository.getByUserId(userId);
+		if (teacher == null) {
+			throw new ValidationException("User not login as either of them [Teacher, Coach, Management]");
+		}
+		
+		String filename = UUID.randomUUID().toString() + "." + fileService.getFileExtension(file.getOriginalFilename());
+		try {
+			String imageUrl = filestore.store("profilePic", filename, file.getBytes());
+			teacher.setImageUrl(imageUrl);
+			if(teacher.getUser() != null)
+				teacher.getUser().setImagePath(imageUrl);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new ValidationException("Something went wromg image not saved/uploaded.");
+		}
+
+		return new TeacherResponse(teacherRepository.save(teacher));
 	}
 
 	@Override

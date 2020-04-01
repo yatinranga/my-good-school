@@ -571,7 +571,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 		
 		Set<String> psdAreas = new HashSet<String>();
 		for(PSDArea psd : PSDArea.values()) {
-			psdAreas.add(psd.toString());
+			psdAreas.add(psd.getPsdArea());
 		}
 		response.put("PSD Areas", psdAreas);
 		

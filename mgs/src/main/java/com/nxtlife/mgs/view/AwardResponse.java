@@ -3,6 +3,7 @@ package com.nxtlife.mgs.view;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -28,6 +29,10 @@ public class AwardResponse {
 	private String studentName;
 	private String studentGrade;
 	private ActivityRequestResponse activity;
+	/*Adding these fields fourS focusAreas and psdAreas on front end's demand but they are already present in activityPerformedResponses */
+	private String fourS;
+	private Set<String> focusAreas;
+	private Set<String> psdAreas;
 
 	public String getId() {
 		return id;
@@ -153,6 +158,30 @@ public class AwardResponse {
 		this.awardType = awardType;
 	}
 
+	public String getFourS() {
+		return fourS;
+	}
+
+	public void setFourS(String fourS) {
+		this.fourS = fourS;
+	}
+
+	public Set<String> getFocusAreas() {
+		return focusAreas;
+	}
+
+	public void setFocusAreas(Set<String> focusAreas) {
+		this.focusAreas = focusAreas;
+	}
+
+	public Set<String> getPsdAreas() {
+		return psdAreas;
+	}
+
+	public void setPsdAreas(Set<String> psdAreas) {
+		this.psdAreas = psdAreas;
+	}
+
 	public AwardResponse(Award award) {
 		this.id = award.getCid();
 		this.description = award.getDescription();
@@ -176,6 +205,13 @@ public class AwardResponse {
 			for (AwardActivityPerformed awardActivityPerformed : award.getAwardActivityPerformed()) {
 				this.activityPerformedResponses
 						.add(new ActivityPerformedResponse(awardActivityPerformed.getActivityPerformed()));
+			}
+			
+			ActivityPerformedResponse activityPerfResp = this.getActivityPerformedResponses().stream().findFirst().orElse(null);
+			if(activityPerfResp != null) {
+				this.fourS = activityPerfResp.getFourS();
+				this.focusAreas = activityPerfResp.getFocusAreas();
+				this.psdAreas = activityPerfResp.getPsdAreas();
 			}
 		}
 		if (award.getActivity() != null) {

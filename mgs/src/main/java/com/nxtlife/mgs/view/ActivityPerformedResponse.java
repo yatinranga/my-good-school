@@ -1,6 +1,7 @@
 package com.nxtlife.mgs.view;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,6 +18,10 @@ import com.nxtlife.mgs.util.DateUtil;
 public class ActivityPerformedResponse {
 
 	private String dateOfActivity;
+	
+    private String submittedOn;
+	
+	private String reviewedOn;
 
 	private String id;
 
@@ -292,6 +297,11 @@ public class ActivityPerformedResponse {
 			for (File file : activityPerformed.getFiles())
 				this.fileResponses.add(new FileResponse(file));
 		this.totalMarks = this.initiativeScore + this.achievementScore + this.participationScore;
+		
+		if (activityPerformed.getSubmittedOn() != null)
+			this.dateOfActivity = DateUtil.formatDate(activityPerformed.getSubmittedOn());
+		if (activityPerformed.getReviewedOn() != null)
+			this.dateOfActivity = DateUtil.formatDate(activityPerformed.getReviewedOn());
 
 	}
 

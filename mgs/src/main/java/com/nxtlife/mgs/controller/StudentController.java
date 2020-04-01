@@ -2,6 +2,7 @@ package com.nxtlife.mgs.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -88,6 +89,11 @@ public class StudentController {
 		return studentService.getAllStudentsBySchoolAndActivityAndCoachAndStatusReviewed(schoolCid, gradeCid,
 				activityCid, ActivityStatus.Reviewed.toString(), teacherCid);
 	}
+	
+	@GetMapping(value = "api/students/activity")
+	public List<StudentResponse> getAllStudentsOfSchoolForParticularActivity(@RequestParam("activityId") String activityCid){
+		return studentService.getAllStudentsOfSchoolForParticularActivity(activityCid, ActivityStatus.Reviewed.toString());
+	}
 
 	@DeleteMapping("api/student/{cid}")
 	public SuccessResponse delete(@PathVariable String cid) {
@@ -107,6 +113,11 @@ public class StudentController {
 	@GetMapping(value = "api/student/certificates" )
 	public List<CertificateResponse> getAllCertificatesOfStudent(){
 		return studentService.getAllCertificatesOfStudent();
+	}
+	
+	@GetMapping(value = "api/award/students")
+	public Set<StudentResponse> getAllStudentsAndItsActivitiesByAwardCriterion(@RequestParam(name = "awardCriterion") String awardCriterion ,@RequestParam(name = "criterionValue") String criterionValue, @RequestParam(name = "gradeId" , required = false) String gradeId){
+		return studentService.getAllStudentsAndItsActivitiesByAwardCriterion(awardCriterion, criterionValue, gradeId);
 	}
 
 }

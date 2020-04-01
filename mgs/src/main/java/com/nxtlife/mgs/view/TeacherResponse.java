@@ -31,6 +31,10 @@ public class TeacherResponse {
 	private String designation;
 	private Boolean isManagmentMember;
 	private Boolean isCoach;
+	private Boolean isClassTeacher;
+	private String imagePath;
+	private String profileBrief;
+	private String yearOfEnrolment;
 
 	public String getId() {
 		return id;
@@ -168,6 +172,38 @@ public class TeacherResponse {
 		this.schoolId = schoolId;
 	}
 
+	public Boolean getIsClassTeacher() {
+		return isClassTeacher;
+	}
+
+	public void setIsClassTeacher(Boolean isClassTeacher) {
+		this.isClassTeacher = isClassTeacher;
+	}
+
+	public String getImagePath() {
+		return imagePath;
+	}
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
+	}
+
+	public String getProfileBrief() {
+		return profileBrief;
+	}
+
+	public void setProfileBrief(String profileBrief) {
+		this.profileBrief = profileBrief;
+	}
+
+	public String getYearOfEnrolment() {
+		return yearOfEnrolment;
+	}
+
+	public void setYearOfEnrolment(String yearOfEnrolment) {
+		this.yearOfEnrolment = yearOfEnrolment;
+	}
+
 	public TeacherResponse(Teacher teacher) {
 		this.id = teacher.getcId();
 
@@ -186,6 +222,11 @@ public class TeacherResponse {
 		this.isManagmentMember = teacher.getIsManagmentMember();
 		this.designation = teacher.getDesignation();
 		this.isCoach = teacher.getIsCoach();
+		this.isClassTeacher = teacher.getIsClassTeacher();
+		this.imagePath = teacher.getImageUrl();
+		this.profileBrief = teacher.getProfileBrief();
+		if (teacher.getCreatedDate() != null)
+			this.yearOfEnrolment = Integer.toString(teacher.getCreatedDate().getYear());
 		
 			if (teacher.getSchool() != null) {
 				this.schoolName = teacher.getSchool().getName();
@@ -223,8 +264,13 @@ public class TeacherResponse {
 		this.gender = teacher.getGender();
 		this.mobileNumber = teacher.getMobileNumber();
 		this.email = teacher.getEmail();
+		this.profileBrief = teacher.getProfileBrief();
+		if (teacher.getCreatedDate() != null)
+			this.yearOfEnrolment = Integer.toString(teacher.getCreatedDate().getYear());
+		
 		if(teacher.getDob()!=null)
 			   this.dob = DateUtil.formatDate(teacher.getDob());
+		
 		this.qualification = teacher.getQualification();
 		this.active = teacher.getActive();
 		if (teacher.getSchool() != null) {
@@ -233,7 +279,10 @@ public class TeacherResponse {
 		}
 		
 		this.isManagmentMember = teacher.getIsManagmentMember();
+		this.isCoach = teacher.getIsCoach();
+		this.isClassTeacher = teacher.getIsClassTeacher();
 		this.designation = teacher.getDesignation();
+		this.imagePath = teacher.getImageUrl();
 	}
 
 }

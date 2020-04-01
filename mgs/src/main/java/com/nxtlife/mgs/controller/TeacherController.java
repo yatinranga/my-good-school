@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.service.TeacherService;
+import com.nxtlife.mgs.view.StudentResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
 import com.nxtlife.mgs.view.TeacherRequest;
 import com.nxtlife.mgs.view.TeacherResponse;
@@ -52,6 +54,11 @@ public class TeacherController {
 	@PutMapping("api/teacher/update/{cid}")
 	public TeacherResponse update(@RequestBody TeacherRequest request, @PathVariable String cid) {
 		return teacherService.update(request, cid);
+	}
+	
+	@PutMapping("api/teacher/profilePic")
+	public TeacherResponse setProfilePic(@RequestParam("profilePic") MultipartFile file) {
+		return teacherService.setProfilePic(file);
 	}
 
 	@GetMapping("api/teachers")

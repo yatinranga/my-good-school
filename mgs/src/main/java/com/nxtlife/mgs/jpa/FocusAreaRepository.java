@@ -28,4 +28,6 @@ public interface FocusAreaRepository extends JpaRepository<FocusArea, Long> {
 	FocusArea findByCid(String id);
 
 	FocusArea findByNameAndPsdArea(String name, PSDArea psdArea);
+
+	boolean existsByNameAndActiveTrue(String focusArea);
 	}

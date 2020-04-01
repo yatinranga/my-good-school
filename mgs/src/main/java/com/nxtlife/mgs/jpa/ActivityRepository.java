@@ -60,4 +60,11 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
 
 	boolean existsByCidAndActiveTrue(String activityCid);
 
+	boolean existsByNameAndActiveTrue(String activityName);
+	
+//	@Query("select a.id from Activity a where a.cid = :activityCid and a.school.id =:schoolId and a.active = true")
+//	Long findCidByNameAndActiveTrue( @Param("activityCid") String activityCid , @Param("schoolId") Long schoolId);
+	
+	boolean existsByCidAndSchoolsCidAndActiveTrue(String cid , String schoolCid);
+
 }

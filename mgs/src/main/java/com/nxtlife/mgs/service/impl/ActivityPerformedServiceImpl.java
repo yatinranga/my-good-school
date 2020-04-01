@@ -162,18 +162,20 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			if (request.getDescription() != null)
 				activityPerformed.setDescription(request.getDescription());
 
-			List<File> allValidFilesOfActivity = fileRepository
-					.findAllByActiveTrueAndActivityPerformedCidAndActiveTrue(request.getId());
-			List<File> copyOfAllValidImagesOfProduct = new ArrayList<File>();
-			copyOfAllValidImagesOfProduct.addAll(allValidFilesOfActivity);
-			List<FileRequest> requestFiles = request.getFileRequests();
-			List<File> updatedFiles = new ArrayList<File>();
+			
 			/*
 			 * write logic here to add new files if any and remove files which is not
 			 * present now but were present earlier
 			 */
 
+			List<FileRequest> requestFiles = request.getFileRequests();
+			
 			if (requestFiles != null && !requestFiles.isEmpty()) {
+				
+				List<File> allValidFilesOfActivity = fileRepository
+						.findAllByActiveTrueAndActivityPerformedCidAndActiveTrue(request.getId());
+				List<File> updatedFiles = new ArrayList<File>();
+				
 				for (int itr = 0; itr < requestFiles.size(); itr++) {
 					if (requestFiles.get(itr).getId() != null) {
 						for (int itr2 = 0; itr2 < allValidFilesOfActivity.size(); itr2++) {
@@ -198,28 +200,32 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 
 					}
 				}
-
-			}
-			/*
-			 * logic to delete the files which were previously there but in new request have
-			 * been removed.
-			 */
-			for (File f : allValidFilesOfActivity) {
-				fileRepository.updateFileSetActiveByCid(false, f.getCid());
-			}
-
-			// Logic to save new files and then add it to List updatedFiles
-			if (requestFiles != null && !requestFiles.isEmpty())
-				for (FileRequest fileReq : requestFiles) {
-					File file = saveMediaForActivityPerformed(fileReq, "activity", activityPerformed);
-					if (file != null) {
-						file.setCid(utils.generateRandomAlphaNumString(8));
-						updatedFiles.add(file);
-					}
+				
+				/*
+				 * logic to delete the files which were previously there but in new request have
+				 * been removed.
+				 */
+				for (File f : allValidFilesOfActivity) {
+					fileRepository.updateFileSetActiveByCid(false, f.getCid());
 				}
 
-			// Setting files to activityPerformed
-			activityPerformed.setFiles(updatedFiles);
+				// Logic to save new files and then add it to List updatedFiles
+				if (requestFiles != null && !requestFiles.isEmpty())
+					for (FileRequest fileReq : requestFiles) {
+						File file = saveMediaForActivityPerformed(fileReq, "activity", activityPerformed);
+						if (file != null) {
+							file.setCid(utils.generateRandomAlphaNumString(8));
+							updatedFiles.add(file);
+						}
+					}
+
+				if(updatedFiles.size() > 5)
+					throw new ValidationException("Cannot attach more than 5 files to upload.");
+				// Setting files to activityPerformed
+				activityPerformed.setFiles(updatedFiles);
+
+			}
+			
 		} else {
 			/* Converting request to entity */
 			activityPerformed = request.toEntity();
@@ -227,6 +233,9 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			/* Saving files associated with activity */
 			List<File> activityPerformedMedia = new ArrayList<>();
 			if (request.getFileRequests() != null && !request.getFileRequests().isEmpty())
+				if(request.getFileRequests().size() > 5)
+					throw new ValidationException("Cannot attach more than 5 files to upload.");
+			
 				for (FileRequest fileReq : request.getFileRequests()) {
 					File file = saveMediaForActivityPerformed(fileReq, "activity", activityPerformed);
 					if (file != null) {
@@ -276,6 +285,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			throw new ValidationException("Activity cannot be submitted first fill all the mandatory fields.");
 
 		activity.setActivityStatus(ActivityStatus.SubmittedByStudent);
+		activity.setSubmittedOn(LocalDateTime.now().toDate());
 		activity = activityPerformedRepository.save(activity);
 		if (activity == null)
 			throw new RuntimeException("Something went wrong activity not submitted.");
@@ -335,6 +345,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			throw new ValidationException("Activity cannot be submitted first fill all the mandatory fields.");
 
 		activity.setActivityStatus(ActivityStatus.Reviewed);
+		activity.setReviewedOn(LocalDateTime.now().toDate());
 
 		activity = activityPerformedRepository.save(activity);
 

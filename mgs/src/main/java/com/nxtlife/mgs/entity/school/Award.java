@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -43,6 +44,10 @@ public class Award extends BaseEntity {
 	private Boolean active = true;
 
 	private Date dateOfReceipt;
+	
+	private Date validFrom;
+	
+	private Date validUntil;
 
 	@Enumerated(EnumType.STRING)
 	private ApprovalStatus status;
@@ -167,6 +172,22 @@ public class Award extends BaseEntity {
 
 	public void setAwardType(AwardType awardType) {
 		this.awardType = awardType;
+	}
+
+	public Date getValidFrom() {
+		return validFrom;
+	}
+
+	public void setValidFrom(Date validFrom) {
+		this.validFrom = validFrom;
+	}
+
+	public Date getValidUntil() {
+		return validUntil;
+	}
+
+	public void setValidUntil(Date validUntil) {
+		this.validUntil = validUntil;
 	}
 
 	public Award(@NotNull AwardType awardType, @NotNull String description, Boolean active, Teacher teacher) {

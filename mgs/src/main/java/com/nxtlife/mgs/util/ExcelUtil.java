@@ -111,7 +111,7 @@ public interface ExcelUtil {
 //		columnTypes.put("USERNAME", CellType.STRING);
 		columnTypes.put("DOB", CellType.NUMERIC);
 		columnTypes.put("EMAIL", CellType.STRING);
-		columnTypes.put("MOBILE NUMBER", CellType.STRING);
+		columnTypes.put("CONTACT NUMBER", CellType.STRING);
 		columnTypes.put("GENDER", CellType.STRING);
 		return columnTypes;
 	}

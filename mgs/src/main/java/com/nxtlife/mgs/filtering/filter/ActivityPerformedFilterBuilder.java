@@ -28,8 +28,8 @@ public class ActivityPerformedFilterBuilder implements FilterBuilder<ActivityPer
 	@Override
 	public Predicate build(ActivityPerformedFilter filter) {
 		return new OptionalBooleanBuilder(ActivityPerformed.isNotNull())
-				.notEmptyAnd(ActivityPerformed.student.cid::contains, filter.getStudentId())
-				.notEmptyAnd(ActivityPerformed.teacher.cid::contains, filter.getTeacherId())
+				.notEmptyAnd(ActivityPerformed.student.cid::eq, filter.getStudentId())
+				.notEmptyAnd(ActivityPerformed.teacher.cid::eq, filter.getTeacherId())
 				.notEmptyAnd(ActivityPerformed.activity.fourS.stringValue()::containsIgnoreCase, filter.getFourS())
 				.notEmptyAnd(ActivityPerformed.activityStatus.stringValue()::containsIgnoreCase, filter.getStatus())
 				.notEmptyAnd(ActivityPerformed.activity.cid::contains, filter.getActivityId())
@@ -38,6 +38,9 @@ public class ActivityPerformedFilterBuilder implements FilterBuilder<ActivityPer
 						filter.getPsdArea())
 				.notEmptyAnd(ActivityPerformed.dateOfActivity.year().stringValue()::containsIgnoreCase,
 						filter.getYear())
+				.notEmptyAnd(ActivityPerformed.student.school.cid::eq, filter.getSchoolId())
+				.notEmptyAnd(ActivityPerformed.student.grade.name :: equalsIgnoreCase, filter.getGrade())
+				.notEmptyAnd(ActivityPerformed.student.grade.section :: equalsIgnoreCase, filter.getSection())
 				.notEmptyAnd(ActivityPerformed.active.stringValue()::containsIgnoreCase,"TRUE")
 				.build();
 	}

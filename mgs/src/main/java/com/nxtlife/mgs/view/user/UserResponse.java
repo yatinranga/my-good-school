@@ -21,6 +21,7 @@ public class UserResponse {
 	private TeacherResponse teacher;
 	private SchoolResponse school;
 	private String roleName;
+	private String imagePath;
 
 	public String getUserName() {
 		return userName;
@@ -102,10 +103,19 @@ public class UserResponse {
 		this.roleName = roleName;
 	}
 
+	public String getImagePath() {
+		return imagePath;
+	}
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
+	}
+
 	public UserResponse(User user) {
 //		this.id = user.getId();
 		this.id = user.getCid();
 		this.email = user.getEmail();
+		this.imagePath = user.getImagePath();
 		if (user.getRoleForUser() != null) {
 			this.roleId = user.getRoleForUser().getCid();
 			this.roleName = user.getRoleForUser().getName();

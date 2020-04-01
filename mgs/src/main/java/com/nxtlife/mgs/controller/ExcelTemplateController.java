@@ -22,6 +22,7 @@ import com.nxtlife.mgs.service.ActivityService;
 import com.nxtlife.mgs.service.ExcelTemplateService;
 import com.nxtlife.mgs.service.FocusAreaService;
 import com.nxtlife.mgs.service.GradeService;
+import com.nxtlife.mgs.service.LFINService;
 import com.nxtlife.mgs.service.SchoolService;
 import com.nxtlife.mgs.service.StudentService;
 import com.nxtlife.mgs.service.TeacherService;
@@ -50,6 +51,9 @@ public class ExcelTemplateController {
 	
 	@Autowired
 	ActivityService activityService;
+	
+	@Autowired
+	LFINService lFINService;
 
 	@GetMapping("template/export")
 	public void exportExampleTemplate(@RequestParam String type , HttpServletResponse response) throws IOException {
@@ -82,6 +86,9 @@ public class ExcelTemplateController {
 	@Transactional
 	@RequestMapping(value = "/api/template/bulkUpload", method = RequestMethod.POST)
 	public ResponseEntity<?> uploadTeachersFromExcel(@RequestParam("file") MultipartFile file , @RequestParam("type") String type ,@RequestParam(required = false ,value = "schoolId") String schoolCid) {
+		if (file == null || file.isEmpty() || file.getSize() == 0)
+			throw new ValidationException("Pls upload valid excel file.");
+		
 		if(type.equalsIgnoreCase("TEACHER"))
 			 return teacherService.uploadTeachersFromExcel(file, false,schoolCid);
 		else if(type.equalsIgnoreCase("COACH"))
@@ -98,6 +105,8 @@ public class ExcelTemplateController {
 			return activityService.uploadActivityFromExcel(file ,schoolCid);
 		else if(type.equalsIgnoreCase("MANAGEMENT"))
 			return teacherService.uploadManagementFromExcel(file, schoolCid);
+		else if(type.equalsIgnoreCase("LFIN"))
+			return lFINService.uploadLFINFromExcel(file);
 		else
 			 return new ResponseEntity<String>("Something went wrong.", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
