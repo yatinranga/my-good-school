@@ -20,7 +20,6 @@ export class TeacherProfileComponent implements OnInit {
     this.teacherService.getProfile(this.teacherId).subscribe((res) => {
       this.teacherDetails = res;
       console.log(res);
-      console.log(this.teacherDetails);
     },
     (err) => console.log(err)
     );

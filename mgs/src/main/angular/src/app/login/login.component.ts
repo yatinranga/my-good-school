@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { AlertService } from '../services/alert.service';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,7 @@ export class LoginComponent implements OnInit {
   userInfo: any;
   loader: boolean = false;
 
-  constructor(private formBuilder: FormBuilder,
+  constructor(private formBuilder: FormBuilder, private alertService : AlertService,
     private router: Router,
     public authService: AuthService) { }
 
@@ -34,6 +35,23 @@ export class LoginComponent implements OnInit {
     }, (err) => {
       this.loader = false;
     });
+  }
+
+  forgetPassword() {
+    if (this.loginForm.value.username) {
+      this.alertService.confirmWithoutLoader('question', 'Are you sure you want to continue?', '', 'Confirm').then(result => {
+        if (result.value) {
+          console.log(this.loginForm.value.username);
+          this.alertService.showLoader("");
+          this.authService.forgetPassword(this.loginForm.value.username).subscribe((res) => {
+            console.log(res);
+            this.alertService.showSuccessAlert("New generated password has been sent to your email.");
+          }, (err) => { console.log(err); });
+        }
+      });
+    } else {
+      this.alertService.showErrorAlert('Please Enter Username');
+    }
   }
 
   getUserInfo() {

@@ -162,7 +162,6 @@ export class SavedActitvityComponent implements OnInit {
       description: activity.description,
       coachId: activity.coachId,
       id: activity.id,
-      attachment: activity.fileResponses
     });
     this.files=activity.fileResponses;      
     this.editActivityShow = true;
@@ -283,13 +282,14 @@ export class SavedActitvityComponent implements OnInit {
 
   // to UPDATE the saved activity
   updateActivity() {
+     
     if (this.editActivityShow) {
       this.submit_loader = true;
       this.savedActivityForm.value.attachment = this.files;
       console.log(this.savedActivityForm.value.attachment);
       const formData = new FormData();
-      const date = new Date(this.savedActivityForm.value.dateOfActivity);
-      const activityDate = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
+      const activityDate = this.savedActivityForm.value.dateOfActivity + ' 00:00:00';
+      // const activityDate = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
 
       formData.append('studentId', this.studentInfo.student.id);
       formData.append('activityId', this.savedActivityForm.value.activityId);
@@ -300,11 +300,17 @@ export class SavedActitvityComponent implements OnInit {
 
       if (this.savedActivityForm.value.attachment.length > 0) {
         this.savedActivityForm.value.attachment.forEach((element, index) => {
-          formData.append('fileRequests[' + index + '].file', element);
+          if(element.id){
+            console.log("Old file");
+            formData.append('fileRequests[' + index + '].id', element.id);
+          } else {
+            console.log("New file");
+            formData.append('fileRequests[' + index + '].file', element);
+          }
         });
       }
       console.log(this.savedActivityForm.value);  
-
+      
       this.studentService.addActivity('/api/student/activities', formData).subscribe(
         (res) => {
           console.log(res);
@@ -317,8 +323,8 @@ export class SavedActitvityComponent implements OnInit {
         (err) => {
           this.submit_loader = false;
           console.log(err);
-          $('#addActivityModal').modal('hide');
-          $('.modal-backdrop').remove();
+          // $('#addActivityModal').modal('hide');
+          // $('.modal-backdrop').remove();
         }
       );
     }

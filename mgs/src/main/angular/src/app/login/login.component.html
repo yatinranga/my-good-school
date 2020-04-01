@@ -45,7 +45,7 @@
                             </div>
                         </fieldset>
                         <div class="forms_buttons">
-                            <a routerLink='/forgot-pwd'>Forgot Password ?</a>
+                            <a (click)="forgetPassword()">Forgot Password ?</a>
                             <button class="forms_buttons-action login-btn" name="Submit_Button" type="submit">Login
                                 <span *ngIf="loader">
                                     <div class="spinner-border" role="status">

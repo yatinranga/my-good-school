@@ -9,6 +9,9 @@
                             <small class="text-danger" *ngIf="!teacherSignup.get('name').valid && teacherSignup.get('name').touched">
                                 Name Required
                             </small>
+                            <small class="text-danger" *ngIf="teacherSignup.get('name').hasError('pattern')">
+                                Only Alphabets allowed
+                            </small>
                         </div>
                         <div class="form-group">Enter DOB : <span style="color: red"> * </span>
                             <input type="date" class="form-control" name="dob" placeholder="Date of Birth" formControlName="dob" />
@@ -25,9 +28,12 @@
                                 Email Required
                             </small>
                         </div>
-                        <div class="form-group">Enter Mobile no. :
-                            <input type="number" class="form-control" name="mobileNumber" placeholder="Your Mobile Number"
+                        <div class="form-group">Enter Mobile no. : <span style="color: red"> * </span>
+                            <input type="tel" class="form-control" name="mobileNumber" maxlength="10" placeholder="Your Mobile Number"
                                 formControlName="mobileNumber" />
+                                <small class="text-danger" *ngIf="teacherSignup.get('mobileNumber').hasError('pattern')">
+                                    Only Numbers allowed
+                                </small>
                             
                         </div>
                         <div class="form-group">Select Gender :

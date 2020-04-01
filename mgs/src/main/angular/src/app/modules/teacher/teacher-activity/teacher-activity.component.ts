@@ -22,7 +22,7 @@ export class TeacherActivityComponent implements OnInit {
   studentId = "";
   index: any;
   loader: boolean = false;
-  save_loader: boolean = true;
+  save_loader: boolean = false;
 
   reviewForm: FormGroup;
   selectedActivity: any;
@@ -71,7 +71,7 @@ export class TeacherActivityComponent implements OnInit {
       participationScore: [, [Validators.min(0), Validators.max(10)]],
       initiativeScore: [, [Validators.min(0), Validators.max(10)]],
       // star: [],
-      coachRemark: []
+      coachRemark: [,[Validators.required,Validators.minLength(25)]]
     })
   }
 
