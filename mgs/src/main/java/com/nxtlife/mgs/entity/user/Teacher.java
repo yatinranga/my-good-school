@@ -74,6 +74,9 @@ public class Teacher extends BaseEntity {
 	private String designation;
 
 	private Boolean isManagmentMember;
+	
+	@Column(columnDefinition = "TEXT")
+	private String profileBrief;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
@@ -306,6 +309,14 @@ public class Teacher extends BaseEntity {
 
 	public void setIsManagmentMember(Boolean isManagmentMember) {
 		this.isManagmentMember = isManagmentMember;
+	}
+
+	public String getProfileBrief() {
+		return profileBrief;
+	}
+
+	public void setProfileBrief(String profileBrief) {
+		this.profileBrief = profileBrief;
 	}
 
 	public Teacher(@NotNull String cid, @NotNull String name, String username, String gender, @NotNull Date dob,

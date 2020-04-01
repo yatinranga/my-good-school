@@ -25,5 +25,7 @@ public interface AwardService {
 	List<PropertyCount> getCount(String studentCid, String status, String type);
 
 	Set<String> getAllAwardTypes();
+
+	Set<String> getAwardCriterias();
 	
 }

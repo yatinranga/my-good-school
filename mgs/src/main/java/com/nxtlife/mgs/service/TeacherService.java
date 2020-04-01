@@ -60,4 +60,6 @@ public interface TeacherService {
 
 	ResponseEntity<?> uploadManagementFromExcel(MultipartFile file, String schoolCid);
 
+	TeacherResponse setProfilePic(MultipartFile file);
+
 }

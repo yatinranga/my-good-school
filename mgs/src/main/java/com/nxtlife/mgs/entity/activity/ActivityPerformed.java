@@ -15,6 +15,7 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -31,6 +32,10 @@ public class ActivityPerformed extends BaseEntity {
 
 	@NotNull
 	private Date dateOfActivity;
+	
+	private Date submittedOn;
+	
+	private Date reviewedOn;
 
 	@NotNull
 	@Column(unique = true)
@@ -39,6 +44,7 @@ public class ActivityPerformed extends BaseEntity {
 	@Column(columnDefinition = "TEXT ")
 	private String description;
 
+	@Column(columnDefinition = "TEXT ")
 	private String coachRemark;
 
 	private Date coachRemarkDate;
@@ -78,9 +84,11 @@ public class ActivityPerformed extends BaseEntity {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "activityPerformed")
 	private List<File> files;
 
+	@NotNull
 	@ManyToOne
 	private Student student;
 
+	@NotNull
 	@ManyToOne
 	private Teacher teacher;
 	
@@ -221,6 +229,22 @@ public class ActivityPerformed extends BaseEntity {
 
 	public void setAwardActivityPerformed(List<AwardActivityPerformed> awardActivityPerformed) {
 		this.awardActivityPerformed = awardActivityPerformed;
+	}
+
+	public Date getSubmittedOn() {
+		return submittedOn;
+	}
+
+	public void setSubmittedOn(Date submittedOn) {
+		this.submittedOn = submittedOn;
+	}
+
+	public Date getReviewedOn() {
+		return reviewedOn;
+	}
+
+	public void setReviewedOn(Date reviewedOn) {
+		this.reviewedOn = reviewedOn;
 	}
 
 	public ActivityPerformed(Date dateOfActivity, String cid, String description, String coachRemark,

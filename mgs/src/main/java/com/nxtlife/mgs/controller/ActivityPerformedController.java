@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -42,7 +43,7 @@ public class ActivityPerformedController {
 
 	@PostMapping(value = "api/coach/save")
 	public ActivityPerformedResponse saveActivityByCoach(
-			@Valid @ModelAttribute /* Change it to ModelAttribute */ ActivityPerformedRequest request) {
+			@Validated @ModelAttribute /* Change it to ModelAttribute */ ActivityPerformedRequest request) {
 		return activityPerformedService.saveActivityByCoach(request);
 	}
 

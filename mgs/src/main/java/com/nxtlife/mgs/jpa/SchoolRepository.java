@@ -33,6 +33,8 @@ public interface SchoolRepository extends JpaRepository<School, Long> {
 	School getOneByCid(String schoolRequest);
 
 	boolean existsByNameAndActiveTrue(String string);
+
+	School getByUserId(Long userId);
 	
 	
 }

@@ -16,18 +16,18 @@ import com.nxtlife.mgs.view.SuccessResponse;
 import com.nxtlife.mgs.view.user.UserResponse;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/")
 public class UserController {
 
 	@Autowired
 	private UserService userService;
 
-	@GetMapping(value = "/info")
+	@GetMapping(value = "api/info")
 	public UserResponse getLoggedInUser() {
 		return userService.getLoggedInUser();
 	}
 
-	@PutMapping("/change-password")
+	@PutMapping("api/change-password")
 	public SuccessResponse changePassword(@Valid @RequestBody PasswordRequest request) {
 		return userService.changePassword(request);
 	}

@@ -3,10 +3,14 @@ package com.nxtlife.mgs.service.impl;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -21,11 +25,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.common.exceptions.UnauthorizedUserException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import com.nxtlife.mgs.entity.activity.Activity;
+import com.nxtlife.mgs.entity.activity.ActivityPerformed;
 import com.nxtlife.mgs.entity.activity.Certificate;
+import com.nxtlife.mgs.entity.activity.FocusArea;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.user.Guardian;
@@ -33,6 +40,9 @@ import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.entity.user.User;
 import com.nxtlife.mgs.enums.ActivityStatus;
+import com.nxtlife.mgs.enums.AwardCriterion;
+import com.nxtlife.mgs.enums.FourS;
+import com.nxtlife.mgs.enums.PSDArea;
 import com.nxtlife.mgs.enums.UserType;
 import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.ex.ValidationException;
@@ -40,6 +50,7 @@ import com.nxtlife.mgs.jpa.ActivityPerformedRepository;
 import com.nxtlife.mgs.jpa.ActivityRepository;
 import com.nxtlife.mgs.jpa.AwardActivityPerformedRepository;
 import com.nxtlife.mgs.jpa.CertificateRepository;
+import com.nxtlife.mgs.jpa.FocusAreaRepository;
 import com.nxtlife.mgs.jpa.GradeRepository;
 import com.nxtlife.mgs.jpa.GuardianRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
@@ -47,6 +58,7 @@ import com.nxtlife.mgs.jpa.SequenceGeneratorRepo;
 import com.nxtlife.mgs.jpa.StudentRepository;
 import com.nxtlife.mgs.jpa.StudentSchoolGradeRepository;
 import com.nxtlife.mgs.jpa.TeacherRepository;
+import com.nxtlife.mgs.jpa.UserRepository;
 import com.nxtlife.mgs.service.ActivityPerformedService;
 import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.FileService;
@@ -57,6 +69,7 @@ import com.nxtlife.mgs.store.FileStore;
 import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.Utils;
+import com.nxtlife.mgs.view.ActivityPerformedResponse;
 import com.nxtlife.mgs.view.CertificateRequest;
 import com.nxtlife.mgs.view.CertificateResponse;
 import com.nxtlife.mgs.view.GuardianRequest;
@@ -117,6 +130,12 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	
 	@Autowired
 	FileService fileService; 
+	
+	@Autowired
+	UserRepository userRepository;
+	
+	@Autowired
+	FocusAreaRepository focusAreaRepository;
 
 	@Value("${spring.mail.username}")
 	private String emailUsername;
@@ -311,6 +330,20 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		
 		student.setSchool(school);
 		student.setGrade(grade);
+		if(request.getMobileNumber() != null) {
+			if(userRepository.existsByContactNumber(request.getMobileNumber()))
+					throw new ValidationException(String.format("Mobile Number (%s) already belongs to some other user.",request.getMobileNumber()));
+			student.setMobileNumber(request.getMobileNumber());
+			student.getUser().setContactNumber(request.getMobileNumber());
+		}
+		
+		if(request.getEmail() != null) {
+			if(userRepository.existsByEmail(request.getEmail()))
+					throw new ValidationException(String.format("Email (%s) already belongs to some other user.",request.getEmail()));
+			student.setEmail(request.getEmail());
+			student.getUser().setEmail(request.getEmail());
+		}
+		
 		student = studentRepository.save(student);
 
 		return new StudentResponse(student);
@@ -505,8 +538,11 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		try {
 			String imageUrl = filestore.store("profilePic", filename, file.getBytes());
 			student.setImageUrl(imageUrl);
+			if(student.getUser() != null)
+				student.getUser().setImagePath(imageUrl);
 		} catch (IOException e) {
 			e.printStackTrace();
+			throw new ValidationException("Something went wromg image not saved/uploaded.");
 		}
 
 		return new StudentResponse(studentRepository.save(student));
@@ -762,6 +798,367 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		return studentRequest;
 	}
 
+	@Override
+	public Set<StudentResponse> getAllStudentsAndItsActivitiesByAwardCriterion(String awardCriterion , String criterionValue,String gradeCid){
+		
+		Long userId = getUserId();
+		if(userId == null)
+			throw new ValidationException("No user logged in currently.");
+		if(awardCriterion == null)
+			throw new ValidationException("Award Criterion cannot be null.");
+		if(criterionValue == null)
+			throw new ValidationException("Criterion Value cannot be null.");
+		if(!AwardCriterion.matches(awardCriterion))
+			throw new ValidationException(String.format("Invalid value (%s) for awardCriterion it should be of form : [PSD Area ,Focus Area , 4S ,Activity Type]", awardCriterion));
+		
+		Teacher teacher = teacherRepository.getByUserId(userId);
+		if(teacher == null)
+			throw new UnauthorizedUserException("User not logged in as Faculty of school i.e(Teacher ,Coach , Management)");
+
+		AwardCriterion criterion = AwardCriterion.fromString(awardCriterion);
+		
+		if(criterion.equals(AwardCriterion.PSDArea)) {
+			return getAllStudentsAndItsActivitiesByPsdArea(criterionValue, gradeCid , teacher.getSchool().getCid());
+		}else if(criterion.equals(AwardCriterion.FocusArea)){
+			return getAllStudentsAndItsActivitiesByFocusArea(criterionValue, gradeCid, teacher.getSchool().getCid());
+		}else if(criterion.equals(AwardCriterion.FourS)){
+			return getAllStudentsAndItsActivitiesByFourS(criterionValue, gradeCid, teacher.getSchool().getCid());
+		}else if(criterion.equals(AwardCriterion.ActivityType)){
+			return getAllStudentsAndItsActivitiesByActivity(criterionValue, gradeCid, teacher.getSchool().getCid());
+		}else {
+			throw new ValidationException(String.format("Invalid value (%s) for awardCriterion it should be of form : [PSD Area ,Focus Area , 4S ,Activity Type]", awardCriterion));
+		}
+	}
 	
+	private Set<StudentResponse> getAllStudentsAndItsActivitiesByActivity(String activityName ,String gradeCid , String schoolCid){
+		if(activityName == null)
+			throw new ValidationException("activityName cannot be null.");
+		if(!activityRepository.existsByNameAndActiveTrue(activityName))
+			throw new ValidationException(String.format("Activity with name  (%s) does not exist.", activityName));
+		
+		Set<ActivityPerformed> activitiesPerformed = null ;
+		Set<StudentResponse> students = null;
+		if(gradeCid== null) {
+			activitiesPerformed = new HashSet<ActivityPerformed>();
+			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndActivityNameAndActivityStatusAndActiveTrue(schoolCid, activityName, ActivityStatus.Reviewed);
+			students = new HashSet<StudentResponse>();
+			for(ActivityPerformed act : activitiesPerformed) {
+				if(students.stream().filter(st -> st.getId().equals(act.getStudent().getCid())).count() < 1 )
+				  students.add( new StudentResponse(act.getStudent()));
+			}
+//			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
+			
+			Map<StudentResponse,Double> studentScoreLookUp = new HashMap<StudentResponse,Double>();
+			for(StudentResponse studResp : students) {
+				List<ActivityPerformedResponse>	activitiesToReturn = activitiesPerformed.stream().filter(ap -> ap.getStudent().getCid().equals(studResp.getId())).map(ActivityPerformedResponse :: new).distinct().collect(Collectors.toList());
+				studResp.setPerformedActivities(activitiesToReturn);
+				
+				Double score = 0d;
+				Double starSum = 0d;
+				Set<String> focusAreas = new HashSet<String>();
+				for(ActivityPerformedResponse act : activitiesToReturn) {
+					starSum+= act.getStar();
+					focusAreas.addAll(act.getFocusAreas());
+				}
+				score = focusAreas.size() * (starSum / activitiesToReturn.size());
+				System.out.println(score);
+				studentScoreLookUp.put(studResp, score);
+			}
+			studentScoreLookUp = studentScoreLookUp.entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+			students = studentScoreLookUp.keySet();
+
+		}else {
+			if(!gradeRepository.existsByCidAndActiveTrue(gradeCid))
+				throw new ValidationException(String.format("Grade with id (%s) does not exist.",gradeCid));
+			
+			activitiesPerformed = new HashSet<ActivityPerformed>();
+			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndStudentGradeCidAndActivityNameAndActivityStatusAndActiveTrue(schoolCid ,gradeCid ,activityName ,ActivityStatus.Reviewed);
+			students = new HashSet<StudentResponse>();
+			for(ActivityPerformed act : activitiesPerformed) {
+				students.add( new StudentResponse(act.getStudent()));
+			}
+//			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
+			
+			Map<StudentResponse,Double> studentScoreLookUp = new HashMap<StudentResponse,Double>();
+			for(StudentResponse studResp : students) {
+				List<ActivityPerformedResponse>	activitiesToReturn = activitiesPerformed.stream().filter(ap -> ap.getStudent().getCid().equals(studResp.getId())).map(ActivityPerformedResponse :: new).distinct().collect(Collectors.toList());
+				studResp.setPerformedActivities(activitiesToReturn);
+				
+				Double score = 0d;
+				Double starSum = 0d;
+				
+				for(ActivityPerformedResponse act : activitiesToReturn) {
+					starSum+= act.getStar();
+				}
+				score =  (starSum / activitiesToReturn.size());
+				System.out.println(score);
+				studentScoreLookUp.put(studResp, score);
+			}
+			studentScoreLookUp = studentScoreLookUp.entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+			students = studentScoreLookUp.keySet();
+		}
+		if(students == null || students.isEmpty())
+			throw new ValidationException("No Student found for Activity having name : "+activityName);
+		return students;
+	}
+	
+	private Set<StudentResponse> getAllStudentsAndItsActivitiesByFocusArea(String focusArea ,String gradeCid , String schoolCid){
+		if(focusArea == null)
+			throw new ValidationException("focusArea cannot be null.");
+		if(!focusAreaRepository.existsByNameAndActiveTrue(focusArea))
+			throw new ValidationException(String.format("Focus Area  (%s) does not exist.", focusArea));
+		
+		Set<ActivityPerformed> activitiesPerformed = null ;
+		Set<StudentResponse> students = null;
+		if(gradeCid== null) {
+			activitiesPerformed = new HashSet<ActivityPerformed>();
+			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndActivityFocusAreasNameAndActivityStatusAndActiveTrue(schoolCid, focusArea, ActivityStatus.Reviewed);
+			students = new HashSet<StudentResponse>();
+			for(ActivityPerformed act : activitiesPerformed) {
+				if(students.stream().filter(st -> st.getId().equals(act.getStudent().getCid())).count() < 1 )
+				  students.add( new StudentResponse(act.getStudent()));
+			}
+//			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
+			
+			Map<StudentResponse,Double> studentScoreLookUp = new HashMap<StudentResponse,Double>();
+			for(StudentResponse studResp : students) {
+				List<ActivityPerformedResponse>	activitiesToReturn = activitiesPerformed.stream().filter(ap -> ap.getStudent().getCid().equals(studResp.getId())).map(ActivityPerformedResponse :: new).distinct().collect(Collectors.toList());
+				studResp.setPerformedActivities(activitiesToReturn);
+				
+				Double score = 0d;
+				Double starSum = 0d;
+				Set<String> focusAreas = new HashSet<String>();
+				for(ActivityPerformedResponse act : activitiesToReturn) {
+					starSum+= act.getStar();
+					focusAreas.addAll(act.getFocusAreas());
+				}
+				score = focusAreas.size() * (starSum / activitiesToReturn.size());
+				System.out.println(score);
+				studentScoreLookUp.put(studResp, score);
+			}
+			studentScoreLookUp = studentScoreLookUp.entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+			students = studentScoreLookUp.keySet();
+
+		}else {
+			if(!gradeRepository.existsByCidAndActiveTrue(gradeCid))
+				throw new ValidationException(String.format("Grade with id (%s) does not exist.",gradeCid));
+			
+			activitiesPerformed = new HashSet<ActivityPerformed>();
+			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasNameAndActivityStatusAndActiveTrue(schoolCid ,gradeCid ,focusArea,ActivityStatus.Reviewed);
+			students = new HashSet<StudentResponse>();
+			for(ActivityPerformed act : activitiesPerformed) {
+				students.add( new StudentResponse(act.getStudent()));
+			}
+//			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
+			
+			Map<StudentResponse,Double> studentScoreLookUp = new HashMap<StudentResponse,Double>();
+			for(StudentResponse studResp : students) {
+				List<ActivityPerformedResponse>	activitiesToReturn = activitiesPerformed.stream().filter(ap -> ap.getStudent().getCid().equals(studResp.getId())).map(ActivityPerformedResponse :: new).distinct().collect(Collectors.toList());
+				studResp.setPerformedActivities(activitiesToReturn);
+				
+				Double score = 0d;
+				Double starSum = 0d;
+				
+				for(ActivityPerformedResponse act : activitiesToReturn) {
+					starSum+= act.getStar();
+				}
+				score =  (starSum / activitiesToReturn.size());
+				System.out.println(score);
+				studentScoreLookUp.put(studResp, score);
+			}
+			studentScoreLookUp = studentScoreLookUp.entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+			students = studentScoreLookUp.keySet();
+		}
+		if(students == null || students.isEmpty())
+			throw new ValidationException("No Student found for Focus Area : "+focusArea);
+		return students;
+	}
+	
+	private Set<StudentResponse> getAllStudentsAndItsActivitiesByFourS(String fourS ,String gradeCid , String schoolCid){
+		if(fourS == null)
+			throw new ValidationException("fourS cannot be null.");
+		if(!FourS.matches(fourS))
+			throw new ValidationException(String.format("FourS  (%s) does not matches with available values for fourS i.e [Skill , Sport ,Study ,Service]", fourS));
+		
+		Set<ActivityPerformed> activitiesPerformed = null ;
+		Set<StudentResponse> students = null;
+		if(gradeCid== null) {
+			activitiesPerformed = new HashSet<ActivityPerformed>();
+			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndActivityFourSAndActivityStatusAndActiveTrue(schoolCid, FourS.valueOf(fourS), ActivityStatus.Reviewed);
+			students = new HashSet<StudentResponse>();
+			for(ActivityPerformed act : activitiesPerformed) {
+				if(students.stream().filter(st -> st.getId().equals(act.getStudent().getCid())).count() < 1 )
+				  students.add( new StudentResponse(act.getStudent()));
+			}
+//			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
+			
+			Map<StudentResponse,Double> studentScoreLookUp = new HashMap<StudentResponse,Double>();
+			for(StudentResponse studResp : students) {
+				List<ActivityPerformedResponse>	activitiesToReturn = activitiesPerformed.stream().filter(ap -> ap.getStudent().getCid().equals(studResp.getId())).map(ActivityPerformedResponse :: new).distinct().collect(Collectors.toList());
+				studResp.setPerformedActivities(activitiesToReturn);
+				
+				Double score = 0d;
+				Double starSum = 0d;
+				Set<String> focusAreas = new HashSet<String>();
+				for(ActivityPerformedResponse act : activitiesToReturn) {
+					starSum+= act.getStar();
+					focusAreas.addAll(act.getFocusAreas());
+				}
+				score = focusAreas.size() * (starSum / activitiesToReturn.size());
+				System.out.println(score);
+				studentScoreLookUp.put(studResp, score);
+			}
+			studentScoreLookUp = studentScoreLookUp.entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+			students = studentScoreLookUp.keySet();
+
+		}else {
+			if(!gradeRepository.existsByCidAndActiveTrue(gradeCid))
+				throw new ValidationException(String.format("Grade with id (%s) does not exist.",gradeCid));
+			
+			activitiesPerformed = new HashSet<ActivityPerformed>();
+			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndStudentGradeCidAndActivityFourSAndActivityStatusAndActiveTrue(schoolCid ,gradeCid ,FourS.valueOf(fourS),ActivityStatus.Reviewed);
+			students = new HashSet<StudentResponse>();
+			for(ActivityPerformed act : activitiesPerformed) {
+				students.add( new StudentResponse(act.getStudent()));
+			}
+//			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
+			
+			Map<StudentResponse,Double> studentScoreLookUp = new HashMap<StudentResponse,Double>();
+			for(StudentResponse studResp : students) {
+				List<ActivityPerformedResponse>	activitiesToReturn = activitiesPerformed.stream().filter(ap -> ap.getStudent().getCid().equals(studResp.getId())).map(ActivityPerformedResponse :: new).distinct().collect(Collectors.toList());
+				studResp.setPerformedActivities(activitiesToReturn);
+				
+				Double score = 0d;
+				Double starSum = 0d;
+				Set<String> focusAreas = new HashSet<String>();
+				for(ActivityPerformedResponse act : activitiesToReturn) {
+					starSum+= act.getStar();
+					focusAreas.addAll(act.getFocusAreas());
+				}
+				score = focusAreas.size() * (starSum / activitiesToReturn.size());
+				System.out.println(score);
+				studentScoreLookUp.put(studResp, score);
+			}
+			studentScoreLookUp = studentScoreLookUp.entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+			students = studentScoreLookUp.keySet();
+		}
+		if(students == null || students.isEmpty())
+			throw new ValidationException("No Student found for fourS : "+fourS);
+		return students;
+	}
+	
+	private Set<StudentResponse> getAllStudentsAndItsActivitiesByPsdArea(String psdArea ,String gradeCid , String schoolCid){
+		if(psdArea == null)
+			throw new ValidationException("Psd Area cannot be null.");
+		if(!PSDArea.matches(psdArea))
+			throw new ValidationException(String.format("PSD Area (%s) does not matches with available PSD Areas i.e [Personal Development, Social Development]", psdArea));
+		
+		Set<ActivityPerformed> activitiesPerformed = null ;
+		Set<StudentResponse> students = null;
+		if(gradeCid== null) {
+			activitiesPerformed = new HashSet<ActivityPerformed>();
+			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndActivityFocusAreasPsdAreaAndActivityStatusAndActiveTrue(schoolCid ,PSDArea.fromString(psdArea),ActivityStatus.Reviewed);
+			students = new HashSet<StudentResponse>();
+			for(ActivityPerformed act : activitiesPerformed) {
+				if(students.stream().filter(st -> st.getId().equals(act.getStudent().getCid())).count() < 1 )
+				  students.add( new StudentResponse(act.getStudent()));
+			}
+//			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
+			
+			Map<StudentResponse,Double> studentScoreLookUp = new HashMap<StudentResponse,Double>();
+			for(StudentResponse studResp : students) {
+				List<ActivityPerformedResponse>	activitiesToReturn = activitiesPerformed.stream().filter(ap -> ap.getStudent().getCid().equals(studResp.getId())).map(ActivityPerformedResponse :: new).distinct().collect(Collectors.toList());
+				studResp.setPerformedActivities(activitiesToReturn);
+				
+				Double score = 0d;
+				Double starSum = 0d;
+				Set<String> focusAreas = new HashSet<String>();
+				for(ActivityPerformedResponse act : activitiesToReturn) {
+					starSum+= act.getStar();
+					focusAreas.addAll(act.getFocusAreas());
+				}
+				score = focusAreas.size() * (starSum / activitiesToReturn.size());
+				System.out.println(score);
+				studentScoreLookUp.put(studResp, score);
+			}
+			studentScoreLookUp = studentScoreLookUp.entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+			students = studentScoreLookUp.keySet();
+
+		}else {
+			if(!gradeRepository.existsByCidAndActiveTrue(gradeCid))
+				throw new ValidationException(String.format("Grade with id (%s) does not exist.",gradeCid));
+			
+			activitiesPerformed = new HashSet<ActivityPerformed>();
+			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasPsdAreaAndActivityStatusAndActiveTrue(schoolCid ,gradeCid ,PSDArea.fromString(psdArea),ActivityStatus.Reviewed);
+			students = new HashSet<StudentResponse>();
+			for(ActivityPerformed act : activitiesPerformed) {
+				students.add( new StudentResponse(act.getStudent()));
+			}
+//			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
+			
+			Map<StudentResponse,Double> studentScoreLookUp = new HashMap<StudentResponse,Double>();
+			for(StudentResponse studResp : students) {
+				List<ActivityPerformedResponse>	activitiesToReturn = activitiesPerformed.stream().filter(ap -> ap.getStudent().getCid().equals(studResp.getId())).map(ActivityPerformedResponse :: new).distinct().collect(Collectors.toList());
+				studResp.setPerformedActivities(activitiesToReturn);
+				
+				Double score = 0d;
+				Double starSum = 0d;
+				Set<String> focusAreas = new HashSet<String>();
+				for(ActivityPerformedResponse act : activitiesToReturn) {
+					starSum+= act.getStar();
+					focusAreas.addAll(act.getFocusAreas());
+				}
+				score = focusAreas.size() * (starSum / activitiesToReturn.size());
+				System.out.println(score);
+				studentScoreLookUp.put(studResp, score);
+			}
+			studentScoreLookUp = studentScoreLookUp.entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+			students = studentScoreLookUp.keySet();
+		}
+		if(students == null || students.isEmpty())
+			throw new ValidationException("No Student found for PSD Area : "+psdArea);
+		return students;
+	}
+	
+	@Override
+	public List<StudentResponse> getAllStudentsOfSchoolForParticularActivity(String activityCid , String activityStatus){
+		Long userId = getUserId();
+		if(userId == null)
+			throw new ValidationException("Please login first as a teacher or coach or management or school or student to view students.");
+		Object user =null;
+		String schoolCid = null;
+		 user = teacherRepository.getByUserId(userId);
+		 if(user == null)
+			 user = studentRepository.getByUserId(userId);
+		 if(user == null)
+			 user = schoolRepository.getByUserId(userId);
+		 if(user == null)
+			 throw new UnauthorizedUserException("Not logged in as either a teacher or coach or management or school or student.");
+		if(user instanceof Teacher) {
+			if(((Teacher) user).getSchool()!=null)
+				schoolCid = ((Teacher) user).getSchool().getCid();
+		}
+		if(user instanceof Student) {
+			if(((Student) user).getSchool()!=null)
+				schoolCid = ((Student) user).getSchool().getCid();
+		}
+		if(user instanceof School) {
+				schoolCid = ((School) user).getCid();
+		}
+		if(activityCid == null)
+			throw new ValidationException("activity id cannot be null.");
+		if(!activityRepository.existsByCidAndActiveTrue(activityCid))
+			throw new ValidationException(String.format("Activity with id (%s) not found",activityCid));
+		if(!activityRepository.existsByCidAndSchoolsCidAndActiveTrue(activityCid, schoolCid)) 
+			throw new ValidationException(String.format("Activity with id (%s) not offered in school",activityCid));
+		List<Student> students = studentRepository
+				.findAllBySchoolCidAndActivitiesActivityCidAndActivitiesActivityStatusAndSchoolActiveTrueAndActivitiesActivityActiveTrueAndActiveTrue(
+						schoolCid, activityCid, ActivityStatus.valueOf(activityStatus));
+		if (students == null)
+			throw new ValidationException(String.format(
+					"No student found in the school with id : %s  having performed activity with id : %s and status is %s .",
+					schoolCid,  activityCid, activityStatus));
+		return students.stream().distinct().map(StudentResponse::new).collect(Collectors.toList());
+	}
 
 }

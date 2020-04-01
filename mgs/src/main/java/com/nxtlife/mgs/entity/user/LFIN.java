@@ -2,6 +2,7 @@ package com.nxtlife.mgs.entity.user;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -44,7 +45,7 @@ public class LFIN extends BaseEntity{
 	
 	private String gender;
 	
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	User user;
 
 	public String getName() {

@@ -8,6 +8,7 @@ package com.nxtlife.mgs.auth;
 
 	    public static final class Authorities {
 //	    	public static final String PROMO_CODE = "ROLE_PROMO_CODE";//for creating Promo Code
+	    	public static final String LFIN_WRITE_PRIVILEGE = "ROLE_LFIN_WRITE_PRIVILEGE";
 	    	public static final String TRANSACTION_READ_PRIVILEGE ="ROLE_TRANSACTION_READ_PRIVILEGE";
 	    	public static final String SELF_READ = "ROLE_SELF_READ";
 	        public static final String SELF_WRITE = "ROLE_SELF_WRITE";

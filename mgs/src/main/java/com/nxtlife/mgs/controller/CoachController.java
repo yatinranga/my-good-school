@@ -2,6 +2,8 @@ package com.nxtlife.mgs.controller;
 
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +25,7 @@ public class CoachController {
 	TeacherService teacherService;
 	
 	@GetMapping("coaches/{schoolId}/{activityId}")
-	public List<TeacherResponse> getAllCoachesBySchoolCidAndActivityCid(@PathVariable("schoolId") String schoolCid,@PathVariable("activityId") String activityCid){
+	public List<TeacherResponse> getAllCoachesBySchoolCidAndActivityCid(@PathVariable("schoolId") @NotNull(message = "School Id cannot be null.") String schoolCid,@PathVariable("activityId") @NotNull(message = "Activity Id cannot be null.") String activityCid){
 		return teacherService.findCoachesBySchoolCidAndActivityCid(schoolCid, activityCid);
 	}
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 
 import org.joda.time.LocalDateTime;
 
@@ -12,12 +13,12 @@ import com.nxtlife.mgs.entity.activity.ActivityPerformed;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.util.DateUtil;
 
-public class ActivityPerformedRequest {
+public class ActivityPerformedRequest extends Request{
 
 	private String dateOfActivity;
 
 	private String id;
-
+	
 	private String description;
 
 	private String coachRemark;
@@ -171,13 +172,26 @@ public class ActivityPerformedRequest {
 		if (this.dateOfActivity != null) {
 			if (LocalDateTime.now().toDate().before(DateUtil.convertStringToDate(this.dateOfActivity)))
 				throw new ValidationException("Date of activity cannot be a future date.");
+			Date thresholdDate = LocalDateTime.now().minusDays(30).toDate();
+			if(DateUtil.convertStringToDate(this.dateOfActivity).before(thresholdDate))
+			    throw new ValidationException("Activity performed date cannot be earlier than 30 days from today.");
+			    
 			activityPerformed.setDateOfActivity(DateUtil.convertStringToDate(this.dateOfActivity));
 		}
 //		activityPerformed.setActivityStatus(this.activityStatus);
-		if (this.description != null)
+		if (this.description != null ) {
+			if(countWords(this.description) < 25 || countWords(this.description) >250)
+				throw new ValidationException("description can be between 25 to 250 words.");
 			activityPerformed.setDescription(this.description);
-		if (this.getCoachRemark() != null)
+		}
+		
+		if (this.coachRemark != null ) {
+			if(countWords(this.coachRemark) < 25 )
+				throw new ValidationException("Remark should be minimum of 25 characters.");
 			activityPerformed.setCoachRemark(this.coachRemark);
+		}
+			
+	
 //		activityPerformed.setCoachRemarkDate(DateUtil.convertStringToDate(this.coachRemarkDate));
 //		activityPerformed.setActive(this.active);
 

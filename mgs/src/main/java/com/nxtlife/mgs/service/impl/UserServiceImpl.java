@@ -109,28 +109,30 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			role = new Role();
 			role.setName("Admin");
 			role.setCid(utils.generateRandomAlphaNumString(8));
-			role.setAuthorities(authorityList);
-			role.setActive(true);
-			roleRepository.save(role);
 		}
+		role.setAuthorities(authorityList);
+		role.setActive(true);
+		roleRepository.save(role);
 
 		logger.info("attached Authorities to admin.");
+		
+		User user = userRepository.findByUserName("mainAdmin");
 
-		if (userRepository.findByUserName("mainAdmin") == null) {
-			User user = new User();
-			user.setRoleForUser(role);
+		if (user == null) {
+			 user = new User();
 			// user.setUserName("Admin0001");
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 			String encodedPassword = encoder.encode("root");
 			user.setPassword(encodedPassword);
 			user.setCid(utils.generateRandomAlphaNumString(8));
-			user.setActive(true);
 			user.setContactNumber("8860571043");
 			user.setEmail("admin@gmail.com");
 			user.setUserName("mainAdmin");
 			user.setUserType(UserType.Admin);
-			userRepository.save(user);
 		}
+		user.setRoleForUser(role);
+		user.setActive(true);
+		userRepository.save(user);
 	}
 
 	@Override
@@ -262,19 +264,19 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			if ((((LFIN)entity).getContactNumber() != null && (userRepository.countByContactNumber(((LFIN)entity).getContactNumber())) > 0)
 					|| (((LFIN)entity).getEmail() != null && userRepository.countByEmail(((LFIN)entity).getEmail()) > 0)) {
 				throw new ValidationException(String.format(
-						"mobile number [%s] or email [%s] for School [%s] is already registered for some other school",
+						"mobile number [%s] or email [%s] for LFIN [%s] is already registered for some other LFIN",
 						((LFIN)entity).getContactNumber(), ((LFIN)entity).getEmail(), ((LFIN)entity).getName()));
 			}
 			
 			user.setUserType(UserType.LFIN);
-			user.setUserName(((School)entity).getUsername());
+			user.setUserName(((LFIN)entity).getUsername());
 			defaultRole = roleRepository.getOneByName("Lfin");
 			if (defaultRole == null)
 				throw new ValidationException("Role Lfin does not exist");
 			
 			user.setLfin(((LFIN)entity));
-			user.setEmail(((School)entity).getEmail());
-			user.setContactNumber(((School)entity).getContactNumber());
+			user.setEmail(((LFIN)entity).getEmail());
+			user.setContactNumber(((LFIN)entity).getContactNumber());
 			
 		}else {
 			throw new ValidationException(String.format("User for this entity type (%s) cannot be created.", entity.getClass().getSimpleName()));
@@ -551,9 +553,11 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@Override
 	public SuccessResponse forgotPassword(String username) {
 
-		if (!username.matches("^[@A-Za-z0-9_]")) {
-			throw new ValidationException(String.format("incorrect username [%s]", username));
-		}
+//		if (!username.matches("^[@A-Za-z0-9_]")) {
+//			throw new ValidationException(String.format("incorrect username [%s]", username));
+//		}
+		if(username == null)
+			throw new ValidationException("username cannot be null.");
 
 		User user = userRepository.findByUserNameAndActiveTrue(username);
 
@@ -570,13 +574,15 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		String generatedPassword = utils.generateRandomAlphaNumString(8);
 		user.setPassword(encoder.encode(generatedPassword));
 		user = userRepository.save(user);
-		
+		Boolean emailFlag =false;
 		if (user.getEmail() != null) {
 			Mail mail = usernamePasswordSendContentBuilder(user.getUsername(),
 					generatedPassword, emailUsername, user.getEmail());
 			mail.setMailSubject("Password reset successful.");
-			sendLoginCredentialsBySMTP(mail);
+			emailFlag = sendLoginCredentialsBySMTP(mail);
 		}
+		if(!emailFlag || user.getEmail() == null)
+			throw new ValidationException("Password could not be sent because email may not be registered or email is wrong.");
 		return new SuccessResponse(HttpStatus.OK.value(),
 				"New generated password has been sent to your email and/or contact number");
 

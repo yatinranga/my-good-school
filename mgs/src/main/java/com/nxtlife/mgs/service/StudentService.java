@@ -1,6 +1,7 @@
 package com.nxtlife.mgs.service;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,6 +47,11 @@ public interface StudentService extends ExcelUtil {
 	CertificateResponse uploadCertificate(CertificateRequest request);
 
 	List<CertificateResponse> getAllCertificatesOfStudent();
+
+	Set<StudentResponse> getAllStudentsAndItsActivitiesByAwardCriterion(String awardCriterion, String criterionValue,
+			String gradeCid);
+
+	List<StudentResponse> getAllStudentsOfSchoolForParticularActivity(String activityCid, String activityStatus);
 
 	// List<AwardResponse> getAllAwardsOfStudentByActivityId(String studentCid,
 	// String awardCid);

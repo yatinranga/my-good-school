@@ -1,6 +1,8 @@
 package com.nxtlife.mgs.view;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -27,6 +29,8 @@ public class StudentResponse {
 	private String schoolName;
 	private List<GuardianResponse> guardianResponseList;
 	private String profileImage;
+	private String yearOfEnrolment;
+	private List<ActivityPerformedResponse> performedActivities;
 
 	public String getId() {
 		return id;
@@ -156,6 +160,22 @@ public class StudentResponse {
 		this.profileImage = profileImage;
 	}
 
+	public String getYearOfEnrolment() {
+		return yearOfEnrolment;
+	}
+
+	public void setYearOfEnrolment(String yearOfEnrolment) {
+		this.yearOfEnrolment = yearOfEnrolment;
+	}
+
+	public List<ActivityPerformedResponse> getPerformedActivities() {
+		return performedActivities;
+	}
+
+	public void setPerformedActivities(List<ActivityPerformedResponse> performedActivities) {
+		this.performedActivities = performedActivities;
+	}
+
 	public StudentResponse(Student student) {
 		this.id = student.getCid();
 		this.name = student.getName();
@@ -167,6 +187,8 @@ public class StudentResponse {
 		this.mobileNumber = student.getMobileNumber();
 		this.active = student.getActive();
 		this.profileImage = student.getImageUrl();
+		if (student.getCreatedDate() != null)
+			this.yearOfEnrolment = Integer.toString(student.getCreatedDate().getYear());
 
 		if (student.getSubscriptionEndDate() != null)
 			this.subscriptionEndDate = DateUtil.formatDate(student.getSubscriptionEndDate());
@@ -184,7 +206,7 @@ public class StudentResponse {
 			this.schoolId = student.getSchool().getCid();
 			this.schoolName = student.getSchool().getName();
 		}
-		
+
 		if (student.getGuardians() != null && !student.getGuardians().isEmpty())
 			this.guardianResponseList = student.getGuardians().stream().map(g -> new GuardianResponse(g))
 					.collect(Collectors.toList());
@@ -197,14 +219,17 @@ public class StudentResponse {
 			this.name = student.getName();
 			this.username = student.getUsername();
 			this.email = student.getEmail();
-			if(student.getDob()!=null)
-			   this.dob = DateUtil.formatDate(student.getDob());
+			if (student.getDob() != null)
+				this.dob = DateUtil.formatDate(student.getDob());
 			this.gender = student.getGender();
 			this.mobileNumber = student.getMobileNumber();
 			this.active = student.getActive();
 			this.profileImage = student.getImageUrl();
-			if(student.getSubscriptionEndDate()!=null)
-			   this.subscriptionEndDate = DateUtil.formatDate(student.getSubscriptionEndDate());
+			if (student.getCreatedDate() != null)
+				this.yearOfEnrolment = Integer.toString(student.getCreatedDate().getYear());
+
+			if (student.getSubscriptionEndDate() != null)
+				this.subscriptionEndDate = DateUtil.formatDate(student.getSubscriptionEndDate());
 
 			if (student.getUser() != null) {
 				this.userId = student.getUser().getCid();

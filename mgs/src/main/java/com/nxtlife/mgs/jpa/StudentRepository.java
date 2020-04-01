@@ -56,6 +56,9 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
 	Student getByUserIdAndActiveTrue(Long userId);
 
+	List<Student> findAllBySchoolCidAndActivitiesActivityCidAndActivitiesActivityStatusAndSchoolActiveTrueAndActivitiesActivityActiveTrueAndActiveTrue(
+			String schoolCid, String activityCid, ActivityStatus valueOf);
+
 
 
 	/*

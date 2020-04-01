@@ -25,6 +25,11 @@ public class AwardController {
 
 	@Autowired
 	AwardService awardService;
+	
+	@GetMapping("awardCriteria")
+	public Set<String> getAwardCriteria(){
+		return awardService.getAwardCriterias();
+	}
 
 	@PostMapping("api/award")
 	public AwardResponse createAward(@RequestBody AwardRequest request) {
