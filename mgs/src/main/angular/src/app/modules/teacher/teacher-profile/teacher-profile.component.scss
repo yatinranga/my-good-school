@@ -17,6 +17,7 @@
     position: absolute;
     top: 175px;
     padding: 10px;
+    background: grey;
 }
 .profile_text h2{
     margin: 0 0 20px 0;
@@ -45,8 +46,14 @@
 }
 .basic-info {
     float: left;
-    width: 55%;
-    margin: 0 5px;
+    width: 50%;
+    margin: 30px 5px;
+}
+.basic-info li {
+    margin: 10px 0;
+}
+.basic-info ul{
+    padding: 0;
 }
 
 .teacher-activities ul {
@@ -61,4 +68,19 @@ list-style: inherit;
 
 .teacher-activities h3{
     color: #fafafa !important;
+}
+.teacher_picture img{
+    width: 150px;
+    height: 150px;
+}
+.teacher_picture{
+    width: 100%;
+    display: inline-flex;
+    padding: 10px;
+}
+
+h4 {
+    margin: 10px;
+    font-size: 30px;
+    font-weight: 300;
 }
