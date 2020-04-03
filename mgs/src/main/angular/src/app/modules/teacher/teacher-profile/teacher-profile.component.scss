@@ -2,11 +2,11 @@
     width: 100%;
     display: inline-block;
 }
-.profile_image{
+.profile_bg{
     width: 100%;
     position: relative;
 }
-.profile_image img{
+.profile_bg img{
     width: 100%;
     height: calc(100vh - 107px);
 }
@@ -15,9 +15,26 @@
     width: 50%;
     float: left;
     position: absolute;
-    top: 175px;
+    top: 155px;
     padding: 10px;
-    background: grey;
+    background: #8cb9c7;
+}
+.teacher_image {
+    position: relative;
+    text-align: center;
+    margin: 0 auto;
+    top: -50px;
+}
+.teacher_image img {
+    opacity: 1;
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    border: 1px solid grey;
+}
+.profile_text{
+    width: 100%;
+    display: inline-block;
 }
 .profile_text h2{
     margin: 0 0 20px 0;
@@ -30,24 +47,19 @@
     color: #333;
     padding: 0px 10px;
 }
-
 .profile_text h3{
     width: 100px;
     font-size: 21px;
-    color: #333;
+    color: #e04090;
     text-align: left;
     margin-bottom: 35px;
     font-weight: 500;
-    border-bottom: 1px solid #555;
-}
-.profile_text{
-    width: 100%;
-    display: inline-block;
+    border-bottom: 1px solid #e04090;
 }
 .basic-info {
     float: left;
-    width: 50%;
-    margin: 30px 5px;
+    width: 65%;
+    margin: 0;
 }
 .basic-info li {
     margin: 10px 0;
@@ -55,33 +67,24 @@
 .basic-info ul{
     padding: 0;
 }
-
-.teacher-activities ul {
+.teacher-activities-main {
+    float: right;
+    width: 35%;
+    margin: 0;
+    padding: 0;
+}
+.teacher-activities-main ul {
     padding: 0 17px;
 }
-.teacher-activities ul li{
+.teacher-activities-main ul li{
 list-style: inherit;
 }
 .basic-info i.fa {
     margin: 0 15px 0 0px;
 }
-
-.teacher-activities h3{
-    color: #fafafa !important;
-}
-.teacher_picture img{
-    width: 150px;
-    height: 150px;
-    opacity: 1;
-}
-.teacher_picture{
-    width: 100%;
-    display: inline-flex;
-    padding: 10px;
-}
-
-h4 {
-    margin: 10px;
+h4{
     font-size: 30px;
     font-weight: 300;
+    margin: 10px 0 0 0;
+    color: #e04090;
 }
