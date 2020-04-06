@@ -366,8 +366,8 @@ export class SavedActitvityComponent implements OnInit {
         (err) => {
           this.submit_loader = false;
           console.log(err);
-          $('#addActivityModal').modal('hide');
-          $('.modal-backdrop').remove();
+          // $('#addActivityModal').modal('hide');
+          // $('.modal-backdrop').remove();
         }
       );
     }

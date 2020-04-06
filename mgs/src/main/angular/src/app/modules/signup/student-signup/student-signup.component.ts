@@ -74,11 +74,12 @@ export class StudentSignupComponent implements OnInit {
     // this.studentSignup.value.dob = time;
     const payload =  this.studentSignup.value;
     console.log(payload);
-    // this.studentService.uploadStudentDetails(payload).subscribe((res) => {
-    //   this.alertService.showSuccessAlert(""); 
-    //   this.router.navigate(['./login'])
-    // },
-    // (err) => console.log(err) )
+    this.alertService.showLoader("");
+    this.studentService.uploadStudentDetails(payload).subscribe((res) => {
+      this.alertService.showSuccessAlert(""); 
+      this.router.navigate(['./login'])
+    },
+    (err) => console.log(err) )
   }
 
   getGrades(schoolId){

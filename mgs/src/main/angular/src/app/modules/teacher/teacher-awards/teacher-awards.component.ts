@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { AlertService } from 'src/app/services/alert.service';
+import { element } from 'protractor';
 
 declare let $: any;
 
@@ -18,7 +19,7 @@ export class TeacherAwardsComponent implements OnInit {
   performedActiArr = [];
   schoolAwards = []; // List of all Awards of a school
 
-  awardViewType = "view";
+  awardViewType = "assign";
   teacherInfo: any;
   schoolId = "";
   activities = [];
@@ -26,7 +27,6 @@ export class TeacherAwardsComponent implements OnInit {
   actiPerform = {};
   studentId = "";
 
-  gradeId = "";
   activityId = ""
   teacherId = "";
 
@@ -43,6 +43,17 @@ export class TeacherAwardsComponent implements OnInit {
 
   assignAwardForm: FormGroup;
 
+  //New Changes
+  awardCriteriaArr: any = [];
+  criteriaValuesArr: any = [];
+
+  awardcr_loader: boolean;
+  criteriaVal_loader: boolean;
+
+  criterionValue: any = "";
+  awardCriterion : any = "";
+  gradeId : any = "";
+
   constructor(private teacherService: TeacherService, private formbuilder: FormBuilder, private alertService: AlertService) { }
 
   ngOnInit() {
@@ -52,7 +63,7 @@ export class TeacherAwardsComponent implements OnInit {
     this.assignAwardInit();
     this.getSchoolGrades();
     this.awardView(this.awardViewType);
-
+    this.getSchoolActivities();
   }
 
   // initialize the Assign Award Form
@@ -66,6 +77,14 @@ export class TeacherAwardsComponent implements OnInit {
       description: [, [Validators.required, Validators.minLength(10)]],
       activityPerformedIds: [([])],
     });
+  }
+
+  // get ALL Activites Offered in a School
+  getSchoolActivities(){
+    this.teacherService.getActivity(this.schoolId).subscribe((res)=>{
+      // this.activities = res;
+      res.forEach((element) => {this.activities.push(element.name)});
+    },(err) => {console.log(err)});
   }
 
   // get Grades of School
@@ -131,7 +150,7 @@ export class TeacherAwardsComponent implements OnInit {
   // get ActivityId of selected from dropdown
   getActivityId(event) {
     this.activityId = event;
-    this.getPerformedActivities();
+    // this.getPerformedActivities();
     this.studentActivityList = true;
     this.actiPerform = {};
   }
@@ -174,15 +193,48 @@ export class TeacherAwardsComponent implements OnInit {
   }
 
   // get List of Performed activity by specific activityId
-  getPerformedActivities() {
+  getPerformedActivities(value,type) {
     this.pa_loader = true;
+    this.studentActivityList = true;
+    // console.log(this.criterionValue)
     this.performedActiArr = [];
-    this.teacherService.getStudentPerformedActivities(this.studentId, this.activityId).subscribe((res) => {
-      console.log(res);
-      this.performedActiArr = res;
-      this.pa_loader = false;
-    },
-      (err) => console.log(err));
+    if(type == "value"){
+      if (this.gradeId == "") {
+        this.criterionValue = value;
+        this.teacherService.getStudentPerformedActivities(this.awardCriterion, value).subscribe((res) => {
+          this.performedActiArr = res;
+          console.log(res);
+                    this.pa_loader = false;
+          // this.pa_loader = false;
+        },
+          (err) => {console.log(err)
+                        this.pa_loader = false;
+          });
+      } else {
+        this.criterionValue = value;
+        this.teacherService.getStudentPerformedActivities(this.awardCriterion, value, this.gradeId).subscribe((res) => {
+          console.log(res);
+          this.performedActiArr = res;
+                    this.pa_loader = false;
+          // this.pa_loader = false;
+        },
+          (err) => {
+            console.log(err);
+                        this.pa_loader = false;
+          });
+      }
+    }
+
+    if(type == "grade"){
+      this.gradeId = value;
+      if(this.criterionValue){
+        this.teacherService.getStudentPerformedActivities(this.awardCriterion, this.criterionValue, value).subscribe((res)=>{
+          console.log(res);
+          this.performedActiArr = res;
+        },(err) => {console.log(err)
+        });
+      }
+    }
   }
 
   // set award id in form 
@@ -200,6 +252,9 @@ export class TeacherAwardsComponent implements OnInit {
     this.awardViewType = type;
     console.log("Award View Type = " + this.awardViewType);
     this.viewAwards();
+    if(type == "assign"){
+      this.awardCriteria();
+    }
   }
 
   viewAwards() {
@@ -208,10 +263,14 @@ export class TeacherAwardsComponent implements OnInit {
       this.selectedGrade = "";  // Reset the value of Grade dropdown
       this.selectedStudent = ""; // Reset the value of Student dropdown
 
+      this.criterionValue= ""; // Reset the value of Criteria dropdown
+      this.awardCriterion = ""; // Reset the value of Criteria Values dropdown
+      this.gradeId = ""; // Reset the value of Grades dropdown
+
       this.award_loader = true;
       this.teacherService.getTeacherAwards().subscribe((res) => {
-        console.log(res);
         this.awardsList = res;
+        console.log(this.awardsList);
         this.award_loader = false;
       },
         (err) => {
@@ -289,6 +348,53 @@ export class TeacherAwardsComponent implements OnInit {
     this.teacherService.downloadAttachment(url).subscribe((res) => {
       console.log(res);
     }, (err) => {console.log(err)});
+  }
+
+  // get Award Criteria
+  awardCriteria() {
+    this.awardcr_loader = true;
+    this.teacherService.getAwardCriteria().subscribe((res) => {
+      this.awardcr_loader = false;
+      this.awardCriteriaArr = res;
+    }, (err) => { console.log(err); 
+      this.awardcr_loader = false; });
+  }
+  
+
+  // get Values on the basis of Award Criteria(PSD, Focus Area, Activity Type & 4s)
+  getCriteriaValue(event) {
+    this.criterionValue ="";
+    this.criteriaValuesArr = [];
+    this.criteriaVal_loader = true;
+    this.actiPerform = {};
+    this.studentActivityList = false;
+    this.performedActiArr = [];
+    this.teacherService.getAwardCriteriaValue().subscribe((res) => {
+      this.criteriaValuesArr = res;
+      console.log(this.criteriaValuesArr);
+        switch (event) {
+          case "PSD Area": {
+            this.criteriaValuesArr = res["PSD Areas"];
+            this.criteriaVal_loader = false;
+            break;
+          }
+          case "Focus Area": {
+            this.criteriaValuesArr = res["Focus Areas"];
+            this.criteriaVal_loader = false;
+            break;
+          }
+          case "4S": {
+            this.criteriaValuesArr = res["Four S"];
+            this.criteriaVal_loader = false;
+            break;
+          }
+          case "Activity Type": { 
+            this.criteriaValuesArr = this.activities;
+            this.criteriaVal_loader = false;
+            break; }
+        }
+      
+    }, (err) => { console.log(err) })
   }
 
 }

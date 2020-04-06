@@ -75,9 +75,12 @@ export class TeacherService {
   }
 
   // List of Activities performed by student of particular activity
-  getStudentPerformedActivities(studentId,actiId){
-    return this.http.get("/api/student/"+studentId+"/activities?activityId="+actiId);
+  getStudentPerformedActivities(awardCriterion,criterionValue,gradeId?){
+    return this.http.get("/api/award/students?awardCriterion="+awardCriterion+"&criterionValue="+criterionValue+"&gradeId ="+gradeId);
   }
+  // getStudentPerformedActivities(studentId,actiId){
+  //   return this.http.get("/api/student/"+studentId+"/activities?activityId="+actiId);
+  // }
 
   // to get activities of student whose status = REVIEWED
   getStudentActivities(studentCid){
@@ -97,5 +100,25 @@ export class TeacherService {
   // DOWNLOAD Attachmeents
   downloadAttachment(filePath){
     return this.http.get("/file/download?filePath="+filePath);
+  }
+
+  // Profile Photo Update
+  putProfilePhoto(formData){
+    return this.http.put("/api/teacher/profilePic",formData);
+  }
+
+  // Update Contact Details
+  putMobileNumber(teacherId,form){
+    return this.http.put("/api/teacher/update/"+teacherId,form);
+  }
+
+  // to Award Criteria
+  getAwardCriteria(){
+    return this.http.get("/awardCriteria");
+  }
+
+  // get Values of PSD, Focus Area & 4s
+  getAwardCriteriaValue(){
+    return this.http.get("/filters");
   }
 }
