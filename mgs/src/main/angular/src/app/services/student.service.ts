@@ -46,6 +46,7 @@ export class StudentService {
     return this.http.get(url);
   }
 
+  // get GRADES of School
   getGradesOfSchool(schoolId){
     return this.http.get("/grades?schoolId=" + schoolId);
   }
@@ -119,6 +120,11 @@ export class StudentService {
   // Profile Photo Update
   putProfilePhoto(studentCid,formData){
     return this.http.put("/api/student/"+studentCid+"/profilePic",formData);
+  }
+
+  // get List of Students for the Activity
+  getActivityStudent(activityId){
+    return this.http.get("/api/students/activity?activityId="+activityId);
   }
 
 }

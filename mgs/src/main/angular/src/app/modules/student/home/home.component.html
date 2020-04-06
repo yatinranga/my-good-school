@@ -1,7 +1,40 @@
 <div id="banner" class="banner">
     <img src="assets/images/g.png">
-   <!--
-        <div class="home_page_content">
+    <div class="home_page_content">
+        <div class="menu_main">
+            <label> Activity Type : </label>
+            <select name="activity" (ngModelChange)="getCoaches($event)" ngModel [disabled]="!activities.length">
+                <option value="" disabled>Select Activity</option>
+                <option *ngFor="let activity of activities;" value={{activity.id}}>
+                    {{activity.name}}</option>
+                <option disabled *ngIf="!activities.length">No activities available</option>
+            </select>
+        </div>
+        <div class="menu_main" >
+            <h3>List of Supervisor :</h3>
+            <div *ngFor="let c of coaches">{{c.name}}</div>
+            <div *ngIf="coaches.length==0">
+                {{sup_loader ? 'Loading...' : 'No Supervisor'}}
+            </div>
+        </div>
+        <div class="menu_main" >
+            <h3>List of Students :</h3>
+            <select name="grade" [disabled]="!activities.length" (change)="filterStudent()" [(ngModel)]="grade">
+                <option value="" disabled>Select Grade</option>
+                <option *ngFor="let g of grades" value={{g.grade}}>{{g.grade}}</option>
+                <option disbaled *ngIf="!grades.length">No Grades Available</option>
+            </select>
+            <div *ngFor="let s of students">{{s.name}} {{s.grade}}</div>
+            <div *ngIf="students.length==0">
+                {{stu_loader ? 'Loading...' : 'No Students'}}
+            </div>
+        </div>
+    </div>
+
+
+
+   
+        <!-- <div class="home_page_content">
             <div class="menu_main">
                     <h1> Welcome to Student Portal </h1>
                 <div class="menu_content">
@@ -27,6 +60,6 @@
                     <p>In Awards link, you can view awards.</p>
                 </div>
             </div>
-        </div>
-   -->
+        </div> --> 
+   
 </div>

@@ -127,11 +127,9 @@
                                                     *ngFor="let activity of performedActiArr ; let i = index;">
                                                     <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                                                         <td>
-                                                            <label>
-                                                                <input type="checkbox" name="selectPerformedActivity"
-                                                                    (click)="stopCollapse($event)"
-                                                                    [(ngModel)]="actiPerform[activity.id]">
-                                                                {{activity.activityName}}
+                                                            <label >
+                                                                <input type="radio" name="selectStudent" value={{activity.id}}
+                                                                    (click)="stopCollapse($event)" >
                                                             </label>
                                                         </td>
                                                         <td>{{activity.name}}</td>
@@ -148,7 +146,8 @@
                                                                         <div class="col-4">
                                                                             <div class="assign description">
                                                                                 <h5>
-                                                                                    <label><input type="checkbox"></label>
+                                                                                    <label><input type="checkbox" name="selectPerformedActivity" value={{pa.id}}
+                                                                                        [(ngModel)]="actiPerform[pa.id]"></label>
                                                                                      Activity Details </h5>
                                                                                 <p> <strong>Activity Name -
                                                                                     </strong>{{pa.activityName}}</p>
@@ -449,6 +448,22 @@
                         <small class="text-danger"
                             *ngIf="!assignAwardForm.get('description').valid && assignAwardForm.get('description').touched">
                             Min Length 10 words.
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label"> Valid From - </label>
+                        <input type="date" class="form-control" name="vaidFrom" formControlName="vaidFrom"/>
+                        <small class="text-danger"
+                            *ngIf="!assignAwardForm.get('vaidFrom').valid && assignAwardForm.get('vaidFrom').touched">
+                            Date Required
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label"> Valid Till - </label>
+                        <input type="date" class="form-control" name="validUntil" formControlName="validUntil"/>
+                        <small class="text-danger"
+                            *ngIf="!assignAwardForm.get('validUntil').valid && assignAwardForm.get('validUntil').touched">
+                            Date Required
                         </small>
                     </div>
                     <div class="modal-footer">

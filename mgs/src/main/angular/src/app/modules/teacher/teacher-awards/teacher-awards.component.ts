@@ -74,7 +74,9 @@ export class TeacherAwardsComponent implements OnInit {
       studentId: [],
       activityId: [],
       awardType: [, [Validators.required]],
-      description: [, [Validators.required, Validators.minLength(10)]],
+      description: [, [Validators.required, Validators.minLength(40)]],
+      vaidFrom: [,[Validators.required]],
+      validUntil : [,[Validators.required]],
       activityPerformedIds: [([])],
     });
   }
@@ -99,61 +101,61 @@ export class TeacherAwardsComponent implements OnInit {
   }
 
   //  get LIST of students who performed specific activity of particular grade
-  getListOfStudent(gradeId) {
-    this.studentActivityList = false; // List of performed activities
-    this.stu_loader = true;
+  // getListOfStudent(gradeId) {
+  //   this.studentActivityList = false; // List of performed activities
+  //   this.stu_loader = true;
 
-    this.studentList = [];
-    this.performedActiArr = [];
-    this.activities = [];
-    this.selectedStudent = "";
-    this.selectedActivity = "";
+  //   this.studentList = [];
+  //   this.performedActiArr = [];
+  //   this.activities = [];
+  //   this.selectedStudent = "";
+  //   this.selectedActivity = "";
 
-    this.teacherService.getStudents(gradeId).subscribe((res) => {
-      this.studentList = res;
-      console.log(res);
-      this.stu_loader = false;
-    }, (err) => {
-      console.log(err);
-      this.stu_loader = false;
-    });
-  }
+  //   this.teacherService.getStudents(gradeId).subscribe((res) => {
+  //     this.studentList = res;
+  //     console.log(res);
+  //     this.stu_loader = false;
+  //   }, (err) => {
+  //     console.log(err);
+  //     this.stu_loader = false;
+  //   });
+  // }
 
   // get StudentId of selected from dropdown
-  getStudentId(studentId) {
-    this.acti_loader = true;
-    this.selectedActivity = "";
-    this.studentId = studentId;
-    this.activities = [];
-    this.performedActiArr = [];
-    this.studentActivityList = false;
-    this.teacherService.getStudentActivities(studentId).subscribe((res) => {
-      console.log(res);
-      const activityIds = []
-      this.activities = res.filter(a => {
-        if (activityIds.includes(a.activityId))
-          return false;
-        else {
-          activityIds.push(a.activityId);
-          return true;
-        }
-      });
-      this.acti_loader = false;
+  // getStudentId(studentId) {
+  //   this.acti_loader = true;
+  //   this.selectedActivity = "";
+  //   this.studentId = studentId;
+  //   this.activities = [];
+  //   this.performedActiArr = [];
+  //   this.studentActivityList = false;
+  //   this.teacherService.getStudentActivities(studentId).subscribe((res) => {
+  //     console.log(res);
+  //     const activityIds = []
+  //     this.activities = res.filter(a => {
+  //       if (activityIds.includes(a.activityId))
+  //         return false;
+  //       else {
+  //         activityIds.push(a.activityId);
+  //         return true;
+  //       }
+  //     });
+  //     this.acti_loader = false;
 
-    },
-      (err) => {
-        console.log(err)
-        this.acti_loader = false;
-      });
-  }
+  //   },
+  //     (err) => {
+  //       console.log(err)
+  //       this.acti_loader = false;
+  //     });
+  // }
 
   // get ActivityId of selected from dropdown
-  getActivityId(event) {
-    this.activityId = event;
-    // this.getPerformedActivities();
-    this.studentActivityList = true;
-    this.actiPerform = {};
-  }
+  // getActivityId(event) {
+  //   this.activityId = event;
+  //   // this.getPerformedActivities();
+  //   this.studentActivityList = true;
+  //   this.actiPerform = {};
+  // }
 
   // Assign Award to Students
   assignAward() {
@@ -161,7 +163,7 @@ export class TeacherAwardsComponent implements OnInit {
     this.assignAwardForm.value.teacherId = this.teacherId;
     this.assignAwardForm.value.schoolId = this.schoolId;
     this.assignAwardForm.value.activityId = this.activityId;
-    this.assignAwardForm.value.studentId = this.studentId;
+    // this.assignAwardForm.value.studentId = this.studentId;
     this.assignAwardForm.value.activityPerformedIds = [];
     Object.keys(this.actiPerform).forEach((key) => {
       if (this.actiPerform[key]) {
@@ -171,24 +173,24 @@ export class TeacherAwardsComponent implements OnInit {
 
     console.log(this.assignAwardForm.value);
 
-    this.teacherService.assignAward(this.assignAwardForm.value).subscribe((res) => {
-      console.log(res);
-      $('#assignAwardModal').modal('hide');
-      $('.modal-backdrop').remove();
-      this.performedActiArr = [];
-      this.assignAwardForm.reset();
-      this.alertService.showSuccessAlert("");
-      this.studentActivityList = false;
-      this.awardViewType = "view";
-      this.viewAwards();
-      this.pa_loader = false;
-    },
-      (err) => {
-        console.log(err);
-        $('#assignAwardModal').modal('hide');
-        $('.modal-backdrop').remove();
-        this.pa_loader = false;
-      });
+    // this.teacherService.assignAward(this.assignAwardForm.value).subscribe((res) => {
+    //   console.log(res);
+    //   $('#assignAwardModal').modal('hide');
+    //   $('.modal-backdrop').remove();
+    //   this.performedActiArr = [];
+    //   this.assignAwardForm.reset();
+    //   this.alertService.showSuccessAlert("");
+    //   this.studentActivityList = false;
+    //   this.awardViewType = "view";
+    //   this.viewAwards();
+    //   this.pa_loader = false;
+    // },
+    //   (err) => {
+    //     console.log(err);
+    //     $('#assignAwardModal').modal('hide');
+    //     $('.modal-backdrop').remove();
+    //     this.pa_loader = false;
+    //   });
 
   }
 
@@ -238,14 +240,14 @@ export class TeacherAwardsComponent implements OnInit {
   }
 
   // set award id in form 
-  setAwardId(event) {
-    this.assignAwardForm.value.id = event;
-  }
+  // setAwardId(event) {
+  //   this.assignAwardForm.value.id = event;
+  // }
 
   // get grades
-  getGradeId(event) {
-    this.gradeId = event;
-  }
+  // getGradeId(event) {
+  //   this.gradeId = event;
+  // }
 
   // change award view
   awardView(type) {
@@ -396,5 +398,10 @@ export class TeacherAwardsComponent implements OnInit {
       
     }, (err) => { console.log(err) })
   }
+
+  temp(){
+    console.log("Hella");
+  }
+
 
 }
