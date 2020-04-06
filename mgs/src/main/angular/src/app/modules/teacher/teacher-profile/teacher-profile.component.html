@@ -1,10 +1,14 @@
 <div class="main">
     <div class="content_main">
         <div class="profile_main">
-            <div class="profile_image">
-                <img src="assets/images/teacherprofile.jpg">
+            <div class="profile_bg">
+                <img src="assets/images/teacherprofilebg.jpg">              
             </div>
             <div class="profile_text_main">
+                <div class="teacher_image">
+                    <img src="assets/images/teacherprofile1.jpg">
+                    <h4> {{teacherDetails['name']}}  </h4>
+                </div>
                 <div class="profile_text">
                     <div class="teacher_picture">
                         <img [src]="path">
@@ -36,14 +40,11 @@
                             </li>
                         </ul>
                     </div>
-
                     <div *ngIf="teacherDetails['activities']" class="teacher-activities-main">
-                        <div class="teacher-activities">
                             <h3> Activities </h3>
                             <ul *ngFor="let acti of teacherDetails['activities']">
                                 <li>{{acti}}</li>
                             </ul>
-                        </div>
                     </div>
                     <div *ngIf="teacherDetails['gradeIds']">Activities -
                         <div *ngFor="let grade of teacherDetails['gradeIds']">
@@ -62,6 +63,13 @@
 
 
 <!--
+
+    <div class="profile_text">
+                    <div class="teacher_picture">
+                        <img src="assets/images/teacherprofile1.jpg">
+                        <h4> {{teacherDetails['name']}} </h4>
+                    </div>
+                     </div>
     <div class="profile_text_main">
                 <div class="basic_info">
                             <div class="teacher_img">
