@@ -19,7 +19,7 @@ export class TeacherAwardsComponent implements OnInit {
   performedActiArr = [];
   schoolAwards = []; // List of all Awards of a school
 
-  awardViewType = "assign";
+  awardViewType = "view";
   teacherInfo: any;
   schoolId = "";
   activities = [];
@@ -191,8 +191,8 @@ export class TeacherAwardsComponent implements OnInit {
         this.alertService.showSuccessAlert("");
         this.studentActivityList = false;
         this.awardViewType = "view";
-        this.viewAwards();
         this.pa_loader = false;
+        this.viewAwards();
       },
         (err) => {
           console.log(err);
@@ -314,6 +314,7 @@ export class TeacherAwardsComponent implements OnInit {
 
     this.alertService.confirmWithoutLoader('question', "Verify Actvity", '', 'Yes').then(result => {
       if (result.value) {
+        this.alertService.showLoader("");
         this.teacherService.verifyAwards(awardId).subscribe((res) => {
           console.log(res);
           this.alertService.showSuccessAlert("");

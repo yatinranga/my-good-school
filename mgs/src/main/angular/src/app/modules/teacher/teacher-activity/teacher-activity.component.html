@@ -25,7 +25,13 @@
                                 <th scope="col">Performed Activity</th>
                                 <th scope="col">Description</th>
                                 <th scope="col">Performed Activity Date</th>
-                                <th scope="col">Status
+                                <th scope="col" *ngIf="!(activityType === 'Reviewed')">Status
+                                    <button *ngIf="activityType === 'All'" name="sort" class="icon_button"
+                                        (click)="sortByStatus()">
+                                        <i class="fa fa-sort"></i>
+                                    </button>
+                                </th>
+                                <th scope="col" *ngIf="(activityType === 'Reviewed')" colspan="2">Status
                                     <button *ngIf="activityType === 'All'" name="sort" class="icon_button"
                                         (click)="sortByStatus()">
                                         <i class="fa fa-sort"></i>
