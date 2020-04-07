@@ -62,4 +62,6 @@ public interface TeacherService {
 
 	TeacherResponse setProfilePic(MultipartFile file);
 
+	TeacherResponse addOrRemoveActivitiesToTeachers(TeacherRequest request);
+
 }

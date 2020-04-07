@@ -1,5 +1,7 @@
 package com.nxtlife.mgs.service.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -32,11 +34,11 @@ public class ExcelTemplateServiceImpl extends BaseService implements ExcelTempla
 	private static Logger logger = LoggerFactory.getLogger(ExcelTemplateServiceImpl.class);
 	
 	@Override
-	public File exportExampleFile(String type) {
+	public ByteArrayInputStream exportExampleFile(String type) throws IOException {
 
-		Path path = Paths.get(filedir);
-		logger.info(filedir);
-		String filename = path.resolve(UUID.randomUUID().toString()).toString() + ".xlsx";
+//		Path path = Paths.get(filedir);
+//		logger.info(filedir);
+//		String filename = path.resolve(UUID.randomUUID().toString()).toString() + ".xlsx";
 
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		XSSFSheet sheet = workbook.createSheet(type.toUpperCase());
@@ -52,15 +54,16 @@ public class ExcelTemplateServiceImpl extends BaseService implements ExcelTempla
 			cell.setCellValue(entry.getKey());
 		}
 
-		File file = new File(filename);
-		try {
-		workbook.write(new FileOutputStream(file));
+//		File file = new File(filename);
+		try(ByteArrayOutputStream out = new ByteArrayOutputStream();) {
+		workbook.write(out);
 		workbook.close();
-		} catch (IOException e) {
-		logger.error("error in creating ", e);
+		
+//		} catch (IOException e) {
+//		logger.error("error in creating ", e);
+//		}
+		return new ByteArrayInputStream(out.toByteArray());
 		}
-		return file;
-
 		}
 
 }

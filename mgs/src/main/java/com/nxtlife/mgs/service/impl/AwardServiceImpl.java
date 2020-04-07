@@ -205,7 +205,7 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 		if (teacher.getActivities() == null || teacher.getActivities().isEmpty()) {
 			throw new ValidationException("Management not assigned with any activity");
 		}
-		List<Award> awards = awardRepository.findByActivityIn(teacher.getActivities());
+		List<Award> awards = awardRepository.findByActivityInOrActivityNull(teacher.getActivities());
 		return awards.stream().map(AwardResponse::new).collect(Collectors.toList());
 	}
 	

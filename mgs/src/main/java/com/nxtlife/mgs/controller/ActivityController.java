@@ -22,7 +22,7 @@ public class ActivityController {
 	@Autowired
 	private ActivityService activityService;
 
-	@PostMapping(value = "/api/activitiesOffered")
+	@PostMapping(value = "api/activitiesOffered")
 	public ActivityRequestResponse saveActivity(@Validated @RequestBody ActivityRequestResponse request) {
 		return activityService.saveActivity(request);
 	}

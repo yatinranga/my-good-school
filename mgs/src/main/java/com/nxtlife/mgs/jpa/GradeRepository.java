@@ -3,6 +3,8 @@ package com.nxtlife.mgs.jpa;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.nxtlife.mgs.entity.school.Grade;
@@ -31,4 +33,7 @@ public interface GradeRepository extends JpaRepository<Grade, Long>{
 	Grade findByCidAndSchoolsCidAndSchoolsActiveTrueAndActiveTrue(String gradeId, String cid);
 
 	boolean existsByCidAndActiveTrue(String gradeCid);
+
+//	@Query("SELECT CASE WHEN count(g) > 0 THEN true ELSE false END FROM Grade g where g.cid = :gradeCid AND g.schools.cid =:schoolCid AND g.active = true")
+	boolean existsBySchoolsCidAndCidAndActiveTrue(String schoolCid, String gradeCid);
 }
