@@ -47,6 +47,7 @@ export class HomeComponent implements OnInit {
     this.getStudents(actiId);
     this.coaches = [];
     this.students = [];
+    this.grade = "";
     this.sup_loader = true;
     this.studentService.getCoach(this.schoolId, actiId).subscribe((res) => {
       this.coaches = res;

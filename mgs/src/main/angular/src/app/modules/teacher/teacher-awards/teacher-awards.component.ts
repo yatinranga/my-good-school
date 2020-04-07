@@ -19,7 +19,7 @@ export class TeacherAwardsComponent implements OnInit {
   performedActiArr = [];
   schoolAwards = []; // List of all Awards of a school
 
-  awardViewType = "assign";
+  awardViewType = "view";
   teacherInfo: any;
   schoolId = "";
   activities = [];
@@ -71,7 +71,7 @@ export class TeacherAwardsComponent implements OnInit {
     this.assignAwardForm = this.formbuilder.group({
       teacherId: [],
       schoolId: [],
-      studentId: [],
+      // studentId: [],
       activityId: [],
       awardType: [, [Validators.required]],
       description: [, [Validators.required, Validators.minLength(40)]],
@@ -94,7 +94,6 @@ export class TeacherAwardsComponent implements OnInit {
     this.grade_loader = true;
     this.teacherService.getGrades(this.schoolId).subscribe((res) => {
       this.schoolGrades = res;
-      console.log(this.schoolGrades);
       this.grade_loader = false;
     },
       (err) => console.log(err));
@@ -159,11 +158,12 @@ export class TeacherAwardsComponent implements OnInit {
 
   // Assign Award to Students
   assignAward() {
+    console.log(this.actiPerform);
     this.pa_loader = true;
     this.assignAwardForm.value.teacherId = this.teacherId;
     this.assignAwardForm.value.schoolId = this.schoolId;
-    this.assignAwardForm.value.activityId = this.activityId;
-    // this.assignAwardForm.value.studentId = this.studentId;
+    // this.assignAwardForm.value.activityId = this.activityId;
+    this.assignAwardForm.value.studentId = this.studentId;
     this.assignAwardForm.value.activityPerformedIds = [];
     Object.keys(this.actiPerform).forEach((key) => {
       if (this.actiPerform[key]) {
@@ -173,24 +173,35 @@ export class TeacherAwardsComponent implements OnInit {
 
     console.log(this.assignAwardForm.value);
 
-    // this.teacherService.assignAward(this.assignAwardForm.value).subscribe((res) => {
-    //   console.log(res);
-    //   $('#assignAwardModal').modal('hide');
-    //   $('.modal-backdrop').remove();
-    //   this.performedActiArr = [];
-    //   this.assignAwardForm.reset();
-    //   this.alertService.showSuccessAlert("");
-    //   this.studentActivityList = false;
-    //   this.awardViewType = "view";
-    //   this.viewAwards();
-    //   this.pa_loader = false;
-    // },
-    //   (err) => {
-    //     console.log(err);
-    //     $('#assignAwardModal').modal('hide');
-    //     $('.modal-backdrop').remove();
-    //     this.pa_loader = false;
-    //   });
+    if(this.assignAwardForm.value.vaidFrom == this.assignAwardForm.value.validUntil){
+      this.alertService.showErrorAlert("Date cannot be same");
+      this.pa_loader = false;
+    } else if (this.assignAwardForm.value.vaidFrom > this.assignAwardForm.value.validUntil){
+      this.alertService.showErrorAlert("Valid Date cannot be ahead of Till Date");
+      this.pa_loader = false;
+    } else {
+      this.assignAwardForm.value.vaidFrom = this.assignAwardForm.value.vaidFrom + " 00:00:00";
+      this.assignAwardForm.value.validUntil = this.assignAwardForm.value.validUntil +  " 00:00:00";
+      this.teacherService.assignAward(this.assignAwardForm.value).subscribe((res) => {
+        console.log(res);
+        $('#assignAwardModal').modal('hide');
+        $('.modal-backdrop').remove();
+        this.performedActiArr = [];
+        this.assignAwardForm.reset();
+        this.alertService.showSuccessAlert("");
+        this.studentActivityList = false;
+        this.awardViewType = "view";
+        this.pa_loader = false;
+        this.viewAwards();
+      },
+        (err) => {
+          console.log(err);
+          // $('#assignAwardModal').modal('hide');
+          // $('.modal-backdrop').remove();
+          this.pa_loader = false;
+        });
+    }
+
 
   }
 
@@ -287,7 +298,6 @@ export class TeacherAwardsComponent implements OnInit {
     this.award_loader = true;
     this.teacherService.getAwards().subscribe((res) => {
       this.schoolAwards = res;
-      console.log(res);
       this.award_loader = false;
     },
       (err) => {
@@ -304,6 +314,7 @@ export class TeacherAwardsComponent implements OnInit {
 
     this.alertService.confirmWithoutLoader('question', "Verify Actvity", '', 'Yes').then(result => {
       if (result.value) {
+        this.alertService.showLoader("");
         this.teacherService.verifyAwards(awardId).subscribe((res) => {
           console.log(res);
           this.alertService.showSuccessAlert("");
@@ -373,7 +384,7 @@ export class TeacherAwardsComponent implements OnInit {
     this.performedActiArr = [];
     this.teacherService.getAwardCriteriaValue().subscribe((res) => {
       this.criteriaValuesArr = res;
-      console.log(this.criteriaValuesArr);
+      // console.log(this.criteriaValuesArr);
         switch (event) {
           case "PSD Area": {
             this.criteriaValuesArr = res["PSD Areas"];
@@ -399,8 +410,11 @@ export class TeacherAwardsComponent implements OnInit {
     }, (err) => { console.log(err) })
   }
 
-  temp(){
-    console.log("Hella");
+  getPerformedIds(activity) {
+    this.studentId = activity.id;
+    activity.performedActivities.forEach((ele) => {
+      this.actiPerform[ele.id] = true;
+    });
   }
 
 
