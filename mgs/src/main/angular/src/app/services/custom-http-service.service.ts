@@ -125,7 +125,7 @@ export class CustomHttpService {
     showErrorAlert(errorInfo: any) {
         if(errorInfo.status === 401){
             this.alertService.showErrorAlert("Invalid Username/Password");
-        } else if (errorInfo.status === 400){
+        } else if (errorInfo.status === 400 && errorInfo.msg == "invalid_grant"){
             this.alertService.showErrorAlert("Invalid Password");
         }
          else {

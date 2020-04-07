@@ -28,10 +28,10 @@ export class TeacherSignupComponent implements OnInit {
       (err) => console.log(err))
 
     this.teacherSignup = this.formBuilder.group({
-      name: [null,[Validators.required]],
+      name: [null,[Validators.required,Validators.pattern('[a-zA-Z ]*')]],
       dob: [null,[Validators.required]],
       email: [null,[Validators.required,Validators.email]],
-      mobileNumber: [null],
+      mobileNumber: [null,[Validators.required,Validators.minLength(10),Validators.pattern("[0-9]*")]],
       qualification: [null],
       gender: [null],
       activityIds: [null],

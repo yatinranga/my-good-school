@@ -14,11 +14,9 @@ const routes: Routes = [
     loadChildren: 'src/app/modules/admin/admin.module#AdminModule',
     canActivate: [AuthGuard]
   },
-
   {
     path: 'signup',
     loadChildren: 'src/app/modules/signup/signup.module#SignupModule'
-
   },
   {
     path: 'Student',

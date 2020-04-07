@@ -210,8 +210,9 @@ form.add_activity_form{
 }
 button.btn.cancel {
     margin: 0 10px;
-    padding: 10px;
-    outline: none !important
+    padding: 10px; 
+    outline: none !important;
+    background: grey;
 }
 .action-buttons{
     display: inline-block;
@@ -322,6 +323,7 @@ button.btn.saved.btnSubmit.btn-success {
     position: relative;
     top: 50px;
     outline: none !important;
+    border: 5px solid #808080;
 }
 button.close span {
     color: #dd343d;

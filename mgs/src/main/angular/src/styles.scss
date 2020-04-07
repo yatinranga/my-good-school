@@ -8,6 +8,7 @@
     outline: none !important;
     box-sizing: border-box;
     border-radius: 0;
+    font-family: 'Baloo Paaji 2', cursive !important; 
 }
 .card.bg-light {
     margin: 15px 0;
@@ -178,8 +179,10 @@ button.btn.btnSubmit.btn-success {
 table.table {
     margin:0;
 }
-th{
-    font-weight: bold;
+
+thead.thead-light {
+    font-size: 19px;
+    font-family: serif;
 }
 table.table, tr, th, td{
     border: 1px solid #777 !important;
@@ -206,7 +209,7 @@ border: 1px solid #777 !important;
 }
 .main .table_main table thead tr th {
     background: #ddd;
-    color: #333;
+    color: #e04090;
 }
 
 tbody tr{
@@ -264,7 +267,10 @@ tbody#accordionExample > tr[aria-expanded="true"] {
     display: none !important;
 }
 i.fa.fa-sort {
-    filter: invert(1);
+    color: #e04090;
+    font-size: 16px;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 .table_main h5 {
     font-size: 18px;
@@ -645,23 +651,8 @@ li.nav-item{
 
 /*-------------------------------------ACTIVITY-------------------------------------*/
 
-
-.teacher-activities-main {
-    float: right;
-    width: 40%;
-    margin: 0 5px;
-    /* background: url(assets/images/activitybg.jpg); 
-    background: #91beca; */
-    padding: 0 5px;
-}
 div#fa, p#fa {
     display: inline-block;
-}
-.teacher-activities {
-    background: url(assets/images/board.jpg);
-    color: #fafafa;
-    padding: 5px 10px;
-    opacity: 0.8;
 }
 
 p#attachment_name {

@@ -30,4 +30,8 @@ export class AuthService {
   getInfo(){
     return this.http.get("/api/info");
   }
+
+  forgetPassword(username){
+    return this.http.get("/forgot-password/"+username);
+  }
 }

@@ -39,7 +39,7 @@
                     <div class="col-md-6">
                         <div class="form-group">Select Gender : <span style="color: red"> * </span>
                             <select class="form-control" name="gender" placeholder="Select one" formControlName="gender" >
-                                <option [ngValue]="null" selected>Choose your option</option>
+                                <option [ngValue]="null" selected disabled>Choose your option</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
                             </select>
@@ -59,7 +59,7 @@
                         </div>
                         <div class="form-group">Select Grade : <span style="color: red"> * </span>
                             <select class="form-control" name="gradeId" formControlName="gradeId" >
-                                <option value="" selected>Select Grade</option>
+                                <option value="" selected disabled>Select Grade</option>
                                 <option *ngFor="let grade of gradesList; let i = index;" value={{grade.id}}>
                                     {{grade.grade}} {{grade.section}}</option>
                             </select>
@@ -103,7 +103,7 @@
                                 <input type="tel" class="form-control" maxlength="10" name="'guradianMob'+{{i}}" placeholder="Your Mobile Number"
                                     formControlName="mobileNumber" />
                                     <small class="text-danger" *ngIf="gud.get('mobileNumber').hasError('pattern')">
-                                        Only Digits allowed
+                                        Only Numbers allowed
                                     </small>                                    
                             </div>
                         </div>

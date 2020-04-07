@@ -25,7 +25,13 @@
                                 <th scope="col">Performed Activity</th>
                                 <th scope="col">Description</th>
                                 <th scope="col">Performed Activity Date</th>
-                                <th scope="col">Status
+                                <th scope="col" *ngIf="!(activityType === 'Reviewed')">Status
+                                    <button *ngIf="activityType === 'All'" name="sort" class="icon_button"
+                                        (click)="sortByStatus()">
+                                        <i class="fa fa-sort"></i>
+                                    </button>
+                                </th>
+                                <th scope="col" *ngIf="(activityType === 'Reviewed')" colspan="2">Status
                                     <button *ngIf="activityType === 'All'" name="sort" class="icon_button"
                                         (click)="sortByStatus()">
                                         <i class="fa fa-sort"></i>
@@ -360,11 +366,15 @@
                                         <label for="message-text" class="col-form-label">Remarks :</label>
                                         <textarea class="form-control" name="coachRemark"
                                             formControlName="coachRemark" ></textarea>
+                                            <small class="text-danger"
+                            *ngIf="!reviewForm.get('coachRemark').valid && reviewForm.get('coachRemark').touched">
+                            Should be minimum of 25 characters.
+                        </small>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" name="resetForm" class="reset btn btn-secondary"
                                             (click)="resetForm()">Reset</button>
-                                        <button class="award btn btn-primary" type="submit" name="submit">
+                                        <button class="award btn btn-primary" type="submit" name="submit" [disabled]="reviewForm.invalid">
                                             <div *ngIf="save_loader" class="spinner-border text-dark" role="status">
                                             </div>{{save_loader ? 'Saving...' : 'Save Changes'}}
                                         </button>

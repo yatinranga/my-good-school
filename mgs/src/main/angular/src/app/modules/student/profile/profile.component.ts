@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { StudentService } from 'src/app/services/student.service';
+import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'app-profile',
@@ -20,7 +21,7 @@ export class ProfileComponent implements OnInit {
   files: any[];
   path: any;
 
-  constructor(private formBuilder: FormBuilder, private studentService: StudentService) { }
+  constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService : AlertService) { }
 
   ngOnInit() {
 
@@ -88,6 +89,7 @@ export class ProfileComponent implements OnInit {
 
   // Edit Profile Photo of Student
   editProfilePhoto() {
+    this.alertService.showSuccessAlert("Profile Photo Updated");
     const formData = new FormData();
     formData.append('profilePic', this.profilePhotoForm.value.profilePic);
     this.studentService.putProfilePhoto(this.studentId, formData).subscribe((res) => {
