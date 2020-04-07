@@ -266,7 +266,7 @@ tbody#accordionExample > tr[aria-expanded="true"] {
 }
 .description {
     border-right: 1px solid #333;
-    min-height: 330px;
+    min-height: 333px;
 }
 .description:after, .attachment:before{
     display: none !important;
@@ -554,6 +554,13 @@ li.nav-item{
     width: 100%;
     display: inline-block;
     height: calc(100vh - 145px);
+}
+button.edit_profile {
+    color: #555;
+    margin-top: 15px;
+    background: #adadad;
+    padding: 5px;
+    border-radius: 2px;
 }
 
 .student_main {
