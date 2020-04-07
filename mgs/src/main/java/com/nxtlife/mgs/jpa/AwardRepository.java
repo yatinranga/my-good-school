@@ -19,6 +19,8 @@ public interface AwardRepository extends JpaRepository<Award, Long>, QueryDslPre
 	public List<Award> findByStudentIdAndStatus(Long studentId, ApprovalStatus status);
 
 	public List<Award> findByActivityIn(List<Activity> activities);
+	
+	public List<Award> findByActivityInOrActivityNull(List<Activity> activities);
 
 	public List<Award> findAll(Predicate predicate);
 

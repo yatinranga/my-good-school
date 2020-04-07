@@ -1,6 +1,7 @@
 package com.nxtlife.mgs.controller;
 
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -9,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import org.apache.poi.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.service.ActivityService;
 import com.nxtlife.mgs.service.ExcelTemplateService;
@@ -56,29 +60,29 @@ public class ExcelTemplateController {
 	LFINService lFINService;
 
 	@GetMapping("template/export")
-	public void exportExampleTemplate(@RequestParam String type , HttpServletResponse response) throws IOException {
+	public ResponseEntity<?> exportExampleTemplate(@RequestParam String type , HttpServletResponse response) throws IOException {
 		if(type.equalsIgnoreCase("STUDENT"))
-			exportExampleFile("STUDENT", response);
+			return exportExampleFile("STUDENT", response);
 		else if(type.equalsIgnoreCase("TEACHER"))
-			exportExampleFile("TEACHER", response);
+			return exportExampleFile("TEACHER", response);
 		else if(type.equalsIgnoreCase("COACH"))
-			exportExampleFile("COACH", response);
+			return exportExampleFile("COACH", response);
 		else if(type.equalsIgnoreCase("USER"))
-			exportExampleFile("USER", response);
+			return exportExampleFile("USER", response);
 		else if(type.equalsIgnoreCase("SCHOOL"))
-			exportExampleFile("SCHOOL", response);
+			return exportExampleFile("SCHOOL", response);
 		else if(type.equalsIgnoreCase("MANAGEMENT"))
-			exportExampleFile("MANAGEMENT", response);
+			return exportExampleFile("MANAGEMENT", response);
 		else if(type.equalsIgnoreCase("LFIN"))
-			exportExampleFile("LFIN", response);
+			return exportExampleFile("LFIN", response);
 		else if(type.equalsIgnoreCase("GRADE"))
-			exportExampleFile("GRADE", response);
+			return exportExampleFile("GRADE", response);
 		else if(type.equalsIgnoreCase("ACTIVITY"))
-			exportExampleFile("ACTIVITY", response);
+			return exportExampleFile("ACTIVITY", response);
 		else if(type.equalsIgnoreCase("FOCUS AREA"))
-			exportExampleFile("FOCUS AREA", response);
+			return exportExampleFile("FOCUS AREA", response);
 		else
-			System.out.println("Invalid type.");
+			throw new ValidationException("Invalid type.");
 		
 		
 	}
@@ -112,24 +116,34 @@ public class ExcelTemplateController {
 	}
 
 
-    public void exportExampleFile(String type, HttpServletResponse response) throws IOException {
-        File file;
-        file = excelTemplateService.exportExampleFile(type);
-        if(file== null)
-        	 throw new ValidationException("undefined upload type");
-        String filename = type.toUpperCase()+".xlsx";
-        response.setContentType("text/csv");
-        response.setHeader("Content-disposition", String.format("attachment; filename = %s", filename));
-        response.setHeader("fileName", filename);
-        FileInputStream is = new FileInputStream(file);
-        OutputStream out = response.getOutputStream();
-        IOUtils.copy(is, out);
-        out.flush();
-        is.close();
-        if (!file.delete()) {
-            throw new IOException("Could not delete temporary file after processing: " + file);
-        }
+    public ResponseEntity<?> exportExampleFile(String type, HttpServletResponse response) throws IOException {
+//        File file;
+//        file = excelTemplateService.exportExampleFile(type);
+//        if(file== null)
+//        	 throw new ValidationException("undefined upload type");
+//        String filename = type.toUpperCase()+".xlsx";
+//        response.setContentType("text/csv");
+//        response.setHeader("Content-disposition", String.format("attachment; filename = %s", filename));
+//        response.setHeader("fileName", filename);
+//        FileInputStream is = new FileInputStream(file);
+//        OutputStream out = response.getOutputStream();
+//        IOUtils.copy(is, out);
+//        out.flush();
+////        is.close();
+//        
+//        if (!file.delete()) {
+//            throw new IOException("Could not delete temporary file after processing: " + file);
+//        }
+        
+    	ByteArrayInputStream in = excelTemplateService.exportExampleFile(type);
+		System.out.println(in + " : " + in.available());
+		// return IO ByteArray(in);
+		HttpHeaders headers = new HttpHeaders();
+		// headers.add("fileName"," Incidents.xls");
 
+		// set filename in header
+		headers.add("Content-Disposition", String.format("attachment; filename=%s.xlsx", type.toUpperCase()));
+		return ResponseEntity.ok().headers(headers).body(new InputStreamResource(in));
 
     }
 }

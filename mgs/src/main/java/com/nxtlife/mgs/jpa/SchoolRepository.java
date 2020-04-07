@@ -35,6 +35,8 @@ public interface SchoolRepository extends JpaRepository<School, Long> {
 	boolean existsByNameAndActiveTrue(String string);
 
 	School getByUserId(Long userId);
+
+	boolean existsByUserIdAndActiveTrue(Long userId);
 	
 	
 }

@@ -88,7 +88,7 @@ public interface ActivityPerformedRepository extends JpaRepository<ActivityPerfo
 
 	boolean existsByCidAndActiveTrue(String activityCid);
 	
-	boolean existsByTeacherCidAndActiveTrue(String teacherCid);
+	boolean existsByTeacherCidAndActivityCidAndActiveTrue(String teacherCid , String activityCid);
 	
 	 @Query("SELECT " +
 	           "new com.nxtlife.mgs.view.PropertyCount(a.activity.fourS, COUNT(DISTINCT a.id)) " +

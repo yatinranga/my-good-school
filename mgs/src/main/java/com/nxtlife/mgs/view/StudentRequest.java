@@ -13,9 +13,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.entity.user.Guardian;
 import com.nxtlife.mgs.entity.user.Student;
+import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.util.DateUtil;
 
-public class StudentRequest {
+public class StudentRequest extends Request {
 
 	@NotEmpty(message = "name can't be null/empty")
 	private String name;
@@ -187,19 +188,26 @@ public class StudentRequest {
 
 	public Student toEntity(Student student) {
 		student = student == null ? new Student() : student;
-		if (this.name != null)
+		if (this.name != null) {
+			if(!isStringOnlyAlphabet(this.name))
+				throw new ValidationException(String.format("Name (%s) is in invalid format, it should contain only alphabets."));
 			student.setName(this.name);
+		}
 		if (this.username != null)
 			student.setUsername(this.username);
-		if (this.email != null)
+		if (this.email != null) {
+			validateEmail(this.email);
 			student.setEmail(this.email);
+		}
 		if (this.gender != null)
 			student.setGender(this.gender);
 		if (this.dob != null)
 			student.setDob(DateUtil.convertStringToDate(this.dob));
 		// student.setDob(DateUtil.getDate(this.dob));
-		if (this.mobileNumber != null)
+		if (this.mobileNumber != null) {
+			validateMobileNumber(this.mobileNumber);
 			student.setMobileNumber(this.mobileNumber);
+		}
 		if (this.subscriptionEndDate != null)
 			student.setSubscriptionEndDate(this.subscriptionEndDate);
 		if (this.sessionStartDate != null)

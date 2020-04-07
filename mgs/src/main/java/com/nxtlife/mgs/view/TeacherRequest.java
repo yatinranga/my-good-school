@@ -4,9 +4,10 @@ import java.util.Date;
 import java.util.List;
 
 import com.nxtlife.mgs.entity.user.Teacher;
+import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.util.DateUtil;
 
-public class TeacherRequest {
+public class TeacherRequest extends Request {
 
 	private String name;
 
@@ -43,6 +44,8 @@ public class TeacherRequest {
 	private String designation;
 
 	private Boolean isManagmentMember;
+	
+	private List<TeacherRequest> teachers;
 
 	public String getName() {
 		return name;
@@ -180,14 +183,25 @@ public class TeacherRequest {
 		this.isManagmentMember = isManagmentMember;
 	}
 
+	public List<TeacherRequest> getTeachers() {
+		return teachers;
+	}
+
+	public void setTeachers(List<TeacherRequest> teachers) {
+		this.teachers = teachers;
+	}
+
 	public Teacher toEntity() {
 		return toEntity(null);
 	}
 
 	public Teacher toEntity(Teacher teacher) {
 		teacher = teacher == null ? new Teacher() : teacher;
-		if (this.name != null)
+		if (this.name != null) {
+			if(!isStringOnlyAlphabet(this.name))
+				throw new ValidationException(String.format("Name (%s) is in invalid format, it should contain only alphabets."));
 			teacher.setName(this.name);
+		}
 
 		if (this.username != null)
 			teacher.setUsername(this.username);
@@ -201,10 +215,14 @@ public class TeacherRequest {
 		 */
 		if (this.gender != null)
 			teacher.setGender(this.gender);
-		if (this.mobileNumber != null)
+		if (this.mobileNumber != null) {
+			validateMobileNumber(this.mobileNumber);
 			teacher.setMobileNumber(this.mobileNumber);
-		if (this.email != null)
+		}
+		if (this.email != null) {
+			validateEmail(this.email);
 			teacher.setEmail(this.email);
+		}
 		if (this.isCoach != null)
 			teacher.setIsCoach(this.isCoach);
 		if (this.isClassTeacher != null)

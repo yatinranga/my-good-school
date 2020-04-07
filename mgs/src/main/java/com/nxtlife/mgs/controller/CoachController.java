@@ -36,7 +36,7 @@ public class CoachController {
 	
 	@GetMapping(value = "coaches/{schoolId}")
 	public List<TeacherResponse> getAllCoachesBySchool(@PathVariable("schoolId") String schoolId){
-		return teacherService.getAllCoaches();
+		return teacherService.getAllCoachesOfSchool(schoolId);
 	} 
 	
 	@GetMapping(value = "coaches/{cId}")

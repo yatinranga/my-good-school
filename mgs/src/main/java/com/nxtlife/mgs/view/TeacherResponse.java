@@ -35,6 +35,8 @@ public class TeacherResponse {
 	private String imagePath;
 	private String profileBrief;
 	private String yearOfEnrolment;
+	private List<String> activityIds;
+	private List<TeacherResponse> teachers;
 
 	public String getId() {
 		return id;
@@ -204,6 +206,25 @@ public class TeacherResponse {
 		this.yearOfEnrolment = yearOfEnrolment;
 	}
 
+	public List<String> getActivityIds() {
+		return activityIds;
+	}
+
+	public void setActivityIds(List<String> activityIds) {
+		this.activityIds = activityIds;
+	}
+
+	public List<TeacherResponse> getTeachers() {
+		return teachers;
+	}
+
+	public void setTeachers(List<TeacherResponse> teachers) {
+		this.teachers = teachers;
+	}
+
+	public TeacherResponse() {
+		
+	}
 	public TeacherResponse(Teacher teacher) {
 		this.id = teacher.getcId();
 
@@ -247,9 +268,13 @@ public class TeacherResponse {
 		if (teacher.getActivities() != null && !teacher.getActivities().isEmpty()) {
 			if (activities == null)
 				activities = new ArrayList<String>();
-			for (Activity activity : teacher.getActivities()) {
-				activities.add(String.format("%s", activity.getName()));
-			}
+			if(activityIds == null)
+				activityIds = new ArrayList<String>();
+			teacher.getActivities().stream().distinct().forEach(act -> {activities.add(act.getName());
+			activityIds.add(act.getCid());});
+//			for (Activity activity : teacher.getActivities()) {
+//				activities.add(String.format("%s", activity.getName()));
+//			}
 		}
 	}
 
@@ -283,6 +308,15 @@ public class TeacherResponse {
 		this.isClassTeacher = teacher.getIsClassTeacher();
 		this.designation = teacher.getDesignation();
 		this.imagePath = teacher.getImageUrl();
+		
+		if (teacher.getActivities() != null && !teacher.getActivities().isEmpty()) {
+			if (activities == null)
+				activities = new ArrayList<String>();
+			if(activityIds == null)
+				activityIds = new ArrayList<String>();
+			teacher.getActivities().stream().distinct().forEach(act -> {activities.add(act.getName());
+			activityIds.add(act.getCid());});
+		}
 	}
 
 }

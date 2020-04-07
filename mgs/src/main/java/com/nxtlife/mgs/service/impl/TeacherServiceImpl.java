@@ -23,6 +23,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.common.exceptions.UnauthorizedUserException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -292,7 +293,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 				if (requestActivityIds.contains(previousActivities.get(i).getCid())) {
 					requestActivityIds.remove(previousActivities.get(i).getCid());
 				} else {
-					if (activityPerformedRepository.existsByTeacherCidAndActiveTrue(teacher.getcId())) {
+					if (activityPerformedRepository.existsByTeacherCidAndActivityCidAndActiveTrue(teacher.getcId(),previousActivities.get(i).getCid())) {
 						throw new ValidationException(String.format(
 								"You cannot delete the activty : %s as few student has already performed activity %s under you.",
 								previousActivities.get(i).getName(), previousActivities.get(i).getName()));
@@ -534,7 +535,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		List<Teacher> teachers = new ArrayList<Teacher>();
 		teachers = teacherRepository.findAllBySchoolCidAndActiveTrue(schoolCid);
 		if (teachers == null)
-			throw new ValidationException("No teachers found.");
+			throw new ValidationException(String.format("No teachers found in school with id (%s) .", schoolCid));
 		return teachers.stream().map(TeacherResponse::new).distinct().collect(Collectors.toList());
 	}
 
@@ -900,6 +901,79 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 
 		return teacherRequest;
 
+	}
+	
+	@Override
+	public TeacherResponse addOrRemoveActivitiesToTeachers(TeacherRequest request) {
+		Long userId = getUserId();
+		if(userId == null)
+			throw new ValidationException("No user logged in currently, kindly log in as School or School Management to assign activities to Teachers.");
+		if(!schoolRepository.existsByUserIdAndActiveTrue(userId) && !teacherRepository.existsByUserIdAndIsManagmentMemberTrueAndActiveTrue(userId))
+			throw new UnauthorizedUserException("Not Authorized to assign activities to Teachers pls login as School or Management Member.");
+		if(request == null)
+			throw new ValidationException("Request cannot be null.");
+		if(request.getTeachers() == null || request.getTeachers().isEmpty())
+			throw new ValidationException("teachers cannot be null or empty, its required to add activities to teachers.");
+		List<Teacher> teachersToSave = new ArrayList<Teacher>();
+		for(TeacherRequest teacherRequest : request.getTeachers()) {
+			if(!teacherRepository.existsByCidAndActiveTrue(teacherRequest.getId()))
+				throw new ValidationException(String.format("Teacher or Coach with id (%s) does not exist.",teacherRequest.getId()));
+			Teacher teacher = teacherRepository.findByCidAndActiveTrue(teacherRequest.getId());
+			
+			if (teacherRequest.getActivityIds() != null && !teacherRequest.getActivityIds().isEmpty()) {
+				List<String> requestActivityIds = teacherRequest.getActivityIds();
+				List<Activity> previousActivities = teacher.getActivities();
+				List<Activity> toBeDeletedActivities = new ArrayList<Activity>();
+
+				for (int i = 0; i < previousActivities.size(); i++) {
+
+					if (requestActivityIds.contains(previousActivities.get(i).getCid())) {
+						requestActivityIds.remove(previousActivities.get(i).getCid());
+					} else {
+						if (activityPerformedRepository.existsByTeacherCidAndActivityCidAndActiveTrue(teacher.getcId(),previousActivities.get(i).getCid())) {
+							throw new ValidationException(String.format(
+									"You cannot delete the activty : %s as few student has already performed activity %s under you.",
+									previousActivities.get(i).getName(), previousActivities.get(i).getName()));
+						} else {
+							List<Teacher> teachers = previousActivities.get(i).getTeachers();
+							if (teachers != null && !teachers.isEmpty()) {
+								teachers.remove(teacher);
+								previousActivities.get(i).setTeachers(teachers);
+								toBeDeletedActivities.add(previousActivities.get(i));
+							}
+							previousActivities.remove(i--);
+						}
+					}
+				}
+
+				if (requestActivityIds != null && !requestActivityIds.isEmpty()) {
+					for (String actId : requestActivityIds) {
+						if (!activityRepository.existsByCidAndActiveTrue(actId))
+							throw new ValidationException(String.format("Activity with id (%s) not found .", actId));
+						Activity activity = activityRepository.findByCidAndActiveTrue(actId);
+						List<Teacher> teachers = new ArrayList<Teacher>();
+						teachers = activity.getTeachers();
+						teachers.add(teacher);
+						activity.setTeachers(teachers);
+						previousActivities.add(activity);
+					}
+				}
+				if (previousActivities != null && !previousActivities.isEmpty())
+					teacher.setIsCoach(true);
+				teacher.setActivities(previousActivities);
+				activityRepository.save(toBeDeletedActivities);
+				teachersToSave.add(teacher);
+//				teacher.setActivities(activityRepository.save(previousActivities));
+
+			}
+		}
+		teachersToSave = teacherRepository.save(teachersToSave);
+		if(teachersToSave.isEmpty())
+			throw new RuntimeException("Something went wrong operation failed ,please try again.");
+		
+		TeacherResponse response =  new TeacherResponse();
+		response.setTeachers(teachersToSave.stream().map(TeacherResponse :: new).collect(Collectors.toList()));
+		return response;
 	}
 
 }

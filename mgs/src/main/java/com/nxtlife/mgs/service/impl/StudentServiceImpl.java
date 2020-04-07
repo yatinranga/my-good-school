@@ -868,8 +868,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			students = studentScoreLookUp.keySet();
 
 		}else {
-			if(!gradeRepository.existsByCidAndActiveTrue(gradeCid))
-				throw new ValidationException(String.format("Grade with id (%s) does not exist.",gradeCid));
+			if(!gradeRepository.existsBySchoolsCidAndCidAndActiveTrue(schoolCid,gradeCid))
+				throw new ValidationException(String.format("Grade with id (%s) does not exist in school having id (%s).",gradeCid,schoolCid));
 			
 			activitiesPerformed = new HashSet<ActivityPerformed>();
 			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndStudentGradeCidAndActivityNameAndActivityStatusAndActiveTrue(schoolCid ,gradeCid ,activityName ,ActivityStatus.Reviewed);
@@ -940,8 +940,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			students = studentScoreLookUp.keySet();
 
 		}else {
-			if(!gradeRepository.existsByCidAndActiveTrue(gradeCid))
-				throw new ValidationException(String.format("Grade with id (%s) does not exist.",gradeCid));
+			if(!gradeRepository.existsBySchoolsCidAndCidAndActiveTrue(schoolCid,gradeCid))
+				throw new ValidationException(String.format("Grade with id (%s) does not exist in school having id (%s).",gradeCid,schoolCid));
 			
 			activitiesPerformed = new HashSet<ActivityPerformed>();
 			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasNameAndActivityStatusAndActiveTrue(schoolCid ,gradeCid ,focusArea,ActivityStatus.Reviewed);
@@ -1012,8 +1012,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			students = studentScoreLookUp.keySet();
 
 		}else {
-			if(!gradeRepository.existsByCidAndActiveTrue(gradeCid))
-				throw new ValidationException(String.format("Grade with id (%s) does not exist.",gradeCid));
+			if(!gradeRepository.existsBySchoolsCidAndCidAndActiveTrue(schoolCid,gradeCid))
+				throw new ValidationException(String.format("Grade with id (%s) does not exist in school having id (%s).",gradeCid,schoolCid));
 			
 			activitiesPerformed = new HashSet<ActivityPerformed>();
 			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndStudentGradeCidAndActivityFourSAndActivityStatusAndActiveTrue(schoolCid ,gradeCid ,FourS.valueOf(fourS),ActivityStatus.Reviewed);
@@ -1085,8 +1085,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			students = studentScoreLookUp.keySet();
 
 		}else {
-			if(!gradeRepository.existsByCidAndActiveTrue(gradeCid))
-				throw new ValidationException(String.format("Grade with id (%s) does not exist.",gradeCid));
+			if(!gradeRepository.existsBySchoolsCidAndCidAndActiveTrue(schoolCid,gradeCid))
+				throw new ValidationException(String.format("Grade with id (%s) does not exist in school having id (%s).",gradeCid,schoolCid));
 			
 			activitiesPerformed = new HashSet<ActivityPerformed>();
 			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasPsdAreaAndActivityStatusAndActiveTrue(schoolCid ,gradeCid ,PSDArea.fromString(psdArea),ActivityStatus.Reviewed);
@@ -1154,7 +1154,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		List<Student> students = studentRepository
 				.findAllBySchoolCidAndActivitiesActivityCidAndActivitiesActivityStatusAndSchoolActiveTrueAndActivitiesActivityActiveTrueAndActiveTrue(
 						schoolCid, activityCid, ActivityStatus.valueOf(activityStatus));
-		if (students == null)
+		if (students == null || students.isEmpty())
 			throw new ValidationException(String.format(
 					"No student found in the school with id : %s  having performed activity with id : %s and status is %s .",
 					schoolCid,  activityCid, activityStatus));

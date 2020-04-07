@@ -66,6 +66,11 @@ public class TeacherController {
 			@RequestParam(defaultValue = "10") Integer pageSize) {
 		return teacherService.getAllTeachers(pageNo, pageSize);
 	}
+	
+	@GetMapping(value = "api/teachers/{schoolId}")
+	public List<TeacherResponse> getAllTeachersBySchool(@PathVariable("schoolId") String schoolId){
+		return teacherService.getAllTeachersOfSchool(schoolId);
+	}
 
 	@GetMapping(value = "q" +
 			"" +
