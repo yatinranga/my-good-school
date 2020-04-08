@@ -69,7 +69,7 @@
                                 <div *ngIf="activity.activityStatus === 'Reviewed'" class="reviewed">Reviewed
                                 </div>
                             </td>
-                            <td *ngIf="(activityType === 'All') || (activityType === 'Saved')">
+                            <td *ngIf="(activityType === 'All') || (activityType === 'Saved')" (click)="stopCollapse($event)">
                                 <div *ngIf="activity.activityStatus === 'SavedByStudent'">
                                     <button (click)="editSavedActivity($event,activity)" class="saved icon_button" name="editActivity">
                                         <i class="fa fa-edit" title="Edit"></i>

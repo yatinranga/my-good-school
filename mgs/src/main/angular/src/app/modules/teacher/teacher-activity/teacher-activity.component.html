@@ -57,7 +57,7 @@
                                         <div *ngIf="activity.activityStatus === 'Reviewed'" class="reviewed">Reviewed
                                         </div>
                                     </td>
-                                    <td *ngIf="!(activityType === 'Reviewed')">
+                                    <td *ngIf="!(activityType === 'Reviewed')"  (click)="stopCollapse($event)">
                                         <div
                                             *ngIf="(activityType === 'All') && (activity.activityStatus !== 'Reviewed')">
                                             <button name="submitSavedActivity"
