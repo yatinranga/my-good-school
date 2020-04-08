@@ -51,8 +51,10 @@ export class TeacherAwardsComponent implements OnInit {
   criteriaVal_loader: boolean;
 
   criterionValue: any = "";
-  awardCriterion : any = "";
-  gradeId : any = "";
+  awardCriterion: any = "";
+  gradeId: any = "";
+
+  showCriteriaValues = true;
 
   constructor(private teacherService: TeacherService, private formbuilder: FormBuilder, private alertService: AlertService) { }
 
@@ -75,18 +77,18 @@ export class TeacherAwardsComponent implements OnInit {
       activityId: [],
       awardType: [, [Validators.required]],
       description: [, [Validators.required, Validators.minLength(40)]],
-      vaidFrom: [,[Validators.required]],
-      validUntil : [,[Validators.required]],
+      vaidFrom: [, [Validators.required]],
+      validUntil: [, [Validators.required]],
       activityPerformedIds: [([])],
     });
   }
 
   // get ALL Activites Offered in a School
-  getSchoolActivities(){
-    this.teacherService.getActivity(this.schoolId).subscribe((res)=>{
+  getSchoolActivities() {
+    this.teacherService.getActivity(this.schoolId).subscribe((res) => {
       // this.activities = res;
-      res.forEach((element) => {this.activities.push(element.name)});
-    },(err) => {console.log(err)});
+      res.forEach((element) => { this.activities.push(element.name) });
+    }, (err) => { console.log(err) });
   }
 
   // get Grades of School
@@ -173,15 +175,15 @@ export class TeacherAwardsComponent implements OnInit {
 
     console.log(this.assignAwardForm.value);
 
-    if(this.assignAwardForm.value.vaidFrom == this.assignAwardForm.value.validUntil){
+    if (this.assignAwardForm.value.vaidFrom == this.assignAwardForm.value.validUntil) {
       this.alertService.showErrorAlert("Date cannot be same");
       this.pa_loader = false;
-    } else if (this.assignAwardForm.value.vaidFrom > this.assignAwardForm.value.validUntil){
+    } else if (this.assignAwardForm.value.vaidFrom > this.assignAwardForm.value.validUntil) {
       this.alertService.showErrorAlert("Valid Date cannot be ahead of Till Date");
       this.pa_loader = false;
     } else {
       this.assignAwardForm.value.vaidFrom = this.assignAwardForm.value.vaidFrom + " 00:00:00";
-      this.assignAwardForm.value.validUntil = this.assignAwardForm.value.validUntil +  " 00:00:00";
+      this.assignAwardForm.value.validUntil = this.assignAwardForm.value.validUntil + " 00:00:00";
       this.teacherService.assignAward(this.assignAwardForm.value).subscribe((res) => {
         console.log(res);
         $('#assignAwardModal').modal('hide');
@@ -206,45 +208,48 @@ export class TeacherAwardsComponent implements OnInit {
   }
 
   // get List of Performed activity by specific activityId
-  getPerformedActivities(value,type) {
+  getPerformedActivities(value, type) {
     this.pa_loader = true;
     this.studentActivityList = true;
     // console.log(this.criterionValue)
     this.performedActiArr = [];
-    if(type == "value"){
+    if (type == "value") {
       if (this.gradeId == "") {
         this.criterionValue = value;
         this.teacherService.getStudentPerformedActivities(this.awardCriterion, value).subscribe((res) => {
           this.performedActiArr = res;
           console.log(res);
-                    this.pa_loader = false;
+          this.pa_loader = false;
           // this.pa_loader = false;
         },
-          (err) => {console.log(err)
-                        this.pa_loader = false;
+          (err) => {
+            console.log(err)
+            this.pa_loader = false;
           });
       } else {
         this.criterionValue = value;
         this.teacherService.getStudentPerformedActivities(this.awardCriterion, value, this.gradeId).subscribe((res) => {
           console.log(res);
           this.performedActiArr = res;
-                    this.pa_loader = false;
+          this.pa_loader = false;
           // this.pa_loader = false;
         },
           (err) => {
             console.log(err);
-                        this.pa_loader = false;
+            this.pa_loader = false;
           });
       }
     }
 
-    if(type == "grade"){
+    if (type == "grade") {
       this.gradeId = value;
-      if(this.criterionValue){
-        this.teacherService.getStudentPerformedActivities(this.awardCriterion, this.criterionValue, value).subscribe((res)=>{
+      if (this.criterionValue) {
+        this.teacherService.getStudentPerformedActivities(this.awardCriterion, this.criterionValue, value).subscribe((res) => {
           console.log(res);
           this.performedActiArr = res;
-        },(err) => {console.log(err)
+        }, (err) => {
+          console.log(err);
+          this.pa_loader = false;
         });
       }
     }
@@ -265,7 +270,7 @@ export class TeacherAwardsComponent implements OnInit {
     this.awardViewType = type;
     console.log("Award View Type = " + this.awardViewType);
     this.viewAwards();
-    if(type == "assign"){
+    if (type == "assign") {
       this.awardCriteria();
     }
   }
@@ -276,7 +281,7 @@ export class TeacherAwardsComponent implements OnInit {
       this.selectedGrade = "";  // Reset the value of Grade dropdown
       this.selectedStudent = ""; // Reset the value of Student dropdown
 
-      this.criterionValue= ""; // Reset the value of Criteria dropdown
+      this.criterionValue = ""; // Reset the value of Criteria dropdown
       this.awardCriterion = ""; // Reset the value of Criteria Values dropdown
       this.gradeId = ""; // Reset the value of Grades dropdown
 
@@ -357,10 +362,10 @@ export class TeacherAwardsComponent implements OnInit {
   }
 
   // to DOWNLOAD the Attachments
-  downloadFile(url){
+  downloadFile(url) {
     this.teacherService.downloadAttachment(url).subscribe((res) => {
       console.log(res);
-    }, (err) => {console.log(err)});
+    }, (err) => { console.log(err) });
   }
 
   // get Award Criteria
@@ -369,44 +374,48 @@ export class TeacherAwardsComponent implements OnInit {
     this.teacherService.getAwardCriteria().subscribe((res) => {
       this.awardcr_loader = false;
       this.awardCriteriaArr = res;
-    }, (err) => { console.log(err); 
-      this.awardcr_loader = false; });
+    }, (err) => {
+      console.log(err);
+      this.awardcr_loader = false;
+    });
   }
-  
+
 
   // get Values on the basis of Award Criteria(PSD, Focus Area, Activity Type & 4s)
   getCriteriaValue(event) {
-    this.criterionValue ="";
+    this.criterionValue = "";
     this.criteriaValuesArr = [];
     this.criteriaVal_loader = true;
     this.actiPerform = {};
     this.studentActivityList = false;
     this.performedActiArr = [];
+    this.showCriteriaValues = false; // to show the Criteria Values on when Criteria is selected
     this.teacherService.getAwardCriteriaValue().subscribe((res) => {
       this.criteriaValuesArr = res;
       // console.log(this.criteriaValuesArr);
-        switch (event) {
-          case "PSD Area": {
-            this.criteriaValuesArr = res["PSD Areas"];
-            this.criteriaVal_loader = false;
-            break;
-          }
-          case "Focus Area": {
-            this.criteriaValuesArr = res["Focus Areas"];
-            this.criteriaVal_loader = false;
-            break;
-          }
-          case "4S": {
-            this.criteriaValuesArr = res["Four S"];
-            this.criteriaVal_loader = false;
-            break;
-          }
-          case "Activity Type": { 
-            this.criteriaValuesArr = this.activities;
-            this.criteriaVal_loader = false;
-            break; }
+      switch (event) {
+        case "PSD Area": {
+          this.criteriaValuesArr = res["PSD Areas"];
+          this.criteriaVal_loader = false;
+          break;
         }
-      
+        case "Focus Area": {
+          this.criteriaValuesArr = res["Focus Areas"];
+          this.criteriaVal_loader = false;
+          break;
+        }
+        case "4S": {
+          this.criteriaValuesArr = res["Four S"];
+          this.criteriaVal_loader = false;
+          break;
+        }
+        case "Activity Type": {
+          this.criteriaValuesArr = this.activities;
+          this.criteriaVal_loader = false;
+          break;
+        }
+      }
+
     }, (err) => { console.log(err) })
   }
 
