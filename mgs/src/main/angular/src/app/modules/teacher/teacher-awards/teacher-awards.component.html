@@ -340,6 +340,8 @@
                                                                         <p id="title_award"> Activity {{j+1}} Details : </p>
                                                                         <p> <strong>Description -
                                                                             </strong>{{ap.description}}</p>
+                                                                        <p> <strong style="color: green">Remarks -
+                                                                            </strong>{{ap.coachRemark}} </p>
                                                                         <p> <strong>Performed Date -
                                                                             </strong>{{ap.dateOfActivity | date}}
                                                                         </p>
@@ -347,7 +349,7 @@
                                                                 </div>
                                                                 <div class="col-4">
                                                                     <div class="description">
-                                                                        <h5> Reviews </h5>
+                                                                        <h5> Reviews : </h5>
                                                                         <p> <strong>Participation Score -
                                                                             </strong>{{ap.participationScore}} </p>
                                                                         <p> <strong>Initiative Score -
@@ -357,8 +359,6 @@
                                                                         <p> <strong>Total Score -
                                                                             </strong>{{ap.totalMarks}}</p>
                                                                         <p> <strong>Star - </strong>{{ap.star}}</p>
-                                                                        <p> <strong style="color: green">Remarks -
-                                                                            </strong>{{ap.coachRemark}} </p>
                                                                         <p> <strong>Reviewed Date -
                                                                             </strong>{{ap.coachRemarkDate}}</p>
                                                                     </div>
@@ -367,7 +367,7 @@
                                                                     <div class="attachment">
                                                                         <p *ngIf="ap.fileResponses.length">
                                                                             <strong style="text-decoration: underline;">
-                                                                                Attachments - </strong> </p>
+                                                                                Attachments : </strong> </p>
                                                                         <div *ngFor="let file of ap.fileResponses">
                                                                             <div>
                                                                                 <a target="_blank"

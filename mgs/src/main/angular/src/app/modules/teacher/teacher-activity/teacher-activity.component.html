@@ -37,7 +37,8 @@
                                         <i class="fa fa-sort"></i>
                                     </button>
                                 </th>
-                                <th *ngIf="!(activityType === 'Reviewed')" colspan="2">ACTION</th>
+                                <th *ngIf="!(activityType === 'Reviewed')">ACTION</th>
+                                <th scope="col">  <i class="fa fa-paperclip" title="Attachment" aria-hidden="true"></i> </th>
                             </tr>
                         </thead>
                         <tbody id="accordionExample">
@@ -115,10 +116,16 @@
                                                         <div class="description">
                                                             <h5> Activity Details : </h5>
                                                             <p> <strong> Description - </strong> {{activity.description}} </p>
-                                                            <p> <strong style="color: green">Remarks -
-                                                                </strong>{{activity.coachRemark}}</p>
-                                                            <p> <strong> Date Reviewed -
-                                                                </strong>{{activity.coachRemarkDate | date }} </p>
+                                                            <p> <strong>Focus Area - </strong></p>
+                                                            <span id="fa" *ngFor="let fa of activity.focusAreas; let i = index">                                                        
+                                                                {{ (i === activity.focusAreas.length-1) ? fa : fa + "," + ' '}}                                                        
+                                                            </span>
+                                                            <p><strong>PSD Area : </strong></p>
+                                                        <span id="fa" *ngFor="let fa of activity.psdAreas let i = index">                                                        
+                                                            {{ (i === activity.psdAreas.length-1) ? fa : fa + "," + ' '}}                                                        
+                                                        </span>
+                                                            <p *ngIf="activity.fourS" id="fourSkills">
+                                                                <strong> 4's - </strong> {{activity.fourS}}  </p>                                                      
                                                         </div>
                                                     </div>
                                                     <div class="col-3">
@@ -137,34 +144,13 @@
                                                     <div class="col-3">
                                                         <div class="description">
                                                             <h5> Development Parameters : </h5>
-                                                            <p> <strong>Focus Area - </strong></p>
-                                                            <span id="fa" *ngFor="let fa of activity.focusAreas; let i = index">                                                        
-                                                                {{ (i === activity.focusAreas.length-1) ? fa : fa + "," + ' '}}                                                        
-                                                            </span>
-                                                            <p><strong>PSD Area : </strong></p>
-                                                        <span id="fa" *ngFor="let fa of activity.psdAreas let i = index">                                                        
-                                                            {{ (i === activity.psdAreas.length-1) ? fa : fa + "," + ' '}}                                                        
-                                                        </span>
-                                                            <p *ngIf="activity.fourS" id="fourSkills">
-                                                                <strong>4's - </strong>
-                                                                <span *ngIf="activity.fourS=='Skill'"
-                                                                    style="color: #4bafa5;">
-                                                                    {{activity.fourS}}
-                                                                </span>
-                                                                <span *ngIf="activity.fourS=='Sport'"
-                                                                    style="color: #e04090;">
-                                                                    {{activity.fourS}}
-                                                                </span>
-                                                                <span *ngIf="activity.fourS=='Study'"
-                                                                    style="color: #1f69ad;">
-                                                                    {{activity.fourS}}
-                                                                </span>
-                                                                <span *ngIf="activity.fourS=='Service'"
-                                                                    style="color: #8dc33a;">
-                                                                    {{activity.fourS}}
-                                                                </span>
-                                                            </p>
-                                                        </div>
+
+                                                            <p> <strong style="color: green">Remarks -
+                                                                </strong>{{activity.coachRemark}}</p>
+                                                            <p> <strong> Date Reviewed -
+                                                                </strong>{{activity.coachRemarkDate | date }} </p>
+
+                                                            </div>
                                                     </div>
                                                     <div class="col-3" *ngIf="activity.fileResponses.length">
                                                         <div class="attachment">

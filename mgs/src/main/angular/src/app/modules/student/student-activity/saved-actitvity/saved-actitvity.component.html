@@ -49,8 +49,9 @@
                             </button>
                         </th>
                         <th scope="col" *ngIf="(activityType === 'Reviewed')" colspan="2">Status</th>
-                        <th *ngIf="(activityType === 'All') || (activityType === 'Saved')" scope="col" colspan="2">
+                        <th *ngIf="(activityType === 'All') || (activityType === 'Saved')" scope="col">
                             ACTION</th>
+                            <th scope="col">  <i class="fa fa-paperclip" title="Attachment" aria-hidden="true"></i> </th>
                     </tr>
                 </thead>
                 <tbody id="accordionExample1">
@@ -98,20 +99,18 @@
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="description">
-                                                    <h5> Development Parameters </h5>
+                                                    <h5> Activity Details : </h5>
                                                     <p *ngIf="activity.description">
                                                         <strong> Description : </strong> {{activity.description}} </p>
                                                     <p id="fa"> <strong> Focus Area : </strong> </p>
                                                     <span id="fa" *ngFor="let fa of activity.focusAreas; let i = index">                                                        
                                                         {{ (i === activity.focusAreas.length-1) ? fa : fa + "," + ' '}}                                                        
                                                     </span>
-                                                    <p *ngIf="activity.psdAreas">
-                                                        <strong>PSD Area : </strong></p>
+                                                    <p id="fa"> <strong>PSD Area : </strong></p>
                                                         <span id="fa" *ngFor="let fa of activity.psdAreas let i = index">                                                        
                                                             {{ (i === activity.psdAreas.length-1) ? fa : fa + "," + ' '}}                                                        
                                                         </span>
-                                                    <p *ngIf="activity.fourS" id="fourSkills">
-                                                        <strong> 4's : </strong> {{activity.fourS}}
+                                                    <p id="fa"> <strong> 4's : </strong> {{activity.fourS}}
                                                         <!--
                                                             <span *ngIf="activity.fourS=='Skill'" style="color: #4bafa5;">
                                                             {{activity.fourS}}
@@ -153,7 +152,7 @@
 
                                             <div class="col-3">
                                                 <div class="description">
-                                                    <h5> Development Parameters : </h5>
+                                                    <h5> Activity Details : </h5>
                                                     <p *ngIf="activity.description">
                                                         <strong> Description : </strong> {{activity.description}} </p>
                                                     <p id="fa">
