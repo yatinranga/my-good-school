@@ -72,6 +72,14 @@ export class TeacherProfileComponent implements OnInit {
     })
   }
 
+  setEditable(){
+    this.isEditable = !this.isEditable;
+  }
+
+  temp(){
+    console.log("MOBILE changed");
+  }
+
   updateMobileNo(){
 
     // this.teacherService.putMobileNumber(this.teacherId,json).subscribe((res) =>{

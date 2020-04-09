@@ -13,23 +13,21 @@
                     </select>
                 </div>
                 <div class="sortby"> Activity Type:
-                    <select style="border: 1px solid #ddd" name="activity">
-                        <option value="" disabled selected> Select Activity </option>
+                    <select style="border: 1px solid #ddd" (change)="filterActivities()" name="activity" [(ngModel)]="activity">
+                        <option value="" selected> NONE </option>
                         <option *ngFor="let activity of activities; let i = index" value={{activity}}>
                             {{activity}}</option>
                     </select>
                 </div>
-                <!-- <div class="sortby"> Filter by:
-                    <select style="border: 1px solid #ddd" name="activityType" (ngModelChange)="activityView($event)"
-                        [(ngModel)]="activityType">
-                        <option value="" disabled hidden> Choose here </option>
-                        <option value="All"> All</option>
-                        <option value="Pending" selected>Pending</option>
-                        <option value="Saved">Saved</option>
-                        <option value="Reviewed">Reviewed</option>
+                <div class="sortby"> Grade:
+                    <select style="border: 1px solid #ddd" name="grade" (change)="filterActivities()" [(ngModel)]="grade">
+                        <option value="" selected> NONE </option>
+                        <option *ngFor="let grade of schoolGrades" value={{grade.id}} >
+                            {{grade.grade}} {{grade.section}}
+                        </option>
                     </select>
                 </div>
-                <div class="sortby"> Filter by:
+                <!-- <div class="sortby"> Filter by:
                     <select style="border: 1px solid #ddd" name="activityType" (ngModelChange)="activityView($event)"
                         [(ngModel)]="activityType">
                         <option value="" disabled hidden> Choose here </option>

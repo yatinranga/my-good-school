@@ -119,7 +119,10 @@
                                                     <th scope="col">#</th>
                                                     <th scope="col">NAME</th>
                                                     <th scope="col">GRADE & SECTION</th>
-                                                    <th scope="col">ACTIVITY TYPE</th>
+                                                    <th scope="col" *ngIf="!(awardCriterion=='Focus Area')">FOCUS AREA</th>
+                                                    <th scope="col" *ngIf="!(awardCriterion=='Activity Type')">ACTIVITY TYPE</th>
+                                                    <th scope="col" *ngIf="awardCriterion=='Activity Type'">COUNT</th>
+                                                    <th scope="col">SCORE</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="accordionExample">
@@ -137,20 +140,32 @@
                                                         </td>
                                                         <td>{{activity.name}}</td>
                                                         <td>{{activity.grade}} {{activity.section}}</td>
-                                                        <td>
+                                                        <td *ngIf="!(awardCriterion=='Focus Area')">
+                                                            <span *ngFor="let at of activity.focusAreas; let i = index">
+                                                                {{ (i === activity.focusAreas.length-1) ? at : at + "," + ' '}}
+                                                            </span>
+                                                        </td>
+                                                        <td *ngIf="!(awardCriterion=='Activity Type')">
                                                             <!-- <label *ngFor="let at of activity.activityTypes"></label> -->
                                                             <span *ngFor="let at of activity.activityTypes; let i = index">
                                                                 {{ (i === activity.activityTypes.length-1) ? at : at + "," + ' '}}
                                                             </span>
                                                         </td>
+                                                        <td *ngIf="awardCriterion=='Activity Type'">{{activity.performedActivities[0].count}}</td>
+                                                        <td>{{activity.scoreForAward}}</td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="collapse-td" colspan="4">
+                                                        <td class="collapse-td" colspan="6">
                                                             <div [attr.id]="'collapse' + i" class="collapse"
                                                                 data-parent="#accordionExample">
                                                                 <div
                                                                     *ngFor="let pa of activity.performedActivities; let i = index;">
-                                                                    <h3>{{pa.activityName}}</h3>
+                                                                    <div>
+                                                                        <h3>{{pa.activityName}}</h3>
+                                                                        <label *ngIf="!(awardCriterion=='Activity Type')">Activity Count - {{pa.count}}</label><br>
+                                                                        <label>Average Stars - {{pa.averageStars}}</label>
+
+                                                                    </div>
                                                                     <div *ngFor="let ac of pa.activities; let j = index;">
                                                                         <div class="row">
                                                                             <div class="col-4">
@@ -238,7 +253,7 @@
                                             </tbody>
                                             <tfoot *ngIf="performedActiArr.length == 0">
                                                 <tr>
-                                                    <td colspan="4">
+                                                    <td colspan="6">
                                                         <div *ngIf="pa_loader" class="spinner-border text-dark"
                                                             role="status">
                                                         </div>{{pa_loader ? 'Loading...' :  'No Student Found'}}

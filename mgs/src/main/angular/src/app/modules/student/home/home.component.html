@@ -28,7 +28,7 @@
                 <option disbaled *ngIf="!grades.length">No Grades Available</option>
             </select>
             <ul>
-                    <li *ngFor="let s of students">{{s.name}} {{s.grade}}</li>
+                    <li *ngFor="let s of students">{{s.name}} {{s.grade}} - {{s.section}}</li>
                     <li *ngIf="students.length==0" id="null">
                         {{stu_loader ? 'Loading...' : 'No Students'}}
                     </li>

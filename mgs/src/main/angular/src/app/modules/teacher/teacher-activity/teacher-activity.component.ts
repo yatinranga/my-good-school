@@ -10,6 +10,7 @@ declare let $: any;
   styleUrls: ['./teacher-activity.component.scss']
 })
 export class TeacherActivityComponent implements OnInit {
+  
   activityType = "All";
 
   pendingActivitiesArr = [];
@@ -35,6 +36,13 @@ export class TeacherActivityComponent implements OnInit {
   activitiesArr = []; //single arr for performed actvities
   schoolId: any;
   activities: any = [];
+  activity:any = "";
+  copyPendingActi: any;
+  copySavedActi: any;
+  copyAllActi: any;
+  copyReviewActi: any;
+  grade: any = "";
+  schoolGrades: any = [];
   
 
 
@@ -47,6 +55,7 @@ export class TeacherActivityComponent implements OnInit {
     this.reviewFormInit();
     this.activityView(this.activityType);
     this.getSchoolActivities();
+    this.getSchoolGrades();
   }
 
   // Toggle Activity View
@@ -76,9 +85,16 @@ export class TeacherActivityComponent implements OnInit {
   getSchoolActivities() {
     this.teacherService.getActivity(this.schoolId).subscribe((res) => {
       // this.activities = res;
-      console.log("Activities - "+res);
       res.forEach((element) => { this.activities.push(element.name) });
     }, (err) => { console.log(err) });
+  }
+
+  // get Grades of School
+  getSchoolGrades() {
+    this.teacherService.getGrades(this.schoolId).subscribe((res) => {
+      this.schoolGrades = res;
+    },
+      (err) => console.log(err));
   }
 
   // PENDING Activities of Teacher
@@ -88,6 +104,7 @@ export class TeacherActivityComponent implements OnInit {
       // this.activities = res;
       // this.pendingActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SubmittedByStudent"));
       this.pendingActivitiesArr = res.filter((e) => (e.activityStatus == "SubmittedByStudent"));
+      this.copyPendingActi = Object.assign([], res.filter((e) => (e.activityStatus == "SubmittedByStudent")));
       this.activitiesArr = this.pendingActivitiesArr;
       console.log(this.pendingActivitiesArr);
       this.loader = false;
@@ -103,6 +120,7 @@ export class TeacherActivityComponent implements OnInit {
     this.activitiesArr = [];
     this.teacherService.getPendingActivity(this.teacherId).subscribe((res) => {
       this.savedActivitiesArr = res.filter((e) => (e.activityStatus == "SavedByTeacher"));
+      this.copySavedActi = Object.assign([], res.filter((e) => (e.activityStatus == "SavedByTeacher")));
       this.activitiesArr = this.savedActivitiesArr;
       this.loader = false;
     },
@@ -118,6 +136,7 @@ export class TeacherActivityComponent implements OnInit {
     this.teacherService.getAllActivity(this.teacherId).subscribe((res) => {
       console.log(res);
       this.allActivitiesArr = res.filter((e) => (e.activityStatus != "SavedByStudent"));
+      this.copyAllActi = Object.assign([], res.filter((e) => (e.activityStatus != "SavedByStudent")));
       this.activitiesArr = this.allActivitiesArr;
       this.loader = false;
     },
@@ -133,6 +152,7 @@ export class TeacherActivityComponent implements OnInit {
     this.teacherService.getReviewedActivity(this.teacherId).subscribe((res) => {
       console.log(res);
       this.reviewedActivitiesArr = res;
+      this.copyReviewActi = Object.assign([], res);
       this.activitiesArr = this.reviewedActivitiesArr;
       this.loader = false;
     },
@@ -319,10 +339,51 @@ export class TeacherActivityComponent implements OnInit {
     }, (err) => {console.log(err)});
   }
 
-      // stop toogle of table
-      stopCollapse(e) {
-        e.stopPropagation();
+  // Filter Activities on the basis of Activity Type, Grade and Students
+  filterActivities = () => {
+    switch (this.activityType) {
+      case 'All': {
+        this.activitiesArr = this.filter(Object.assign([], this.copyAllActi));
+        break;
       }
+
+      case 'Pending': {
+        this.activitiesArr = this.filter(Object.assign([], this.copyPendingActi));
+        break;
+      }
+
+      case 'Saved': {
+        this.activitiesArr = this.filter(Object.assign([], this.copySavedActi));
+        break;
+      }
+
+      case 'Reviewed': {
+        this.activitiesArr = this.filter(Object.assign([], this.copyReviewActi));
+        break;
+      }
+    }
+  }
+
+  // Actual Filtering on the basis of Activity Type, Grade and Students
+  filter(array: any[]) {
+    let filterActivitiesArr = [];
+    if (this.activity && this.grade) {
+      filterActivitiesArr = array.filter(e => e.activityName == this.activity && e.gradeId == this.grade);
+    } else if (this.activity) {
+      filterActivitiesArr = array.filter(e => e.activityName == this.activity);
+    } else if (this.grade) {
+      filterActivitiesArr = array.filter(e => e.gradeId == this.grade);
+    } else {
+      filterActivitiesArr = array;
+    }
+
+    return filterActivitiesArr;
+  }
+
+  // stop toogle of table
+  stopCollapse(e) {
+    e.stopPropagation();
+  }
 
 
 }
