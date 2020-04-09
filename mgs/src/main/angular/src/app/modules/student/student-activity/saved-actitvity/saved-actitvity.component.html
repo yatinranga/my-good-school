@@ -212,6 +212,8 @@
                                                         <strong>Star - </strong>{{activity.star}}</p>
                                                     <p *ngIf="activity.coachRemark">
                                                         <strong>Remarks - </strong>{{activity.coachRemark}}</p>
+                                                        <p *ngIf="activity.coachRemarkDate">
+                                                            <strong>Remark Date - </strong>{{activity.coachRemarkDate | date}}</p>
                                                 </div>
                                             </div>
                                             <div class="col-3" *ngIf="activity.fileResponses.length">

@@ -16,6 +16,9 @@ export class TeacherProfileComponent implements OnInit {
   profilePhotoForm: FormGroup;
   files: any[];
   path: any;
+  mobileNumber: any;
+  email: any;
+  isEditable = true;
 
   constructor(private formBuilder: FormBuilder, private teacherService: TeacherService, private alertService : AlertService) { }
 
@@ -25,6 +28,8 @@ export class TeacherProfileComponent implements OnInit {
     this.teacherId = this.teacherInfo['teacher'].id;
     this.teacherService.getProfile(this.teacherId).subscribe((res) => {
       this.teacherDetails = res;
+      this.mobileNumber = res.mobileNumber;
+      this.email = res.email;
       console.log(res);
     },
     (err) => console.log(err)
@@ -65,6 +70,13 @@ export class TeacherProfileComponent implements OnInit {
     }, (err) => {
       console.log(err);
     })
+  }
+
+  updateMobileNo(){
+
+    // this.teacherService.putMobileNumber(this.teacherId,json).subscribe((res) =>{
+    //   console.log(res);
+    // },(err) => {console.log(err)};)
   }
 
   // Edit Mobile Number

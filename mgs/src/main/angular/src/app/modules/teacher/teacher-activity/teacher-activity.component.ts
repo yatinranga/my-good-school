@@ -33,6 +33,9 @@ export class TeacherActivityComponent implements OnInit {
   totalScore = 0; // Calc Total Marks
 
   activitiesArr = []; //single arr for performed actvities
+  schoolId: any;
+  activities: any = [];
+  
 
 
   constructor(private teacherService: TeacherService, private alertService: AlertService, private formBuilder: FormBuilder) { }
@@ -40,16 +43,10 @@ export class TeacherActivityComponent implements OnInit {
   ngOnInit() {
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
     this.teacherId = this.teacherInfo['teacher'].id;
-    // this.teacherService.getPendingActivity(this.teacherId).subscribe((res) => {
-    //   this.activities = res;
-    //   this.pendingActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SubmittedByStudent"));
-    //   this.savedActivitiesArr = this.activities.filter((e) => (e.activityStatus == "SavedByTeacher"));
-    // },
-    //   (err) => console.log(err));
-
+    this.schoolId = this.teacherInfo['teacher'].schoolId;
     this.reviewFormInit();
     this.activityView(this.activityType);
-
+    this.getSchoolActivities();
   }
 
   // Toggle Activity View
@@ -73,6 +70,15 @@ export class TeacherActivityComponent implements OnInit {
       // star: [],
       coachRemark: [,[Validators.required,Validators.minLength(25)]]
     })
+  }
+
+  // get ALL Activites Offered in a School
+  getSchoolActivities() {
+    this.teacherService.getActivity(this.schoolId).subscribe((res) => {
+      // this.activities = res;
+      console.log("Activities - "+res);
+      res.forEach((element) => { this.activities.push(element.name) });
+    }, (err) => { console.log(err) });
   }
 
   // PENDING Activities of Teacher
