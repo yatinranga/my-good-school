@@ -9,6 +9,7 @@
                     <img [src]="path">
                     <h4> {{teacherDetails['name']}}  </h4>
                     <button class="edit_profile" (click)="photoInput.click()"> <i class="fa fa-edit" title="Edit" > </i> Edit Profile Photo </button>
+                    <button (click)="setEditable()">{{isEditable ? 'Update Profile' :'Save'}}</button>
                 </div>
                 <div class="profile_text">
                     <div class="basic-info">
@@ -16,12 +17,15 @@
                         <ul>
                             <li> <i class="fa fa-phone-alt"></i>
                                 Mobile Number - <label>
-                                    <!-- <input [(ngModel)]="mobileNumber" placeholder="mobileNumber" [disabled]="isEditable"/> -->
-                                    {{teacherDetails['mobileNumber']}}</label> </li>
+                                    <input [(ngModel)]="mobileNumber" placeholder="mobileNumber" [disabled]="isEditable"
+                                    (change)="temp()"/>
+                                    <!-- {{teacherDetails['mobileNumber']}} -->
+                                </label> </li>
                             <li> <i class="fa fa-envelope"></i>
                                 Email - <label>
-                                    <!-- <input [(ngModel)]="email" placeholder="email" [disabled]="isEditable"/> -->
-                                    {{teacherDetails['email']}}</label> </li>
+                                    <input [(ngModel)]="email" placeholder="email" [disabled]="isEditable"/>
+                                    <!-- {{teacherDetails['email']}} -->
+                                </label> </li>
                             <li> <i class="fa fa-calendar" aria-hidden="true"></i>
                                 DOB - <label> {{teacherDetails['dob'] | date }}</label></li>
                             <li> <i class='fa fa-restroom'></i>
@@ -43,13 +47,15 @@
                                 <li>{{acti}}</li>
                             </ul>
                     </div>
-                    <div *ngIf="teacherDetails['gradeIds']">Activities -
+                    <div *ngIf="teacherDetails['gradeIds']">Grade -
                         <div *ngFor="let grade of teacherDetails['gradeIds']">
                             <p>{{grade.name}}</p>
                             <p>{{grade.grade}} {{grade.section}}</p>
                         </div>
                     </div>
                 </div>
+                <div *ngIf="teacherDetails['profileBrief']">Brief - {{teacherDetails['profileBrief']}}</div>
+
             </div>
         </div>
     </div>
