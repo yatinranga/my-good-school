@@ -210,6 +210,11 @@ border: 1px solid #777 !important;
 .main .table_main table thead tr th {
     background: #ddd;
     color: #e04090;
+    font-size: 18px;
+}
+.main .awards .table_main table thead tr th, .main .teacher_activity_main .table_main table thead tr th {
+    color: #0d5ea9;
+    font-size: 18px;
 }
 
 tbody tr{
@@ -261,7 +266,7 @@ tbody#accordionExample > tr[aria-expanded="true"] {
 }
 .description {
     border-right: 1px solid #333;
-    min-height: 330px;
+    min-height: 333px;
 }
 .description:after, .attachment:before{
     display: none !important;
@@ -314,13 +319,24 @@ app-home{
     opacity: 0.7;
 }
 .home_page_content {
-    width: 100%;
-    display: inline-block;
+    width: 50%;
+    display: inline-grid;
     background: none;
     position: absolute;
     top: 60px;
-    right: 0;
-    float: right;
+    left: 0;
+    float: left;
+}
+.home_page_content select {
+    width: 150px;
+    margin: 0 5px;
+    font-size: 16px;
+    background: #d2d2d2;
+    border: 1px solid #999;
+}
+
+.home_page_content label {
+    font-size: 20px;
 }
 .banner {
     width: 100%;
@@ -330,66 +346,38 @@ app-home{
     vertical-align: top;
     height: calc(100vh - 107px);
 }
-.menu_main h1{
-    font-size: 40px;
-    text-align: left;
-    margin: 0 0 30px 0;
-    color: #159487;
+.home_page_content ul {
+    padding: 0;
+    margin: 5px;
 }
-
-.content_main_com h2{
-    font-size: 26px;
-    text-align: left;
+.home_page_content h2 {
+    font-size: 23px;
+    margin: 5px;
 }
-.menu_content p{
-    font-size: 16px;
-    text-align: left;
-    margin: 5px 10px;
+.home_page_content h3:before {
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-left: 12px solid #555;
+    border-bottom: 6px solid transparent;
+    left: -22px;
+    top: 5px;
 }
-.menu_content ul{
-    margin: 0;
-    padding: 0; 
-}
-.content_main_com h3{
-    font-size: 22px;
-    color: $black;
-    margin: 0;
+.home_page_content h3 {
+    font-size: 20px;
+    margin: 5px 25px;
+    position: relative;
 }
 .menu_main{
     width: 50%;
     display: -webkit-inline-box;
-    display: inline-block;
     float: left;
     padding: 10px 20px;
     margin: 20px 0;
     font-family: initial;
 }
-.menu_content {
-    width: 100%;
-    display: inline-block;
-    padding: 5px 15px;
-    margin: 0;
-    position: relative;
-}
-.title p{
-    text-align: center;
-}
-.menu_content h3{
-    position: relative;
-    font-size: 26px;
-    margin: 5px 10px;
-}
-.menu_content h3:before {
-    content: url(assets/images/ff1.png);
-    position: absolute;
-    top: 3px;
-    left: -35px;
-}
-.menu_content li{
-    list-style: disc;
-    margin: 0 20px;
-}
-
 
 /*-------------------------------------NAVIGATION BAR-------------------------------------*/
 
@@ -566,6 +554,13 @@ li.nav-item{
     width: 100%;
     display: inline-block;
     height: calc(100vh - 145px);
+}
+button.edit_profile {
+    color: #555;
+    margin-top: 15px;
+    background: #adadad;
+    padding: 5px;
+    border-radius: 2px;
 }
 
 .student_main {

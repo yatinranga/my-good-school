@@ -6,18 +6,11 @@
             </div>
             <div class="profile_text_main">
                 <div class="teacher_image">
-                    <img src="assets/images/teacherprofile1.jpg">
+                    <img [src]="path">
                     <h4> {{teacherDetails['name']}}  </h4>
+                    <button class="edit_profile" (click)="photoInput.click()"> <i class="fa fa-edit" title="Edit" > </i> Edit Profile Photo </button>
                 </div>
                 <div class="profile_text">
-                    <div class="teacher_picture">
-                        <img [src]="path">
-                        
-                        
-                        <h4> {{teacherDetails['name']}} </h4>
-                        
-                    </div>
-                    <button class="edit_profile" (click)="photoInput.click()"> <i class="fa fa-edit" title="Edit" > </i> Edit Profile Photo </button>
                     <div class="basic-info">
                         <h3> Basic Info </h3>
                         <ul>

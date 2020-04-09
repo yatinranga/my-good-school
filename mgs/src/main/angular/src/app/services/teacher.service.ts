@@ -76,8 +76,14 @@ export class TeacherService {
 
   // List of Activities performed by student of particular activity
   getStudentPerformedActivities(awardCriterion,criterionValue,gradeId?){
-    return this.http.get("/api/award/students?awardCriterion="+awardCriterion+"&criterionValue="+criterionValue+"&gradeId ="+gradeId);
+    if(gradeId){
+      return this.http.get("/api/award/students?awardCriterion="+awardCriterion+"&criterionValue="+criterionValue+"&gradeId="+gradeId);      
+    }
+    else {
+      return this.http.get("/api/award/students?awardCriterion="+awardCriterion+"&criterionValue="+criterionValue);      
+    }
   }
+
   // getStudentPerformedActivities(studentId,actiId){
   //   return this.http.get("/api/student/"+studentId+"/activities?activityId="+actiId);
   // }

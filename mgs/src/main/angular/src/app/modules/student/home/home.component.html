@@ -2,7 +2,7 @@
     <img src="assets/images/g.png">
     <div class="home_page_content">
         <div class="menu_main">
-            <label> Activity Type : </label>
+            <h2> Activity Type : </h2>
             <select name="activity" (ngModelChange)="getCoaches($event)" ngModel [disabled]="!activities.length">
                 <option value="" disabled>Select Activity</option>
                 <option *ngFor="let activity of activities;" value={{activity.id}}>
@@ -10,24 +10,29 @@
                 <option disabled *ngIf="!activities.length">No activities available</option>
             </select>
         </div>
-        <div class="menu_main" >
-            <h3>List of Supervisor :</h3>
-            <div *ngFor="let c of coaches">{{c.name}}</div>
-            <div *ngIf="coaches.length==0">
-                {{sup_loader ? 'Loading...' : 'No Supervisor'}}
-            </div>
+        <div class="menu_main">
+            <h3>List of Supervisors :</h3>
+            <ul>
+                <li *ngFor="let c of coaches">{{c.name}}</li>
+                <li *ngIf="coaches.length==0" id="null">
+                    {{sup_loader ? 'Loading...' : 'No Supervisor'}}
+                </li>
+            </ul>
+            
         </div>
-        <div class="menu_main" >
+        <div class="menu_main">
             <h3>List of Students :</h3>
             <select name="grade" [disabled]="!activities.length" (change)="filterStudent()" [(ngModel)]="grade">
                 <option value="" disabled>Select Grade</option>
                 <option *ngFor="let g of grades" value={{g.grade}}>{{g.grade}}</option>
                 <option disbaled *ngIf="!grades.length">No Grades Available</option>
             </select>
-            <div *ngFor="let s of students">{{s.name}} {{s.grade}}</div>
-            <div *ngIf="students.length==0">
-                {{stu_loader ? 'Loading...' : 'No Students'}}
-            </div>
+            <ul>
+                    <li *ngFor="let s of students">{{s.name}} {{s.grade}}</li>
+                    <li *ngIf="students.length==0" id="null">
+                        {{stu_loader ? 'Loading...' : 'No Students'}}
+                    </li>
+            </ul>
         </div>
     </div>
 

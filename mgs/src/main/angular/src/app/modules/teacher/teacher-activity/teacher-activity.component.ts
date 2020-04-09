@@ -313,6 +313,11 @@ export class TeacherActivityComponent implements OnInit {
     }, (err) => {console.log(err)});
   }
 
+      // stop toogle of table
+      stopCollapse(e) {
+        e.stopPropagation();
+      }
+
 
 }
 

@@ -1,5 +1,16 @@
-.home_page_content h1 {
-    font-family: serif;
+.teacher.home_page_content h1 {
     padding: 10px 30px;
     margin: 0;
+}
+.teacher.home_page_content .menu_main {
+    display: inline-block;
+    padding: 0px 30px;
+    width: 100%;
+    font-size: 17px;
+}
+.teacher.home_page_content .menu_main h3{
+    font-size: 22px;
+}
+.teacher.home_page_content .menu_content {
+    margin-bottom: 25px;
 }

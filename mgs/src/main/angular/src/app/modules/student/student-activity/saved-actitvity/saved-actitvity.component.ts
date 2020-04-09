@@ -539,4 +539,10 @@ export class SavedActitvityComponent implements OnInit {
       day = '0' + day.toString();
     this.maxDate = [year, month, day].join('-');
   }
+
+    // stop toogle of table
+    stopCollapse(e) {
+      e.stopPropagation();
+    }
+  
 }

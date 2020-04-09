@@ -12,7 +12,7 @@
                         <option value="Reviewed">Reviewed</option>
                     </select>
                 </div>
-            </div>
+            
 
             <div *ngIf="activityType">
                 <div class="table_main">
@@ -20,24 +20,24 @@
                         <thead class="thead-dark">
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Student Name</th>
-                                <th scope="col">Grade</th>
-                                <th scope="col">Performed Activity</th>
-                                <th scope="col">Description</th>
-                                <th scope="col">Performed Activity Date</th>
-                                <th scope="col" *ngIf="!(activityType === 'Reviewed')">Status
+                                <th scope="col">STUDENT NAME</th>
+                                <th scope="col">GRADE</th>
+                                <th scope="col">ACTIVITY TYPE </th>
+                                <th scope="col">DESCRIPTION</th>
+                                <th scope="col">PERFORMED ACTIVITY DATE </th>
+                                <th scope="col" *ngIf="!(activityType === 'Reviewed')">STATUS
                                     <button *ngIf="activityType === 'All'" name="sort" class="icon_button"
                                         (click)="sortByStatus()">
                                         <i class="fa fa-sort"></i>
                                     </button>
                                 </th>
-                                <th scope="col" *ngIf="(activityType === 'Reviewed')" colspan="2">Status
+                                <th scope="col" *ngIf="(activityType === 'Reviewed')" colspan="2">STATUS
                                     <button *ngIf="activityType === 'All'" name="sort" class="icon_button"
                                         (click)="sortByStatus()">
                                         <i class="fa fa-sort"></i>
                                     </button>
                                 </th>
-                                <th *ngIf="!(activityType === 'Reviewed')" colspan="2">Action</th>
+                                <th *ngIf="!(activityType === 'Reviewed')" colspan="2">ACTION</th>
                             </tr>
                         </thead>
                         <tbody id="accordionExample">
@@ -57,7 +57,7 @@
                                         <div *ngIf="activity.activityStatus === 'Reviewed'" class="reviewed">Reviewed
                                         </div>
                                     </td>
-                                    <td *ngIf="!(activityType === 'Reviewed')">
+                                    <td *ngIf="!(activityType === 'Reviewed')"  (click)="stopCollapse($event)">
                                         <div
                                             *ngIf="(activityType === 'All') && (activity.activityStatus !== 'Reviewed')">
                                             <button name="submitSavedActivity"
@@ -265,8 +265,6 @@
                 </div>
             </div>
 
-
-
             <!-- Review Activity Modal-->
             <div>
                 <div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -386,5 +384,6 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </div>
