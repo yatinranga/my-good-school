@@ -19,7 +19,7 @@ export class TeacherAwardsComponent implements OnInit {
   performedActiArr = [];
   schoolAwards = []; // List of all Awards of a school
 
-  awardViewType = "view";
+  awardViewType = "assign";
   teacherInfo: any;
   schoolId = "";
   activities = [];
@@ -167,11 +167,11 @@ export class TeacherAwardsComponent implements OnInit {
     // this.assignAwardForm.value.activityId = this.activityId;
     this.assignAwardForm.value.studentId = this.studentId;
     this.assignAwardForm.value.activityPerformedIds = [];
-    Object.keys(this.actiPerform).forEach((key) => {
-      if (this.actiPerform[key]) {
-        this.assignAwardForm.value.activityPerformedIds.push(key);
-      }
-    })
+    // Object.keys(this.actiPerform).forEach((key) => {
+    //   if (this.actiPerform[key]) {
+    //     this.assignAwardForm.value.activityPerformedIds.push(key);
+    //   }
+    // })
 
     console.log(this.assignAwardForm.value);
 
@@ -272,6 +272,9 @@ export class TeacherAwardsComponent implements OnInit {
     this.viewAwards();
     if (type == "assign") {
       this.awardCriteria();
+      this.performedActiArr = [];
+      this.studentActivityList = false;
+      this.showCriteriaValues = true;
     }
   }
 
@@ -301,6 +304,11 @@ export class TeacherAwardsComponent implements OnInit {
   // to get all awards of school
   getSchoolAwards() {
     this.award_loader = true;
+    Object.keys(this.actiPerform).forEach((key) => {
+      if (this.actiPerform[key]) {
+        this.assignAwardForm.value.activityPerformedIds.push(key);
+      }
+    })
     this.teacherService.getAwards().subscribe((res) => {
       this.schoolAwards = res;
       this.award_loader = false;
@@ -420,9 +428,12 @@ export class TeacherAwardsComponent implements OnInit {
   }
 
   getPerformedIds(activity) {
+    this.actiPerform = {};
     this.studentId = activity.id;
     activity.performedActivities.forEach((ele) => {
-      this.actiPerform[ele.id] = true;
+      ele.activities.forEach(element => {
+        this.actiPerform[element.id] = true;        
+      });
     });
   }
 
