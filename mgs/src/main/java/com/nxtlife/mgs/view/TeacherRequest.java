@@ -46,6 +46,8 @@ public class TeacherRequest extends Request {
 	private Boolean isManagmentMember;
 	
 	private List<TeacherRequest> teachers;
+	
+	private String profileBrief;
 
 	public String getName() {
 		return name;
@@ -191,6 +193,14 @@ public class TeacherRequest extends Request {
 		this.teachers = teachers;
 	}
 
+	public String getProfileBrief() {
+		return profileBrief;
+	}
+
+	public void setProfileBrief(String profileBrief) {
+		this.profileBrief = profileBrief;
+	}
+
 	public Teacher toEntity() {
 		return toEntity(null);
 	}
@@ -230,6 +240,9 @@ public class TeacherRequest extends Request {
 
 		teacher.setIsManagmentMember(this.isManagmentMember);
 		teacher.setDesignation(this.designation);
+		
+		if(this.profileBrief != null)
+		   teacher.setProfileBrief(this.profileBrief);
 
 		return teacher;
 	}

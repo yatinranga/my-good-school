@@ -30,7 +30,10 @@ public class StudentResponse {
 	private List<GuardianResponse> guardianResponseList;
 	private String profileImage;
 	private String yearOfEnrolment;
-	private List<ActivityPerformedResponse> performedActivities;
+	private List<ActivityActivitiesPerformedResponse> performedActivities;
+	private Set<String> focusAreas;
+	private Set<String> activityTypes;
+	private Double scoreForAward;
 
 	public String getId() {
 		return id;
@@ -168,12 +171,36 @@ public class StudentResponse {
 		this.yearOfEnrolment = yearOfEnrolment;
 	}
 
-	public List<ActivityPerformedResponse> getPerformedActivities() {
+	public List<ActivityActivitiesPerformedResponse> getPerformedActivities() {
 		return performedActivities;
 	}
 
-	public void setPerformedActivities(List<ActivityPerformedResponse> performedActivities) {
+	public void setPerformedActivities(List<ActivityActivitiesPerformedResponse> performedActivities) {
 		this.performedActivities = performedActivities;
+	}
+
+	public Set<String> getFocusAreas() {
+		return focusAreas;
+	}
+
+	public void setFocusAreas(Set<String> focusAreas) {
+		this.focusAreas = focusAreas;
+	}
+
+	public Set<String> getActivityTypes() {
+		return activityTypes;
+	}
+
+	public void setActivityTypes(Set<String> activityTypes) {
+		this.activityTypes = activityTypes;
+	}
+
+	public Double getScoreForAward() {
+		return scoreForAward;
+	}
+
+	public void setScoreForAward(Double scoreForAward) {
+		this.scoreForAward = scoreForAward;
 	}
 
 	public StudentResponse(Student student) {
