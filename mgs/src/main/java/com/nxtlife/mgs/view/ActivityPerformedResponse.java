@@ -66,6 +66,8 @@ public class ActivityPerformedResponse {
 	private String grade;
 	
 	private Integer totalMarks;
+	
+	private String title;
 
 	public String getDateOfActivity() {
 		return dateOfActivity;
@@ -251,6 +253,31 @@ public class ActivityPerformedResponse {
 		this.totalMarks = totalMarks;
 	}
 
+	public String getSubmittedOn() {
+		return submittedOn;
+	}
+
+	public void setSubmittedOn(String submittedOn) {
+		this.submittedOn = submittedOn;
+	}
+
+	public String getReviewedOn() {
+		return reviewedOn;
+	}
+
+	public void setReviewedOn(String reviewedOn) {
+		this.reviewedOn = reviewedOn;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+
 	public ActivityPerformedResponse(ActivityPerformed activityPerformed) {
 		this.id = activityPerformed.getCid();
 		this.active = activityPerformed.getActive();
@@ -302,6 +329,7 @@ public class ActivityPerformedResponse {
 			this.dateOfActivity = DateUtil.formatDate(activityPerformed.getSubmittedOn());
 		if (activityPerformed.getReviewedOn() != null)
 			this.dateOfActivity = DateUtil.formatDate(activityPerformed.getReviewedOn());
+		this.title = activityPerformed.getTitle();
 
 	}
 

@@ -26,6 +26,8 @@ public class ActivityPerformedRequest extends Request{
 //	private String coachRemarkDate;
 
 	private Boolean active;
+	
+	private String title;
 
 	@Min(value = 0, message = "Minimum permissible value is 0.")
 	@Max(value = 10, message = "Maximum permissible value is 10.")
@@ -165,6 +167,14 @@ public class ActivityPerformedRequest extends Request{
 //		this.coachRemarkDate = coachRemarkDate;
 //	}
 
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
 	public ActivityPerformed toEntity(ActivityPerformed activityPerformed) {
 		activityPerformed = activityPerformed == null ? new ActivityPerformed() : activityPerformed;
 		if (this.id != null)
@@ -187,7 +197,7 @@ public class ActivityPerformedRequest extends Request{
 		
 		if (this.coachRemark != null ) {
 			if(countWords(this.coachRemark) < 25 )
-				throw new ValidationException("Remark should be minimum of 25 characters.");
+				throw new ValidationException("Remark should be minimum of 25 words.");
 			activityPerformed.setCoachRemark(this.coachRemark);
 		}
 			
@@ -209,6 +219,7 @@ public class ActivityPerformedRequest extends Request{
 		Double percentScore = ((double) totalScore / 25) * 100;
 		double fractionalStar = 0;
 
+		if(totalScore > 0) {
 		if (percentScore > 90.0)
 			fractionalStar = 5.0;
 		else if (percentScore > 80 && percentScore <= 90)
@@ -231,11 +242,13 @@ public class ActivityPerformedRequest extends Request{
 			fractionalStar = 0.5;
 		else
 			fractionalStar = 0;
+		}
 
 		System.out.println("fractionalStar :" + fractionalStar);
 
 		activityPerformed.setStar(fractionalStar);
-
+		if(this.title != null)
+		    activityPerformed.setTitle(this.title);
 		return activityPerformed;
 	}
 
