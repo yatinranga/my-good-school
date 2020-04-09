@@ -7,8 +7,9 @@ import javax.validation.constraints.NotNull;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.entity.school.School;
+import com.nxtlife.mgs.ex.ValidationException;
 
-public class SchoolRequest {
+public class SchoolRequest extends Request{
 
 	@NotNull
 	private String name;
@@ -135,14 +136,21 @@ public class SchoolRequest {
 
 	public School toEntity(School school) {
 		school = school == null ? new School() : school;
-		if (this.name != null)
+		if (this.name != null) {
+			if(!isStringOnlyAlphabet(this.name))
+				throw new ValidationException(String.format("Name (%s) is in invalid format, it should contain only alphabets."));
 			school.setName(this.name);
+		}
 		if (this.username != null)
 			school.setUsername(this.username);
-		if (this.email != null)
-			school.setEmail(this.getEmail());
-		if (this.contactNumber != null)
+		if (this.contactNumber != null) {
+			validateMobileNumber(this.contactNumber);
 			school.setContactNumber(this.contactNumber);
+		}
+		if (this.email != null) {
+			validateEmail(this.email);
+			school.setEmail(this.email);
+		}
 		if (this.address != null)
 			school.setAddress(this.address);
 		return school;

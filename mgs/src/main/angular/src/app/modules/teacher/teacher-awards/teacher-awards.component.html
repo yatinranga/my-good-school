@@ -16,7 +16,7 @@
                     <div *ngSwitchCase="'assign'" class="popup-form">
                         <div class="assign_main">
                             <div class="assign-form">
-                                <label for="exampleFormControlSelect1">Select - </label>
+                                <label for="exampleFormControlSelect1">Select Criteria - </label>
                                 <select class="" name="criteria" [disabled]="awardcr_loader"
                                     id="exampleFormControlSelect1" (ngModelChange)="getCriteriaValue($event)"
                                     [(ngModel)]="awardCriterion">
@@ -29,8 +29,8 @@
                                     </div>
                                 </span>
                             </div>
-                            <div class="assign-form">
-                                <label for="exampleFormControlSelect1">Select - </label>
+                            <div class="assign-form"  [hidden]="showCriteriaValues">
+                                <label for="exampleFormControlSelect1">Select {{awardCriterion}} - </label>
                                 <select class="" name="CriteriaValue" [disabled]="criteriaVal_loader"
                                     id="exampleFormControlSelect1"
                                     (ngModelChange)="getPerformedActivities($event,'value')"
@@ -40,17 +40,17 @@
                                     <!-- <option *ngFor="let val of criteriaValuesArr" value={{val}}>{{val}}</option> -->
                                     <!-- <option disabled *ngIf="criteriaValuesArr.length == 0">No Criteria Found</option> -->
                                 </select>
-                                <span *ngIf="criteriaVal_loader">
+                                <span *ngIf="criteriaVal_loader" >
                                     <div class="spinner-border" role="status">
                                     </div>
                                 </span>
                             </div>
-                            <div class="assign-form">
-                                <label for="exampleFormControlSelect1">Select - </label>
+                            <div class="assign-form" [hidden]="showCriteriaValues">
+                                <label for="exampleFormControlSelect1">Select Grade - </label>
                                 <select class="" name="grade" [disabled]="awardCriterion.length==0"
                                     id="exampleFormControlSelect1"
                                     (ngModelChange)="getPerformedActivities($event,'grade')" [(ngModel)]="gradeId">
-                                    <option value="" selected>Select Grades</option>
+                                    <option value="" selected>Select Grade</option>
                                     <option *ngFor="let grade of schoolGrades" value={{grade.id}}>
                                         {{grade.grade}} {{grade.section}}
                                     </option>
@@ -252,7 +252,7 @@
                                                     <td colspan="4">
                                                         <div *ngIf="pa_loader" class="spinner-border text-dark"
                                                             role="status">
-                                                        </div>{{pa_loader ? 'Loading...' :  'No Activities'}}
+                                                        </div>{{pa_loader ? 'Loading...' :  'No Student Found'}}
                                                     </td>
                                                 </tr>
                                             </tfoot>

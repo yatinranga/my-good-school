@@ -69,6 +69,7 @@ import com.nxtlife.mgs.store.FileStore;
 import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.Utils;
+import com.nxtlife.mgs.view.ActivityActivitiesPerformedResponse;
 import com.nxtlife.mgs.view.ActivityPerformedResponse;
 import com.nxtlife.mgs.view.CertificateRequest;
 import com.nxtlife.mgs.view.CertificateResponse;
@@ -843,7 +844,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndActivityNameAndActivityStatusAndActiveTrue(schoolCid, activityName, ActivityStatus.Reviewed);
 			students = new HashSet<StudentResponse>();
 			for(ActivityPerformed act : activitiesPerformed) {
-				if(students.stream().filter(st -> st.getId().equals(act.getStudent().getCid())).count() < 1 )
+				if(!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())) )
 				  students.add( new StudentResponse(act.getStudent()));
 			}
 //			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
@@ -851,7 +852,12 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			Map<StudentResponse,Double> studentScoreLookUp = new HashMap<StudentResponse,Double>();
 			for(StudentResponse studResp : students) {
 				List<ActivityPerformedResponse>	activitiesToReturn = activitiesPerformed.stream().filter(ap -> ap.getStudent().getCid().equals(studResp.getId())).map(ActivityPerformedResponse :: new).distinct().collect(Collectors.toList());
-				studResp.setPerformedActivities(activitiesToReturn);
+				List<ActivityActivitiesPerformedResponse> finalActivitiesList = new ArrayList<ActivityActivitiesPerformedResponse>();
+				ActivityActivitiesPerformedResponse performedActivities = new ActivityActivitiesPerformedResponse();
+				performedActivities.setActivityName(activityName);
+				performedActivities.setActivities(activitiesToReturn);
+				finalActivitiesList.add(performedActivities);
+				studResp.setPerformedActivities(finalActivitiesList);
 				
 				Double score = 0d;
 				Double starSum = 0d;
@@ -860,8 +866,9 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 					starSum+= act.getStar();
 					focusAreas.addAll(act.getFocusAreas());
 				}
-				score = focusAreas.size() * (starSum / activitiesToReturn.size());
+				score =  (starSum / activitiesToReturn.size());
 				System.out.println(score);
+				studResp.setFocusAreas(focusAreas);
 				studentScoreLookUp.put(studResp, score);
 			}
 			studentScoreLookUp = studentScoreLookUp.entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
@@ -875,23 +882,33 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndStudentGradeCidAndActivityNameAndActivityStatusAndActiveTrue(schoolCid ,gradeCid ,activityName ,ActivityStatus.Reviewed);
 			students = new HashSet<StudentResponse>();
 			for(ActivityPerformed act : activitiesPerformed) {
-				students.add( new StudentResponse(act.getStudent()));
+				if(!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())) )
+					  students.add( new StudentResponse(act.getStudent()));
 			}
 //			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
 			
 			Map<StudentResponse,Double> studentScoreLookUp = new HashMap<StudentResponse,Double>();
 			for(StudentResponse studResp : students) {
 				List<ActivityPerformedResponse>	activitiesToReturn = activitiesPerformed.stream().filter(ap -> ap.getStudent().getCid().equals(studResp.getId())).map(ActivityPerformedResponse :: new).distinct().collect(Collectors.toList());
-				studResp.setPerformedActivities(activitiesToReturn);
+		
+				List<ActivityActivitiesPerformedResponse> finalActivitiesList = new ArrayList<ActivityActivitiesPerformedResponse>();
+				ActivityActivitiesPerformedResponse performedActivities = new ActivityActivitiesPerformedResponse();
+				performedActivities.setActivityName(activityName);
+				performedActivities.setActivities(activitiesToReturn);
+				finalActivitiesList.add(performedActivities);
+				studResp.setPerformedActivities(finalActivitiesList);
 				
 				Double score = 0d;
 				Double starSum = 0d;
 				
+				Set<String> focusAreas = new HashSet<String>();
 				for(ActivityPerformedResponse act : activitiesToReturn) {
 					starSum+= act.getStar();
+					focusAreas.addAll(act.getFocusAreas());
 				}
 				score =  (starSum / activitiesToReturn.size());
 				System.out.println(score);
+				studResp.setFocusAreas(focusAreas);
 				studentScoreLookUp.put(studResp, score);
 			}
 			studentScoreLookUp = studentScoreLookUp.entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
@@ -915,25 +932,37 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndActivityFocusAreasNameAndActivityStatusAndActiveTrue(schoolCid, focusArea, ActivityStatus.Reviewed);
 			students = new HashSet<StudentResponse>();
 			for(ActivityPerformed act : activitiesPerformed) {
-				if(students.stream().filter(st -> st.getId().equals(act.getStudent().getCid())).count() < 1 )
-				  students.add( new StudentResponse(act.getStudent()));
+				if(!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())) )
+					  students.add( new StudentResponse(act.getStudent()));
 			}
 //			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
 			
 			Map<StudentResponse,Double> studentScoreLookUp = new HashMap<StudentResponse,Double>();
 			for(StudentResponse studResp : students) {
 				List<ActivityPerformedResponse>	activitiesToReturn = activitiesPerformed.stream().filter(ap -> ap.getStudent().getCid().equals(studResp.getId())).map(ActivityPerformedResponse :: new).distinct().collect(Collectors.toList());
-				studResp.setPerformedActivities(activitiesToReturn);
 				
 				Double score = 0d;
 				Double starSum = 0d;
-				Set<String> focusAreas = new HashSet<String>();
+				Set<String> activityTypes = new HashSet<String>();
 				for(ActivityPerformedResponse act : activitiesToReturn) {
 					starSum+= act.getStar();
-					focusAreas.addAll(act.getFocusAreas());
+					activityTypes.add(act.getActivityName());
+//					focusAreas.addAll(act.getFocusAreas());
 				}
-				score = focusAreas.size() * (starSum / activitiesToReturn.size());
+//				score = focusAreas.size() * (starSum / activitiesToReturn.size());
+				score =  (starSum / activitiesToReturn.size());
 				System.out.println(score);
+				studResp.setActivityTypes(activityTypes);
+				
+				List<ActivityActivitiesPerformedResponse> finalActivitiesList = new ArrayList<ActivityActivitiesPerformedResponse>();
+				for(String type : activityTypes) {
+					
+					ActivityActivitiesPerformedResponse activitiesPerformedResponse = new ActivityActivitiesPerformedResponse();
+					activitiesPerformedResponse.setActivityName(type);
+					activitiesPerformedResponse.setActivities(activitiesToReturn.stream().filter(act-> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
+					finalActivitiesList.add(activitiesPerformedResponse);
+				}
+				studResp.setPerformedActivities(finalActivitiesList);
 				studentScoreLookUp.put(studResp, score);
 			}
 			studentScoreLookUp = studentScoreLookUp.entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
@@ -947,23 +976,35 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasNameAndActivityStatusAndActiveTrue(schoolCid ,gradeCid ,focusArea,ActivityStatus.Reviewed);
 			students = new HashSet<StudentResponse>();
 			for(ActivityPerformed act : activitiesPerformed) {
-				students.add( new StudentResponse(act.getStudent()));
+				if(!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())) )
+					  students.add( new StudentResponse(act.getStudent()));
 			}
 //			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
 			
 			Map<StudentResponse,Double> studentScoreLookUp = new HashMap<StudentResponse,Double>();
 			for(StudentResponse studResp : students) {
 				List<ActivityPerformedResponse>	activitiesToReturn = activitiesPerformed.stream().filter(ap -> ap.getStudent().getCid().equals(studResp.getId())).map(ActivityPerformedResponse :: new).distinct().collect(Collectors.toList());
-				studResp.setPerformedActivities(activitiesToReturn);
 				
 				Double score = 0d;
 				Double starSum = 0d;
-				
+				Set<String> activityTypes = new HashSet<String>();
 				for(ActivityPerformedResponse act : activitiesToReturn) {
 					starSum+= act.getStar();
+					activityTypes.add(act.getActivityName());
 				}
 				score =  (starSum / activitiesToReturn.size());
 				System.out.println(score);
+				studResp.setActivityTypes(activityTypes);
+				
+				List<ActivityActivitiesPerformedResponse> finalActivitiesList = new ArrayList<ActivityActivitiesPerformedResponse>();
+				for(String type : activityTypes) {
+					
+					ActivityActivitiesPerformedResponse activitiesPerformedResponse = new ActivityActivitiesPerformedResponse();
+					activitiesPerformedResponse.setActivityName(type);
+					activitiesPerformedResponse.setActivities(activitiesToReturn.stream().filter(act-> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
+					finalActivitiesList.add(activitiesPerformedResponse);
+				}
+				studResp.setPerformedActivities(finalActivitiesList);
 				studentScoreLookUp.put(studResp, score);
 			}
 			studentScoreLookUp = studentScoreLookUp.entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
@@ -987,25 +1028,39 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndActivityFourSAndActivityStatusAndActiveTrue(schoolCid, FourS.valueOf(fourS), ActivityStatus.Reviewed);
 			students = new HashSet<StudentResponse>();
 			for(ActivityPerformed act : activitiesPerformed) {
-				if(students.stream().filter(st -> st.getId().equals(act.getStudent().getCid())).count() < 1 )
-				  students.add( new StudentResponse(act.getStudent()));
+				if(!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())) )
+					  students.add( new StudentResponse(act.getStudent()));
 			}
 //			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
 			
 			Map<StudentResponse,Double> studentScoreLookUp = new HashMap<StudentResponse,Double>();
 			for(StudentResponse studResp : students) {
 				List<ActivityPerformedResponse>	activitiesToReturn = activitiesPerformed.stream().filter(ap -> ap.getStudent().getCid().equals(studResp.getId())).map(ActivityPerformedResponse :: new).distinct().collect(Collectors.toList());
-				studResp.setPerformedActivities(activitiesToReturn);
 				
 				Double score = 0d;
 				Double starSum = 0d;
 				Set<String> focusAreas = new HashSet<String>();
+				Set<String> activityTypes = new HashSet<String>();
 				for(ActivityPerformedResponse act : activitiesToReturn) {
 					starSum+= act.getStar();
 					focusAreas.addAll(act.getFocusAreas());
+					activityTypes.add(act.getActivityName());
 				}
 				score = focusAreas.size() * (starSum / activitiesToReturn.size());
 				System.out.println(score);
+				studResp.setScoreForAward(score);
+				studResp.setActivityTypes(activityTypes);
+				studResp.setFocusAreas(focusAreas);
+				
+				List<ActivityActivitiesPerformedResponse> finalActivitiesList = new ArrayList<ActivityActivitiesPerformedResponse>();
+				for(String type : activityTypes) {
+					
+					ActivityActivitiesPerformedResponse activitiesPerformedResponse = new ActivityActivitiesPerformedResponse();
+					activitiesPerformedResponse.setActivityName(type);
+					activitiesPerformedResponse.setActivities(activitiesToReturn.stream().filter(act-> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
+					finalActivitiesList.add(activitiesPerformedResponse);
+				}
+				studResp.setPerformedActivities(finalActivitiesList);
 				studentScoreLookUp.put(studResp, score);
 			}
 			studentScoreLookUp = studentScoreLookUp.entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
@@ -1018,25 +1073,41 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			activitiesPerformed = new HashSet<ActivityPerformed>();
 			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndStudentGradeCidAndActivityFourSAndActivityStatusAndActiveTrue(schoolCid ,gradeCid ,FourS.valueOf(fourS),ActivityStatus.Reviewed);
 			students = new HashSet<StudentResponse>();
+			
 			for(ActivityPerformed act : activitiesPerformed) {
-				students.add( new StudentResponse(act.getStudent()));
+				if(!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())) )
+					  students.add( new StudentResponse(act.getStudent()));
 			}
 //			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
 			
 			Map<StudentResponse,Double> studentScoreLookUp = new HashMap<StudentResponse,Double>();
 			for(StudentResponse studResp : students) {
 				List<ActivityPerformedResponse>	activitiesToReturn = activitiesPerformed.stream().filter(ap -> ap.getStudent().getCid().equals(studResp.getId())).map(ActivityPerformedResponse :: new).distinct().collect(Collectors.toList());
-				studResp.setPerformedActivities(activitiesToReturn);
 				
 				Double score = 0d;
 				Double starSum = 0d;
 				Set<String> focusAreas = new HashSet<String>();
+				Set<String> activityTypes = new HashSet<String>();
 				for(ActivityPerformedResponse act : activitiesToReturn) {
 					starSum+= act.getStar();
 					focusAreas.addAll(act.getFocusAreas());
+					activityTypes.add(act.getActivityName());
 				}
 				score = focusAreas.size() * (starSum / activitiesToReturn.size());
 				System.out.println(score);
+				studResp.setScoreForAward(score);
+				studResp.setActivityTypes(activityTypes);
+				studResp.setFocusAreas(focusAreas);
+				
+				List<ActivityActivitiesPerformedResponse> finalActivitiesList = new ArrayList<ActivityActivitiesPerformedResponse>();
+				for(String type : activityTypes) {
+					
+					ActivityActivitiesPerformedResponse activitiesPerformedResponse = new ActivityActivitiesPerformedResponse();
+					activitiesPerformedResponse.setActivityName(type);
+					activitiesPerformedResponse.setActivities(activitiesToReturn.stream().filter(act-> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
+					finalActivitiesList.add(activitiesPerformedResponse);
+				}
+				studResp.setPerformedActivities(finalActivitiesList);
 				studentScoreLookUp.put(studResp, score);
 			}
 			studentScoreLookUp = studentScoreLookUp.entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
@@ -1060,25 +1131,39 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndActivityFocusAreasPsdAreaAndActivityStatusAndActiveTrue(schoolCid ,PSDArea.fromString(psdArea),ActivityStatus.Reviewed);
 			students = new HashSet<StudentResponse>();
 			for(ActivityPerformed act : activitiesPerformed) {
-				if(students.stream().filter(st -> st.getId().equals(act.getStudent().getCid())).count() < 1 )
-				  students.add( new StudentResponse(act.getStudent()));
+				if(!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())) )
+					  students.add( new StudentResponse(act.getStudent()));
 			}
 //			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
 			
 			Map<StudentResponse,Double> studentScoreLookUp = new HashMap<StudentResponse,Double>();
 			for(StudentResponse studResp : students) {
 				List<ActivityPerformedResponse>	activitiesToReturn = activitiesPerformed.stream().filter(ap -> ap.getStudent().getCid().equals(studResp.getId())).map(ActivityPerformedResponse :: new).distinct().collect(Collectors.toList());
-				studResp.setPerformedActivities(activitiesToReturn);
 				
 				Double score = 0d;
 				Double starSum = 0d;
 				Set<String> focusAreas = new HashSet<String>();
+				Set<String> activityTypes = new HashSet<String>();
 				for(ActivityPerformedResponse act : activitiesToReturn) {
 					starSum+= act.getStar();
 					focusAreas.addAll(act.getFocusAreas());
+					activityTypes.add(act.getActivityName());
 				}
 				score = focusAreas.size() * (starSum / activitiesToReturn.size());
 				System.out.println(score);
+				studResp.setScoreForAward(score);
+				studResp.setActivityTypes(activityTypes);
+				studResp.setFocusAreas(focusAreas);
+				
+				List<ActivityActivitiesPerformedResponse> finalActivitiesList = new ArrayList<ActivityActivitiesPerformedResponse>();
+				for(String type : activityTypes) {
+					
+					ActivityActivitiesPerformedResponse activitiesPerformedResponse = new ActivityActivitiesPerformedResponse();
+					activitiesPerformedResponse.setActivityName(type);
+					activitiesPerformedResponse.setActivities(activitiesToReturn.stream().filter(act-> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
+					finalActivitiesList.add(activitiesPerformedResponse);
+				}
+				studResp.setPerformedActivities(finalActivitiesList);
 				studentScoreLookUp.put(studResp, score);
 			}
 			studentScoreLookUp = studentScoreLookUp.entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
@@ -1092,24 +1177,39 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasPsdAreaAndActivityStatusAndActiveTrue(schoolCid ,gradeCid ,PSDArea.fromString(psdArea),ActivityStatus.Reviewed);
 			students = new HashSet<StudentResponse>();
 			for(ActivityPerformed act : activitiesPerformed) {
-				students.add( new StudentResponse(act.getStudent()));
+				if(!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())) )
+					  students.add( new StudentResponse(act.getStudent()));
 			}
 //			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
 			
 			Map<StudentResponse,Double> studentScoreLookUp = new HashMap<StudentResponse,Double>();
 			for(StudentResponse studResp : students) {
 				List<ActivityPerformedResponse>	activitiesToReturn = activitiesPerformed.stream().filter(ap -> ap.getStudent().getCid().equals(studResp.getId())).map(ActivityPerformedResponse :: new).distinct().collect(Collectors.toList());
-				studResp.setPerformedActivities(activitiesToReturn);
 				
 				Double score = 0d;
 				Double starSum = 0d;
 				Set<String> focusAreas = new HashSet<String>();
+				Set<String> activityTypes = new HashSet<String>();
 				for(ActivityPerformedResponse act : activitiesToReturn) {
 					starSum+= act.getStar();
 					focusAreas.addAll(act.getFocusAreas());
+					activityTypes.add(act.getActivityName());
 				}
 				score = focusAreas.size() * (starSum / activitiesToReturn.size());
 				System.out.println(score);
+				studResp.setScoreForAward(score);
+				studResp.setActivityTypes(activityTypes);
+				studResp.setFocusAreas(focusAreas);
+				
+				List<ActivityActivitiesPerformedResponse> finalActivitiesList = new ArrayList<ActivityActivitiesPerformedResponse>();
+				for(String type : activityTypes) {
+					
+					ActivityActivitiesPerformedResponse activitiesPerformedResponse = new ActivityActivitiesPerformedResponse();
+					activitiesPerformedResponse.setActivityName(type);
+					activitiesPerformedResponse.setActivities(activitiesToReturn.stream().filter(act-> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
+					finalActivitiesList.add(activitiesPerformedResponse);
+				}
+				studResp.setPerformedActivities(finalActivitiesList);
 				studentScoreLookUp.put(studResp, score);
 			}
 			studentScoreLookUp = studentScoreLookUp.entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
