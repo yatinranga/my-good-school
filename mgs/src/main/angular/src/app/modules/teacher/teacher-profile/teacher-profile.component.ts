@@ -14,11 +14,13 @@ export class TeacherProfileComponent implements OnInit {
   teacherDetails = {};
 
   profilePhotoForm: FormGroup;
+  profileUpdateForm: FormGroup;
   files: any[];
   path: any;
   mobileNumber: any;
   email: any;
   isEditable = true;
+  oldMobNo: any;
 
   constructor(private formBuilder: FormBuilder, private teacherService: TeacherService, private alertService : AlertService) { }
 
@@ -37,6 +39,11 @@ export class TeacherProfileComponent implements OnInit {
 
     this.profilePhotoForm = this.formBuilder.group({
       profilePic: []
+    })
+
+    this.profileUpdateForm = this.formBuilder.group({
+      id : this.teacherId,
+      mobileNumber : []
     })
   }
   
@@ -72,19 +79,44 @@ export class TeacherProfileComponent implements OnInit {
     })
   }
 
-  setEditable(){
-    this.isEditable = !this.isEditable;
+  // updateProfile(){
+  //   let oldMobile = this.mobileNumber;
+  //   if(this.isEditable == false){
+
+  //   }
+  //   return !this.isEditable;
+  // }
+
+  temp(e){
+    // console.log(e);
   }
 
-  temp(){
-    console.log("MOBILE changed");
-  }
+  updateMobileNo() {
+    if (this.isEditable == false) {
+      if (this.oldMobNo != this.mobileNumber && this.mobileNumber.length == 10) {
+        this.profileUpdateForm.value.mobileNumber = this.mobileNumber;
+        this.alertService.showLoader("");
 
-  updateMobileNo(){
-
-    // this.teacherService.putMobileNumber(this.teacherId,json).subscribe((res) =>{
-    //   console.log(res);
-    // },(err) => {console.log(err)};)
+        this.teacherService.putMobileNumber(this.teacherId, this.profileUpdateForm.value).subscribe((res) => {
+          console.log(res);
+          this.alertService.showSuccessToast("Mobile Phone Updated");
+          this.isEditable = true;
+        }, (err) => {
+          console.log(err);
+          this.isEditable = false;
+        });
+      } else {
+        if (this.mobileNumber.length == 10) {
+          this.oldMobNo = this.mobileNumber;
+          this.isEditable = true;
+        } else {
+          this.alertService.showErrorAlert("Mobile Number can be less than 10");
+        }
+      }
+    } else {
+      this.oldMobNo = this.mobileNumber;
+      this.isEditable = false;
+    }
   }
 
   // Edit Mobile Number

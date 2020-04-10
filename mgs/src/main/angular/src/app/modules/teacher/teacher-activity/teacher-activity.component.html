@@ -27,14 +27,12 @@
                         </option>
                     </select>
                 </div>
-                <!-- <div class="sortby"> Filter by:
-                    <select style="border: 1px solid #ddd" name="activityType" (ngModelChange)="activityView($event)"
-                        [(ngModel)]="activityType">
-                        <option value="" disabled hidden> Choose here </option>
-                        <option value="All"> All</option>
-                        <option value="Pending" selected>Pending</option>
-                        <option value="Saved">Saved</option>
-                        <option value="Reviewed">Reviewed</option>
+                <!-- <div class="sortby"> Student :
+                    <select style="border: 1px solid #ddd" name="studentName" (change)="filterActivities()" [(ngModel)]="studentName"> 
+                        <option value="" selected> NONE </option>
+                        <option *ngFor="let s of studentList" value={{s}} >
+                            {{s}}
+                        </option>
                     </select>
                 </div> -->
             
