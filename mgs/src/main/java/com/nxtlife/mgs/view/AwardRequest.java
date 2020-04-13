@@ -32,8 +32,8 @@ public class AwardRequest extends Request{
 	private String gradeId;
 	private String activityId;
 	private List<AwardActivityPerformedCid> awardActivityPerformedList;
-	private String validFrom;
-	private String validUntil;
+//	private String validFrom;
+//	private String validUntil;
 
 	public String getId() {
 		return id;
@@ -119,22 +119,7 @@ public class AwardRequest extends Request{
 		this.awardType = awardType;
 	}
 
-	public String getValidFrom() {
-		return validFrom;
-	}
-
-	public void setValidFrom(String validFrom) {
-		this.validFrom = validFrom;
-	}
-
-	public String getValidUntil() {
-		return validUntil;
-	}
-
-	public void setValidUntil(String validUntil) {
-		this.validUntil = validUntil;
-	}
-
+	
 	public Award toEntity(Award award) {
 		award = award == null ? new Award() : award;
 		award.setCid(this.id);
@@ -143,22 +128,22 @@ public class AwardRequest extends Request{
 				throw new ValidationException("description cannot be less than 10 words.");
 			award.setDescription(this.description);
 		}
-		if(this.getValidFrom() == null && this.getValidUntil() == null) {
-			LocalDateTime currentDate = LocalDateTime.now();
-			award.setValidFrom(currentDate.toDate());
-			award.setValidUntil(currentDate.minusMonths(4).toDate());
-		}
-		if(this.validFrom != null) {
-			if (LocalDateTime.now().toDate().before(DateUtil.convertStringToDate(this.validFrom)))
-				throw new ValidationException("ValidFrom cannot be a future date.");
-			 award.setValidFrom(DateUtil.convertStringToDate(this.validFrom));
-		}
-		  
-		if(this.validUntil != null) {
-			if (LocalDateTime.now().toDate().before(DateUtil.convertStringToDate(this.validUntil)))
-				throw new ValidationException("validUntil cannot be a future date.");
-			 award.setValidUntil(DateUtil.convertStringToDate(this.validUntil));
-		}
+//		if(this.getValidFrom() == null && this.getValidUntil() == null) {
+//			LocalDateTime currentDate = LocalDateTime.now();
+//			award.setValidFrom(currentDate.toDate());
+//			award.setValidUntil(currentDate.minusMonths(4).toDate());
+//		}
+//		if(this.validFrom != null) {
+//			if (LocalDateTime.now().toDate().before(DateUtil.convertStringToDate(this.validFrom)))
+//				throw new ValidationException("ValidFrom cannot be a future date.");
+//			 award.setValidFrom(DateUtil.convertStringToDate(this.validFrom));
+//		}
+//		  
+//		if(this.validUntil != null) {
+//			if (LocalDateTime.now().toDate().before(DateUtil.convertStringToDate(this.validUntil)))
+//				throw new ValidationException("validUntil cannot be a future date.");
+//			 award.setValidUntil(DateUtil.convertStringToDate(this.validUntil));
+//		}
 		return award;
 	}
 

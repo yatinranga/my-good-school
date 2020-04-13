@@ -1,5 +1,6 @@
 package com.nxtlife.mgs.jpa;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -114,19 +115,19 @@ public interface ActivityPerformedRepository extends JpaRepository<ActivityPerfo
 	           "   f.psdArea" )
 	List<PropertyCount> findPsdAreaCount(@Param("cid") String cid, @Param("status") ActivityStatus status);
 	 
-	 Set<ActivityPerformed> findAllByStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasPsdAreaAndActivityStatusAndActiveTrue(String schoolCid , String gradeCid,PSDArea psdArea,ActivityStatus status);
+	 Set<ActivityPerformed> findAllByStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasPsdAreaAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(String schoolCid , String gradeCid,PSDArea psdArea,ActivityStatus status,Date startDate ,Date endDate);
 	 
-	 Set<ActivityPerformed> findAllByStudentSchoolCidAndActivityFocusAreasPsdAreaAndActivityStatusAndActiveTrue(String schoolCid ,PSDArea psdArea,ActivityStatus status);
+	 Set<ActivityPerformed> findAllByStudentSchoolCidAndActivityFocusAreasPsdAreaAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(String schoolCid ,PSDArea psdArea,ActivityStatus status,Date startDate ,Date endDate);
 	 
-	 Set<ActivityPerformed> findAllByStudentSchoolCidAndStudentGradeCidAndActivityFourSAndActivityStatusAndActiveTrue(String schoolCid , String gradeCid,FourS fourS ,ActivityStatus status);
+	 Set<ActivityPerformed> findAllByStudentSchoolCidAndStudentGradeCidAndActivityFourSAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(String schoolCid , String gradeCid,FourS fourS ,ActivityStatus status,Date startDate ,Date endDate);
 	 
-	 Set<ActivityPerformed> findAllByStudentSchoolCidAndActivityFourSAndActivityStatusAndActiveTrue(String schoolCid , FourS fourS ,ActivityStatus status);
+	 Set<ActivityPerformed> findAllByStudentSchoolCidAndActivityFourSAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(String schoolCid , FourS fourS ,ActivityStatus status,Date startDate ,Date endDate);
 	 
-	 Set<ActivityPerformed> findAllByStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasNameAndActivityStatusAndActiveTrue(String schoolCid , String gradeCid,String focusAreaName,ActivityStatus status);
+	 Set<ActivityPerformed> findAllByStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(String schoolCid , String gradeCid,String focusAreaName,ActivityStatus status,Date startDate ,Date endDate);
 	 
-	 Set<ActivityPerformed> findAllByStudentSchoolCidAndActivityFocusAreasNameAndActivityStatusAndActiveTrue(String schoolCid , String focusAreaName,ActivityStatus status);
+	 Set<ActivityPerformed> findAllByStudentSchoolCidAndActivityFocusAreasNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(String schoolCid , String focusAreaName,ActivityStatus status,Date startDate ,Date endDate);
 	 
-	 Set<ActivityPerformed> findAllByStudentSchoolCidAndStudentGradeCidAndActivityNameAndActivityStatusAndActiveTrue(String schoolCid , String gradeCid,String activityName,ActivityStatus status);
+	 Set<ActivityPerformed> findAllByStudentSchoolCidAndStudentGradeCidAndActivityNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(String schoolCid , String gradeCid,String activityName,ActivityStatus status,Date startDate ,Date endDate);
 	 
-	 Set<ActivityPerformed> findAllByStudentSchoolCidAndActivityNameAndActivityStatusAndActiveTrue(String schoolCid , String activityName,ActivityStatus status);
+	 Set<ActivityPerformed> findAllByStudentSchoolCidAndActivityNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(String schoolCid , String activityName,ActivityStatus status,Date startDate ,Date endDate);
 }
