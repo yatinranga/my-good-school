@@ -128,8 +128,10 @@
                                                     <th scope="col">GRADE & SECTION</th>
                                                     <th scope="col" *ngIf="!(awardCriterion=='Focus Area')">FOCUS AREA
                                                     </th>
+                                                    <th scope="col" *ngIf="!(awardCriterion=='PSD Area')">PSD AREA</th>
                                                     <th scope="col" *ngIf="!(awardCriterion=='Activity Type')">ACTIVITY
                                                         TYPE</th>
+                                                    <th scope="col" *ngIf="!(awardCriterion=='4S')">FOUR S</th>
                                                     <th scope="col" *ngIf="awardCriterion=='Activity Type'">COUNT</th>
                                                     <th scope="col">SCORE</th>
                                                 </tr>
@@ -150,11 +152,20 @@
                                                             </li>
                                                         </ul>
                                                         </td>
+                                                        <td *ngIf="!(awardCriterion=='PSD Area')">
+                                                            <span *ngFor="let at of activity.psdAreas; let i = index">
+                                                                {{ (i === activity.psdAreas.length-1) ? at : at + "," + ' '}}
+                                                            </span>
+                                                        </td>
                                                         <td *ngIf="!(awardCriterion=='Activity Type')">
-                                                            <!-- <label *ngFor="let at of activity.activityTypes"></label> -->
                                                             <span
                                                                 *ngFor="let at of activity.activityTypes; let i = index">
                                                                 {{ (i === activity.activityTypes.length-1) ? at : at + "," + ' '}}
+                                                            </span>
+                                                        </td>
+                                                        <td *ngIf="!(awardCriterion=='4S')">
+                                                            <span *ngFor="let at of activity.fourS; let i = index">
+                                                                {{ (i === activity.fourS.length-1) ? at : at + "," + ' '}}
                                                             </span>
                                                         </td>
                                                         <td *ngIf="awardCriterion=='Activity Type'">
@@ -162,10 +173,11 @@
                                                         <td>{{activity.scoreForAward}}</td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="collapse-td" colspan="6">
+                                                        <td class="collapse-td" colspan="8">
                                                             <div [attr.id]="'collapse' + i" class="collapse"
                                                                 data-parent="#accordionExample">
 
+                                                                <!-- When award criteria is 4s, PSD and Focus Area -->
                                                                 <table *ngIf="!(awardCriterion=='Activity Type')">
                                                                     <tbody id="innerAccordionExample">
                                                                         <ng-container
@@ -176,7 +188,25 @@
                                                                                 <td>Activity Count - {{pa.count}}</td>
                                                                                 <td>Average Stars - {{pa.averageStars}}
                                                                                 </td>
+                                                                                <td
+                                                                                    *ngIf="!(awardCriterion=='Focus Area')">
+                                                                                    <span
+                                                                                        *ngFor="let at of pa.activities[0].focusAreas; let i = index">
+                                                                                        {{ (i === pa.activities[0].focusAreas.length-1) ? at : at + "," + ' '}}
+                                                                                    </span>
+                                                                                </td>
+                                                                                <td
+                                                                                    *ngIf="!(awardCriterion=='PSD Area')">
+                                                                                    <span
+                                                                                        *ngFor="let at of pa.activities[0].psdAreas; let i = index">
+                                                                                        {{ (i === pa.activities[0].psdAreas.length-1) ? at : at + "," + ' '}}
+                                                                                    </span>
+                                                                                </td>
+                                                                                <td *ngIf="!(awardCriterion=='4S')">
+                                                                                    {{pa.activities[0].fourS}}
+                                                                                </td>
                                                                             </tr>
+
                                                                             <tr>
                                                                                 <td class="collapsed-td" colspan="12">
                                                                                     <div [attr.id]="'collapsed' + j"
@@ -186,7 +216,7 @@
                                                                                         <div
                                                                                             *ngFor="let ac of pa.activities; let j = index;">
                                                                                             <div class="row">
-                                                                                                <div class="col-4">
+                                                                                                <div class="col-6">
                                                                                                     <div
                                                                                                         class="assign description">
                                                                                                         <h5>
@@ -243,36 +273,8 @@
                                                                                                         </div>
                                                                                                     </div>
                                                                                                 </div>
-                                                                                                <div class="col-4">
-                                                                                                    <div
-                                                                                                        class="assign description">
-                                                                                                        <h5> Development
-                                                                                                            Parameters
-                                                                                                        </h5>
-                                                                                                        <p> <strong>Focus
-                                                                                                                Area -
-                                                                                                            </strong>
-                                                                                                        </p>
-                                                                                                        <span id="fa"
-                                                                                                            *ngFor="let fa of ac.focusAreas; let i = index">
-                                                                                                            {{ (i === ac.focusAreas.length-1) ? fa : fa + "," + ' '}}
-                                                                                                        </span>
-                                                                                                        <p><strong>PSD
-                                                                                                                Area :
-                                                                                                            </strong>
-                                                                                                        </p>
-                                                                                                        <span id="fa"
-                                                                                                            *ngFor="let fa of ac.psdAreas let i = index">
-                                                                                                            {{ (i === ac.psdAreas.length-1) ? fa : fa + "," + ' '}}
-                                                                                                        </span>
-                                                                                                        <p> <strong> 4's
-                                                                                                                -
-                                                                                                            </strong>
-                                                                                                            {{ac.fourS}}
-                                                                                                        </p>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                                <div class="col-4">
+                                                                                            
+                                                                                                <div class="col-6">
                                                                                                     <div
                                                                                                         class="assign description">
                                                                                                         <h5> Scoring
@@ -309,15 +311,20 @@
                                                                     </tbody>
                                                                 </table>
 
+                                                                <!-- When award criteria is Activity Type -->
                                                                 <div *ngIf="awardCriterion=='Activity Type'">
                                                                     <div
                                                                         *ngFor="let pa of activity.performedActivities; let i = index;">
-                                                                        <div *ngFor="let ac of pa.activities; let j = index;">
+                                                                        <div
+                                                                            *ngFor="let ac of pa.activities; let j = index;">
                                                                             <div class="row">
-                                                                                <div class="col-4">
+                                                                                <div class="col-6">
                                                                                     <div class="assign description">
                                                                                         <h5>
-                                                                                            <label><input type="checkbox" name="selectPerformedActivity" value={{ac.id}}
+                                                                                            <label><input
+                                                                                                    type="checkbox"
+                                                                                                    name="selectPerformedActivity"
+                                                                                                    value={{ac.id}}
                                                                                                     [(ngModel)]="actiPerform[ac.id]"></label>
                                                                                             Activity
                                                                                             {{j+1}}
@@ -343,50 +350,32 @@
                                                                                                 Date -
                                                                                             </strong>{{ac.coachRemarkDate | date}}
                                                                                         </p>
-                                                                                        <p *ngIf="ac.fileResponses.length">
+                                                                                        <p
+                                                                                            *ngIf="ac.fileResponses.length">
                                                                                             <strong>Attachments
                                                                                                 -
                                                                                             </strong>
                                                                                         </p>
-                                                                                        <div *ngFor="let file of ac.fileResponses">
+                                                                                        <div
+                                                                                            *ngFor="let file of ac.fileResponses">
                                                                                             <div>
-                                                                                                <a target="_blank" [attr.href]="file.url" (click)="downloadFile(file.url)">
-                                                                                                    <i class="fa fa-file-audio" *ngIf="file.extension == 'mp3'"></i>
-                                                                                                    <i class="fa fa-image" *ngIf="file.extension=='jpg'"></i>
-                                                                                                    <i class="fa fa-video-camera" *ngIf="file.extension=='video'"></i>
+                                                                                                <a target="_blank"
+                                                                                                    [attr.href]="file.url"
+                                                                                                    (click)="downloadFile(file.url)">
+                                                                                                    <i class="fa fa-file-audio"
+                                                                                                        *ngIf="file.extension == 'mp3'"></i>
+                                                                                                    <i class="fa fa-image"
+                                                                                                        *ngIf="file.extension=='jpg'"></i>
+                                                                                                    <i class="fa fa-video-camera"
+                                                                                                        *ngIf="file.extension=='video'"></i>
                                                                                                     {{file.name}}
                                                                                                 </a>
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
-                                                                                <div class="col-4">
-                                                                                    <div class="assign description">
-                                                                                        <h5> Development
-                                                                                            Parameters
-                                                                                        </h5>
-                                                                                        <p> <strong>Focus
-                                                                                                Area -
-                                                                                            </strong>
-                                                                                        </p>
-                                                                                        <span id="fa" *ngFor="let fa of ac.focusAreas; let i = index">
-                                                                                            {{ (i === ac.focusAreas.length-1) ? fa : fa + "," + ' '}}
-                                                                                        </span>
-                                                                                        <p><strong>PSD
-                                                                                                Area :
-                                                                                            </strong>
-                                                                                        </p>
-                                                                                        <span id="fa" *ngFor="let fa of ac.psdAreas let i = index">
-                                                                                            {{ (i === ac.psdAreas.length-1) ? fa : fa + "," + ' '}}
-                                                                                        </span>
-                                                                                        <p> <strong> 4's
-                                                                                                -
-                                                                                            </strong>
-                                                                                            {{ac.fourS}}
-                                                                                        </p>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="col-4">
+                                                                                
+                                                                                <div class="col-6">
                                                                                     <div class="assign description">
                                                                                         <h5> Scoring
                                                                                         </h5>
@@ -413,7 +402,7 @@
                                                                                         </p>
                                                                                     </div>
                                                                                 </div>
-                                                                            </div>              
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -425,7 +414,7 @@
                                             </tbody>
                                             <tfoot *ngIf="performedActiArr.length == 0">
                                                 <tr>
-                                                    <td colspan="6">
+                                                    <td colspan="8">
                                                         <div *ngIf="pa_loader" class="spinner-border text-dark"
                                                             role="status">
                                                         </div>{{pa_loader ? 'Loading...' :  'No Student Found'}}
@@ -628,7 +617,7 @@
                             Min Length 10 words.
                         </small>
                     </div>
-                    
+
                     <div class="modal-footer">
                         <button type="button" name="resetForm" class="reset btn btn-secondary" (click)="resetForm()">
                             Reset </button>
