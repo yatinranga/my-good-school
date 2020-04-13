@@ -75,12 +75,14 @@ export class TeacherService {
   }
 
   // List of Activities performed by student of particular activity
-  getStudentPerformedActivities(awardCriterion,criterionValue,gradeId?){
+  getStudentPerformedActivities(awardCriterion,criterionValue,startDate,endDate,gradeId?){
     if(gradeId){
-      return this.http.get("/api/award/students?awardCriterion="+awardCriterion+"&criterionValue="+criterionValue+"&gradeId="+gradeId);      
+      return this.http.get("/api/award/students?awardCriterion="+awardCriterion+"&criterionValue="+criterionValue+
+      +"&startDate="+startDate+"&endDate="+endDate+"&gradeId="+gradeId);      
     }
     else {
-      return this.http.get("/api/award/students?awardCriterion="+awardCriterion+"&criterionValue="+criterionValue);      
+      return this.http.get("/api/award/students?awardCriterion="+awardCriterion+"&criterionValue="+criterionValue
+      +"&startDate="+startDate+"&endDate="+endDate);      
     }
   }
 
@@ -90,7 +92,7 @@ export class TeacherService {
 
   // to get activities of student whose status = REVIEWED
   getStudentActivities(studentCid){
-    return this.http.get("/api/student/activities?status=reviewed&studentId=" + studentCid);
+    return this.http.get("/api/student/activities?status=reviewed&studentId=" + studentCid );
   }
 
   // Get the awards initiated/given by student
@@ -114,7 +116,7 @@ export class TeacherService {
   }
 
   // Update Contact Details
-  putMobileNumber(teacherId,form){
+  updateProfile(teacherId,form){
     return this.http.put("/api/teacher/update/"+teacherId,form);
   }
 

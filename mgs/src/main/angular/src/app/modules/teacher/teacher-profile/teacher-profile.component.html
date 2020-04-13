@@ -60,6 +60,10 @@
                         <p>{{grade.grade}} {{grade.section}}</p>
                     </div>
                 </div>
+                <div *ngIf="teacherDetails['profileBrief']">Brief
+                    <textarea name="profileBrief" rows="6" cols="50" [disabled]="setDisabled" [(ngModel)]="profileBrief"></textarea>
+                    </div>
+
             </div>
             <div *ngIf="teacherDetails['profileBrief']">Brief - {{teacherDetails['profileBrief']}}</div>
 

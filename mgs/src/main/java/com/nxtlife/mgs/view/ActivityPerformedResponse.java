@@ -68,6 +68,8 @@ public class ActivityPerformedResponse {
 	private Integer totalMarks;
 	
 	private String title;
+	
+	private String gradeId;
 
 	public String getDateOfActivity() {
 		return dateOfActivity;
@@ -277,6 +279,13 @@ public class ActivityPerformedResponse {
 		this.title = title;
 	}
 
+	public String getGradeId() {
+		return gradeId;
+	}
+
+	public void setGradeId(String gradeId) {
+		this.gradeId = gradeId;
+	}
 
 	public ActivityPerformedResponse(ActivityPerformed activityPerformed) {
 		this.id = activityPerformed.getCid();
@@ -308,9 +317,11 @@ public class ActivityPerformedResponse {
 		if (activityPerformed.getStudent() != null) {
 			this.studentId = activityPerformed.getStudent().getCid();
 			this.studentName = activityPerformed.getStudent().getName();
-			if (activityPerformed.getStudent().getGrade() != null)
+			if (activityPerformed.getStudent().getGrade() != null) {
 				this.grade = String.format("%s - %s", activityPerformed.getStudent().getGrade().getName(),
 						activityPerformed.getStudent().getGrade().getSection());
+				this.gradeId =  activityPerformed.getStudent().getGrade().getCid();
+			}
 		}
 		this.coachRemark = activityPerformed.getCoachRemark();
 		if (activityPerformed.getCoachRemarkDate() != null)

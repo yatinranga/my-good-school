@@ -55,6 +55,8 @@ export class TeacherAwardsComponent implements OnInit {
   gradeId: any = "";
 
   showCriteriaValues = true;
+  endDate: string;
+  startDate: string;
 
   constructor(private teacherService: TeacherService, private formbuilder: FormBuilder, private alertService: AlertService) { }
 
@@ -207,16 +209,48 @@ export class TeacherAwardsComponent implements OnInit {
 
   }
 
+  dateChanged() {
+    this.pa_loader = true;
+    let sDate = this.startDate +' 00:00:00';
+    let eDate = this.endDate+' 00:00:00';
+    this.performedActiArr = [];
+    if (this.gradeId) {
+      this.teacherService.getStudentPerformedActivities(this.awardCriterion, this.criterionValue, sDate,eDate,this.gradeId).subscribe((res) => {
+        console.log(res);
+        this.performedActiArr = res;
+        this.pa_loader = false;
+      },
+        (err) => {
+          console.log(err);
+          this.pa_loader = false;
+        });
+
+    } else {
+      this.teacherService.getStudentPerformedActivities(this.awardCriterion, this.criterionValue,sDate,eDate).subscribe((res) => {
+        this.performedActiArr = res;
+        console.log(res);
+        this.pa_loader = false;
+      },
+        (err) => {
+          console.log(err)
+          this.pa_loader = false;
+        });
+
+    }
+  }
+
   // get List of Performed activity by specific activityId
-  getPerformedActivities(value, type) {
+  getPerformedActivities(type, value?) {
     this.pa_loader = true;
     this.studentActivityList = true;
     // console.log(this.criterionValue)
     this.performedActiArr = [];
+    let sDate = this.startDate +' 00:00:00';
+    let eDate = this.endDate+' 00:00:00';
     if (type == "value") {
       if (this.gradeId == "") {
         this.criterionValue = value;
-        this.teacherService.getStudentPerformedActivities(this.awardCriterion, value).subscribe((res) => {
+        this.teacherService.getStudentPerformedActivities(this.awardCriterion, value,sDate,eDate).subscribe((res) => {
           this.performedActiArr = res;
           console.log(res);
           this.pa_loader = false;
@@ -228,7 +262,7 @@ export class TeacherAwardsComponent implements OnInit {
           });
       } else {
         this.criterionValue = value;
-        this.teacherService.getStudentPerformedActivities(this.awardCriterion, value, this.gradeId).subscribe((res) => {
+        this.teacherService.getStudentPerformedActivities(this.awardCriterion, value,sDate,eDate, this.gradeId).subscribe((res) => {
           console.log(res);
           this.performedActiArr = res;
           this.pa_loader = false;
@@ -244,7 +278,7 @@ export class TeacherAwardsComponent implements OnInit {
     if (type == "grade") {
       this.gradeId = value;
       if (this.criterionValue) {
-        this.teacherService.getStudentPerformedActivities(this.awardCriterion, this.criterionValue, value).subscribe((res) => {
+        this.teacherService.getStudentPerformedActivities(this.awardCriterion, this.criterionValue,sDate,eDate, value).subscribe((res) => {
           console.log(res);
           this.performedActiArr = res;
         }, (err) => {
@@ -275,6 +309,8 @@ export class TeacherAwardsComponent implements OnInit {
       this.performedActiArr = [];
       this.studentActivityList = false;
       this.showCriteriaValues = true;
+      this.setEndDate();
+      this.setStartDate();
     }
   }
 
@@ -432,9 +468,38 @@ export class TeacherAwardsComponent implements OnInit {
     this.studentId = activity.id;
     activity.performedActivities.forEach((ele) => {
       ele.activities.forEach(element => {
-        this.actiPerform[element.id] = true;        
+        this.actiPerform[element.id] = true;
       });
     });
+  }
+
+  // set Start Date for Activity Performed Duration
+  setStartDate() {
+    const minDate = new Date();
+    minDate.setMonth(minDate.getMonth() - 4);
+    let month: any = minDate.getMonth() + 1;
+    let day: any = minDate.getDate();
+    let year: any = minDate.getFullYear();
+
+    if (month < 10)
+      month = '0' + month.toString();
+    if (day < 10)
+      day = '0' + day.toString();
+    this.startDate = [year, month, day].join('-');
+  }
+
+  // set Till Date for Activty Performed Duration
+  setEndDate() {
+    const minDate = new Date();
+    let month: any = minDate.getMonth() + 1;
+    let day: any = minDate.getDate();
+    let year: any = minDate.getFullYear();
+
+    if (month < 10)
+      month = '0' + month.toString();
+    if (day < 10)
+      day = '0' + day.toString();
+    this.endDate = [year, month, day].join('-');
   }
 
 

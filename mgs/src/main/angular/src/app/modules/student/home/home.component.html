@@ -22,9 +22,9 @@
         </div>
         <div class="menu_main">
             <h3>List of Students :</h3>
-            <select name="grade" [disabled]="!activities.length" (change)="filterStudent()" [(ngModel)]="grade">
+            <select name="grade" [disabled]="!activities.length" (change)="filterStudent()" [(ngModel)]="gradeId">
                 <option value="" disabled>Select Grade</option>
-                <option *ngFor="let g of grades" value={{g.grade}}>{{g.grade}}</option>
+                <option *ngFor="let g of grades" value={{g.id}}>{{g.grade}} {{g.section}}</option>
                 <option disbaled *ngIf="!grades.length">No Grades Available</option>
             </select>
             <ul>

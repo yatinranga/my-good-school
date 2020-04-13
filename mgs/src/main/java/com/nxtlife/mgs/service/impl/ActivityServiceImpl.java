@@ -68,7 +68,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 	public void init() {
 		List<FocusArea> focusAreaRepoList = focusAreaRepository.findAllByActiveTrue();
 		List<FocusArea> focusAreaList = new ArrayList<FocusArea>();
-		String[] focusAreasPd = { "Identity", "Spiritual & Aesthetic Awareness", "Decision Making", "Health",
+		String[] focusAreasPd = { "Identity", "Spiritual And Aesthetic Awareness", "Decision Making", "Health",
 				"Intellectual Growth" };
 		String[] focusAreasSD = { "Community Skills", "Employment Skills", "Citizenship", "Environmental Awareness" };
 
@@ -111,11 +111,11 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 
 		focusAreaList = focusAreaRepository.save(focusAreaList);
 
-		String[] skillActivities = { "Yoga", "Literary Society Hindi", "Literary Society English", "Art & Craft",
-				"Music & Dance", "Band", "Computers", "Cooking" };
+		String[] skillActivities = { "Yoga", "Literary Society Hindi", "Literary Society English", "Art And Craft",
+				"Music And Dance", "Band", "Computers", "Cooking" };
 		String[] sportActivities = { "Martial Arts", "Cricket", "Fencing", "Football", "Kho-Kho", "Badminton",
 				"Kabaddi" };
-		String[] serviceActivities = { "Social Service League", "NCC", "Scouts & Guides", "Rural Livelihood Maping",
+		String[] serviceActivities = { "Social Service League", "NCC", "Scouts And Guides", "Rural Livelihood Maping",
 				"Green School Club", "Eco Club" };
 		String[] studyActivities = { "Reading" };
 

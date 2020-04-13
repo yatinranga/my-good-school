@@ -34,6 +34,7 @@ public class StudentResponse {
 	private Set<String> focusAreas;
 	private Set<String> activityTypes;
 	private Double scoreForAward;
+	private String gradeId;
 
 	public String getId() {
 		return id;
@@ -203,6 +204,14 @@ public class StudentResponse {
 		this.scoreForAward = scoreForAward;
 	}
 
+	public String getGradeId() {
+		return gradeId;
+	}
+
+	public void setGradeId(String gradeId) {
+		this.gradeId = gradeId;
+	}
+
 	public StudentResponse(Student student) {
 		this.id = student.getCid();
 		this.name = student.getName();
@@ -227,6 +236,7 @@ public class StudentResponse {
 		if (student.getGrade() != null) {
 			this.grade = student.getGrade().getName();
 			this.section = student.getGrade().getSection();
+			this.gradeId = student.getGrade().getCid();
 		}
 
 		if (student.getSchool() != null) {
@@ -265,6 +275,7 @@ public class StudentResponse {
 			if (student.getGrade() != null) {
 				this.grade = student.getGrade().getName();
 				this.section = student.getGrade().getSection();
+				this.gradeId = student.getGrade().getCid();
 			}
 
 			if (student.getSchool() != null) {

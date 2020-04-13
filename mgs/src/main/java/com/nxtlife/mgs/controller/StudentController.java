@@ -116,8 +116,8 @@ public class StudentController {
 	}
 	
 	@GetMapping(value = "api/award/students")
-	public Set<StudentResponse> getAllStudentsAndItsActivitiesByAwardCriterion(@RequestParam(name = "awardCriterion") String awardCriterion ,@RequestParam(name = "criterionValue") String criterionValue, @RequestParam(name = "gradeId" , required = false) String gradeId){
-		return studentService.getAllStudentsAndItsActivitiesByAwardCriterion(awardCriterion, criterionValue, gradeId);
+	public Set<StudentResponse> getAllStudentsAndItsActivitiesByAwardCriterion(@RequestParam(name = "awardCriterion") String awardCriterion ,@RequestParam(name = "criterionValue") String criterionValue, @RequestParam(name = "gradeId" , required = false) String gradeId,@RequestParam(name = "startDate" , required = false) String startDate ,@RequestParam(name = "endDate" , required = false) String endDate){
+		return studentService.getAllStudentsAndItsActivitiesByAwardCriterion(awardCriterion, criterionValue, gradeId,startDate ,endDate);
 	}
 
 }
