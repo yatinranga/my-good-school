@@ -79,8 +79,6 @@ export class TeacherAwardsComponent implements OnInit {
       activityId: [],
       awardType: [, [Validators.required]],
       description: [, [Validators.required, Validators.minLength(40)]],
-      vaidFrom: [, [Validators.required]],
-      validUntil: [, [Validators.required]],
       activityPerformedIds: [([])],
     });
   }
@@ -169,44 +167,32 @@ export class TeacherAwardsComponent implements OnInit {
     // this.assignAwardForm.value.activityId = this.activityId;
     this.assignAwardForm.value.studentId = this.studentId;
     this.assignAwardForm.value.activityPerformedIds = [];
-    // Object.keys(this.actiPerform).forEach((key) => {
-    //   if (this.actiPerform[key]) {
-    //     this.assignAwardForm.value.activityPerformedIds.push(key);
-    //   }
-    // })
+    Object.keys(this.actiPerform).forEach((key) => {
+      if (this.actiPerform[key]) {
+        this.assignAwardForm.value.activityPerformedIds.push(key);
+      }
+    })
 
     console.log(this.assignAwardForm.value);
 
-    if (this.assignAwardForm.value.vaidFrom == this.assignAwardForm.value.validUntil) {
-      this.alertService.showErrorAlert("Date cannot be same");
+    this.teacherService.assignAward(this.assignAwardForm.value).subscribe((res) => {
+      console.log(res);
+      this.alertService.showSuccessAlert("");
+      $('#assignAwardModal').modal('hide');
+      $('.modal-backdrop').remove();
+      this.performedActiArr = [];
+      this.assignAwardForm.reset();
+      this.studentActivityList = false;
+      this.awardViewType = "view";
       this.pa_loader = false;
-    } else if (this.assignAwardForm.value.vaidFrom > this.assignAwardForm.value.validUntil) {
-      this.alertService.showErrorAlert("Valid Date cannot be ahead of Till Date");
-      this.pa_loader = false;
-    } else {
-      this.assignAwardForm.value.vaidFrom = this.assignAwardForm.value.vaidFrom + " 00:00:00";
-      this.assignAwardForm.value.validUntil = this.assignAwardForm.value.validUntil + " 00:00:00";
-      this.teacherService.assignAward(this.assignAwardForm.value).subscribe((res) => {
-        console.log(res);
-        $('#assignAwardModal').modal('hide');
-        $('.modal-backdrop').remove();
-        this.performedActiArr = [];
-        this.assignAwardForm.reset();
-        this.alertService.showSuccessAlert("");
-        this.studentActivityList = false;
-        this.awardViewType = "view";
+      this.viewAwards();
+    },
+      (err) => {
+        console.log(err);
+        // $('#assignAwardModal').modal('hide');
+        // $('.modal-backdrop').remove();
         this.pa_loader = false;
-        this.viewAwards();
-      },
-        (err) => {
-          console.log(err);
-          // $('#assignAwardModal').modal('hide');
-          // $('.modal-backdrop').remove();
-          this.pa_loader = false;
-        });
-    }
-
-
+      });
   }
 
   dateChanged() {
