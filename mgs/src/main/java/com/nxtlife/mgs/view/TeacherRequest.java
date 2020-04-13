@@ -241,8 +241,12 @@ public class TeacherRequest extends Request {
 		teacher.setIsManagmentMember(this.isManagmentMember);
 		teacher.setDesignation(this.designation);
 		
-		if(this.profileBrief != null)
-		   teacher.setProfileBrief(this.profileBrief);
+		if(this.profileBrief != null) {
+			if(countWords(this.profileBrief) < 20 || countWords(this.profileBrief) >200)
+				throw new ValidationException("profile brief can be between 20 to 200 words.");
+			teacher.setProfileBrief(this.profileBrief);
+		}
+		   
 
 		return teacher;
 	}

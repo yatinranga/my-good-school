@@ -1,5 +1,6 @@
 package com.nxtlife.mgs.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -49,7 +50,7 @@ public interface StudentService extends ExcelUtil {
 	List<CertificateResponse> getAllCertificatesOfStudent();
 
 	Set<StudentResponse> getAllStudentsAndItsActivitiesByAwardCriterion(String awardCriterion, String criterionValue,
-			String gradeCid);
+			String gradeCid,String startDate,String endDate);
 
 	List<StudentResponse> getAllStudentsOfSchoolForParticularActivity(String activityCid, String activityStatus);
 
