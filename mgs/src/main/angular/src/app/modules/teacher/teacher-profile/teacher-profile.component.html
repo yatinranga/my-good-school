@@ -9,7 +9,7 @@
                     <img [src]="path">
                     <h4> {{teacherDetails['name']}}  </h4>
                     <button class="edit_profile" (click)="photoInput.click()"> <i class="fa fa-edit" title="Edit" > </i> Edit Profile Photo </button>
-                    <button (click)="updateMobileNo()">{{isEditable ? 'Update Profile' :'Save'}}</button>
+                    <button (click)="updateProfile()">{{setDisabled ? 'Update Profile' :'Save'}}</button>
                 </div>
                 <div class="profile_text">
                     <div class="basic-info">
@@ -18,14 +18,14 @@
                             <li> <i class="fa fa-phone-alt"></i>
                                 Mobile Number - <label>
                                     <input type="tel" maxlength="10" pattern="[0-9]{10}"  name="mobileNumbe" [(ngModel)]="mobileNumber" 
-                                    placeholder="mobileNumber" [disabled]="isEditable"
+                                    placeholder="mobileNumber" [disabled]="setDisabled"
                                     (ngModelChange)="temp($event)"/>
                                     <!-- {{teacherDetails['mobileNumber']}} -->
                                 </label> </li>
                             <li> <i class="fa fa-envelope"></i>
                                 Email - <label>
-                                    <!-- <input [(ngModel)]="email" placeholder="email" [disabled]="isEditable"/> -->
-                                    {{teacherDetails['email']}}
+                                    <input type="email" [disabled]="setDisabled" [(ngModel)]="email"/>
+                                    <!-- {{teacherDetails['email']}} -->
                                 </label> </li>
                             <li> <i class="fa fa-calendar" aria-hidden="true"></i>
                                 DOB - <label> {{teacherDetails['dob'] | date }}</label></li>
@@ -55,7 +55,9 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="teacherDetails['profileBrief']">Brief - {{teacherDetails['profileBrief']}}</div>
+                <div *ngIf="teacherDetails['profileBrief']">Brief
+                    <textarea name="profileBrief" rows="6" cols="50" [disabled]="setDisabled" [(ngModel)]="profileBrief"></textarea>
+                    </div>
 
             </div>
         </div>

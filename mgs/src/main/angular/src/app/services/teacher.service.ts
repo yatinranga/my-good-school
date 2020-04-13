@@ -116,7 +116,7 @@ export class TeacherService {
   }
 
   // Update Contact Details
-  putMobileNumber(teacherId,form){
+  updateProfile(teacherId,form){
     return this.http.put("/api/teacher/update/"+teacherId,form);
   }
 
