@@ -4,15 +4,12 @@
             <div class="teacher_awards_main">
                 <div class="tabs">
                     <ul>
-                        <li [ngClass]="{'active': awardViewType=='view'}">
-                            <a (click)="awardView('view')"> View Awards </a> </li>
-                        <li [ngClass]="{'active': awardViewType=='assign'}"> <a (click)="awardView('assign')"> Assign
-                                Awards </a> </li>
+                        <li [ngClass]="{'active': awardViewType=='view'}"> <a (click)="awardView('view')"> View Awards </a> </li>
+                        <li [ngClass]="{'active': awardViewType=='assign'}"> <a (click)="awardView('assign')"> Assign Awards </a> </li>
                     </ul>
                 </div>
                 <div [ngSwitch]="awardViewType">
-
-                    <!-- Assign Award -->
+                <!-- Assign Award -->
                     <div *ngSwitchCase="'assign'" class="popup-form">
                         <div class="assign_main">
                             <div class="assign-form">
@@ -130,26 +127,24 @@
                                                     *ngFor="let activity of performedActiArr ; let i = index;">
                                                     <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                                                         <td (click)="stopCollapse($event)">
-                                                            <label>
-                                                                <input type="radio" name="selectStudent"
-                                                                    value={{activity.id}}
-                                                                    (change)="getPerformedIds(activity)"
-                                                                    (click)="stopCollapse($event)">
-
-                                                            </label>
+                                                            <label> <input type="radio" name="selectStudent" value={{activity.id}} (change)="getPerformedIds(activity)" (click)="stopCollapse($event)"> </label>
                                                         </td>
                                                         <td>{{activity.name}}</td>
                                                         <td>{{activity.grade}} {{activity.section}}</td>
                                                         <td *ngIf="!(awardCriterion=='Focus Area')">
-                                                            <span *ngFor="let at of activity.focusAreas; let i = index">
-                                                                {{ (i === activity.focusAreas.length-1) ? at : at + "," + ' '}}
-                                                            </span>
+                                                        <ul id="collapselist"> 
+                                                            <li *ngFor="let at of activity.focusAreas; let i = index">
+                                                                {{ (i === activity.focusAreas.length-1) ? at : at + ' '}}
+                                                            </li>
+                                                        </ul>
                                                         </td>
                                                         <td *ngIf="!(awardCriterion=='Activity Type')">
                                                             <!-- <label *ngFor="let at of activity.activityTypes"></label> -->
-                                                            <span *ngFor="let at of activity.activityTypes; let i = index">
-                                                                {{ (i === activity.activityTypes.length-1) ? at : at + "," + ' '}}
-                                                            </span>
+                                                        <ul id="collapselist">
+                                                            <li *ngFor="let at of activity.activityTypes; let i = index">
+                                                                {{ (i === activity.activityTypes.length-1) ? at : at + ' '}}
+                                                            </li>
+                                                        </ul>
                                                         </td>
                                                         <td *ngIf="awardCriterion=='Activity Type'">{{activity.performedActivities[0].count}}</td>
                                                         <td>{{activity.scoreForAward}}</td>
@@ -158,13 +153,10 @@
                                                         <td class="collapse-td" colspan="6">
                                                             <div [attr.id]="'collapse' + i" class="collapse"
                                                                 data-parent="#accordionExample">
-                                                                <div
-                                                                    *ngFor="let pa of activity.performedActivities; let i = index;">
+                                                                <div *ngFor="let pa of activity.performedActivities; let i = index;">
                                                                     <div>
-                                                                        <h3>{{pa.activityName}}</h3>
-                                                                        <label *ngIf="!(awardCriterion=='Activity Type')">Activity Count - {{pa.count}}</label><br>
+                                                                        <h3 *ngIf="!(awardCriterion=='Activity Type')">{{pa.count}}  {{pa.activityName}}</h3><br>
                                                                         <label>Average Stars - {{pa.averageStars}}</label>
-
                                                                     </div>
                                                                     <div *ngFor="let ac of pa.activities; let j = index;">
                                                                         <div class="row">
