@@ -19,7 +19,7 @@ export class HomeComponent implements OnInit {
   schoolId: any;
 
   activityId = "";
-  grade = "";
+  gradeId = "";
 
   stu_loader = false;
   sup_loader = false;
@@ -47,7 +47,7 @@ export class HomeComponent implements OnInit {
     this.getStudents(actiId);
     this.coaches = [];
     this.students = [];
-    this.grade = "";
+    this.gradeId = "";
     this.sup_loader = true;
     this.studentService.getCoach(this.schoolId, actiId).subscribe((res) => {
       this.coaches = res;
@@ -85,8 +85,8 @@ export class HomeComponent implements OnInit {
   // Actual Filtering on the basis of PSD , Focus Area and 4S
   filter(array: any[]) {
     let filterStudentArr = [];
-    if (this.grade) {
-      filterStudentArr = array.filter(e => e.grade == this.grade);
+    if (this.gradeId) {
+      filterStudentArr = array.filter(e => e.gradeId == this.gradeId);
     } else {
       filterStudentArr = array;
     }

@@ -9,15 +9,24 @@
                     <img [src]="path">
                     <h4> {{teacherDetails['name']}}  </h4>
                     <button class="edit_profile" (click)="photoInput.click()"> <i class="fa fa-edit" title="Edit" > </i> Edit Profile Photo </button>
+                    <button (click)="updateProfile()">{{setDisabled ? 'Update Profile' :'Save'}}</button>
                 </div>
                 <div class="profile_text">
                     <div class="basic-info">
                         <h3> Basic Info </h3>
                         <ul>
                             <li> <i class="fa fa-phone-alt"></i>
-                                Mobile Number - <label> {{teacherDetails['mobileNumber']}}</label> </li>
+                                Mobile Number - <label>
+                                    <input type="tel" maxlength="10" pattern="[0-9]{10}"  name="mobileNumbe" [(ngModel)]="mobileNumber" 
+                                    placeholder="mobileNumber" [disabled]="setDisabled"
+                                    (ngModelChange)="temp($event)"/>
+                                    <!-- {{teacherDetails['mobileNumber']}} -->
+                                </label> </li>
                             <li> <i class="fa fa-envelope"></i>
-                                Email - <label> {{teacherDetails['email']}}</label> </li>
+                                Email - <label>
+                                    <input type="email" [disabled]="setDisabled" [(ngModel)]="email"/>
+                                    <!-- {{teacherDetails['email']}} -->
+                                </label> </li>
                             <li> <i class="fa fa-calendar" aria-hidden="true"></i>
                                 DOB - <label> {{teacherDetails['dob'] | date }}</label></li>
                             <li> <i class='fa fa-restroom'></i>
@@ -39,13 +48,17 @@
                                 <li>{{acti}}</li>
                             </ul>
                     </div>
-                    <div *ngIf="teacherDetails['gradeIds']">Activities -
+                    <div *ngIf="teacherDetails['gradeIds']">Grade -
                         <div *ngFor="let grade of teacherDetails['gradeIds']">
                             <p>{{grade.name}}</p>
                             <p>{{grade.grade}} {{grade.section}}</p>
                         </div>
                     </div>
                 </div>
+                <div *ngIf="teacherDetails['profileBrief']">Brief
+                    <textarea name="profileBrief" rows="6" cols="50" [disabled]="setDisabled" [(ngModel)]="profileBrief"></textarea>
+                    </div>
+
             </div>
         </div>
     </div>

@@ -14,8 +14,14 @@ export class TeacherProfileComponent implements OnInit {
   teacherDetails = {};
 
   profilePhotoForm: FormGroup;
+  profileUpdateForm: FormGroup;
   files: any[];
   path: any;
+  mobileNumber: any;
+  email: any;
+  setDisabled = true;
+  oldMobNo: any;
+  profileBrief: any;
 
   constructor(private formBuilder: FormBuilder, private teacherService: TeacherService, private alertService : AlertService) { }
 
@@ -25,6 +31,9 @@ export class TeacherProfileComponent implements OnInit {
     this.teacherId = this.teacherInfo['teacher'].id;
     this.teacherService.getProfile(this.teacherId).subscribe((res) => {
       this.teacherDetails = res;
+      this.mobileNumber = res.mobileNumber;
+      this.email = res.email;
+      this.profileBrief = res.profileBrief; 
       console.log(res);
     },
     (err) => console.log(err)
@@ -32,6 +41,13 @@ export class TeacherProfileComponent implements OnInit {
 
     this.profilePhotoForm = this.formBuilder.group({
       profilePic: []
+    })
+
+    this.profileUpdateForm = this.formBuilder.group({
+      id : this.teacherId,
+      mobileNumber : [],
+      email: [],
+      profileBrief: []
     })
   }
   
@@ -66,6 +82,70 @@ export class TeacherProfileComponent implements OnInit {
       console.log(err);
     })
   }
+
+  // updateProfile(){
+  //   let oldMobile = this.mobileNumber;
+  //   if(this.setDisabled == false){
+
+  //   }
+  //   return !this.setDisabled;
+  // }
+
+  temp(e){
+    // console.log(e);
+  }
+
+  updateProfile() {
+    if (this.setDisabled == false) {
+      if (this.mobileNumber.length == 10) {
+
+        this.profileUpdateForm.value.mobileNumber = this.mobileNumber;
+        this.profileUpdateForm.value.email = this.email;
+        this.profileUpdateForm.value.profileBrief = this.profileBrief;
+        this.alertService.showLoader("");
+        this.teacherService.updateProfile(this.teacherId, this.profileUpdateForm.value).subscribe((res) => {
+          console.log(res);
+          this.alertService.showSuccessToast("Profile Updated");
+          this.setDisabled = true;
+        }, (err) => {
+          console.log(err);
+          this.setDisabled = false;
+        });
+      }
+    } else {
+      
+      // this.alertService.showErrorAlert("Fill the proper details");
+      this.setDisabled = false;
+    }
+  }
+
+  // updateMobileNo() {
+  //   if (this.setDisabled == false) {
+  //     if (this.oldMobNo != this.mobileNumber && this.mobileNumber.length == 10) {
+  //       this.profileUpdateForm.value.mobileNumber = this.mobileNumber;
+  //       this.alertService.showLoader("");
+
+  //       this.teacherService.putMobileNumber(this.teacherId, this.profileUpdateForm.value).subscribe((res) => {
+  //         console.log(res);
+  //         this.alertService.showSuccessToast("Mobile Phone Updated");
+  //         this.setDisabled = true;
+  //       }, (err) => {
+  //         console.log(err);
+  //         this.setDisabled = false;
+  //       });
+  //     } else {
+  //       if (this.mobileNumber.length == 10) {
+  //         this.oldMobNo = this.mobileNumber;
+  //         this.setDisabled = true;
+  //       } else {
+  //         this.alertService.showErrorAlert("Mobile Number can be less than 10");
+  //       }
+  //     }
+  //   } else {
+  //     this.oldMobNo = this.mobileNumber;
+  //     this.setDisabled = false;
+  //   }
+  // }
 
   // Edit Mobile Number
   // editMobileNumber(){

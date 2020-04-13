@@ -1,84 +1,43 @@
 <div class="wrapper">
+    <img src="assets/images/login4.jpg">
+    <div class="login_form">
+        <!-- <img src="assets/images/logo.jpg"> -->
+        <h2>My Good School Login</h2>
+        <form name="Login_Form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <fieldset class="forms_fieldset">
+                <div class="forms_field">
+                    <input type="text" name="username" class="loginform forms_field-input" placeholder="Username"
+                        formControlName="username">
+                    <small class="text-danger"
+                        *ngIf="!loginForm.get('username').valid && loginForm.get('username').touched">
+                        Username or email required
+                    </small>
 
-    <div class="user">
-        <div class="user_options-container">
-            <div class="user_options-text">
-                <div class="user_options-unregistered">
-                    <div class="user_unregistered-title">
-                        <img src="assets/images/logo.jpg" class="logoImage">
-                    </div>
-                    <h2 class="user_unregistered-text">My Good School</h2>
                 </div>
-            </div>
-            <div class="user_options-forms">
-                <div>
-                    <div class="d-block d-sm-block d-md-none ">
-                        <!-- <div>
-                <img src="assets/logo-name.png" class="logoImage">
-              </div> -->
-
-                        <h2 class="user_unregistered-text">My Good School</h2>
-
-
-                    </div>
+                <div class="forms_field">
+                    <input type="password" name="password" formControlName="password" placeholder="Password"
+                        class="loginform forms_field-input">
+                    <small class="text-danger"
+                        *ngIf="!loginForm.get('password').valid && loginForm.get('password').touched">
+                        Password required
+                    </small>
                 </div>
-                <div class="user_forms-login">
-                    <h2 class="forms_title">Login</h2>
-                    <form name="Login_Form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-                        <fieldset class="forms_fieldset">
-                            <div class="forms_field">
-                                <input type="text" name="username" class="forms_field-input" placeholder="Username"
-                                    formControlName="username">
-                                <small class="text-danger"
-                                    *ngIf="!loginForm.get('username').valid && loginForm.get('username').touched">
-                                    Username or email required
-                                </small>
-
-                            </div>
-                            <div class="forms_field">
-                                <input type="password" name="password" formControlName="password" placeholder="Password"
-                                    class="forms_field-input">
-                                <small class="text-danger"
-                                    *ngIf="!loginForm.get('password').valid && loginForm.get('password').touched">
-                                    Password required
-                                </small>
-                            </div>
-                        </fieldset>
-                        <div class="forms_buttons">
-                            <a (click)="forgetPassword()">Forgot Password ?</a>
-                            <button class="forms_buttons-action login-btn" name="Submit_Button" type="submit">Login
-                                <span *ngIf="loader">
-                                    <div class="spinner-border" role="status">
-                                    </div>
-                                </span></button>
+            </fieldset>
+            <div class="forms_buttons">
+                <a (click)="forgetPassword()">Forgot Password ?</a>
+                <button class="forms_buttons-action login-btn" name="Submit_Button" type="submit">Login
+                    <span *ngIf="loader">
+                        <div class="spinner-border" role="status">
                         </div>
-
-                        <!-- <div class="err-msg" *ngIf="errorMsg">
-                <p>{{errorMsg}}</p>
-              </div> -->
-                    </form>
-
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <button class="forms_buttons-action login-btn " routerLink='/signup'>Signup</button>
-                    </div>
-                </div>
+                    </span></button>
             </div>
+
+            <!-- <div class="err-msg" *ngIf="errorMsg">
+                                        <p>{{errorMsg}}</p>
+                                      </div> -->
+        </form>
+        <div class="signup_button">
+            <button class="forms_buttons-action login-btn " routerLink='/signup'>Signup</button>
         </div>
     </div>
-
-
-    <ul class="bg-bubbles">
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-    </ul>
 </div>

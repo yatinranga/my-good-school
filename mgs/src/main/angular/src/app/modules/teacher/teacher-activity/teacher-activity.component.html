@@ -6,12 +6,35 @@
                     <select style="border: 1px solid #ddd" name="activityType" (ngModelChange)="activityView($event)"
                         [(ngModel)]="activityType">
                         <option value="" disabled hidden> Choose here </option>
-                        <option value="All"> All</option>
-                        <option value="Pending" selected>Pending</option>
+                        <option value="All" selected> All</option>
+                        <option value="Pending" >Pending</option>
                         <option value="Saved">Saved</option>
                         <option value="Reviewed">Reviewed</option>
                     </select>
                 </div>
+                <div class="sortby"> Activity Type:
+                    <select style="border: 1px solid #ddd" (change)="filterActivities()" name="activity" [(ngModel)]="activity">
+                        <option value="" selected> NONE </option>
+                        <option *ngFor="let activity of activities; let i = index" value={{activity}}>
+                            {{activity}}</option>
+                    </select>
+                </div>
+                <div class="sortby"> Grade:
+                    <select style="border: 1px solid #ddd" name="grade" (change)="filterActivities()" [(ngModel)]="grade">
+                        <option value="" selected> NONE </option>
+                        <option *ngFor="let grade of schoolGrades" value={{grade.id}} >
+                            {{grade.grade}} {{grade.section}}
+                        </option>
+                    </select>
+                </div>
+                <!-- <div class="sortby"> Student :
+                    <select style="border: 1px solid #ddd" name="studentName" (change)="filterActivities()" [(ngModel)]="studentName"> 
+                        <option value="" selected> NONE </option>
+                        <option *ngFor="let s of studentList" value={{s}} >
+                            {{s}}
+                        </option>
+                    </select>
+                </div> -->
             
 
             <div *ngIf="activityType">
@@ -22,8 +45,8 @@
                                 <th scope="col">#</th>
                                 <th scope="col">STUDENT NAME</th>
                                 <th scope="col">GRADE</th>
-                                <th scope="col">ACTIVITY TYPE </th>
-                                <th scope="col">DESCRIPTION</th>
+                                <th scope="col">PERFORMED ACTIVITY  </th>
+                                <th scope="col">ACTIVITY  TITLE</th>
                                 <th scope="col">PERFORMED ACTIVITY DATE </th>
                                 <th scope="col" *ngIf="!(activityType === 'Reviewed')">STATUS
                                     <button *ngIf="activityType === 'All'" name="sort" class="icon_button"
@@ -37,7 +60,8 @@
                                         <i class="fa fa-sort"></i>
                                     </button>
                                 </th>
-                                <th *ngIf="!(activityType === 'Reviewed')" colspan="2">ACTION</th>
+                                <th *ngIf="!(activityType === 'Reviewed')">ACTION</th>
+                                <th scope="col">  <i class="fa fa-paperclip" title="Attachment" aria-hidden="true"></i> </th>
                             </tr>
                         </thead>
                         <tbody id="accordionExample">
@@ -111,27 +135,10 @@
                                             data-parent="#accordionExample">
                                             <div *ngIf="(activity.activityStatus != 'SubmittedByStudent')">
                                                 <div class="row">
-                                                    <div class="col-4">
+                                                    <div class="col-3">
                                                         <div class="description">
-                                                            <h5> Scoring : </h5>
-                                                            <p> <strong>Participation Score -
-                                                                </strong>{{activity.participationScore}}</p>
-                                                            <p> <strong>Initiative Score -
-                                                                </strong>{{activity.initiativeScore}}</p>
-                                                            <p> <strong>Achievement Score -
-                                                                </strong>{{activity.achievementScore}}</p>
-                                                            <p> <strong>Total Score - </strong>{{activity.totalMarks}}
-                                                            </p>
-                                                            <p> <strong>Star - </strong>{{activity.star}}</p>
-                                                            <p> <strong style="color: green">Remarks -
-                                                                </strong>{{activity.coachRemark}}</p>
-                                                            <p> <strong> Date Reviewed -
-                                                                </strong>{{activity.coachRemarkDate | date }} </p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <div class="description">
-                                                            <h5> Development Parameters : </h5>
+                                                            <h5> Activity Details : </h5>
+                                                            <p> <strong> Description - </strong> {{activity.description}} </p>
                                                             <p> <strong>Focus Area - </strong></p>
                                                             <span id="fa" *ngFor="let fa of activity.focusAreas; let i = index">                                                        
                                                                 {{ (i === activity.focusAreas.length-1) ? fa : fa + "," + ' '}}                                                        
@@ -141,27 +148,34 @@
                                                             {{ (i === activity.psdAreas.length-1) ? fa : fa + "," + ' '}}                                                        
                                                         </span>
                                                             <p *ngIf="activity.fourS" id="fourSkills">
-                                                                <strong>4's - </strong>
-                                                                <span *ngIf="activity.fourS=='Skill'"
-                                                                    style="color: #4bafa5;">
-                                                                    {{activity.fourS}}
-                                                                </span>
-                                                                <span *ngIf="activity.fourS=='Sport'"
-                                                                    style="color: #e04090;">
-                                                                    {{activity.fourS}}
-                                                                </span>
-                                                                <span *ngIf="activity.fourS=='Study'"
-                                                                    style="color: #1f69ad;">
-                                                                    {{activity.fourS}}
-                                                                </span>
-                                                                <span *ngIf="activity.fourS=='Service'"
-                                                                    style="color: #8dc33a;">
-                                                                    {{activity.fourS}}
-                                                                </span>
-                                                            </p>
+                                                                <strong> 4's - </strong> {{activity.fourS}}  </p>                                                      
                                                         </div>
                                                     </div>
-                                                    <div class="col-4" *ngIf="activity.fileResponses.length">
+                                                    <div class="col-3">
+                                                        <div class="description">
+                                                            <h5> Scoring : </h5>
+                                                            <p> <strong>Participation Score -
+                                                                </strong>{{activity.participationScore}}</p>
+                                                            <p> <strong>Initiative Score -
+                                                                </strong>{{activity.initiativeScore}}</p>
+                                                            <p> <strong>Achievement Score -
+                                                                </strong>{{activity.achievementScore}}</p>
+                                                            <p> <strong>Total Score - </strong>{{activity.totalMarks}} </p>
+                                                            <p> <strong>Star - </strong>{{activity.star}}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <div class="description">
+                                                            <h5> Development Parameters : </h5>
+
+                                                            <p> <strong style="color: green">Remarks -
+                                                                </strong>{{activity.coachRemark}}</p>
+                                                            <p> <strong> Date Reviewed -
+                                                                </strong>{{activity.coachRemarkDate | date }} </p>
+
+                                                            </div>
+                                                    </div>
+                                                    <div class="col-3" *ngIf="activity.fileResponses.length">
                                                         <div class="attachment">
                                                             <h5> Attachments : </h5>
                                                             {{activity.fileResponses.length ? "" : "NA"}}

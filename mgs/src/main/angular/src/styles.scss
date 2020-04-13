@@ -216,7 +216,12 @@ border: 1px solid #777 !important;
     color: #0d5ea9;
     font-size: 18px;
 }
-
+.main .teacher_awards_main .table_main table thead tr th, .teacher_awards_main i.fa.fa-sort {
+    color: #8dc33a;
+}
+div#assignAwardModal .modal-content {
+    border: 5px solid #b4d673;
+}
 tbody tr{
     cursor: pointer;
     }
