@@ -70,6 +70,7 @@ export class SavedActitvityComponent implements OnInit {
       description: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(100), Validators.maxLength(250)]],
       dateOfActivity: [{ value: '', disabled: true }, [Validators.required]],
       coachId: [{ value: '', disabled: true }, [Validators.required]],
+      title: [{ value: '',disabled: true}, [Validators.required]],
       attachment: [],
       id: []
     });
@@ -266,10 +267,12 @@ export class SavedActitvityComponent implements OnInit {
         this.savedActivityForm.get('coachId').enable();
         this.savedActivityForm.get('description').enable();
         this.savedActivityForm.get('dateOfActivity').enable();
+        this.savedActivityForm.get('title').enable();
       } else {
         this.savedActivityForm.get('coachId').disable();
         this.savedActivityForm.get('description').disable();
         this.savedActivityForm.get('dateOfActivity').disable();
+        this.savedActivityForm.get('title').disable();
       }
       this.modal_loader = false;
     },
@@ -296,6 +299,7 @@ export class SavedActitvityComponent implements OnInit {
       formData.append('coachId', this.savedActivityForm.value.coachId);
       formData.append('dateOfActivity', activityDate);
       formData.append('description', this.savedActivityForm.value.description);
+      formData.append('title',this.savedActivityForm.value.title);
       formData.append('id', this.savedActivityForm.value.id);
 
       if (this.savedActivityForm.value.attachment.length > 0) {
@@ -341,6 +345,7 @@ export class SavedActitvityComponent implements OnInit {
       formData.append('coachId', this.savedActivityForm.value.coachId);
       formData.append('dateOfActivity', time);
       formData.append('description', this.savedActivityForm.value.description);
+      formData.append('title',this.savedActivityForm.value.title);
 
       if (this.savedActivityForm.value.attachment.length > 0) {
         this.savedActivityForm.value.attachment.forEach((element, index) => {
