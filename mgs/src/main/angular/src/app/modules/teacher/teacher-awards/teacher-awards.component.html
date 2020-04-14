@@ -4,12 +4,14 @@
             <div class="teacher_awards_main">
                 <div class="tabs">
                     <ul>
-                        <li [ngClass]="{'active': awardViewType=='view'}"> <a (click)="awardView('view')"> View Awards </a> </li>
-                        <li [ngClass]="{'active': awardViewType=='assign'}"> <a (click)="awardView('assign')"> Assign Awards </a> </li>
+                        <li [ngClass]="{'active': awardViewType=='view'}"> <a (click)="awardView('view')"> View Awards
+                            </a> </li>
+                        <li [ngClass]="{'active': awardViewType=='assign'}"> <a (click)="awardView('assign')"> Assign
+                                Awards </a> </li>
                     </ul>
                 </div>
                 <div [ngSwitch]="awardViewType">
-                <!-- Assign Award -->
+                    <!-- Assign Award -->
                     <div *ngSwitchCase="'assign'" class="popup-form">
                         <div class="assign_main">
                             <div class="assign-form">
@@ -141,16 +143,20 @@
                                                     *ngFor="let activity of performedActiArr ; let i = index;">
                                                     <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                                                         <td (click)="stopCollapse($event)">
-                                                            <label> <input type="radio" name="selectStudent" value={{activity.id}} (change)="getPerformedIds(activity)" (click)="stopCollapse($event)"> </label>
+                                                            <label> <input type="radio" name="selectStudent"
+                                                                    value={{activity.id}}
+                                                                    (change)="getPerformedIds(activity)"
+                                                                    (click)="stopCollapse($event)"> </label>
                                                         </td>
                                                         <td>{{activity.name}}</td>
                                                         <td>{{activity.grade}} {{activity.section}}</td>
                                                         <td *ngIf="!(awardCriterion=='Focus Area')">
-                                                        <ul id="collapselist"> 
-                                                            <li *ngFor="let at of activity.focusAreas; let i = index">
-                                                                {{ (i === activity.focusAreas.length-1) ? at : at + ' '}}
-                                                            </li>
-                                                        </ul>
+                                                            <ul id="collapselist">
+                                                                <li
+                                                                    *ngFor="let at of activity.focusAreas; let i = index">
+                                                                    {{ (i === activity.focusAreas.length-1) ? at : at + ' '}}
+                                                                </li>
+                                                            </ul>
                                                         </td>
                                                         <td *ngIf="!(awardCriterion=='PSD Area')">
                                                             <span *ngFor="let at of activity.psdAreas; let i = index">
@@ -178,56 +184,45 @@
                                                                 data-parent="#accordionExample">
 
                                                                 <!-- When award criteria is 4s, PSD and Focus Area -->
-                                                                <table *ngIf="!(awardCriterion=='Activity Type')">
+                                                                <table *ngIf="!(awardCriterion=='Activity Type')"
+                                                                    class="innertable">
                                                                     <tbody id="innerAccordionExample">
                                                                         <ng-container
                                                                             *ngFor="let pa of activity.performedActivities; let j = index;">
                                                                             <tr data-toggle="collapse"
                                                                                 [attr.data-target]="'#collapsed'+j">
-                                                                                <td>{{pa.activityName}}</td>
-                                                                                <td>Activity Count - {{pa.count}}</td>
-                                                                                <td>Average Stars - {{pa.averageStars}}
-                                                                                </td>
+                                                                                <td id="actname"> {{j+1}}. {{pa.activityName}}</td>
                                                                                 <td
-                                                                                    *ngIf="!(awardCriterion=='Focus Area')">
+                                                                                    *ngIf="!(awardCriterion=='Focus Area')"> 
+                                                                                    <strong> Focus Area - </strong> 
                                                                                     <span
                                                                                         *ngFor="let at of pa.activities[0].focusAreas; let i = index">
                                                                                         {{ (i === pa.activities[0].focusAreas.length-1) ? at : at + "," + ' '}}
                                                                                     </span>
                                                                                 </td>
-                                                                                <td
-                                                                                    *ngIf="!(awardCriterion=='PSD Area')">
-                                                                                    <span
-                                                                                        *ngFor="let at of pa.activities[0].psdAreas; let i = index">
-                                                                                        {{ (i === pa.activities[0].psdAreas.length-1) ? at : at + "," + ' '}}
+                                                                                <td *ngIf="!(awardCriterion=='PSD Area')">
+                                                                                    <strong> Focus Area - </strong> 
+                                                                                    <span *ngFor="let at of pa.activities[0].psdAreas; let i = index">
+                                                                                       {{ (i === pa.activities[0].psdAreas.length-1) ? at : at + "," + ' '}}
                                                                                     </span>
                                                                                 </td>
-                                                                                <td *ngIf="!(awardCriterion=='4S')">
+                                                                                <td *ngIf="!(awardCriterion=='4S')"> <strong> 4S - </strong>
                                                                                     {{pa.activities[0].fourS}}
                                                                                 </td>
+                                                                                <td>Activity Count - {{pa.count}} </td>
+                                                                                <td>Average Stars - {{pa.averageStars}} </td>
                                                                             </tr>
-
                                                                             <tr>
-                                                                                <td class="collapsed-td" colspan="12">
-                                                                                    <div [attr.id]="'collapsed' + j"
-                                                                                        class="collapse"
-                                                                                        data-parent="#innerAccordionExample">
-
-                                                                                        <div
-                                                                                            *ngFor="let ac of pa.activities; let j = index;">
-                                                                                            <div class="row">
+                                                                                <td class="last collapsed-td" colspan="12">
+                                                                                    <div [attr.id]="'collapsed' + j" class="collapse" data-parent="#innerAccordionExample">
+                                                                                        <div *ngFor="let ac of pa.activities; let j = index;"> <div class="row">
                                                                                                 <div class="col-6">
                                                                                                     <div
                                                                                                         class="assign description">
                                                                                                         <h5>
-                                                                                                            <label><input
-                                                                                                                    type="checkbox"
-                                                                                                                    name="selectPerformedActivity"
-                                                                                                                    value={{ac.id}}
-                                                                                                                    [(ngModel)]="actiPerform[ac.id]"></label>
-                                                                                                            Activity
-                                                                                                            {{j+1}}
-                                                                                                            Details
+                                                                                                            <label>
+                                                                                                                <input type="checkbox" name="selectPerformedActivity" value={{ac.id}} [(ngModel)]="actiPerform[ac.id]">
+                                                                                                            </label> Activity {{j+1}} Details
                                                                                                         </h5>
                                                                                                         <p> <strong>Title
                                                                                                             -
@@ -272,28 +267,12 @@
                                                                                                 <div class="col-6">
                                                                                                     <div
                                                                                                         class="assign description">
-                                                                                                        <h5> Scoring
-                                                                                                        </h5>
-                                                                                                        <p> <strong>Participation
-                                                                                                                Score -
-                                                                                                            </strong>{{ac.participationScore}}
-                                                                                                        </p>
-                                                                                                        <p> <strong>Initiative
-                                                                                                                Score -
-                                                                                                            </strong>{{ac.initiativeScore}}
-                                                                                                        </p>
-                                                                                                        <p> <strong>Achievement
-                                                                                                                Score -
-                                                                                                            </strong>{{ac.achievementScore}}
-                                                                                                        </p>
-                                                                                                        <p> <strong>Total
-                                                                                                                Score -
-                                                                                                            </strong>{{ac.totalMarks}}
-                                                                                                        </p>
-                                                                                                        <p> <strong>Coach
-                                                                                                                Remarks
-                                                                                                                -
-                                                                                                            </strong>{{ac.coachRemark}}
+                                                                                                        <h5> Scoring </h5>
+                                                                                                        <p> <strong>Participation Score - </strong>{{ac.participationScore}} </p>
+                                                                                                        <p> <strong>Initiative Score - </strong>{{ac.initiativeScore}} </p>
+                                                                                                        <p> <strong>Achievement Score - </strong>{{ac.achievementScore}} </p>
+                                                                                                        <p> <strong>Total Score - </strong>{{ac.totalMarks}} </p>
+                                                                                                        <p> <strong>Review Date - </strong>{{ac.coachRemarkDate | date}}
                                                                                                         </p>
                                                                                                     </div>
                                                                                                 </div>
@@ -316,14 +295,9 @@
                                                                                 <div class="col-6">
                                                                                     <div class="assign description">
                                                                                         <h5>
-                                                                                            <label><input
-                                                                                                    type="checkbox"
-                                                                                                    name="selectPerformedActivity"
-                                                                                                    value={{ac.id}}
-                                                                                                    [(ngModel)]="actiPerform[ac.id]"></label>
-                                                                                            Activity
-                                                                                            {{j+1}}
-                                                                                            Details
+                                                                                            <label>
+                                                                                                <input type="checkbox" name="selectPerformedActivity" value={{ac.id}} [(ngModel)]="actiPerform[ac.id]">
+                                                                                            </label> Activity {{j+1}} Details
                                                                                         </h5>
                                                                                         <p> <strong>Title
                                                                                             -
@@ -367,29 +341,15 @@
 
                                                                                 <div class="col-6">
                                                                                     <div class="assign description">
-                                                                                        <h5> Scoring
-                                                                                        </h5>
-                                                                                        <p> <strong>Participation
-                                                                                                Score -
-                                                                                            </strong>{{ac.participationScore}}
-                                                                                        </p>
-                                                                                        <p> <strong>Initiative
-                                                                                                Score -
-                                                                                            </strong>{{ac.initiativeScore}}
-                                                                                        </p>
-                                                                                        <p> <strong>Achievement
-                                                                                                Score -
-                                                                                            </strong>{{ac.achievementScore}}
-                                                                                        </p>
-                                                                                        <p> <strong>Total
-                                                                                                Score -
-                                                                                            </strong>{{ac.totalMarks}}
-                                                                                        </p>
-                                                                                        <p> <strong>Coach
-                                                                                                Remarks
-                                                                                                -
-                                                                                            </strong>{{ac.coachRemark}}
-                                                                                        </p>
+                                                                                        <h5> Scoring </h5>
+                                                                                        <p> <strong>Participation Score - </strong>{{ac.participationScore}} </p>
+                                                                                        <p> <strong>Initiative Score - </strong>{{ac.initiativeScore}} </p>
+                                                                                        <p> <strong>Achievement Score - </strong>{{ac.achievementScore}} </p>
+                                                                                        <p> <strong>Total Score - </strong>{{ac.totalMarks}} </p>
+                                                                                        <p> <strong>Coach Remarks - </strong>{{ac.coachRemark}} </p>
+                                                                                        <p> <strong>Performed Date - </strong>{{ac.dateOfActivity | date}} </p>
+                                                                                        <p> <strong>Review Date - </strong>{{ac.coachRemarkDate | date}} </p>
+
                                                                                     </div>
                                                                                 </div>
                                                                             </div>

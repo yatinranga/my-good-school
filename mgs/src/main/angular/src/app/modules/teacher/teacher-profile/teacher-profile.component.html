@@ -13,15 +13,12 @@
                                             [(ngModel)]="mobileNumber" placeholder="mobileNumber" [disabled]="isEditable"
                                             (ngModelChange)="temp($event)"/>
                                  </h5>
-                                 <h5> <!-- <i class="fa fa-envelope"></i> --> {{teacherDetails['email']}} </h5>
-                                <h6 id="bio">  
-                                    I believe each student learns in their own way and style. 
-                                    I strive to provide a safe and nurturing environment 
-                                    where each student can have the opportunity to experience 
-                                    success and progress. It is my goal to help encourage my 
-                                    students to look beyond the four walls of our classroom 
-                                    and view the world around them as a place of learning and 
-                                    discovery. </h6>
+                                 <h5> <!-- <i class="fa fa-envelope"></i> --> {{teacherDetails['email']}} </h5>                                    
+                                <h6 id="bio">
+                                <div *ngIf="teacherDetails['profileBrief']">Brief
+                                   <textarea name="profileBrief" rows="6" cols="50" [disabled]="setDisabled" [(ngModel)]="profileBrief"></textarea>
+                                </div>
+                                </h6>
                         </div>
                         <button (click)="updateMobileNo()"
                             class="update">{{isEditable ? 'Update Profile' :'Save'}}</button>
@@ -60,13 +57,8 @@
                         <p>{{grade.grade}} {{grade.section}}</p>
                     </div>
                 </div>
-                <div *ngIf="teacherDetails['profileBrief']">Brief
-                    <textarea name="profileBrief" rows="6" cols="50" [disabled]="setDisabled" [(ngModel)]="profileBrief"></textarea>
-                    </div>
-
+                
             </div>
-            <div *ngIf="teacherDetails['profileBrief']">Brief - {{teacherDetails['profileBrief']}}</div>
-
         </div>
     </div>
 </div>
