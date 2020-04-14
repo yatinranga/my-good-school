@@ -160,7 +160,7 @@ export class TeacherAwardsComponent implements OnInit {
 
   // Assign Award to Students
   assignAward() {
-    console.log(this.actiPerform);
+    
     this.pa_loader = true;
     this.assignAwardForm.value.teacherId = this.teacherId;
     this.assignAwardForm.value.schoolId = this.schoolId;
@@ -326,20 +326,35 @@ export class TeacherAwardsComponent implements OnInit {
   // to get all awards of school
   getSchoolAwards() {
     this.award_loader = true;
+    this.schoolAwards = [];
+    this.assignAwardForm.value.activityPerformedIds = [];
     Object.keys(this.actiPerform).forEach((key) => {
       if (this.actiPerform[key]) {
         this.assignAwardForm.value.activityPerformedIds.push(key);
       }
     })
-    this.teacherService.getAwards().subscribe((res) => {
-      this.schoolAwards = res;
-      this.award_loader = false;
-    },
-      (err) => {
-        console.log(err);
-        this.award_loader = false;
+
+    if (this.assignAwardForm.value.activityPerformedIds.length > 0) {
+      $('#assignAwardModal').modal('show');
+      $('#assignAwardModal').modal({
+        backdrop: 'static',
+        keyboard: false
       });
+
+      this.teacherService.getAwards().subscribe((res) => {
+        this.schoolAwards = res;
+        this.award_loader = false;
+      },
+        (err) => {
+          console.log(err);
+          this.award_loader = false;
+        });
+        
+    } else {
+      this.alertService.showErrorAlert("Please select atleast one activity");
+    }
   }
+
 
   // Verify the Selected Award 
   verifySelectedAward(e, i) {
