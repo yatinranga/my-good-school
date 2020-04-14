@@ -187,3 +187,17 @@ ul#collapselist {
     margin: 0;
     text-align: left;
 }
+table.innertable {
+    width: 100%;
+    background: white;
+}
+td#actname {
+    font-size: 21px;
+    color: #8dc33a;
+}
+.assign.description label{
+    margin-right: 10px;
+}
+td.last.collapsed-td {
+    padding: 0;
+}
