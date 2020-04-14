@@ -4,10 +4,8 @@
             <div class="teacher_awards_main">
                 <div class="tabs">
                     <ul>
-                        <li [ngClass]="{'active': awardViewType=='view'}"> <a (click)="awardView('view')"> View Awards
-                            </a> </li>
-                        <li [ngClass]="{'active': awardViewType=='assign'}"> <a (click)="awardView('assign')"> Assign
-                                Awards </a> </li>
+                        <li [ngClass]="{'active': awardViewType=='view'}"> <a (click)="awardView('view')"> View </a> </li>
+                        <li [ngClass]="{'active': awardViewType=='assign'}"> <a (click)="awardView('assign')"> Assign </a> </li>
                     </ul>
                 </div>
                 <div [ngSwitch]="awardViewType">
