@@ -56,6 +56,7 @@ img{
     opacity: 0.8;
 }
 
+
 .teacher-awards {
     width: 100%;
     margin: 0;
@@ -175,4 +176,14 @@ p#title_award {
 }
 .assign.description h5 {
     color: #8dc33a;
+}
+/*-----------------------ASSIGN AWARDS--------------------*/
+
+ul#collapselist li {
+    list-style: inside;
+}
+ul#collapselist {
+    padding: 0;
+    margin: 0;
+    text-align: left;
 }

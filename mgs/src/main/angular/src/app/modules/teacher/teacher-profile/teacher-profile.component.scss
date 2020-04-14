@@ -1,40 +1,74 @@
-.profile_main{
+.teacher_profile_main{
     width: 100%;
     display: inline-block;
+    padding: 5px;
 }
-.profile_bg{
+.teacher_intro_box{
     width: 100%;
-    position: relative;
-}
-.profile_bg img{
-    width: 100%;
-    height: calc(100vh - 107px);
-}
-.profile_text_main{
-    left: 20px;
-    width: 50%;
-    float: left;
-    position: absolute;
-    top: 155px;
-    padding: 10px;
-    background: #8cb9c7;
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 0;
+    border-radius: 5px;
 }
 .teacher_image {
-    position: relative;
+    width: 20%;
+    float: left;
     text-align: center;
-    margin: 0 auto;
-    top: -50px;
 }
 .teacher_image img {
     opacity: 1;
     border-radius: 50%;
-    width: 150px;
-    height: 150px;
-    border: 1px solid grey;
+    width: 200px;
+    height: 200px;
+    float: left;
+    margin-left: 25px;
 }
-.profile_text{
+.teacher_intro_text_main{
+    float: right;
+    width: 80%;
+    display: inline-block;
+}
+.teacher_intro{
+    float: left;
+    width: 80%;
+    text-align: left;
+    display: inline-grid;
+}
+.teacher_intro_text_main h4{
+    font-size: 40px;
+    font-weight: 300;
+    margin: 10px 0 0 0;
+    color: #e04090;
+    float: left;
+}
+.teacher_intro_text_main h5{
+    font-size: 20px;
+    margin: 5px 0;
+}
+.teacher_intro_text_main h6{
+    font-size: 17px;
+    color: #333;
+    margin: 5px 0;
+}
+input{
+    border: none;
+}
+button.update {
+    float: right;
+    margin: 0 5px;
+    background: #e04090;
+    box-shadow: 0 0 10px #ddd;
+    color: #fafafa;
+    padding: 7px;
+    border-radius: 5px;
+}
+.teacher_about_box{
     width: 100%;
     display: inline-block;
+    padding: 0 30px;
+}
+.basic-info h3 {
+    background: cornflowerblue;
 }
 .profile_text h2{
     margin: 0 0 20px 0;
@@ -82,12 +116,7 @@ list-style: inherit;
 .basic-info i.fa {
     margin: 0 15px 0 0px;
 }
-h4{
-    font-size: 30px;
-    font-weight: 300;
-    margin: 10px 0 0 0;
-    color: #e04090;
-}
+
 .profile_text_main button.edit_profile {
     margin: 5px;
     background: #8cb9c7;

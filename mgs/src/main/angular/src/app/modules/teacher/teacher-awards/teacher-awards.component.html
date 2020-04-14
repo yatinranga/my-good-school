@@ -4,15 +4,12 @@
             <div class="teacher_awards_main">
                 <div class="tabs">
                     <ul>
-                        <li [ngClass]="{'active': awardViewType=='view'}">
-                            <a (click)="awardView('view')"> View Awards </a> </li>
-                        <li [ngClass]="{'active': awardViewType=='assign'}"> <a (click)="awardView('assign')"> Assign
-                                Awards </a> </li>
+                        <li [ngClass]="{'active': awardViewType=='view'}"> <a (click)="awardView('view')"> View Awards </a> </li>
+                        <li [ngClass]="{'active': awardViewType=='assign'}"> <a (click)="awardView('assign')"> Assign Awards </a> </li>
                     </ul>
                 </div>
                 <div [ngSwitch]="awardViewType">
-
-                    <!-- Assign Award -->
+                <!-- Assign Award -->
                     <div *ngSwitchCase="'assign'" class="popup-form">
                         <div class="assign_main">
                             <div class="assign-form">
@@ -144,20 +141,16 @@
                                                     *ngFor="let activity of performedActiArr ; let i = index;">
                                                     <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                                                         <td (click)="stopCollapse($event)">
-                                                            <label>
-                                                                <input type="radio" name="selectStudent"
-                                                                    value={{activity.id}}
-                                                                    (change)="getPerformedIds(activity)"
-                                                                    (click)="stopCollapse($event)">
-
-                                                            </label>
+                                                            <label> <input type="radio" name="selectStudent" value={{activity.id}} (change)="getPerformedIds(activity)" (click)="stopCollapse($event)"> </label>
                                                         </td>
                                                         <td>{{activity.name}}</td>
                                                         <td>{{activity.grade}} {{activity.section}}</td>
                                                         <td *ngIf="!(awardCriterion=='Focus Area')">
-                                                            <span *ngFor="let at of activity.focusAreas; let i = index">
-                                                                {{ (i === activity.focusAreas.length-1) ? at : at + "," + ' '}}
-                                                            </span>
+                                                        <ul id="collapselist"> 
+                                                            <li *ngFor="let at of activity.focusAreas; let i = index">
+                                                                {{ (i === activity.focusAreas.length-1) ? at : at + ' '}}
+                                                            </li>
+                                                        </ul>
                                                         </td>
                                                         <td *ngIf="!(awardCriterion=='PSD Area')">
                                                             <span *ngFor="let at of activity.psdAreas; let i = index">
