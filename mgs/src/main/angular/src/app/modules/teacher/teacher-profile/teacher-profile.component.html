@@ -14,14 +14,14 @@
                                             (ngModelChange)="temp($event)"/>
                                  </h5>
                                  <h5> <!-- <i class="fa fa-envelope"></i> --> {{teacherDetails['email']}} </h5>                                    
-                                <h6 id="bio">
-                                <div *ngIf="teacherDetails['profileBrief']">Brief
+                                <div *ngIf="teacherDetails['profileBrief']"> 
+                                        
                                    <textarea name="profileBrief" rows="6" cols="50" [disabled]="setDisabled" [(ngModel)]="profileBrief"></textarea>
+                                
                                 </div>
-                                </h6>
                         </div>
                         <button (click)="updateMobileNo()"
-                            class="update">{{isEditable ? 'Update Profile' :'Save'}}</button>
+                            class="update">{{isEditable ? 'Update Profile' :'Update'}}</button>
                     </div>
             </div>
             <div class="teacher_about_box">

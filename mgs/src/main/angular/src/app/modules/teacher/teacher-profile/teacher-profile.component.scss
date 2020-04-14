@@ -53,23 +53,39 @@
 input{
     border: none;
 }
+textarea {
+    overflow: hidden;
+    resize: none;
+    border: none;
+    font-size: 17px;
+    width: 100%;
+    margin-top: 5px;
+    line-height: 25px;
+    max-height: 100px;
+    color: #333;
+}
 button.update {
     float: right;
     margin: 0 5px;
     background: #e04090;
-    box-shadow: 0 0 10px #ddd;
+    box-shadow: 0 0 10px #e6e6e6;
     color: #fafafa;
-    padding: 7px;
-    border-radius: 5px;
+    padding: 5px 12px;
+    border-radius: 3px;
+    border: none;
 }
 .teacher_about_box{
     width: 100%;
     display: inline-block;
     padding: 0 30px;
 }
+
+/*
 .basic-info h3 {
     background: cornflowerblue;
 }
+*/
+
 .profile_text h2{
     margin: 0 0 20px 0;
     color: #e04090;

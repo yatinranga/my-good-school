@@ -54,14 +54,14 @@
                                 </select>
                             </div>
                             <div class="assign-form" [hidden]="showCriteriaValues">
-                                <label for="exampleFormControlSelect1">From Date - </label>
+                                <label for="exampleFormControlSelect1" class="date">From Date - </label>
                                 <input type="date" [value]="startDate" [(ngModel)]="startDate"
-                                    (ngModelChange)="dateChanged()">
+                                    (ngModelChange)="dateChanged()" class="date">
                             </div>
                             <div class="assign-form" [hidden]="showCriteriaValues">
-                                <label for="exampleFormControlSelect1">Till Date - </label>
+                                <label for="exampleFormControlSelect1" class="date">Till Date - </label>
                                 <input type="date" [value]="endDate" max="endDate" [(ngModel)]="endDate"
-                                    (ngModelChange)="dateChanged()">
+                                    (ngModelChange)="dateChanged()" class="date">
                             </div>
 
                             <!-- <div class="assign-form">
@@ -157,20 +157,26 @@
                                                             </ul>
                                                         </td>
                                                         <td *ngIf="!(awardCriterion=='PSD Area')">
-                                                            <span *ngFor="let at of activity.psdAreas; let i = index">
+                                                                <ul id="collapselist">
+                                                            <li *ngFor="let at of activity.psdAreas; let i = index">
                                                                 {{ (i === activity.psdAreas.length-1) ? at : at + "," + ' '}}
-                                                            </span>
+                                                            </li>
+                                                            </ul>
                                                         </td>
                                                         <td *ngIf="!(awardCriterion=='Activity Type')">
-                                                            <span
+                                                                <ul id="collapselist">
+                                                            <li
                                                                 *ngFor="let at of activity.activityTypes; let i = index">
-                                                                {{ (i === activity.activityTypes.length-1) ? at : at + "," + ' '}}
-                                                            </span>
+                                                                {{ (i === activity.activityTypes.length-1) ? at : at + ' '}}
+                                                            </li>
+                                                            </ul>
                                                         </td>
                                                         <td *ngIf="!(awardCriterion=='4S')">
-                                                            <span *ngFor="let at of activity.fourS; let i = index">
-                                                                {{ (i === activity.fourS.length-1) ? at : at + "," + ' '}}
-                                                            </span>
+                                                                <ul id="collapselist">
+                                                            <li *ngFor="let at of activity.fourS; let i = index">
+                                                                {{ (i === activity.fourS.length-1) ? at : at + ' '}}
+                                                            </li>
+                                                            </ul>
                                                         </td>
                                                         <td *ngIf="awardCriterion=='Activity Type'">
                                                             {{activity.performedActivities[0].count}}</td>
@@ -189,8 +195,10 @@
                                                                             *ngFor="let pa of activity.performedActivities; let j = index;">
                                                                             <tr data-toggle="collapse"
                                                                                 [attr.data-target]="'#collapsed'+j">
-                                                                                <td id="actname"> {{j+1}}. {{pa.activityName}}</td>
-                                                                                <td
+                                                                                <td> {{j+1}}. </td>
+                                                                                <td id="actname"> {{pa.activityName}}</td>
+                                                                                <!--
+                                                                                    <td
                                                                                     *ngIf="!(awardCriterion=='Focus Area')"> 
                                                                                     <strong> Focus Area - </strong> 
                                                                                     <span
@@ -207,6 +215,7 @@
                                                                                 <td *ngIf="!(awardCriterion=='4S')"> <strong> 4S - </strong>
                                                                                     {{pa.activities[0].fourS}}
                                                                                 </td>
+                                                                                -->
                                                                                 <td>Activity Count - {{pa.count}} </td>
                                                                                 <td>Average Stars - {{pa.averageStars}} </td>
                                                                             </tr>
@@ -215,19 +224,15 @@
                                                                                     <div [attr.id]="'collapsed' + j" class="collapse" data-parent="#innerAccordionExample">
                                                                                         <div *ngFor="let ac of pa.activities; let j = index;"> <div class="row">
                                                                                                 <div class="col-6">
-                                                                                                    <div
-                                                                                                        class="assign description">
-                                                                                                        <h5>
-                                                                                                            <label>
+                                                                                                    <div class="assign description"> 
+                                                                                                        <h5> <label>
                                                                                                                 <input type="checkbox" name="selectPerformedActivity" value={{ac.id}} [(ngModel)]="actiPerform[ac.id]">
                                                                                                             </label> Activity {{j+1}} Details
                                                                                                         </h5>
                                                                                                         <p> <strong>Title - </strong>{{ac.title}}</p>
-                                                                                                        <p> <strong>Description - </strong>{{ac.description}}
-                                                                                                        </p>
+                                                                                                        <p> <strong>Description - </strong>{{ac.description}} </p>
                                                                                                     </div>
                                                                                                 </div>
-
                                                                                                 <div class="col-6">
                                                                                                     <div
                                                                                                         class="assign description">
