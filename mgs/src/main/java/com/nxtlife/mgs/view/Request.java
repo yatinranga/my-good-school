@@ -38,7 +38,8 @@ public class Request {
     { 
         return ((str != null) 
                 && (!str.equals("")) 
-                && (str.matches("^[a-zA-Z]*$"))); 
+                && (str.matches("^[a-zA-z]+([\\s][a-zA-Z]+)*$")));
+//        /^[a-zA-Z ]*$/
     }
     
     public boolean emailValidator(String email) {

@@ -138,7 +138,7 @@ public class SchoolRequest extends Request{
 		school = school == null ? new School() : school;
 		if (this.name != null) {
 			if(!isStringOnlyAlphabet(this.name))
-				throw new ValidationException(String.format("Name (%s) is in invalid format, it should contain only alphabets."));
+				throw new ValidationException(String.format("Name (%s) is in invalid format, it should contain only alphabets.",this.name));
 			school.setName(this.name);
 		}
 		if (this.username != null)

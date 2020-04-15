@@ -23,6 +23,7 @@ import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.enums.ApprovalStatus;
+import com.nxtlife.mgs.enums.AwardCriterion;
 
 @SuppressWarnings("serial")
 @Entity
@@ -45,9 +46,9 @@ public class Award extends BaseEntity {
 
 	private Date dateOfReceipt;
 	
-//	private Date validFrom;
-//	
-//	private Date validUntil;
+	private Date validFrom;
+	
+	private Date validUntil;
 
 	@Enumerated(EnumType.STRING)
 	private ApprovalStatus status;
@@ -73,6 +74,14 @@ public class Award extends BaseEntity {
 	
 	@ManyToOne
 	private AwardType awardType;
+	
+	@Enumerated(EnumType.STRING)
+	private AwardCriterion awardCriterion;
+	
+	private String criterionValue;
+	
+	@ManyToOne
+	private Grade grade;
 
 	public Award() {
 		super();
@@ -174,6 +183,45 @@ public class Award extends BaseEntity {
 		this.awardType = awardType;
 	}
 
+	public Date getValidFrom() {
+		return validFrom;
+	}
+
+	public void setValidFrom(Date validFrom) {
+		this.validFrom = validFrom;
+	}
+
+	public Date getValidUntil() {
+		return validUntil;
+	}
+
+	public void setValidUntil(Date validUntil) {
+		this.validUntil = validUntil;
+	}
+
+	public AwardCriterion getAwardCriterion() {
+		return awardCriterion;
+	}
+
+	public void setAwardCriterion(AwardCriterion awardCriterion) {
+		this.awardCriterion = awardCriterion;
+	}
+
+	public String getCriterionValue() {
+		return criterionValue;
+	}
+
+	public void setCriterionValue(String criterionValue) {
+		this.criterionValue = criterionValue;
+	}
+
+	public Grade getGrade() {
+		return grade;
+	}
+
+	public void setGrade(Grade grade) {
+		this.grade = grade;
+	}
 
 	public Award(@NotNull AwardType awardType, @NotNull String description, Boolean active, Teacher teacher) {
 		this.awardType = awardType;

@@ -191,7 +191,7 @@ public class StudentRequest extends Request {
 		student = student == null ? new Student() : student;
 		if (this.name != null) {
 			if(!isStringOnlyAlphabet(this.name))
-				throw new ValidationException(String.format("Name (%s) is in invalid format, it should contain only alphabets."));
+				throw new ValidationException(String.format("Name (%s) is in invalid format, it should contain only alphabets.",this.name));
 			student.setName(this.name);
 		}
 		if (this.username != null)

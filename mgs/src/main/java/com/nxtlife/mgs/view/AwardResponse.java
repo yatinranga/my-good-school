@@ -2,14 +2,17 @@ package com.nxtlife.mgs.view;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.nxtlife.mgs.entity.school.Award;
 import com.nxtlife.mgs.entity.school.AwardActivityPerformed;
 import com.nxtlife.mgs.enums.ApprovalStatus;
+import com.nxtlife.mgs.util.DateUtil;
 
 @JsonInclude(value = Include.NON_ABSENT)
 public class AwardResponse {
@@ -22,7 +25,7 @@ public class AwardResponse {
 	private String statusModifiedBy;
 	private String statusModifierId;
 	private Date statusModifiedAt;
-	private List<ActivityPerformedResponse> activityPerformedResponses;
+	private List<GroupResponseByActivityName<ActivityPerformedResponse>> activityPerformedResponses;
 	private Date dateOfReceipt;
 	private ApprovalStatus status;
 	private String studentId;
@@ -33,6 +36,12 @@ public class AwardResponse {
 	private String fourS;
 	private Set<String> focusAreas;
 	private Set<String> psdAreas;
+	private List<GroupResponseByActivityName<AwardResponse>> awards;
+	private String validFrom;
+	private String validUntil;
+	private String awardCriterion;
+	private String criterionValue;
+	private String gradeId;
 
 	public String getId() {
 		return id;
@@ -62,13 +71,13 @@ public class AwardResponse {
 
 	}
 
-	public List<ActivityPerformedResponse> getActivityPerformedResponses() {
-		return activityPerformedResponses;
-	}
-
-	public void setActivityPerformedResponses(List<ActivityPerformedResponse> activityPerformedResponses) {
-		this.activityPerformedResponses = activityPerformedResponses;
-	}
+//	public List<ActivityPerformedResponse> getActivityPerformedResponses() {
+//		return activityPerformedResponses;
+//	}
+//
+//	public void setActivityPerformedResponses(List<ActivityPerformedResponse> activityPerformedResponses) {
+//		this.activityPerformedResponses = activityPerformedResponses;
+//	}
 
 	public Date getDateOfReceipt() {
 		return dateOfReceipt;
@@ -182,6 +191,63 @@ public class AwardResponse {
 		this.psdAreas = psdAreas;
 	}
 
+	public List<GroupResponseByActivityName<AwardResponse>> getAwards() {
+		return awards;
+	}
+
+	public void setAwards(List<GroupResponseByActivityName<AwardResponse>> awards) {
+		this.awards = awards;
+	}
+	
+	public String getValidFrom() {
+		return validFrom;
+	}
+
+	public void setValidFrom(String validFrom) {
+		this.validFrom = validFrom;
+	}
+
+	public String getValidUntil() {
+		return validUntil;
+	}
+
+	public void setValidUntil(String validUntil) {
+		this.validUntil = validUntil;
+	}
+
+	public String getAwardCriterion() {
+		return awardCriterion;
+	}
+
+	public void setAwardCriterion(String awardCriterion) {
+		this.awardCriterion = awardCriterion;
+	}
+
+	public String getCriterionValue() {
+		return criterionValue;
+	}
+
+	public void setCriterionValue(String criterionValue) {
+		this.criterionValue = criterionValue;
+	}
+
+	public List<GroupResponseByActivityName<ActivityPerformedResponse>> getActivityPerformedResponses() {
+		return activityPerformedResponses;
+	}
+
+	public void setActivityPerformedResponses(
+			List<GroupResponseByActivityName<ActivityPerformedResponse>> activityPerformedResponses) {
+		this.activityPerformedResponses = activityPerformedResponses;
+	}
+
+	public String getGradeId() {
+		return gradeId;
+	}
+
+	public void setGradeId(String gradeId) {
+		this.gradeId = gradeId;
+	}
+
 	public AwardResponse(Award award) {
 		this.id = award.getCid();
 		this.description = award.getDescription();
@@ -200,20 +266,41 @@ public class AwardResponse {
 			if(award.getStudent().getGrade()!=null)
 			  this.studentGrade = String.format("%s-%s", award.getStudent().getGrade().getName(),award.getStudent().getGrade().getSection());
 		}
-		if (award.getAwardActivityPerformed() != null) {
+		if (award.getAwardActivityPerformed() != null && !award.getAwardActivityPerformed().isEmpty()) {
 			this.activityPerformedResponses = new ArrayList<>();
-			for (AwardActivityPerformed awardActivityPerformed : award.getAwardActivityPerformed()) {
-				this.activityPerformedResponses
-						.add(new ActivityPerformedResponse(awardActivityPerformed.getActivityPerformed()));
+			Set<String> activityTypes = new HashSet<String>();
+			award.getAwardActivityPerformed().stream().forEach(act -> {activityTypes.add(act.getActivityPerformed().getActivity().getName());});
+			if(activityTypes !=null && !activityTypes.isEmpty()) {
+				for(String type : activityTypes) {
+					GroupResponseByActivityName<ActivityPerformedResponse> partialList = new GroupResponseByActivityName<ActivityPerformedResponse>();
+					partialList.setActivityName(type);
+					Long[] count = {0l};
+					List<ActivityPerformedResponse> activityList = new ArrayList<ActivityPerformedResponse>();
+					award.getAwardActivityPerformed().stream().forEach(act -> {
+						if(act.getActivityPerformed().getActivity().getName().equalsIgnoreCase(type)) {
+							activityList.add(new ActivityPerformedResponse(act.getActivityPerformed()));
+							count[0]++;
+							}
+						});
+					partialList.setResponses(activityList);
+					partialList.setCount(count[0]);
+					this.activityPerformedResponses.add(partialList);
+					}
+					
+				}
 			}
+//			for (AwardActivityPerformed awardActivityPerformed : award.getAwardActivityPerformed()) {
+//				this.activityPerformedResponses
+//						.add(new ActivityPerformedResponse(awardActivityPerformed.getActivityPerformed()));
+//			}
 			
-			ActivityPerformedResponse activityPerfResp = this.getActivityPerformedResponses().stream().findFirst().orElse(null);
-			if(activityPerfResp != null) {
-				this.fourS = activityPerfResp.getFourS();
-				this.focusAreas = activityPerfResp.getFocusAreas();
-				this.psdAreas = activityPerfResp.getPsdAreas();
-			}
-		}
+//			ActivityPerformedResponse activityPerfResp = this.getActivityPerformedResponses().stream().findFirst().orElse(null);
+//			if(activityPerfResp != null) {
+//				this.fourS = activityPerfResp.getFourS();
+//				this.focusAreas = activityPerfResp.getFocusAreas();
+//				this.psdAreas = activityPerfResp.getPsdAreas();
+//			}
+//		}
 		if (award.getActivity() != null) {
 			activity = new ActivityRequestResponse(award.getActivity());
 		}
@@ -221,8 +308,22 @@ public class AwardResponse {
 			this.statusModifiedBy=award.getStatusModifiedBy().getName();
 			this.statusModifierId=award.getStatusModifiedBy().getCid();
 		}
-		
+		this.validFrom = DateUtil.formatDate(award.getValidFrom());
+		this.validUntil = DateUtil.formatDate(award.getValidUntil());
+		if(award.getAwardCriterion() != null)
+		   this.awardCriterion = award.getAwardCriterion().toString();
+		this.criterionValue = award.getCriterionValue();
+		if(award.getGrade() != null)
+			this.gradeId = award.getGrade().getCid();
 		
 	}
+	
+//	public AwardResponse performActivityGrouping() {
+//		if(this.awards != null && !this.awards.isEmpty()) {
+//			for()
+//		}
+//		
+//		return this;
+//	}
 
 }
