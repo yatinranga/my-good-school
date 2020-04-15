@@ -4,6 +4,7 @@
             <div class="teacher_intro_box">
                     <div class="teacher_image">
                         <img [src]="path">
+                        <button class="edit_profile" (click)="photoInput.click()"> <i class="fa fa-edit" title="Edit" > </i> Edit Profile Photo </button>
                     </div>
                     <div class="teacher_intro_text_main">
                         <div class="teacher_intro">
@@ -22,7 +23,6 @@
                                 
                                 </div>
                         </div>
-                        <button class="edit_profile" (click)="photoInput.click()"> <i class="fa fa-edit" title="Edit" > </i> Edit Profile Photo </button>
                         <button (click)="updateProfile()"
                             class="update">{{setDisabled ? 'Update Profile' :'Update'}}</button>
                     </div>
