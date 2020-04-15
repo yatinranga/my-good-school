@@ -70,7 +70,7 @@ import com.nxtlife.mgs.store.FileStore;
 import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.Utils;
-import com.nxtlife.mgs.view.ActivityActivitiesPerformedResponse;
+import com.nxtlife.mgs.view.GroupResponseByActivityName;
 import com.nxtlife.mgs.view.ActivityPerformedResponse;
 import com.nxtlife.mgs.view.CertificateRequest;
 import com.nxtlife.mgs.view.CertificateResponse;
@@ -862,6 +862,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		
 		Set<ActivityPerformed> activitiesPerformed = null ;
 		Set<StudentResponse> students = null;
+		Set<String> focusAreas,psdAreas,fourS;
 		if(gradeCid== null) {
 			activitiesPerformed = new HashSet<ActivityPerformed>();
 			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndActivityNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(schoolCid, activityName, ActivityStatus.Reviewed,startDate ,endDate);
@@ -875,15 +876,15 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			Map<StudentResponse,Double> studentScoreLookUp = new HashMap<StudentResponse,Double>();
 			for(StudentResponse studResp : students) {
 				List<ActivityPerformedResponse>	activitiesToReturn = activitiesPerformed.stream().filter(ap -> ap.getStudent().getCid().equals(studResp.getId())).map(ActivityPerformedResponse :: new).distinct().collect(Collectors.toList());
-				List<ActivityActivitiesPerformedResponse> finalActivitiesList = new ArrayList<ActivityActivitiesPerformedResponse>();
-				ActivityActivitiesPerformedResponse performedActivities = new ActivityActivitiesPerformedResponse();
+				List<GroupResponseByActivityName> finalActivitiesList = new ArrayList<GroupResponseByActivityName>();
+				GroupResponseByActivityName<ActivityPerformedResponse> performedActivities = new GroupResponseByActivityName<ActivityPerformedResponse>();
 				performedActivities.setActivityName(activityName);
-				performedActivities.setActivities(activitiesToReturn);
-				Long count = performedActivities.getActivities().stream().count();
+				performedActivities.setResponses(activitiesToReturn);
+				Long count = performedActivities.getResponses().stream().count();
 				if(count!= 0) {
 					performedActivities.setCount(count);
 					double avgStars = 0d;
-					for(ActivityPerformedResponse act : performedActivities.getActivities()) {
+					for(ActivityPerformedResponse act : performedActivities.getResponses()) {
 						avgStars+= act.getStar();
 					}
 					performedActivities.setAverageStars(avgStars/count);
@@ -893,15 +894,22 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				
 				Double score = 0d;
 				Double starSum = 0d;
-				Set<String> focusAreas = new HashSet<String>();
+				focusAreas = new HashSet<String>();
+				psdAreas = new HashSet<String>();
+				fourS = new HashSet<String>();
+				
 				for(ActivityPerformedResponse act : activitiesToReturn) {
 					starSum+= act.getStar();
 					focusAreas.addAll(act.getFocusAreas());
+					psdAreas.addAll(act.getPsdAreas());
+					fourS.add(act.getFourS());
 				}
 				score =  (starSum / activitiesToReturn.size());
 				System.out.println(score);
 				studResp.setScoreForAward(score);
 				studResp.setFocusAreas(focusAreas);
+				studResp.setPsdAreas(psdAreas);
+				studResp.setFourS(fourS);
 				studentScoreLookUp.put(studResp, score);
 			}
 			studentScoreLookUp = studentScoreLookUp.entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
@@ -924,15 +932,15 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			for(StudentResponse studResp : students) {
 				List<ActivityPerformedResponse>	activitiesToReturn = activitiesPerformed.stream().filter(ap -> ap.getStudent().getCid().equals(studResp.getId())).map(ActivityPerformedResponse :: new).distinct().collect(Collectors.toList());
 		
-				List<ActivityActivitiesPerformedResponse> finalActivitiesList = new ArrayList<ActivityActivitiesPerformedResponse>();
-				ActivityActivitiesPerformedResponse performedActivities = new ActivityActivitiesPerformedResponse();
+				List<GroupResponseByActivityName> finalActivitiesList = new ArrayList<GroupResponseByActivityName>();
+				GroupResponseByActivityName<ActivityPerformedResponse> performedActivities = new GroupResponseByActivityName();
 				performedActivities.setActivityName(activityName);
-				performedActivities.setActivities(activitiesToReturn);
-				Long count = performedActivities.getActivities().stream().count();
+				performedActivities.setResponses(activitiesToReturn);
+				Long count = performedActivities.getResponses().stream().count();
 				if(count!= 0) {
 					performedActivities.setCount(count);
 					double avgStars = 0d;
-					for(ActivityPerformedResponse act : performedActivities.getActivities()) {
+					for(ActivityPerformedResponse act : performedActivities.getResponses()) {
 						avgStars+= act.getStar();
 					}
 					performedActivities.setAverageStars(avgStars/count);
@@ -943,15 +951,21 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				Double score = 0d;
 				Double starSum = 0d;
 				
-				Set<String> focusAreas = new HashSet<String>();
+				focusAreas = new HashSet<String>();
+				psdAreas = new HashSet<String>();
+				fourS = new HashSet<String>();
 				for(ActivityPerformedResponse act : activitiesToReturn) {
 					starSum+= act.getStar();
 					focusAreas.addAll(act.getFocusAreas());
+					psdAreas.addAll(act.getPsdAreas());
+					fourS.add(act.getFourS());
 				}
 				score =  (starSum / activitiesToReturn.size());
 				System.out.println(score);
 				studResp.setScoreForAward(score);
 				studResp.setFocusAreas(focusAreas);
+				studResp.setPsdAreas(psdAreas);
+				studResp.setFourS(fourS);
 				studentScoreLookUp.put(studResp, score);
 			}
 			studentScoreLookUp = studentScoreLookUp.entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
@@ -970,6 +984,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		
 		Set<ActivityPerformed> activitiesPerformed = null ;
 		Set<StudentResponse> students = null;
+		Set<String> activityTypes ,psdAreas,fourS;
 		if(gradeCid== null) {
 			activitiesPerformed = new HashSet<ActivityPerformed>();
 			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndActivityFocusAreasNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(schoolCid, focusArea, ActivityStatus.Reviewed,startDate ,endDate);
@@ -986,29 +1001,35 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				
 				Double score = 0d;
 				Double starSum = 0d;
-				Set<String> activityTypes = new HashSet<String>();
+				activityTypes = new HashSet<String>();
+				psdAreas = new HashSet<String>();
+				fourS = new HashSet<String>();
 				for(ActivityPerformedResponse act : activitiesToReturn) {
 					starSum+= act.getStar();
 					activityTypes.add(act.getActivityName());
 //					focusAreas.addAll(act.getFocusAreas());
+					psdAreas.addAll(act.getPsdAreas());
+					fourS.add(act.getFourS());
 				}
 //				score = focusAreas.size() * (starSum / activitiesToReturn.size());
 				score =  (starSum / activitiesToReturn.size());
 				System.out.println(score);
 				studResp.setScoreForAward(score);
 				studResp.setActivityTypes(activityTypes);
+				studResp.setPsdAreas(psdAreas);
+				studResp.setFourS(fourS);
 				
-				List<ActivityActivitiesPerformedResponse> finalActivitiesList = new ArrayList<ActivityActivitiesPerformedResponse>();
+				List<GroupResponseByActivityName> finalActivitiesList = new ArrayList<GroupResponseByActivityName>();
 				for(String type : activityTypes) {
 					
-					ActivityActivitiesPerformedResponse activitiesPerformedResponse = new ActivityActivitiesPerformedResponse();
+					GroupResponseByActivityName<ActivityPerformedResponse> activitiesPerformedResponse = new GroupResponseByActivityName();
 					activitiesPerformedResponse.setActivityName(type);
-					activitiesPerformedResponse.setActivities(activitiesToReturn.stream().filter(act-> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
-					Long count = activitiesPerformedResponse.getActivities().stream().count();
+					activitiesPerformedResponse.setResponses(activitiesToReturn.stream().filter(act-> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
+					Long count = activitiesPerformedResponse.getResponses().stream().count();
 					if(count!= 0) {
 						activitiesPerformedResponse.setCount(count);
 						double avgStars = 0d;
-						for(ActivityPerformedResponse act : activitiesPerformedResponse.getActivities()) {
+						for(ActivityPerformedResponse act : activitiesPerformedResponse.getResponses()) {
 							avgStars+= act.getStar();
 						}
 						activitiesPerformedResponse.setAverageStars(avgStars/count);
@@ -1040,27 +1061,33 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				
 				Double score = 0d;
 				Double starSum = 0d;
-				Set<String> activityTypes = new HashSet<String>();
+				activityTypes = new HashSet<String>();
+				psdAreas = new HashSet<String>();
+				fourS = new HashSet<String>();
 				for(ActivityPerformedResponse act : activitiesToReturn) {
 					starSum+= act.getStar();
 					activityTypes.add(act.getActivityName());
+					psdAreas.addAll(act.getPsdAreas());
+					fourS.add(act.getFourS());
 				}
 				score =  (starSum / activitiesToReturn.size());
 				System.out.println(score);
 				studResp.setScoreForAward(score);
 				studResp.setActivityTypes(activityTypes);
+				studResp.setPsdAreas(psdAreas);
+				studResp.setFourS(fourS);
 				
-				List<ActivityActivitiesPerformedResponse> finalActivitiesList = new ArrayList<ActivityActivitiesPerformedResponse>();
+				List<GroupResponseByActivityName> finalActivitiesList = new ArrayList<GroupResponseByActivityName>();
 				for(String type : activityTypes) {
 					
-					ActivityActivitiesPerformedResponse activitiesPerformedResponse = new ActivityActivitiesPerformedResponse();
+					GroupResponseByActivityName<ActivityPerformedResponse> activitiesPerformedResponse = new GroupResponseByActivityName();
 					activitiesPerformedResponse.setActivityName(type);
-					activitiesPerformedResponse.setActivities(activitiesToReturn.stream().filter(act-> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
-					Long count = activitiesPerformedResponse.getActivities().stream().count();
+					activitiesPerformedResponse.setResponses(activitiesToReturn.stream().filter(act-> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
+					Long count = activitiesPerformedResponse.getResponses().stream().count();
 					if(count!= 0) {
 						activitiesPerformedResponse.setCount(count);
 						double avgStars = 0d;
-						for(ActivityPerformedResponse act : activitiesPerformedResponse.getActivities()) {
+						for(ActivityPerformedResponse act : activitiesPerformedResponse.getResponses()) {
 							avgStars+= act.getStar();
 						}
 						activitiesPerformedResponse.setAverageStars(avgStars/count);
@@ -1086,6 +1113,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		
 		Set<ActivityPerformed> activitiesPerformed = null ;
 		Set<StudentResponse> students = null;
+		Set<String> focusAreas ,activityTypes , psdAreas;
 		if(gradeCid== null) {
 			activitiesPerformed = new HashSet<ActivityPerformed>();
 			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndActivityFourSAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(schoolCid, FourS.valueOf(fourS), ActivityStatus.Reviewed,startDate ,endDate);
@@ -1102,30 +1130,33 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				
 				Double score = 0d;
 				Double starSum = 0d;
-				Set<String> focusAreas = new HashSet<String>();
-				Set<String> activityTypes = new HashSet<String>();
+				focusAreas = new HashSet<String>();
+				activityTypes = new HashSet<String>();
+				psdAreas = new HashSet<String>();
 				for(ActivityPerformedResponse act : activitiesToReturn) {
 					starSum+= act.getStar();
 					focusAreas.addAll(act.getFocusAreas());
 					activityTypes.add(act.getActivityName());
+					psdAreas.addAll(act.getPsdAreas());
 				}
 				score = focusAreas.size() * (starSum / activitiesToReturn.size());
 				System.out.println(score);
 				studResp.setScoreForAward(score);
 				studResp.setActivityTypes(activityTypes);
 				studResp.setFocusAreas(focusAreas);
+				studResp.setPsdAreas(psdAreas);
 				
-				List<ActivityActivitiesPerformedResponse> finalActivitiesList = new ArrayList<ActivityActivitiesPerformedResponse>();
+				List<GroupResponseByActivityName> finalActivitiesList = new ArrayList<GroupResponseByActivityName>();
 				for(String type : activityTypes) {
 					
-					ActivityActivitiesPerformedResponse activitiesPerformedResponse = new ActivityActivitiesPerformedResponse();
+					GroupResponseByActivityName<ActivityPerformedResponse> activitiesPerformedResponse = new GroupResponseByActivityName();
 					activitiesPerformedResponse.setActivityName(type);
-					activitiesPerformedResponse.setActivities(activitiesToReturn.stream().filter(act-> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
-					Long count = activitiesPerformedResponse.getActivities().stream().count();
+					activitiesPerformedResponse.setResponses(activitiesToReturn.stream().filter(act-> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
+					Long count = activitiesPerformedResponse.getResponses().stream().count();
 					if(count!= 0) {
 						activitiesPerformedResponse.setCount(count);
 						double avgStars = 0d;
-						for(ActivityPerformedResponse act : activitiesPerformedResponse.getActivities()) {
+						for(ActivityPerformedResponse act : activitiesPerformedResponse.getResponses()) {
 							avgStars+= act.getStar();
 						}
 						activitiesPerformedResponse.setAverageStars(avgStars/count);
@@ -1158,30 +1189,33 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				
 				Double score = 0d;
 				Double starSum = 0d;
-				Set<String> focusAreas = new HashSet<String>();
-				Set<String> activityTypes = new HashSet<String>();
+				focusAreas = new HashSet<String>();
+				activityTypes = new HashSet<String>();
+				psdAreas = new HashSet<String>();
 				for(ActivityPerformedResponse act : activitiesToReturn) {
 					starSum+= act.getStar();
 					focusAreas.addAll(act.getFocusAreas());
 					activityTypes.add(act.getActivityName());
+					psdAreas.addAll(act.getPsdAreas());
 				}
 				score = focusAreas.size() * (starSum / activitiesToReturn.size());
 				System.out.println(score);
 				studResp.setScoreForAward(score);
 				studResp.setActivityTypes(activityTypes);
 				studResp.setFocusAreas(focusAreas);
+				studResp.setPsdAreas(psdAreas);
 				
-				List<ActivityActivitiesPerformedResponse> finalActivitiesList = new ArrayList<ActivityActivitiesPerformedResponse>();
+				List<GroupResponseByActivityName> finalActivitiesList = new ArrayList<GroupResponseByActivityName>();
 				for(String type : activityTypes) {
 					
-					ActivityActivitiesPerformedResponse activitiesPerformedResponse = new ActivityActivitiesPerformedResponse();
+					GroupResponseByActivityName<ActivityPerformedResponse> activitiesPerformedResponse = new GroupResponseByActivityName();
 					activitiesPerformedResponse.setActivityName(type);
-					activitiesPerformedResponse.setActivities(activitiesToReturn.stream().filter(act-> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
-					Long count = activitiesPerformedResponse.getActivities().stream().count();
+					activitiesPerformedResponse.setResponses(activitiesToReturn.stream().filter(act-> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
+					Long count = activitiesPerformedResponse.getResponses().stream().count();
 					if(count!= 0) {
 						activitiesPerformedResponse.setCount(count);
 						double avgStars = 0d;
-						for(ActivityPerformedResponse act : activitiesPerformedResponse.getActivities()) {
+						for(ActivityPerformedResponse act : activitiesPerformedResponse.getResponses()) {
 							avgStars+= act.getStar();
 						}
 						activitiesPerformedResponse.setAverageStars(avgStars/count);
@@ -1207,6 +1241,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		
 		Set<ActivityPerformed> activitiesPerformed = null ;
 		Set<StudentResponse> students = null;
+		Set<String> focusAreas, activityTypes , fourS;
 		if(gradeCid== null) {
 			activitiesPerformed = new HashSet<ActivityPerformed>();
 			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndActivityFocusAreasPsdAreaAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(schoolCid ,PSDArea.fromString(psdArea),ActivityStatus.Reviewed,startDate ,endDate);
@@ -1223,30 +1258,33 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				
 				Double score = 0d;
 				Double starSum = 0d;
-				Set<String> focusAreas = new HashSet<String>();
-				Set<String> activityTypes = new HashSet<String>();
+				focusAreas = new HashSet<String>();
+				activityTypes = new HashSet<String>();
+			    fourS = new HashSet<String>();
 				for(ActivityPerformedResponse act : activitiesToReturn) {
 					starSum+= act.getStar();
 					focusAreas.addAll(act.getFocusAreas());
 					activityTypes.add(act.getActivityName());
+					fourS.add(act.getFourS());
 				}
 				score = focusAreas.size() * (starSum / activitiesToReturn.size());
 				System.out.println(score);
 				studResp.setScoreForAward(score);
 				studResp.setActivityTypes(activityTypes);
 				studResp.setFocusAreas(focusAreas);
+				studResp.setFourS(fourS);
 				
-				List<ActivityActivitiesPerformedResponse> finalActivitiesList = new ArrayList<ActivityActivitiesPerformedResponse>();
+				List<GroupResponseByActivityName> finalActivitiesList = new ArrayList<GroupResponseByActivityName>();
 				for(String type : activityTypes) {
 					
-					ActivityActivitiesPerformedResponse activitiesPerformedResponse = new ActivityActivitiesPerformedResponse();
+					GroupResponseByActivityName<ActivityPerformedResponse> activitiesPerformedResponse = new GroupResponseByActivityName();
 					activitiesPerformedResponse.setActivityName(type);
-					activitiesPerformedResponse.setActivities(activitiesToReturn.stream().filter(act-> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
-					Long count = activitiesPerformedResponse.getActivities().stream().count();
+					activitiesPerformedResponse.setResponses(activitiesToReturn.stream().filter(act-> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
+					Long count = activitiesPerformedResponse.getResponses().stream().count();
 					if(count!= 0) {
 						activitiesPerformedResponse.setCount(count);
 						double avgStars = 0d;
-						for(ActivityPerformedResponse act : activitiesPerformedResponse.getActivities()) {
+						for(ActivityPerformedResponse act : activitiesPerformedResponse.getResponses()) {
 							avgStars+= act.getStar();
 						}
 						activitiesPerformedResponse.setAverageStars(avgStars/count);
@@ -1279,30 +1317,33 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				
 				Double score = 0d;
 				Double starSum = 0d;
-				Set<String> focusAreas = new HashSet<String>();
-				Set<String> activityTypes = new HashSet<String>();
+				focusAreas = new HashSet<String>();
+				activityTypes = new HashSet<String>();
+				fourS = new HashSet<String>();
 				for(ActivityPerformedResponse act : activitiesToReturn) {
 					starSum+= act.getStar();
 					focusAreas.addAll(act.getFocusAreas());
 					activityTypes.add(act.getActivityName());
+					fourS.add(act.getFourS());
 				}
 				score = focusAreas.size() * (starSum / activitiesToReturn.size());
 				System.out.println(score);
 				studResp.setScoreForAward(score);
 				studResp.setActivityTypes(activityTypes);
 				studResp.setFocusAreas(focusAreas);
+				studResp.setFourS(fourS);
 				
-				List<ActivityActivitiesPerformedResponse> finalActivitiesList = new ArrayList<ActivityActivitiesPerformedResponse>();
+				List<GroupResponseByActivityName> finalActivitiesList = new ArrayList<GroupResponseByActivityName>();
 				for(String type : activityTypes) {
 					
-					ActivityActivitiesPerformedResponse activitiesPerformedResponse = new ActivityActivitiesPerformedResponse();
+					GroupResponseByActivityName<ActivityPerformedResponse> activitiesPerformedResponse = new GroupResponseByActivityName();
 					activitiesPerformedResponse.setActivityName(type);
-					activitiesPerformedResponse.setActivities(activitiesToReturn.stream().filter(act-> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
-					Long count = activitiesPerformedResponse.getActivities().stream().count();
+					activitiesPerformedResponse.setResponses(activitiesToReturn.stream().filter(act-> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
+					Long count = activitiesPerformedResponse.getResponses().stream().count();
 					if(count!= 0) {
 						activitiesPerformedResponse.setCount(count);
 						double avgStars = 0d;
-						for(ActivityPerformedResponse act : activitiesPerformedResponse.getActivities()) {
+						for(ActivityPerformedResponse act : activitiesPerformedResponse.getResponses()) {
 							avgStars+= act.getStar();
 						}
 						activitiesPerformedResponse.setAverageStars(avgStars/count);
@@ -1356,8 +1397,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 						schoolCid, activityCid, ActivityStatus.valueOf(activityStatus));
 		if (students == null || students.isEmpty())
 			throw new ValidationException(String.format(
-					"No student found in the school with id : %s  having performed activity with id : %s and status is %s .",
-					schoolCid,  activityCid, activityStatus));
+					"No student in the school has performed any activity having id (%s) or activities might not have been %s.",
+					 activityCid, activityStatus));
 		return students.stream().distinct().map(StudentResponse::new).collect(Collectors.toList());
 	}
 
