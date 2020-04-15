@@ -10,18 +10,21 @@
                                 <h4> {{teacherDetails['name']}} </h4>
                                 <h5> <!-- <i class="fa fa-phone-alt"></i> --> 
                                     <input type="tel" maxlength="10" pattern="[0-9]{10}" name="mobileNumbe"
-                                            [(ngModel)]="mobileNumber" placeholder="mobileNumber" [disabled]="isEditable"
+                                            [(ngModel)]="mobileNumber" [disabled]="setDisabled"
                                             (ngModelChange)="temp($event)"/>
                                  </h5>
-                                 <h5> <!-- <i class="fa fa-envelope"></i> --> {{teacherDetails['email']}} </h5>                                    
+                                 <h5> <!-- <i class="fa fa-envelope"></i> --> 
+                                    <input [(ngModel)]="email" [disabled]="setDisabled" [(ngModel)]="email"/>
+                                 </h5>                                    
                                 <div *ngIf="teacherDetails['profileBrief']"> 
                                         
                                    <textarea name="profileBrief" rows="6" cols="50" [disabled]="setDisabled" [(ngModel)]="profileBrief"></textarea>
                                 
                                 </div>
                         </div>
-                        <button (click)="updateMobileNo()"
-                            class="update">{{isEditable ? 'Update Profile' :'Update'}}</button>
+                        <button class="edit_profile" (click)="photoInput.click()"> <i class="fa fa-edit" title="Edit" > </i> Edit Profile Photo </button>
+                        <button (click)="updateProfile()"
+                            class="update">{{setDisabled ? 'Update Profile' :'Update'}}</button>
                     </div>
             </div>
             <div class="teacher_about_box">
