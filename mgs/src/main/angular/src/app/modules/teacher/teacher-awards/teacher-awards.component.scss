@@ -15,7 +15,7 @@
 .tabs {
     width: 100%;
     display: inline-flex;
-    background: #737373;
+    background: #00000096;
 }
 
 .teacher-awards .popup-form {
@@ -55,6 +55,7 @@ img{
     position: relative;
     opacity: 0.8;
 }
+
 
 .teacher-awards {
     width: 100%;
@@ -128,7 +129,7 @@ p#title_award {
 }
 .description h5{
     margin-bottom: 12px;
-    font-size: 17px;
+    font-size: 18px;
     text-decoration: underline;
 }
 button.icon_button {
@@ -175,4 +176,41 @@ p#title_award {
 }
 .assign.description h5 {
     color: #8dc33a;
+}
+/*-----------------------ASSIGN AWARDS--------------------*/
+
+ul#collapselist li {
+    list-style: inside;
+}
+ul#collapselist {
+    padding: 0;
+    margin: 0;
+    text-align: left;
+}
+table.innertable {
+    width: 100%;
+    background: white;
+}
+td#actname {
+    font-size: 21px;
+    color: #8dc33a;
+}
+.assign.description label{
+    margin-right: 10px;
+}
+td.last.collapsed-td {
+    padding: 0;
+}
+.assign.description{
+   min-height: 200px;
+}
+input.date {
+    background: #dddddd;
+    border: 1px solid #777;
+    border-radius: 5px;
+    color: #333;
+}
+label.date {
+    margin-top: 10px;
+    margin-right: 30px; 
 }

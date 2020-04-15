@@ -49,7 +49,7 @@
                         </div>
                         <div class="form-group">Select School : <span style="color: red"> * </span>
                             <select class="form-control" name="schoolId" formControlName="schoolId" (ngModelChange)="getGrades($event)">
-                                <option value="" disabled selected>Select School </option>
+                                <option [ngValue]="null" disabled selected>Select School </option>
                                 <option *ngFor="let school of schoolsList; let i = index;" value={{school.id}}>
                                     {{school.name}}</option>
                             </select>
@@ -59,7 +59,7 @@
                         </div>
                         <div class="form-group">Select Grade : <span style="color: red"> * </span>
                             <select class="form-control" name="gradeId" formControlName="gradeId" >
-                                <option value="" selected disabled>Select Grade</option>
+                                <option value="" selected disabled>Select your grade</option>
                                 <option *ngFor="let grade of gradesList; let i = index;" value={{grade.id}}>
                                     {{grade.grade}} {{grade.section}}</option>
                             </select>
@@ -79,6 +79,7 @@
                 </div>
             </div>
 
+            <!-- Guardian Form -->
             <div class="form-content" formArrayName="guardians">
                 <div *ngFor="let gud of guardians.controls; let i = index">
                     <div class="form">
@@ -98,6 +99,9 @@
                             <div class="form-group">Enter Email : <span style="color: red"> * </span>
                                 <input type="email" class="form-control" name="'guradianEmail'+{{i}}" placeholder="Your Email"
                                     formControlName="email" />
+                                    <small class="text-danger" *ngIf="!gud.get('email').valid && gud.get('email').touched">
+                                        Email Required
+                                    </small>
                             </div>
                             <div class="form-group">Enter Mobile no. : <span style="color: red"> * </span>
                                 <input type="tel" class="form-control" maxlength="10" name="'guradianMob'+{{i}}" placeholder="Your Mobile Number"
@@ -110,14 +114,14 @@
                         <div class="col-md-6">
                             <div class="form-group">Select Gender : <span style="color: red"> * </span>
                                 <select class="form-control" placeholder="Select one" name="'guradianGender'+{{i}}" formControlName="gender">
-                                    <option value="" disabled selected>Choose your option</option>
+                                    <option [ngValue]="null" disabled selected>Choose your option</option>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
                                 </select>
                             </div>
                             <div class="form-group">Select Relationship : <span style="color: red"> * </span>
                                 <select class="form-control" placeholder="Select one" name="relationship" formControlName="relationship">
-                                    <option value="" disabled selected>Choose your option</option>
+                                    <option [ngValue]="null" disabled selected>Choose your option</option>
                                     <option value="Father">Father</option>
                                     <option value="Mother">Mother</option>
                                     <option value="Local Guardian">Local Guardian</option>

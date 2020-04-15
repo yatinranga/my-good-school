@@ -1,69 +1,72 @@
 <div class="main">
     <div class="content_main">
-        <div class="profile_main">
-            <div class="profile_bg">
-                <img src="assets/images/teacherprofilebg.jpg">              
-            </div>
-            <div class="profile_text_main">
-                <div class="teacher_image">
-                    <img [src]="path">
-                    <h4> {{teacherDetails['name']}}  </h4>
-                    <button class="edit_profile" (click)="photoInput.click()"> <i class="fa fa-edit" title="Edit" > </i> Edit Profile Photo </button>
-                    <button (click)="updateProfile()">{{setDisabled ? 'Update Profile' :'Save'}}</button>
-                </div>
-                <div class="profile_text">
-                    <div class="basic-info">
-                        <h3> Basic Info </h3>
-                        <ul>
-                            <li> <i class="fa fa-phone-alt"></i>
-                                Mobile Number - <label>
-                                    <input type="tel" maxlength="10" pattern="[0-9]{10}"  name="mobileNumbe" [(ngModel)]="mobileNumber" 
-                                    placeholder="mobileNumber" [disabled]="setDisabled"
-                                    (ngModelChange)="temp($event)"/>
-                                    <!-- {{teacherDetails['mobileNumber']}} -->
-                                </label> </li>
-                            <li> <i class="fa fa-envelope"></i>
-                                Email - <label>
-                                    <input type="email" [disabled]="setDisabled" [(ngModel)]="email"/>
-                                    <!-- {{teacherDetails['email']}} -->
-                                </label> </li>
-                            <li> <i class="fa fa-calendar" aria-hidden="true"></i>
-                                DOB - <label> {{teacherDetails['dob'] | date }}</label></li>
-                            <li> <i class='fa fa-restroom'></i>
-                                Gender - <label> {{teacherDetails['gender']}}</label> </li>
-                            <li> <i class="fa fa-school"></i>
-                                School Name - <label> {{teacherDetails['schoolName']}}</label> </li>
-                            <li> <i class="fa fa-user-graduate"></i>
-                                Qualifications - <label> {{teacherDetails['qualification']}}</label> </li>
-                            <li> <i class="fa fa-running"></i>
-                                Coach - <label> {{teacherDetails['isCoach'] ? "Yes" : "No" }} </label> </li>
-                            <li> <i class="fa fa-chalkboard-teacher"></i>
-                                Class Teacher - <label> {{teacherDetails['isClassTeacher'] ? "Yes" : "No" }}</label>
-                            </li>
-                        </ul>
+        <div class="teacher_profile_main">
+            <div class="teacher_intro_box">
+                    <div class="teacher_image">
+                        <img [src]="path">
                     </div>
-                    <div *ngIf="teacherDetails['activities']" class="teacher-activities-main">
-                            <h3> Activities </h3>
-                            <ul *ngFor="let acti of teacherDetails['activities']">
-                                <li>{{acti}}</li>
-                            </ul>
-                    </div>
-                    <div *ngIf="teacherDetails['gradeIds']">Grade -
-                        <div *ngFor="let grade of teacherDetails['gradeIds']">
-                            <p>{{grade.name}}</p>
-                            <p>{{grade.grade}} {{grade.section}}</p>
+                    <div class="teacher_intro_text_main">
+                        <div class="teacher_intro">
+                                <h4> {{teacherDetails['name']}} </h4>
+                                <h5> <!-- <i class="fa fa-phone-alt"></i> --> 
+                                    <input type="tel" maxlength="10" pattern="[0-9]{10}" name="mobileNumbe"
+                                            [(ngModel)]="mobileNumber" [disabled]="setDisabled"
+                                            (ngModelChange)="temp($event)"/>
+                                 </h5>
+                                 <h5> <!-- <i class="fa fa-envelope"></i> --> 
+                                    <input [(ngModel)]="email" [disabled]="setDisabled" [(ngModel)]="email"/>
+                                 </h5>                                    
+                                <div *ngIf="teacherDetails['profileBrief']"> 
+                                        
+                                   <textarea name="profileBrief" rows="6" cols="50" [disabled]="setDisabled" [(ngModel)]="profileBrief"></textarea>
+                                
+                                </div>
                         </div>
+                        <button class="edit_profile" (click)="photoInput.click()"> <i class="fa fa-edit" title="Edit" > </i> Edit Profile Photo </button>
+                        <button (click)="updateProfile()"
+                            class="update">{{setDisabled ? 'Update Profile' :'Update'}}</button>
+                    </div>
+            </div>
+            <div class="teacher_about_box">
+                <div class="basic-info">
+                    <h3> Basic Info </h3>
+                    <ul>
+                                <!-- {{teacherDetails['mobileNumber']}} -->
+                                <!-- <input [(ngModel)]="email" placeholder="email" [disabled]="isEditable"/> -->
+                        <li> <i class="fa fa-calendar" aria-hidden="true"></i>
+                            DOB - <label> {{teacherDetails['dob'] | date }}</label></li>
+                        <li> <i class='fa fa-restroom'></i>
+                            Gender - <label> {{teacherDetails['gender']}}</label> </li>
+                        <li> <i class="fa fa-school"></i>
+                            School Name - <label> {{teacherDetails['schoolName']}}</label> </li>
+                        <li> <i class="fa fa-user-graduate"></i>
+                            Qualifications - <label> {{teacherDetails['qualification']}}</label> </li>
+                        <li> <i class="fa fa-running"></i>
+                            Coach - <label> {{teacherDetails['isCoach'] ? "Yes" : "No" }} </label> </li>
+                        <li> <i class="fa fa-chalkboard-teacher"></i>
+                            Class Teacher - <label> {{teacherDetails['isClassTeacher'] ? "Yes" : "No" }}</label>
+                        </li>
+                    </ul>
+                </div>
+                <div *ngIf="teacherDetails['activities']" class="teacher-activities-main">
+                    <h3> Activities </h3>
+                    <ul *ngFor="let acti of teacherDetails['activities']">
+                        <li>{{acti}}</li>
+                    </ul>
+                </div>
+                <div *ngIf="teacherDetails['gradeIds']">Grade -
+                    <div *ngFor="let grade of teacherDetails['gradeIds']">
+                        <p>{{grade.name}}</p>
+                        <p>{{grade.grade}} {{grade.section}}</p>
                     </div>
                 </div>
-                <div *ngIf="teacherDetails['profileBrief']">Brief
-                    <textarea name="profileBrief" rows="6" cols="50" [disabled]="setDisabled" [(ngModel)]="profileBrief"></textarea>
-                    </div>
-
+                
             </div>
         </div>
     </div>
 </div>
-<input style="display : none" name="profilePhoto" type="file" accept=".png, .jpg, .jpeg" #photoInput (change)="onFileSelect($event)">
+<input style="display : none" name="profilePhoto" type="file" accept=".png, .jpg, .jpeg" #photoInput
+    (change)="onFileSelect($event)">
 
 
 
@@ -155,5 +158,20 @@
 }
 .text_com p{
     margin: 0 5px;
+}
+-->
+
+
+<!--
+    <div class="profile_bg">
+                <img src="assets/images/teacherprofilebg.jpg">              
+            </div>
+            .profile_bg{
+    width: 100%;
+    position: relative;
+}
+.profile_bg img{
+    width: 100%;
+    height: calc(100vh - 107px);
 }
 -->
