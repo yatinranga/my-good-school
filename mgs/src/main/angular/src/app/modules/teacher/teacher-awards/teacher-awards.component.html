@@ -196,6 +196,17 @@
                                     <tr data-toggle="collapse" [attr.data-target]="'#collapsed'+j">
                                         <td> {{j+1}}. </td>
                                         <td id="actname"> {{pa.activityName}} </td>
+                                        <td> 
+                                            <p *ngIf="!(awardCriterion=='Focus Area')"> <strong> Focus Area - </strong>
+                                                <span *ngFor="let at of pa.activities[0].focusAreas; let i = index"> {{ (i === pa.activities[0].focusAreas.length-1) ? at : at + "," + ' '}} </span> 
+                                            </p>
+                                            <p *ngIf="!(awardCriterion=='PSD Area')"> <strong> PSD Area - </strong> 
+                                                <span *ngFor="let at of pa.activities[0].psdAreas; let i = index"> {{ (i === pa.activities[0].psdAreas.length-1) ? at : at + "," + ' '}} </span> 
+                                            </p>
+                                        </td> 
+                                        <td>  <p *ngIf="!(awardCriterion=='4S')"> 
+                                            <strong> 4S - </strong> {{pa.activities[0].fourS}} </p>
+                                        </td>
                                         <td>Activity Count - {{pa.count}} </td>
                                         <td>Average Stars - {{pa.averageStars}} </td>
                                     </tr>
@@ -204,35 +215,19 @@
                                             <div [attr.id]="'collapsed' + j" class="collapse" data-parent="#innerAccordionExample">
                                                 <div *ngFor="let ac of pa.activities; let j = index;">
                                                     <div class="row">
-                                                        <div class="col-4">
+                                                        <div class="col-6">
                                                             <div class="assign description">
                                                                 <h5> <label> <input type="checkbox" name="selectPerformedActivity" value={{ac.id}} [(ngModel)]="actiPerform[ac.id]"> </label>
-                                                                    Activity {{j+1}} Details </h5>
+                                                                     {{j+1}} </h5>
                                                                 <p> <strong>Title - </strong>{{ac.title}} </p>
                                                                 <p> <strong>Description - </strong>{{ac.description}} </p>
                                                             </div>
                                                         </div>
-                                                        <div class="col-4">
+                                                        <div class="col-6">
                                                             <div class="assign description">
                                                                 <h5> Scoring </h5>
                                                                 <p> <strong>Total Score - </strong>{{ac.totalMarks}} </p>
                                                                 <p> <strong>Remarks - </strong>{{ac.coachRemark}} </p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-4">
-                                                            <div class="assign description">
-                                                                <p *ngIf="!(awardCriterion=='Focus Area')">
-                                                                    <strong> Focus Area - </strong>
-                                                                    <span *ngFor="let at of pa.activities[0].focusAreas; let i = index">
-                                                                        {{ (i === pa.activities[0].focusAreas.length-1) ? at : at + "," + ' '}}
-                                                                    </span> </p>
-                                                                <p *ngIf="!(awardCriterion=='PSD Area')">
-                                                                    <strong> PSD Area - </strong>
-                                                                    <span *ngFor="let at of pa.activities[0].psdAreas; let i = index">
-                                                                        {{ (i === pa.activities[0].psdAreas.length-1) ? at : at + "," + ' '}}
-                                                                    </span> </p>
-                                                                <p *ngIf="!(awardCriterion=='4S')">
-                                                                    <strong> 4S - </strong> {{pa.activities[0].fourS}} </p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -249,7 +244,7 @@
                             <div *ngFor="let pa of activity.performedActivities; let i = index;">
                                 <div *ngFor="let ac of pa.activities; let j = index;">
                                     <div class="row">
-                                        <div class="col-4">
+                                        <div class="col-6">
                                             <div class="assign description">
                                                 <h5>
                                                     <label> <input type="checkbox" name="selectPerformedActivity" value={{ac.id}}
@@ -260,29 +255,13 @@
                                                 <p> <strong>Description - </strong>{{ac.description}}</p>
                                             </div>
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-6">
                                             <div class="assign description">
                                                 <h5> Scoring </h5>
                                                 <p> <strong>Total Score - </strong>{{ac.totalMarks}} </p>
                                                 <p> <strong>Coach Remarks - </strong>{{ac.coachRemark}} </p>
                                             </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="assign description">
-                                                <p *ngIf="!(awardCriterion=='Focus Area')">
-                                                    <strong> Focus Area - </strong>
-                                                    <span *ngFor="let at of pa.activities[0].focusAreas; let i = index">
-                                                        {{ (i === pa.activities[0].focusAreas.length-1) ? at : at + "," + ' '}}
-                                                    </span> </p>
-                                                <p *ngIf="!(awardCriterion=='PSD Area')">
-                                                    <strong> PSD Area - </strong>
-                                                    <span *ngFor="let at of pa.activities[0].psdAreas; let i = index">
-                                                        {{ (i === pa.activities[0].psdAreas.length-1) ? at : at + "," + ' '}}
-                                                    </span> </p>
-                                                <p *ngIf="!(awardCriterion=='4S')">
-                                                    <strong> 4S - </strong> {{pa.activities[0].fourS}} </p>
-                                            </div>
-                                        </div>
+                                        </div>           
                                     </div>
                                 </div>
                             </div>
