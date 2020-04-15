@@ -11,6 +11,9 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.LocalDateTime;
 
 import com.nxtlife.mgs.entity.school.Award;
+import com.nxtlife.mgs.enums.AwardCriterion;
+import com.nxtlife.mgs.enums.FourS;
+import com.nxtlife.mgs.enums.PSDArea;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.util.DateUtil;
 
@@ -32,8 +35,10 @@ public class AwardRequest extends Request{
 	private String gradeId;
 	private String activityId;
 	private List<AwardActivityPerformedCid> awardActivityPerformedList;
-//	private String validFrom;
-//	private String validUntil;
+	private String validFrom;
+	private String validUntil;
+	private String awardCriterion;
+	private String criterionValue;
 
 	public String getId() {
 		return id;
@@ -107,10 +112,6 @@ public class AwardRequest extends Request{
 		this.awardActivityPerformedList = awardActivityPerformedList;
 	}
 
-	public Award toEntity() {
-		return toEntity(null);
-	}
-
 	public String getAwardType() {
 		return awardType;
 	}
@@ -120,6 +121,42 @@ public class AwardRequest extends Request{
 	}
 
 	
+	public String getAwardCriterion() {
+		return awardCriterion;
+	}
+
+	public void setAwardCriterion(String awardCriterion) {
+		this.awardCriterion = awardCriterion;
+	}
+
+	public String getCriterionValue() {
+		return criterionValue;
+	}
+
+	public void setCriterionValue(String criterionValue) {
+		this.criterionValue = criterionValue;
+	}
+
+	public String getValidFrom() {
+		return validFrom;
+	}
+
+	public void setValidFrom(String validFrom) {
+		this.validFrom = validFrom;
+	}
+
+	public String getValidUntil() {
+		return validUntil;
+	}
+
+	public void setValidUntil(String validUntil) {
+		this.validUntil = validUntil;
+	}
+
+	public Award toEntity() {
+		return toEntity(null);
+	}
+	
 	public Award toEntity(Award award) {
 		award = award == null ? new Award() : award;
 		award.setCid(this.id);
@@ -128,6 +165,32 @@ public class AwardRequest extends Request{
 				throw new ValidationException("description cannot be less than 10 words.");
 			award.setDescription(this.description);
 		}
+		LocalDateTime currentDateTime = LocalDateTime.now();
+		if((validFrom !=null && DateUtil.convertStringToDate(validFrom).after(currentDateTime.toDate())) ||
+				validUntil !=null && DateUtil.convertStringToDate(validUntil).after(currentDateTime.toDate()))
+			throw new ValidationException("StartDate or endDate cannot be a future date.");
+		Date startDate,endDate; 
+		if(validFrom == null && validUntil == null) {
+			endDate = currentDateTime.toDate();
+			startDate = currentDateTime.minusMonths(4).toDate();
+		}else if(validFrom == null && validUntil!=null) {
+			endDate = DateUtil.convertStringToDate(validUntil);
+			startDate = LocalDateTime.fromDateFields(endDate).minusMonths(4).toDate();
+		}else if(validFrom != null && validUntil == null) {
+			 startDate = DateUtil.convertStringToDate(validFrom);
+			 endDate = currentDateTime.toDate();
+		}else {
+			startDate = DateUtil.convertStringToDate(validFrom);
+            endDate = DateUtil.convertStringToDate(validUntil);
+            if(startDate.after(endDate))
+            	throw new ValidationException("startDate shall fall before end date.");
+		}
+		award.setValidFrom(startDate);
+		award.setValidUntil(endDate);
+
+		
+		
+		
 //		if(this.getValidFrom() == null && this.getValidUntil() == null) {
 //			LocalDateTime currentDate = LocalDateTime.now();
 //			award.setValidFrom(currentDate.toDate());

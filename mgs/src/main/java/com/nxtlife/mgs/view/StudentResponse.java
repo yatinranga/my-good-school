@@ -30,9 +30,11 @@ public class StudentResponse {
 	private List<GuardianResponse> guardianResponseList;
 	private String profileImage;
 	private String yearOfEnrolment;
-	private List<ActivityActivitiesPerformedResponse> performedActivities;
+	private List<GroupResponseByActivityName> performedActivities;
 	private Set<String> focusAreas;
 	private Set<String> activityTypes;
+	private Set<String> psdAreas;
+	private Set<String> fourS;
 	private Double scoreForAward;
 	private String gradeId;
 
@@ -172,11 +174,11 @@ public class StudentResponse {
 		this.yearOfEnrolment = yearOfEnrolment;
 	}
 
-	public List<ActivityActivitiesPerformedResponse> getPerformedActivities() {
+	public List<GroupResponseByActivityName> getPerformedActivities() {
 		return performedActivities;
 	}
 
-	public void setPerformedActivities(List<ActivityActivitiesPerformedResponse> performedActivities) {
+	public void setPerformedActivities(List<GroupResponseByActivityName> performedActivities) {
 		this.performedActivities = performedActivities;
 	}
 
@@ -210,6 +212,22 @@ public class StudentResponse {
 
 	public void setGradeId(String gradeId) {
 		this.gradeId = gradeId;
+	}
+
+	public Set<String> getPsdAreas() {
+		return psdAreas;
+	}
+
+	public void setPsdAreas(Set<String> psdAreas) {
+		this.psdAreas = psdAreas;
+	}
+
+	public Set<String> getFourS() {
+		return fourS;
+	}
+
+	public void setFourS(Set<String> fourS) {
+		this.fourS = fourS;
 	}
 
 	public StudentResponse(Student student) {

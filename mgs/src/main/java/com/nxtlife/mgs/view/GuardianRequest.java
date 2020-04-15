@@ -1,8 +1,9 @@
 package com.nxtlife.mgs.view;
 
 import com.nxtlife.mgs.entity.user.Guardian;
+import com.nxtlife.mgs.ex.ValidationException;
 
-public class GuardianRequest {
+public class GuardianRequest extends Request {
 
 	private String id;
 	private String name;
@@ -79,9 +80,19 @@ public class GuardianRequest {
 
 	public Guardian toEntity(Guardian guardian) {
 		guardian = guardian == null ? new Guardian() : guardian;
-		guardian.setName(name);
-		guardian.setEmail(email);
-		guardian.setMobileNumber(mobileNumber);
+		if (this.name != null) {
+			if(!isStringOnlyAlphabet(this.name))
+				throw new ValidationException(String.format("Name (%s) is in invalid format, it should contain only alphabets.",this.name));
+			guardian.setName(this.name);
+		}
+		if (this.email != null) {
+			validateEmail(this.email);
+			guardian.setEmail(this.email);
+		}
+		if (this.mobileNumber != null) {
+			validateMobileNumber(this.mobileNumber);
+			guardian.setMobileNumber(this.mobileNumber);
+		}
 		guardian.setRelationship(this.relationship);
 		guardian.setUsername(this.username);
 		guardian.setGender(gender);

@@ -12,13 +12,13 @@ public interface AwardService {
 
 	AwardResponse createAward(AwardRequest request);
 	
-	public List<AwardResponse> findAllByStudent();
+	public AwardResponse findAllByStudent();
 	
-	public List<AwardResponse> findAllByStudent(AwardFilter awardFilter) ;
+	public AwardResponse findAllByStudent(AwardFilter awardFilter) ;
 	
-	public List<AwardResponse> findAllByManagement();
+	public AwardResponse findAllByManagement();
 	
-	public List<AwardResponse> findAllByManagement(AwardFilter awardFilter) ;
+	public AwardResponse findAllByManagement(AwardFilter awardFilter) ;
 	
 	public AwardResponse updateStatus(String awardId, Boolean isVerified);
 

@@ -209,7 +209,7 @@ public class TeacherRequest extends Request {
 		teacher = teacher == null ? new Teacher() : teacher;
 		if (this.name != null) {
 			if(!isStringOnlyAlphabet(this.name))
-				throw new ValidationException(String.format("Name (%s) is in invalid format, it should contain only alphabets."));
+				throw new ValidationException(String.format("Name (%s) is in invalid format, it should contain only alphabets.",this.name));
 			teacher.setName(this.name);
 		}
 
