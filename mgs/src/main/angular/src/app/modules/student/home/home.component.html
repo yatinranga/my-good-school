@@ -13,7 +13,7 @@
         <div class="menu_main">
             <h3>List of Supervisors :</h3>
             <ul>
-                <li *ngFor="let c of coaches">{{c.name}}</li>
+                <li *ngFor="let c of coaches">{{c.name}} - {{c.profileBrief}}</li>
                 <li *ngIf="coaches.length==0" id="null">
                     {{sup_loader ? 'Loading...' : 'No Supervisor'}}
                 </li>

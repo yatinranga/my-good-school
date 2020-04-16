@@ -49,7 +49,7 @@ export class StudentAwardsComponent implements OnInit {
   getAwards(){
     this.loader = true;
     this.studentService.getAllAwards(this.studentId).subscribe((res) => {
-      this.awardsArr = res;
+      this.awardsArr = res.awards;
       this.copyAwardArr = Object.assign([],res);
 
       console.log(res);
@@ -103,4 +103,6 @@ export class StudentAwardsComponent implements OnInit {
   getDate(date) {
     return new Date(date)
   }
+
+  
 }

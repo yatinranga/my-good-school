@@ -192,33 +192,33 @@
                         <!-- When award criteria is 4s, PSD and Focus Area -->
                         <table *ngIf="!(awardCriterion=='Activity Type')" class="innertable">
                             <tbody id="innerAccordionExample">
-                                <ng-container *ngFor="let pa of activity.performedActivities; let j = index;">
-                                    <tr data-toggle="collapse" [attr.data-target]="'#collapsed'+j">
-                                        <td> {{j+1}}. </td>
+                                <ng-container *ngFor="let pa of activity.performedActivities; let i = index;">
+                                    <tr data-toggle="collapse" [attr.data-target]="'#collapsed'+i">
+                                        <td> {{i+1}} </td>
                                         <td id="actname"> {{pa.activityName}} </td>
                                         <td> 
                                             <p *ngIf="!(awardCriterion=='Focus Area')"> <strong> Focus Area - </strong>
-                                                <span *ngFor="let at of pa.activities[0].focusAreas; let i = index"> {{ (i === pa.activities[0].focusAreas.length-1) ? at : at + "," + ' '}} </span> 
+                                                <span *ngFor="let at of pa.responses[0].focusAreas; let i = index"> {{ (i === pa.responses[0].focusAreas.length-1) ? at : at + "," + ' '}} </span> 
                                             </p>
                                             <p *ngIf="!(awardCriterion=='PSD Area')"> <strong> PSD Area - </strong> 
-                                                <span *ngFor="let at of pa.activities[0].psdAreas; let i = index"> {{ (i === pa.activities[0].psdAreas.length-1) ? at : at + "," + ' '}} </span> 
+                                                <span *ngFor="let at of pa.responses[0].psdAreas; let i = index"> {{ (i === pa.responses[0].psdAreas.length-1) ? at : at + "," + ' '}} </span> 
                                             </p>
                                         </td> 
                                         <td>  <p *ngIf="!(awardCriterion=='4S')"> 
-                                            <strong> 4S - </strong> {{pa.activities[0].fourS}} </p>
+                                            <strong> 4S - </strong> {{pa.responses[0].fourS}} </p>
                                         </td>
                                         <td>Activity Count - {{pa.count}} </td>
                                         <td>Average Stars - {{pa.averageStars}} </td>
                                     </tr>
                                     <tr>
                                         <td class="last collapsed-td" colspan="12">
-                                            <div [attr.id]="'collapsed' + j" class="collapse" data-parent="#innerAccordionExample">
-                                                <div *ngFor="let ac of pa.activities; let j = index;">
+                                            <div [attr.id]="'collapsed' + i" class="collapse" data-parent="#innerAccordionExample">
+                                                <div *ngFor="let ac of pa.responses; let j = index;">
                                                     <div class="row">
                                                         <div class="col-6">
                                                             <div class="assign description">
                                                                 <h5> <label> <input type="checkbox" name="selectPerformedActivity" value={{ac.id}} [(ngModel)]="actiPerform[ac.id]"> </label>
-                                                                     {{j+1}} </h5>
+                                                                     {{i+1}}.{{j+1}} </h5>
                                                                 <p> <strong>Title - </strong>{{ac.title}} </p>
                                                                 <p> <strong>Description - </strong>{{ac.description}} </p>
                                                             </div>
@@ -242,14 +242,14 @@
                         <!-- When award criteria is Activity Type -->
                         <div *ngIf="awardCriterion=='Activity Type'">
                             <div *ngFor="let pa of activity.performedActivities; let i = index;">
-                                <div *ngFor="let ac of pa.activities; let j = index;">
+                                <div *ngFor="let ac of pa.responses; let j = index;">
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="assign description">
                                                 <h5>
                                                     <label> <input type="checkbox" name="selectPerformedActivity" value={{ac.id}}
                                                             [(ngModel)]="actiPerform[ac.id]"> </label>
-                                                    Activity {{j+1}} Details
+                                                    {{j+1}}
                                                 </h5>
                                                 <p> <strong>Title - </strong>{{ac.title}}</p>
                                                 <p> <strong>Description - </strong>{{ac.description}}</p>
@@ -266,6 +266,8 @@
                                 </div>
                             </div>
                         </div>
+
+
                     </div>
                     </td>
                     </tr>
@@ -298,42 +300,83 @@
                         <th scope="col">#</th>
                         <th scope="col">AWARD</th>
                         <th scope="col">DESCRIPTION</th>
-                        <th scope="col">STUDENT NAME</th>
-                        <th scope="col">GRADE</th>
+                        <th scope="col">STUDENT NAME & GRADE</th>
+                        <th scope="col">AWARD CRITERIA</th>
+                        <th scope="col">CRITERIA VALUE</th>
+                        <th scope="col">VALID FROM</th>
+                        <th scope="col">VALID TO</th>
                         <th scope="col">
                             STATUS
                             <button class="icon_button" name="sort" (click)="sortByStatus()">
                                 <i class="fa fa-sort"></i>
                             </button>
                         </th>
-                        <th scope="col">ACTION</th>
                     </tr>
                 </thead>
                 <tbody id="accordionExample">
                     <ng-container *ngFor="let al of awardsList ; let i = index;">
                         <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                             <td>{{i+1}}</td>
-                            <td>{{al.awardType}}</td>
-                            <td>{{al.description}}</td>
-                            <td>{{al.studentName}}</td>
-                            <td> {{al.studentGrade}}</td>
+                            <td>{{al.responses[0].awardType}}</td>
+                            <td>{{al.responses[0].description}}</td>
+                            <td>{{al.responses[0].studentName}} {{al.responses[0].studentGrade}}</td>
+                            <td>{{al.criterion}}</td>
+                            <td>{{al.criterionValue}}</td>
+                            <td>{{al.responses[0].validFrom | date }}</td>
+                            <td>{{al.responses[0].validUntil | date}}</td>
                             <td>
-                                <div *ngIf="al.status === 'PENDING'" class="pending"> {{al.status}}
+                                <div *ngIf="al.responses[0].status === 'PENDING'" class="pending"> {{al.responses[0].status}}
                                 </div>
-                                <div *ngIf="al.status === 'VERIFIED'" class="verified">
-                                    {{al.status}} </div>
+                                <div *ngIf="al.responses[0].status === 'VERIFIED'" class="verified">
+                                    {{al.responses[0].status}} </div>
                             </td>
-                            <td><button name="verifySelectedAward" *ngIf="al.status == 'PENDING'"
+                            <!-- <td><button name="verifySelectedAward" *ngIf="al.status == 'PENDING'"
                                     (click)="verifySelectedAward($event,i)" class="pending">
                                     <i class="fa fa-hourglass-start"></i> </button>
                                 <button name="verifiedAward" *ngIf="al.status == 'VERIFIED'"
                                     [disabled]="(al.status == 'VERIFIED')" class="verify">
-                                    <i class="fa fa-check" aria-hidden="true"></i> </button> </td>
+                                    <i class="fa fa-check" aria-hidden="true"></i> </button> </td> -->
                         </tr>
                         <tr>
-                            <td class="collapse-td" colspan="7">
+                            <td class="collapse-td" colspan="9">
                                 <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
-                                    <div *ngFor="let ap of al.activityPerformedResponses; let j = index">
+                                    <table >
+                                        <tbody id="innerAccordionExample">
+                                            <ng-container *ngFor="let pa of al.responses[0].activityPerformedResponses; let i = index;">
+                                                <tr data-toggle="collapse" [attr.data-target]="'#collapsed'+i">
+                                                    <td>{{i+1}}</td>
+                                                    <td>{{pa.activityName}}</td>
+                                                    <td>Activity Count - {{pa.count}}</td>
+                                                    <td>Average Stars - {{pa.averageStars}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="last collapsed-td" colspan="12">
+                                                        <div [attr.id]="'collapsed' + i" class="collapse" data-parent="#innerAccordionExample">
+                                                            <div *ngFor="let ac of pa.responses; let j = index;">
+                                                                <div class="row">
+                                                                    <div class="col-6">
+                                                                        <div class="assign description">
+                                                                            <h5>{{i+1}}.{{j+1}} </h5>
+                                                                            <p> <strong>Title - </strong>{{ac.title}} </p>
+                                                                            <p> <strong>Description - </strong>{{ac.description}} </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-6">
+                                                                        <div class="assign description">
+                                                                            <h5> Scoring </h5>
+                                                                            <p> <strong>Total Score - </strong>{{ac.totalMarks}} </p>
+                                                                            <p> <strong>Remarks - </strong>{{ac.coachRemark}} </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>                                                    
+                                                    </td>
+                                                </tr>
+                                            </ng-container>
+                                        </tbody>
+                                    </table>
+                                    <!-- <div *ngFor="let ap of al.responses[0].activityPerformedResponses; let j = index">
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="horz">
@@ -403,7 +446,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </td>
                         </tr>
@@ -411,9 +454,9 @@
                 </tbody>
                 <tfoot *ngIf="awardsList.length == 0">
                     <tr>
-                        <td colspan="8">
+                        <td colspan="9">
                             <div *ngIf="award_loader" class="spinner-border text-dark" role="status">
-                            </div>{{award_loader ? 'Loading...' :  'No Activities'}}
+                            </div>{{award_loader ? 'Loading...' :  'No Awards'}}
                         </td>
                     </tr>
                 </tfoot>
