@@ -400,8 +400,8 @@ export class TeacherAwardsComponent implements OnInit {
     this.order = !this.order;
     // sort by activityStatus
     this.awardsList.sort((a, b) => {
-      const nameA = a.status.toUpperCase(); // ignore upper and lowercase
-      const nameB = b.status.toUpperCase(); // ignore upper and lowercase
+      const nameA = a.responses[0].status.toUpperCase(); // ignore upper and lowercase
+      const nameB = b.responses[0].status.toUpperCase(); // ignore upper and lowercase
       if (nameA < nameB) {
         return this.order ? -1 : 1;
       }
