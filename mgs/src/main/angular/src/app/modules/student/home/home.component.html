@@ -29,8 +29,7 @@
                             <option disbaled *ngIf="!grades.length">No Grades Available</option>
                         </select>
                         <ul>
-                                <li *ngFor="let s of students; let i = index" id="t-name"> {{i+1}}. {{s.name}}</li>
-                                <li *ngFor="let s of students">  {{s.grade}} - {{s.section}} </li>
+                                <li *ngFor="let s of students; let i = index" id="t-name"> {{i+1}}. {{s.name}} - {{s.grade}} {{s.section}}</li>
                                 <li *ngIf="students.length==0" id="null">
                                     {{stu_loader ? 'Loading...' : 'No Students'}}
                                 </li>
