@@ -43,18 +43,18 @@
                     <ng-container *ngFor="let al of awardsArr ; let i = index;">
                         <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                             <td>{{i+1}}</td>
-                            <td>{{al.responses[0].awardType}}</td>
-                            <td>{{al.responses[0].description}}</td>
-                            <td>{{al.responses[0].studentName}} {{al.responses[0].studentGrade}}</td>
-                            <td>{{al.criterion}}</td>
+                            <td>{{al.awardType}}</td>
+                            <td>{{al.description}}</td>
+                            <td>{{al.studentName}} {{al.studentGrade}}</td>
+                            <td>{{al.awardCriterion}}</td>
                             <td>{{al.criterionValue}}</td>
-                            <td>{{al.responses[0].validFrom | date }}</td>
-                            <td>{{al.responses[0].validUntil | date}}</td>
+                            <td>{{al.validFrom | date }}</td>
+                            <td>{{al.validUntil | date}}</td>
                             <td>
-                                <div *ngIf="al.responses[0].status === 'PENDING'" class="pending"> {{al.responses[0].status}}
+                                <div *ngIf="al.status === 'PENDING'" class="pending"> {{al.status}}
                                 </div>
-                                <div *ngIf="al.responses[0].status === 'VERIFIED'" class="verified">
-                                    {{al.responses[0].status}} </div>
+                                <div *ngIf="al.status === 'VERIFIED'" class="verified">
+                                    {{al.status}} </div>
                             </td>                            
                         </tr>
                         <tr>
@@ -62,7 +62,7 @@
                                 <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
                                     <table class="innertable">
                                         <tbody id="innerAccordionExample">
-                                            <ng-container *ngFor="let pa of al.responses[0].activityPerformedResponses; let i = index;">
+                                            <ng-container *ngFor="let pa of al.activityPerformedResponses; let i = index;">
                                                 <tr data-toggle="collapse" [attr.data-target]="'#collapsed'+i">
                                                     <td>{{i+1}}</td>
                                                     <td id="actname"> {{pa.activityName}}</td>

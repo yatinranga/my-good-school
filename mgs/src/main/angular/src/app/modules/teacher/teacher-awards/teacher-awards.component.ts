@@ -324,7 +324,7 @@ export class TeacherAwardsComponent implements OnInit {
 
       this.award_loader = true;
       this.teacherService.getTeacherAwards().subscribe((res) => {
-        this.awardsList = res.awards;
+        this.awardsList = res;
         console.log(this.awardsList);
         this.award_loader = false;
       },
