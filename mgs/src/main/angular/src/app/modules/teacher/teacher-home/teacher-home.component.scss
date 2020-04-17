@@ -1,16 +1,50 @@
-.teacher.home_page_content h1 {
+.home_page_content {
+    width: 50%;
+    display: inline-grid;
+    background: none;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    float: left;
+}
+.home_page_content h1 {
     padding: 10px 30px;
     margin: 0;
 }
-.teacher.home_page_content .menu_main {
+.home_page_content .menu_main {
     display: inline-block;
     padding: 0px 30px;
     width: 100%;
     font-size: 17px;
 }
-.teacher.home_page_content .menu_main h3{
+.home_page_content .menu_content {
+    margin-bottom: 25px;
+}
+.home_page_content .menu_main h3{
     font-size: 22px;
 }
-.teacher.home_page_content .menu_content {
-    margin-bottom: 25px;
+.home_page_content h3:before {
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-left: 12px solid #555;
+    border-bottom: 6px solid transparent;
+    left: -22px;
+    top: 5px;
+}
+.home_page_content h3 {
+    font-size: 20px;
+    margin: 5px 25px;
+    position: relative;
+}
+.home_page_content ul {
+    padding: 0;
+    margin: 5px 10px;
+}
+.home_page_content ul li{
+    list-style: inside;
+    list-style-type: disc;
+    color: #333;
 }

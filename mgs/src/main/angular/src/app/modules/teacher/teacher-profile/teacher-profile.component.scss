@@ -91,6 +91,36 @@ button.edit_profile {
     padding: 0 30px;
     margin: 20px 0;
 }
+.basic-info {
+    float: left;
+    width: 25%;
+    margin: 0 auto;
+    background: #d8d8d8;
+    padding: 10px;
+    min-height: 320px;
+}
+.basic-info li {
+    margin: 10px 0;
+}
+.basic-info ul{
+    padding: 0;
+    margin: 0;
+}
+.teacher-activities-main {
+    float: left;
+    width: 25%;
+    margin-left: 20px;
+    background: #d8d8d8;
+    padding: 10px;
+    min-height: 320px;
+}
+.teacher-activities-main ul {
+    padding: 0 15px;
+    margin: 15px 0;
+}
+.teacher-activities-main ul li{
+list-style: inherit;
+}
 
 /*
 .basic-info h3 {
@@ -98,49 +128,16 @@ button.edit_profile {
 }
 */
 
-.profile_text h2{
-    margin: 0 0 20px 0;
-    color: #e04090;
-    font-weight: 300;
-    text-align: left;
-}
-.profile_text label {
-    font-size: 17px;
-    color: #333;
-    padding: 0px 10px;
-}
-.profile_text h3{
+.teacher_about_box h3{
     width: 100px;
     font-size: 21px;
     color: #e04090;
     text-align: left;
-    margin-bottom: 35px;
+    margin-bottom: 25px;
     font-weight: 500;
     border-bottom: 1px solid #e04090;
 }
-.basic-info {
-    float: left;
-    width: 65%;
-    margin: 0;
-}
-.basic-info li {
-    margin: 10px 0;
-}
-.basic-info ul{
-    padding: 0;
-}
-.teacher-activities-main {
-    float: right;
-    width: 35%;
-    margin: 0;
-    padding: 0;
-}
-.teacher-activities-main ul {
-    padding: 0 17px;
-}
-.teacher-activities-main ul li{
-list-style: inherit;
-}
+
 .basic-info i.fa {
     margin: 0 15px 0 0px;
 }

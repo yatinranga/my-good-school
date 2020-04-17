@@ -319,25 +319,6 @@ app-home{
     padding: 0;
     opacity: 0.7;
 }
-.home_page_content {
-    width: 50%;
-    display: inline-grid;
-    background: none;
-    position: absolute;
-    top: 60px;
-    left: 0;
-    float: left;
-}
-.home_page_content select {
-    width: 150px;
-    margin: 0 5px;
-    font-size: 16px;
-    background: #d2d2d2;
-    border: 1px solid #999;
-}
-.home_page_content label {
-    font-size: 20px;
-}
 .banner {
     width: 100%;
     display: inline-block;
@@ -346,39 +327,6 @@ app-home{
     vertical-align: top;
     height: calc(100vh - 107px);
 }
-.home_page_content ul {
-    padding: 0;
-    margin: 5px;
-}
-.home_page_content h2 {
-    font-size: 23px;
-    margin: 5px;
-}
-.home_page_content h3:before {
-    position: absolute;
-    content: "";
-    width: 0;
-    height: 0;
-    border-top: 6px solid transparent;
-    border-left: 12px solid #555;
-    border-bottom: 6px solid transparent;
-    left: -22px;
-    top: 5px;
-}
-.home_page_content h3 {
-    font-size: 20px;
-    margin: 5px 25px;
-    position: relative;
-}
-.menu_main{
-    width: 50%;
-    display: -webkit-inline-box;
-    float: left;
-    padding: 10px 20px;
-    margin: 20px 0;
-    font-family: initial;
-}
-
 /*-------------------------------------NAVIGATION BAR-------------------------------------*/
 
 
