@@ -49,7 +49,7 @@ export class StudentAwardsComponent implements OnInit {
   getAwards(){
     this.loader = true;
     this.studentService.getAllAwards(this.studentId).subscribe((res) => {
-      this.awardsArr = res.awards;
+      this.awardsArr = res;
       this.copyAwardArr = Object.assign([],res);
 
       console.log(res);

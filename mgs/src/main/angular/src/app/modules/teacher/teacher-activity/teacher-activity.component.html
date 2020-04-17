@@ -38,69 +38,6 @@
                     </select>
                 </div> -->
 
-            <div *ngIf="activityType">
-                <div class="table_main">
-                    <table class="table">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">STUDENT NAME</th>
-                                <th scope="col">GRADE</th>
-                                <th scope="col">PERFORMED ACTIVITY  </th>
-                                <th scope="col">TITLE</th>
-                                <th scope="col">SUBMISSION DATE </th>
-                                <th scope="col" *ngIf="!(activityType === 'Reviewed')">STATUS
-                                    <button *ngIf="activityType === 'All'" name="sort" class="icon_button"
-                                        (click)="sortByStatus()">
-                                        <i class="fa fa-sort"></i>
-                                    </button>
-                                </th>
-                                <th scope="col" *ngIf="(activityType === 'Reviewed')">STATUS
-                                    <button *ngIf="activityType === 'All'" name="sort" class="icon_button"
-                                        (click)="sortByStatus()">
-                                        <i class="fa fa-sort"></i>
-                                    </button>
-                                </th>
-                                <th *ngIf="!(activityType === 'Reviewed')">ACTION</th>
-                                <th scope="col">  <i class="fa fa-paperclip" title="Attachment" aria-hidden="true"></i> </th>
-                            </tr>
-                        </thead>
-                        <tbody id="accordionExample">
-                            <ng-container *ngFor="let activity of activitiesArr; let i = index;">
-                                <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
-                                    <td>{{i+1}}</td>
-                                    <td>{{activity.studentName}} </td>
-                                    <td>{{activity.grade}}</td>
-                                    <td>{{activity.activityName}}</td>
-                                    <td>{{activity.title}}</td>
-                                    <td>{{getDate(activity.dateOfActivity) | date}}</td>
-                                    <td>
-                                        <div *ngIf="activity.activityStatus === 'SubmittedByStudent'" class="pending">
-                                            Pending</div>
-                                        <div *ngIf="activity.activityStatus === 'SavedByTeacher'" class="saved">Saved
-                                        </div>
-                                        <div *ngIf="activity.activityStatus === 'Reviewed'" class="reviewed">Reviewed
-                                        </div>
-                                    </td>
-                                    <td *ngIf="!(activityType === 'Reviewed')"  (click)="stopCollapse($event)">
-                                        <div
-                                            *ngIf="(activityType === 'All') && (activity.activityStatus !== 'Reviewed')">
-                                            <button name="submitSavedActivity"
-                                                [disabled]="!(activity.activityStatus === 'SavedByTeacher')"
-                                                (click)="submitSavedActivity(activity,i, $event)"
-                                                class="submitted icon_button">
-                                                <i class="fa fa-paper-plane" title="Submit"> </i> </button>
-                                            <button name="editSavedActivity"
-                                                [disabled]="!(activity.activityStatus === 'SavedByTeacher')"
-                                                (click)="editSavedActivity(activity,i, $event)"
-                                                class="saved icon_button">
-                                                <i class="fa fa-edit" title="Edit"> </i> </button>
-                                            <button name="reviewActivity"
-                                                [disabled]="!(activity.activityStatus === 'SubmittedByStudent')"
-                                                (click)="reviewActivity(activity,i, $event)"
-                                                class="pending icon_button">
-                                                <i class="fa fa-comments" title="Review"></i> </button>
-                                        </div>
 
                 <div *ngIf="activityType">
                     <div class="table_main">
@@ -177,27 +114,39 @@
                                                         title="Review"></i> </button>
                                             </div>
 
-                                        <div
-                                            *ngIf="(activityType === 'All') && (activity.activityStatus === 'Reviewed')">
-                                            NA
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="pull-right" *ngIf="activity.fileResponses.length">
-                                            <i class="fa fa-paperclip" title="Attachment" aria-hidden="true"></i>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="collapse-td" colspan="10">
-                                        <div [attr.id]="'collapse' + i " class="collapse"
-                                            data-parent="#accordionExample">
-                                            <div *ngIf="(activity.activityStatus != 'SubmittedByStudent')">
-                                                <div class="row">
-                                                    <div class="col-3">
-                                                        <div class="description">
-                                                            <h5> Activity Details : </h5>
-                                                            <p> <strong> Description - </strong> {{activity.description}} </p>                                                   
+                                            <div *ngIf="activityType === 'Saved'">
+                                                <button name="submitSavedActivity"
+                                                    (click)="submitSavedActivity(activity,i, $event)"
+                                                    class="submitted icon_button">
+                                                    <i class="fa fa-paper-plane" title="Submit"> </i> </button>
+                                                <button name="editSavedActivity"
+                                                    (click)="editSavedActivity(activity,i, $event)"
+                                                    class="saved icon_button"> <i class="fa fa-edit" title="Edit">
+                                                    </i> </button>
+                                            </div>
+                                            <div
+                                                *ngIf="(activityType === 'All') && (activity.activityStatus === 'Reviewed')">
+                                                NA </div>
+                                        </td>
+                                        <td>
+                                            <span class="pull-right" *ngIf="activity.fileResponses.length">
+                                                <i class="fa fa-paperclip" title="Attachment" aria-hidden="true"></i>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="collapse-td" colspan="10">
+                                            <div [attr.id]="'collapse' + i " class="collapse"
+                                                data-parent="#accordionExample">
+                                                <div *ngIf="(activity.activityStatus != 'SubmittedByStudent')">
+                                                    <div class="row">
+                                                        <div class="col-3">
+                                                            <div class="description">
+                                                                <h5> Activity Details : </h5>
+                                                                <p> <strong> Description - </strong>
+                                                                    {{activity.description}} </p>
+                                                                
+                                                            </div>
                                                         </div>
                                                         <div class="col-3">
                                                                 <div class="description">
@@ -242,16 +191,34 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div *ngIf="(activity.activityStatus === 'SubmittedByStudent')">
-                                                <div class="row">
-                                                    <div class="col-6">
-                                                        <div class="description">
-                                                            <h5> Activity Details : </h5>
-                                                            <p> <strong> Description - </strong> {{activity.description}} </p>                                                   
+                                                <div *ngIf="(activity.activityStatus === 'SubmittedByStudent')">
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <div class="description">
+                                                                <h5> Activity Details : </h5>
+                                                                <p> <strong> Description - </strong> {{activity.description}} </p> 
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="description">
+                                                                <h5> Development Parameters : </h5>
+                                                                <p> <strong>Focus Area - </strong></p>
+                                                                <span id="fa"
+                                                                    *ngFor="let fa of activity.focusAreas; let i = index">
+                                                                    {{ (i === activity.focusAreas.length-1) ? fa : fa + "," + ' '}}
+                                                                </span>
+                                                                <p *ngIf="activity.psdAreas">
+                                                                    <strong>PSD Area : </strong></p>
+                                                                <span id="fa"
+                                                                    *ngFor="let fa of activity.psdAreas let i = index">
+                                                                    {{ (i === activity.psdAreas.length-1) ? fa : fa + "," + ' '}}
+                                                                </span>
+                                                                <p *ngIf="activity.fourS" id="fourSkills">
+                                                                    <strong>4's - </strong> {{activity.fourS}}
+                                                                </p>
+                                                            </div>
                                                         </div>
 
                                                         <div class="col-4" *ngIf="activity.fileResponses.length">
