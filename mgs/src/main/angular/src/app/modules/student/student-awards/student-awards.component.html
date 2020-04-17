@@ -60,12 +60,12 @@
                         <tr>
                             <td class="collapse-td" colspan="9">
                                 <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
-                                    <table >
+                                    <table class="innertable">
                                         <tbody id="innerAccordionExample">
                                             <ng-container *ngFor="let pa of al.responses[0].activityPerformedResponses; let i = index;">
                                                 <tr data-toggle="collapse" [attr.data-target]="'#collapsed'+i">
                                                     <td>{{i+1}}</td>
-                                                    <td>{{pa.activityName}}</td>
+                                                    <td id="actname"> {{pa.activityName}}</td>
                                                     <td>Activity Count - {{pa.count}}</td>
                                                     <td>Average Stars - {{pa.averageStars}}</td>
                                                 </tr>

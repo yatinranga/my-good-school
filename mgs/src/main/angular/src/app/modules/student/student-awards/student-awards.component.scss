@@ -4,27 +4,21 @@
 .awards .sortby select{
   color: #1f69ad;
 }
-
-p#title_award {
+table.innertable h5{
   color: #1f69ad;
-  font-weight: 300;
-  margin-bottom: 15px;
-}
-.table_main h5{
-  color: #333;
-}
-.horz {
-  width: 100%;
-  text-align: left;
-  padding: 10px;
-  border-bottom: 1px solid;
-}
-.horz h5 {
-  color: #1f69ad;
-  font-weight: 400;
-  font-size: 27px;
-  margin-bottom: 20px;
+  text-decoration: underline;
 }
 .awards .description{
-  min-height: 300px;
+  min-height: 200px;
+}
+table.innertable {
+  width: 100%;
+  background: white;
+}
+td.last.collapsed-td {
+  padding: 0;
+}
+td#actname {
+  font-size: 21px;
+  color: #1f69ad;
 }
