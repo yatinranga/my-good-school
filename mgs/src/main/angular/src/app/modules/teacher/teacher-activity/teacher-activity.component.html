@@ -46,8 +46,8 @@
                                 <th scope="col">STUDENT NAME</th>
                                 <th scope="col">GRADE</th>
                                 <th scope="col">PERFORMED ACTIVITY  </th>
-                                <th scope="col">ACTIVITY  TITLE</th>
-                                <th scope="col">PERFORMED ACTIVITY DATE </th>
+                                <th scope="col">TITLE</th>
+                                <th scope="col">SUBMISSION DATE </th>
                                 <th scope="col" *ngIf="!(activityType === 'Reviewed')">STATUS
                                     <button *ngIf="activityType === 'All'" name="sort" class="icon_button"
                                         (click)="sortByStatus()">
@@ -138,17 +138,7 @@
                                                     <div class="col-3">
                                                         <div class="description">
                                                             <h5> Activity Details : </h5>
-                                                            <p> <strong> Description - </strong> {{activity.description}} </p>
-                                                            <p> <strong>Focus Area - </strong></p>
-                                                            <span id="fa" *ngFor="let fa of activity.focusAreas; let i = index">                                                        
-                                                                {{ (i === activity.focusAreas.length-1) ? fa : fa + "," + ' '}}                                                        
-                                                            </span>
-                                                            <p><strong>PSD Area : </strong></p>
-                                                        <span id="fa" *ngFor="let fa of activity.psdAreas let i = index">                                                        
-                                                            {{ (i === activity.psdAreas.length-1) ? fa : fa + "," + ' '}}                                                        
-                                                        </span>
-                                                            <p *ngIf="activity.fourS" id="fourSkills">
-                                                                <strong> 4's - </strong> {{activity.fourS}}  </p>                                                      
+                                                            <p> <strong> Description - </strong> {{activity.description}} </p>                                                   
                                                         </div>
                                                     </div>
                                                     <div class="col-3">
@@ -202,35 +192,8 @@
                                                 <div class="row">
                                                     <div class="col-6">
                                                         <div class="description">
-                                                            <h5> Development Parameters : </h5>
-                                                            <p> <strong>Focus Area - </strong></p>
-                                                            <span id="fa" *ngFor="let fa of activity.focusAreas; let i = index">                                                        
-                                                                {{ (i === activity.focusAreas.length-1) ? fa : fa + "," + ' '}}                                                        
-                                                            </span>
-                                                            <p *ngIf="activity.psdAreas">
-                                                                <strong>PSD Area : </strong></p>
-                                                        <span id="fa" *ngFor="let fa of activity.psdAreas let i = index">                                                        
-                                                            {{ (i === activity.psdAreas.length-1) ? fa : fa + "," + ' '}}                                                        
-                                                        </span>
-                                                            <p *ngIf="activity.fourS" id="fourSkills">
-                                                                <strong>4's - </strong>
-                                                                <span *ngIf="activity.fourS=='Skill'"
-                                                                    style="color: #4bafa5;">
-                                                                    {{activity.fourS}}
-                                                                </span>
-                                                                <span *ngIf="activity.fourS=='Sport'"
-                                                                    style="color: #e04090;">
-                                                                    {{activity.fourS}}
-                                                                </span>
-                                                                <span *ngIf="activity.fourS=='Study'"
-                                                                    style="color: #1f69ad;">
-                                                                    {{activity.fourS}}
-                                                                </span>
-                                                                <span *ngIf="activity.fourS=='Service'"
-                                                                    style="color: #8dc33a;">
-                                                                    {{activity.fourS}}
-                                                                </span>
-                                                            </p>
+                                                            <h5> Activity Details : </h5>
+                                                            <p> <strong> Description - </strong> {{activity.description}} </p>                                                   
                                                         </div>
                                                     </div>
 

@@ -189,6 +189,7 @@ export class SavedActitvityComponent implements OnInit {
     e.stopPropagation();
     this.alertService.confirmWithoutLoader('question', 'Once submitted you will not be able to edit,\nSure you want to submit?', '', 'Confirm').then(result => {
       if (result.value) {
+        this.alertService.showLoader("");
         const activityId = array[index].id;
         this.studentService.submitActivity(activityId).subscribe((res) => {
           console.log(res);
@@ -235,6 +236,7 @@ export class SavedActitvityComponent implements OnInit {
     e.stopPropagation();
     this.alertService.confirmWithoutLoader('question', 'Are you sure you want to delete ?', '', 'Yes').then(result => {
       if (result.value) {
+        this.alertService.showLoader("");
         const activityId = activity.id;
         console.log(activityId);
         this.studentService.deleteActivity(activityId).subscribe((res) => {
