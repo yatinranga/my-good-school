@@ -145,17 +145,17 @@
                                                                 <h5> Activity Details : </h5>
                                                                 <p> <strong> Description - </strong>
                                                                     {{activity.description}} </p>
-                                                                
+
                                                             </div>
                                                         </div>
                                                         <div class="col-3">
-                                                                <div class="description">
-                                                                    <h5> Reviews : </h5>
-                                                                    <p> <strong style="color: green">Remarks -
-                                                                        </strong>{{activity.coachRemark}}</p>
-                                                                    <p> <strong> Date Reviewed -
-                                                                        </strong>{{activity.coachRemarkDate | date }} </p>
-                                                                </div>
+                                                            <div class="description">
+                                                                <h5> Reviews : </h5>
+                                                                <p> <strong style="color: green">Remarks -
+                                                                    </strong>{{activity.coachRemark}}</p>
+                                                                <p> <strong> Date Reviewed -
+                                                                    </strong>{{activity.coachRemarkDate | date }} </p>
+                                                            </div>
                                                         </div>
                                                         <div class="col-3">
                                                             <div class="description">
@@ -195,12 +195,15 @@
                                                 </div>
                                                 <div *ngIf="(activity.activityStatus === 'SubmittedByStudent')">
                                                     <div class="row">
+
                                                         <div class="col-4">
                                                             <div class="description">
                                                                 <h5> Activity Details : </h5>
-                                                                <p> <strong> Description - </strong> {{activity.description}} </p> 
+                                                                <p> <strong> Description - </strong>
+                                                                    {{activity.description}} </p>
                                                             </div>
                                                         </div>
+
                                                         <div class="col-4">
                                                             <div class="description">
                                                                 <h5> Development Parameters : </h5>
@@ -240,15 +243,10 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <!--
-                                                            <p *ngIf="activity.coachName">
-                                                                <strong>Teacher : </strong>{{activity.coachName}}</p>
-                                                        -->
                                                         </div>
 
                                                     </div>
                                                 </div>
-
                                             </div>
                                         </td>
                                     </tr>
@@ -368,12 +366,15 @@
                                             <label> {{ totalScore}} / 25</label>
                                         </div>
                                         <div class="form-group">
-                                            <label for="message-text" class="col-form-label">Remarks :</label>
+                                            <label for="message-text" class="col-form-label">Remarks : (Min. 25
+                                                words)</label>
                                             <textarea class="form-control" name="coachRemark"
-                                                formControlName="coachRemark"></textarea>
+                                                formControlName="coachRemark"
+                                                (ngModelChange)="wordCount($event)"></textarea>
+                                            <span class="text-muted">Word count - {{count}}</span><br>
                                             <small class="text-danger"
                                                 *ngIf="!reviewForm.get('coachRemark').valid && reviewForm.get('coachRemark').touched">
-                                                Should be minimum of 25 characters.
+                                                Should be minimum of 25 words.
                                             </small>
                                         </div>
                                         <div class="modal-footer">
