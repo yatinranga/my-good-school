@@ -4,7 +4,7 @@
     <div class="card-body text-center">
       <form [formGroup]="teacherBulkForm" (ngSubmit)="uploadTeacher()">
         <div class="input-field">
-          <select name="schoolName">
+          <select formControlName="schoolId" name="schoolName">
             <option value="" disabled selected>Select School </option>
             <option *ngFor="let school of schools; let i = index;" value={{school.id}}>{{school.name}}</option>
           </select>

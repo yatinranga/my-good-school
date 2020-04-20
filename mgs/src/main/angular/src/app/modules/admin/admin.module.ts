@@ -13,7 +13,7 @@ const routes: Routes = [
     component: AdminComponent,
     children: [
       { path: 'student-upload', component: StudentUploadComponent },
-      { path: 'teacher-upload', component: TeacherUploadComponent },
+      { path: 'supervisor-upload', component: TeacherUploadComponent },
       { path: 'school-upload', component: SchoolUploadComponent },
       { path: '', redirectTo : 'student-upload' }
     ]

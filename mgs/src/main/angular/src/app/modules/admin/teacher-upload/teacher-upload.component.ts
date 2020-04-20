@@ -15,11 +15,11 @@ export class TeacherUploadComponent implements OnInit {
   @ViewChild('dwnld', { static: false }) dwnld: ElementRef;
 
   schools = [];
-  teacherBulkForm : FormGroup;
-  files: any[];
+  teacherBulkForm: FormGroup;
+  files: any = [];
 
   constructor(private adminService: AdminService, private formBuilder: FormBuilder,
-              private alertService: AlertService) { }
+    private alertService: AlertService) { }
 
   ngOnInit() {
     this.adminService.getSchools("/schools").subscribe(
@@ -33,31 +33,51 @@ export class TeacherUploadComponent implements OnInit {
     });
   }
 
- 
+
 
   onFileSelect(event) {
     if (event.target.files.length > 0) {
       this.files = [];
       const file = event.target.files[0];
       this.files = [...event.target.files];
+      this.teacherBulkForm.value['selectedFile'] = event.target.files[0];
+      console.log(this.files);
     }
   }
 
   uploadTeacher() {
-    this.teacherBulkForm.value['selectedFile'] =this.files;
-    const formData = new FormData();
-    formData.append('file', this.teacherBulkForm.value.selectedFile);
-    formData.append('type', this.teacherBulkForm.value.type);
-    formData.append('schoolId', this.teacherBulkForm.value.schoolId);
-    console.log(formData);
+    if (this.teacherBulkForm.value.schoolId && (this.files != 0)) {
+      this.alertService.showLoader("");
+      const formData = new FormData();
+      formData.append('file', this.teacherBulkForm.value.selectedFile);
+      formData.append('type', this.teacherBulkForm.value.type);
+      formData.append('schoolId', this.teacherBulkForm.value.schoolId);
+      console.log(this.teacherBulkForm.value);
 
-    this.adminService.UploadExcel("/api/template/bulkUpload", formData).subscribe(
-      (res) => {
-        console.log(res);
-        this.alertService.showSuccessToast('Uploaded Successfully');
-      },
-      (err) => console.log(err)
-    );
+      this.adminService.UploadExcel("/api/template/bulkUpload", formData).subscribe(
+        (res) => {
+          console.log(res);
+          this.alertService.showSuccessToast('Uploaded Successfully');
+          this.teacherBulkForm.value.selectedFile = [];
+        }, (err) => { console.log(err) });
+
+    } else {
+      this.alertService.showErrorAlert("Please fill all the columns");
+    }
+    // this.teacherBulkForm.value['selectedFile'] =this.files;
+    // const formData = new FormData();
+    // formData.append('file', this.teacherBulkForm.value.selectedFile);
+    // formData.append('type', this.teacherBulkForm.value.type);
+    // formData.append('schoolId', this.teacherBulkForm.value.schoolId);
+    // console.log(formData);
+
+    // this.adminService.UploadExcel("/api/template/bulkUpload", formData).subscribe(
+    //   (res) => {
+    //     console.log(res);
+    //     this.alertService.showSuccessToast('Uploaded Successfully');
+    //   },
+    //   (err) => console.log(err)
+    // );
   }
 
   downloadTeacher() {
@@ -66,8 +86,9 @@ export class TeacherUploadComponent implements OnInit {
     this.dwnld.nativeElement.click();
   }
 
-  removeFile(){
+  removeFile() {
     this.files = [];
+    this.teacherBulkForm.value.selectedFile = [];
   }
 
 }
