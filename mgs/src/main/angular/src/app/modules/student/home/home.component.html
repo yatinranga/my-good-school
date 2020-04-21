@@ -11,37 +11,31 @@
             </select>
         </div>
         <div class="list_card_main">
-                <div class="list_card">
-                        <h3> List of Supervisors : </h3>
-                        <ul>
-                            <li *ngFor="let c of coaches; let i = index" id="t-name"> {{i+1}}. {{c.name}} - </li>
-                            <li *ngFor="let c of coaches"> {{c.profileBrief}} </li>
-                            <li *ngIf="coaches.length==0" id="null">
-                                {{sup_loader ? 'Loading...' : 'No Supervisor'}}
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="list_card">
-                        <h3> List of Students : </h3>
-                        <select name="grade" [disabled]="!activities.length" (change)="filterStudent()" [(ngModel)]="gradeId">
-                            <option value="" disabled>Select Grade</option>
-                            <option *ngFor="let g of grades" value={{g.id}}>{{g.grade}} {{g.section}}</option>
-                            <option disbaled *ngIf="!grades.length">No Grades Available</option>
-                        </select>
-                        <ul>
-                                <li *ngFor="let s of students; let i = index" id="t-name"> {{i+1}}. {{s.name}} - {{s.grade}} {{s.section}}</li>
-                                <li *ngIf="students.length==0" id="null">
-                                    {{stu_loader ? 'Loading...' : 'No Students'}}
-                                </li>
-                        </ul>
-                    </div>
+            <div class="list_card">
+                <h3> List of Superv[isors : </h3>
+                <ul>
+                 <li *ngFor="let c of coaches; let i = index" id="t-name"> {{i+1}}. {{c.name}} - </li>
+                 <li *ngFor="let c of coaches"> {{c.profileBrief}} </li>
+                 <li *ngIf="coaches.length==0" id="null"> {{sup_loader ? 'Loading...' : 'No Supervisor'}} </li>
+                </ul>
+            </div>
+            <div class="list_card">
+                <h3> List of Students : </h3>
+                <select name="grade" [disabled]="!activities.length" (change)="filterStudent()" [(ngModel)]="gradeId">
+                    <option value="" disabled>Select Grade</option>
+                    <option *ngFor="let g of grades" value={{g.id}}>{{g.grade}} {{g.section}}</option>
+                    <option disbaled *ngIf="!grades.length">No Grades Available</option>
+                </select>
+                <ul>
+                  <li *ngFor="let s of students; let i = index" id="t-name"> {{i+1}}. {{s.name}} - {{s.grade}} {{s.section}}</li>
+                  <li *ngIf="students.length==0" id="null"> {{stu_loader ? 'Loading...' : 'No Students'}} </li>
+                </ul>
+            </div>
         </div>
     </div>
+</div>
 
-
-
-   
-        <!-- <div class="home_page_content">
+    <!-- <div class="home_page_content">
             <div class="menu_main">
                     <h1> Welcome to Student Portal </h1>
                 <div class="menu_content">
@@ -67,6 +61,5 @@
                     <p>In Awards link, you can view awards.</p>
                 </div>
             </div>
-        </div> --> 
-   
-</div>
+        </div> -->
+
