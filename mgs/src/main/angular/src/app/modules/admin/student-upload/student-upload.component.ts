@@ -1,9 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { AdminService } from 'src/app/services/admin.service';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
-import { AuthService } from 'src/app/services/auth.service';
-// import { CustomHttpService } from 'src/app/services/custom-http-service.service';
-import { HttpClient } from '@angular/common/http';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { BASE_URL } from '../../../services/app.constant';
 import { AlertService } from 'src/app/services/alert.service';
 
@@ -19,7 +16,7 @@ export class StudentUploadComponent implements OnInit, AfterViewInit {
   schools = [];
 
   studentBulkForm : FormGroup;
-  files: any[];
+  files: any = [];
 
   constructor(private adminService: AdminService,
     private formBuilder: FormBuilder,
@@ -33,23 +30,23 @@ export class StudentUploadComponent implements OnInit, AfterViewInit {
 
     this.studentBulkForm = this.formBuilder.group({
       type: ['student'],
-      schoolId: [''],
-      selectedFile: ['']
+      schoolId: ['',Validators.required],
+      selectedFile: ['',Validators.required]
     });
   }
 
   ngAfterViewInit() {
 
       const header = document.getElementById('myDIV');
-      const btns = header.getElementsByClassName('nav-item');
-      // tslint:disable-next-line:prefer-for-of
-      for (let i = 0; i < btns.length; i++) {
-        btns[i].addEventListener('click', function() {
-          const current = document.getElementsByClassName('active');
-          current[0].className = current[0].className.replace(' active', '');
-          this.className += ' active';
-        });
-      }
+      // const btns = header.getElementsByClassName('nav-item');
+      // // tslint:disable-next-line:prefer-for-of
+      // for (let i = 0; i < btns.length; i++) {
+      //   btns[i].addEventListener('click', function() {
+      //     const current = document.getElementsByClassName('active');
+      //     current[0].className = current[0].className.replace(' active', '');
+      //     this.className += ' active';
+      //   });
+      // }
     
   }
 
@@ -59,24 +56,32 @@ export class StudentUploadComponent implements OnInit, AfterViewInit {
       this.files = [];
       const file = event.target.files[0];
       this.files = [...event.target.files];
+      
+      this.studentBulkForm.value['selectedFile'] = event.target.files[0];
+      console.log(this.files);
     }
   }
 
   uploadStudents() {
-    this.studentBulkForm.value['selectedFile'] =this.files;
-    const formData = new FormData();
-    formData.append('file', this.studentBulkForm.value.selectedFile);
-    formData.append('type', this.studentBulkForm.value.type);
-    formData.append('schoolId', this.studentBulkForm.value.schoolId);
-    console.log(formData);
+    if (this.studentBulkForm.value.schoolId && (this.files!=0) ) {
+      this.alertService.showLoader("");
+      const formData = new FormData();
+      formData.append('file', this.studentBulkForm.value.selectedFile);
+      formData.append('type', this.studentBulkForm.value.type);
+      formData.append('schoolId', this.studentBulkForm.value.schoolId);
+      console.log(this.studentBulkForm.value);
 
-    this.adminService.UploadExcel("/api/template/bulkUpload", formData).subscribe(
-      (res) => {
-        console.log(res);
-        this.alertService.showSuccessToast('Uploaded Successfully');
-      },
-      (err) => console.log(err)
-    );
+      this.adminService.UploadExcel("/api/template/bulkUpload", formData).subscribe(
+        (res) => {
+          console.log(res);
+          this.alertService.showSuccessToast('Uploaded Successfully');
+          this.studentBulkForm.value.selectedFile = [];
+        },(err) => { console.log(err) });
+        
+    } else {
+      this.alertService.showErrorAlert("Please fill all the columns");
+    }
+
   }
 
   downloadStudent() {
@@ -87,6 +92,7 @@ export class StudentUploadComponent implements OnInit, AfterViewInit {
 
   removeFile(){
     this.files = [];
+    this.studentBulkForm.value.selectedFile = [];
   }
   
 }

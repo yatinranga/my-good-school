@@ -39,8 +39,8 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">ACTIVITY</th>
-                        <th scope="col">ACTIVITY TITLE</th>
-                        <th scope="col">DATE</th>
+                        <th scope="col">TITLE</th>
+                        <th scope="col">SUBMISSION DATE</th>
                         <th scope="col">SUPERVISOR</th>
                         <th scope="col" *ngIf="!(activityType === 'Reviewed')">
                             STATUS
@@ -48,7 +48,7 @@
                                 <i class="fa fa-sort"></i>
                             </button>
                         </th>
-                        <th scope="col" *ngIf="(activityType === 'Reviewed')" colspan="2">Status</th>
+                        <th scope="col" *ngIf="(activityType === 'Reviewed')">Status</th>
                         <th *ngIf="(activityType === 'All') || (activityType === 'Saved')" scope="col">
                             ACTION</th>
                             <th scope="col">  <i class="fa fa-paperclip" title="Attachment" aria-hidden="true"></i> </th>
@@ -105,12 +105,12 @@
                                                     <p id="fa"> <strong> Focus Area : </strong> </p>
                                                     <span id="fa" *ngFor="let fa of activity.focusAreas; let i = index">                                                        
                                                         {{ (i === activity.focusAreas.length-1) ? fa : fa + "," + ' '}}                                                        
-                                                    </span>
+                                                    </span><br>
                                                     <p id="fa" *ngIf="activity.psdAreas">
                                                         <strong>PSD Area : </strong></p>
                                                         <span id="fa" *ngFor="let fa of activity.psdAreas let i = index">                                                        
                                                             {{ (i === activity.psdAreas.length-1) ? fa : fa + "," + ' '}}                                                        
-                                                        </span>
+                                                        </span><br>
                                                     <p id="fa"> <strong> 4's : </strong> {{activity.fourS}}
                                                         <!--
                                                             <span *ngIf="activity.fourS=='Skill'" style="color: #4bafa5;">

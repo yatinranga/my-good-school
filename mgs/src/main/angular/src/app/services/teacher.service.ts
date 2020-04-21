@@ -71,18 +71,17 @@ export class TeacherService {
 
   // Assign Award to Students
   assignAward(reqBody){
-    return this.http.post("/api/award",reqBody);
+      return this.http.post("/api/award",reqBody);      
+    
   }
 
   // List of Activities performed by student of particular activity
   getStudentPerformedActivities(awardCriterion,criterionValue,startDate,endDate,gradeId?){
     if(gradeId){
-      return this.http.get("/api/award/students?awardCriterion="+awardCriterion+"&criterionValue="+criterionValue+
-      +"&startDate="+startDate+"&endDate="+endDate+"&gradeId="+gradeId);      
+      return this.http.get("/api/award/students?awardCriterion="+awardCriterion+"&criterionValue="+criterionValue+"&startDate="+startDate+"&endDate="+endDate+"&gradeId="+gradeId);      
     }
     else {
-      return this.http.get("/api/award/students?awardCriterion="+awardCriterion+"&criterionValue="+criterionValue
-      +"&startDate="+startDate+"&endDate="+endDate);      
+      return this.http.get("/api/award/students?awardCriterion="+awardCriterion+"&criterionValue="+criterionValue+"&startDate="+startDate+"&endDate="+endDate);      
     }
   }
 

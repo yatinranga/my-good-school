@@ -19,7 +19,7 @@ export class TeacherAwardsComponent implements OnInit {
   performedActiArr = [];
   schoolAwards = []; // List of all Awards of a school
 
-  awardViewType = "assign";
+  awardViewType = "view";
   teacherInfo: any;
   schoolId = "";
   activities = [];
@@ -76,7 +76,12 @@ export class TeacherAwardsComponent implements OnInit {
       teacherId: [],
       schoolId: [],
       // studentId: [],
-      activityId: [],
+      // activityId: [],
+      awardCriterion: [],
+      criterionValue: [],
+      validFrom: [],
+      validUntil:[],
+      gradeId: [null],
       awardType: [, [Validators.required]],
       description: [, [Validators.required, Validators.minLength(40)]],
       activityPerformedIds: [([])],
@@ -160,13 +165,18 @@ export class TeacherAwardsComponent implements OnInit {
 
   // Assign Award to Students
   assignAward() {
-    
+
     this.pa_loader = true;
     this.assignAwardForm.value.teacherId = this.teacherId;
     this.assignAwardForm.value.schoolId = this.schoolId;
     // this.assignAwardForm.value.activityId = this.activityId;
     this.assignAwardForm.value.studentId = this.studentId;
     this.assignAwardForm.value.activityPerformedIds = [];
+    this.assignAwardForm.value.awardCriterion = this.awardCriterion;
+    this.assignAwardForm.value.criterionValue = this.criterionValue;
+    this.assignAwardForm.value.validFrom = this.startDate + " 00:00:00";
+    this.assignAwardForm.value.validUntil = this.endDate + " 00:00:00";
+    this.assignAwardForm.value.gradeId = null;
     Object.keys(this.actiPerform).forEach((key) => {
       if (this.actiPerform[key]) {
         this.assignAwardForm.value.activityPerformedIds.push(key);
@@ -174,6 +184,8 @@ export class TeacherAwardsComponent implements OnInit {
     })
 
     console.log(this.assignAwardForm.value);
+    let validFrom = this.startDate + " 00:00:00";
+    let validUntil = this.endDate + " 00:00:00";
 
     this.teacherService.assignAward(this.assignAwardForm.value).subscribe((res) => {
       console.log(res);
@@ -197,11 +209,11 @@ export class TeacherAwardsComponent implements OnInit {
 
   dateChanged() {
     this.pa_loader = true;
-    let sDate = this.startDate +' 00:00:00';
-    let eDate = this.endDate+' 00:00:00';
+    let sDate = this.startDate + ' 00:00:00';
+    let eDate = this.endDate + ' 00:00:00';
     this.performedActiArr = [];
     if (this.gradeId) {
-      this.teacherService.getStudentPerformedActivities(this.awardCriterion, this.criterionValue, sDate,eDate,this.gradeId).subscribe((res) => {
+      this.teacherService.getStudentPerformedActivities(this.awardCriterion, this.criterionValue, sDate, eDate, this.gradeId).subscribe((res) => {
         console.log(res);
         this.performedActiArr = res;
         this.pa_loader = false;
@@ -212,7 +224,7 @@ export class TeacherAwardsComponent implements OnInit {
         });
 
     } else {
-      this.teacherService.getStudentPerformedActivities(this.awardCriterion, this.criterionValue,sDate,eDate).subscribe((res) => {
+      this.teacherService.getStudentPerformedActivities(this.awardCriterion, this.criterionValue, sDate, eDate).subscribe((res) => {
         this.performedActiArr = res;
         console.log(res);
         this.pa_loader = false;
@@ -231,12 +243,12 @@ export class TeacherAwardsComponent implements OnInit {
     this.studentActivityList = true;
     // console.log(this.criterionValue)
     this.performedActiArr = [];
-    let sDate = this.startDate +' 00:00:00';
-    let eDate = this.endDate+' 00:00:00';
+    let sDate = this.startDate + ' 00:00:00';
+    let eDate = this.endDate + ' 00:00:00';
     if (type == "value") {
       if (this.gradeId == "") {
         this.criterionValue = value;
-        this.teacherService.getStudentPerformedActivities(this.awardCriterion, value,sDate,eDate).subscribe((res) => {
+        this.teacherService.getStudentPerformedActivities(this.awardCriterion, value, sDate, eDate).subscribe((res) => {
           this.performedActiArr = res;
           console.log(res);
           this.pa_loader = false;
@@ -248,7 +260,7 @@ export class TeacherAwardsComponent implements OnInit {
           });
       } else {
         this.criterionValue = value;
-        this.teacherService.getStudentPerformedActivities(this.awardCriterion, value,sDate,eDate, this.gradeId).subscribe((res) => {
+        this.teacherService.getStudentPerformedActivities(this.awardCriterion, value, sDate, eDate, this.gradeId).subscribe((res) => {
           console.log(res);
           this.performedActiArr = res;
           this.pa_loader = false;
@@ -264,7 +276,7 @@ export class TeacherAwardsComponent implements OnInit {
     if (type == "grade") {
       this.gradeId = value;
       if (this.criterionValue) {
-        this.teacherService.getStudentPerformedActivities(this.awardCriterion, this.criterionValue,sDate,eDate, value).subscribe((res) => {
+        this.teacherService.getStudentPerformedActivities(this.awardCriterion, this.criterionValue, sDate, eDate, value).subscribe((res) => {
           console.log(res);
           this.performedActiArr = res;
         }, (err) => {
@@ -325,6 +337,7 @@ export class TeacherAwardsComponent implements OnInit {
 
   // to get all awards of school
   getSchoolAwards() {
+    console.log(this.gradeId);
     this.award_loader = true;
     this.schoolAwards = [];
     this.assignAwardForm.value.activityPerformedIds = [];
@@ -349,7 +362,7 @@ export class TeacherAwardsComponent implements OnInit {
           console.log(err);
           this.award_loader = false;
         });
-        
+
     } else {
       this.alertService.showErrorAlert("Please select atleast one activity");
     }
@@ -387,8 +400,8 @@ export class TeacherAwardsComponent implements OnInit {
     this.order = !this.order;
     // sort by activityStatus
     this.awardsList.sort((a, b) => {
-      const nameA = a.status.toUpperCase(); // ignore upper and lowercase
-      const nameB = b.status.toUpperCase(); // ignore upper and lowercase
+      const nameA = a.responses[0].status.toUpperCase(); // ignore upper and lowercase
+      const nameB = b.responses[0].status.toUpperCase(); // ignore upper and lowercase
       if (nameA < nameB) {
         return this.order ? -1 : 1;
       }
@@ -468,7 +481,7 @@ export class TeacherAwardsComponent implements OnInit {
     this.actiPerform = {};
     this.studentId = activity.id;
     activity.performedActivities.forEach((ele) => {
-      ele.activities.forEach(element => {
+      ele.responses.forEach(element => {
         this.actiPerform[element.id] = true;
       });
     });

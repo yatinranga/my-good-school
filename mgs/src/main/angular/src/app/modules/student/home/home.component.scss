@@ -1,0 +1,54 @@
+
+.student_home {
+    width: 100%;
+    display: inline-block;
+    position: absolute;
+    top: 20px;
+    left: 0;
+    padding: 10px;
+}
+.student_home select {
+    width: 150px;
+    margin-bottom: 7px;
+    font-size: 16px;
+    background: #dad6bf;
+    border: 1px solid #999;
+}
+.student_home label {
+    font-size: 20px;
+}
+.student_home h2 {
+    font-size: 23px;
+    margin: 5px;
+}
+.student_home ul{
+    padding: 0;
+    margin: 0;
+}
+.activity_select{
+    display: inline-flex;
+}
+.list_card_main{
+    width: 100%;
+    display: inline-grid;
+    margin-top: 20px;
+    padding: 10px 0;
+}
+.list_card{
+    box-shadow: 0 0 10px #ccc;
+    width: 40%;
+    background: #dad6bf;
+    float: left;
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #dad6bf;
+    border-radius: 3px;
+}
+li#t-name {
+    font-size: 22px;
+    color: #c38800;
+}
+.list_card h3{
+    font-size: 24px;
+    font-weight: 400px;
+}

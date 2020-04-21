@@ -4,6 +4,7 @@
             <div class="teacher_intro_box">
                     <div class="teacher_image">
                         <img [src]="path">
+                        <button class="edit_profile" (click)="photoInput.click()"> <i class="fa fa-edit" title="Edit" > </i> Edit Profile Photo </button>
                     </div>
                     <div class="teacher_intro_text_main">
                         <div class="teacher_intro">
@@ -16,15 +17,12 @@
                                  <h5> <!-- <i class="fa fa-envelope"></i> --> 
                                     <input [(ngModel)]="email" [disabled]="setDisabled" [(ngModel)]="email"/>
                                  </h5>                                    
-                                <div *ngIf="teacherDetails['profileBrief']"> 
-                                        
-                                   <textarea name="profileBrief" rows="6" cols="50" [disabled]="setDisabled" [(ngModel)]="profileBrief"></textarea>
-                                
+                                <div *ngIf="teacherDetails['profileBrief']">
+                                   <textarea name="profileBrief" rows="6" cols="50" [disabled]="setDisabled" [(ngModel)]="profileBrief"></textarea>                               
                                 </div>
                         </div>
-                        <button class="edit_profile" (click)="photoInput.click()"> <i class="fa fa-edit" title="Edit" > </i> Edit Profile Photo </button>
                         <button (click)="updateProfile()"
-                            class="update">{{setDisabled ? 'Update Profile' :'Update'}}</button>
+                            class="update"> {{setDisabled ? 'Update Profile' :'Save'}}</button>
                     </div>
             </div>
             <div class="teacher_about_box">
@@ -33,17 +31,17 @@
                     <ul>
                                 <!-- {{teacherDetails['mobileNumber']}} -->
                                 <!-- <input [(ngModel)]="email" placeholder="email" [disabled]="isEditable"/> -->
-                        <li> <i class="fa fa-calendar" aria-hidden="true"></i>
+                        <li> <!-- <i class="fa fa-calendar" aria-hidden="true"></i> -->
                             DOB - <label> {{teacherDetails['dob'] | date }}</label></li>
-                        <li> <i class='fa fa-restroom'></i>
+                        <li> <!-- <i class='fa fa-restroom'></i> -->
                             Gender - <label> {{teacherDetails['gender']}}</label> </li>
-                        <li> <i class="fa fa-school"></i>
+                        <li> <!-- <i class="fa fa-school"></i> -->
                             School Name - <label> {{teacherDetails['schoolName']}}</label> </li>
-                        <li> <i class="fa fa-user-graduate"></i>
+                        <li> <!-- <i class="fa fa-user-graduate"></i> -->
                             Qualifications - <label> {{teacherDetails['qualification']}}</label> </li>
-                        <li> <i class="fa fa-running"></i>
+                        <li> <!-- <i class="fa fa-running"></i> -->
                             Coach - <label> {{teacherDetails['isCoach'] ? "Yes" : "No" }} </label> </li>
-                        <li> <i class="fa fa-chalkboard-teacher"></i>
+                        <li> <!-- <i class="fa fa-chalkboard-teacher"></i> -->
                             Class Teacher - <label> {{teacherDetails['isClassTeacher'] ? "Yes" : "No" }}</label>
                         </li>
                     </ul>

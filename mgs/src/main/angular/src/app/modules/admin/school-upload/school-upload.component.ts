@@ -15,9 +15,9 @@ export class SchoolUploadComponent implements OnInit {
 
 
   schoolBulkForm : FormGroup;
-  files: any[];
+  files: any = [];
   
-  constructor(private adminService : AdminService, private formBuilder : FormBuilder, private alertSerivce :  AlertService) { }
+  constructor(private adminService : AdminService, private formBuilder : FormBuilder, private alertService :  AlertService) { }
 
   ngOnInit() {
     this.schoolBulkForm = this.formBuilder.group({
@@ -31,11 +31,29 @@ export class SchoolUploadComponent implements OnInit {
       this.files = [];
       const file = event.target.files[0];
       this.files = [...event.target.files];
+      this.schoolBulkForm.value.selectedFile = event.target.files[0];
     }
   }
   
   uploadSchool(){
-    const formData =  new FormData();
+    if (this.files!=0 ) {
+      this.alertService.showLoader("");
+      const formData = new FormData();
+      formData.append('file', this.schoolBulkForm.value.selectedFile);
+      formData.append('type', this.schoolBulkForm.value.type);
+      console.log(this.schoolBulkForm.value);
+
+      this.adminService.UploadExcel("/api/template/bulkUpload", formData).subscribe(
+        (res) => {
+          console.log(res);
+          this.alertService.showSuccessToast('Uploaded Successfully');
+          this.schoolBulkForm.value.selectedFile = [];
+        },(err) => { console.log(err) });
+        
+    } else {
+      this.alertService.showErrorAlert("Please fill all the columns");
+    }
+    
 
     // this.adminService.UploadExcel("/api/template/bulkUpload",formData).subscribe((res) => {
     //   console.log(res);
@@ -52,5 +70,6 @@ export class SchoolUploadComponent implements OnInit {
 
   removeFile(){
     this.files = [];
+    this.schoolBulkForm.value.selectedFile = [];
   }
 }
