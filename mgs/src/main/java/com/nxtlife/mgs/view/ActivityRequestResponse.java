@@ -32,6 +32,8 @@ public class ActivityRequestResponse {
 	
 	private List<FocusAreaRequestResponse> focusAreaRequests;
 	private Set<FocusAreaRequestResponse> focusAreaResponses;
+	
+	private String clubOrSociety;
 
 	public String getName() {
 		return name;
@@ -117,6 +119,14 @@ public class ActivityRequestResponse {
 		this.focusAreaResponses = focusAreaResponses;
 	}
 
+	public String getClubOrSociety() {
+		return clubOrSociety;
+	}
+
+	public void setClubOrSociety(String clubOrSociety) {
+		this.clubOrSociety = clubOrSociety;
+	}
+
 	public Activity toEntity(Activity activity) {
 		activity = activity == null ? new Activity() : activity;
 		activity.setName(this.name);
@@ -136,7 +146,8 @@ public class ActivityRequestResponse {
 		this.name = activity.getName();
 		this.description = activity.getDescription();
 		this.isGeneral = activity.getIsGeneral();
-		
+		if(activity.getClubOrSociety() != null)
+		      this.clubOrSociety = activity.getClubOrSociety().toString();
 		this.focusAreaResponses = activity.getFocusAreas().stream().map(FocusAreaRequestResponse :: new ).distinct().collect(Collectors.toSet());
 		// focusAreaIds = new ArrayList<String>();
 		/*

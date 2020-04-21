@@ -36,11 +36,13 @@ import com.nxtlife.mgs.entity.activity.Certificate;
 import com.nxtlife.mgs.entity.activity.FocusArea;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
+import com.nxtlife.mgs.entity.school.StudentClub;
 import com.nxtlife.mgs.entity.user.Guardian;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.entity.user.User;
 import com.nxtlife.mgs.enums.ActivityStatus;
+import com.nxtlife.mgs.enums.ApprovalStatus;
 import com.nxtlife.mgs.enums.AwardCriterion;
 import com.nxtlife.mgs.enums.FourS;
 import com.nxtlife.mgs.enums.PSDArea;
@@ -56,6 +58,7 @@ import com.nxtlife.mgs.jpa.GradeRepository;
 import com.nxtlife.mgs.jpa.GuardianRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
 import com.nxtlife.mgs.jpa.SequenceGeneratorRepo;
+import com.nxtlife.mgs.jpa.StudentClubRepository;
 import com.nxtlife.mgs.jpa.StudentRepository;
 import com.nxtlife.mgs.jpa.StudentSchoolGradeRepository;
 import com.nxtlife.mgs.jpa.TeacherRepository;
@@ -138,6 +141,9 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	
 	@Autowired
 	FocusAreaRepository focusAreaRepository;
+	
+	@Autowired
+	StudentClubRepository studentClubRepository;
 
 	@Value("${spring.mail.username}")
 	private String emailUsername;
@@ -1402,4 +1408,28 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		return students.stream().distinct().map(StudentResponse::new).collect(Collectors.toList());
 	}
 
+	@Override
+	public SuccessResponse applyForClubMembership(String activityCid , String supervisorCid) {
+		Long userId = getUserId();
+		if(userId == null)
+			throw new ValidationException("Login first as student to apply for membership.");
+		Long  studentId = studentRepository.findIdByUserIdAndActiveTrue(userId);
+		if(studentId == null)
+			throw new ValidationException("Login as student to apply for membership.");
+		if(activityCid == null)
+			throw new ValidationException("activityCid cannot be null.");
+		if(supervisorCid == null)
+			throw new ValidationException("supervisorId cannot be null.");
+		if(studentClubRepository.existsByStudentIdAndActivityCidAndMembershipStatusAndActiveTrue(studentId, activityCid, ApprovalStatus.VERIFIED))
+			throw new ValidationException("Already applied for the membership of this club.");
+		if(studentClubRepository.existsByStudentIdAndActivityCidAndMembershipStatusAndActiveTrue(studentId, activityCid, ApprovalStatus.PENDING))
+			throw new ValidationException("Already applied for the membership of this club and its pending.");
+		
+		StudentClub studentClub = new StudentClub(studentId, activityRepository.findIdByCidAndActiveTrue(activityCid), teacherRepository.findIdByCidAndActiveTrue(supervisorCid));
+		studentClub.setAppliedOn(LocalDateTime.now().toDate());
+		studentClub.setMembershipStatus(ApprovalStatus.PENDING);
+		studentClubRepository.save(studentClub);
+		
+		return new SuccessResponse(200, "Successfully applied for the Membership.");
+	}
 }

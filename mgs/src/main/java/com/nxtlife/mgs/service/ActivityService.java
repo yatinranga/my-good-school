@@ -25,4 +25,6 @@ public interface ActivityService {
 
 	Map<String, Object> getAvailableFilters();
 
+	List<ActivityRequestResponse> getAllClubsOfStudent();
+
 }

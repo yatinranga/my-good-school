@@ -159,25 +159,27 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 			
 			award.setGrade(gradeRepository.getOneByCid(request.getGradeId()));
 		}
+		
 		if(request.getAwardCriterion() != null) {
+			AwardCriterion criterion = AwardCriterion.fromString(request.getAwardCriterion());
 			if(!AwardCriterion.matches(request.getAwardCriterion()))
 				throw new ValidationException(String.format("Invalid value (%s) for awardCriterion it should be of form : [PSD Area ,Focus Area , 4S ,Activity Type]", request.getAwardCriterion()));
-			award.setAwardCriterion(AwardCriterion.fromString(request.getAwardCriterion()));
+			award.setAwardCriterion(criterion);
 			if(request.getCriterionValue() == null)
 				throw new ValidationException("Please provide criterion value.");
-			if(request.getAwardCriterion().equals(AwardCriterion.PSDArea)) {
+			if(criterion.equals(AwardCriterion.PSDArea)) {
 				if(!PSDArea.matches(request.getCriterionValue()))
 					throw new ValidationException(String.format("PSD Area (%s) does not matches with available PSD Areas i.e [Personal Development, Social Development]", request.getCriterionValue()));
 				award.setCriterionValue(request.getCriterionValue());
-			}else if(request.getAwardCriterion().equals(AwardCriterion.FocusArea)){
+			}else if(criterion.equals(AwardCriterion.FocusArea)){
 				if(!focusAreaRepository.existsByNameAndActiveTrue(request.getCriterionValue()))
 					throw new ValidationException(String.format("Focus Area  (%s) does not exist.", request.getCriterionValue()));
 				award.setCriterionValue(request.getCriterionValue());
-			}else if(request.getAwardCriterion().equals(AwardCriterion.FourS)){
+			}else if(criterion.equals(AwardCriterion.FourS)){
 				if(!FourS.matches(request.getCriterionValue()))
 					throw new ValidationException(String.format("FourS  (%s) does not matches with available values for fourS i.e [Skill , Sport ,Study ,Service]", request.getCriterionValue()));
 				award.setCriterionValue(request.getCriterionValue());
-			}else if(request.getAwardCriterion().equals(AwardCriterion.ActivityType)){
+			}else if(criterion.equals(AwardCriterion.ActivityType)){
 				if(!activityRepository.existsByNameAndActiveTrue(request.getCriterionValue()))
 					throw new ValidationException(String.format("Activity with name  (%s) does not exist.", request.getCriterionValue()));
 				award.setCriterionValue(request.getCriterionValue());
@@ -205,7 +207,7 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 	}
 
 	@Override
-	public AwardResponse findAllByStudent() {
+	public List<AwardResponse> findAllByStudent() {
 		Long userId = getUserId();
 		Student student = studentRepository.getByUserId(userId);
 		if (student == null) {
@@ -215,39 +217,35 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 		if(awards == null || awards.isEmpty())
 			throw new NotFoundException(String.format("No Award given to student (%s) yet.",student.getName()));
 		
-		Set<String> criterionValues = new HashSet<String>();
-		awards.stream().forEach(awrd -> {
-			if(awrd.getCriterionValue() != null) 
-				criterionValues.add(awrd.getCriterionValue());});
-		AwardResponse response = new AwardResponse();
-//		awards.stream().forEach(awrd -> {awrd.getAwardActivityPerformed().stream().forEach(awrdAct -> {activityTypes.add(awrdAct.getActivityPerformed().getActivity().getName());});});
-		
-//		for(String act : activityTypes) {
-//			awards.stream().filter(awrd -> awrd.getAwardActivityPerformed().)
+//		Set<String> criterionValues = new HashSet<String>();
+//		awards.stream().forEach(awrd -> {
+//			if(awrd.getCriterionValue() != null) 
+//				criterionValues.add(awrd.getCriterionValue());});
+//		AwardResponse response = new AwardResponse();
+//
+//		List<AwardResponse> awardResponses = awards.stream().map(AwardResponse::new).collect(Collectors.toList());
+//		List<GroupResponseByActivityName<AwardResponse>> finalAwardsResponse = new ArrayList<GroupResponseByActivityName<AwardResponse>>();
+//		GroupResponseByActivityName<AwardResponse> partialAwardsList;
+//		if(criterionValues !=null && !criterionValues.isEmpty())
+//		for(String criterionVal : criterionValues) {
+//			partialAwardsList = new GroupResponseByActivityName<AwardResponse>();
+//			partialAwardsList.setCriterionValue(criterionVal);
+//			partialAwardsList.setResponses(awardResponses.stream().filter(awr -> criterionVal.equalsIgnoreCase(awr.getCriterionValue())).collect(Collectors.toList()));
+//			partialAwardsList.setCriterion( partialAwardsList.getResponses().get(0).getAwardCriterion());
+//			finalAwardsResponse.add(partialAwardsList);
 //		}
-		List<AwardResponse> awardResponses = awards.stream().map(AwardResponse::new).collect(Collectors.toList());
-		List<GroupResponseByActivityName<AwardResponse>> finalAwardsResponse = new ArrayList<GroupResponseByActivityName<AwardResponse>>();
-		GroupResponseByActivityName<AwardResponse> partialAwardsList;
-		if(criterionValues !=null && !criterionValues.isEmpty())
-		for(String criterionVal : criterionValues) {
-			partialAwardsList = new GroupResponseByActivityName<AwardResponse>();
-			partialAwardsList.setCriterionValue(criterionVal);
-			partialAwardsList.setResponses(awardResponses.stream().filter(awr -> criterionVal.equalsIgnoreCase(awr.getCriterionValue())).collect(Collectors.toList()));
-			partialAwardsList.setCriterion( partialAwardsList.getResponses().get(0).getAwardCriterion());
-			finalAwardsResponse.add(partialAwardsList);
-		}
-		if(finalAwardsResponse.isEmpty()) {
-			partialAwardsList = new GroupResponseByActivityName<AwardResponse>();
-			partialAwardsList.setResponses(awardResponses);
-			finalAwardsResponse.add(partialAwardsList);
-		}
-		response.setAwards(finalAwardsResponse);
-		return response;
-//		return awards.stream().map(AwardResponse::new).distinct().collect(Collectors.toList());
+//		if(finalAwardsResponse.isEmpty()) {
+//			partialAwardsList = new GroupResponseByActivityName<AwardResponse>();
+//			partialAwardsList.setResponses(awardResponses);
+//			finalAwardsResponse.add(partialAwardsList);
+//		}
+//		response.setAwards(finalAwardsResponse);
+//		return response;
+		return awards.stream().map(AwardResponse::new).distinct().collect(Collectors.toList());
 	}
 
 	@Override
-	public AwardResponse findAllByStudent(AwardFilter awardFilter) {
+	public List<AwardResponse> findAllByStudent(AwardFilter awardFilter) {
 		Long userId = getUserId();
 		Student student = studentRepository.getByUserId(userId);
 		if (student == null) {
@@ -258,39 +256,35 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 		if(awards == null || awards.isEmpty())
 			throw new NotFoundException(String.format("No Award found for student (%s) after applying filters.",student.getName()));
 		
-		Set<String> criterionValues = new HashSet<String>();
-		awards.stream().forEach(awrd -> {
-			if(awrd.getCriterionValue() != null) 
-				criterionValues.add(awrd.getCriterionValue());});
-		AwardResponse response = new AwardResponse();
-//		awards.stream().forEach(awrd -> {awrd.getAwardActivityPerformed().stream().forEach(awrdAct -> {activityTypes.add(awrdAct.getActivityPerformed().getActivity().getName());});});
-		
-//		for(String act : activityTypes) {
-//			awards.stream().filter(awrd -> awrd.getAwardActivityPerformed().)
+//		Set<String> criterionValues = new HashSet<String>();
+//		awards.stream().forEach(awrd -> {
+//			if(awrd.getCriterionValue() != null) 
+//				criterionValues.add(awrd.getCriterionValue());});
+//		AwardResponse response = new AwardResponse();
+//
+//		List<AwardResponse> awardResponses = awards.stream().map(AwardResponse::new).collect(Collectors.toList());
+//		List<GroupResponseByActivityName<AwardResponse>> finalAwardsResponse = new ArrayList<GroupResponseByActivityName<AwardResponse>>();
+//		GroupResponseByActivityName<AwardResponse> partialAwardsList;
+//		if(criterionValues !=null && !criterionValues.isEmpty())
+//		for(String criterionVal : criterionValues) {
+//			partialAwardsList = new GroupResponseByActivityName<AwardResponse>();
+//			partialAwardsList.setCriterionValue(criterionVal);
+//			partialAwardsList.setResponses(awardResponses.stream().filter(awr -> criterionVal.equalsIgnoreCase(awr.getCriterionValue())).collect(Collectors.toList()));
+//			partialAwardsList.setCriterion( partialAwardsList.getResponses().get(0).getAwardCriterion());
+//			finalAwardsResponse.add(partialAwardsList);
 //		}
-		List<AwardResponse> awardResponses = awards.stream().map(AwardResponse::new).collect(Collectors.toList());
-		List<GroupResponseByActivityName<AwardResponse>> finalAwardsResponse = new ArrayList<GroupResponseByActivityName<AwardResponse>>();
-		GroupResponseByActivityName<AwardResponse> partialAwardsList;
-		if(criterionValues !=null && !criterionValues.isEmpty())
-		for(String criterionVal : criterionValues) {
-			partialAwardsList = new GroupResponseByActivityName<AwardResponse>();
-			partialAwardsList.setCriterionValue(criterionVal);
-			partialAwardsList.setResponses(awardResponses.stream().filter(awr -> criterionVal.equalsIgnoreCase(awr.getCriterionValue())).collect(Collectors.toList()));
-			partialAwardsList.setCriterion( partialAwardsList.getResponses().get(0).getAwardCriterion());
-			finalAwardsResponse.add(partialAwardsList);
-		}
-		if(finalAwardsResponse.isEmpty()) {
-			partialAwardsList = new GroupResponseByActivityName<AwardResponse>();
-			partialAwardsList.setResponses(awardResponses);
-			finalAwardsResponse.add(partialAwardsList);
-		}
-		response.setAwards(finalAwardsResponse);
-		return response;
-//		return awards.stream().map(AwardResponse::new).distinct().collect(Collectors.toList());
+//		if(finalAwardsResponse.isEmpty()) {
+//			partialAwardsList = new GroupResponseByActivityName<AwardResponse>();
+//			partialAwardsList.setResponses(awardResponses);
+//			finalAwardsResponse.add(partialAwardsList);
+//		}
+//		response.setAwards(finalAwardsResponse);
+//		return response;
+		return awards.stream().map(AwardResponse::new).distinct().collect(Collectors.toList());
 	}
 
 	@Override
-	public AwardResponse findAllByManagement() {
+	public List<AwardResponse> findAllByManagement() {
 		Long userId = getUserId();
 		Teacher teacher = teacherRepository.getByUserId(userId);
 		if (teacher == null) {
@@ -300,39 +294,35 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 			throw new ValidationException("Management not assigned with any activity");
 		}
 		List<Award> awards = awardRepository.findByActivityInOrActivityNull(teacher.getActivities());
-		Set<String> criterionValues = new HashSet<String>();
-		awards.stream().forEach(awrd -> {
-			if(awrd.getCriterionValue() != null) 
-				criterionValues.add(awrd.getCriterionValue());});
-		AwardResponse response = new AwardResponse();
-//		awards.stream().forEach(awrd -> {awrd.getAwardActivityPerformed().stream().forEach(awrdAct -> {activityTypes.add(awrdAct.getActivityPerformed().getActivity().getName());});});
-		
-//		for(String act : activityTypes) {
-//			awards.stream().filter(awrd -> awrd.getAwardActivityPerformed().)
+//		Set<String> criterionValues = new HashSet<String>();
+//		awards.stream().forEach(awrd -> {
+//			if(awrd.getCriterionValue() != null) 
+//				criterionValues.add(awrd.getCriterionValue());});
+//		AwardResponse response = new AwardResponse();
+//
+//		List<AwardResponse> awardResponses = awards.stream().map(AwardResponse::new).collect(Collectors.toList());
+//		List<GroupResponseByActivityName<AwardResponse>> finalAwardsResponse = new ArrayList<GroupResponseByActivityName<AwardResponse>>();
+//		GroupResponseByActivityName<AwardResponse> partialAwardsList;
+//		if(criterionValues !=null && !criterionValues.isEmpty())
+//		for(String criterionVal : criterionValues) {
+//			partialAwardsList = new GroupResponseByActivityName<AwardResponse>();
+//			partialAwardsList.setCriterionValue(criterionVal);
+//			partialAwardsList.setResponses(awardResponses.stream().filter(awr -> criterionVal.equalsIgnoreCase(awr.getCriterionValue())).collect(Collectors.toList()));
+//			partialAwardsList.setCriterion( partialAwardsList.getResponses().get(0).getAwardCriterion());
+//			finalAwardsResponse.add(partialAwardsList);
 //		}
-		List<AwardResponse> awardResponses = awards.stream().map(AwardResponse::new).collect(Collectors.toList());
-		List<GroupResponseByActivityName<AwardResponse>> finalAwardsResponse = new ArrayList<GroupResponseByActivityName<AwardResponse>>();
-		GroupResponseByActivityName<AwardResponse> partialAwardsList;
-		if(criterionValues !=null && !criterionValues.isEmpty())
-		for(String criterionVal : criterionValues) {
-			partialAwardsList = new GroupResponseByActivityName<AwardResponse>();
-			partialAwardsList.setCriterionValue(criterionVal);
-			partialAwardsList.setResponses(awardResponses.stream().filter(awr -> criterionVal.equalsIgnoreCase(awr.getCriterionValue())).collect(Collectors.toList()));
-			partialAwardsList.setCriterion( partialAwardsList.getResponses().get(0).getAwardCriterion());
-			finalAwardsResponse.add(partialAwardsList);
-		}
-		if(finalAwardsResponse.isEmpty()) {
-			partialAwardsList = new GroupResponseByActivityName<AwardResponse>();
-			partialAwardsList.setResponses(awardResponses);
-			finalAwardsResponse.add(partialAwardsList);
-		}
-		response.setAwards(finalAwardsResponse);
-		return response;
-//		return awards.stream().map(AwardResponse::new).collect(Collectors.toList());
+//		if(finalAwardsResponse.isEmpty()) {
+//			partialAwardsList = new GroupResponseByActivityName<AwardResponse>();
+//			partialAwardsList.setResponses(awardResponses);
+//			finalAwardsResponse.add(partialAwardsList);
+//		}
+//		response.setAwards(finalAwardsResponse);
+//		return response;
+		return awards.stream().map(AwardResponse::new).collect(Collectors.toList());
 	}
 	
 	@Override
-	public AwardResponse findAllByManagement(AwardFilter awardFilter) {
+	public List<AwardResponse> findAllByManagement(AwardFilter awardFilter) {
 		Long userId = getUserId();
 		Teacher teacher = teacherRepository.getByUserId(userId);
 		if (teacher == null) {
@@ -343,35 +333,31 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 		}
 		List<Award> awards = awardRepository.findAll(new AwardFilterBuilder().build(awardFilter, teacher.getActivities()));
 		
-		Set<String> criterionValues = new HashSet<String>();
-		awards.stream().forEach(awrd -> {
-			if(awrd.getCriterionValue() != null) 
-				criterionValues.add(awrd.getCriterionValue());});
-		AwardResponse response = new AwardResponse();
-//		awards.stream().forEach(awrd -> {awrd.getAwardActivityPerformed().stream().forEach(awrdAct -> {activityTypes.add(awrdAct.getActivityPerformed().getActivity().getName());});});
-		
-//		for(String act : activityTypes) {
-//			awards.stream().filter(awrd -> awrd.getAwardActivityPerformed().)
+//		Set<String> criterionValues = new HashSet<String>();
+//		awards.stream().forEach(awrd -> {
+//			if(awrd.getCriterionValue() != null) 
+//				criterionValues.add(awrd.getCriterionValue());});
+//		AwardResponse response = new AwardResponse();
+//
+//		List<AwardResponse> awardResponses = awards.stream().map(AwardResponse::new).collect(Collectors.toList());
+//		List<GroupResponseByActivityName<AwardResponse>> finalAwardsResponse = new ArrayList<GroupResponseByActivityName<AwardResponse>>();
+//		GroupResponseByActivityName<AwardResponse> partialAwardsList;
+//		if(criterionValues !=null && !criterionValues.isEmpty())
+//		for(String criterionVal : criterionValues) {
+//			partialAwardsList = new GroupResponseByActivityName<AwardResponse>();
+//			partialAwardsList.setCriterionValue(criterionVal);
+//			partialAwardsList.setResponses(awardResponses.stream().filter(awr -> criterionVal.equalsIgnoreCase(awr.getCriterionValue())).collect(Collectors.toList()));
+//			partialAwardsList.setCriterion( partialAwardsList.getResponses().get(0).getAwardCriterion());
+//			finalAwardsResponse.add(partialAwardsList);
 //		}
-		List<AwardResponse> awardResponses = awards.stream().map(AwardResponse::new).collect(Collectors.toList());
-		List<GroupResponseByActivityName<AwardResponse>> finalAwardsResponse = new ArrayList<GroupResponseByActivityName<AwardResponse>>();
-		GroupResponseByActivityName<AwardResponse> partialAwardsList;
-		if(criterionValues !=null && !criterionValues.isEmpty())
-		for(String criterionVal : criterionValues) {
-			partialAwardsList = new GroupResponseByActivityName<AwardResponse>();
-			partialAwardsList.setCriterionValue(criterionVal);
-			partialAwardsList.setResponses(awardResponses.stream().filter(awr -> criterionVal.equalsIgnoreCase(awr.getCriterionValue())).collect(Collectors.toList()));
-			partialAwardsList.setCriterion( partialAwardsList.getResponses().get(0).getAwardCriterion());
-			finalAwardsResponse.add(partialAwardsList);
-		}
-		if(finalAwardsResponse.isEmpty()) {
-			partialAwardsList = new GroupResponseByActivityName<AwardResponse>();
-			partialAwardsList.setResponses(awardResponses);
-			finalAwardsResponse.add(partialAwardsList);
-		}
-		response.setAwards(finalAwardsResponse);
-		return response;
-//		return awards.stream().map(AwardResponse::new).collect(Collectors.toList());
+//		if(finalAwardsResponse.isEmpty()) {
+//			partialAwardsList = new GroupResponseByActivityName<AwardResponse>();
+//			partialAwardsList.setResponses(awardResponses);
+//			finalAwardsResponse.add(partialAwardsList);
+//		}
+//		response.setAwards(finalAwardsResponse);
+//		return response;
+		return awards.stream().map(AwardResponse::new).collect(Collectors.toList());
 	}
 
 	@Override

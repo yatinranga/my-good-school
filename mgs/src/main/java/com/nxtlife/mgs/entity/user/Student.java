@@ -27,6 +27,7 @@ import com.nxtlife.mgs.entity.activity.ActivityPerformed;
 import com.nxtlife.mgs.entity.activity.Certificate;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
+import com.nxtlife.mgs.entity.school.StudentClub;
 import com.nxtlife.mgs.entity.school.AwardActivityPerformed;
 import com.nxtlife.mgs.entity.school.StudentSchoolGrade;
 
@@ -101,6 +102,10 @@ public class Student  extends BaseEntity {
 
 //	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "student")
 //	private List<AwardActivityPerformed> StudentAwards;
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "student")
+	private List<StudentClub> studentClubs;
+	
 
 	public Date getSessionStartDate() {
 		return sessionStartDate;
@@ -253,6 +258,14 @@ public class Student  extends BaseEntity {
 
 	public void setCertificates(List<Certificate> certificates) {
 		this.certificates = certificates;
+	}
+
+	public List<StudentClub> getStudentClubs() {
+		return studentClubs;
+	}
+
+	public void setStudentClubs(List<StudentClub> studentClubs) {
+		this.studentClubs = studentClubs;
 	}
 
 	public Student(@NotNull String name, @NotNull String cid, @NotNull String username, Date dob, String imageUrl,
