@@ -36,7 +36,7 @@
                         <th scope="col">CRITERIA VALUE</th>
                         <th scope="col">VALID FROM</th>
                         <th scope="col">VALID TO</th>
-                        <th scope="col">STATUS</th>
+                        <!-- <th scope="col">STATUS</th> -->
                     </tr>
                 </thead>
                 <tbody id="accordionExample">
@@ -50,15 +50,15 @@
                             <td>{{al.criterionValue}}</td>
                             <td>{{al.validFrom | date }}</td>
                             <td>{{al.validUntil | date}}</td>
-                            <td>
+                            <!-- <td>
                                 <div *ngIf="al.status === 'PENDING'" class="pending"> {{al.status}}
                                 </div>
                                 <div *ngIf="al.status === 'VERIFIED'" class="verified">
                                     {{al.status}} </div>
-                            </td>                            
+                            </td>                             -->
                         </tr>
                         <tr>
-                            <td class="collapse-td" colspan="9">
+                            <td class="collapse-td" colspan="8">
                                 <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
                                     <table class="innertable">
                                         <tbody id="innerAccordionExample">
@@ -103,7 +103,7 @@
                 </tbody>
                 <tfoot *ngIf="awardsArr.length == 0">
                     <tr>
-                        <td colspan="9">
+                        <td colspan="8">
                             <div *ngIf="loader" class="spinner-border text-dark" role="status">
                             </div>{{loader ? 'Loading...' :  'No Awards'}}
                         </td>
