@@ -376,26 +376,26 @@
                                                         <table class="innertable">
                                                             <tbody id="innerAccordionExample">
                                                                 <ng-container
-                                                                    *ngFor="let pa of al.activityPerformedResponses; let i = index;">
+                                                                    *ngFor="let pa of al.activityPerformedResponses; let j = index;">
                                                                     <tr data-toggle="collapse"
-                                                                        [attr.data-target]="'#collapsed'+i">
-                                                                        <td>{{i+1}}</td>
+                                                                        [attr.data-target]="'#collapsed'+j">
+                                                                        <td>{{i+1}}.{{j+1}}</td>
                                                                         <td id="actname">{{pa.activityName}}</td>
                                                                         <td>Activity Count - {{pa.count}}</td>
                                                                         <td>Average Stars - {{pa.averageStars}}</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td class="last collapsed-td" colspan="12">
-                                                                            <div [attr.id]="'collapsed' + i"
+                                                                            <div [attr.id]="'collapsed' + j"
                                                                                 class="collapse"
                                                                                 data-parent="#innerAccordionExample">
                                                                                 <div
-                                                                                    *ngFor="let ac of pa.responses; let j = index;">
+                                                                                    *ngFor="let ac of pa.responses; let k = index;">
                                                                                     <div class="row">
                                                                                         <div class="col-6">
                                                                                             <div
                                                                                                 class="assign description">
-                                                                                                <h5>{{i+1}}.{{j+1}}
+                                                                                                <h5>{{i+1}}.{{j+1}}.{{k+1}}
                                                                                                 </h5>
                                                                                                 <p> <strong>Title -
                                                                                                     </strong>{{ac.title}}
