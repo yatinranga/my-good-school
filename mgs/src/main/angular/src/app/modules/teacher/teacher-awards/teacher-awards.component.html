@@ -55,12 +55,12 @@
                             </div>
                             <div class="assign-form" [hidden]="showCriteriaValues">
                                 <label for="exampleFormControlSelect1" class="date">From Date - </label>
-                                <input type="date" [value]="startDate" [(ngModel)]="startDate"
+                                <input type="date" [value]="startDate" [attr.max]="endDate" [(ngModel)]="startDate"
                                     (ngModelChange)="dateChanged()" class="date">
                             </div>
                             <div class="assign-form" [hidden]="showCriteriaValues">
                                 <label for="exampleFormControlSelect1" class="date">Till Date - </label>
-                                <input type="date" [value]="endDate" max="endDate" [(ngModel)]="endDate"
+                                <input type="date" [value]="endDate" [attr.max]="endDate" max="endDate" [(ngModel)]="endDate"
                                     (ngModelChange)="dateChanged()" class="date">
                             </div>
                         </div>
@@ -134,7 +134,7 @@
                                                     TYPE</th>
                                                 <th scope="col" *ngIf="!(awardCriterion=='4S')">FOUR S</th>
                                                 <th scope="col" *ngIf="awardCriterion=='Activity Type'">COUNT</th>
-                                                <th scope="col">SCORE</th>
+                                                <th scope="col">PERFORMANCE</th>
                                             </tr>
                                         </thead>
                                         <tbody id="accordionExample">
@@ -555,8 +555,9 @@
                     </div>
                     <div class="form-group">
                         <label for="message-text" class="col-form-label"> Description - (Minimum 10 words)</label>
-                        <textarea class="form-control" name="description" id="message-text"
+                        <textarea class="form-control" name="description" id="message-text" (ngModelChange)="wordCount($event)"
                             formControlName="description"></textarea>
+                            <span class="text-muted">Word count - {{count}}</span><br>
                         <small class="text-danger"
                             *ngIf="!assignAwardForm.get('description').valid && assignAwardForm.get('description').touched">
                             Min Length 10 words.

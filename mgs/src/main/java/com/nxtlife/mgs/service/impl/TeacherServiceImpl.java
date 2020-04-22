@@ -28,11 +28,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.entity.activity.Activity;
+import com.nxtlife.mgs.entity.school.Award;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
+import com.nxtlife.mgs.entity.school.StudentClub;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.entity.user.User;
+import com.nxtlife.mgs.enums.ApprovalStatus;
 import com.nxtlife.mgs.enums.UserType;
 import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.ex.ValidationException;
@@ -42,6 +45,8 @@ import com.nxtlife.mgs.jpa.GradeRepository;
 import com.nxtlife.mgs.jpa.RoleRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
 import com.nxtlife.mgs.jpa.SequenceGeneratorRepo;
+import com.nxtlife.mgs.jpa.StudentClubRepository;
+import com.nxtlife.mgs.jpa.StudentRepository;
 import com.nxtlife.mgs.jpa.TeacherRepository;
 import com.nxtlife.mgs.jpa.UserRepository;
 import com.nxtlife.mgs.service.BaseService;
@@ -52,8 +57,11 @@ import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.store.FileStore;
 import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.ExcelUtil;
+import com.nxtlife.mgs.util.StudentActivityId;
 import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.ActivityRequestResponse;
+import com.nxtlife.mgs.view.AwardResponse;
+import com.nxtlife.mgs.view.ClubMembershipResponse;
 import com.nxtlife.mgs.view.StudentResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
 import com.nxtlife.mgs.view.TeacherRequest;
@@ -103,6 +111,12 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 
 	@Autowired
 	private FileStore filestore;
+	
+	@Autowired
+	StudentClubRepository studentClubRepository;
+	
+	@Autowired
+	StudentRepository studentRepository;
 
 	@Override
 	public TeacherResponse save(TeacherRequest request) {
@@ -359,17 +373,26 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		}
 		
 		if(request.getMobileNumber() != null) {
-			if(userRepository.existsByContactNumber(request.getMobileNumber()))
+			
+//			if(!userRepository.existsByContactNumberAndCid(request.getMobileNumber(),teacher.getUser().getCid())) {
+				if(!userRepository.existsByContactNumberAndCidNot(request.getMobileNumber(),teacher.getUser().getCid())) {
+					teacher.setMobileNumber(request.getMobileNumber());
+					teacher.getUser().setContactNumber(request.getMobileNumber());
+				}else {
 					throw new ValidationException(String.format("Mobile Number (%s) already belongs to some other user.",request.getMobileNumber()));
-			teacher.setMobileNumber(request.getMobileNumber());
-			teacher.getUser().setContactNumber(request.getMobileNumber());
+				}
+//			}
 		}
 		
 		if(request.getEmail() != null) {
-			if(userRepository.existsByEmail(request.getEmail()))
+//			if(!userRepository.existsByEmailAndCid(request.getEmail(),teacher.getUser().getCid())) {
+				if(!userRepository.existsByEmailAndCidNot(request.getEmail(),teacher.getUser().getCid())) {
+					teacher.setEmail(request.getEmail());
+					teacher.getUser().setEmail(request.getEmail());
+				}else {
 					throw new ValidationException(String.format("Email (%s) already belongs to some other user.",request.getEmail()));
-			teacher.setEmail(request.getEmail());
-			teacher.getUser().setEmail(request.getEmail());
+				}
+//			}
 		}
 		
 
@@ -976,4 +999,43 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		return response;
 	}
 
+	@Override
+	public List<ClubMembershipResponse> getPendingMembershipRequests(){
+		Long userId = getUserId();
+		if(userId == null)
+			throw new ValidationException("Login as teacher/coach to view pending requests.");
+		Long teacherId = teacherRepository.getIdByUserIdAndActiveTrue(userId);
+		if(teacherId == null)
+			throw new ValidationException("Login as teacher/coach to view pending requests.");
+		List<StudentClub> pendingRequests = studentClubRepository.findAllByTeacherIdAndMembershipStatusAndActiveTrue(teacherId, ApprovalStatus.PENDING);
+		
+		if(pendingRequests == null || pendingRequests.isEmpty())
+			throw new ValidationException("No membership application found for you.");
+		
+		return pendingRequests.stream().map(ClubMembershipResponse :: new).distinct().collect(Collectors.toList());
+	}
+	
+	@Override
+	public ClubMembershipResponse updateStatus(String studentId,String activityId , Boolean isVerified) {
+		Long userId = getUserId();
+		if(userId == null)
+			throw new ValidationException("Login as teacher/coach to verify/reject pending requests.");
+		Long teacherId = teacherRepository.getIdByUserIdAndActiveTrue(userId);
+		if(teacherId == null)
+			throw new ValidationException("Login as teacher/coach to verify/reject pending requests.");
+		StudentClub studentClub = studentClubRepository.findOne(new StudentActivityId(studentRepository.findIdByCidAndActiveTrue(studentId), activityRepository.findIdByCidAndActiveTrue(activityId), teacherId));
+		if (studentClub == null) {
+			throw new ValidationException(String.format("This membership request not found in records."));
+		}
+		if (studentClub.getMembershipStatus().equals(ApprovalStatus.PENDING)) {
+			studentClub.setMembershipStatus(isVerified ? ApprovalStatus.VERIFIED : ApprovalStatus.REJECTED);
+				
+			studentClub.setConsideredOn(new Date());
+		} else {
+			throw new ValidationException("This membership request already rejected or verified");
+		}
+		
+		studentClub = studentClubRepository.save(studentClub);
+		return new ClubMembershipResponse(studentClub);
+	}
 }

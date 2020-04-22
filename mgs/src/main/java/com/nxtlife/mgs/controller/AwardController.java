@@ -37,12 +37,12 @@ public class AwardController {
 	}
 	
 	@GetMapping("api/student/awards")
-	public AwardResponse getAwardsByStudent(){
+	public List<AwardResponse> getAwardsByStudent(){
 		return awardService.findAllByStudent();
 	}
 	
 	@GetMapping("api/teacher/awards")
-	public AwardResponse getAwardsByManagement(){
+	public List<AwardResponse> getAwardsByManagement(){
 		return awardService.findAllByManagement();
 	}
 
@@ -52,12 +52,12 @@ public class AwardController {
 	}
 	
 	@PostMapping("api/student/awards")
-	private AwardResponse getAwardsByStudent(@RequestBody AwardFilter filter){
+	private List<AwardResponse> getAwardsByStudent(@RequestBody AwardFilter filter){
 		return awardService.findAllByStudent(filter);
 	}
 	
 	@PostMapping("api/teacher/awards")
-	private AwardResponse getAwardsByManagement(@RequestBody AwardFilter filter){
+	private List<AwardResponse> getAwardsByManagement(@RequestBody AwardFilter filter){
 		return awardService.findAllByManagement(filter);
 	}
 	

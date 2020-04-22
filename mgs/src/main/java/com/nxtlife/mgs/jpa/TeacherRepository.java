@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.nxtlife.mgs.entity.user.Teacher;
@@ -61,6 +63,12 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 	String findNameByCidAndActiveTrue(String assignerCid);
 
 	boolean existsByUserIdAndIsManagmentMemberTrueAndActiveTrue(Long userId);
+
+	@Query(value = "select t.id from Teacher t where t.cid = :cid and t.active = true")
+	Long findIdByCidAndActiveTrue(@Param("cid") String cid);
+
+	@Query(value = "select t.id from Teacher t where t.user.id = :userId and t.active = true")
+	Long getIdByUserIdAndActiveTrue(@Param("userId") Long userId);
 
 //	List<Teacher> findAllByActivitiesCid(String cid);
 

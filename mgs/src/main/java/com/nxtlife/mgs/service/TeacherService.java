@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.view.ActivityRequestResponse;
+import com.nxtlife.mgs.view.ClubMembershipResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
 import com.nxtlife.mgs.view.TeacherRequest;
 import com.nxtlife.mgs.view.TeacherResponse;
@@ -63,5 +64,9 @@ public interface TeacherService {
 	TeacherResponse setProfilePic(MultipartFile file);
 
 	TeacherResponse addOrRemoveActivitiesToTeachers(TeacherRequest request);
+
+	List<ClubMembershipResponse> getPendingMembershipRequests();
+
+	ClubMembershipResponse updateStatus(String studentId, String activityId, Boolean isVerified);
 
 }

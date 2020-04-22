@@ -1,5 +1,6 @@
 package com.nxtlife.mgs.view;
 
+import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -9,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.util.DateUtil;
+import com.nxtlife.mgs.util.Utils;
 
 @JsonInclude(value = Include.NON_ABSENT)
 public class StudentResponse {
@@ -198,8 +200,12 @@ public class StudentResponse {
 		this.activityTypes = activityTypes;
 	}
 
-	public Double getScoreForAward() {
-		return scoreForAward;
+	public String getScoreForAward() {
+		if(this.scoreForAward != null) {
+			DecimalFormat df = new DecimalFormat("####0.00");
+			return df.format((double) scoreForAward);
+		}
+		return null;
 	}
 
 	public void setScoreForAward(Double scoreForAward) {
