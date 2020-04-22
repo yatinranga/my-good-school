@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { StudentService } from 'src/app/services/student.service';
+import { AlertService } from 'src/app/services/alert.service';
+declare let $: any;
 
 @Component({
   selector: 'app-home',
@@ -14,23 +16,30 @@ export class HomeComponent implements OnInit {
   grades = [];
   copyStuArr = [];
 
+  enrolledClubsArr = [];
+  clubSupervisor = [];
+
   studentInfo: any;
   studentId: any;
   schoolId: any;
 
   activityId = "";
   gradeId = "";
+  clubId = "";
+  supervisorId = "";
 
   stu_loader = false;
   sup_loader = false;
+  csup_loader = false;
 
-  constructor(private studentService: StudentService) { }
+  constructor(private studentService: StudentService, public alertService: AlertService) { }
 
   ngOnInit() {
     this.studentInfo = JSON.parse(localStorage.getItem('user_info'));
     this.schoolId = this.studentInfo.student.schoolId;
     this.getActivity(this.schoolId);
     this.getGrades(this.schoolId);
+    this.getEnrolledClub();
   }
 
   // get List of Activities of School
@@ -61,7 +70,7 @@ export class HomeComponent implements OnInit {
   // get List of Student of selected Activity
   getStudents(actiId) {
     this.stu_loader = true;
-    this.studentService.getActivityStudent(actiId).subscribe((res) => {      
+    this.studentService.getActivityStudent(actiId).subscribe((res) => {
       this.students = res;
       this.copyStuArr = Object.assign([], res);
       console.log(res);
@@ -72,14 +81,14 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  getGrades(schoolId){
+  getGrades(schoolId) {
     this.studentService.getGradesOfSchool(schoolId).subscribe((res) => {
       this.grades = res;
-    },(err) => {console.log(err)});
+    }, (err) => { console.log(err) });
   }
 
-  filterStudent(){
-    this.students = this.filter(Object.assign([], this.copyStuArr));    
+  filterStudent() {
+    this.students = this.filter(Object.assign([], this.copyStuArr));
   }
 
   // Actual Filtering on the basis of PSD , Focus Area and 4S
@@ -92,5 +101,54 @@ export class HomeComponent implements OnInit {
     }
     return filterStudentArr;
   }
+
+  // List of enrolled Clubs and Societies
+  getEnrolledClub() {
+    this.studentService.getAllEnrolledClub().subscribe(res => {
+      console.log(res);
+      this.enrolledClubsArr = res;
+    }, (err) => { console.log(err) });
+  }
+
+  // List of Supervisor of a particular club of activity
+  getSupervisor(actiId) {
+    this.clubId = "";
+    this.supervisorId = "";
+    this.clubSupervisor = [];
+    this.csup_loader = true;
+    this.clubId = actiId;
+    this.studentService.getCoach(this.schoolId, actiId).subscribe((res) => {
+      this.clubSupervisor = res;
+      console.log(res);
+      this.csup_loader = false;
+    }, (err) => {
+      console.log(err);
+      this.csup_loader = false;
+    })
+  }
+
+  clubRegistration() {
+    console.log(this.clubId);
+    console.log("Supervisor- ",this.supervisorId);
+    if (this.clubId && this.supervisorId) {
+      this.alertService.showLoader("");
+      this.studentService.postEnrollInClub(this.clubId, this.supervisorId).subscribe(res => {
+        console.log(res)
+        this.alertService.showSuccessAlert("Registration Successful");
+        $('#registrationModal').modal('hide');
+        $('.modal-backdrop').remove();
+      }, (err) => { console.log(err); });
+      
+    } else {
+      this.alertService.showErrorAlert("Fill all the details");
+    }
+  }
+
+  clearSelected(){
+    console.log("clear selection called");
+    this.clubId = "";
+    this.supervisorId = "";
+  }
+
 
 }

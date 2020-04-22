@@ -2,20 +2,31 @@
     <img src="assets/images/banner.jpg">
     <div class="student_home">
         <div class="activity_select">
-            <h2> Activity Type : </h2>
+            <h2> Clubs and Societies : </h2>
             <select name="activity" (ngModelChange)="getCoaches($event)" ngModel [disabled]="!activities.length">
-                <option value="" disabled>Select Activity</option>
+                <option value="" disabled>Select One</option>
                 <option *ngFor="let activity of activities;" value={{activity.id}}>
-                    {{activity.name}}</option>
+                    {{activity.name}} ({{activity.clubOrSociety}})</option>
                 <option disabled *ngIf="!activities.length">No activities available</option>
             </select>
         </div>
+
+        <!-- list of enrolled clubs and societies -->
+        <div class="card-right" style="width: 20rem;">
+            <div class="card-body">
+              <h5 class="card-title">Enrolled Clubs and Societies : </h5>
+              <div class="card-text">
+                  <ul *ngFor="let ec of enrolledClubsArr; let i = index;">
+                      <li>{{i+1}}. {{ec.name}} - ({{ec.clubOrSociety}})</li>
+                  </ul>
+              </div>
+            </div>
+          </div>
         <div class="list_card_main">
             <div class="list_card">
                 <h3> List of Supervisors : </h3>
                 <ul>
-                 <li *ngFor="let c of coaches; let i = index" id="t-name"> {{i+1}}. {{c.name}} - </li>
-                 <li *ngFor="let c of coaches"> {{c.profileBrief}} </li>
+                 <li *ngFor="let c of coaches; let i = index" id="t-name"> {{i+1}}. {{c.name}} - {{c.profileBrief}}</li>
                  <li *ngIf="coaches.length==0" id="null"> {{sup_loader ? 'Loading...' : 'No Supervisor'}} </li>
                 </ul>
             </div>
@@ -31,9 +42,61 @@
                   <li *ngIf="students.length==0" id="null"> {{stu_loader ? 'Loading...' : 'No Students'}} </li>
                 </ul>
             </div>
+            <div>
+
+                <button data-toggle="modal" data-target="#exampleModal">Enrollment Form</button>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- Registration Form -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="registrationModal" aria-hidden="true"
+data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="registrationModal">Registration Form</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="clearSelected()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+            <!-- List of all Clubs and Societites -->
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <label class="input-group-text" for="inputGroupSelect01">Clubs and Societies</label>
+                </div>
+                    <select class="custom-select" id="inputGroupSelect01" name="clubs" (ngModelChange)="getSupervisor($event)" 
+                    [(ngModel)]="clubId" [disabled]="!activities.length">
+                        <option value="" disabled>Select One</option>
+                        <option *ngFor="let activity of activities;" value={{activity.id}}>
+                            {{activity.name}} ({{activity.clubOrSociety}})</option>
+                        <option disabled *ngIf="!activities.length">No activities available</option>
+                    </select>
+              </div>
+
+              <!-- List of Supervisor associated with Specific clubs and societies -->
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <label class="input-group-text" for="inputGroupSelect01">Select Supervisor</label>
+                </div>
+                <select class="custom-select" id="inputGroupSelect01" [(ngModel)]="supervisorId" [disabled]="csup_loader">
+                    <option value="" disabled>Select One</option>
+                    <option *ngFor="let sup of clubSupervisor" value={{sup.id}}>{{sup.name}}</option>
+                </select>
+                <div class="spinner-border text-info" role="status" *ngIf="csup_loader"></div>
+              </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="clearSelected()">Reset</button>
+          <button type="button" class="btn btn-primary" (click)="clubRegistration()">Register</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
 
     <!-- <div class="home_page_content">
             <div class="menu_main">
