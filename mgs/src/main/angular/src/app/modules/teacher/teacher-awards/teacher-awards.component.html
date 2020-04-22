@@ -4,10 +4,8 @@
             <div class="teacher_awards_main">
                 <div class="tabs">
                     <ul>
-                        <li [ngClass]="{'active': awardViewType=='view'}"> <a (click)="awardView('view')"> View </a>
-                        </li>
-                        <li [ngClass]="{'active': awardViewType=='assign'}"> <a (click)="awardView('assign')"> Assign
-                            </a> </li>
+                        <li [ngClass]="{'active': awardViewType=='view'}"> <a (click)="awardView('view')"> View </a></li>
+                        <li [ngClass]="{'active': awardViewType=='assign'}"> <a (click)="awardView('assign')"> Assign </a> </li>
                     </ul>
                 </div>
                 <div [ngSwitch]="awardViewType">
@@ -199,31 +197,23 @@
                                                                             <td> {{i+1}} </td>
                                                                             <td id="actname"> {{pa.activityName}} </td>
                                                                             <td>
-                                                                                <p
-                                                                                    *ngIf="!(awardCriterion=='Focus Area')">
+                                                                                <p *ngIf="!(awardCriterion=='Focus Area')">
                                                                                     <strong> Focus Area - </strong>
-                                                                                    <span
-                                                                                        *ngFor="let at of pa.responses[0].focusAreas; let i = index">
+                                                                                    <span *ngFor="let at of pa.responses[0].focusAreas; let i = index">
                                                                                         {{ (i === pa.responses[0].focusAreas.length-1) ? at : at + "," + ' '}}
                                                                                     </span>
                                                                                 </p>
-                                                                                <p
-                                                                                    *ngIf="!(awardCriterion=='PSD Area')">
+                                                                                <p *ngIf="!(awardCriterion=='PSD Area')">
                                                                                     <strong> PSD Area - </strong>
-                                                                                    <span
-                                                                                        *ngFor="let at of pa.responses[0].psdAreas; let i = index">
+                                                                                    <span *ngFor="let at of pa.responses[0].psdAreas; let i = index">
                                                                                         {{ (i === pa.responses[0].psdAreas.length-1) ? at : at + "," + ' '}}
-                                                                                    </span>
-                                                                                </p>
+                                                                                    </span> </p>
                                                                             </td>
-                                                                            <td>
-                                                                                <p *ngIf="!(awardCriterion=='4S')">
-                                                                                    <strong> 4S - </strong>
-                                                                                    {{pa.responses[0].fourS}} </p>
+                                                                            <td> <p *ngIf="!(awardCriterion=='4S')">
+                                                                                    <strong> 4S - </strong> {{pa.responses[0].fourS}} </p> 
                                                                             </td>
-                                                                            <td>Activity Count - {{pa.count}} </td>
-                                                                            <td>Average Stars - {{pa.averageStars}}
-                                                                            </td>
+                                                                            <td>Activity Count - <strong> {{pa.count}} </strong> </td>
+                                                                            <td>Average Stars - <strong> {{pa.averageStars}} </strong> </td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class="last collapsed-td" colspan="12">
@@ -234,8 +224,7 @@
                                                                                         *ngFor="let ac of pa.responses; let j = index;">
                                                                                         <div class="row">
                                                                                             <div class="col-6">
-                                                                                                <div
-                                                                                                    class="assign description">
+                                                                                                <div class="assign description">
                                                                                                     <h5> <label> <input
                                                                                                                 type="checkbox"
                                                                                                                 name="selectPerformedActivity"
@@ -244,13 +233,8 @@
                                                                                                         </label>
                                                                                                         {{i+1}}.{{j+1}}
                                                                                                     </h5>
-                                                                                                    <p> <strong>Title -
-                                                                                                        </strong>{{ac.title}}
-                                                                                                    </p>
-                                                                                                    <p> <strong>Description
-                                                                                                            -
-                                                                                                        </strong>{{ac.description}}
-                                                                                                    </p>
+                                                                                                    <p> <strong>Title - </strong>{{ac.title}} </p>
+                                                                                                    <p> <strong>Description - </strong>{{ac.description}} </p>
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div class="col-6">
@@ -366,7 +350,7 @@
                                             <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                                                 <td>{{i+1}}</td>
                                                 <td>{{al.awardType}}</td>
-                                                <td>{{al.description}}</td>
+                                                <td class="des"> {{al.description}}</td>
                                                 <td>{{al.studentName}} {{al.studentGrade}}</td>
                                                 <td>{{al.awardCriterion}}</td>
                                                 <td>{{al.criterionValue}}</td>
