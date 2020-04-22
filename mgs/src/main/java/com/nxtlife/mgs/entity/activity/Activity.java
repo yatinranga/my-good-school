@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
@@ -21,7 +22,9 @@ import org.hibernate.annotations.FetchMode;
 
 import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.school.School;
+import com.nxtlife.mgs.entity.school.StudentClub;
 import com.nxtlife.mgs.entity.user.Teacher;
+import com.nxtlife.mgs.enums.ClubOrSociety;
 import com.nxtlife.mgs.enums.FourS;
 
 @SuppressWarnings("serial")
@@ -46,6 +49,9 @@ public class Activity extends BaseEntity {
 	private Boolean active;
 
 	private Boolean isGeneral;
+	
+	@Enumerated(EnumType.STRING)
+	private ClubOrSociety clubOrSociety;
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "activity_focus_area", joinColumns = { @JoinColumn(name = "activity_id") }, inverseJoinColumns = {
@@ -63,6 +69,9 @@ public class Activity extends BaseEntity {
 					"school_id" }))
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<School> schools;
+	
+	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY , mappedBy = "activity")
+	private List<StudentClub> studentClubs;
 
 	public String getName() {
 		return name;
@@ -78,6 +87,12 @@ public class Activity extends BaseEntity {
 
 	public void setFourS(FourS fourS) {
 		this.fourS = fourS;
+		if(fourS != null) {
+			if(fourS.equals(FourS.Service) || fourS.equals(FourS.Study))
+				this.clubOrSociety = ClubOrSociety.Society;
+			else
+				this.clubOrSociety = ClubOrSociety.Club;
+		}
 	}
 
 	public String getCid() {
@@ -134,6 +149,22 @@ public class Activity extends BaseEntity {
 
 	public void setIsGeneral(Boolean isGeneral) {
 		this.isGeneral = isGeneral;
+	}
+
+	public List<StudentClub> getStudentClubs() {
+		return studentClubs;
+	}
+
+	public void setStudentClubs(List<StudentClub> studentClubs) {
+		this.studentClubs = studentClubs;
+	}
+
+	public ClubOrSociety getClubOrSociety() {
+		return clubOrSociety;
+	}
+
+	public void setClubOrSociety(ClubOrSociety clubOrSociety) {
+		this.clubOrSociety = clubOrSociety;
 	}
 
 	public Activity(@NotNull String name, FourS fourS, @NotNull String cid, String description, Boolean active,

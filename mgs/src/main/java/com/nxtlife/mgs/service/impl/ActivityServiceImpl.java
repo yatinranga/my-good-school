@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.activity.FocusArea;
 import com.nxtlife.mgs.entity.school.School;
+import com.nxtlife.mgs.enums.ApprovalStatus;
 import com.nxtlife.mgs.enums.FourS;
 import com.nxtlife.mgs.enums.PSDArea;
 import com.nxtlife.mgs.ex.NotFoundException;
@@ -37,6 +38,8 @@ import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.ActivityRepository;
 import com.nxtlife.mgs.jpa.FocusAreaRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
+import com.nxtlife.mgs.jpa.StudentClubRepository;
+import com.nxtlife.mgs.jpa.StudentRepository;
 import com.nxtlife.mgs.service.ActivityService;
 import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.FocusAreaService;
@@ -63,6 +66,12 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 	
 	@Autowired
 	FocusAreaService focusAreaService;
+	
+	@Autowired
+	StudentClubRepository studentClubRepository;
+	
+	@Autowired
+	StudentRepository studentRepository;
 
 	@PostConstruct
 	public void init() {
@@ -388,6 +397,9 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 			schoolRepository.save(school);
 		}
 		
+		activityList = activityRepository.findAll();
+		activityList.stream().forEach(a -> {if(a.getClubOrSociety() == null ) a.setFourS(a.getFourS());});
+		activityList = activityRepository.save(activityList);
 
 	}
 
@@ -536,13 +548,32 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 	@Override
 	public List<ActivityRequestResponse> getAllOfferedActivitiesBySchool(String schoolCid) {
 		List<Activity> activities;
+		
 		if (schoolCid == null)
 			activities = activityRepository.findAllByIsGeneralTrueAndActiveTrue();
 		else
 			activities = activityRepository.findAllBySchoolsCidAndActiveTrue(schoolCid);
+		
 
 		if (activities == null || activities.isEmpty())
 			throw new ValidationException("No general or school specific activities found.");
+		
+		return activities.stream().map(ActivityRequestResponse:: new).collect(Collectors.toList());
+	}
+	
+	@Override
+	public List<ActivityRequestResponse> getAllClubsOfStudent(){
+		List<Activity> activities;
+		Long userId = getUserId();
+		if(userId == null)
+			throw new ValidationException("Login as student to see your activities.");
+		Long studentId =  studentRepository.findIdByUserIdAndActiveTrue(userId);
+		if(studentId == null)
+			throw new ValidationException("User not logged in as student.");
+		if(!studentClubRepository.existsByStudentIdAndMembershipStatusAndActiveTrue(studentId, ApprovalStatus.VERIFIED))
+			throw new ValidationException("Student not member of any Clubs.");
+		
+		activities = studentClubRepository.findActivityByStudentIdAndMembershipStatusAndActiveTrue(studentId, ApprovalStatus.VERIFIED);
 		
 		return activities.stream().map(ActivityRequestResponse:: new).collect(Collectors.toList());
 	}

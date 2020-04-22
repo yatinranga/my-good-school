@@ -3,6 +3,8 @@ package com.nxtlife.mgs.jpa;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.nxtlife.mgs.entity.user.Student;
@@ -55,9 +57,15 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 	Boolean existsByCidAndActiveTrue(String studentCid);
 
 	Student getByUserIdAndActiveTrue(Long userId);
+	
+	@Query(value = "select s.id from Student s where s.user.id = :userId and s.active = true")
+	Long findIdByUserIdAndActiveTrue(@Param("userId") Long userId);
 
 	List<Student> findAllBySchoolCidAndActivitiesActivityCidAndActivitiesActivityStatusAndSchoolActiveTrueAndActivitiesActivityActiveTrueAndActiveTrue(
 			String schoolCid, String activityCid, ActivityStatus valueOf);
+
+	@Query(value = "select s.id from Student s where s.cid = :cid and s.active = true")
+	Long findIdByCidAndActiveTrue(@Param("cid")String cid);
 
 
 

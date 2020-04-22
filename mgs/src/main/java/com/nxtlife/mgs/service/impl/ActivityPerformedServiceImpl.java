@@ -20,6 +20,7 @@ import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.enums.ActivityStatus;
+import com.nxtlife.mgs.enums.ApprovalStatus;
 import com.nxtlife.mgs.enums.FourS;
 import com.nxtlife.mgs.enums.PSDArea;
 import com.nxtlife.mgs.ex.NotFoundException;
@@ -32,6 +33,7 @@ import com.nxtlife.mgs.jpa.FileRepository;
 import com.nxtlife.mgs.jpa.FocusAreaRepository;
 import com.nxtlife.mgs.jpa.GradeRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
+import com.nxtlife.mgs.jpa.StudentClubRepository;
 import com.nxtlife.mgs.jpa.StudentRepository;
 import com.nxtlife.mgs.jpa.TeacherRepository;
 import com.nxtlife.mgs.service.ActivityPerformedService;
@@ -78,6 +80,9 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 
 	@Autowired
 	ActivityRepository activityRepository;
+	
+	@Autowired
+	StudentClubRepository studentClubRepository;
 
 	@Override
 	public List<FileResponse> getAllFilesOfActivity(String activityCId) {
@@ -123,6 +128,9 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 		if (activity == null)
 			throw new ValidationException(
 					String.format("Activity with id : %s does not exist.", request.getActivityId()));
+		
+		if(!studentClubRepository.existsByStudentIdAndActivityIdAndMembershipStatusAndActiveTrue(student.getId(), activity.getId(), ApprovalStatus.VERIFIED))
+			throw new ValidationException(String.format("You are not a member of %s : %s please apply for membership first.", activity.getClubOrSociety().toString() , activity.getName()));
 
 		if (request.getCoachId() == null)
 			throw new ValidationException("Coach Id can not be null.");
