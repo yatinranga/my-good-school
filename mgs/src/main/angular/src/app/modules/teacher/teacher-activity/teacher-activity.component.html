@@ -195,36 +195,14 @@
                                                 </div>
                                                 <div *ngIf="(activity.activityStatus === 'SubmittedByStudent')">
                                                     <div class="row">
-
-                                                        <div class="col-4">
+                                                        <div class="col-6">
                                                             <div class="description">
                                                                 <h5> Activity Details : </h5>
                                                                 <p> <strong> Description - </strong>
                                                                     {{activity.description}} </p>
                                                             </div>
                                                         </div>
-
-                                                        <div class="col-4">
-                                                            <div class="description">
-                                                                <h5> Development Parameters : </h5>
-                                                                <p> <strong>Focus Area - </strong></p>
-                                                                <span id="fa"
-                                                                    *ngFor="let fa of activity.focusAreas; let i = index">
-                                                                    {{ (i === activity.focusAreas.length-1) ? fa : fa + "," + ' '}}
-                                                                </span>
-                                                                <p *ngIf="activity.psdAreas">
-                                                                    <strong>PSD Area : </strong></p>
-                                                                <span id="fa"
-                                                                    *ngFor="let fa of activity.psdAreas let i = index">
-                                                                    {{ (i === activity.psdAreas.length-1) ? fa : fa + "," + ' '}}
-                                                                </span>
-                                                                <p *ngIf="activity.fourS" id="fourSkills">
-                                                                    <strong>4's - </strong> {{activity.fourS}}
-                                                                </p>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-4" *ngIf="activity.fileResponses.length">
+                                                        <div class="col-6" *ngIf="activity.fileResponses.length">
                                                             <div class="attachment">
                                                                 <h5> Attachments : </h5>
                                                                 {{activity.fileResponses.length ? "" : "NA"}}

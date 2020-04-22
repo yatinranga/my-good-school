@@ -217,6 +217,7 @@ border: 1px solid #777 !important;
 }
 div#assignAwardModal .modal-content {
     border: 5px solid #b4d673;
+    top: 100px;
 }
 tbody tr{
     cursor: pointer;
@@ -226,28 +227,8 @@ tbody tr{
     padding: 10px;
     display: inline-block;
     width: 100%;
-    min-height: 140px;
     vertical-align: bottom;
     position: relative;
-}
-.attachment:before {
-    content: "";
-    position: absolute;
-    background: #666;
-    width: 1px;
-    left: 0;
-    top: 0;
-    bottom: 0;
-}
-.description:after {
-    content: "";
-    position: absolute;
-    background: #666;
-    width: 1px;
-    right: -31px;
-    top: 0;
-    bottom: 0;
-    min-height: 261px;
     height: 100%;
 }
 .buttons{
@@ -267,7 +248,6 @@ tbody#accordionExample > tr[aria-expanded="true"] {
 }
 .description {
     border-right: 1px solid #333;
-    min-height: 333px;
 }
 .description:after, .attachment:before{
     display: none !important;
@@ -591,6 +571,7 @@ button.edit_profile {
     background: #adadad;
     box-shadow: 0 0 10px #555;
 }
+
 
 /*-------------------------------------ACTIVITY-------------------------------------*/
 

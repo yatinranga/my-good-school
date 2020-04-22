@@ -22,7 +22,6 @@ span.choosefile.choosefile-custom {
     box-shadow: 0 0 10px $light;
     border-radius: 0;
 }
-
 .upload img {
     max-width: 200px;
 }
@@ -35,11 +34,9 @@ span.choosefile.choosefile-custom {
     border: 1px solid #ddd;
     margin: 20px;
 }
-
 .collapse-td{
     padding: 0;
 }
-
 select{
     background: none;
     border: none;
@@ -48,7 +45,6 @@ select{
     border-radius: 0 !important;
     width: 120px;
 }
-
 button.submit {
     background: green;
 }
@@ -64,7 +60,6 @@ button.submit {
 .pending {
     color: indianred;
 }
-
 button.icon_button {
     padding: 5px;
     margin: 0 5px;
@@ -113,7 +108,4 @@ button.reset.btn.btn-secondary {
 .modal-content{
     top: 100px;
     border: 5px solid #1e68a9;
-}
-.description {
-    min-height: 355px;
 }
