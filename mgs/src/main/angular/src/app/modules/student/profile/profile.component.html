@@ -21,19 +21,9 @@
                         <p> <i class="fa fa-phone-alt"></i><label> {{studentDetails['mobileNumber']}}</label> </p>
                     </div>
                 </div>
+
                 <div class="guardian_main">
-                    <!--
-                        <div class="tab_nav">
-                        <div class="tab_buttons" *ngFor="let sd of studentDetails['guardianResponseList']; let i = index">
-                            <ul class="breadcrumb">
-                                <li [ngClass]="{'active':tabs=='guardian' + i}">
-                                    <a (click)="switchTabs('guardian' + i)">
-                                        {{sd['relationship']}} </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    -->
+                        <h2> GUARDIAN PROFILE </h2>
                     <div *ngFor="let sd of studentDetails['guardianResponseList']; let i = index">
                         <div class="guardian_profile_card">
                             <h3> {{sd['relationship']}}</h3>
@@ -46,8 +36,14 @@
                         </div>
                     </div>
                 </div>
-
-
+                <div class="clubs_main">
+                    <div>
+                        <h2> Enrolled Clubs and Societies : </h2>
+                        <ul *ngFor="let ec of enrolledClubsArr; let i = index;">
+                            <li>{{i+1}}. {{ec.name}} - ({{ec.clubOrSociety}})</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -55,15 +51,10 @@
 
 
 <input style="display : none" name="profilePhoto" type="file" accept=".png, .jpg, .jpeg" #photoInput
-(change)="onFileSelect($event)">
+    (change)="onFileSelect($event)">
 
 <!-- list of enrolled clubs and societies -->
-<div>
-    <h5 class="card-title">Enrolled Clubs and Societies : </h5>
-    <ul *ngFor="let ec of enrolledClubsArr; let i = index;">
-        <li>{{i+1}}. {{ec.name}} - ({{ec.clubOrSociety}})</li>
-    </ul>
-</div>
+
 
 <!-- <br>
 <div *ngIf="editForm == 'Student Profile'">

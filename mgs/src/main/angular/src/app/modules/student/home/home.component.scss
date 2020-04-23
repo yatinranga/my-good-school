@@ -2,11 +2,36 @@
 .student_home {
     width: 100%;
     display: inline-block;
-    position: absolute;
-    top: 20px;
-    left: 0;
     padding: 10px;
 }
+.student_home h1{
+    text-align: center;
+}
+.clubs{
+    width: 45%;
+    background: gold;
+    float: left;
+    padding: 10px;
+}
+.societies{
+    width: 45%;
+    background: gold;
+    float: right;
+    padding: 10px;
+}
+.fourskill_main {
+    width: 100%;
+    display: inline-flex;
+    background: cadetblue;
+}
+.fourskill{
+    border: 1px solid;
+    width: 33%;
+    background: #c38800;
+    margin: 0 auto;
+    padding: 10px;
+}
+
 .student_home select {
     width: 150px;
     margin-bottom: 7px;
