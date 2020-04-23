@@ -5,7 +5,8 @@
                 <div class="student_main">
                     <div class="student_image">
                         <img [src]="path">
-                        <button class="edit_profile" (click)="photoInput.click()"> <i class="fa fa-edit" title="Edit" > </i> Edit Profile Photo </button>
+                        <button class="edit_profile" (click)="photoInput.click()"> <i class="fa fa-edit" title="Edit">
+                            </i> Edit Profile Photo </button>
                         <p> <label> {{studentDetails['name']}}</label> </p>
                     </div>
                     <div class="student_content">
@@ -45,13 +46,24 @@
                         </div>
                     </div>
                 </div>
+
+
             </div>
         </div>
     </div>
 </div>
 
-<input style="display : none" name="profilePhoto" type="file" accept=".png, .jpg, .jpeg" #photoInput (change)="onFileSelect($event)">
 
+<input style="display : none" name="profilePhoto" type="file" accept=".png, .jpg, .jpeg" #photoInput
+(change)="onFileSelect($event)">
+
+<!-- list of enrolled clubs and societies -->
+<div>
+    <h5 class="card-title">Enrolled Clubs and Societies : </h5>
+    <ul *ngFor="let ec of enrolledClubsArr; let i = index;">
+        <li>{{i+1}}. {{ec.name}} - ({{ec.clubOrSociety}})</li>
+    </ul>
+</div>
 
 <!-- <br>
 <div *ngIf="editForm == 'Student Profile'">

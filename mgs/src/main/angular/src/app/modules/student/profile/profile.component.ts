@@ -20,6 +20,7 @@ export class ProfileComponent implements OnInit {
 
   files: any[];
   path: any;
+  enrolledClubsArr = [];
 
   constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService : AlertService) { }
 
@@ -47,6 +48,8 @@ export class ProfileComponent implements OnInit {
     },
       (err) => console.log(err)
     );
+
+    this.getEnrolledClub();
 
     // this.studentProfile = this.formBuilder.group({
     //   studentName : [''],
@@ -98,6 +101,14 @@ export class ProfileComponent implements OnInit {
     }, (err) => {
       console.log(err);
     })
+  }
+
+  // List of enrolled Clubs and Societies
+  getEnrolledClub() {
+    this.studentService.getAllEnrolledClub().subscribe(res => {
+      console.log(res);
+      this.enrolledClubsArr = res;
+    }, (err) => { console.log(err) });
   }
 
   // setEditForm(value){
