@@ -11,8 +11,36 @@
             </select>
         </div>
 
+        <!-- Study Activities -->
+        <div>Study : -
+          <ul *ngFor="let study of studyArr">
+            <li>{{study.name}}</li>
+          </ul>
+        </div><hr>
+
+        <!-- Skill Activities -->
+        <div>Skill : -
+          <ul *ngFor="let skill of skillArr">
+            <li>{{skill.name}}</li>
+          </ul>
+        </div><hr>
+
+        <!-- Service Activities -->
+        <div>Service : -
+          <ul *ngFor="let service of serviceArr">
+            <li>{{service.name}}</li>
+          </ul>
+        </div><hr>
+
+        <!-- Sports Activities -->
+        <div>Sport : -
+          <ul *ngFor="let soc of sportArr">
+            <li>{{soc.name}}</li>
+          </ul>
+        </div><hr>
+
         <!-- list of enrolled clubs and societies -->
-        <div class="card-right" style="width: 20rem;">
+        <!-- <div class="card-right" style="width: 20rem;">
             <div class="card-body">
               <h5 class="card-title">Enrolled Clubs and Societies : </h5>
               <div class="card-text">
@@ -21,7 +49,7 @@
                   </ul>
               </div>
             </div>
-          </div>
+          </div> -->
         <div class="list_card_main">
             <div class="list_card">
                 <h3> List of Supervisors : </h3>

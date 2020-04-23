@@ -16,6 +16,11 @@ export class HomeComponent implements OnInit {
   grades = [];
   copyStuArr = [];
 
+  sportArr = [];
+  skillArr = [];
+  serviceArr = [];
+  studyArr = [];
+
   enrolledClubsArr = [];
   clubSupervisor = [];
 
@@ -46,6 +51,10 @@ export class HomeComponent implements OnInit {
   getActivity(schoolId) {
     this.studentService.getActivity(schoolId).subscribe((res) => {
       this.activities = res;
+      this.sportArr = res.filter((e) =>(e.fourS == 'Sport'));
+      this.skillArr = res.filter((e) =>(e.fourS == 'Skill'));
+      this.serviceArr = res.filter((e) =>(e.fourS == 'Service'));
+      this.studyArr = res.filter((e) =>(e.fourS == 'Study'));
     },
       (err) => console.log(err)
     );
