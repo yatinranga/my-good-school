@@ -85,10 +85,6 @@ export class TeacherService {
     }
   }
 
-  // getStudentPerformedActivities(studentId,actiId){
-  //   return this.http.get("/api/student/"+studentId+"/activities?activityId="+actiId);
-  // }
-
   // to get activities of student whose status = REVIEWED
   getStudentActivities(studentCid){
     return this.http.get("/api/student/activities?status=reviewed&studentId=" + studentCid );
@@ -127,5 +123,15 @@ export class TeacherService {
   // get Values of PSD, Focus Area & 4s
   getAwardCriteriaValue(){
     return this.http.get("/filters");
+  }
+
+  // get all club and society request
+  getClubReq(){
+    return this.http.get("/api/teacher/clubs");
+  }
+
+  // Approve or reject club Request
+  approveClubReq(stuId,actId,verify){
+    return this.http.put("/api/teacher/club?studentId="+stuId+"&activityId="+actId+"&verified="+verify,{});
   }
 }
