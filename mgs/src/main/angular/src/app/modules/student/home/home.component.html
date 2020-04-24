@@ -1,94 +1,98 @@
-<!--
-          <div class="activity_select">
-            <h2> Clubs and Societies : </h2>
-            <select name="activity" (ngModelChange)="getCoaches($event)" ngModel [disabled]="!activities.length">
-                <option value="" disabled>Select One</option>
-                <option *ngFor="let activity of activities;" value={{activity.id}}>
-                    {{activity.name}} ({{activity.clubOrSociety}})</option>
-                <option disabled *ngIf="!activities.length">No activities available</option>
-            </select>
-        </div>
-       -->
-
 <div class="student_home">
+  <div class="welcome">
+    <h1> Welcome to My Good School , Aarti ! </h1>
+  </div>
   <div class="cands">
-    <div class="clubs">
-        <h1> CLUBS </h1>
-      <div class="fourskill_main">
-        <div class="fourskill">
-          <h5> Study </h5>
-          <ul *ngFor="let study of studyArr">
-            <li>{{study.name}}</li>
-          </ul>
-        </div>
-        <div class="fourskill">
-          <h5> Skill </h5>
-          <ul *ngFor="let skill of skillArr">
-            <li>{{skill.name}}</li>
-          </ul>
+    <h2> CLUBS and SOCIETIES </h2>
+    <button data-toggle="modal" data-target="#exampleModal" class="enrollment_button">Enrollment Form</button>
+    <div class="fourskill_main">
+      <div class="study fourskill">
+        <img src="assets/images/16.png">
+        <h3> Study </h3>
+        <ul *ngFor="let study of studyArr">
+          <li>{{study.name}}</li>
+        </ul>
+        <div class="activities">
         </div>
       </div>
-    </div>
-
-    <div class="societies">
-        <h1> SOCIETIES </h1>
-      <div class="fourskill_main">
-        <div class="fourskill">
-          <h5> Service </h5>
-          <ul *ngFor="let service of serviceArr">
-            <li>{{service.name}}</li>
-          </ul>
+      <div class="skill fourskill">
+        <img src="assets/images/21.png">
+        <h3> Skill </h3>
+        <ul *ngFor="let skill of skillArr">
+          <li>{{skill.name}}</li>
+        </ul>
+        <div class="activities">
         </div>
-        <div class="fourskill">
-          <h5> Sport </h5>
-          <ul *ngFor="let soc of sportArr">
-            <li>{{soc.name}}</li>
-          </ul>
+      </div>
+      <div class="service fourskill">
+        <img src="assets/images/24.png">
+        <h3> Service </h3>
+        <ul *ngFor="let service of serviceArr">
+          <li>{{service.name}}</li>
+        </ul>
+        <div class="activities">
+        </div>
+      </div>
+      <div class="sport fourskill">
+        <img src="assets/images/23.png">
+        <h3> Sport </h3>
+        <ul *ngFor="let soc of sportArr">
+          <li>{{soc.name}}</li>
+        </ul>
+        <div class="activities">
         </div>
       </div>
     </div>
   </div>
 
-
-
-
-  <!-- list of enrolled clubs and societies -->
-  <!-- <div class="card-right" style="width: 20rem;">
-            <div class="card-body">
-              <h5 class="card-title">Enrolled Clubs and Societies : </h5>
-              <div class="card-text">
-                  <ul *ngFor="let ec of enrolledClubsArr; let i = index;">
-                      <li>{{i+1}}. {{ec.name}} - ({{ec.clubOrSociety}})</li>
-                  </ul>
-              </div>
-            </div>
-          </div> -->
-  <div class="list_card_main">
-    <div class="list_card">
-      <h3> List of Supervisors : </h3>
-      <ul>
-        <li *ngFor="let c of coaches; let i = index" id="t-name"> {{i+1}}. {{c.name}} - {{c.profileBrief}}</li>
-        <li *ngIf="coaches.length==0" id="null"> {{sup_loader ? 'Loading...' : 'No Supervisor'}} </li>
-      </ul>
-    </div>
-    <div class="list_card">
-      <h3> List of Students : </h3>
-      <select name="grade" [disabled]="!activities.length" (change)="filterStudent()" [(ngModel)]="gradeId">
-        <option value="" disabled>Select Grade</option>
-        <option *ngFor="let g of grades" value={{g.id}}>{{g.grade}} {{g.section}}</option>
-        <option disbaled *ngIf="!grades.length">No Grades Available</option>
-      </select>
-      <ul>
-        <li *ngFor="let s of students; let i = index" id="t-name"> {{i+1}}. {{s.name}} - {{s.grade}} {{s.section}}</li>
-        <li *ngIf="students.length==0" id="null"> {{stu_loader ? 'Loading...' : 'No Students'}} </li>
-      </ul>
-    </div>
-    <div>
-
-      <button data-toggle="modal" data-target="#exampleModal">Enrollment Form</button>
-    </div>
+  <!--
+    <div class="schedule">
+    <h2> MY SCHEDULE </h2>
   </div>
+-->
 </div>
+
+
+
+
+
+<!-- list of enrolled clubs and societies -->
+<!-- <div class="card-right" style="width: 20rem;">
+        <div class="card-body">
+          <h5 class="card-title">Enrolled Clubs and Societies : </h5>
+          <div class="card-text">
+              <ul *ngFor="let ec of enrolledClubsArr; let i = index;">
+                  <li>{{i+1}}. {{ec.name}} - ({{ec.clubOrSociety}})</li>
+              </ul>
+          </div>
+        </div>
+      </div> -->
+
+<!--
+  <div class="list_card_main">
+  <div class="list_card">
+    <h3> List of Supervisors : </h3>
+    <ul>
+      <li *ngFor="let c of coaches; let i = index" id="t-name"> {{i+1}}. {{c.name}} - {{c.profileBrief}}</li>
+      <li *ngIf="coaches.length==0" id="null"> {{sup_loader ? 'Loading...' : 'No Supervisor'}} </li>
+    </ul>
+  </div>
+  <div class="list_card">
+    <h3> List of Students : </h3>
+    <select name="grade" [disabled]="!activities.length" (change)="filterStudent()" [(ngModel)]="gradeId">
+      <option value="" disabled>Select Grade</option>
+      <option *ngFor="let g of grades" value={{g.id}}>{{g.grade}} {{g.section}}</option>
+      <option disbaled *ngIf="!grades.length">No Grades Available</option>
+    </select>
+    <ul>
+      <li *ngFor="let s of students; let i = index" id="t-name"> {{i+1}}. {{s.name}} - {{s.grade}} {{s.section}}</li>
+      <li *ngIf="students.length==0" id="null"> {{stu_loader ? 'Loading...' : 'No Students'}} </li>
+    </ul>
+  </div>
+  
+</div>
+-->
+
 
 <!-- Registration Form -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="registrationModal"
@@ -136,32 +140,3 @@
     </div>
   </div>
 </div>
-
-
-<!-- <div class="home_page_content">
-            <div class="menu_main">
-                    <h1> Welcome to Student Portal </h1>
-                <div class="menu_content">
-                    <h3> About Portal: </h3>
-                    <p> Through this Portal, students can view the their profile, manage activities
-                        <br> and view awards. </p>
-                </div>
-                <div class="menu_content">
-                    <h3> Profile: </h3>
-                    <p> In Profile link, you can view details like Personal Information.</p>
-                </div>
-                <div class="menu_content">
-                    <h3> Activity: </h3>
-                    <p>In Activity link, you can do the following things - </p>
-                    <ul>
-                        <li>Add Activity</li>
-                        <li>Review Activity</li>
-                        <li>Edit saved activity</li>
-                    </ul>
-                </div>
-                <div class="menu_content">
-                    <h3>Awards: </h3>
-                    <p>In Awards link, you can view awards.</p>
-                </div>
-            </div>
-        </div> -->

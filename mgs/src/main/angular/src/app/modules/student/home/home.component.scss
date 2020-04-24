@@ -1,35 +1,171 @@
-
 .student_home {
     width: 100%;
     display: inline-block;
     padding: 10px;
 }
-.student_home h1{
-    text-align: center;
+.welcome{
+    width: 100%;
+    margin: 10px 0 40px 0; 
 }
-.clubs{
-    width: 45%;
-    background: gold;
+.welcome h1{
+    font-size: 35px;
+    text-align: center;
+    margin: 20px 0 30px 0;
+}
+.cands{
+    width: 100%;
     float: left;
     padding: 10px;
+    display: inline-block;
 }
-.societies{
-    width: 45%;
-    background: gold;
+.cands h2{
+    font-size: 30px;
+    float: left;
+    margin: 0 0 20px 15px;
+}
+button.enrollment_button {
     float: right;
-    padding: 10px;
+    background: #cecece;
+    border: none;
+    color: #333;
+    box-shadow: 0 0 10px #ddd;
+    border-radius: 4px;
+    padding: 5px 15px;
+    cursor: pointer;
 }
 .fourskill_main {
     width: 100%;
     display: inline-flex;
-    background: cadetblue;
+    position: relative;
 }
 .fourskill{
-    border: 1px solid;
     width: 33%;
-    background: #c38800;
-    margin: 0 auto;
+    background: #cecece;
+    margin: 10px;
     padding: 10px;
+    position: relative;
+    text-align: center;
+}
+.fourskill .activities{
+    width: 75%;
+    text-align: left;
+    margin: 0 auto;
+}
+.fourskill img{
+    width: 60px;
+    margin: 10px 0 20px 0;
+    opacity: 1;
+}
+.fourskill h3{
+    font-size: 27px;   
+    margin: 5px 0 20px 0;
+    text-align: center;
+}
+.fourskill ul{
+    padding: 0 65px;
+    margin: 0;
+}
+.fourskill li{
+    list-style-type: none;
+    border-bottom: 1px solid #999;
+    font-size: 18px;
+    line-height: 40px;
+}
+
+.study.fourskill h3{
+    color: #4bafa5;
+}
+.skill.fourskill h3{
+    color: #e04090;
+}
+.service.fourskill h3{
+    color: #1f69ad;
+}
+.sport.fourskill h3{
+    color: #8dc33a;
+}
+.study.fourskill:hover {
+    background: #4bafa5;
+}
+.skill.fourskill:hover {
+    background: #e04090;
+}
+.service.fourskill:hover {
+    background: #1f69ad;
+}
+.sport.fourskill:hover {
+    background: #8dc33a;
+}
+.fourskill:hover h3{
+    color: #333;
+}
+.fourskill:hover li{
+    border-bottom: 1px solid #333; 
+    color: #333;
+}
+/*
+.fourskill:after {
+    content: "";
+    background: #ffffff;
+    width: 55px;
+    border-radius: 50%;
+    height: 50px;
+    position: absolute;
+    bottom: -3;
+    left: -38px;
+    bottom: -32px;
+    z-index: 2;
+}
+.fourskill:before {
+    content: "";
+    position: absolute;
+    background: #ffffff;
+    width: 55px;
+    height: 50px;
+    border-radius: 50%;
+    top: -32px;
+    left: -38px;
+    z-index: 2;
+}
+.fourskill_main:after {
+    content: "";
+    position: absolute;
+    background: #ffffff;
+    width: 55px;
+    height: 50px;
+    right: -10px;
+    bottom: -18px;
+    border-radius: 50%;
+    z-index: 2;
+}
+.fourskill_main:before {
+    content: "";
+    position: absolute;
+    background: #ffffff;
+    width: 55px;
+    height: 50px;
+    right: -10px;
+    top: -18px;
+    border-radius: 50%;
+    z-index: 2;
+}
+*/
+
+
+
+
+
+
+.schedule{
+    width: 20%;
+    background: #c38800;
+    float: right;
+    border-left: 2px solid gray;
+    padding: 10px;
+}
+.schedule h2{
+    text-align: center;
+    font-size: 30px;
 }
 
 .student_home select {
@@ -42,14 +178,7 @@
 .student_home label {
     font-size: 20px;
 }
-.student_home h2 {
-    font-size: 23px;
-    margin: 5px;
-}
-.student_home ul{
-    padding: 0;
-    margin: 0;
-}
+
 .activity_select{
     display: inline-flex;
 }
