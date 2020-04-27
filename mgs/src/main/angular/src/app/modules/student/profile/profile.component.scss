@@ -72,7 +72,7 @@ button.edit_profile {
 }
 .guardian_main {
     margin: 0 10px;
-    width: 43%;
+    width: 70%;
     float: left;
     padding: 0;
     display: inline-block;
@@ -81,10 +81,10 @@ button.edit_profile {
     padding: 0 15px;
 }
 .guardian_profile_card {
-    width: 100%;
+    width: 45%;
     padding: 35px 10px 0px 10px;
     float: left;
-    margin: 20px 0 40px 0;
+    margin: 20px;
     position: relative;
     background: #adadad;
     box-shadow: 0 0 10px #555;
@@ -99,6 +99,12 @@ button.edit_profile {
     top: -18px;
     padding: 5px 10px;
     border-radius: 2px;
+}
+.guardian_main h2 {
+    color: #4bafa5;
+    margin: 5px 0 20px 20px;
+    /* margin-left: 20px; */
+    font-size: 27px;
 }
 
 
