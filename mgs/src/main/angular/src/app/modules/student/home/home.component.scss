@@ -19,7 +19,7 @@
     text-align: left;
     padding: 5px 15px;
     border-right: 2px solid #999;
-    height: 100vh;
+    height: 100%;
 }
 .enrolled h2, .schedule h2{
     font-size: 25px;
@@ -55,8 +55,9 @@ button.enrollment_button {
     color: #333;
     box-shadow: 0 0 10px #ddd;
     border-radius: 4px;
-    padding: 3px 10px;
+    padding: 3px 5px;
     cursor: pointer;
+    margin-right: 10px;
 }
 .fourskill_main {
     width: 100%;
@@ -136,9 +137,42 @@ button.enrollment_button {
     text-align: left;
     padding: 5px 15px;
     border-left: 2px solid #999;
-    height: 100vh;
+    height: 100%;
 }
-
+.day h3 {
+    font-size: 21px;
+}
+.day {
+    width: 100%;
+    padding: 10px;
+    margin: 10px;
+}
+.day ul li {
+    list-style-type: disc;
+    list-style: inside;
+}
+.day ul {
+    padding: 0;
+    margin: 0;
+}
+.day:first-child h3 {
+    color: #4bafa5;
+}
+.day:nth-child(2) h3 {
+    color: #e04090;
+}
+.day:nth-child(3) h3 {
+    color: #1f69ad;
+}
+.day:nth-child(4) h3 {
+    color: #8dc33a;
+}
+.day:nth-child(5) h3 {
+    color: #c3005b;
+}
+.day:last-child h3 {
+    color: #7c00c3;
+}
 
 
 
