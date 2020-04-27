@@ -47,17 +47,23 @@
                         </ul>
                     </div>
                     <div *ngIf="teacherDetails['activities']" class="teacher-activities-main">
-                        <h3> Activities </h3>
+                        <h3> Clubs </h3>
                         <ul *ngFor="let acti of teacherDetails['activities']">
                             <li>{{acti}}</li>
                         </ul>
                     </div>
-                    <div *ngIf="teacherDetails['gradeIds']">Grade -
+                    <div *ngIf="teacherDetails['activities']" class="teacher-activities-main">
+                            <h3> Societies </h3>
+                            <ul *ngFor="let acti of teacherDetails['activities']">
+                                <li>{{acti}}</li>
+                            </ul>
+                    </div>
+                    <!-- <div *ngIf="teacherDetails['gradeIds']">Grade -
                         <div *ngFor="let grade of teacherDetails['gradeIds']">
                             <p>{{grade.name}}</p>
                             <p>{{grade.grade}} {{grade.section}}</p>
                         </div>
-                    </div>
+                    </div> -->
                     
             </div>
         </div>
