@@ -27,6 +27,7 @@ export class HomeComponent implements OnInit {
   studentInfo: any;
   studentId: any;
   schoolId: any;
+  studentName: any;
 
   activityId = "";
   gradeId = "";
@@ -42,6 +43,7 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.studentInfo = JSON.parse(localStorage.getItem('user_info'));
     this.schoolId = this.studentInfo.student.schoolId;
+    this.studentName = this.studentInfo.student.name;
     this.getActivity(this.schoolId);
     this.getGrades(this.schoolId);
     this.getEnrolledClub();
