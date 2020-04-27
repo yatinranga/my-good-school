@@ -12,14 +12,39 @@
     text-align: center;
     margin: 20px 0 30px 0;
 }
-.cands{
-    width: 100%;
+.enrolled{
+    width: 25%;
     float: left;
-    padding: 10px;
+    display: inline-block;
+    text-align: left;
+    padding: 5px 15px;
+    border-right: 2px solid #999;
+    height: 100vh;
+}
+.enrolled h2, .schedule h2{
+    font-size: 25px;
+    color: #159487;
+    margin-bottom: 20px;
+}
+.enrolled li {
+    font-size: 20px;
+    line-height: 35px;
+    color: #555;
+}
+.enrolled ul {
+    padding: 0;
+    margin: 0;
+    text-align: left;
+}
+.cands{
+    width: 50%;
+    float: left;
+    padding: 0 10px;
     display: inline-block;
 }
 .cands h2{
-    font-size: 30px;
+    font-size: 25px;
+    color: #159487;
     float: left;
     margin: 0 0 20px 15px;
 }
@@ -30,7 +55,7 @@ button.enrollment_button {
     color: #333;
     box-shadow: 0 0 10px #ddd;
     border-radius: 4px;
-    padding: 5px 15px;
+    padding: 3px 10px;
     cursor: pointer;
 }
 .fourskill_main {
@@ -39,7 +64,7 @@ button.enrollment_button {
     position: relative;
 }
 .fourskill{
-    width: 33%;
+    width: 100%;
     background: #cecece;
     margin: 10px;
     padding: 10px;
@@ -62,7 +87,7 @@ button.enrollment_button {
     text-align: center;
 }
 .fourskill ul{
-    padding: 0 65px;
+    padding: 0 50px;
     margin: 0;
 }
 .fourskill li{
@@ -103,6 +128,61 @@ button.enrollment_button {
     border-bottom: 1px solid #333; 
     color: #333;
 }
+
+.schedule{
+    width: 25%;
+    float: right;
+    display: inline-block;
+    text-align: left;
+    padding: 5px 15px;
+    border-left: 2px solid #999;
+    height: 100vh;
+}
+
+
+
+
+
+
+.student_home select {
+    width: 150px;
+    margin-bottom: 7px;
+    font-size: 16px;
+    background: #dad6bf;
+    border: 1px solid #999;
+}
+.student_home label {
+    font-size: 20px;
+}
+
+.activity_select{
+    display: inline-flex;
+}
+.list_card_main{
+    width: 100%;
+    display: inline-grid;
+    margin-top: 20px;
+    padding: 10px 0;
+}
+.list_card{
+    box-shadow: 0 0 10px #ccc;
+    width: 40%;
+    background: #dad6bf;
+    float: left;
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #dad6bf;
+    border-radius: 3px;
+}
+li#t-name {
+    font-size: 22px;
+    color: #c38800;
+}
+.list_card h3{
+    font-size: 24px;
+    font-weight: 400px;
+}
+
 /*
 .fourskill:after {
     content: "";
@@ -150,59 +230,3 @@ button.enrollment_button {
     z-index: 2;
 }
 */
-
-
-
-
-
-
-.schedule{
-    width: 20%;
-    background: #c38800;
-    float: right;
-    border-left: 2px solid gray;
-    padding: 10px;
-}
-.schedule h2{
-    text-align: center;
-    font-size: 30px;
-}
-
-.student_home select {
-    width: 150px;
-    margin-bottom: 7px;
-    font-size: 16px;
-    background: #dad6bf;
-    border: 1px solid #999;
-}
-.student_home label {
-    font-size: 20px;
-}
-
-.activity_select{
-    display: inline-flex;
-}
-.list_card_main{
-    width: 100%;
-    display: inline-grid;
-    margin-top: 20px;
-    padding: 10px 0;
-}
-.list_card{
-    box-shadow: 0 0 10px #ccc;
-    width: 40%;
-    background: #dad6bf;
-    float: left;
-    margin: 10px 0;
-    padding: 10px;
-    border: 1px solid #dad6bf;
-    border-radius: 3px;
-}
-li#t-name {
-    font-size: 22px;
-    color: #c38800;
-}
-.list_card h3{
-    font-size: 24px;
-    font-weight: 400px;
-}
