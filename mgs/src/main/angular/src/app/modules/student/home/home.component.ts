@@ -22,6 +22,7 @@ export class HomeComponent implements OnInit {
   studyArr = [];
 
   enrolledClubsArr = [];
+  enrolledSocietyArr = [];
   clubSupervisor = [];
 
   studentInfo: any;
@@ -117,7 +118,8 @@ export class HomeComponent implements OnInit {
   getEnrolledClub() {
     this.studentService.getAllEnrolledClub().subscribe(res => {
       console.log(res);
-      this.enrolledClubsArr = res;
+      this.enrolledClubsArr = res.filter(e => e.clubOrSociety=="Club");
+      this.enrolledSocietyArr = res.filter(e => e.clubOrSociety=="Society");
     }, (err) => { console.log(err) });
   }
 

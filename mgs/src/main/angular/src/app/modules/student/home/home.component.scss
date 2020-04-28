@@ -12,42 +12,6 @@
     text-align: center;
     margin: 20px 0 30px 0;
 }
-.enrolled{
-    width: 25%;
-    float: left;
-    display: inline-block;
-    text-align: left;
-    padding: 5px 15px;
-    border-right: 2px solid #999;
-    height: 100%;
-}
-.enrolled h2, .schedule h2{
-    font-size: 25px;
-    color: #159487;
-    margin-bottom: 20px;
-}
-.enrolled li {
-    font-size: 20px;
-    line-height: 35px;
-    color: #555;
-}
-.enrolled ul {
-    padding: 0;
-    margin: 0;
-    text-align: left;
-}
-.cands{
-    width: 50%;
-    float: left;
-    padding: 0 10px;
-    display: inline-block;
-}
-.cands h2{
-    font-size: 25px;
-    color: #159487;
-    float: left;
-    margin: 0 0 20px 15px;
-}
 button.enrollment_button {
     float: right;
     background: #cecece;
@@ -59,23 +23,125 @@ button.enrollment_button {
     cursor: pointer;
     margin-right: 10px;
 }
+.left_col{
+    width: 32%;
+    display: inline-block;
+    float: left;
+    margin-right: 20px;
+}
+.enrolled_main{
+    width: 100%;
+    float: left;
+    display: inline-block;
+    text-align: left;
+    padding: 0px 15px;
+    height: 100%;
+}
+.enrolled_pre {
+    width: 50%;
+    display: inline-block;
+    text-align: center;
+    border: 1px solid lightgrey;
+    margin: 10px 0px;
+}
+.enrolled_pre h3 {
+    font-size: 22px;
+    color: #4bafa5;
+    border-bottom: 1px solid lightgray;
+}
+.enrolled_main h2, .schedule h2{
+    font-size: 27px;
+    color: #159487;
+    margin-bottom: 10px;
+}
+.enrolled_main li {
+    font-size: 17px;
+    line-height: 35px;
+    color: #555;
+}
+.enrolled_main ul {
+    padding: 0 10px;
+    margin: 0;
+    text-align: left;
+}
+.schedule{
+    width: 100%;
+    float: right;
+    display: inline-block;
+    text-align: left;
+    padding: 25px 15px;
+    height: 100%;
+    margin-top: 20px;
+    position: relative;
+}
+.day h3 {
+    font-size: 21px;
+    margin-top: 20px;
+}
+.day {
+    width: 100%;
+    padding: 0 10px;
+    margin-bottom: 20px;
+}
+.day ul li {
+    font-size: 17px;
+    color: #333;
+}
+.day ul {
+    padding: 0;
+    margin: 0;
+}
+.day:first-child h3 {
+    color: #4bafa5;
+}
+.day:nth-child(2) h3 {
+    color: #e04090;
+}
+.day:nth-child(3) h3 {
+    color: #1f69ad;
+}
+.day:nth-child(4) h3 {
+    color: #8dc33a;
+}
+.day:nth-child(5) h3 {
+    color: #c3005b;
+}
+.day:last-child h3 {
+    color: #7c00c3;
+}
+.cands{
+    width: 65%;
+    padding: 0 10px;
+    display: inline-block;
+    border-left: 2px solid lightgrey;
+}
+.cands h2{
+    font-size: 30px;
+    color: #159487;
+    margin: 0 0 20px 15px;
+}
 .fourskill_main {
     width: 100%;
     display: inline-flex;
-    position: relative;
+}
+.club_main {
+    width: 47%;
+    text-align: center;    
+    display: inline-block;
+}
+.society_main {
+    width: 47%;
+    float: right;
+    text-align: center;
+    display: inline-block;
 }
 .fourskill{
     width: 100%;
     background: #cecece;
     margin: 10px;
-    padding: 10px;
+    padding: 10px 15px;
     position: relative;
     text-align: center;
-}
-.fourskill .activities{
-    width: 75%;
-    text-align: left;
-    margin: 0 auto;
 }
 .fourskill img{
     width: 60px;
@@ -88,13 +154,13 @@ button.enrollment_button {
     text-align: center;
 }
 .fourskill ul{
-    padding: 0 50px;
+    padding: 0 5px;
     margin: 0;
 }
 .fourskill li{
     list-style-type: none;
     border-bottom: 1px solid #999;
-    font-size: 18px;
+    font-size: 17px;
     line-height: 40px;
 }
 
@@ -130,49 +196,7 @@ button.enrollment_button {
     color: #333;
 }
 
-.schedule{
-    width: 25%;
-    float: right;
-    display: inline-block;
-    text-align: left;
-    padding: 5px 15px;
-    border-left: 2px solid #999;
-    height: 100%;
-}
-.day h3 {
-    font-size: 21px;
-}
-.day {
-    width: 100%;
-    padding: 10px;
-    margin: 10px;
-}
-.day ul li {
-    list-style-type: disc;
-    list-style: inside;
-}
-.day ul {
-    padding: 0;
-    margin: 0;
-}
-.day:first-child h3 {
-    color: #4bafa5;
-}
-.day:nth-child(2) h3 {
-    color: #e04090;
-}
-.day:nth-child(3) h3 {
-    color: #1f69ad;
-}
-.day:nth-child(4) h3 {
-    color: #8dc33a;
-}
-.day:nth-child(5) h3 {
-    color: #c3005b;
-}
-.day:last-child h3 {
-    color: #7c00c3;
-}
+
 button.btn.register.btn-primary{
     background: #8dc33a;
 }
@@ -221,51 +245,3 @@ li#t-name {
     font-size: 24px;
     font-weight: 400px;
 }
-
-/*
-.fourskill:after {
-    content: "";
-    background: #ffffff;
-    width: 55px;
-    border-radius: 50%;
-    height: 50px;
-    position: absolute;
-    bottom: -3;
-    left: -38px;
-    bottom: -32px;
-    z-index: 2;
-}
-.fourskill:before {
-    content: "";
-    position: absolute;
-    background: #ffffff;
-    width: 55px;
-    height: 50px;
-    border-radius: 50%;
-    top: -32px;
-    left: -38px;
-    z-index: 2;
-}
-.fourskill_main:after {
-    content: "";
-    position: absolute;
-    background: #ffffff;
-    width: 55px;
-    height: 50px;
-    right: -10px;
-    bottom: -18px;
-    border-radius: 50%;
-    z-index: 2;
-}
-.fourskill_main:before {
-    content: "";
-    position: absolute;
-    background: #ffffff;
-    width: 55px;
-    height: 50px;
-    right: -10px;
-    top: -18px;
-    border-radius: 50%;
-    z-index: 2;
-}
-*/
