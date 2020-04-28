@@ -18,8 +18,8 @@
         </div>
         <div class="enrolled_pre">
           <h3> Societies </h3>
-            <ul *ngFor="let ec of enrolledClubsArr; let i = index;">
-                <li>{{i+1}}. {{ec.name}}</li>
+            <ul *ngFor="let es of enrolledSocietyArr; let i = index;">
+                <li>{{i+1}}. {{es.name}}</li>
             </ul>
         </div>
       </div>
@@ -157,12 +157,12 @@
 
 
 <!-- Registration Form -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="registrationModal"
+<div class="modal fade" id="registrationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
   aria-hidden="true" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="registrationModal">Registration Form</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Registration Form</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="clearSelected()">
           <span aria-hidden="true">&times;</span>
         </button>
