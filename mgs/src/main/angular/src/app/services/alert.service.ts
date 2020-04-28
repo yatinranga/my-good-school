@@ -35,9 +35,17 @@ export class AlertService {
         });
     }
 
+    showMessageWithSym(msg: string, type?: SweetAlertType) {
+        swal({
+            type: type,
+            text: msg
+        });
+    }
+
+
     /**used to show a btn(not 'OK') with alert to execute some task */
     showErrorAlertWithBtn(msg: string, btnText: string, clbk: Function) {
-       return swal({
+        return swal({
             text: msg,
             confirmButtonText: btnText,
             preConfirm: () => clbk(),
@@ -45,16 +53,16 @@ export class AlertService {
         });
     }
 
-      /**used to show a btn(not 'OK') and cancel with alert to execute some task */
-      showErrorAlertWithTwoBtn(msg: string, btnText: string) {
+    /**used to show a btn(not 'OK') and cancel with alert to execute some task */
+    showErrorAlertWithTwoBtn(msg: string, btnText: string) {
         return swal({
-             text: msg,
-             confirmButtonText: btnText,
-             showCancelButton:true,
+            text: msg,
+            confirmButtonText: btnText,
+            showCancelButton: true,
             //  preConfirm: () => clbk(),
             //  allowOutsideClick: false
-         });
-     }
+        });
+    }
 
     showSuccessToast(msg: string, type?: SweetAlertType) {
         return swal({

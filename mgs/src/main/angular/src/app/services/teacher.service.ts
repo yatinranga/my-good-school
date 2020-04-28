@@ -127,11 +127,20 @@ export class TeacherService {
 
   // get all club and society request
   getClubReq(){
-    return this.http.get("/api/teacher/clubs");
+    return this.http.get("/api/teacher/club/members");
   }
 
   // Approve or reject club Request
   approveClubReq(stuId,actId,verify){
     return this.http.put("/api/teacher/club?studentId="+stuId+"&activityId="+actId+"&verified="+verify,{});
+  }
+
+  // get all clubs and society under teacher
+  getAssignedClubs(){
+    return this.http.get("/api/teacher/clubs");
+  }
+
+  createNewSession(sessionForm){
+    return this.http.post("/api/session",sessionForm);
   }
 }

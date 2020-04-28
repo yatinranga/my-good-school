@@ -48,14 +48,14 @@
                     </div>
                     <div *ngIf="teacherDetails['activities']" class="teacher-activities-main">
                         <h3> Clubs </h3>
-                        <ul *ngFor="let acti of teacherDetails['activities']">
-                            <li>{{acti}}</li>
+                        <ul *ngFor="let c of assignedClubsArr">
+                            <li>{{c.name}}</li>
                         </ul>
                     </div>
                     <div *ngIf="teacherDetails['activities']" class="teacher-activities-main">
                             <h3> Societies </h3>
-                            <ul *ngFor="let acti of teacherDetails['activities']">
-                                <li>{{acti}}</li>
+                            <ul *ngFor="let s of assignedSocietyArr">
+                                <li>{{s.name}}</li>
                             </ul>
                     </div>
                     <!-- <div *ngIf="teacherDetails['gradeIds']">Grade -
