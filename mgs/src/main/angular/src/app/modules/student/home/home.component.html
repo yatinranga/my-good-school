@@ -27,14 +27,13 @@
     </div>
     <div class="schedule">
       <h2> My Schedule </h2>
-      <div class="day">
-        <h3> Monday </h3>
+      <div class="day" *ngFor="let s of sessionsArr">
+        <h3>{{s.startDate | date}} - {{s.startDay}} </h3>
         <ul>
-          <li> 1. Yoga - 8:00 AM - 8:30 AM </li>
-          <li> 1. Yoga - 8:00 AM - 8:30 AM </li>
+          <li> {{s.club.name}} - {{s.startDate | date:"HH-mm"}}hrs - {{s.endDate | date:"HH-mm"}}hrs </li>          
         </ul>
       </div>
-      <div class="day">
+      <!-- <div class="day">
         <h3> Tuesday </h3>
         <ul>
           <li> 1. Yoga - 8:00 AM - 8:30 AM </li>
@@ -68,7 +67,7 @@
           <li> 1. Yoga - 8:00 AM - 8:30 AM </li>
           <li> 1. Yoga - 8:00 AM - 8:30 AM </li>
         </ul>
-      </div>
+      </div> -->
     </div>
   </div>
 

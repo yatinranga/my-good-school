@@ -112,10 +112,10 @@ export class TeacherHomeComponent implements OnInit {
     this.createSessionForm.value.endDate = this.createSessionForm.value.startDate + " " + this.endTime + ":00";
     this.createSessionForm.value.startDate = this.createSessionForm.value.startDate + " " + this.startTime + ":00";
     console.log(this.createSessionForm.value);
-    
+
     this.teacherService.createNewSession(this.createSessionForm.value).subscribe((res) => {
       console.log(res);
-      $('#addActivityModal').modal('hide');
+      $('#createSessionModal').modal('hide');
       $('.modal-backdrop').remove();
       this.alertService.showErrorAlert("Session Created !");
     }, (err) => { console.log(err); })

@@ -140,6 +140,7 @@ export class TeacherService {
     return this.http.get("/api/teacher/clubs");
   }
 
+  // Create new Session
   createNewSession(sessionForm){
     return this.http.post("/api/session",sessionForm);
   }

@@ -23,6 +23,7 @@ export class HomeComponent implements OnInit {
 
   enrolledClubsArr = [];
   enrolledSocietyArr = [];
+  sessionsArr = [];
   clubSupervisor = [];
 
   studentInfo: any;
@@ -48,6 +49,7 @@ export class HomeComponent implements OnInit {
     this.getActivity(this.schoolId);
     this.getGrades(this.schoolId);
     this.getEnrolledClub();
+    this.getSessionDetails();    
   }
 
   // get List of Activities of School
@@ -63,7 +65,23 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  // get List of Supervisior of Selected Activity
+   // List of enrolled Clubs and Societies
+   getEnrolledClub() {
+    this.studentService.getAllEnrolledClub().subscribe(res => {
+      this.enrolledClubsArr = res.filter(e => e.clubOrSociety=="Club");
+      this.enrolledSocietyArr = res.filter(e => e.clubOrSociety=="Society");
+    }, (err) => { console.log(err) });
+  }
+
+  // List of Sessions
+  getSessionDetails(){
+    this.studentService.getSession().subscribe((res) => {
+      console.log(res);
+      this.sessionsArr = res;
+    },(err) => {console.log(err);});
+  }
+
+  // List of Supervisior of Selected Activity
   getCoaches(actiId) {
     this.getStudents(actiId);
     this.coaches = [];
@@ -79,7 +97,7 @@ export class HomeComponent implements OnInit {
     })
   }
 
-  // get List of Student of selected Activity
+  // List of Student of selected Activity
   getStudents(actiId) {
     this.stu_loader = true;
     this.studentService.getActivityStudent(actiId).subscribe((res) => {
@@ -112,16 +130,7 @@ export class HomeComponent implements OnInit {
       filterStudentArr = array;
     }
     return filterStudentArr;
-  }
-
-  // List of enrolled Clubs and Societies
-  getEnrolledClub() {
-    this.studentService.getAllEnrolledClub().subscribe(res => {
-      console.log(res);
-      this.enrolledClubsArr = res.filter(e => e.clubOrSociety=="Club");
-      this.enrolledSocietyArr = res.filter(e => e.clubOrSociety=="Society");
-    }, (err) => { console.log(err) });
-  }
+  } 
 
   // List of Supervisor of a particular club of activity
   getSupervisor(actiId) {
@@ -140,6 +149,7 @@ export class HomeComponent implements OnInit {
     })
   }
 
+  // Register in specific club/society
   clubRegistration() {
     console.log(this.clubId);
     console.log("Supervisor- ",this.supervisorId);
