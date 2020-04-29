@@ -111,26 +111,27 @@ aria-hidden="true" data-backdrop="static" data-keyboard="false">
           <form [formGroup]="createSessionForm" (ngSubmit)="createSessionForm">
               <div class="form-group">
                 <h5 style="color: red"> Note : All Fields Are Mandatory </h5>
-                <label for="recipient-name" class="col-form-label">No. of Sessions : </label>
-                <input type="number" class="form-control add" name="sessionNumber" placeholder="Enter Session Count Here" formControlName="number">
+                <label for="recipient-name" class="col-form-label">Session Number : </label>
+                <input type="number" class="form-control add" name="sessionNumber" placeholder="Enter Session Number Here" formControlName="number">
               </div>
 
               <div class="form-group">
-                <label for="recipient-name" class="col-form-label">Start Date : </label>
+                <label for="recipient-name" class="col-form-label">Date : </label>
                 <input type="date" class="form-control" name="startDate" formControlName="startDate">
               </div>
 
               <div class="form-group">
-                <label for="recipient-name" class="col-form-label">End Date : </label>
-                <input type="date" class="form-control" name="endDate" formControlName="endDate">
+                <label for="recipient-name" class="col-form-label">Timing : </label>
+                <input type="time" class="form-control" name="startTime" [(ngModel)]="startTime" [ngModelOptions]="{standalone: true}">
+                <input type="time" class="form-control" name="endTime" [(ngModel)]="endTime" [ngModelOptions]="{standalone: true}">
               </div>
 
               <div class="form-group">
-                <label for="recipient-name" class="col-form-label">Title : </label>
+                <label for="recipient-name" class="col-form-label">Name of Session : </label>
                 <input type="text" class="form-control add" name="title" placeholder="Add Title Here" formControlName="title">
               </div>
               <div class="form-group">
-                <label for="recipient-name" class="col-form-label">Activity : </label>
+                <label for="recipient-name" class="col-form-label">Club/Society : </label>
                 <select class="form-control" name="activityId" formControlName="clubId">
                     <option [ngValue]=null selected disabled>Select One</option>
                     <option *ngFor="let acti of allAssignedActi" value={{acti.id}}>

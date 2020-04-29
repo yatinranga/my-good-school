@@ -22,6 +22,8 @@ export class TeacherHomeComponent implements OnInit {
   schoolId: any;
   adminService: any;
   schoolGrades: any;
+  startTime: any;
+  endTime: any;
 
 
   constructor(private teacherService: TeacherService, private formBuilder: FormBuilder, private alertService: AlertService) { }
@@ -36,7 +38,7 @@ export class TeacherHomeComponent implements OnInit {
     this.createSessionForm = this.formBuilder.group({
       number: [, [Validators.required]],
       startDate: [, [Validators.required]],
-      endDate: [, [Validators.required]],
+      endDate: [],
       title: [, [Validators.required]],
       clubId: [, [Validators.required]],
       gradeIds: [, [Validators.required]],
@@ -107,24 +109,24 @@ export class TeacherHomeComponent implements OnInit {
 
   // Create Session
   createSession() {
-    if (this.createSessionForm.value.endDate < this.createSessionForm.value.startDate) {
-      this.alertService.showMessageWithSym("Start date cannot be ahead of End date", "error");
-    } else {
-      this.createSessionForm.value.startDate = this.createSessionForm.value.startDate + " 00:00:00";
-      this.createSessionForm.value.endDate = this.createSessionForm.value.endDate + " 00:00:00";
-      console.log(this.createSessionForm.value);
-      this.teacherService.createNewSession(this.createSessionForm.value).subscribe((res) => {
-        console.log(res);
-        $('#addActivityModal').modal('hide');
-        $('.modal-backdrop').remove();
-        this.alertService.showErrorAlert("Session Created !");
-      }, (err) => { console.log(err); })
+    this.createSessionForm.value.endDate = this.createSessionForm.value.startDate + " " + this.endTime + ":00";
+    this.createSessionForm.value.startDate = this.createSessionForm.value.startDate + " " + this.startTime + ":00";
+    console.log(this.createSessionForm.value);
+    
+    this.teacherService.createNewSession(this.createSessionForm.value).subscribe((res) => {
+      console.log(res);
+      $('#addActivityModal').modal('hide');
+      $('.modal-backdrop').remove();
+      this.alertService.showErrorAlert("Session Created !");
+    }, (err) => { console.log(err); })
 
-    }
+
   }
 
   // Reset Form
   resetForm() {
+    this.startTime = "";
+    this.endTime = "";
     this.createSessionForm.reset();
   }
 
