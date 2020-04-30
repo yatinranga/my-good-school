@@ -137,9 +137,14 @@ export class StudentService {
     return this.http.post("/api/student/club?activityId="+activityId+"&supervisorId="+supervisorId,{});
   }
 
-  // get Student schedule session
-  getSession(){
-    return this.http.get("/api/student/sessions");
+  // get Student Session Schedule
+  getSession(duration){
+    return this.http.get("/api/student/sessions?sessionFetch="+duration);
+  }
+  
+  // get Session Schedule for a particular club or society
+  getEnrolledClubSession(clubId,duration){
+    return this.http.get("/api/student/sessions/club/"+clubId+"?sessionFetch="+duration)
   }
 
 }

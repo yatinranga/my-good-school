@@ -1,73 +1,38 @@
 <div class="student_home">
   <div class="welcome">
-     <h2> Welcome to My Good School , {{studentName}} ! </h2>
-     <div class="en_button">
-       <button data-toggle="modal" data-target="#registrationModal" class="enrollment_button">Enrollment Form</button>
-     </div>
+    <h2> Welcome to My Good School , {{studentName}} ! </h2>
+    <div class="en_button">
+      <button data-toggle="modal" data-target="#registrationModal" class="enrollment_button">Enrollment Form</button>
     </div>
+  </div>
 
   <div class="left_col">
     <div class="enrolled_main">
       <h2> My Enrolled </h2>
       <div class="fourskill_main">
         <div class="enrolled_pre">
-            <h3> Clubs </h3>
-            <ul *ngFor="let ec of enrolledClubsArr; let i = index;">
-                <li>{{i+1}}. {{ec.name}}</li>
-            </ul>
+          <h3> Clubs </h3>
+          <ul *ngFor="let ec of enrolledClubsArr; let i = index;">
+            <li (click)="viewEnrolledSchedule(ec)">{{i+1}}. {{ec.name}}</li>
+          </ul>
         </div>
         <div class="enrolled_pre">
           <h3> Societies </h3>
-            <ul *ngFor="let es of enrolledSocietyArr; let i = index;">
-                <li>{{i+1}}. {{es.name}}</li>
-            </ul>
+          <ul *ngFor="let es of enrolledSocietyArr; let i = index;">
+            <li (click)="viewEnrolledSchedule(es)">{{i+1}}. {{es.name}}</li>
+          </ul>
         </div>
       </div>
-      
+
     </div>
     <div class="schedule">
       <h2> My Schedule </h2>
       <div class="day" *ngFor="let s of sessionsArr">
         <h3>{{s.startDate | date}} - {{s.startDay}} </h3>
         <ul>
-          <li> {{s.club.name}} - {{s.startDate | date:"HH-mm"}}hrs - {{s.endDate | date:"HH-mm"}}hrs </li>          
+          <li> {{s.club.name}} - {{s.startDate | date:"HH:mm"}}hrs - {{s.endDate | date:"HH:mm"}}hrs </li>
         </ul>
       </div>
-      <!-- <div class="day">
-        <h3> Tuesday </h3>
-        <ul>
-          <li> 1. Yoga - 8:00 AM - 8:30 AM </li>
-          <li> 1. Yoga - 8:00 AM - 8:30 AM </li>
-        </ul>
-      </div>
-      <div class="day">
-        <h3> Wednesday </h3>
-        <ul>
-          <li> 1. Yoga - 8:00 AM - 8:30 AM </li>
-          <li> 1. Yoga - 8:00 AM - 8:30 AM </li>
-        </ul>
-      </div>
-      <div class="day">
-        <h3> Thursday </h3>
-        <ul>
-          <li> 1. Yoga - 8:00 AM - 8:30 AM </li>
-          <li> 1. Yoga - 8:00 AM - 8:30 AM </li>
-        </ul>
-      </div>
-      <div class="day">
-        <h3> Friday </h3>
-        <ul>
-          <li> 1. Yoga - 8:00 AM - 8:30 AM </li>
-          <li> 1. Yoga - 8:00 AM - 8:30 AM </li>
-        </ul>
-      </div>
-      <div class="day">
-        <h3> Saturday </h3>
-        <ul>
-          <li> 1. Yoga - 8:00 AM - 8:30 AM </li>
-          <li> 1. Yoga - 8:00 AM - 8:30 AM </li>
-        </ul>
-      </div> -->
     </div>
   </div>
 
@@ -197,6 +162,40 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="clearSelected()">Reset</button>
         <button type="button" class="btn register btn-primary" (click)="clubRegistration()">Register</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal to View Session Schedule of Enrolled Club/Soceity -->
+<div class="modal fade" id="enrolledScheduleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{{enrolledName}} Schedule</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div *ngIf="enrollSch_loader">
+          <div class="spinner-border text-secondary" role="status" *ngIf="enrollSch_loader">
+          </div>{{enrollSch_loader?' Loading...':''}}
+        </div>{{clubSchedule.length==0&&!enrollSch_loader?'No Session Available !': ''}}
+
+        <div class="day" *ngFor="let club of clubSchedule">
+          <h3>{{club.startDate | date}} - {{club.startDay}} </h3>
+          <ul>
+            <li><span>Title - {{club.title}}</span><br> {{club.club.name}} - {{club.startDate | date:"HH:mm"}}hrs - {{club.endDate | date:"HH:mm"}}hrs </li>
+          </ul>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
       </div>
     </div>
   </div>
