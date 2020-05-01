@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { AlertService } from 'src/app/services/alert.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 declare let $: any;
 
 @Component({
@@ -43,6 +43,8 @@ export class TeacherActivityComponent implements OnInit {
   copyReviewActi: any;
   grade: any = "";
   schoolGrades: any = [];
+
+  count = 0; //to count the number of words enter
   
 
 
@@ -286,6 +288,7 @@ export class TeacherActivityComponent implements OnInit {
   // to reset the Review Form
   resetForm() {
     this.reviewForm.reset();
+    this.count = 0;
   }
 
   order: boolean = false;
@@ -312,7 +315,6 @@ export class TeacherActivityComponent implements OnInit {
     
     if (scoreType == "achievement"){
       this.achiScore = Number(value);
-      console.log(typeof(value));     
     }
     if (scoreType == "participation"){
       this.partiScore = Number(value);            
@@ -383,6 +385,15 @@ export class TeacherActivityComponent implements OnInit {
   // stop toogle of table
   stopCollapse(e) {
     e.stopPropagation();
+  }
+
+  // to count the number of words 
+  wordCount(e){
+    if(e){
+      this.count = e.split(/\s\w/).length;
+    } else {
+      this.count = 0;
+    }
   }
 
 

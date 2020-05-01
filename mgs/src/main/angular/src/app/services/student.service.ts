@@ -127,4 +127,24 @@ export class StudentService {
     return this.http.get("/api/students/activity?activityId="+activityId);
   }
 
+  // get List of Enrolled Clubs and Socities
+  getAllEnrolledClub(){
+    return this.http.get("/api/student/clubs");
+  }
+
+  // Enroll in a new Club or Society
+  postEnrollInClub(activityId,supervisorId){
+    return this.http.post("/api/student/club?activityId="+activityId+"&supervisorId="+supervisorId,{});
+  }
+
+  // get Student Session Schedule
+  getSession(duration){
+    return this.http.get("/api/student/sessions?sessionFetch="+duration);
+  }
+  
+  // get Session Schedule for a particular club or society
+  getEnrolledClubSession(clubId,duration){
+    return this.http.get("/api/student/sessions/club/"+clubId+"?sessionFetch="+duration)
+  }
+
 }

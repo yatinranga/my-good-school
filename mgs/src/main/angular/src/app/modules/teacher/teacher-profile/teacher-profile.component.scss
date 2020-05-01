@@ -1,14 +1,18 @@
 .teacher_profile_main{
     width: 100%;
     display: inline-block;
-    padding: 5px;
+}
+.first img {
+    width: 100%;
+    height: 300px;
+    position: relative;
 }
 .teacher_intro_box{
     width: 100%;
     display: inline-block;
-    margin-top: 20px;
-    padding: 10px 0;
     border-radius: 5px;
+    position: absolute;
+    top: 161px;
 }
 .teacher_image {
     width: 20%;
@@ -27,17 +31,17 @@
     float: right;
     width: 80%;
     display: inline-block;
+    margin-top: 25px;
 }
 .teacher_intro{
     float: left;
-    width: 80%;
+    width: 87%;
     text-align: left;
     display: inline-grid;
 }
 .teacher_intro_text_main h4{
     font-size: 40px;
     font-weight: 300;
-    margin: 10px 0 0 0;
     color: #e04090;
     float: left;
 }
@@ -50,19 +54,17 @@
     color: #333;
     margin: 5px 0;
 }
-input{
-    border: none;
-}
 textarea {
     overflow: hidden;
     resize: none;
     border: none;
-    font-size: 17px;
+    font-size: 16px;
     width: 100%;
-    margin-top: 5px;
-    line-height: 25px;
-    max-height: 100px;
+    line-height: 24px;
+    max-height: 165px;
     color: #333;
+    background: #dcdadf;
+    padding: 20px 0;
 }
 button.update {
     float: right;
@@ -83,50 +85,66 @@ button.edit_profile {
     border-radius: 3px;
     border: none;
     float: left;
-    margin-left: 40px;
+    margin-left: 30px;
+}
+.lowerbox {
+    display: inline-block;
+    float: right;
+    padding: 10px;
+    position: absolute;
+    float: right;
+    right: 135px;
+    top: 365px;
+}
+input{
+    border: none;
+    background: #b9b9de;
+    color: #fafafa;
+    padding: 5px;
+    border-radius: 30Lopx;
+    width: 100%;
+    font-size: 16px;
+}
+.number {
+    float: left;
+    margin: 0 10px;
+    padding: 10px;
 }
 .teacher_about_box{
     width: 100%;
     display: inline-block;
     padding: 0 30px;
-    margin: 20px 0;
+    margin: 50px 0;
 }
 .basic-info {
     float: left;
-    width: 25%;
+    width: 31%;
     margin: 0 auto;
-    background: #d8d8d8;
+    background: #dcdadf;
     padding: 10px;
-    min-height: 320px;
-}
-.basic-info li {
-    margin: 10px 0;
+    min-height: 280px;
 }
 .basic-info ul{
     padding: 0;
     margin: 0;
+    line-height: 30px;
 }
 .teacher-activities-main {
     float: left;
-    width: 25%;
-    margin-left: 20px;
-    background: #d8d8d8;
+    width: 31%;
+    margin-left: 40px;
+    background: #dcdadf;
     padding: 10px;
-    min-height: 320px;
+    min-height: 200px;
 }
 .teacher-activities-main ul {
     padding: 0 15px;
-    margin: 15px 0;
+    margin: 0;
+    line-height: 30px;
 }
 .teacher-activities-main ul li{
-list-style: inherit;
+   list-style: inherit;
 }
-
-/*
-.basic-info h3 {
-    background: cornflowerblue;
-}
-*/
 
 .teacher_about_box h3{
     width: 100px;
@@ -136,15 +154,4 @@ list-style: inherit;
     margin-bottom: 25px;
     font-weight: 500;
     border-bottom: 1px solid #e04090;
-}
-
-.basic-info i.fa {
-    margin: 0 15px 0 0px;
-}
-
-.profile_text_main button.edit_profile {
-    margin: 5px;
-    background: #8cb9c7;
-    border: 1px solid #7cb5c1;
-    box-shadow: 0 0 10px #668690;
 }

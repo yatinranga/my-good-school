@@ -22,6 +22,8 @@ export class TeacherProfileComponent implements OnInit {
   setDisabled = true;
   oldMobNo: any;
   profileBrief: any;
+  assignedClubsArr = [];
+  assignedSocietyArr = [];
 
   constructor(private formBuilder: FormBuilder, private teacherService: TeacherService, private alertService : AlertService) { }
 
@@ -49,6 +51,16 @@ export class TeacherProfileComponent implements OnInit {
       email: [],
       profileBrief: []
     })
+
+    this.getAllClubs();
+  }
+
+  //get list of assigned/supervised Clubs and Society
+  getAllClubs() {
+    this.teacherService.getAssignedClubs().subscribe(res => {
+      this.assignedClubsArr = res.filter((e) => (e.clubOrSociety == "Club"));
+      this.assignedSocietyArr = res.filter((e) => (e.clubOrSociety == "Society"));
+    }, (err) => { console.log(err); });
   }
   
   // Select Profile Photo

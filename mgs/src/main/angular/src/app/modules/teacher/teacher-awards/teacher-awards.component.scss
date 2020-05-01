@@ -36,7 +36,7 @@
     height: 30px;
     border-radius: 0 !important;
     border: 1px solid #333;
-    margin-bottom: 10px;
+    margin: 0 0 10px 7px;
     width: 190px;
 }
 button.assign-button {
@@ -173,9 +173,10 @@ p#title_award {
 .assign.description h5 {
     color: #8dc33a;
 }
-.description{
-    min-height: 185px;
+td.des{
+    width: 350px;
 }
+
 /*-----------------------ASSIGN AWARDS--------------------*/
 
 ul#collapselist li {
@@ -199,9 +200,6 @@ td#actname {
 }
 td.last.collapsed-td {
     padding: 0;
-}
-.assign.description{
-   min-height: 230px;
 }
 input.date {
     background: #dddddd;

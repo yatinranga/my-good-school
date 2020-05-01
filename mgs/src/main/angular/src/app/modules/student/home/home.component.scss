@@ -1,12 +1,220 @@
-
 .student_home {
     width: 100%;
     display: inline-block;
-    position: absolute;
-    top: 20px;
-    left: 0;
     padding: 10px;
 }
+.welcome{
+    width: 100%;
+    margin: 20px 0 40px 0; 
+    display: inline-block;
+}
+.welcome h2{
+    font-size: 34px;
+    text-align: center;
+    margin: 0;
+    float: left;
+    width: 90%;
+    padding: 0;
+}
+.en_button{
+    float: right;
+    width: 10%;
+}
+button.enrollment_button {
+    float: right;
+    background: #cecece;
+    border: none;
+    color: #333;
+    box-shadow: 0 0 10px #ddd;
+    border-radius: 4px;
+    padding: 3px 5px;
+    cursor: pointer;
+}
+.left_col{
+    width: 31%;
+    display: inline-block;
+    float: left;
+    margin-right: 15px;
+}
+.enrolled_main{
+    width: 100%;
+    float: left;
+    display: inline-block;
+    text-align: left;
+    padding: 0px;
+    height: 100%;
+}
+.enrolled_pre {
+    width: 50%;
+    display: inline-block;
+    text-align: center;
+    border: 1px solid lightgrey;
+    margin: 10px 0px;
+}
+.enrolled_pre h3 {
+    font-size: 22px;
+    color: #4bafa5;
+    border-bottom: 1px solid lightgray;
+}
+.enrolled_main h2, .schedule h2{
+    font-size: 27px;
+    color: #159487;
+    margin-bottom: 10px;
+}
+.enrolled_main li {
+    font-size: 17px;
+    line-height: 35px;
+    color: #555;
+}
+.enrolled_main ul {
+    padding: 0 10px;
+    margin: 0;
+    text-align: left;
+}
+.schedule{
+    width: 100%;
+    float: right;
+    display: inline-block;
+    text-align: left;
+    padding: 25px 0;
+    height: 100%;
+    margin-top: 20px;
+    position: relative;
+}
+.day h3 {
+    font-size: 21px;
+    margin-top: 20px;
+}
+.day {
+    width: 100%;
+    padding: 0 10px;
+    margin-bottom: 20px;
+}
+.day ul li {
+    font-size: 17px;
+    color: #333;
+}
+.day ul {
+    padding: 0;
+    margin: 0;
+}
+.day:first-child h3 {
+    color: #4bafa5;
+}
+.day:nth-child(2) h3 {
+    color: #e04090;
+}
+.day:nth-child(3) h3 {
+    color: #1f69ad;
+}
+.day:nth-child(4) h3 {
+    color: #8dc33a;
+}
+.day:nth-child(5) h3 {
+    color: #c3005b;
+}
+.day:last-child h3 {
+    color: #7c00c3;
+}
+.cands{
+    width: 65%;
+    padding: 0 15px;
+    display: inline-block;
+    border-left: 2px solid lightgrey;
+    margin-left: 25px;
+}
+.cands h2{
+    font-size: 30px;
+    color: #159487;
+    margin: 0 0 20px 15px;
+}
+.fourskill_main {
+    width: 100%;
+    display: inline-flex;
+}
+.club_main {
+    width: 48%;
+    text-align: center;    
+    display: inline-block;
+}
+.society_main {
+    width: 48%;
+    float: right;
+    text-align: center;
+    display: inline-block;
+}
+.fourskill{
+    width: 100%;
+    background: #cecece;
+    margin: 10px;
+    padding: 10px 0;
+    position: relative;
+    text-align: center;
+}
+.fourskill img{
+    width: 60px;
+    margin: 10px 0 20px 0;
+    opacity: 1;
+}
+.fourskill h3{
+    font-size: 27px;   
+    margin: 5px 0 20px 0;
+    text-align: center;
+}
+.fourskill ul{
+    padding: 0 5px;
+    margin: 0;
+}
+.fourskill li{
+    list-style-type: none;
+    border-bottom: 1px solid #999;
+    font-size: 17px;
+    line-height: 40px;
+}
+
+.study.fourskill h3{
+    color: #4bafa5;
+}
+.skill.fourskill h3{
+    color: #e04090;
+}
+.service.fourskill h3{
+    color: #1f69ad;
+}
+.sport.fourskill h3{
+    color: #8dc33a;
+}
+.study.fourskill:hover {
+    background: #4bafa5;
+}
+.skill.fourskill:hover {
+    background: #e04090;
+}
+.service.fourskill:hover {
+    background: #1f69ad;
+}
+.sport.fourskill:hover {
+    background: #8dc33a;
+}
+.fourskill:hover h3{
+    color: #333;
+}
+.fourskill:hover li{
+    border-bottom: 1px solid #333; 
+    color: #333;
+}
+
+
+button.btn.register.btn-primary{
+    background: #8dc33a;
+}
+.modal-content {
+    border: 5px solid #b4d673;
+    top: 100px;
+}
+
+
+
 .student_home select {
     width: 150px;
     margin-bottom: 7px;
@@ -17,14 +225,7 @@
 .student_home label {
     font-size: 20px;
 }
-.student_home h2 {
-    font-size: 23px;
-    margin: 5px;
-}
-.student_home ul{
-    padding: 0;
-    margin: 0;
-}
+
 .activity_select{
     display: inline-flex;
 }

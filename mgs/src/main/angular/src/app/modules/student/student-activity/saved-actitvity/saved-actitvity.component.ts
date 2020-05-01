@@ -54,6 +54,7 @@ export class SavedActitvityComponent implements OnInit {
 
   activitiesArr = []; // single arr for performed actvities
   order = false;
+  count = 0; //to count the number of words enter
 
   ngOnInit() {
     this.setMinDate();
@@ -551,5 +552,14 @@ export class SavedActitvityComponent implements OnInit {
     stopCollapse(e) {
       e.stopPropagation();
     }
+
+    // to count the number of words 
+  wordCount(e){
+    if(e){
+      this.count = e.split(/\s\w/).length;
+    } else {
+      this.count = 0;
+    }
+  }
   
 }

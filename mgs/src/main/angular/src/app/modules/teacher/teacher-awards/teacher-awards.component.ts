@@ -57,6 +57,7 @@ export class TeacherAwardsComponent implements OnInit {
   showCriteriaValues = true;
   endDate: string;
   startDate: string;
+  count = 0; //to count the number of words enter
 
   constructor(private teacherService: TeacherService, private formbuilder: FormBuilder, private alertService: AlertService) { }
 
@@ -400,8 +401,8 @@ export class TeacherAwardsComponent implements OnInit {
     this.order = !this.order;
     // sort by activityStatus
     this.awardsList.sort((a, b) => {
-      const nameA = a.responses[0].status.toUpperCase(); // ignore upper and lowercase
-      const nameB = b.responses[0].status.toUpperCase(); // ignore upper and lowercase
+      const nameA = a.status.toUpperCase(); // ignore upper and lowercase
+      const nameB = b.status.toUpperCase(); // ignore upper and lowercase
       if (nameA < nameB) {
         return this.order ? -1 : 1;
       }
@@ -514,6 +515,15 @@ export class TeacherAwardsComponent implements OnInit {
     if (day < 10)
       day = '0' + day.toString();
     this.endDate = [year, month, day].join('-');
+  }
+
+  // to count the number of words 
+  wordCount(e){
+    if(e){
+      this.count = e.split(/\s\w/).length;
+    } else {
+      this.count = 0;
+    }
   }
 
 

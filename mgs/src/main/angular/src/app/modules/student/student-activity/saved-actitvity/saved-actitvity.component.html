@@ -44,14 +44,15 @@
                         <th scope="col">SUPERVISOR</th>
                         <th scope="col" *ngIf="!(activityType === 'Reviewed')">
                             STATUS
-                            <button *ngIf="activityType === 'All'" name="sort" class="icon_button" (click)="sortByStatus()">
+                            <button *ngIf="activityType === 'All'" name="sort" class="icon_button"
+                                (click)="sortByStatus()">
                                 <i class="fa fa-sort"></i>
                             </button>
                         </th>
                         <th scope="col" *ngIf="(activityType === 'Reviewed')">Status</th>
                         <th *ngIf="(activityType === 'All') || (activityType === 'Saved')" scope="col">
                             ACTION</th>
-                            <th scope="col">  <i class="fa fa-paperclip" title="Attachment" aria-hidden="true"></i> </th>
+                        <th scope="col"> <i class="fa fa-paperclip" title="Attachment" aria-hidden="true"></i> </th>
                     </tr>
                 </thead>
                 <tbody id="accordionExample1">
@@ -70,15 +71,19 @@
                                 <div *ngIf="activity.activityStatus === 'Reviewed'" class="reviewed">Reviewed
                                 </div>
                             </td>
-                            <td *ngIf="(activityType === 'All') || (activityType === 'Saved')" (click)="stopCollapse($event)">
+                            <td *ngIf="(activityType === 'All') || (activityType === 'Saved')"
+                                (click)="stopCollapse($event)">
                                 <div *ngIf="activity.activityStatus === 'SavedByStudent'">
-                                    <button (click)="editSavedActivity($event,activity)" class="saved icon_button" name="editActivity">
+                                    <button (click)="editSavedActivity($event,activity)" class="saved icon_button"
+                                        name="editActivity">
                                         <i class="fa fa-edit" title="Edit"></i>
                                     </button>
-                                    <button (click)="submitSavedActivity($event,i,activitiesArr)" class="submitted icon_button" name="submitActivity">
+                                    <button (click)="submitSavedActivity($event,i,activitiesArr)"
+                                        class="submitted icon_button" name="submitActivity">
                                         <i class="fa fa-paper-plane" title="Submit"></i>
                                     </button>
-                                    <button (click)="deleteSavedActivity($event,activity,i)" class="reviewed icon_button" name="deleteActivity">
+                                    <button (click)="deleteSavedActivity($event,activity,i)"
+                                        class="reviewed icon_button" name="deleteActivity">
                                         <i class="fa fa-trash" title="Delete"></i>
                                     </button>
 
@@ -94,8 +99,10 @@
                         </tr>
                         <tr>
                             <td class="collapse-td" colspan="8">
-                                <div [attr.id]="'collapse' + i + 'all'" class="collapse" data-parent="#accordionExample1">
-                                    <div *ngIf=" (activity.activityStatus === 'SavedByStudent') || (activity.activityStatus === 'SubmittedByStudent')">
+                                <div [attr.id]="'collapse' + i + 'all'" class="collapse"
+                                    data-parent="#accordionExample1">
+                                    <div
+                                        *ngIf=" (activity.activityStatus === 'SavedByStudent') || (activity.activityStatus === 'SubmittedByStudent')">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="description">
@@ -103,14 +110,14 @@
                                                     <p *ngIf="activity.description">
                                                         <strong> Description : </strong> {{activity.description}} </p>
                                                     <p id="fa"> <strong> Focus Area : </strong> </p>
-                                                    <span id="fa" *ngFor="let fa of activity.focusAreas; let i = index">                                                        
-                                                        {{ (i === activity.focusAreas.length-1) ? fa : fa + "," + ' '}}                                                        
+                                                    <span id="fa" *ngFor="let fa of activity.focusAreas; let i = index">
+                                                        {{ (i === activity.focusAreas.length-1) ? fa : fa + "," + ' '}}
                                                     </span><br>
                                                     <p id="fa" *ngIf="activity.psdAreas">
                                                         <strong>PSD Area : </strong></p>
-                                                        <span id="fa" *ngFor="let fa of activity.psdAreas let i = index">                                                        
-                                                            {{ (i === activity.psdAreas.length-1) ? fa : fa + "," + ' '}}                                                        
-                                                        </span><br>
+                                                    <span id="fa" *ngFor="let fa of activity.psdAreas let i = index">
+                                                        {{ (i === activity.psdAreas.length-1) ? fa : fa + "," + ' '}}
+                                                    </span><br>
                                                     <p id="fa"> <strong> 4's : </strong> {{activity.fourS}}
                                                         <!--
                                                             <span *ngIf="activity.fourS=='Skill'" style="color: #4bafa5;">
@@ -131,14 +138,18 @@
                                             </div>
                                             <div class="col-6" *ngIf="activity.fileResponses.length">
                                                 <div class="attachment">
-                                                    <h5> Attachments </h5> 
-                                                    <div *ngFor="let file of activity.fileResponses"> {{activity.fileResponses.length ? "" : "NA"}}
+                                                    <h5> Attachments </h5>
+                                                    <div *ngFor="let file of activity.fileResponses">
+                                                        {{activity.fileResponses.length ? "" : "NA"}}
                                                         <div>
                                                             <!-- insert target="_blank" in a tag -->
                                                             <a [attr.href]="file.url" (click)="downloadFile(file.url)">
-                                                                <i class="fa fa-file-audio" *ngIf="file.extension == 'mp3'"></i>
-                                                                <i class="fa fa-image" *ngIf="file.extension=='jpg' || file.extension=='png'"></i>
-                                                                <i class="fa fa-video-camera" *ngIf="file.extension=='video'"></i>
+                                                                <i class="fa fa-file-audio"
+                                                                    *ngIf="file.extension == 'mp3'"></i>
+                                                                <i class="fa fa-image"
+                                                                    *ngIf="file.extension=='jpg' || file.extension=='png'"></i>
+                                                                <i class="fa fa-video-camera"
+                                                                    *ngIf="file.extension=='video'"></i>
                                                                 {{file.name}}
                                                             </a>
                                                         </div>
@@ -159,14 +170,14 @@
                                                     <p id="fa">
                                                         <strong>Focus Area : </strong>
                                                     </p>
-                                                    <span id="fa" *ngFor="let fa of activity.focusAreas; let i = index">                                                        
-                                                        {{ (i === activity.focusAreas.length-1) ? fa : fa + "," + ' '}}                                                        
+                                                    <span id="fa" *ngFor="let fa of activity.focusAreas; let i = index">
+                                                        {{ (i === activity.focusAreas.length-1) ? fa : fa + "," + ' '}}
                                                     </span>
                                                     <p *ngIf="activity.psdAreas">
                                                         <strong>PSD Area : </strong></p>
-                                                        <span id="fa" *ngFor="let fa of activity.psdAreas let i = index">                                                        
-                                                            {{ (i === activity.psdAreas.length-1) ? fa : fa + "," + ' '}}                                                        
-                                                        </span>
+                                                    <span id="fa" *ngFor="let fa of activity.psdAreas let i = index">
+                                                        {{ (i === activity.psdAreas.length-1) ? fa : fa + "," + ' '}}
+                                                    </span>
                                                     <p *ngIf="activity.fourS" id="fourSkills">
                                                         <strong>4's: </strong> {{activity.fourS}}
                                                         <!--
@@ -213,19 +224,25 @@
                                                         <strong>Star - </strong>{{activity.star}}</p>
                                                     <p *ngIf="activity.coachRemark">
                                                         <strong>Remarks - </strong>{{activity.coachRemark}}</p>
-                                                        <p *ngIf="activity.coachRemarkDate">
-                                                            <strong>Remark Date - </strong>{{activity.coachRemarkDate | date}}</p>
+                                                    <p *ngIf="activity.coachRemarkDate">
+                                                        <strong>Remark Date -
+                                                        </strong>{{activity.coachRemarkDate | date}}</p>
                                                 </div>
                                             </div>
                                             <div class="col-3" *ngIf="activity.fileResponses.length">
                                                 <div class="attachment">
-                                                    <h5> Attachments : </h5> {{activity.fileResponses.length ? "" : "NA"}}
+                                                    <h5> Attachments : </h5>
+                                                    {{activity.fileResponses.length ? "" : "NA"}}
                                                     <div *ngFor="let file of activity.fileResponses">
                                                         <div>
-                                                            <a target="_blank" [attr.href]="file.url" (click)="downloadFile(file.url)">
-                                                                <i class="fa fa-file-audio" *ngIf="file.extension == 'mp3'"></i>
-                                                                <i class="fa fa-image" *ngIf="file.extension=='jpg' || file.extension=='png'"></i>
-                                                                <i class="fa fa-video-camera" *ngIf="file.extension=='video'"></i>
+                                                            <a target="_blank" [attr.href]="file.url"
+                                                                (click)="downloadFile(file.url)">
+                                                                <i class="fa fa-file-audio"
+                                                                    *ngIf="file.extension == 'mp3'"></i>
+                                                                <i class="fa fa-image"
+                                                                    *ngIf="file.extension=='jpg' || file.extension=='png'"></i>
+                                                                <i class="fa fa-video-camera"
+                                                                    *ngIf="file.extension=='video'"></i>
                                                                 {{file.name}}
                                                             </a>
                                                         </div>
@@ -256,19 +273,21 @@
 
 <!-- Edit Activity Form  -->
 <div *ngIf="editActivityShow || addActivityShow">
-    <div class="modal fade" id="addActivityModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addActivityModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">{{addActivityShow?'Add':'Edit'}} Activity </h5>
-                    <button type="button" class="close" name="closeModal" data-dismiss="modal" aria-label="Close" (click)="resetForm()">
+                    <button type="button" class="close" name="closeModal" data-dismiss="modal" aria-label="Close"
+                        (click)="resetForm()">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <form [formGroup]="savedActivityForm" (ngSubmit)="updateActivity()">
                         <div class="form-group">
-                                <h2> Note : All Fields Are Mandatory </h2>
+                            <h2> Note : All Fields Are Mandatory </h2>
                             <label for="recipient-name" class="col-form-label"> Activity Type : </label>
                             <select class="form-control" name="activityName" (ngModelChange)="getStudentCoach($event)"
                                 formControlName="activityId">
@@ -276,11 +295,12 @@
                                     {{activity.name}}</option>
                                 <option disabled *ngIf="!activities.length">No activities available</option>
                             </select>
-                            <span *ngIf="savedActivityForm.value.activityId&&!modal_loader&&!coaches.length" style="color: red">No Teacher/Coaches for corresponding activity</span>
+                            <span *ngIf="savedActivityForm.value.activityId&&!modal_loader&&!coaches.length"
+                                style="color: red">No Teacher/Coaches for corresponding activity</span>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label"> Supervisor : </label>
-                            <select class="form-control" name="coachId" formControlName="coachId" >
+                            <select class="form-control" name="coachId" formControlName="coachId">
                                 <option *ngFor="let coach of coaches; let i = index;" value={{coach.id}}>
                                     {{coach.name}}
                                 </option>
@@ -296,18 +316,21 @@
                         </div>
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label"> Description : </label>
-                            <textarea class="form-control add" name="description" formControlName="description" rows="3" ></textarea>
+                            <textarea class="form-control add" name="description" formControlName="description" rows="3"
+                                (ngModelChange)="wordCount($event)"></textarea>
+                            <span class="text-muted">Word count - {{count}}</span><br>
                             <small class="text-danger"
-                            *ngIf="!savedActivityForm.get('description').valid && savedActivityForm.get('description').touched">
-                            Length between 25-250 words.
-                        </small>
-            
+                                *ngIf="!savedActivityForm.get('description').valid && savedActivityForm.get('description').touched">
+                                Length between 25-250 words.
+                            </small>
+
                         </div>
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label"> Date of Activity Performed : </label>
-                            <input type="date" class="form-control" name="dateOfActivity" formControlName="dateOfActivity" [attr.min]="minDate" [attr.max]="maxDate"/>
+                            <input type="date" class="form-control" name="dateOfActivity"
+                                formControlName="dateOfActivity" [attr.min]="minDate" [attr.max]="maxDate" />
                         </div>
-                        
+
                         <div class="form-group">
                             <div class="add-act choosefile_box">
                                 <input class="choosefile" type="file" accept="image/*, audio/*, video/*, application/pdf,application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
@@ -320,19 +343,23 @@
                             <label for="recipient-name" class="col-form-label"> </label>
                             <div *ngFor="let sf of files; let i = index;">
                                 <p id="attachment_name"> {{sf.name}}
-                                    <button type="button" name="removeFile" (click)="removeFile(i)" class="reviewed icon_button">
+                                    <button type="button" name="removeFile" (click)="removeFile(i)"
+                                        class="reviewed icon_button">
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </p>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn cancel" type="button" name="resetForm" (click)="resetForm()">Reset</button>
-                            <button class="btn saved btnSubmit btn-success" type="submit" name="submitSavedActivity" *ngIf="editActivityShow" [disabled]="savedActivityForm.invalid">
+                            <button class="btn cancel" type="button" name="resetForm"
+                                (click)="resetForm()">Reset</button>
+                            <button class="btn saved btnSubmit btn-success" type="submit" name="submitSavedActivity"
+                                *ngIf="editActivityShow" [disabled]="savedActivityForm.invalid">
                                 <div *ngIf="submit_loader" class="spinner-border text-dark" role="status"></div>
                                 {{submit_loader ? 'Updating...' : 'Update'}}
                             </button>
-                            <button class="btn saved btnSubmit btn-success" type="submit" name="submitNewActivity" *ngIf="addActivityShow" [disabled]="savedActivityForm.invalid">
+                            <button class="btn saved btnSubmit btn-success" type="submit" name="submitNewActivity"
+                                *ngIf="addActivityShow" [disabled]="savedActivityForm.invalid">
                                 <div *ngIf="submit_loader" class="spinner-border text-dark" role="status">
                                 </div>{{submit_loader ? 'Submitting...' : 'Submit'}}
                             </button>
@@ -343,7 +370,7 @@
         </div>
     </div>
 </div>
-<button class="add_activity" type="button" name="addActivity" data-toggle="modal" data-backdrop="static" data-keyboard="false"
-    data-target="#addActivityModal" (click)="addActivity()">
+<button class="add_activity" type="button" name="addActivity" data-toggle="modal" data-backdrop="static"
+    data-keyboard="false" data-target="#addActivityModal" (click)="addActivity()">
     <i class="fa fa-plus"></i>
 </button>

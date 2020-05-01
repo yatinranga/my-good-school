@@ -1,6 +1,6 @@
-<div id="banner" class="banner">
-    <img src="assets/images/teacherhome1.jpg">
-    <div class="home_page_content">
+<!-- <div id="banner" class="banner"> -->
+<!-- <img src="assets/images/teacherhome1.jpg"> -->
+<!-- <div class="home_page_content">
         <h1> Welcome to Supervisor Portal </h1>
         <div class="menu_main">
             <div class="menu_content">
@@ -26,5 +26,134 @@
                 <p>In Awards link, you can review awards.</p>
             </div>
         </div>
-    </div>
+    </div> -->
+
+<div>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Student Name & Grade</th>
+                <th scope="col">Club/Society</th>
+                <th scope="col">Name</th>
+                <th scope="col">Applied Date</th>
+                <th scope="col">Status
+                    <button (click)="sortByStatus()"></button>
+                </th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let c of clubReqArr; let i = index;">
+            <tr>
+                <td>{{i+1}}</td>
+                <td>{{c.student.name}} {{c.student.grade}}-{{c.student.section}}</td>
+                <td>{{c.club.clubOrSociety}}</td>
+                <td>{{c.club['name']}}</td>
+                <td>{{c.appliedOn | date}}</td>
+                <td>
+                    <div *ngIf="c.membershipStatus=='PENDING'" class="pending">PENDING</div>
+                    <div *ngIf="c.membershipStatus=='VERIFIED'" class="verified">VERIFIED</div>
+                    <div *ngIf="c.membershipStatus=='REJECTED'" class="rejected">REJECTED</div>
+                </td>
+                <td *ngIf="c.membershipStatus=='PENDING'">
+                    <button type="button" class="btn btn-success" (click)="setClubReq(c,i,'true')">VERIFY</button>
+                    <button type="button" class="btn btn-danger" (click)="setClubReq(c,i,'false')">REJECT</button>
+                </td>
+                <td *ngIf="!(c.membershipStatus=='PENDING')">NA</td>
+            </tr>
+        </tbody>
+        <tfoot *ngIf="clubReqArr.length==0">
+            <tr>
+                <td colspan="7">
+                    <div *ngIf="clubReqLoader" class="spinner-border text-info" role="status">
+
+                    </div>{{clubReqLoader?'Loading....':'No request available'}}
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+
+
+
+
 </div>
+<!-- LIST of SUPERVISED CLUBS -->
+<div> CLUBS:
+    <ul *ngFor="let c of assignedClubsArr">
+        <li>{{c.name}}</li>
+    </ul>
+</div>
+
+<!-- LIST of SUPERVISED SOCIETIES -->
+<div> SOCIETIES:
+    <ul *ngFor="let s of assignedSocietyArr">
+        <li>{{s.name}}</li>
+    </ul>
+</div>
+
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createSessionModal">
+    Create Session
+  </button>
+
+  <!-- Create Session Modal -->
+<div class="modal fade" id="createSessionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" 
+aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Session Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetForm()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="createSessionForm" (ngSubmit)="createSessionForm">
+              <div class="form-group">
+                <h5 style="color: red"> Note : All Fields Are Mandatory </h5>
+                <label for="recipient-name" class="col-form-label">Session Number : </label>
+                <input type="number" class="form-control add" name="sessionNumber" placeholder="Enter Session Number Here" formControlName="number">
+              </div>
+
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Date : </label>
+                <input type="date" class="form-control" name="startDate" formControlName="startDate">
+              </div>
+
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Timing : </label>
+                <input type="time" class="form-control" name="startTime" [(ngModel)]="startTime" [ngModelOptions]="{standalone: true}">
+                <input type="time" class="form-control" name="endTime" [(ngModel)]="endTime" [ngModelOptions]="{standalone: true}">
+              </div>
+
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Name of Session : </label>
+                <input type="text" class="form-control add" name="title" placeholder="Add Title Here" formControlName="title">
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Club/Society : </label>
+                <select class="form-control" name="activityId" formControlName="clubId">
+                    <option [ngValue]=null selected disabled>Select One</option>
+                    <option *ngFor="let acti of allAssignedActi" value={{acti.id}}>
+                        {{acti.name}}
+                    </option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Grades : </label>
+                <select class="form-control" name="gradeId" formControlName="gradeIds" multiple>
+                    <option value=null selected disabled >Select Grades</option>
+                    <option *ngFor="let grade of schoolGrades" value={{grade.id}}>
+                        {{grade.grade}} {{grade.section}}
+                    </option>
+                </select>
+              </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="resetForm()">Reset</button>
+          <button type="button" class="btn btn-primary"[disabled]="createSessionForm.invalid" (click)="createSession()">Create</button>
+        </div>
+      </div>
+    </div>
+  </div>

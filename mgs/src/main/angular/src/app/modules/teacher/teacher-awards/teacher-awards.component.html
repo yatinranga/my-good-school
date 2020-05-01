@@ -4,10 +4,8 @@
             <div class="teacher_awards_main">
                 <div class="tabs">
                     <ul>
-                        <li [ngClass]="{'active': awardViewType=='view'}"> <a (click)="awardView('view')"> View </a>
-                        </li>
-                        <li [ngClass]="{'active': awardViewType=='assign'}"> <a (click)="awardView('assign')"> Assign
-                            </a> </li>
+                        <li [ngClass]="{'active': awardViewType=='view'}"> <a (click)="awardView('view')"> View </a></li>
+                        <li [ngClass]="{'active': awardViewType=='assign'}"> <a (click)="awardView('assign')"> Assign </a> </li>
                     </ul>
                 </div>
                 <div [ngSwitch]="awardViewType">
@@ -57,12 +55,12 @@
                             </div>
                             <div class="assign-form" [hidden]="showCriteriaValues">
                                 <label for="exampleFormControlSelect1" class="date">From Date - </label>
-                                <input type="date" [value]="startDate" [(ngModel)]="startDate"
+                                <input type="date" [value]="startDate" [attr.max]="endDate" [(ngModel)]="startDate"
                                     (ngModelChange)="dateChanged()" class="date">
                             </div>
                             <div class="assign-form" [hidden]="showCriteriaValues">
                                 <label for="exampleFormControlSelect1" class="date">Till Date - </label>
-                                <input type="date" [value]="endDate" max="endDate" [(ngModel)]="endDate"
+                                <input type="date" [value]="endDate" [attr.max]="endDate" max="endDate" [(ngModel)]="endDate"
                                     (ngModelChange)="dateChanged()" class="date">
                             </div>
                         </div>
@@ -136,7 +134,7 @@
                                                     TYPE</th>
                                                 <th scope="col" *ngIf="!(awardCriterion=='4S')">FOUR S</th>
                                                 <th scope="col" *ngIf="awardCriterion=='Activity Type'">COUNT</th>
-                                                <th scope="col">SCORE</th>
+                                                <th scope="col">PERFORMANCE</th>
                                             </tr>
                                         </thead>
                                         <tbody id="accordionExample">
@@ -199,31 +197,23 @@
                                                                             <td> {{i+1}} </td>
                                                                             <td id="actname"> {{pa.activityName}} </td>
                                                                             <td>
-                                                                                <p
-                                                                                    *ngIf="!(awardCriterion=='Focus Area')">
+                                                                                <p *ngIf="!(awardCriterion=='Focus Area')">
                                                                                     <strong> Focus Area - </strong>
-                                                                                    <span
-                                                                                        *ngFor="let at of pa.responses[0].focusAreas; let i = index">
+                                                                                    <span *ngFor="let at of pa.responses[0].focusAreas; let i = index">
                                                                                         {{ (i === pa.responses[0].focusAreas.length-1) ? at : at + "," + ' '}}
                                                                                     </span>
                                                                                 </p>
-                                                                                <p
-                                                                                    *ngIf="!(awardCriterion=='PSD Area')">
+                                                                                <p *ngIf="!(awardCriterion=='PSD Area')">
                                                                                     <strong> PSD Area - </strong>
-                                                                                    <span
-                                                                                        *ngFor="let at of pa.responses[0].psdAreas; let i = index">
+                                                                                    <span *ngFor="let at of pa.responses[0].psdAreas; let i = index">
                                                                                         {{ (i === pa.responses[0].psdAreas.length-1) ? at : at + "," + ' '}}
-                                                                                    </span>
-                                                                                </p>
+                                                                                    </span> </p>
                                                                             </td>
-                                                                            <td>
-                                                                                <p *ngIf="!(awardCriterion=='4S')">
-                                                                                    <strong> 4S - </strong>
-                                                                                    {{pa.responses[0].fourS}} </p>
+                                                                            <td> <p *ngIf="!(awardCriterion=='4S')">
+                                                                                    <strong> 4S - </strong> {{pa.responses[0].fourS}} </p> 
                                                                             </td>
-                                                                            <td>Activity Count - {{pa.count}} </td>
-                                                                            <td>Average Stars - {{pa.averageStars}}
-                                                                            </td>
+                                                                            <td>Activity Count - <strong> {{pa.count}} </strong> </td>
+                                                                            <td>Average Stars - <strong> {{pa.averageStars}} </strong> </td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class="last collapsed-td" colspan="12">
@@ -234,8 +224,7 @@
                                                                                         *ngFor="let ac of pa.responses; let j = index;">
                                                                                         <div class="row">
                                                                                             <div class="col-6">
-                                                                                                <div
-                                                                                                    class="assign description">
+                                                                                                <div class="assign description">
                                                                                                     <h5> <label> <input
                                                                                                                 type="checkbox"
                                                                                                                 name="selectPerformedActivity"
@@ -244,13 +233,8 @@
                                                                                                         </label>
                                                                                                         {{i+1}}.{{j+1}}
                                                                                                     </h5>
-                                                                                                    <p> <strong>Title -
-                                                                                                        </strong>{{ac.title}}
-                                                                                                    </p>
-                                                                                                    <p> <strong>Description
-                                                                                                            -
-                                                                                                        </strong>{{ac.description}}
-                                                                                                    </p>
+                                                                                                    <p> <strong>Title - </strong>{{ac.title}} </p>
+                                                                                                    <p> <strong>Description - </strong>{{ac.description}} </p>
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div class="col-6">
@@ -348,7 +332,7 @@
                                             <th scope="col">#</th>
                                             <th scope="col">AWARD</th>
                                             <th scope="col">DESCRIPTION</th>
-                                            <th scope="col">STUDENT NAME & GRADE</th>
+                                            <th scope="col">STUDENT</th>
                                             <th scope="col">AWARD CRITERIA</th>
                                             <th scope="col">CRITERIA VALUE</th>
                                             <th scope="col">VALID FROM</th>
@@ -366,7 +350,7 @@
                                             <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                                                 <td>{{i+1}}</td>
                                                 <td>{{al.awardType}}</td>
-                                                <td>{{al.description}}</td>
+                                                <td class="des"> {{al.description}}</td>
                                                 <td>{{al.studentName}} {{al.studentGrade}}</td>
                                                 <td>{{al.awardCriterion}}</td>
                                                 <td>{{al.criterionValue}}</td>
@@ -392,26 +376,26 @@
                                                         <table class="innertable">
                                                             <tbody id="innerAccordionExample">
                                                                 <ng-container
-                                                                    *ngFor="let pa of al.activityPerformedResponses; let i = index;">
+                                                                    *ngFor="let pa of al.activityPerformedResponses; let j = index;">
                                                                     <tr data-toggle="collapse"
-                                                                        [attr.data-target]="'#collapsed'+i">
-                                                                        <td>{{i+1}}</td>
+                                                                        [attr.data-target]="'#collapsed'+j">
+                                                                        <td>{{i+1}}.{{j+1}}</td>
                                                                         <td id="actname">{{pa.activityName}}</td>
                                                                         <td>Activity Count - {{pa.count}}</td>
                                                                         <td>Average Stars - {{pa.averageStars}}</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td class="last collapsed-td" colspan="12">
-                                                                            <div [attr.id]="'collapsed' + i"
+                                                                            <div [attr.id]="'collapsed' + j"
                                                                                 class="collapse"
                                                                                 data-parent="#innerAccordionExample">
                                                                                 <div
-                                                                                    *ngFor="let ac of pa.responses; let j = index;">
+                                                                                    *ngFor="let ac of pa.responses; let k = index;">
                                                                                     <div class="row">
                                                                                         <div class="col-6">
                                                                                             <div
                                                                                                 class="assign description">
-                                                                                                <h5>{{i+1}}.{{j+1}}
+                                                                                                <h5>{{i+1}}.{{j+1}}.{{k+1}}
                                                                                                 </h5>
                                                                                                 <p> <strong>Title -
                                                                                                     </strong>{{ac.title}}
@@ -571,8 +555,9 @@
                     </div>
                     <div class="form-group">
                         <label for="message-text" class="col-form-label"> Description - (Minimum 10 words)</label>
-                        <textarea class="form-control" name="description" id="message-text"
+                        <textarea class="form-control" name="description" id="message-text" (ngModelChange)="wordCount($event)"
                             formControlName="description"></textarea>
+                            <span class="text-muted">Word count - {{count}}</span><br>
                         <small class="text-danger"
                             *ngIf="!assignAwardForm.get('description').valid && assignAwardForm.get('description').touched">
                             Min Length 10 words.
