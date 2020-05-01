@@ -240,7 +240,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 
 			/* Saving files associated with activity */
 			List<File> activityPerformedMedia = new ArrayList<>();
-			if (request.getFileRequests() != null && !request.getFileRequests().isEmpty())
+			if (request.getFileRequests() != null && !request.getFileRequests().isEmpty()) {
 				if(request.getFileRequests().size() > 5)
 					throw new ValidationException("Cannot attach more than 5 files to upload.");
 			
@@ -255,6 +255,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			 * Assigned the returned files List set to ActivityPerformed entity
 			 */
 			activityPerformed.setFiles(activityPerformedMedia);
+			}
 
 			activityPerformed.setActive(true);
 			if (activityPerformed.getCid() == null)

@@ -70,6 +70,8 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 	@Query(value = "select t.id from Teacher t where t.user.id = :userId and t.active = true")
 	Long getIdByUserIdAndActiveTrue(@Param("userId") Long userId);
 
+	Teacher findByUserIdAndActiveTrue(Long userId);
+
 //	List<Teacher> findAllByActivitiesCid(String cid);
 
 }

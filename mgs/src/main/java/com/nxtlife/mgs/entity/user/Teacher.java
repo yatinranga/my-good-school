@@ -30,15 +30,12 @@ import com.nxtlife.mgs.entity.school.Award;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.school.TeacherSchoolGrade;
+import com.nxtlife.mgs.entity.session.Event;
 
 @SuppressWarnings("serial")
 @Entity
 @DynamicUpdate(true)
 public class Teacher extends BaseEntity {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
 
 	@NotNull
 	@Column(unique = true)
@@ -110,7 +107,10 @@ public class Teacher extends BaseEntity {
 
 //	@ManyToOne
 //	ActivityOffered activityOffered; 
-
+	
+	@OneToMany(mappedBy = "teacher" , cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
+	private List<Event> sessions;
+	
 	public String getName() {
 		return name;
 	}
@@ -239,28 +239,12 @@ public class Teacher extends BaseEntity {
 		this.awards = awards;
 	}
 
-	public String getcId() {
-		return cid;
-	}
-
-	public void setcId(String cId) {
-		this.cid = cId;
-	}
-
 	public User getUser() {
 		return user;
 	}
 
 	public void setUser(User user) {
 		this.user = user;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 //	public ActivityOffered getActivityOffered() {
@@ -317,6 +301,14 @@ public class Teacher extends BaseEntity {
 
 	public void setProfileBrief(String profileBrief) {
 		this.profileBrief = profileBrief;
+	}
+
+	public List<Event> getSessions() {
+		return sessions;
+	}
+
+	public void setSessions(List<Event> sessions) {
+		this.sessions = sessions;
 	}
 
 	public Teacher(@NotNull String cid, @NotNull String name, String username, String gender, @NotNull Date dob,

@@ -257,7 +257,7 @@ public class AwardResponse {
 		this.status = award.getStatus();
 		this.statusModifiedAt = award.getStatusModifiedAt();
 		if (award.getTeacher() != null) {
-			this.createrId = award.getTeacher().getcId();
+			this.createrId = award.getTeacher().getCid();
 			this.createdBy = award.getTeacher().getName();
 		}
 		if (award.getStudent() != null) {

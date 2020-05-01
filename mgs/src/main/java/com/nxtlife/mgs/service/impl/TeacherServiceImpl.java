@@ -250,7 +250,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 			teacher.setIsCoach(true);
 		}
 
-		teacher.setcId(utils.generateRandomAlphaNumString(8));
+		teacher.setCid(utils.generateRandomAlphaNumString(8));
 
 //		User user = userService.createTeacherUser(teacher);
 		User user = userService.createUserForEntity(teacher);
@@ -307,7 +307,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 				if (requestActivityIds.contains(previousActivities.get(i).getCid())) {
 					requestActivityIds.remove(previousActivities.get(i).getCid());
 				} else {
-					if (activityPerformedRepository.existsByTeacherCidAndActivityCidAndActiveTrue(teacher.getcId(),previousActivities.get(i).getCid())) {
+					if (activityPerformedRepository.existsByTeacherCidAndActivityCidAndActiveTrue(teacher.getCid(),previousActivities.get(i).getCid())) {
 						throw new ValidationException(String.format(
 								"You cannot delete the activty : %s as few student has already performed activity %s under you.",
 								previousActivities.get(i).getName(), previousActivities.get(i).getName()));
@@ -953,7 +953,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 					if (requestActivityIds.contains(previousActivities.get(i).getCid())) {
 						requestActivityIds.remove(previousActivities.get(i).getCid());
 					} else {
-						if (activityPerformedRepository.existsByTeacherCidAndActivityCidAndActiveTrue(teacher.getcId(),previousActivities.get(i).getCid())) {
+						if (activityPerformedRepository.existsByTeacherCidAndActivityCidAndActiveTrue(teacher.getCid(),previousActivities.get(i).getCid())) {
 							throw new ValidationException(String.format(
 									"You cannot delete the activty : %s as few student has already performed activity %s under you.",
 									previousActivities.get(i).getName(), previousActivities.get(i).getName()));
@@ -1000,19 +1000,19 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	}
 
 	@Override
-	public List<ClubMembershipResponse> getPendingMembershipRequests(){
+	public List<ClubMembershipResponse> getMembershipDetails(){
 		Long userId = getUserId();
 		if(userId == null)
 			throw new ValidationException("Login as teacher/coach to view pending requests.");
 		Long teacherId = teacherRepository.getIdByUserIdAndActiveTrue(userId);
 		if(teacherId == null)
 			throw new ValidationException("Login as teacher/coach to view pending requests.");
-		List<StudentClub> pendingRequests = studentClubRepository.findAllByTeacherIdAndMembershipStatusAndActiveTrue(teacherId, ApprovalStatus.PENDING);
+		List<StudentClub> membership = studentClubRepository.findAllByTeacherIdAndActiveTrue(teacherId);
 		
-		if(pendingRequests == null || pendingRequests.isEmpty())
+		if(membership == null || membership.isEmpty())
 			throw new ValidationException("No membership application found for you.");
 		
-		return pendingRequests.stream().map(ClubMembershipResponse :: new).distinct().collect(Collectors.toList());
+		return membership.stream().map(ClubMembershipResponse :: new).distinct().collect(Collectors.toList());
 	}
 	
 	@Override

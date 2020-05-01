@@ -40,6 +40,7 @@ import com.nxtlife.mgs.jpa.FocusAreaRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
 import com.nxtlife.mgs.jpa.StudentClubRepository;
 import com.nxtlife.mgs.jpa.StudentRepository;
+import com.nxtlife.mgs.jpa.TeacherRepository;
 import com.nxtlife.mgs.service.ActivityService;
 import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.FocusAreaService;
@@ -72,6 +73,9 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 	
 	@Autowired
 	StudentRepository studentRepository;
+	
+	@Autowired
+	TeacherRepository teacherRepository;
 
 	@PostConstruct
 	public void init() {
@@ -574,6 +578,23 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 			throw new ValidationException("Student not member of any Clubs.");
 		
 		activities = studentClubRepository.findActivityByStudentIdAndMembershipStatusAndActiveTrue(studentId, ApprovalStatus.VERIFIED);
+		
+		return activities.stream().map(ActivityRequestResponse:: new).collect(Collectors.toList());
+	}
+	
+	@Override
+	public List<ActivityRequestResponse> getAllClubsOfTeacher(){
+		List<Activity> activities;
+		Long userId = getUserId();
+		if(userId == null)
+			throw new ValidationException("Login as teacher to see your activities.");
+		Long teacherId =  teacherRepository.getIdByUserIdAndActiveTrue(userId);
+		if(teacherId == null)
+			throw new ValidationException("User not logged in as teacher.");
+		if(!activityRepository.existsByTeachersIdAndActiveTrue(teacherId))
+			throw new ValidationException("Teacher not running any clubs or societies.");
+		
+		activities = activityRepository.findAllByTeachersIdAndActiveTrue(teacherId);
 		
 		return activities.stream().map(ActivityRequestResponse:: new).collect(Collectors.toList());
 	}

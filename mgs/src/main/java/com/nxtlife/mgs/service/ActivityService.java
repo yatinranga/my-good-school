@@ -27,4 +27,6 @@ public interface ActivityService {
 
 	List<ActivityRequestResponse> getAllClubsOfStudent();
 
+	List<ActivityRequestResponse> getAllClubsOfTeacher();
+
 }

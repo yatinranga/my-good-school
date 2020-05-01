@@ -77,6 +77,7 @@ import com.nxtlife.mgs.view.GroupResponseByActivityName;
 import com.nxtlife.mgs.view.ActivityPerformedResponse;
 import com.nxtlife.mgs.view.CertificateRequest;
 import com.nxtlife.mgs.view.CertificateResponse;
+import com.nxtlife.mgs.view.ClubMembershipResponse;
 import com.nxtlife.mgs.view.GuardianRequest;
 import com.nxtlife.mgs.view.StudentRequest;
 import com.nxtlife.mgs.view.StudentResponse;
@@ -1409,7 +1410,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	}
 
 	@Override
-	public SuccessResponse applyForClubMembership(String activityCid , String supervisorCid) {
+	public ClubMembershipResponse applyForClubMembership(String activityCid , String supervisorCid) {
 		Long userId = getUserId();
 		if(userId == null)
 			throw new ValidationException("Login first as student to apply for membership.");
@@ -1428,8 +1429,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		StudentClub studentClub = new StudentClub(studentId, activityRepository.findIdByCidAndActiveTrue(activityCid), teacherRepository.findIdByCidAndActiveTrue(supervisorCid));
 		studentClub.setAppliedOn(LocalDateTime.now().toDate());
 		studentClub.setMembershipStatus(ApprovalStatus.PENDING);
-		studentClubRepository.save(studentClub);
-		
-		return new SuccessResponse(200, "Successfully applied for the Membership.");
+		studentClub = studentClubRepository.save(studentClub);
+		return new ClubMembershipResponse(studentClub);
 	}
 }

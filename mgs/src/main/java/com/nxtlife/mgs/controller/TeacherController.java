@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.nxtlife.mgs.service.ActivityService;
 import com.nxtlife.mgs.service.TeacherService;
+import com.nxtlife.mgs.view.ActivityRequestResponse;
+import com.nxtlife.mgs.view.ClubMembershipResponse;
 import com.nxtlife.mgs.view.StudentResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
 import com.nxtlife.mgs.view.TeacherRequest;
@@ -27,6 +30,9 @@ public class TeacherController {
 
 	@Autowired
 	TeacherService teacherService;
+	
+	@Autowired
+	ActivityService activityService;
 
 //	@RequestMapping(value = "importTeachers", method = RequestMethod.POST)
 //	public List<TeacherResponse> uploadTeachersFromExcel(@RequestParam("file") MultipartFile file) {
@@ -97,6 +103,21 @@ public class TeacherController {
 	@DeleteMapping("api/teacher/{cid}")
 	public SuccessResponse delete(@PathVariable String cid) {
 		return teacherService.delete(cid);
+	}
+	
+	@GetMapping(value = "api/teacher/club/members")
+	public List<ClubMembershipResponse> getMembershipDetails(){
+		return teacherService.getMembershipDetails();
+	}
+	
+	@GetMapping(value = "api/teacher/clubs")
+	public List<ActivityRequestResponse> getAllClubsOfTeacher(){
+		return activityService.getAllClubsOfTeacher();
+	}
+	
+	@PutMapping(value = "api/teacher/club")
+	public ClubMembershipResponse updateStatus(@RequestParam(name = "studentId")  String studentId,@RequestParam(name = "activityId") String activityId , @RequestParam(name="verified",defaultValue="true") Boolean verified) {
+		return teacherService.updateStatus(studentId, activityId, verified);
 	}
 
 }

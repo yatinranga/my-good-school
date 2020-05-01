@@ -26,9 +26,12 @@ import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.CertificateRepository;
 import com.nxtlife.mgs.jpa.StudentRepository;
 import com.nxtlife.mgs.service.ActivityPerformedService;
+import com.nxtlife.mgs.service.ActivityService;
 import com.nxtlife.mgs.service.StudentService;
+import com.nxtlife.mgs.view.ActivityRequestResponse;
 import com.nxtlife.mgs.view.CertificateRequest;
 import com.nxtlife.mgs.view.CertificateResponse;
+import com.nxtlife.mgs.view.ClubMembershipResponse;
 import com.nxtlife.mgs.view.StudentRequest;
 import com.nxtlife.mgs.view.StudentResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
@@ -42,6 +45,9 @@ public class StudentController {
 
 	@Autowired
 	ActivityPerformedService activityPerformedService;
+	
+	@Autowired
+	ActivityService activityService;
 
 
 	@PostMapping(value = "/student/signUp")
@@ -118,6 +124,16 @@ public class StudentController {
 	@GetMapping(value = "api/award/students")
 	public Set<StudentResponse> getAllStudentsAndItsActivitiesByAwardCriterion(@RequestParam(name = "awardCriterion") String awardCriterion ,@RequestParam(name = "criterionValue") String criterionValue, @RequestParam(name = "gradeId" , required = false) String gradeId,@RequestParam(name = "startDate" , required = false) String startDate ,@RequestParam(name = "endDate" , required = false) String endDate){
 		return studentService.getAllStudentsAndItsActivitiesByAwardCriterion(awardCriterion, criterionValue, gradeId,startDate ,endDate);
+	}
+	
+	@PostMapping(value = "api/student/club")
+	public ClubMembershipResponse applyForClubMembership(@RequestParam("activityId") String activityId ,@RequestParam("supervisorId") String supervisorId) {
+		return studentService.applyForClubMembership(activityId, supervisorId);
+	}
+	
+	@GetMapping(value = "api/student/clubs")
+	public List<ActivityRequestResponse> getAllClubsOfStudent(){
+		return activityService.getAllClubsOfStudent();
 	}
 
 }
