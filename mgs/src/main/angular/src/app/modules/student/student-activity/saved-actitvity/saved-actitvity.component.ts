@@ -63,7 +63,7 @@ export class SavedActitvityComponent implements OnInit {
     this.studentId = this.studentInfo.student.id;
     this.schoolId = this.studentInfo.student.schoolId;
     this.activityView(this.activityType);
-    this.getStudentActivity(this.schoolId);
+    this.getStudentActivity();
     this.getAreas(); // to get PSD Areas, Focus Area and 4s 
 
     this.savedActivityForm = this.formBuilder.group({
@@ -252,8 +252,8 @@ export class SavedActitvityComponent implements OnInit {
 
 
   // to get all activities of particular school
-  getStudentActivity(schoolId) {
-    this.studentService.getActivity(schoolId).subscribe((res) => {
+  getStudentActivity() {
+    this.studentService.getAllEnrolledClub().subscribe((res) => {
       this.activities = res;
     },
       (err) => console.log(err)
