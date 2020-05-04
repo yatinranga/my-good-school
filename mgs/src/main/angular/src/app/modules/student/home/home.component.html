@@ -7,7 +7,8 @@
   </div>
 
   <div class="left_col">
-    <div class="enrolled_main">
+    <!--
+      <div class="enrolled_main">
       <h2> My Enrolled </h2>
       <div class="fourskill_main">
         <div class="enrolled_pre">
@@ -23,14 +24,14 @@
           </ul>
         </div>
       </div>
-
     </div>
+    -->
     <div class="schedule">
       <h2> My Schedule </h2>
       <div class="day" *ngFor="let s of sessionsArr">
-        <h3>{{s.startDate | date}} - {{s.startDay}} </h3>
+        <h3>{{s.startDay}} - {{s.startDate | date}} </h3>
         <ul>
-          <li> {{s.club.name}} - {{s.startDate | date:"HH:mm"}}hrs - {{s.endDate | date:"HH:mm"}}hrs </li>
+          <li> {{s.club.name}} - {{s.startDate | date:"HH:mm"}} - {{s.endDate | date:"HH:mm"}} </li>
         </ul>
       </div>
     </div>

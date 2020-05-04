@@ -5,7 +5,7 @@
 }
 .welcome{
     width: 100%;
-    margin: 20px 0 40px 0; 
+    margin: 30px 0 50px 0; 
     display: inline-block;
 }
 .welcome h2{
@@ -31,55 +31,22 @@ button.enrollment_button {
     cursor: pointer;
 }
 .left_col{
-    width: 31%;
+    width: 20%;
     display: inline-block;
     float: left;
-    margin-right: 15px;
-}
-.enrolled_main{
-    width: 100%;
-    float: left;
-    display: inline-block;
-    text-align: left;
-    padding: 0px;
-    height: 100%;
-}
-.enrolled_pre {
-    width: 50%;
-    display: inline-block;
-    text-align: center;
-    border: 1px solid lightgrey;
-    margin: 10px 0px;
-}
-.enrolled_pre h3 {
-    font-size: 22px;
-    color: #4bafa5;
-    border-bottom: 1px solid lightgray;
-}
-.enrolled_main h2, .schedule h2{
-    font-size: 27px;
-    color: #159487;
-    margin-bottom: 10px;
-}
-.enrolled_main li {
-    font-size: 17px;
-    line-height: 35px;
-    color: #555;
-}
-.enrolled_main ul {
-    padding: 0 10px;
-    margin: 0;
-    text-align: left;
 }
 .schedule{
     width: 100%;
     float: right;
     display: inline-block;
     text-align: left;
-    padding: 25px 0;
     height: 100%;
-    margin-top: 20px;
     position: relative;
+}
+.schedule h2{
+    font-size: 30px;
+    color: #159487;
+    margin-bottom: 10px;
 }
 .day h3 {
     font-size: 21px;
@@ -117,11 +84,11 @@ button.enrollment_button {
     color: #7c00c3;
 }
 .cands{
-    width: 65%;
-    padding: 0 15px;
+    width: 78%;
+    padding: 0 20px 0 40px;
     display: inline-block;
     border-left: 2px solid lightgrey;
-    margin-left: 25px;
+    margin-left: 20px;
 }
 .cands h2{
     font-size: 30px;
@@ -133,12 +100,12 @@ button.enrollment_button {
     display: inline-flex;
 }
 .club_main {
-    width: 48%;
+    width: 49%;
     text-align: center;    
     display: inline-block;
 }
 .society_main {
-    width: 48%;
+    width: 49%;
     float: right;
     text-align: center;
     display: inline-block;
@@ -162,7 +129,7 @@ button.enrollment_button {
     text-align: center;
 }
 .fourskill ul{
-    padding: 0 5px;
+    padding: 0 25px;
     margin: 0;
 }
 .fourskill li{
@@ -252,4 +219,34 @@ li#t-name {
 .list_card h3{
     font-size: 24px;
     font-weight: 400px;
+}
+.enrolled_main{
+    width: 100%;
+    float: left;
+    display: inline-block;
+    text-align: left;
+    padding: 0px;
+    height: 100%;
+}
+.enrolled_pre {
+    width: 50%;
+    display: inline-block;
+    text-align: center;
+    border: 1px solid lightgrey;
+    margin: 10px 0px;
+}
+.enrolled_pre h3 {
+    font-size: 22px;
+    color: #4bafa5;
+    border-bottom: 1px solid lightgray;
+}
+.enrolled_main li {
+    font-size: 17px;
+    line-height: 35px;
+    color: #555;
+}
+.enrolled_main ul {
+    padding: 0 10px;
+    margin: 0;
+    text-align: left;
 }
