@@ -2,7 +2,7 @@
   <div class="welcome">
     <h2> Welcome to My Good School , {{studentName}} ! </h2>
     <div class="en_button">
-      <button data-toggle="modal" data-target="#registrationModal" class="enrollment_button">Enrollment Form</button>
+      <button data-toggle="modal" data-target="#registrationModal" class="enrollment_button" >Enrollment Form</button>
     </div>
   </div>
 
@@ -10,6 +10,7 @@
     <!--
       <div class="enrolled_main">
       <h2> My Enrolled </h2>
+      <!-- list of enrolled clubs and societies -->
       <div class="fourskill_main">
         <div class="enrolled_pre">
           <h3> Clubs </h3>
@@ -31,7 +32,8 @@
       <div class="day" *ngFor="let s of sessionsArr">
         <h3>{{s.startDay}} - {{s.startDate | date}} </h3>
         <ul>
-          <li> {{s.club.name}} - {{s.startDate | date:"HH:mm"}} - {{s.endDate | date:"HH:mm"}} </li>
+          <li><span>{{s.title}}</span><br> {{s.club.name}} - {{s.startDate | date:"HH:mm"}}hrs - {{s.endDate | date:"HH:mm"}}hrs </li>
+          <li>Supervisor - {{s.teacherName}}</li>
         </ul>
       </div>
     </div>
@@ -45,14 +47,14 @@
           <img src="assets/images/16.png">
           <h3> Study </h3>
           <ul *ngFor="let study of studyArr">
-            <li>{{study.name}}</li>
+            <li (click)="clubDetails(study)">{{study.name}}</li>
           </ul>
         </div>
         <div class="skill fourskill">
           <img src="assets/images/21.png">
           <h3> Skill </h3>
           <ul *ngFor="let skill of skillArr">
-            <li>{{skill.name}}</li>
+            <li (click)="clubDetails(skill)">{{skill.name}}</li>
           </ul>
         </div>
       </div>
@@ -64,15 +66,15 @@
           <img src="assets/images/24.png">
           <h3> Service </h3>
           <ul *ngFor="let service of serviceArr">
-            <li>{{service.name}}</li>
+            <li (click)="clubDetails(service)">{{service.name}}</li>
           </ul>
         </div>
         <div class="sport fourskill">
           <img src="assets/images/23.png">
           <h3> Sport </h3>
-          <ul *ngFor="let soc of sportArr">
-            <li>{{soc.name}}</li>
-          </ul>
+          <ul *ngFor="let sport of sportArr">
+            <li (click)="clubDetails(sport)">{{sport.name}}</li>
+          </ul> 
         </div>
       </div>
     </div>
@@ -133,7 +135,6 @@
         </button>
       </div>
       <div class="modal-body">
-
         <!-- List of all Clubs and Societites -->
         <div class="input-group mb-3">
           <div class="input-group-prepend">
@@ -147,17 +148,18 @@
             <option disabled *ngIf="!activities.length">No activities available</option>
           </select>
         </div>
-
         <!-- List of Supervisor associated with Specific clubs and societies -->
         <div class="input-group mb-3">
           <div class="input-group-prepend">
             <label class="input-group-text" for="inputGroupSelect01">Select Supervisor</label>
           </div>
-          <select class="custom-select" id="inputGroupSelect01" [(ngModel)]="supervisorId" [disabled]="csup_loader">
+          <select class="custom-select" id="inputGroupSelect01" [(ngModel)]="supervisorId" [disabled]="csup_loader||!clubSupervisor.length">
             <option value="" disabled>Select One</option>
             <option *ngFor="let sup of clubSupervisor" value={{sup.id}}>{{sup.name}}</option>
           </select>
           <div class="spinner-border text-info" role="status" *ngIf="csup_loader"></div>
+          <span *ngIf="!csup_loader&&!clubSupervisor.length"
+               style="color: red">No Supervisor for corresponding club/society</span>
         </div>
       </div>
       <div class="modal-footer">
@@ -174,13 +176,12 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">{{enrolledName}} Schedule</h5>
+        <h4 class="modal-title" id="exampleModalLabel">{{enrolledName}} Schedule</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-
         <div *ngIf="enrollSch_loader">
           <div class="spinner-border text-secondary" role="status" *ngIf="enrollSch_loader">
           </div>{{enrollSch_loader?' Loading...':''}}
@@ -189,14 +190,75 @@
         <div class="day" *ngFor="let club of clubSchedule">
           <h3>{{club.startDate | date}} - {{club.startDay}} </h3>
           <ul>
-            <li><span>Title - {{club.title}}</span><br> {{club.club.name}} - {{club.startDate | date:"HH:mm"}}hrs - {{club.endDate | date:"HH:mm"}}hrs </li>
+            <li><span>{{club.title}}</span><br> {{club.club.name}} - {{club.startDate | date:"HH:mm"}}hrs -
+              {{club.endDate | date:"HH:mm"}}hrs </li>
           </ul>
         </div>
-
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal to View List of Supervisor, Students and Session Schedule of any activity -->
+<div class="modal fade bd-example-modal-lg" id="clubDetailsModal" tabindex="-1" role="dialog"
+  aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="exampleModalLabel">{{clubName}} Details</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-6 ml-auto">
+              <h5>List of Supervisor :</h5>
+              <ul>
+                <li *ngFor="let c of coaches; let i = index"> {{i+1}}. {{c.name}}</li>
+                <li *ngIf="coaches.length==0" id="null">
+                  <div class="spinner-border text-secondary" role="status" *ngIf="sup_loader">
+                  </div>{{sup_loader ? '  Loading...' : 'No Supervisor'}} 
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-6 ml-auto">
+              <h5>List of Students :</h5>
+              <ul>
+                <li *ngFor="let s of students; let i = index"> {{i+1}}. {{s.name}} - {{s.grade}} {{s.section}}</li>
+                <li *ngIf="students.length==0" id="null">
+                  <div class="spinner-border text-secondary" role="status" *ngIf="stu_loader">
+                </div> {{stu_loader ? ' Loading...' : 'No Students'}} 
+              </li>
+              </ul>
+            </div>
+          </div><hr>
+          <div class="row">
+            <div class="col-md-12 ml-auto">
+              <h5>Session Schedule :</h5>
+              <div *ngIf="enrollSch_loader">
+                <div class="spinner-border text-secondary" role="status" *ngIf="enrollSch_loader">
+                </div>{{enrollSch_loader?'  Loading...':''}}
+              </div>{{clubSchedule.length==0&&!enrollSch_loader?'No Session Available !': ''}}
+      
+              <div class="day" *ngFor="let club of clubSchedule">
+                <h3>{{club.startDate | date}} - {{club.startDay}} </h3>
+                <ul>
+                  <li><span>{{club.title}}</span><br> {{club.club.name}} - {{club.startDate | date:"HH:mm"}}hrs -
+                    {{club.endDate | date:"HH:mm"}}hrs </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

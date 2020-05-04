@@ -42,6 +42,9 @@ export class HomeComponent implements OnInit {
   clubSchedule = [];
   enrollSch_loader = false;
 
+  // Details of All Club/Society Modal Variable
+  clubName = "";
+
   stu_loader = false;
   sup_loader = false;
   csup_loader = false;
@@ -85,36 +88,6 @@ export class HomeComponent implements OnInit {
       console.log(res);
       this.sessionsArr = res;
     }, (err) => { console.log(err); });
-  }
-
-  // List of Supervisior of Selected Activity
-  getCoaches(actiId) {
-    this.getStudents(actiId);
-    this.coaches = [];
-    this.students = [];
-    this.gradeId = "";
-    this.sup_loader = true;
-    this.studentService.getCoach(this.schoolId, actiId).subscribe((res) => {
-      this.coaches = res;
-      this.sup_loader = false;
-    }, (err) => {
-      console.log(err);
-      this.sup_loader = false;
-    })
-  }
-
-  // List of Student of selected Activity
-  getStudents(actiId) {
-    this.stu_loader = true;
-    this.studentService.getActivityStudent(actiId).subscribe((res) => {
-      this.students = res;
-      this.copyStuArr = Object.assign([], res);
-      console.log(res);
-      this.stu_loader = false;
-    }, (err) => {
-      console.log(err);
-      this.stu_loader = false;
-    });
   }
 
   getGrades(schoolId) {
@@ -166,6 +139,7 @@ export class HomeComponent implements OnInit {
         this.alertService.showSuccessAlert("Registration Successful");
         $('#registrationModal').modal('hide');
         $('.modal-backdrop').remove();
+        this.clearSelected();
       }, (err) => { console.log(err); });
 
     } else {
@@ -177,18 +151,67 @@ export class HomeComponent implements OnInit {
     console.log("clear selection called");
     this.clubId = "";
     this.supervisorId = "";
+    this.clubSupervisor = [];
   }
 
-  viewEnrolledSchedule(a) {
-    console.log(a.name + " clicked");
+  // Schedule of Selected Enrolled Club/Society
+  viewEnrolledSchedule(myClub) {
+    console.log(myClub.name + " clicked");
     this.enrollSch_loader = true;
     this.clubSchedule = [];
     this.enrolledName = "";
     this.sessionTitle = "";
     $('#enrolledScheduleModal').modal('show');
-    this.enrolledName = a.name;
-    this.sessionTitle = a.title;
-    this.studentService.getEnrolledClubSession(a.id, "week").subscribe((res) => {
+    this.enrolledName = myClub.name;
+    this.sessionTitle = myClub.title;
+    this.getScheduleOfClub(myClub.id);
+  }
+
+  // Details of All Clubs and Societies
+  clubDetails(clubObj){
+    $('#clubDetailsModal').modal('show');
+    this.clubName=clubObj.name;
+    this.getCoaches(clubObj.id);
+    this.getScheduleOfClub(clubObj.id);
+    console.log(clubObj);
+  }
+  
+  // List of Supervisor of Selected Club/Society
+  getCoaches(actiId) {
+    this.getStudents(actiId);
+    this.coaches = [];
+    this.students = [];
+    this.gradeId = "";
+    this.sup_loader = true;
+    this.studentService.getCoach(this.schoolId, actiId).subscribe((res) => {
+      this.coaches = res;
+      console.log(res);
+      this.sup_loader = false;
+    }, (err) => {
+      console.log(err);
+      this.sup_loader = false;
+    })
+  }
+
+  // List of Student of selected Club/Society
+  getStudents(actiId) {
+    this.stu_loader = true;
+    this.studentService.getActivityStudent(actiId).subscribe((res) => {
+      this.students = res;
+      this.copyStuArr = Object.assign([], res);
+      console.log(res);
+      this.stu_loader = false;
+    }, (err) => {
+      console.log(err);
+      this.stu_loader = false;
+    });
+  }
+
+  // Get Session Schedule of selected Club/Society
+  getScheduleOfClub(clubId){
+    this.enrollSch_loader = true;
+    this.clubSchedule = [];
+    this.studentService.getEnrolledClubSession(clubId, "month").subscribe((res) => {
       console.log(res);
       this.clubSchedule = res;
       this.enrollSch_loader = false
@@ -197,6 +220,7 @@ export class HomeComponent implements OnInit {
       this.enrollSch_loader = false;
     });
   }
+
 
 
 }

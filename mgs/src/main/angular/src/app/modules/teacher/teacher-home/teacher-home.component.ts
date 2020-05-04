@@ -118,9 +118,8 @@ export class TeacherHomeComponent implements OnInit {
       $('#createSessionModal').modal('hide');
       $('.modal-backdrop').remove();
       this.alertService.showErrorAlert("Session Created !");
+      this.resetForm();
     }, (err) => { console.log(err); })
-
-
   }
 
   // Reset Form
@@ -149,5 +148,7 @@ export class TeacherHomeComponent implements OnInit {
       return 0;
     });
   }
+
+  
 
 }
