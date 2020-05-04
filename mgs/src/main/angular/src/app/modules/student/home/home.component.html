@@ -7,32 +7,12 @@
   </div>
 
   <div class="left_col">
-    <!--
-      <div class="enrolled_main">
-      <h2> My Enrolled </h2>
-      <!-- list of enrolled clubs and societies -->
-      <div class="fourskill_main">
-        <div class="enrolled_pre">
-          <h3> Clubs </h3>
-          <ul *ngFor="let ec of enrolledClubsArr; let i = index;">
-            <li (click)="viewEnrolledSchedule(ec)">{{i+1}}. {{ec.name}}</li>
-          </ul>
-        </div>
-        <div class="enrolled_pre">
-          <h3> Societies </h3>
-          <ul *ngFor="let es of enrolledSocietyArr; let i = index;">
-            <li (click)="viewEnrolledSchedule(es)">{{i+1}}. {{es.name}}</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    -->
     <div class="schedule">
       <h2> My Schedule </h2>
       <div class="day" *ngFor="let s of sessionsArr">
         <h3>{{s.startDay}} - {{s.startDate | date}} </h3>
         <ul>
-          <li><span>{{s.title}}</span><br> {{s.club.name}} - {{s.startDate | date:"HH:mm"}}hrs - {{s.endDate | date:"HH:mm"}}hrs </li>
+          <li> {{s.title}} - {{s.club.name}} <br> {{s.startDate | date:"HH:mm"}} - {{s.endDate | date:"HH:mm"}} </li>
           <li>Supervisor - {{s.teacherName}}</li>
         </ul>
       </div>

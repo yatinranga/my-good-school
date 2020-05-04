@@ -144,4 +144,23 @@ export class TeacherService {
   createNewSession(sessionForm){
     return this.http.post("/api/session",sessionForm);
   }
+
+  // get Student Session Schedule
+  getSession(duration){
+    return this.http.get("/api/teacher/sessions?sessionFetch="+duration);
+  }
+   // get Session Schedule for a particular club or society
+   getSupervisedClubSession(clubId,duration){
+    return this.http.get("/api/teacher/sessions/club/"+clubId+"?sessionFetch="+duration)
+  }
+
+  // delete Session Schedule
+  deleteSession(sessionId){
+    return this.http.delete("/api/session/"+sessionId);
+  }
+
+  // edit Session Schedule
+  editSession(sessionForm){
+    return this.http.put("/api/session",sessionForm);
+  } 
 }
