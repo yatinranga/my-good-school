@@ -35,9 +35,10 @@ export class AlertService {
         });
     }
 
-    showMessageWithSym(msg: string, type?: SweetAlertType) {
+    showMessageWithSym(msg: string,title?:string, type?: SweetAlertType) {
         swal({
             type: type,
+            title: title,
             text: msg
         });
     }
