@@ -226,7 +226,7 @@ public class TeacherResponse {
 		
 	}
 	public TeacherResponse(Teacher teacher) {
-		this.id = teacher.getcId();
+		this.id = teacher.getCid();
 
 		if (teacher.getUser() != null)
 			this.userId = teacher.getUser().getCid();
@@ -279,7 +279,7 @@ public class TeacherResponse {
 	}
 
 	public TeacherResponse(Teacher teacher, Boolean teacherResponseForUser) {
-		this.id = teacher.getcId();
+		this.id = teacher.getCid();
 
 		if (teacher.getUser() != null)
 			this.userId = teacher.getUser().getCid();

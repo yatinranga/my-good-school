@@ -65,7 +65,7 @@ public interface TeacherService {
 
 	TeacherResponse addOrRemoveActivitiesToTeachers(TeacherRequest request);
 
-	List<ClubMembershipResponse> getPendingMembershipRequests();
+	List<ClubMembershipResponse> getMembershipDetails();
 
 	ClubMembershipResponse updateStatus(String studentId, String activityId, Boolean isVerified);
 

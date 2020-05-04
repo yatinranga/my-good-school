@@ -310,7 +310,7 @@ public class ActivityPerformedResponse {
 		if (activityPerformed.getDateOfActivity() != null)
 			this.dateOfActivity = DateUtil.formatDate(activityPerformed.getDateOfActivity());
 		if (activityPerformed.getTeacher() != null) {
-			this.coachId = activityPerformed.getTeacher().getcId();
+			this.coachId = activityPerformed.getTeacher().getCid();
 			this.coachName = activityPerformed.getTeacher().getName();
 		}
 

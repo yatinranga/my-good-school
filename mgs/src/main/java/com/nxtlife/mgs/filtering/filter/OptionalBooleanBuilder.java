@@ -1,6 +1,7 @@
 package com.nxtlife.mgs.filtering.filter;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.function.Function;
 
 import org.springframework.util.CollectionUtils;
@@ -50,4 +51,11 @@ public class OptionalBooleanBuilder {
     public BooleanExpression build() {
         return predicate;
     }
+
+	public OptionalBooleanBuilder notEmptyAnd(Function<Date, BooleanExpression>  expressionFunction, Date value) {
+		if (value != null) {
+            return new OptionalBooleanBuilder(predicate.and(expressionFunction.apply(value)));
+        }
+        return this;
+	}
 }

@@ -1,6 +1,7 @@
 package com.nxtlife.mgs.util;
 
 import org.apache.commons.lang3.time.DateUtils;
+import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -10,6 +11,10 @@ import com.nxtlife.mgs.ex.ValidationException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.ChronoField;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -96,6 +101,46 @@ public class DateUtil {
 
 	public static Date atEndOfDay(Date date) {
 		return DateUtils.addMilliseconds(DateUtils.ceiling(date, Calendar.DATE), -1);
+	}
+	
+	public static LocalDate getLastDayOfMonth() {
+		return LocalDate.now().with(TemporalAdjusters.lastDayOfMonth());
+	}
+	
+	public static Date getLastDayOfMonth(LocalDate lastDayOfMonth) {
+		if(lastDayOfMonth == null)
+			throw new ValidationException("date cannot be null.");
+		return atEndOfDay(Date.from(lastDayOfMonth.atStartOfDay(defaultTimeZone.toZoneId()).toInstant()));
+	}
+	
+	public static Date getLastWorkingDayOfMonth(LocalDate lastDayOfMonth) {
+		if(lastDayOfMonth == null)
+			throw new ValidationException("date cannot be null.");
+		   LocalDate lastWorkingDayofMonth;
+		   switch (DayOfWeek.of(lastDayOfMonth.get(ChronoField.DAY_OF_WEEK))) {
+//		     case SATURDAY:
+//		       lastWorkingDayofMonth = lastDayOfMonth.minusDays(1);
+//		       break;
+		     case SUNDAY:
+		       lastWorkingDayofMonth = lastDayOfMonth.minusDays(1);
+		       break;
+		     default:
+		       lastWorkingDayofMonth = lastDayOfMonth;
+		   }
+		   return atEndOfDay(Date.from(lastWorkingDayofMonth.atStartOfDay(defaultTimeZone.toZoneId()).toInstant()));
+		 }
+	
+	public static Date getLastDayOfWeek() {
+		 Calendar c = Calendar.getInstance();
+	     c.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+	     c.add(Calendar.DATE,6);
+	     return c.getTime();
+	}
+	
+	public static Date getlastWorkingDayOfWeek(Date lastWorkingDayOfWeek) {
+		if(lastWorkingDayOfWeek == null)
+			throw new ValidationException("date cannot be null.");
+		return  getLastWorkingDayOfMonth(lastWorkingDayOfWeek.toInstant().atZone(defaultTimeZone.toZoneId()).toLocalDate());
 	}
 
 }

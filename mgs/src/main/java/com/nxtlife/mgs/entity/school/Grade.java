@@ -21,17 +21,15 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.nxtlife.mgs.entity.BaseEntity;
+import com.nxtlife.mgs.entity.session.Event;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
 
+@SuppressWarnings("serial")
 @Entity
 @DynamicUpdate(true)
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "section" }))
 public class Grade extends BaseEntity {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	Long id;
 
 	@NotNull
 	private String name;
@@ -63,6 +61,9 @@ public class Grade extends BaseEntity {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "grade")
 	private List<TeacherSchoolGrade> teacherSchoolGrades;
+	
+	@ManyToMany(mappedBy = "grades")
+	private List<Event> sessions;
 
 	public String getName() {
 		return name;
@@ -120,14 +121,6 @@ public class Grade extends BaseEntity {
 		this.cid = cid;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public List<StudentSchoolGrade> getStudentSchoolGrades() {
 		return studentSchoolGrades;
 	}
@@ -155,6 +148,14 @@ public class Grade extends BaseEntity {
 
 	public void setTeachers(List<Teacher> teachers) {
 		this.teachers = teachers;
+	}
+
+	public List<Event> getSessions() {
+		return sessions;
+	}
+
+	public void setSessions(List<Event> sessions) {
+		this.sessions = sessions;
 	}
 
 	public Grade(@NotNull String name, @NotNull String cid, String section, Boolean active, List<School> schools, List<Student> students) {
