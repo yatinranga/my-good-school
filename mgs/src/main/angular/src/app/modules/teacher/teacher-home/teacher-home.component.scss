@@ -2,6 +2,7 @@
 .cands{
     display: inline-flex;
     border: none;
+    width: 75%;
 }
 .club_main {
     background: gainsboro;
@@ -17,6 +18,9 @@
 .club_main ul {
     padding: 0;
     margin: 0;
+}
+.left_col{
+    width: 25%;
 }
 button.btn.register.btn-primary{
     background: #8dc33a;

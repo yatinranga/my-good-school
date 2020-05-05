@@ -1,34 +1,6 @@
-<!-- <div id="banner" class="banner"> -->
-<!-- <img src="assets/images/teacherhome1.jpg"> -->
-<!-- <div class="home_page_content">
-        <h1> Welcome to Supervisor Portal </h1>
-        <div class="menu_main">
-            <div class="menu_content">
-                <h3> About Portal: </h3>
-                <p> Through this Portal, supervisors can view the their profile, manage activities
-                    <br> and review awards. </p>
-            </div>
-            <div class="menu_content">
-                <h3> Profile: </h3>
-                <p> In Profile link, you can view details like Personal Information.</p>
-            </div>
-            <div class="menu_content">
-                <h3> Activities: </h3>
-                <p>In Activities link, you can do the following things - </p>
-                <ul>
-                    <li>Add Activities</li>
-                    <li>Review Activities</li>
-                    <li>Edit Pending Activities</li>
-                </ul>
-            </div>
-            <div class="menu_content">
-                <h3>Awards: </h3>
-                <p>In Awards link, you can review awards.</p>
-            </div>
-        </div>
-    </div> -->
 
-<div>
+<!--
+    <div>
     <table class="table">
         <thead class="thead-dark">
             <tr>
@@ -73,16 +45,23 @@
         </tfoot>
     </table>
 </div>
-
+-->
+<div class="teacher_home">
+        <div class="welcome">
+          <h2> Welcome to My Good School , {{teacherName}} ! </h2>
+          <div class="en_button">
+            <button data-toggle="modal" data-target="#registrationModal" class="enrollment_button">Enrollment Form</button>
+          </div>
+        </div>
     <div class="left_col">
         <div class="schedule">
             <h2> My Schedule </h2>
             <div class="day" *ngFor="let s of sessionsArr; let i = index;">
                 <h3>{{s.criterionValue | date}} - {{s.criterionValue | date:'EEEE'}} </h3>
                 <ul *ngFor="let res of s.responses; let i = index;">
-                    <li>{{i+1}}. {{res.title}}</li>
-                    <li>{{res.club.name}} - {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs
-                    </li>
+                    <li id="session_title"> {{i+1}}. {{res.title}}</li>
+                    <li>{{res.club.name}} </li>
+                    <li>  {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs </li>
                     <li><button (click)="editSessionBtn(s,i)">Edit</button> <button
                             (click)="deleteSession(s,i)">Delete</button></li>
                 </ul>
@@ -106,17 +85,7 @@
         </div>
     </div>
 
-<!-- Session Schedule of a WEEK -->
-<h2> My Schedule </h2>
-<div class="day" *ngFor="let s of sessionsArr; let i = index;">
-    <h3>{{s.criterionValue | date}} - {{s.criterionValue | date:'EEEE'}} </h3>
-    <ul *ngFor="let res of s.responses; let i = index;">
-        <li>{{i+1}}. {{res.title}}</li>
-        <li>{{res.club.name}} - {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs </li>
-        <li><button (click)="editSessionBtn(s,i)">Edit</button> <button (click)="deleteSession(s,i)">Delete</button></li>
-    </ul>
 </div>
-
 
 
     <!-- Create Session Modal -->
