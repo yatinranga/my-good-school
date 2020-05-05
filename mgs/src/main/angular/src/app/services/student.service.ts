@@ -155,4 +155,9 @@ export class StudentService {
     return this.http.get("/api/student/sessions/club/"+clubId+"?teacherId="+teacherId);
   }
 
+  // get List of Students enrolled in a particular Club/Society under specific Supervisor and grade
+  getSupervisorStudent(activityId,teacherId){
+    return this.http.get("/api/students/activity?activityId="+activityId+"&teacherId="+teacherId);
+  }
+
 }

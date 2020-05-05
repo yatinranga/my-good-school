@@ -44,6 +44,7 @@ export class HomeComponent implements OnInit {
   // Details of All Club/Society Modal Variable
   clubName = "";
   sessionView = false;
+  copyStuArr = [];
 
   stu_loader = false;
   sup_loader = false;
@@ -58,7 +59,7 @@ export class HomeComponent implements OnInit {
     this.schoolId = this.studentInfo.student.schoolId;
     this.studentName = this.studentInfo.student.name;
     this.getActivity(this.schoolId); // ALL Activites of School
-    // this.getGrades(this.schoolId); // ALL Grades of School
+    this.getGrades(this.schoolId); // ALL Grades of School
     this.getEnrolledClub(); // List of Enrolled Club
     this.getSessionDetails(); // List of Scheduled Session of a WEEK
   }
@@ -93,11 +94,11 @@ export class HomeComponent implements OnInit {
   }
 
   // List of ALL Grades of a School
-  // getGrades(schoolId) {
-  //   this.studentService.getGradesOfSchool(schoolId).subscribe((res) => {
-  //     this.grades = res;
-  //   }, (err) => { console.log(err) });
-  // }
+  getGrades(schoolId) {
+    this.studentService.getGradesOfSchool(schoolId).subscribe((res) => {
+      this.grades = res;
+    }, (err) => { console.log(err) });
+  }
 
     // Schedule of Selected Enrolled Club/Society
     viewEnrolledSchedule(myClub) {
@@ -128,16 +129,24 @@ export class HomeComponent implements OnInit {
 
   // Filter session on the bases of ALL, UPCOMING and ENDED
   filterSession(val) {
-    this.clubSchedule = this.filter(Object.assign([], this.copySchedule), val);
+    this.clubSchedule = this.filter(Object.assign([], this.copySchedule), val, "Session");
   }
 
-  // Actual Filtering of Sessions on the basis of ALL, UPCOMING and ENDED
-  filter(array: any[], value: string) {
+  // Actual Filtering of Sessions on the basis of type
+  filter(array: any[], value: string , type:string) {
     let filterSessionArr = [];
-    if (value)
-      filterSessionArr = array.filter(e => e.responses[0].status == value);
-    else
-      filterSessionArr = array;
+    if(type=="Session"){
+      if (value)
+        filterSessionArr = array.filter(e => e.responses[0].status == value);
+      else
+        filterSessionArr = array;
+    }
+    if(type=="Student"){
+      if (value)
+        filterSessionArr = array.filter(e => e.gradeId == value);
+      else
+        filterSessionArr = array;
+    }
 
     return filterSessionArr;
   }
@@ -156,7 +165,6 @@ export class HomeComponent implements OnInit {
 
   // List of Supervisor of Selected Club/Society
   getCoaches(actiId) {
-    // this.getStudents(actiId);
     this.coaches = [];
     this.students = [];
     this.gradeId = "";
@@ -170,6 +178,52 @@ export class HomeComponent implements OnInit {
       this.sup_loader = false;
     })
   }
+
+    // Session Schedule of a particular Supervisor
+    getSupervisorSession(obj_sup){
+      this.getStudents(obj_sup.id);
+      this.clubSchedule = []; // reset club schedule
+      this.students = [] //reset club+supervisor+student array
+      this.sessionView = true; // Session+student view
+      
+      this.enrollSch_loader = true; // Supervisor Session loader
+      this.supervisorId = obj_sup.id;
+      this.studentService.getSupervisorSchedule(this.clubId,obj_sup.id).subscribe((res) => {
+        console.log(res.sessions);
+        this.clubSchedule = res.sessions;
+        this.copySchedule = Object.assign([], res.sessions);
+        this.enrollSch_loader = false;
+      },(err) => {console.log(err);
+      this.enrollSch_loader = false;});
+    }
+
+      // List of Student of selected Club/Society under specific Supervisor
+  getStudents(supervisorId) {
+    this.stu_loader = true; // Student loader
+    this.studentService.getSupervisorStudent(this.clubId,supervisorId).subscribe((res) => {
+      this.students = res;
+      this.copyStuArr = Object.assign([], res);
+      console.log(res);
+      this.stu_loader = false;
+    }, (err) => {
+      console.log(err);
+      this.stu_loader = false;
+    });
+  }
+
+  filterStudent(val){
+    this.students = this.filter(Object.assign([], this.copyStuArr), val, "Student");
+
+  }
+  
+    // Registration in a particular Club from Club Details Modal
+    clubRegBtn(){
+      this.alertService.confirmWithoutLoader("info","Are you sure you want to register ?","","Yes").then(result =>{
+        if(result.value){
+          this.clubRegistration();
+        }
+      })
+    }
 
   // List of Supervisor of a particular club of activity during Registration
   getSupervisor(actiId) {
@@ -196,7 +250,7 @@ export class HomeComponent implements OnInit {
       this.alertService.showLoader("");
       this.studentService.postEnrollInClub(this.clubId, this.supervisorId).subscribe(res => {
         console.log(res)
-        this.alertService.showSuccessAlert("Registration Successful");
+        this.alertService.showSuccessAlert("Request Sent");
         $('#registrationModal').modal('hide');
         $('.modal-backdrop').remove();
         this.clearSelected();
@@ -213,43 +267,5 @@ export class HomeComponent implements OnInit {
     this.supervisorId = "";
     this.clubSupervisor = [];
   }
-
- 
-
-
-
-  // List of Student of selected Club/Society
-  getStudents(actiId) {
-    this.stu_loader = true;
-    this.studentService.getActivityStudent(actiId).subscribe((res) => {
-      this.students = res;
-      // this.copyStuArr = Object.assign([], res);
-      console.log(res);
-      this.stu_loader = false;
-    }, (err) => {
-      console.log(err);
-      this.stu_loader = false;
-    });
-  }
-
-  // Session Schedule of a particular Student
-  getSupervisorSession(obj_sup){
-    // console.log(obj_sup.id);
-    this.clubSchedule = [];
-    this.sessionView = true;
-    this.enrollSch_loader = true;
-    this.supervisorId = obj_sup.id;
-    this.studentService.getSupervisorSchedule(this.clubId,obj_sup.id).subscribe((res) => {
-      console.log(res.sessions);
-      this.clubSchedule = res.sessions;
-      this.copySchedule = Object.assign([], res.sessions);
-      this.enrollSch_loader = false;
-    },(err) => {console.log(err);
-    this.enrollSch_loader = false;});
-  }
-
-
-
-
 
 }

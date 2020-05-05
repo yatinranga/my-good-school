@@ -65,7 +65,7 @@
                                             <ng-container *ngFor="let pa of al.activityPerformedResponses; let i = index;">
                                                 <tr data-toggle="collapse" [attr.data-target]="'#collapsed'+i">
                                                     <td>{{i+1}}</td>
-                                                    <td id="actname"> {{pa.activityName}}</td>
+                                                    <td id="actname"> {{pa.criterionValue}}</td>
                                                     <td>Activity Count - {{pa.count}}</td>
                                                     <td>Average Stars - {{pa.averageStars}}</td>
                                                 </tr>
