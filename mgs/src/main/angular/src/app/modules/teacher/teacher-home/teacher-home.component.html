@@ -28,7 +28,7 @@
         </div>
     </div> -->
 
-<!-- <div>
+<div>
     <table class="table">
         <thead class="thead-dark">
             <tr>
@@ -72,7 +72,7 @@
             </tr>
         </tfoot>
     </table>
-</div> -->
+</div>
 
 
 <!-- LIST of SUPERVISED CLUBS -->
@@ -91,11 +91,12 @@
 
 <!-- Session Schedule of a WEEK -->
 <h2> My Schedule </h2>
-<div class="day" *ngFor="let s of sessionsArr; let i = index">
-    <h3>{{s.startDate | date}} - {{s.startDay}} </h3>
-    <ul>
-        <li><span>{{s.title}}</span><br> {{s.club.name}} - {{s.startDate | date:"HH:mm"}}hrs -
-            {{s.endDate | date:"HH:mm"}}hrs <button (click)="editSessionBtn(s,i)">Edit</button> <button (click)="deleteSession(s,i)">Delete</button></li>
+<div class="day" *ngFor="let s of sessionsArr; let i = index;">
+    <h3>{{s.criterionValue | date}} - {{s.criterionValue | date:'EEEE'}} </h3>
+    <ul *ngFor="let res of s.responses; let i = index;">
+        <li>{{i+1}}. {{res.title}}</li>
+        <li>{{res.club.name}} - {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs </li>
+        <li><button (click)="editSessionBtn(s,i)">Edit</button> <button (click)="deleteSession(s,i)">Delete</button></li>
     </ul>
 </div>
 
@@ -164,7 +165,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" (click)="resetForm()">Reset</button>
-                <button type="submit" class="btn btn-primary" [disabled]="createSessionForm.invalid" (click)="createSession()">Create</button>
+                <button type="submit" class="btn btn-primary" [disabled]="createSessionForm.valid" (click)="createSession()">Create</button>
             </div>
         </div>
     </div>
