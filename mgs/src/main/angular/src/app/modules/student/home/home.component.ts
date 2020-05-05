@@ -14,7 +14,7 @@ export class HomeComponent implements OnInit {
   coaches = [];
   students = [];
   grades = [];
-  copyStuArr = [];
+  copySchedule = [];
 
   sportArr = [];
   skillArr = [];
@@ -38,16 +38,18 @@ export class HomeComponent implements OnInit {
 
   // Schedule Modal Variable
   enrolledName = "";
-  sessionTitle = "";
   clubSchedule = [];
   enrollSch_loader = false;
 
   // Details of All Club/Society Modal Variable
   clubName = "";
+  sessionView = false;
 
   stu_loader = false;
   sup_loader = false;
   csup_loader = false;
+
+  filterVal = ""; // filter the activity by ALL, UPCOMING and ENDED
 
   constructor(private studentService: StudentService, public alertService: AlertService) { }
 
@@ -55,10 +57,10 @@ export class HomeComponent implements OnInit {
     this.studentInfo = JSON.parse(localStorage.getItem('user_info'));
     this.schoolId = this.studentInfo.student.schoolId;
     this.studentName = this.studentInfo.student.name;
-    this.getActivity(this.schoolId);
-    this.getGrades(this.schoolId);
-    this.getEnrolledClub();
-    this.getSessionDetails();
+    this.getActivity(this.schoolId); // ALL Activites of School
+    // this.getGrades(this.schoolId); // ALL Grades of School
+    this.getEnrolledClub(); // List of Enrolled Club
+    this.getSessionDetails(); // List of Scheduled Session of a WEEK
   }
 
   // get List of Activities of School
@@ -85,33 +87,91 @@ export class HomeComponent implements OnInit {
   // List of Sessions in current week
   getSessionDetails() {
     this.studentService.getSession("week").subscribe((res) => {
-      console.log(res);
-      this.sessionsArr = res;
+      console.log(res.sessions);
+      this.sessionsArr = res.sessions;
     }, (err) => { console.log(err); });
   }
 
-  getGrades(schoolId) {
-    this.studentService.getGradesOfSchool(schoolId).subscribe((res) => {
-      this.grades = res;
-    }, (err) => { console.log(err) });
-  }
+  // List of ALL Grades of a School
+  // getGrades(schoolId) {
+  //   this.studentService.getGradesOfSchool(schoolId).subscribe((res) => {
+  //     this.grades = res;
+  //   }, (err) => { console.log(err) });
+  // }
 
-  filterStudent() {
-    this.students = this.filter(Object.assign([], this.copyStuArr));
-  }
-
-  // Actual Filtering on the basis of PSD , Focus Area and 4S
-  filter(array: any[]) {
-    let filterStudentArr = [];
-    if (this.gradeId) {
-      filterStudentArr = array.filter(e => e.gradeId == this.gradeId);
-    } else {
-      filterStudentArr = array;
+    // Schedule of Selected Enrolled Club/Society
+    viewEnrolledSchedule(myClub) {
+      console.log(myClub.name + " clicked");
+      this.enrollSch_loader = true;
+      this.clubSchedule = [];
+      this.enrolledName = "";
+      this.filterVal = "";
+      $('#enrolledScheduleModal').modal('show');
+      this.enrolledName = myClub.name;
+      this.getScheduleOfClub(myClub.id);
     }
-    return filterStudentArr;
+
+      // Get Session Schedule of selected Club/Society
+  getScheduleOfClub(clubId, duration?) {
+    this.enrollSch_loader = true;
+    this.clubSchedule = [];
+    this.studentService.getEnrolledClubSession(clubId).subscribe((res) => {
+      console.log(res.sessions);
+      this.clubSchedule = res.sessions;
+      this.copySchedule = Object.assign([], res.sessions);
+      this.enrollSch_loader = false
+    }, (err) => {
+      console.log(err);
+      this.enrollSch_loader = false;
+    });
+  }  
+
+  // Filter session on the bases of ALL, UPCOMING and ENDED
+  filterSession(val) {
+    this.clubSchedule = this.filter(Object.assign([], this.copySchedule), val);
   }
 
-  // List of Supervisor of a particular club of activity
+  // Actual Filtering of Sessions on the basis of ALL, UPCOMING and ENDED
+  filter(array: any[], value: string) {
+    let filterSessionArr = [];
+    if (value)
+      filterSessionArr = array.filter(e => e.responses[0].status == value);
+    else
+      filterSessionArr = array;
+
+    return filterSessionArr;
+  }
+
+   // Details of All Clubs and Societies
+   clubDetails(clubObj) {
+    $('#clubDetailsModal').modal('show');
+    this.clubName = clubObj.name;
+    this.clubId = clubObj.id;
+    this.supervisorId = "";
+    this.sessionView = false;
+    this.getCoaches(clubObj.id);
+    // this.getScheduleOfClub(clubObj.id);
+    console.log(clubObj);
+  }
+
+  // List of Supervisor of Selected Club/Society
+  getCoaches(actiId) {
+    // this.getStudents(actiId);
+    this.coaches = [];
+    this.students = [];
+    this.gradeId = "";
+    this.sup_loader = true;
+    this.studentService.getCoach(this.schoolId, actiId).subscribe((res) => {
+      this.coaches = res;
+      console.log(res);
+      this.sup_loader = false;
+    }, (err) => {
+      console.log(err);
+      this.sup_loader = false;
+    })
+  }
+
+  // List of Supervisor of a particular club of activity during Registration
   getSupervisor(actiId) {
     this.clubId = "";
     this.supervisorId = "";
@@ -126,7 +186,7 @@ export class HomeComponent implements OnInit {
       console.log(err);
       this.csup_loader = false;
     })
-  }
+  }    
 
   // Register in specific club/society
   clubRegistration() {
@@ -154,51 +214,16 @@ export class HomeComponent implements OnInit {
     this.clubSupervisor = [];
   }
 
-  // Schedule of Selected Enrolled Club/Society
-  viewEnrolledSchedule(myClub) {
-    console.log(myClub.name + " clicked");
-    this.enrollSch_loader = true;
-    this.clubSchedule = [];
-    this.enrolledName = "";
-    this.sessionTitle = "";
-    $('#enrolledScheduleModal').modal('show');
-    this.enrolledName = myClub.name;
-    this.sessionTitle = myClub.title;
-    this.getScheduleOfClub(myClub.id);
-  }
+ 
 
-  // Details of All Clubs and Societies
-  clubDetails(clubObj){
-    $('#clubDetailsModal').modal('show');
-    this.clubName=clubObj.name;
-    this.getCoaches(clubObj.id);
-    this.getScheduleOfClub(clubObj.id);
-    console.log(clubObj);
-  }
-  
-  // List of Supervisor of Selected Club/Society
-  getCoaches(actiId) {
-    this.getStudents(actiId);
-    this.coaches = [];
-    this.students = [];
-    this.gradeId = "";
-    this.sup_loader = true;
-    this.studentService.getCoach(this.schoolId, actiId).subscribe((res) => {
-      this.coaches = res;
-      console.log(res);
-      this.sup_loader = false;
-    }, (err) => {
-      console.log(err);
-      this.sup_loader = false;
-    })
-  }
+
 
   // List of Student of selected Club/Society
   getStudents(actiId) {
     this.stu_loader = true;
     this.studentService.getActivityStudent(actiId).subscribe((res) => {
       this.students = res;
-      this.copyStuArr = Object.assign([], res);
+      // this.copyStuArr = Object.assign([], res);
       console.log(res);
       this.stu_loader = false;
     }, (err) => {
@@ -207,19 +232,23 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  // Get Session Schedule of selected Club/Society
-  getScheduleOfClub(clubId){
-    this.enrollSch_loader = true;
+  // Session Schedule of a particular Student
+  getSupervisorSession(obj_sup){
+    // console.log(obj_sup.id);
     this.clubSchedule = [];
-    this.studentService.getEnrolledClubSession(clubId, "month").subscribe((res) => {
-      console.log(res);
-      this.clubSchedule = res;
-      this.enrollSch_loader = false
-    }, (err) => {
-      console.log(err);
+    this.sessionView = true;
+    this.enrollSch_loader = true;
+    this.supervisorId = obj_sup.id;
+    this.studentService.getSupervisorSchedule(this.clubId,obj_sup.id).subscribe((res) => {
+      console.log(res.sessions);
+      this.clubSchedule = res.sessions;
+      this.copySchedule = Object.assign([], res.sessions);
       this.enrollSch_loader = false;
-    });
+    },(err) => {console.log(err);
+    this.enrollSch_loader = false;});
   }
+
+
 
 
 
