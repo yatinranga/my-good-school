@@ -160,8 +160,8 @@ export class TeacherHomeComponent implements OnInit {
   // List of Sessions in current week
   getSessionDetails() {
     this.teacherService.getSession("week").subscribe((res) => {
-      console.log(res);
-      this.sessionsArr = res;
+      console.log(res.sessions);
+      this.sessionsArr = res.sessions;
     }, (err) => { console.log(err); });
   }
 
