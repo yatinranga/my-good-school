@@ -1,6 +1,6 @@
 
 .left_col{
-    border: none;
+    width: 33%;
 }
 .enrolled_main{
     width: 100%;
@@ -24,15 +24,21 @@
 }
 .enrolled_main li {
     font-size: 17px;
-    line-height: 35px;
+    line-height: 40px;
     color: #555;
 }
 .enrolled_main ul {
-    padding: 0 10px;
+    padding: 0 5px;
     margin: 0;
     text-align: left;
 }
-
+.schedule{
+    margin-top: 20px;
+}
+.cands {
+    width: 67%;
+    padding: 0 20px 0 30px;
+}
 .society_main {
     width: 49%;
     float: right;
@@ -58,7 +64,7 @@
     text-align: center;
 }
 .fourskill ul{
-    padding: 0 25px;
+    padding: 0 10px;
     margin: 0;
 }
 .fourskill li{
@@ -99,13 +105,71 @@
     border-bottom: 1px solid #333; 
     color: #333;
 }
-
-
 button.btn.register.btn-primary{
     background: #8dc33a;
 }
+
+/*--------------------------------------MODAL------------------------------*/
+
 .modal-content {
     border: 5px solid #b4d673;
     top: 100px;
 }
-
+.enr_modal.modal-content .modal-body{
+    padding: 10px;
+    display: inline-block;
+}
+.enr_modal.modal-content select, .all_act.modal-content select{
+    float: right;
+    width: 110px;
+    height: 31px;
+}
+.enr_modal.modal-content .day_pre{
+    display: inline-block;
+    width: 100%;
+}
+.day_pre .day h3{
+    margin-top: 0;
+}
+.day ul li {
+    line-height: 30px;
+    padding: 0 20px;
+}
+li#session_title {
+    font-size: 19px;
+    font-weight: normal;
+    word-spacing: 3px;
+    padding: 0px;
+}
+.modal-title{
+    font-size: 26px;
+    color: black;
+}
+button.register_button.btn.btn-primary.btn-sm {
+    float: right;
+}
+.all_act.modal-content ul {
+    padding: 0;
+    margin: 0;
+}
+.all_act.modal-content ul li {
+    padding: 0 0 0 10px;
+    margin: 0;
+}
+.all_act.modal-content li#session_title {
+    color: red;
+}
+.all_act.modal-content h5 {
+    font-size: 21px;
+    color: cornflowerblue;
+}
+.day_post .day h3 {
+    font-size: 20px;
+}
+.day_post li#session_title {
+    color: #333 !important;
+    font-size: 18px;
+}
+.day_post ul li{
+   padding: 0 0 0 20px;
+}

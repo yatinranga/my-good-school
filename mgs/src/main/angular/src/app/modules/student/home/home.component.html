@@ -2,19 +2,39 @@
   <div class="welcome">
     <h2> Welcome to My Good School , {{studentName}} ! </h2>
     <div class="en_button">
-      <button data-toggle="modal" data-target="#registrationModal" class="enrollment_button" >Enrollment Form</button>
+      <button data-toggle="modal" data-target="#registrationModal" class="enrollment_button">Enrollment Form</button>
     </div>
   </div>
 
   <div class="left_col">
+
+    <div class="enrolled_main">
+      <h2> My Enrolled </h2>
+      <!-- list of enrolled clubs and societies -->
+      <div class="fourskill_main">
+        <div class="enrolled_pre">
+          <h3> Clubs </h3>
+          <ul *ngFor="let ec of enrolledClubsArr; let i = index;">
+            <li (click)="viewEnrolledSchedule(ec)">{{i+1}}. {{ec.name}}</li>
+          </ul>
+        </div>
+        <div class="enrolled_pre">
+          <h3> Societies </h3>
+          <ul *ngFor="let es of enrolledSocietyArr; let i = index;">
+            <li (click)="viewEnrolledSchedule(es)">{{i+1}}. {{es.name}}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
     <div class="schedule">
       <h2> My Schedule </h2>
       <div class="day" *ngFor="let s of sessionsArr; let i = index;">
         <h3>{{s.criterionValue | date}} - {{s.criterionValue | date:'EEEE'}} </h3>
         <ul *ngFor="let res of s.responses; let i = index;">
-          <li>{{i+1}}. {{res.title}}</li>
-          <li> {{res.club.name}} - {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs </li>
-          <li>Supervisor - {{res.teacherName}}</li><br>
+          <li id="session_title"> {{i+1}}. {{res.title}} ({{res.club.name}})</li>
+          <li> {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs </li>
+          <li>Supervisor - {{res.teacherName}}</li> <br>
         </ul>
       </div>
     </div>
@@ -55,7 +75,7 @@
           <h3> Sport </h3>
           <ul *ngFor="let sport of sportArr">
             <li (click)="clubDetails(sport)">{{sport.name}}</li>
-          </ul> 
+          </ul>
         </div>
       </div>
     </div>
@@ -134,13 +154,14 @@
           <div class="input-group-prepend">
             <label class="input-group-text" for="inputGroupSelect01">Select Supervisor</label>
           </div>
-          <select class="custom-select" id="inputGroupSelect01" [(ngModel)]="supervisorId" [disabled]="csup_loader||!clubSupervisor.length">
+          <select class="custom-select" id="inputGroupSelect01" [(ngModel)]="supervisorId"
+            [disabled]="csup_loader||!clubSupervisor.length">
             <option value="" disabled>Select One</option>
             <option *ngFor="let sup of clubSupervisor" value={{sup.id}}>{{sup.name}}</option>
           </select>
           <div class="spinner-border text-info" role="status" *ngIf="csup_loader"></div>
-          <span *ngIf="!csup_loader&&!clubSupervisor.length"
-               style="color: red">No Supervisor for corresponding club/society</span>
+          <span *ngIf="!csup_loader&&!clubSupervisor.length" style="color: red">No Supervisor for corresponding
+            club/society</span>
         </div>
       </div>
       <div class="modal-footer">
@@ -155,7 +176,7 @@
 <div class="modal fade" id="enrolledScheduleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
   aria-hidden="true" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" role="document">
-    <div class="modal-content">
+    <div class="enr_modal modal-content">
       <div class="modal-header">
         <h4 class="modal-title" id="exampleModalLabel">{{enrolledName}}</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -164,10 +185,11 @@
       </div>
       <div class="modal-body">
 
-        <select name="status" [disabled]="enrollSch_loader" (ngModelChange)="filterSession($event)" [(ngModel)]="filterVal"> Filter : 
+        <select name="status" [disabled]="enrollSch_loader" (ngModelChange)="filterSession($event)"
+          [(ngModel)]="filterVal"> Filter :
           <option value="" selected>ALL</option>
           <option value="upcoming">UPCOMIMG</option>
-          <option value="ended">ENDED</option>          
+          <option value="ended">ENDED</option>
         </select>
 
         <div *ngIf="enrollSch_loader">
@@ -175,16 +197,18 @@
           </div>{{enrollSch_loader?' Loading...':''}}
         </div>{{clubSchedule.length==0&&!enrollSch_loader?'No Session Available !': ''}}
 
-        <div class="day" *ngFor="let club of clubSchedule; let i = index;">
-          <h3>{{club.criterionValue | date}} - {{club.criterionValue | date:'EEEE'}} </h3>
-          <ul *ngFor="let res of club.responses; let i = index;">
-            <li>{{i+1}}. {{res.title}} 
-              <span *ngIf="res.status=='upcoming'" style="color: red">({{res.status | uppercase}})</span>
-              <span *ngIf="res.status=='ended'" style="color: green">({{res.status | uppercase}})</span>
-              <li> 
-            <li>{{res.club.name}} - {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs </li>
-            <li>Supervisor - {{res.teacherName}}</li><br>
-          </ul>
+        <div class="day_pre">
+          <div class="day" *ngFor="let club of clubSchedule; let i = index;">
+            <h3>{{club.criterionValue | date}} - {{club.criterionValue | date:'EEEE'}} </h3>
+            <ul *ngFor="let res of club.responses; let i = index;">
+              <li id="session_title"> {{i+1}}. {{res.title}}
+                <span *ngIf="res.status=='upcoming'" style="color: green">({{res.status | uppercase}})</span>
+                <span *ngIf="res.status=='ended'" style="color: red">({{res.status | uppercase}})</span>
+              <li>
+              <li>{{res.club.name}} - {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs </li>
+              <li>Supervisor - {{res.teacherName}}</li><br>
+            </ul>
+          </div>
         </div>
       </div>
       <div class="modal-footer">
@@ -198,10 +222,9 @@
 <div class="modal fade bd-example-modal-lg" id="clubDetailsModal" tabindex="-1" role="dialog"
   aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog modal-lg">
-    <div class="modal-content">
+    <div class="all_act modal-content">
       <div class="modal-header">
-        <h3 class="modal-title" id="exampleModalLabel">{{clubName}} Details 
-          <div><button [disabled]="!(clubId && supervisorId)" class="btn btn-primary btn-sm">Register</button></div></h3>
+        <h3 class="modal-title" id="exampleModalLabel">{{clubName}} </h3>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -210,20 +233,23 @@
         <div class="container-fluid">
           <div class="row">
             <div class="col-md-12">
-              <h5>List of Supervisor :</h5>
+              <h5>List of Supervisors :</h5>
               <ul>
-                <li *ngFor="let c of coaches; let i = index" (click)="getSupervisorSession(c)"> {{i+1}}. {{c.name}} - {{c.profileBrief}}<br></li>
+                <li *ngFor="let c of coaches; let i = index" (click)="getSupervisorSession(c)" id="session_title">
+                  {{i+1}}. {{c.name}} - </li>
+                <li *ngFor="let c of coaches; let i = index" (click)="getSupervisorSession(c)"> {{c.profileBrief}} </li>
                 <li *ngIf="coaches.length==0" id="null">
                   <div class="spinner-border text-secondary" role="status" *ngIf="sup_loader">
-                  </div>{{sup_loader ? '  Loading...' : 'No Supervisor'}} 
+                  </div>{{sup_loader ? '  Loading...' : 'No Supervisor'}}
                 </li>
               </ul>
             </div>
-            
-          </div><hr>
+
+          </div>
+          <hr>
           <div class="row">
             <div class="col-md-6 ml-auto" *ngIf="sessionView">
-              <h5>List of Students :</h5> 
+              <h5>List of Students :</h5>
               <div>Under Development</div>
               <!-- <ul>
                 <li *ngFor="let s of students; let i = index"> {{i+1}}. {{s.name}} - {{s.grade}} {{s.section}}</li>
@@ -234,19 +260,19 @@
               </ul> -->
             </div>
             <div class="col-md-6 ml-auto" *ngIf="sessionView">
-              <h5>Session Schedule :</h5>
-
-              <select name="status" [disabled]="enrollSch_loader" (ngModelChange)="filterSession($event)" [(ngModel)]="filterVal"> Filter : 
+              <select name="status" [disabled]="enrollSch_loader" (ngModelChange)="filterSession($event)"
+                [(ngModel)]="filterVal"> Filter :
                 <option value="" selected>ALL</option>
                 <option value="upcoming">UPCOMIMG</option>
-                <option value="ended">ENDED</option>          
+                <option value="ended">ENDED</option>
               </select>
+              <h5>Session Schedule :</h5>
 
               <div *ngIf="enrollSch_loader">
                 <div class="spinner-border text-secondary" role="status" *ngIf="enrollSch_loader">
                 </div>{{enrollSch_loader?'  Loading...':''}}
               </div>{{clubSchedule.length==0&&!enrollSch_loader?'No Session Available !': ''}}
-      
+
               <!-- <div class="day" *ngFor="let club of clubSchedule">
                 <h3>{{club.startDate | date}} - {{club.startDay}} </h3>
                 <ul>
@@ -254,17 +280,19 @@
                     {{club.endDate | date:"HH:mm"}}hrs </li>
                 </ul>
               </div> -->
-
-              <div class="day" *ngFor="let club of clubSchedule; let i = index;">
-                <h3>{{club.criterionValue | date}} - {{club.criterionValue | date:'EEEE'}} </h3>
-                <ul *ngFor="let res of club.responses; let i = index;">
-                  <li>{{i+1}}. {{res.title}} 
-                    <span *ngIf="res.status=='upcoming'" style="color: red">({{res.status | uppercase}})</span>
-                    <span *ngIf="res.status=='ended'" style="color: green">({{res.status | uppercase}})</span>
-                    <li> 
-                  <li>{{res.club.name}} - {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs </li>
-                </ul>
+              <div class="day_post">
+                <div class="day" *ngFor="let club of clubSchedule; let i = index;">
+                  <h3>{{club.criterionValue | date}} - {{club.criterionValue | date:'EEEE'}} </h3>
+                  <ul *ngFor="let res of club.responses; let i = index;">
+                    <li id="session_title"> {{i+1}}. {{res.title}}
+                      <span *ngIf="res.status=='upcoming'" style="color: red">({{res.status | uppercase}})</span>
+                      <span *ngIf="res.status=='ended'" style="color: green">({{res.status | uppercase}})</span>
+                    <li>
+                    <li>{{res.club.name}} - {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs </li>
+                  </ul>
+                </div>
               </div>
+
             </div>
           </div>
         </div>

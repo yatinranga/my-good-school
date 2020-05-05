@@ -344,6 +344,7 @@ button.enrollment_button {
     display: inline-block;
     float: left;
     border-right: 2px solid lightgrey;
+    padding-right: 35px;
 }
 .schedule{
     width: 100%;
@@ -353,13 +354,13 @@ button.enrollment_button {
     height: 100%;
     position: relative;
 }
-.schedule h2{
+.enrolled_main h2, .schedule h2{
     font-size: 30px;
     color: #159487;
-    margin-bottom: 10px;
+    margin: 5px 0 10px 0;
 }
 .day h3 {
-    font-size: 21px;
+    font-size: 22px;
     margin-top: 20px;
 }
 .day {
@@ -376,34 +377,33 @@ button.enrollment_button {
     margin: 0;
 }
 .day:first-child h3 {
-    color: #4bafa5;
-}
-.day:nth-child(2) h3 {
     color: #e04090;
 }
+.day:nth-child(2) h3 {
+    color: #7c00c3;
+}
 .day:nth-child(3) h3 {
-    color: #1f69ad;
+    color: #4bafa5;
 }
 .day:nth-child(4) h3 {
     color: #8dc33a;
 }
 .day:nth-child(5) h3 {
-    color: #c3005b;
+    color: #1f69ad;
 }
 .day:last-child h3 {
-    color: #7c00c3;
+    color: #1ab3bb;
+    
 }
 .cands{
     width: 78%;
     padding: 0 20px 0 40px;
     display: inline-block;
-    border-left: 2px solid lightgrey;
-    margin-left: 20px;
 }
 .cands h2{
     font-size: 30px;
     color: #159487;
-    margin: 0 0 20px 15px;
+    margin: 0 0 15px 15px;
 }
 .fourskill_main {
     width: 100%;
