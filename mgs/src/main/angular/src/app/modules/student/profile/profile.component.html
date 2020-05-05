@@ -19,6 +19,7 @@
                             </label> </p>
                         <p> <i class="fa fa-envelope"></i><label> {{studentDetails['email']}}</label> </p>
                         <p> <i class="fa fa-phone-alt"></i><label> {{studentDetails['mobileNumber']}}</label> </p>
+                        <p> <i class="fa fa-phone-alt"></i> <label> Enrollment Year - {{studentDetails['yearOfEnrolment']}} </label></p>
                     </div>
                 </div>
 
@@ -44,7 +45,6 @@
 <input style="display : none" name="profilePhoto" type="file" accept=".png, .jpg, .jpeg" #photoInput
     (change)="onFileSelect($event)">
 
-<div>Enrollment Year = {{studentDetails['yearOfEnrolment']}}</div>
 
 <!-- list of enrolled clubs and societies -->
 
