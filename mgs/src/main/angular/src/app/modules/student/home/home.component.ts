@@ -158,8 +158,8 @@ export class HomeComponent implements OnInit {
     this.clubId = clubObj.id;
     this.supervisorId = "";
     this.sessionView = false;
+    this.sup_loader = true;
     this.getCoaches(clubObj.id);
-    // this.getScheduleOfClub(clubObj.id);
     console.log(clubObj);
   }
 
