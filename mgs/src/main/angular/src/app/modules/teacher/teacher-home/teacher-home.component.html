@@ -161,7 +161,7 @@
 <div class="modal fade" id="clubDetailsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
 data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg" >
-      <div class="modal-content">
+      <div class="all_act modal-content">
         <div class="modal-header">
           <h3 class="modal-title" id="exampleModalLabel">{{clubName}} Details</h3>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -172,24 +172,23 @@ data-backdrop="static" data-keyboard="false">
           <div class="conatiner-fluid">
               <div class="row">
                   <div class="col-md-6">
-                      <h5>List of Students :</h5>
-                    Under Development
+                      <h5>List of Students :</h5> Under Development
                   </div>
                   <div class="col-md-6">
-                      <h5>Requests :</h5>
-                      Under Development
+                      <h5>Requests :</h5> Under Development
                 </div>
-
-              </div><hr>
+              </div>
+              <hr>
               <div class="row">
                   <div class="col-md-12">
-                    <h5>Session Schedule :</h5>
-
-                    <select name="status" [disabled]="clubSch_loader" (ngModelChange)="filterSession($event)" [(ngModel)]="filterVal"> Filter : 
+                    <div class="act_details_section_two">
+                        <h5>Session Schedule :</h5>
+                      <select name="status" [disabled]="clubSch_loader" (ngModelChange)="filterSession($event)" [(ngModel)]="filterVal"> Filter : 
                         <option value="" selected>ALL</option>
                         <option value="upcoming">UPCOMIMG</option>
                         <option value="ended">ENDED</option>
                       </select>
+                    </div>
 
                     <div *ngIf="clubSch_loader">
                         <div class="spinner-border text-secondary" role="status" *ngIf="clubSch_loader">

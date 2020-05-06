@@ -119,11 +119,6 @@ button.btn.register.btn-primary{
     padding: 10px;
     display: inline-block;
 }
-.enr_modal.modal-content select, .all_act.modal-content select{
-    float: right;
-    width: 115px;
-    height: 29px;
-}
 .enr_modal.modal-content .day_pre{
     display: inline-block;
     width: 100%;
@@ -138,46 +133,10 @@ button.btn.register.btn-primary{
 button.register_button.btn.btn-primary.btn-sm {
     float: right;
 }
-.all_act.modal-content ul {
-    padding: 0;
-    margin: 0;
-}
-.all_act.modal-content ul li {
-    padding: 0 0 0 20px;
-    margin: 0;
-}
-.all_act.modal-content li#session_title {
-    color: red;
-}
-.all_act.modal-content h5 {
-    font-size: 21px;
-    color: cornflowerblue;
-}
 .all_act.modal-content .day_post {
     width: 100%;
     display: inline-block;
     margin-top: 15px;
-}
-.day_post h3 {
-    font-size: 21px;
-}
-.day_post li#session_title {
-    color: #333 !important;
-    font-size: 18px;
-}
-.day_post ul li{
-   padding: 0 0 0 20px;
-   font-size: 17px;
-   color: #333;
-}
-.act_details_section_two{
-    width: 100%;
-    display: inline-block;
-}
-.act_details_section_two h5, .day_post .day h5{
-    font-size: 20px;
-    margin: 0;
-    float: left;
 }
 ul#student_list li {
     padding: 0;

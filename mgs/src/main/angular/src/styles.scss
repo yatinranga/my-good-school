@@ -338,6 +338,7 @@ button.enrollment_button {
     border-radius: 4px;
     padding: 3px 5px;
     cursor: pointer;
+    width: 150px;
 }
 .left_col{
     width: 20%;
@@ -392,7 +393,6 @@ button.enrollment_button {
 }
 .day:last-child h3 {
     color: #1ab3bb;
-    
 }
 .cands{
     width: 78%;
@@ -434,6 +434,48 @@ li#session_title {
     box-shadow: 0 0 10px #eee;
     border-radius: 4px;
 }
+.act_details_section_two{
+    width: 100%;
+    display: inline-block;
+}
+.all_act.modal-content ul {
+    padding: 0;
+    margin: 0;
+}
+.all_act.modal-content ul li {
+    padding: 0 0 0 20px;
+    margin: 0;
+}
+.all_act.modal-content li#session_title {
+    color: red;
+}
+.all_act.modal-content h5 {
+    font-size: 21px;
+    color: cornflowerblue;
+}
+.day_post h3 {
+    font-size: 21px;
+}
+.day_post li#session_title {
+    color: #333 !important;
+    font-size: 18px;
+}
+.day_post ul li{
+   padding: 0 0 0 20px;
+   font-size: 17px;
+   color: #333;
+}
+.act_details_section_two h5, .day_post .day h5{
+    font-size: 20px;
+    margin: 0;
+    float: left;
+}
+.enr_modal.modal-content select, .all_act.modal-content select, .act_details_section_two select{
+    float: right;
+    width: 115px;
+    height: 29px;
+}
+
 /*-------------------------------------NAVIGATION BAR-------------------------------------*/
 
 
