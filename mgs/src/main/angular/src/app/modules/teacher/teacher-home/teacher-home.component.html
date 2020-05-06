@@ -72,88 +72,114 @@
             </tr>
         </tfoot>
     </table>
-
-
-
-
-</div>
-<!-- LIST of SUPERVISED CLUBS -->
-<div> CLUBS:
-    <ul *ngFor="let c of assignedClubsArr">
-        <li>{{c.name}}</li>
-    </ul>
 </div>
 
-<!-- LIST of SUPERVISED SOCIETIES -->
-<div> SOCIETIES:
-    <ul *ngFor="let s of assignedSocietyArr">
-        <li>{{s.name}}</li>
-    </ul>
-</div>
-
-
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createSessionModal">
-    Create Session
-  </button>
-
-  <!-- Create Session Modal -->
-<div class="modal fade" id="createSessionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" 
-aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Session Details</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetForm()">
-            <span aria-hidden="true">&times;</span>
-          </button>
+    <div class="left_col">
+        <div class="schedule">
+            <h2> My Schedule </h2>
+            <div class="day" *ngFor="let s of sessionsArr; let i = index;">
+                <h3>{{s.criterionValue | date}} - {{s.criterionValue | date:'EEEE'}} </h3>
+                <ul *ngFor="let res of s.responses; let i = index;">
+                    <li>{{i+1}}. {{res.title}}</li>
+                    <li>{{res.club.name}} - {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs
+                    </li>
+                    <li><button (click)="editSessionBtn(s,i)">Edit</button> <button
+                            (click)="deleteSession(s,i)">Delete</button></li>
+                </ul>
+            </div>
         </div>
-        <div class="modal-body">
-          <form [formGroup]="createSessionForm" (ngSubmit)="createSessionForm">
-              <div class="form-group">
-                <h5 style="color: red"> Note : All Fields Are Mandatory </h5>
-                <label for="recipient-name" class="col-form-label">Session Number : </label>
-                <input type="number" class="form-control add" name="sessionNumber" placeholder="Enter Session Number Here" formControlName="number">
-              </div>
-
-              <div class="form-group">
-                <label for="recipient-name" class="col-form-label">Date : </label>
-                <input type="date" class="form-control" name="startDate" formControlName="startDate">
-              </div>
-
-              <div class="form-group">
-                <label for="recipient-name" class="col-form-label">Timing : </label>
-                <input type="time" class="form-control" name="startTime" [(ngModel)]="startTime" [ngModelOptions]="{standalone: true}">
-                <input type="time" class="form-control" name="endTime" [(ngModel)]="endTime" [ngModelOptions]="{standalone: true}">
-              </div>
-
-              <div class="form-group">
-                <label for="recipient-name" class="col-form-label">Name of Session : </label>
-                <input type="text" class="form-control add" name="title" placeholder="Add Title Here" formControlName="title">
-              </div>
-              <div class="form-group">
-                <label for="recipient-name" class="col-form-label">Club/Society : </label>
-                <select class="form-control" name="activityId" formControlName="clubId">
-                    <option [ngValue]=null selected disabled>Select One</option>
-                    <option *ngFor="let acti of allAssignedActi" value={{acti.id}}>
-                        {{acti.name}}
-                    </option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="recipient-name" class="col-form-label">Grades : </label>
-                <select class="form-control" name="gradeId" formControlName="gradeIds" multiple>
-                    <option value=null selected disabled >Select Grades</option>
-                    <option *ngFor="let grade of schoolGrades" value={{grade.id}}>
-                        {{grade.grade}} {{grade.section}}
-                    </option>
-                </select>
-              </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="resetForm()">Reset</button>
-          <button type="button" class="btn btn-primary"[disabled]="createSessionForm.invalid" (click)="createSession()">Create</button>
-        </div>
-      </div>
     </div>
-  </div>
+
+    <div class="cands">
+        <div class="club_main">
+            <h2> Clubs </h2>
+            <ul *ngFor="let c of assignedClubsArr">
+                <li>{{c.name}}</li>
+            </ul>
+        </div>
+
+        <div class="club_main">
+            <h2> Societies </h2>
+            <ul *ngFor="let s of assignedSocietyArr">
+                <li>{{s.name}}</li>
+            </ul>
+        </div>
+    </div>
+
+<!-- Session Schedule of a WEEK -->
+<h2> My Schedule </h2>
+<div class="day" *ngFor="let s of sessionsArr; let i = index;">
+    <h3>{{s.criterionValue | date}} - {{s.criterionValue | date:'EEEE'}} </h3>
+    <ul *ngFor="let res of s.responses; let i = index;">
+        <li>{{i+1}}. {{res.title}}</li>
+        <li>{{res.club.name}} - {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs </li>
+        <li><button (click)="editSessionBtn(s,i)">Edit</button> <button (click)="deleteSession(s,i)">Delete</button></li>
+    </ul>
+</div>
+
+
+
+    <!-- Create Session Modal -->
+    <div class="modal fade" id="createSessionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Session Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetForm()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="createSessionForm" (ngSubmit)="createSession()">
+                        <div class="form-group">
+                            <h5 style="color: red"> Note : All Fields Are Mandatory </h5>
+                            <label for="recipient-name" class="col-form-label">Session Number : </label>
+                            <input type="number" class="form-control add" name="sessionNumber"
+                                placeholder="Enter Session Number Here" formControlName="number">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Date : </label>
+                            <input type="date" class="form-control" name="startDate" formControlName="startDate">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Timing : </label>
+                            <input type="time" class="form-control" name="startTime" [(ngModel)]="startTime"
+                                [ngModelOptions]="{standalone: true}">
+                            <input type="time" class="form-control" name="endTime" [(ngModel)]="endTime"
+                                [ngModelOptions]="{standalone: true}">
+                        </div>
+
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Name of Session : </label>
+                        <input type="text" class="form-control add" name="title" placeholder="Add Title Here"
+                            formControlName="title">
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Club/Society : </label>
+                        <select class="form-control" name="activityId" formControlName="clubId">
+                            <option [ngValue]=null selected disabled>Select One</option>
+                            <option *ngFor="let acti of allAssignedActi" value={{acti.id}}>
+                                {{acti.name}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Grades : </label>
+                        <select class="form-control" name="gradeId" formControlName="gradeIds" multiple>
+                            <option value=null selected disabled>Select Grades</option>
+                            <option *ngFor="let grade of schoolGrades" value={{grade.id}}>
+                                {{grade.grade}} {{grade.section}}
+                            </option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="resetForm()">Reset</button>
+                <button type="submit" class="btn btn-primary" [disabled]="createSessionForm.valid" (click)="createSession()">Create</button>
+            </div>
+        </div>
+    </div>

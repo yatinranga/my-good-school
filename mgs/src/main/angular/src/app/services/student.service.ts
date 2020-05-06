@@ -143,8 +143,21 @@ export class StudentService {
   }
   
   // get Session Schedule for a particular club or society
-  getEnrolledClubSession(clubId,duration){
-    return this.http.get("/api/student/sessions/club/"+clubId+"?sessionFetch="+duration)
+  getEnrolledClubSession(clubId,duration?){
+    if(duration)
+      return this.http.get("/api/student/sessions/club/"+clubId+"?sessionFetch="+duration);
+    else
+      return this.http.get("/api/student/sessions/club/"+clubId);
+  }
+
+  // get Session Schedule of a particular Supervisor for a Club/Society
+  getSupervisorSchedule(clubId,teacherId){
+    return this.http.get("/api/student/sessions/club/"+clubId+"?teacherId="+teacherId);
+  }
+
+  // get List of Students enrolled in a particular Club/Society under specific Supervisor and grade
+  getSupervisorStudent(activityId,teacherId){
+    return this.http.get("/api/students/activity?activityId="+activityId+"&teacherId="+teacherId);
   }
 
 }

@@ -25,6 +25,10 @@ export class TeacherHomeComponent implements OnInit {
   startTime: any;
   endTime: any;
 
+  sessionsArr = []; // Get Session of a week
+  createSessionShow = false;
+  editSessionShow = false;
+
 
   constructor(private teacherService: TeacherService, private formBuilder: FormBuilder, private alertService: AlertService) { }
 
@@ -34,6 +38,7 @@ export class TeacherHomeComponent implements OnInit {
     this.clubReqLoader = true;
     this.getAllClubReq();
     this.getAllClubs();
+    this.getSessionDetails();
 
     this.createSessionForm = this.formBuilder.group({
       number: [, [Validators.required]],
@@ -109,18 +114,20 @@ export class TeacherHomeComponent implements OnInit {
 
   // Create Session
   createSession() {
+    console.log("create session");
     this.createSessionForm.value.endDate = this.createSessionForm.value.startDate + " " + this.endTime + ":00";
     this.createSessionForm.value.startDate = this.createSessionForm.value.startDate + " " + this.startTime + ":00";
     console.log(this.createSessionForm.value);
 
+    this.alertService.showLoader("");
     this.teacherService.createNewSession(this.createSessionForm.value).subscribe((res) => {
       console.log(res);
       $('#createSessionModal').modal('hide');
       $('.modal-backdrop').remove();
-      this.alertService.showErrorAlert("Session Created !");
-    }, (err) => { console.log(err); })
-
-
+      this.alertService.showMessageWithSym("Session Created !","Success","success");
+      this.resetForm();
+    }, (err) => { console.log(err);
+     });
   }
 
   // Reset Form
@@ -150,4 +157,83 @@ export class TeacherHomeComponent implements OnInit {
     });
   }
 
+  // List of Sessions in current week
+  getSessionDetails() {
+    this.teacherService.getSession("week").subscribe((res) => {
+      console.log(res.sessions);
+      this.sessionsArr = res.sessions;
+    }, (err) => { console.log(err); });
+  }
+
+  // Delete Scheduled Session
+  deleteSession(session, index) {
+    console.log(session);
+    this.alertService.confirmWithoutLoader('question', 'Sure you want to DELETE ?', '', 'Yes').then(result => {
+      if (result.value) {       
+        this.alertService.showLoader("");
+        this.teacherService.deleteSession(session.id).subscribe((res)=> {
+          console.log(res);
+          this.sessionsArr.splice(index,1);
+          this.alertService.showMessageWithSym("Session Deleted","Success","success");
+        },(err)=>{console.log(err)});
+      }
+
+    });
+
+
+  }
+  createSessionBtn() {
+    console.log("Create Session btn");
+    this.createSessionShow = true;
+    this.startTime = "";
+    this.endTime = "";
+    this.createSessionForm.reset();
+  }
+
+  // Edit Current Session
+  editSessionBtn(session,index){
+    $('#createSessionModal').modal('show');
+    console.log(session);
+    this.editSessionShow = true;
+    let sDate = new Date(session.startDate);
+    let eDate = new Date(session.endDate);
+
+    if(sDate.getHours()<10){
+      if(sDate.getMinutes()==0)
+        this.startTime = "0"+sDate.getHours()+":"+sDate.getMinutes()+"0";
+      else
+        this.startTime = "0"+sDate.getHours()+":"+sDate.getMinutes();
+    } 
+    else {
+      if(sDate.getMinutes()==0)
+        this.startTime = sDate.getHours()+":"+sDate.getMinutes()+"0";
+      else
+        this.startTime = sDate.getHours()+":"+sDate.getMinutes();
+    }
+
+    if(eDate.getHours()<10){
+      if(eDate.getMinutes()==0)
+        this.endTime = "0"+eDate.getHours()+":"+eDate.getMinutes()+"0";
+      else
+        this.endTime = "0"+eDate.getHours()+":"+eDate.getMinutes();
+    }
+    else {
+      if(eDate.getMinutes()==0)
+        this.endTime = eDate.getHours()+":"+eDate.getMinutes()+"0";
+      else
+        this.endTime = eDate.getHours()+":"+eDate.getMinutes();
+    }
+
+    this.createSessionForm.controls.startDate.patchValue(session.startDate.split(' ')[0]);   
+    this.createSessionForm.patchValue({
+      number: session.number,
+      title: session.title,
+      clubId: session.club.id
+      // gradeIds: [, [Validators.required]],
+
+    });
+  }
+
+
 }
+

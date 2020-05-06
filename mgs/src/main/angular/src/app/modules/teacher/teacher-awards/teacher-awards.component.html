@@ -195,7 +195,7 @@
                                                                         <tr data-toggle="collapse"
                                                                             [attr.data-target]="'#collapsed'+i">
                                                                             <td> {{i+1}} </td>
-                                                                            <td id="actname"> {{pa.activityName}} </td>
+                                                                            <td id="actname"> {{pa.criterionValue}} </td>
                                                                             <td>
                                                                                 <p *ngIf="!(awardCriterion=='Focus Area')">
                                                                                     <strong> Focus Area - </strong>
@@ -380,7 +380,7 @@
                                                                     <tr data-toggle="collapse"
                                                                         [attr.data-target]="'#collapsed'+j">
                                                                         <td>{{i+1}}.{{j+1}}</td>
-                                                                        <td id="actname">{{pa.activityName}}</td>
+                                                                        <td id="actname">{{pa.criterionValue}}</td>
                                                                         <td>Activity Count - {{pa.count}}</td>
                                                                         <td>Average Stars - {{pa.averageStars}}</td>
                                                                     </tr>
