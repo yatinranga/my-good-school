@@ -15,7 +15,7 @@ import com.nxtlife.mgs.entity.session.Event;
 import com.nxtlife.mgs.enums.SessionStatus;
 import com.nxtlife.mgs.util.DateUtil;
 
-@JsonInclude(content = Include.NON_NULL)
+@JsonInclude(content = Include.NON_ABSENT)
 public class SessionResponse {
 
     private String id;
@@ -41,6 +41,8 @@ public class SessionResponse {
 	private String teacherName;
 	
 	private String status;
+	
+	private List<GroupResponseBy<SessionResponse>> sessions;
 
 	
 	public String getId() {
@@ -137,6 +139,14 @@ public class SessionResponse {
 	
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public List<GroupResponseBy<SessionResponse>> getSessions() {
+		return sessions;
+	}
+
+	public void setSessions(List<GroupResponseBy<SessionResponse>> sessions) {
+		this.sessions = sessions;
 	}
 
 	public SessionResponse() {

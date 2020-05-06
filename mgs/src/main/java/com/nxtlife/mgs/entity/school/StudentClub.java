@@ -12,6 +12,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.user.Student;
@@ -21,6 +23,7 @@ import com.nxtlife.mgs.util.StudentActivityId;
 
 @SuppressWarnings("serial")
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"student_id","activityId"}))
 public class StudentClub implements Serializable {
 
 	@EmbeddedId

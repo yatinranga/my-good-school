@@ -42,25 +42,25 @@ public class SessionController {
 	//api/student/sessions and api/student/sessions/club/{clubId}
 	
 	@GetMapping(value = "api/student/sessions/club/{clubId}")
-	List<SessionResponse> getStudentSessionsOfClubBy(@PathVariable("clubId") String clubId,@RequestParam(name = "sessionFetch",required = false) String sessionFetch,@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+	public SessionResponse getStudentSessionsOfClubBy(@PathVariable("clubId") String clubId,@RequestParam(name = "sessionFetch",required = false) String sessionFetch, @RequestParam(value = "teacherId" ,required = false) String teacherId, @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
 			@RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize){
-		return sessionService.getStudentSessionsOfClubBy(clubId, sessionFetch, page, pageSize);
+		return sessionService.getStudentSessionsOfClubBy(clubId, sessionFetch,teacherId, page, pageSize);
 	}
 	
 	@GetMapping(value = "api/student/sessions")
-	List<SessionResponse> getStudentSessionsOfClubsBy(@RequestParam(name = "sessionFetch",required = false) String sessionFetch,@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+	public SessionResponse getStudentSessionsOfClubsBy(@RequestParam(name = "sessionFetch",required = false) String sessionFetch, @RequestParam(value = "teacherId" ,required = false) String teacherId ,@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
 			@RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize){
-		return sessionService.getStudentSessionsOfClubsBy(sessionFetch, page, pageSize);
+		return sessionService.getStudentSessionsOfClubsBy(sessionFetch,teacherId, page, pageSize);
 	}
 	
 	@GetMapping(value = "api/teacher/sessions/club/{clubId}")
-	List<SessionResponse> getTeacherSessionsOfClubBy(@PathVariable("clubId") String clubId, @RequestParam(name = "sessionFetch",required = false) String sessionFetch,@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+	public  SessionResponse getTeacherSessionsOfClubBy(@PathVariable("clubId") String clubId, @RequestParam(name = "sessionFetch",required = false) String sessionFetch,@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
 			@RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize){
 		return sessionService.getTeacherSessionsOfClubBy(clubId, sessionFetch, page, pageSize);
 	}
 	
 	@GetMapping(value = "api/teacher/sessions")
-	List<SessionResponse> getTeacherSessionsOfClubsBy(@RequestParam(name = "sessionFetch",required = false) String sessionFetch,@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+	public SessionResponse getTeacherSessionsOfClubsBy(@RequestParam(name = "sessionFetch",required = false) String sessionFetch,@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
 			@RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize){
 		return sessionService.getTeacherSessionsOfClubsBy(sessionFetch, page, pageSize);
 	}

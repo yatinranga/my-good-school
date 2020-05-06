@@ -110,7 +110,15 @@ public class DateUtil {
 	public static Date getLastDayOfMonth(LocalDate lastDayOfMonth) {
 		if(lastDayOfMonth == null)
 			throw new ValidationException("date cannot be null.");
-		return atEndOfDay(Date.from(lastDayOfMonth.atStartOfDay(defaultTimeZone.toZoneId()).toInstant()));
+		return convertLocalDateToDateAtEndOfDay(lastDayOfMonth);
+	}
+	
+	public static Date convertLocalDateToDateAtEndOfDay(LocalDate date) {
+		return  atEndOfDay(Date.from(date.atStartOfDay(defaultTimeZone.toZoneId()).toInstant()));
+	}
+	
+    public static Date convertLocalDateToDateAtStartOfDay(LocalDate date) {
+		return  atStartOfDay(Date.from(date.atStartOfDay(defaultTimeZone.toZoneId()).toInstant()));
 	}
 	
 	public static Date getLastWorkingDayOfMonth(LocalDate lastDayOfMonth) {
@@ -127,7 +135,7 @@ public class DateUtil {
 		     default:
 		       lastWorkingDayofMonth = lastDayOfMonth;
 		   }
-		   return atEndOfDay(Date.from(lastWorkingDayofMonth.atStartOfDay(defaultTimeZone.toZoneId()).toInstant()));
+		   return convertLocalDateToDateAtEndOfDay(lastWorkingDayofMonth);
 		 }
 	
 	public static Date getLastDayOfWeek() {
@@ -140,7 +148,11 @@ public class DateUtil {
 	public static Date getlastWorkingDayOfWeek(Date lastWorkingDayOfWeek) {
 		if(lastWorkingDayOfWeek == null)
 			throw new ValidationException("date cannot be null.");
-		return  getLastWorkingDayOfMonth(lastWorkingDayOfWeek.toInstant().atZone(defaultTimeZone.toZoneId()).toLocalDate());
+		return  getLastWorkingDayOfMonth(convertToLocalDate(lastWorkingDayOfWeek));
+	}
+	
+	public static LocalDate convertToLocalDate(Date dateToConvert) {
+	    return dateToConvert.toInstant().atZone(defaultTimeZone.toZoneId()).toLocalDate();
 	}
 
 }

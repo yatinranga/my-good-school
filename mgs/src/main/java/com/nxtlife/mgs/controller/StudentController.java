@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.enums.ActivityStatus;
+import com.nxtlife.mgs.enums.ApprovalStatus;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.CertificateRepository;
 import com.nxtlife.mgs.jpa.StudentRepository;
@@ -93,12 +94,12 @@ public class StudentController {
 			@RequestParam("schoolId") String schoolCid, @RequestParam("gradeId") String gradeCid,
 			@PathVariable("activityCid") String activityCid, @RequestParam("teacherId") String teacherCid) {
 		return studentService.getAllStudentsBySchoolAndActivityAndCoachAndStatusReviewed(schoolCid, gradeCid,
-				activityCid, ActivityStatus.Reviewed.toString(), teacherCid);
+				activityCid, ApprovalStatus.VERIFIED.toString(), teacherCid);
 	}
 	
 	@GetMapping(value = "api/students/activity")
-	public List<StudentResponse> getAllStudentsOfSchoolForParticularActivity(@RequestParam("activityId") String activityCid){
-		return studentService.getAllStudentsOfSchoolForParticularActivity(activityCid, ActivityStatus.Reviewed.toString());
+	public List<StudentResponse> getAllStudentsOfSchoolForParticularActivity(@RequestParam("activityId") String activityCid ,@RequestParam(value = "teacherId" , required = false) String teacherId , @RequestParam(value = "gradeId" , required = false) String gradeId){
+		return studentService.getAllStudentsOfSchoolForParticularActivity(activityCid,teacherId ,gradeId ,ApprovalStatus.VERIFIED.toString());
 	}
 
 	@DeleteMapping("api/student/{cid}")
@@ -134,6 +135,11 @@ public class StudentController {
 	@GetMapping(value = "api/student/clubs")
 	public List<ActivityRequestResponse> getAllClubsOfStudent(){
 		return activityService.getAllClubsOfStudent();
+	}
+	
+	@GetMapping(value = "api/student/club/membershipStatus")
+	public List<ClubMembershipResponse> getMembershipDetails(){
+		return studentService.getMembershipDetails();
 	}
 
 }

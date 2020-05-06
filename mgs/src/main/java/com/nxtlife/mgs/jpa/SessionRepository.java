@@ -21,15 +21,25 @@ public interface SessionRepository extends JpaRepository<Event, Long> , QueryDsl
 
 	public Event findByCidAndActiveTrue(String cid);
 	
+	public List<Event> findAllByGradesCidAndClubCidAndTeacherCidAndActiveTrue(String gradeCid , String clubCid ,String teacherCid , Pageable pageable);
+	
 	public List<Event> findAllByGradesCidAndClubCidAndActiveTrue(String gradeCid , String clubCid , Pageable pageable);
 	
 	public List<Event> findAllByGradesCidAndClubCidAndStartDateGreaterThanAndStartDateLessThanAndActiveTrue(String gradeCid , String clubCid,Date rangeBegin ,Date rangeEnd , Sort sort);
+	
+	public List<Event> findAllByGradesCidAndClubCidAndStartDateGreaterThanAndStartDateLessThanAndTeacherCidAndActiveTrue(String gradeCid , String clubCid,Date rangeBegin ,Date rangeEnd ,String teacherCid , Sort sort);
+	
+	@Query(value = "select e from Event e join e.grades g where g.cid =:gradeCid and e.club in :clubs and e.teacher.cid = :teacherCid and  e.active = true group by e.club , e.startDate ,e.teacher")
+	public List<Event> findAllByGradesCidAndClubInAndTeacherCidAndActiveTrueGroupByClubId(@Param("gradeCid") String gradeCid  ,@Param("clubs") Collection<Activity> clubs ,@Param("teacherCid") String teacherCid , Pageable pageable);
 	
 	@Query(value = "select e from Event e join e.grades g where g.cid =:gradeCid and e.club in :clubs and e.active = true group by e.club , e.startDate ,e.teacher")
 	public List<Event> findAllByGradesCidAndClubInAndActiveTrueGroupByClubId(@Param("gradeCid") String gradeCid  ,@Param("clubs") Collection<Activity> clubs , Pageable pageable);
 	
 	@Query(value = "select e from Event e join e.grades g where g.cid =:gradeCid and e.club in :clubs and e.startDate > :rangeBegin and e.startDate < :rangeEnd and e.active = true group by e.club , e.startDate, e.teacher")
 	public List<Event> findAllByGradesCidAndClubInAndStartDateGreaterThanAndStartDateLessThanAndActiveTrueGroupByClubId(@Param("gradeCid") String gradeCid ,@Param("clubs") Collection<Activity> clubs ,@Param("rangeBegin") Date rangeBegin ,@Param("rangeEnd") Date rangeEnd , Sort sort);
+	
+	@Query(value = "select e from Event e join e.grades g where g.cid =:gradeCid and e.club in :clubs and e.startDate > :rangeBegin and e.startDate < :rangeEnd and e.teacher.cid = :teacherCid and e.active = true group by e.club , e.startDate, e.teacher")
+	public List<Event> findAllByGradesCidAndClubInAndStartDateGreaterThanAndStartDateLessThanAndTeacherCidAndActiveTrueGroupByClubId(@Param("gradeCid") String gradeCid ,@Param("clubs") Collection<Activity> clubs ,@Param("rangeBegin") Date rangeBegin ,@Param("rangeEnd") Date rangeEnd ,@Param("teacherCid") String teacherCid , Sort sort);
 
     public List<Event> findAllByTeacherCidAndClubCidAndActiveTrue(String teacherCid , String clubCid , Pageable pageable);
 	
