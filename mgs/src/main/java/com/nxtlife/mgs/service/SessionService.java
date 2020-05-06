@@ -17,14 +17,14 @@ public interface SessionService {
 
 	SuccessResponse deleteSession(String sessionCid);
 
-	List<SessionResponse> getStudentSessionsOfClubBy(String clubId, String sessionFetch, Integer page,
+	SessionResponse getStudentSessionsOfClubBy(String clubId, String sessionFetch ,String teacherId , Integer page,
 			Integer pageSize);
 
-	List<SessionResponse> getStudentSessionsOfClubsBy(String sessionFetch, Integer page, Integer pageSize);
+	SessionResponse getStudentSessionsOfClubsBy(String sessionFetch,String teacherId , Integer page, Integer pageSize);
 
-	List<SessionResponse> getTeacherSessionsOfClubsBy(String sessionFetch, Integer page, Integer pageSize);
+	SessionResponse getTeacherSessionsOfClubsBy(String sessionFetch, Integer page, Integer pageSize);
 
-	List<SessionResponse> getTeacherSessionsOfClubBy(String clubId, String sessionFetch, Integer page,
+	SessionResponse getTeacherSessionsOfClubBy(String clubId, String sessionFetch, Integer page,
 			Integer pageSize);
 
 }

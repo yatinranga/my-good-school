@@ -32,7 +32,7 @@ public class StudentResponse {
 	private List<GuardianResponse> guardianResponseList;
 	private String profileImage;
 	private String yearOfEnrolment;
-	private List<GroupResponseByActivityName> performedActivities;
+	private List<GroupResponseByActivityName<ActivityPerformedResponse>> performedActivities;
 	private Set<String> focusAreas;
 	private Set<String> activityTypes;
 	private Set<String> psdAreas;
@@ -176,11 +176,11 @@ public class StudentResponse {
 		this.yearOfEnrolment = yearOfEnrolment;
 	}
 
-	public List<GroupResponseByActivityName> getPerformedActivities() {
+	public List<GroupResponseByActivityName<ActivityPerformedResponse>> getPerformedActivities() {
 		return performedActivities;
 	}
 
-	public void setPerformedActivities(List<GroupResponseByActivityName> performedActivities) {
+	public void setPerformedActivities(List<GroupResponseByActivityName<ActivityPerformedResponse>> performedActivities) {
 		this.performedActivities = performedActivities;
 	}
 
