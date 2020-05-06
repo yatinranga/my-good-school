@@ -142,7 +142,8 @@
         </button>
       </div>
       <div class="modal-body">
-        <select name="status" [disabled]="enrollSch_loader" (ngModelChange)="filterSession($event)" [(ngModel)]="filterVal"> Filter : 
+        <select name="status" [disabled]="enrollSch_loader" (ngModelChange)="filterSession($event)"
+          [(ngModel)]="filterVal"> Filter :
           <option value="" selected>ALL</option>
           <option value="upcoming">UPCOMIMG</option>
           <option value="ended">ENDED</option>
@@ -179,8 +180,10 @@
   <div class="modal-dialog modal-lg">
     <div class="all_act modal-content">
       <div class="modal-header">
-        <h3 class="modal-title" id="exampleModalLabel">{{clubName}} Details 
-          <div><button [disabled]="!(clubId && supervisorId)" class="btn btn-primary btn-sm" (click)="clubRegBtn()">Register</button></div></h3>
+        <h3 class="modal-title" id="exampleModalLabel">{{clubName}} Details
+          <div><button [disabled]="!(clubId && supervisorId)" class="btn btn-primary btn-sm"
+              (click)="clubRegBtn()">Register</button></div>
+        </h3>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -194,44 +197,51 @@
                 <li id="session_title" (click)="getSupervisorSession(c)">{{i+1}}. {{c.name}} -</li>
                 <li>{{c.profileBrief}}</li>
               </ul>
-                <div *ngIf="coaches.length==0" id="null">
-                  <div class="spinner-border text-secondary" role="status" *ngIf="sup_loader">
-                  </div>{{sup_loader ? '  Loading...' : 'No Supervisor'}}
-                </div>
+              <div *ngIf="coaches.length==0" id="null">
+                <div class="spinner-border text-secondary" role="status" *ngIf="sup_loader">
+                </div>{{sup_loader ? '  Loading...' : 'No Supervisor'}}
+              </div>
             </div>
-            
-          </div><hr>
+
+          </div>
+          <hr>
           <div class="row" *ngIf="sessionView">
             <div class="col-md-6 ml-auto">
-              <h5>List of Students :</h5> 
-              <select name="grade" [disabled]="stu_loader" (ngModelChange)="filterStudent($event)" [(ngModel)]="gradeId">
-                <option value="" selected>Select Grade</option>
-                <option *ngFor="let g of grades" value={{g.id}}>{{g.grade}} {{g.section}}</option>
-                <option disbaled *ngIf="!grades.length">No Grades Available</option>
-              </select>
-              <ul>
-                <li *ngFor="let s of students; let i = index"> {{i+1}}. {{s.name}} - {{s.grade}} {{s.section}}</li>
-                <li *ngIf="students.length==0" id="null">
-                  <div class="spinner-border text-secondary" role="status" *ngIf="stu_loader">
-                </div> {{stu_loader ? ' Loading...' : 'No Students'}} 
-              </li>
-              </ul>
+              <div class="act_details_section_two">
+                <h5>List of Students :</h5>
+                <select name="grade" [disabled]="stu_loader" (ngModelChange)="filterStudent($event)"
+                  [(ngModel)]="gradeId">
+                  <option value="" selected>Select Grade</option>
+                  <option *ngFor="let g of grades" value={{g.id}}>{{g.grade}} {{g.section}}</option>
+                  <option disbaled *ngIf="!grades.length">No Grades Available</option>
+                </select>
+              </div>
+                <ul id="student_list">
+                  <li *ngFor="let s of students; let i = index"> {{i+1}}. {{s.name}} - {{s.grade}} {{s.section}}</li>
+                  <li *ngIf="students.length==0" id="null">
+                    <div class="spinner-border text-secondary" role="status" *ngIf="stu_loader">
+                    </div> {{stu_loader ? ' Loading...' : 'No Students'}}
+                  </li>
+                </ul>
             </div>
             <div class="col-md-6 ml-auto">
-              <h5>Session Schedule :</h5>
+              <div class="act_details_section_two">
+                <h5>Session Schedule :</h5>
 
-              <select name="status" [disabled]="enrollSch_loader" (ngModelChange)="filterSession($event)" [(ngModel)]="filterVal"> Filter : 
-                <option value="" selected>ALL</option>
-                <option value="upcoming">UPCOMIMG</option>
-                <option value="ended">ENDED</option>
-              </select>
+                <select name="status" [disabled]="enrollSch_loader" (ngModelChange)="filterSession($event)"
+                  [(ngModel)]="filterVal"> Filter :
+                  <option value="" selected>ALL</option>
+                  <option value="upcoming">UPCOMIMG</option>
+                  <option value="ended">ENDED</option>
+                </select>
+              </div>
 
               <div *ngIf="enrollSch_loader">
                 <div class="spinner-border text-secondary" role="status" *ngIf="enrollSch_loader">
                 </div>{{enrollSch_loader?'  Loading...':''}}
               </div>{{clubSchedule.length==0&&!enrollSch_loader?'No Session Available !': ''}}
 
-              
+
               <div class="day_post">
                 <div class="day" *ngFor="let club of clubSchedule; let i = index;">
                   <h3>{{club.criterionValue | date}} - {{club.criterionValue | date:'EEEE'}} </h3>
@@ -240,7 +250,8 @@
                       <span *ngIf="res.status=='upcoming'" style="color: red">({{res.status | uppercase}})</span>
                       <span *ngIf="res.status=='ended'" style="color: green">({{res.status | uppercase}})</span>
                     <li>
-                    <li>{{res.club.name}} - {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs </li>
+                    <li>{{res.club.name}} - {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs
+                    </li>
                   </ul>
                 </div>
               </div>

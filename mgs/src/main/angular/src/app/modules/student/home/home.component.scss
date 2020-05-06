@@ -121,20 +121,19 @@ button.btn.register.btn-primary{
 }
 .enr_modal.modal-content select, .all_act.modal-content select{
     float: right;
-    width: 110px;
-    height: 31px;
+    width: 115px;
+    height: 29px;
 }
 .enr_modal.modal-content .day_pre{
     display: inline-block;
     width: 100%;
 }
-.day_pre .day h3{
-    margin-top: 0;
-}
-
 .modal-title{
     font-size: 26px;
     color: black;
+}
+.all_act.modal-content {
+    top: 50px;
 }
 button.register_button.btn.btn-primary.btn-sm {
     float: right;
@@ -144,7 +143,7 @@ button.register_button.btn.btn-primary.btn-sm {
     margin: 0;
 }
 .all_act.modal-content ul li {
-    padding: 0 0 0 10px;
+    padding: 0 0 0 20px;
     margin: 0;
 }
 .all_act.modal-content li#session_title {
@@ -154,8 +153,13 @@ button.register_button.btn.btn-primary.btn-sm {
     font-size: 21px;
     color: cornflowerblue;
 }
-.day_post .day h3 {
-    font-size: 20px;
+.all_act.modal-content .day_post {
+    width: 100%;
+    display: inline-block;
+    margin-top: 15px;
+}
+.day_post h3 {
+    font-size: 21px;
 }
 .day_post li#session_title {
     color: #333 !important;
@@ -163,4 +167,24 @@ button.register_button.btn.btn-primary.btn-sm {
 }
 .day_post ul li{
    padding: 0 0 0 20px;
+   font-size: 17px;
+   color: #333;
+}
+.act_details_section_two{
+    width: 100%;
+    display: inline-block;
+}
+.act_details_section_two h5, .day_post .day h5{
+    font-size: 20px;
+    margin: 0;
+    float: left;
+}
+ul#student_list li {
+    padding: 0;
+    font-size: 17px;
+    word-spacing: 3px;
+}
+ul#student_list {
+    margin-top: 15px;
+    padding: 0;
 }
