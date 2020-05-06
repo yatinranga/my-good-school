@@ -14,14 +14,15 @@ export class TeacherHomeComponent implements OnInit {
   clubReqArr = [];
   assignedClubsArr = [];
   assignedSocietyArr = [];
-  allAssignedActi = [];
+  allAssignedActi = []; // All assigned activities
   clubReqLoader = false;
 
   createSessionForm: FormGroup; // create session form
   teacherInfo: any;
   schoolId: any;
-  adminService: any;
-  schoolGrades: any;
+  teacherId: any;
+
+  schoolGrades = [];
   startTime: any;
   endTime: any;
 
@@ -31,11 +32,16 @@ export class TeacherHomeComponent implements OnInit {
   teacherName: any;
 
   // Club details variable
+  clubId: any;
   clubName = "";
   filterVal = "";
   clubSchedule = [];
   copySchedule = [];
+  studentsArr = [];
+  copyStudentArr = [];
   clubSch_loader = false;
+  stu_loader = false;
+  gradeId = "";
 
 
   constructor(private teacherService: TeacherService, private formBuilder: FormBuilder, private alertService: AlertService) { }
@@ -44,8 +50,9 @@ export class TeacherHomeComponent implements OnInit {
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
     this.schoolId = this.teacherInfo['teacher'].schoolId;
     this.teacherName = this.teacherInfo.teacher.name;
+    this.teacherId = this.teacherInfo.teacher.id;
     this.clubReqLoader = true;
-    this.getAllClubReq();
+    // this.getAllClubReq();
     this.getAllClubs();
     this.getSessionDetails();
 
@@ -71,47 +78,47 @@ export class TeacherHomeComponent implements OnInit {
   }
 
   // get all the Request of Clubs and Society
-  getAllClubReq() {
-    this.teacherService.getClubReq().subscribe(res => {
-      this.clubReqArr = res;
-      this.clubReqLoader = false;
-    }, (err) => {
-      console.log(err);
-      this.clubReqLoader = false;
-    });
-  }
+  // getAllClubReq() {
+  //   this.teacherService.getClubReq().subscribe(res => {
+  //     this.clubReqArr = res;
+  //     this.clubReqLoader = false;
+  //   }, (err) => {
+  //     console.log(err);
+  //     this.clubReqLoader = false;
+  //   });
+  // }
 
-  setClubReq(obj, index, verify) {
+  // setClubReq(obj, index, verify) {
 
-    // To Verify/Approve the Club/Society Request
-    if (verify == 'true') {
-      this.alertService.confirmWithoutLoader('question', 'Sure you want to Approve ?', '', 'Yes').then(result => {
-        if (result.value) {
-          this.alertService.showLoader("");
-          this.teacherService.approveClubReq(obj.student.id, obj.club.id, verify).subscribe(res => {
-            this.alertService.showSuccessAlert("Request Approved!");
-            this.clubReqArr.splice(index, 1);
-            this.clubReqArr.unshift(res);
-          }, (err) => { console.log(err); })
-        }
-      })
-    }
+  //   // To Verify/Approve the Club/Society Request
+  //   if (verify == 'true') {
+  //     this.alertService.confirmWithoutLoader('question', 'Sure you want to Approve ?', '', 'Yes').then(result => {
+  //       if (result.value) {
+  //         this.alertService.showLoader("");
+  //         this.teacherService.approveClubReq(obj.student.id, obj.club.id, verify).subscribe(res => {
+  //           this.alertService.showSuccessAlert("Request Approved!");
+  //           this.clubReqArr.splice(index, 1);
+  //           this.clubReqArr.unshift(res);
+  //         }, (err) => { console.log(err); })
+  //       }
+  //     })
+  //   }
 
-    // To Reject the Club/Society Request
-    if (verify == 'false') {
-      this.alertService.confirmWithoutLoader('question', 'Sure you want to Reject ?', '', 'Yes').then(result => {
-        if (result.value) {
-          this.alertService.showLoader("");
-          this.teacherService.approveClubReq(obj.student.id, obj.club.id, verify).subscribe(res => {
-            this.alertService.showSuccessAlert("Request Rejected!");
-            this.clubReqArr.splice(index, 1);
-            this.clubReqArr.unshift(res);
-          }, (err) => { console.log(err) })
-        }
-      })
-    }
+  //   // To Reject the Club/Society Request
+  //   if (verify == 'false') {
+  //     this.alertService.confirmWithoutLoader('question', 'Sure you want to Reject ?', '', 'Yes').then(result => {
+  //       if (result.value) {
+  //         this.alertService.showLoader("");
+  //         this.teacherService.approveClubReq(obj.student.id, obj.club.id, verify).subscribe(res => {
+  //           this.alertService.showSuccessAlert("Request Rejected!");
+  //           this.clubReqArr.splice(index, 1);
+  //           this.clubReqArr.unshift(res);
+  //         }, (err) => { console.log(err) })
+  //       }
+  //     })
+  //   }
 
-  }
+  // }
 
   // get List of School Grades 
   getSchoolGrades(schoolId) {
@@ -133,10 +140,11 @@ export class TeacherHomeComponent implements OnInit {
       console.log(res);
       $('#createSessionModal').modal('hide');
       $('.modal-backdrop').remove();
-      this.alertService.showMessageWithSym("Session Created !","Success","success");
+      this.alertService.showMessageWithSym("Session Created !", "Success", "success");
       this.resetForm();
-    }, (err) => { console.log(err);
-     });
+    }, (err) => {
+      console.log(err);
+    });
   }
 
   // Reset Form
@@ -147,24 +155,24 @@ export class TeacherHomeComponent implements OnInit {
   }
 
   // Sorting on the basis of Status
-  order: boolean = false;
-  sortByStatus() {
-    this.order = !this.order;
-    // sort by activityStatus
-    this.clubReqArr.sort((a, b) => {
-      const nameA = a.membershipStatus.toUpperCase(); // ignore upper and lowercase
-      const nameB = b.membershipStatus.toUpperCase(); // ignore upper and lowercase
-      if (nameA < nameB) {
-        return this.order ? -1 : 1;
-      }
-      if (nameA > nameB) {
-        return this.order ? 1 : -1;
-      }
+  // order: boolean = false;
+  // sortByStatus() {
+  //   this.order = !this.order;
+  //   // sort by activityStatus
+  //   this.clubReqArr.sort((a, b) => {
+  //     const nameA = a.membershipStatus.toUpperCase(); // ignore upper and lowercase
+  //     const nameB = b.membershipStatus.toUpperCase(); // ignore upper and lowercase
+  //     if (nameA < nameB) {
+  //       return this.order ? -1 : 1;
+  //     }
+  //     if (nameA > nameB) {
+  //       return this.order ? 1 : -1;
+  //     }
 
-      // names must be equal
-      return 0;
-    });
-  }
+  //     // names must be equal
+  //     return 0;
+  //   });
+  // }
 
   // List of Sessions in current week
   getSessionDetails() {
@@ -178,113 +186,139 @@ export class TeacherHomeComponent implements OnInit {
   deleteSession(session, index) {
     console.log(session);
     this.alertService.confirmWithoutLoader('question', 'Sure you want to DELETE ?', '', 'Yes').then(result => {
-      if (result.value) {       
+      if (result.value) {
         this.alertService.showLoader("");
-        this.teacherService.deleteSession(session.id).subscribe((res)=> {
+        this.teacherService.deleteSession(session.id).subscribe((res) => {
           console.log(res);
-          this.sessionsArr.splice(index,1);
-          this.alertService.showMessageWithSym("Session Deleted","Success","success");
-        },(err)=>{console.log(err)});
+          this.sessionsArr.splice(index, 1);
+          this.alertService.showMessageWithSym("Session Deleted", "Success", "success");
+        }, (err) => { console.log(err) });
       }
 
     });
   }
 
-  createSessionBtn() {
-    console.log("Create Session btn");
-    this.createSessionShow = true;
-    this.startTime = "";
-    this.endTime = "";
-    this.createSessionForm.reset();
-  }
+  // createSessionBtn() {
+  //   console.log("Create Session btn");
+  //   this.createSessionShow = true;
+  //   this.startTime = "";
+  //   this.endTime = "";
+  //   this.createSessionForm.reset();
+  // }
 
   // Edit Current Session
-  editSessionBtn(session,index){
+  editSessionBtn(session, index) {
     $('#createSessionModal').modal('show');
     console.log(session);
     this.editSessionShow = true;
     let sDate = new Date(session.startDate);
     let eDate = new Date(session.endDate);
 
-    if(sDate.getHours()<10){
-      if(sDate.getMinutes()==0)
-        this.startTime = "0"+sDate.getHours()+":"+sDate.getMinutes()+"0";
+    if (sDate.getHours() < 10) {
+      if (sDate.getMinutes() == 0)
+        this.startTime = "0" + sDate.getHours() + ":" + sDate.getMinutes() + "0";
       else
-        this.startTime = "0"+sDate.getHours()+":"+sDate.getMinutes();
-    } 
-    else {
-      if(sDate.getMinutes()==0)
-        this.startTime = sDate.getHours()+":"+sDate.getMinutes()+"0";
-      else
-        this.startTime = sDate.getHours()+":"+sDate.getMinutes();
-    }
-
-    if(eDate.getHours()<10){
-      if(eDate.getMinutes()==0)
-        this.endTime = "0"+eDate.getHours()+":"+eDate.getMinutes()+"0";
-      else
-        this.endTime = "0"+eDate.getHours()+":"+eDate.getMinutes();
+        this.startTime = "0" + sDate.getHours() + ":" + sDate.getMinutes();
     }
     else {
-      if(eDate.getMinutes()==0)
-        this.endTime = eDate.getHours()+":"+eDate.getMinutes()+"0";
+      if (sDate.getMinutes() == 0)
+        this.startTime = sDate.getHours() + ":" + sDate.getMinutes() + "0";
       else
-        this.endTime = eDate.getHours()+":"+eDate.getMinutes();
+        this.startTime = sDate.getHours() + ":" + sDate.getMinutes();
     }
 
-    this.createSessionForm.controls.startDate.patchValue(session.startDate.split(' ')[0]);   
+    if (eDate.getHours() < 10) {
+      if (eDate.getMinutes() == 0)
+        this.endTime = "0" + eDate.getHours() + ":" + eDate.getMinutes() + "0";
+      else
+        this.endTime = "0" + eDate.getHours() + ":" + eDate.getMinutes();
+    }
+    else {
+      if (eDate.getMinutes() == 0)
+        this.endTime = eDate.getHours() + ":" + eDate.getMinutes() + "0";
+      else
+        this.endTime = eDate.getHours() + ":" + eDate.getMinutes();
+    }
+
+    this.createSessionForm.controls.startDate.patchValue(session.startDate.split(' ')[0]);
     this.createSessionForm.patchValue({
       number: session.number,
       title: session.title,
       clubId: session.club.id
-      // gradeIds: [, [Validators.required]],
-
     });
+
     let arr = [];
     session.grades.forEach(element => {
-        // console.log(element.id);
-        arr.push(element.id);
-        this.createSessionForm.controls.gradeIds.setValue(arr);     
-      });
+      arr.push(element.id);
+      this.createSessionForm.controls.gradeIds.setValue(arr);
+    });
   }
 
   // Details of All Clubs and Societies
-   clubDetails(clubObj) {
+  clubDetails(clubObj) {
     $('#clubDetailsModal').modal('show');
     this.clubSchedule = [];
     this.filterVal = ""; // Reset Filter value
+    this.gradeId = "";
     this.clubSch_loader = true;
+    this.stu_loader = true;
     this.clubName = clubObj.name;
-    this.getClubSession(clubObj.id)
-   }
+    this.clubId = clubObj.id;
+    this.getClubSession(clubObj.id);
+    this.getClubStudents(clubObj.id, this.teacherId);
+  }
 
-   // get Session of a particualr Club/Society
-   getClubSession(clubId){
-     this.teacherService.getSupervisedClubSession(clubId).subscribe((res)=>{
-       console.log(res.sessions);
-       this.clubSchedule = res.sessions;
-       this.copySchedule = Object.assign([],res.sessions);
-       this.clubSch_loader = false;
-     },(err)=>{
+  // get Session of a particualr Club/Society
+  getClubSession(clubId) {
+    this.teacherService.getSupervisedClubSession(clubId).subscribe((res) => {
+      console.log(res.sessions);
+      this.clubSchedule = res.sessions;
+      this.copySchedule = Object.assign([], res.sessions);
+      this.clubSch_loader = false;
+    }, (err) => {
       console.log(err);
-      this.clubSch_loader = false;});
-   }
+      this.clubSch_loader = false;
+    });
+  }
 
-     // Filter session on the bases of ALL, UPCOMING and ENDED
+  // Filter session on the bases of ALL, UPCOMING and ENDED
   filterSession(val) {
     this.clubSchedule = this.filter(Object.assign([], this.copySchedule), val, "Session");
   }
 
-   // Actual Filtering of Sessions on the basis of type
-  filter(array: any[], value: string , type:string) {
+  // List of Students of the particular Club
+  getClubStudents(clubId, teacherId) {
+    this.teacherService.getSupervisorClubStudents(clubId, teacherId).subscribe((res) => {
+      this.studentsArr = res;
+      this.copyStudentArr = Object.assign([], res);
+      this.stu_loader = false;
+      console.log(res);
+    }, (err) => {
+      console.log(err);
+      this.stu_loader = false;
+    });
+
+  }
+
+  // Filter student on the bases of grade
+  filterStudent(val) {
+    this.studentsArr = this.filter(Object.assign([], this.copyStudentArr), val, "Student");
+  }
+
+  newSessionBtn(){
+    $('#createSessionModal').modal('show');
+  }
+
+  // Actual Filtering of Sessions on the basis of type
+  filter(array: any[], value: string, type: string) {
     let filterSessionArr = [];
-    if(type=="Session"){
+    if (type == "Session") {
       if (value)
         filterSessionArr = array.filter(e => e.responses[0].status == value);
       else
         filterSessionArr = array;
     }
-    if(type=="Student"){
+    if (type == "Student") {
       if (value)
         filterSessionArr = array.filter(e => e.gradeId == value);
       else
