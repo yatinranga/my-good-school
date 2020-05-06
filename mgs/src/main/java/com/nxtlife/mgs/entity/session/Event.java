@@ -1,5 +1,6 @@
 package com.nxtlife.mgs.entity.session;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
@@ -23,6 +25,7 @@ import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.enums.SessionStatus;
+import com.nxtlife.mgs.util.DateUtil;
 
 @SuppressWarnings("serial")
 @Entity
@@ -63,6 +66,9 @@ public class Event extends BaseEntity{
 	@NotNull
 	@ManyToOne
 	private Teacher teacher ;
+	
+	@Transient
+	private LocalDate startLocalDate;
 
 	public String getCid() {
 		return cid;
@@ -135,8 +141,11 @@ public class Event extends BaseEntity{
 	public void setTeacher(Teacher teacher) {
 		this.teacher = teacher;
 	}
-
 	
+	public LocalDate getStartLocalDate() {
+		return DateUtil.convertToLocalDate(this.startDate);
+	}
+
 	public Event() {
 	}
 

@@ -54,9 +54,11 @@ public interface StudentService extends ExcelUtil {
 	Set<StudentResponse> getAllStudentsAndItsActivitiesByAwardCriterion(String awardCriterion, String criterionValue,
 			String gradeCid,String startDate,String endDate);
 
-	List<StudentResponse> getAllStudentsOfSchoolForParticularActivity(String activityCid, String activityStatus);
+	List<StudentResponse> getAllStudentsOfSchoolForParticularActivity(String activityCid,String teacherId ,String gradeId, String activityStatus);
 
 	ClubMembershipResponse applyForClubMembership(String activityCid, String supervisorCid);
+
+	List<ClubMembershipResponse> getMembershipDetails();
 
 	// List<AwardResponse> getAllAwardsOfStudentByActivityId(String studentCid,
 	// String awardCid);

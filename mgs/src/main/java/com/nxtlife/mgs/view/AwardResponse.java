@@ -273,7 +273,8 @@ public class AwardResponse {
 			if(activityTypes !=null && !activityTypes.isEmpty()) {
 				for(String type : activityTypes) {
 					GroupResponseByActivityName<ActivityPerformedResponse> partialList = new GroupResponseByActivityName<ActivityPerformedResponse>();
-					partialList.setActivityName(type);
+					partialList.setCriterion("activityName");
+					partialList.setCriterionValue(type);
 					Long[] count = {0l};
 					List<ActivityPerformedResponse> activityList = new ArrayList<ActivityPerformedResponse>();
 					award.getAwardActivityPerformed().stream().forEach(act -> {

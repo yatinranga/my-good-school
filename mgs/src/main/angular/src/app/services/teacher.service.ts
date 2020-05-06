@@ -149,9 +149,14 @@ export class TeacherService {
   getSession(duration){
     return this.http.get("/api/teacher/sessions?sessionFetch="+duration);
   }
+  
    // get Session Schedule for a particular club or society
-   getSupervisedClubSession(clubId,duration){
-    return this.http.get("/api/teacher/sessions/club/"+clubId+"?sessionFetch="+duration)
+  getSupervisedClubSession(clubId, duration?) {
+    // return this.http.get("/api/teacher/sessions/club/"+clubId+"?sessionFetch="+duration)
+    if (duration)
+      return this.http.get("/api/teacher/sessions/club/" + clubId + "?sessionFetch=" + duration);
+    else
+      return this.http.get("/api/teacher/sessions/club/" + clubId);
   }
 
   // delete Session Schedule
