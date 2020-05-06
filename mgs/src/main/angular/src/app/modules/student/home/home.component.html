@@ -189,8 +189,8 @@
     <div class="all_act modal-content">
       <div class="modal-header">
         <h3 class="modal-title" id="exampleModalLabel">{{clubName}} Details
-          <div><button [disabled]="!(clubId && supervisorId)" class="btn btn-primary btn-sm"
-              (click)="clubRegBtn()">Register</button></div>
+         <button [disabled]="!(clubId && supervisorId)" class="register_act btn btn-primary btn-sm"
+              (click)="clubRegBtn()">Register</button>
         </h3>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -238,9 +238,9 @@
 
                 <select name="status" [disabled]="enrollSch_loader" (ngModelChange)="filterSession($event)"
                   [(ngModel)]="filterVal"> Filter :
-                  <option value="" selected>ALL</option>
-                  <option value="upcoming">UPCOMIMG</option>
-                  <option value="ended">ENDED</option>
+                  <option value="" selected>All</option>
+                  <option value="upcoming">Upcoming</option>
+                  <option value="ended">Ended</option>
                 </select>
               </div>
 

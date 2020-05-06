@@ -61,9 +61,11 @@
                 <ul *ngFor="let res of s.responses; let i = index;">
                     <li id="session_title"> {{i+1}}. {{res.title}}</li>
                     <li> ({{res.club.name}}) </li>
+                    <li> Session Number - {{res.number}} </li>
                     <li> {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs </li>
                     <li>Grade - <span *ngFor="let g of res.grades; let i = index">
-                        {{ (i === res.grades.length-1) ? g.grade+" "+g.section : g.grade+" "+g.section + "," + ' '}}</span></li>
+                            {{ (i === res.grades.length-1) ? g.grade+" "+g.section : g.grade+" "+g.section + "," + ' '}}</span>
+                    </li>
                     <li><button (click)="editSessionBtn(res,i)">Edit</button> <button
                             (click)="deleteSession(res,i)">Delete</button></li>
                 </ul>
@@ -109,7 +111,7 @@
                 <form [formGroup]="createSessionForm" (ngSubmit)="createSession()">
                     <div class="form-group">
                         <h5 style="color: red"> Note : All Fields Are Mandatory </h5>
-                        
+
                         <label for="recipient-name" class="col-form-label">Club/Society : </label>
                         <select class="form-control" name="activityId" formControlName="clubId">
                             <option [ngValue]=null selected disabled>Select One</option>
@@ -117,15 +119,16 @@
                                 {{acti.name}}
                             </option>
                         </select>
-                    </div>                    
+                    </div>
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Name of Session : </label>
-                        <input type="text" class="form-control add" name="title" placeholder="Add Title Here" formControlName="title">
+                        <input type="text" class="form-control add" name="title" placeholder="Add Title Here"
+                            formControlName="title">
                     </div>
-                    <div class="form-group">                        
+                    <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Session Number : </label>
-                        <input type="number" class="form-control add" name="sessionNumber" placeholder="Enter Session Number Here"
-                            formControlName="number">
+                        <input type="number" class="form-control add" name="sessionNumber"
+                            placeholder="Enter Session Number Here" formControlName="number">
                     </div>
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Date : </label>
@@ -159,83 +162,90 @@
 </div>
 
 
-<div class="modal fade" id="clubDetailsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
-data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg" >
-      <div class="all_act modal-content">
-        <div class="modal-header">
-          <h3 class="modal-title" id="exampleModalLabel">{{clubName}} Details
-            <div><button [disabled]="stu_loader && clubSch_loader" class="btn btn-primary btn-sm"
-                data-toggle="modal" data-target="#createSessionModal" >Create Session</button></div>
-          </h3>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="conatiner-fluid">
-              <div class="row">
-                  <div class="col-md-6">
-                    <div class="act_details_section_two">
-                        <h5>List of Students :</h5>
-                        <select name="grade" [disabled]="stu_loader" (ngModelChange)="filterStudent($event)"
-                          [(ngModel)]="gradeId">
-                          <option value="" selected>Select Grade</option>
-                          <option *ngFor="let g of schoolGrades" value={{g.id}}>{{g.grade}} {{g.section}}</option>
-                          <option disabled *ngIf="!schoolGrades.length">No Grades Available</option>
-                        </select>
-                      </div>
-                        <ul id="student_list">
-                          <li *ngFor="let s of studentsArr; let i = index"> {{i+1}}. {{s.name}} - {{s.grade}} {{s.section}}</li>
-                          <li *ngIf="studentsArr.length==0" id="null">
-                            <div class="spinner-border text-secondary" role="status" *ngIf="stu_loader">
-                            </div> {{stu_loader ? ' Loading...' : 'No Students'}}
-                          </li>
-                        </ul>
-                      <!-- <h5>List of Students :</h5> Under Development -->
-                  </div>
-                  <div class="col-md-6">
-                      <h5>Requests :</h5> Under Development
-                </div>
-              </div>
-              <hr>
-              <div class="row">
-                  <div class="col-md-12">
-                    <div class="act_details_section_two">
-                        <h5>Session Schedule :</h5>
-                      <select name="status" [disabled]="clubSch_loader" (ngModelChange)="filterSession($event)" [(ngModel)]="filterVal"> Filter : 
-                        <option value="" selected>ALL</option>
-                        <option value="upcoming">UPCOMIMG</option>
-                        <option value="ended">ENDED</option>
-                      </select>
-                    </div>
-
-                    <div *ngIf="clubSch_loader">
-                        <div class="spinner-border text-secondary" role="status" *ngIf="clubSch_loader">
-                        </div>{{clubSch_loader?'  Loading...':''}}
-                      </div>{{clubSchedule.length==0&&!clubSch_loader?'No Session Available !': ''}}
-                    
-                    <div class="day_post">
-                        <div class="day" *ngFor="let club of clubSchedule; let i = index;">
-                          <h3>{{club.criterionValue | date}} - {{club.criterionValue | date:'EEEE'}} </h3>
-                          <ul *ngFor="let res of club.responses; let i = index;">
-                            <li id="session_title"> {{i+1}}. {{res.title}}
-                              <span *ngIf="res.status=='upcoming'" style="color: red">({{res.status | uppercase}})</span>
-                              <span *ngIf="res.status=='ended'" style="color: green">({{res.status | uppercase}})</span>
-                            <li>
-                            <li>{{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs </li>
-                            <li>Grades - <span *ngFor="let g of res.grades; let i = index">
-                                {{ (i === res.grades.length-1) ? g.grade+" "+g.section : g.grade+" "+g.section + "," + ' '}}</span></li>
-                          </ul>
+<div class="modal fade" id="clubDetailsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="all_act modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel">{{clubName}} Details
+                    <div><button [disabled]="stu_loader && clubSch_loader" class="btn btn-primary btn-sm"
+                            data-toggle="modal" data-target="#createSessionModal">Create Session</button></div>
+                </h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="conatiner-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h5>Requests :</h5> Under Development
                         </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="act_details_section_two">
+                                <h5>List of Students :</h5>
+                                <select name="grade" [disabled]="stu_loader" (ngModelChange)="filterStudent($event)"
+                                    [(ngModel)]="gradeId">
+                                    <option value="" selected>Select Grade</option>
+                                    <option *ngFor="let g of schoolGrades" value={{g.id}}>{{g.grade}} {{g.section}}
+                                    </option>
+                                    <option disabled *ngIf="!schoolGrades.length">No Grades Available</option>
+                                </select>
+                            </div>
+                            <ul id="student_list">
+                                <li *ngFor="let s of studentsArr; let i = index"> {{i+1}}. {{s.name}} - {{s.grade}}
+                                    {{s.section}}</li>
+                                <li *ngIf="studentsArr.length==0" id="null">
+                                    <div class="spinner-border text-secondary" role="status" *ngIf="stu_loader">
+                                    </div> {{stu_loader ? ' Loading...' : 'No Students'}}
+                                </li>
+                            </ul>
+                            <!-- <h5>List of Students :</h5> Under Development -->
+                        </div>
+                        <div class="col-md-6">
+                            <div class="act_details_section_two">
+                                <h5>Session Schedule :</h5>
+                                <select name="status" [disabled]="clubSch_loader"
+                                    (ngModelChange)="filterSession($event)" [(ngModel)]="filterVal"> Filter :
+                                    <option value="" selected>ALL</option>
+                                    <option value="upcoming">UPCOMIMG</option>
+                                    <option value="ended">ENDED</option>
+                                </select>
+                            </div>
+
+                            <div *ngIf="clubSch_loader">
+                                <div class="spinner-border text-secondary" role="status" *ngIf="clubSch_loader">
+                                </div>{{clubSch_loader?'  Loading...':''}}
+                            </div>{{clubSchedule.length==0&&!clubSch_loader?'No Session Available !': ''}}
+
+                            <div class="day_post">
+                                <div class="day" *ngFor="let club of clubSchedule; let i = index;">
+                                    <h3>{{club.criterionValue | date}} - {{club.criterionValue | date:'EEEE'}} </h3>
+                                    <ul *ngFor="let res of club.responses; let i = index;">
+                                        <li id="session_title"> {{i+1}}. {{res.title}}
+                                            <span *ngIf="res.status=='upcoming'"
+                                                style="color: red">({{res.status | uppercase}})</span>
+                                            <span *ngIf="res.status=='ended'"
+                                                style="color: green">({{res.status | uppercase}})</span>
+                                        </li>
+                                        <li>{{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs
+                                        </li>
+                                        <li>Grades - <span *ngFor="let g of res.grades; let i = index">
+                                                {{ (i === res.grades.length-1) ? g.grade+" "+g.section : g.grade+" "+g.section + "," + ' '}}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
