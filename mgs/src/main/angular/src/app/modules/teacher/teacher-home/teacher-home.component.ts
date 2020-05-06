@@ -28,6 +28,14 @@ export class TeacherHomeComponent implements OnInit {
   sessionsArr = []; // Get Session of a week
   createSessionShow = false;
   editSessionShow = false;
+  teacherName: any;
+
+  // Club details variable
+  clubName = "";
+  filterVal = "";
+  clubSchedule = [];
+  copySchedule = [];
+  clubSch_loader = false;
 
 
   constructor(private teacherService: TeacherService, private formBuilder: FormBuilder, private alertService: AlertService) { }
@@ -35,6 +43,7 @@ export class TeacherHomeComponent implements OnInit {
   ngOnInit() {
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
     this.schoolId = this.teacherInfo['teacher'].schoolId;
+    this.teacherName = this.teacherInfo.teacher.name;
     this.clubReqLoader = true;
     this.getAllClubReq();
     this.getAllClubs();
@@ -179,9 +188,8 @@ export class TeacherHomeComponent implements OnInit {
       }
 
     });
-
-
   }
+
   createSessionBtn() {
     console.log("Create Session btn");
     this.createSessionShow = true;
@@ -232,6 +240,58 @@ export class TeacherHomeComponent implements OnInit {
       // gradeIds: [, [Validators.required]],
 
     });
+    let arr = [];
+    session.grades.forEach(element => {
+        // console.log(element.id);
+        arr.push(element.id);
+        this.createSessionForm.controls.gradeIds.setValue(arr);     
+      });
+  }
+
+  // Details of All Clubs and Societies
+   clubDetails(clubObj) {
+    $('#clubDetailsModal').modal('show');
+    this.clubSchedule = [];
+    this.filterVal = ""; // Reset Filter value
+    this.clubSch_loader = true;
+    this.clubName = clubObj.name;
+    this.getClubSession(clubObj.id)
+   }
+
+   // get Session of a particualr Club/Society
+   getClubSession(clubId){
+     this.teacherService.getSupervisedClubSession(clubId).subscribe((res)=>{
+       console.log(res.sessions);
+       this.clubSchedule = res.sessions;
+       this.copySchedule = Object.assign([],res.sessions);
+       this.clubSch_loader = false;
+     },(err)=>{
+      console.log(err);
+      this.clubSch_loader = false;});
+   }
+
+     // Filter session on the bases of ALL, UPCOMING and ENDED
+  filterSession(val) {
+    this.clubSchedule = this.filter(Object.assign([], this.copySchedule), val, "Session");
+  }
+
+   // Actual Filtering of Sessions on the basis of type
+  filter(array: any[], value: string , type:string) {
+    let filterSessionArr = [];
+    if(type=="Session"){
+      if (value)
+        filterSessionArr = array.filter(e => e.responses[0].status == value);
+      else
+        filterSessionArr = array;
+    }
+    if(type=="Student"){
+      if (value)
+        filterSessionArr = array.filter(e => e.gradeId == value);
+      else
+        filterSessionArr = array;
+    }
+
+    return filterSessionArr;
   }
 
 
