@@ -346,6 +346,8 @@ button.enrollment_button {
     float: left;
     border-right: 2px solid lightgrey;
     padding-right: 35px;
+    height: 600px;
+    overflow-y: auto;
 }
 .schedule{
     width: 100%;
@@ -473,6 +475,11 @@ li#session_title {
     float: right;
     width: 115px;
     height: 29px;
+}
+li#reference {
+    background: black;
+    color: white;
+    padding: 0;
 }
 
 /*-------------------------------------NAVIGATION BAR-------------------------------------*/
