@@ -192,10 +192,34 @@ data-backdrop="static" data-keyboard="false">
                             </div> {{stu_loader ? ' Loading...' : 'No Students'}}
                           </li>
                         </ul>
-                      <!-- <h5>List of Students :</h5> Under Development -->
                   </div>
                   <div class="col-md-6">
-                      <h5>Requests :</h5> Under Development
+                    <div class="act_details_section_two">
+                        <h5>Requests :</h5>
+                      <select name="status" [disabled]="clubReqLoader" (ngModelChange)="filterRequests($event)" [(ngModel)]="filterReqVal"> Filter : 
+                        <option value="" selected>ALL</option>
+                        <option value="VERIFIED">VERIFIED</option>
+                        <option value="PENDING">PENDING</option>
+                      </select>
+                    </div>
+                    <ul id="student_list">
+                        <li *ngFor="let req of clubReqArr; let i = index">{{i+1}}. {{req.student.name}}
+                            <div>
+                                <span *ngIf="req.membershipStatus=='PENDING'" style="color: red">({{req.membershipStatus | uppercase}})</span>
+                                  <span *ngIf="req.membershipStatus=='VERIFIED'" style="color: green">({{req.membershipStatus | uppercase}})</span>
+
+
+                            </div>
+                            
+                            <span>Grade - {{req.student.grade}} {{req.student.section}}</span><br>
+                            <button *ngIf="req.membershipStatus=='PENDING'" class="btn btn-success">Verify</button>
+                            <button *ngIf="req.membershipStatus=='PENDING'" class="btn btn-danger">Reject</button>
+                        </li>
+                        <li *ngIf="clubReqArr.length==0" id="null">
+                          <div class="spinner-border text-secondary" role="membershipStatus" *ngIf="stu_loader">
+                          </div> {{stu_loader ? ' Loading...' : 'No Students'}}
+                        </li>
+                      </ul>
                 </div>
               </div>
               <hr>

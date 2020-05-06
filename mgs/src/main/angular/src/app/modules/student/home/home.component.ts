@@ -43,6 +43,7 @@ export class HomeComponent implements OnInit {
 
   // Details of All Club/Society Modal Variable
   clubName = "";
+  supervisorName = "";
   sessionView = false;
   copyStuArr = [];
 
@@ -80,6 +81,7 @@ export class HomeComponent implements OnInit {
   // List of enrolled Clubs and Societies
   getEnrolledClub() {
     this.studentService.getAllEnrolledClub().subscribe(res => {
+      console.log(res);
       this.enrolledClubsArr = res.filter(e => e.clubOrSociety == "Club");
       this.enrolledSocietyArr = res.filter(e => e.clubOrSociety == "Society");
     }, (err) => { console.log(err) });
@@ -88,7 +90,6 @@ export class HomeComponent implements OnInit {
   // List of Sessions in current week
   getSessionDetails() {
     this.studentService.getSession("week").subscribe((res) => {
-      console.log(res.sessions);
       this.sessionsArr = res.sessions;
     }, (err) => { console.log(err); });
   }
@@ -182,6 +183,7 @@ export class HomeComponent implements OnInit {
     // Session Schedule of a particular Supervisor
     getSupervisorSession(obj_sup){
       this.getStudents(obj_sup.id);
+      this.supervisorName = obj_sup.name;
       this.clubSchedule = []; // reset club schedule
       this.students = [] //reset club+supervisor+student array
       this.sessionView = true; // Session+student view
@@ -218,7 +220,8 @@ export class HomeComponent implements OnInit {
   
     // Registration in a particular Club from Club Details Modal
     clubRegBtn(){
-      this.alertService.confirmWithoutLoader("info","Are you sure you want to register ?","","Yes").then(result =>{
+      let a ="Activity : "+this.clubName+"\n, Supervisor : "+this.supervisorName;
+      this.alertService.confirmWithoutLoader("info","Are you sure you want to register ?",a,"Yes").then(result =>{
         if(result.value){
           this.clubRegistration();
         }
