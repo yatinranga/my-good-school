@@ -341,7 +341,7 @@ button.enrollment_button {
     width: 150px;
 }
 .left_col{
-    width: 20%;
+    width: 30%;
     display: inline-block;
     float: left;
     border-right: 2px solid lightgrey;
@@ -358,15 +358,16 @@ button.enrollment_button {
 .enrolled_main h2, .schedule h2{
     font-size: 30px;
     color: #159487;
-    margin: 5px 0 10px 0;
+    margin: 0 0 15px 0;
 }
 .day h3 {
     font-size: 22px;
 }
 .day {
     width: 100%;
-    padding: 0 10px;
+    padding: 10px;
     margin-bottom: 20px;
+    border-radius: 10px;
 }
 .day ul li {
     font-size: 17px;
@@ -376,27 +377,30 @@ button.enrollment_button {
     padding: 0;
     margin: 0;
 }
-.day:first-child h3 {
-    color: #e04090;
+.day:first-child(1) {
+    background: gold;
 }
-.day:nth-child(2) h3 {
-    color: #7c00c3;
+.day:nth-child(2) {
+    background: #ecaece;
 }
-.day:nth-child(3) h3 {
-    color: #4bafa5;
+.day:nth-child(3) {
+    background: #9fbb73;
 }
-.day:nth-child(4) h3 {
-    color: #8dc33a;
+.day:nth-child(4) {
+    background: #c98dea;
 }
-.day:nth-child(5) h3 {
-    color: #1f69ad;
+.day:nth-child(5) {
+    background: #1f69ad;
 }
-.day:last-child h3 {
-    color: #1ab3bb;
+.day:nth-child(6) {
+    background: #1f69ad;
+}
+.day:last-child {
+    background: #f5dd60;
 }
 .cands{
-    width: 78%;
-    padding: 0 20px 0 40px;
+    width: 70%;
+    padding: 0 20px 0 35px;
     display: inline-block;
 }
 .cands h2{
@@ -404,17 +408,13 @@ button.enrollment_button {
     color: #159487;
     margin: 0 0 15px 15px;
 }
-.fourskill_main {
-    width: 100%;
-    display: inline-flex;
-}
 .club_main {
-    width: 49%;
+    width: 50%;
     text-align: center;    
     display: inline-block;
 }
 li#session_title {
-    font-size: 19px;
+    font-size: 20px;
     font-weight: normal;
     word-spacing: 3px;
     padding: 0px;
@@ -431,7 +431,6 @@ li#session_title {
     background: gainsboro;
     border: none;
     color: #333;
-    box-shadow: 0 0 10px #eee;
     border-radius: 4px;
 }
 .act_details_section_two{

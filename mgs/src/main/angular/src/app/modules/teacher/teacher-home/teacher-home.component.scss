@@ -2,10 +2,8 @@
 .cands{
     display: inline-flex;
     border: none;
-    width: 75%;
 }
 .club_main {
-    background: gainsboro;
     margin: 0 10px;
 }
 .club_main ul li {
@@ -19,8 +17,11 @@
     padding: 0;
     margin: 0;
 }
-.left_col{
-    width: 25%;
+.teacher_club_list{
+    width: 100%;
+    background: gainsboro;
+    display: inline-block;
+    min-height: 200px;
 }
 button.btn.register.btn-primary{
     background: #8dc33a;

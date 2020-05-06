@@ -8,9 +8,9 @@
 
   <div class="left_col">
 
-    <div class="enrolled_main">
+    <!--
+      <div class="enrolled_main">
       <h2> My Enrolled </h2>
-      <!-- list of enrolled clubs and societies -->
       <div class="fourskill_main">
         <div class="enrolled_pre">
           <h3> Clubs </h3>
@@ -26,18 +26,21 @@
         </div>
       </div>
     </div>
+    -->
 
     <div class="schedule">
       <h2> My Schedule </h2>
       <div class="day" *ngFor="let s of sessionsArr; let i = index;">
         <h3>{{s.criterionValue | date}} - {{s.criterionValue | date:'EEEE'}} </h3>
         <ul *ngFor="let res of s.responses; let i = index;">
-          <li id="session_title"> {{i+1}}. {{res.title}} ({{res.club.name}})</li>
+          <li id="session_title"> {{i+1}}. {{res.title}} </li>
+          <li> ({{res.club.name}}) </li>
           <li> {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs </li>
           <li>Supervisor - {{res.teacherName}}</li> <br>
         </ul>
       </div>
     </div>
+    
   </div>
 
   <div class="cands">

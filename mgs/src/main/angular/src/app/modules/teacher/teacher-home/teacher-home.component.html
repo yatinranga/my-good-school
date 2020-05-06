@@ -49,7 +49,7 @@
     <div class="welcome">
         <h2> Welcome to My Good School , {{teacherName}} ! </h2>
         <div class="en_button">
-            <button data-toggle="modal" data-target="#registrationModal" class="enrollment_button">Create New
+            <button data-toggle="modal" data-target="#createSessionModal" class="enrollment_button">Create New
                 Session</button>
         </div>
     </div>
@@ -60,9 +60,9 @@
                 <h3>{{s.criterionValue | date}} - {{s.criterionValue | date:'EEEE'}} </h3>
                 <ul *ngFor="let res of s.responses; let i = index;">
                     <li id="session_title"> {{i+1}}. {{res.title}}</li>
-                    <li>{{res.club.name}} </li>
+                    <li> ({{res.club.name}}) </li>
                     <li> {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs </li>
-                    <li>Grades - <span *ngFor="let g of res.grades; let i = index">
+                    <li>Grade - <span *ngFor="let g of res.grades; let i = index">
                         {{ (i === res.grades.length-1) ? g.grade+" "+g.section : g.grade+" "+g.section + "," + ' '}}</span></li>
                     <li><button (click)="editSessionBtn(res,i)">Edit</button> <button
                             (click)="deleteSession(res,i)">Delete</button></li>
@@ -74,16 +74,20 @@
     <div class="cands">
         <div class="club_main">
             <h2> Clubs </h2>
-            <ul *ngFor="let c of assignedClubsArr">
-                <li (click)="clubDetails(c)">{{c.name}}</li>
-            </ul>
+            <div class="teacher_club_list">
+                <ul *ngFor="let c of assignedClubsArr">
+                    <li (click)="clubDetails(c)">{{c.name}}</li>
+                </ul>
+            </div>
         </div>
 
         <div class="club_main">
             <h2> Societies </h2>
-            <ul *ngFor="let s of assignedSocietyArr">
-                <li (click)="clubDetails(s)">{{s.name}}</li>
-            </ul>
+            <div class="teacher_club_list">
+                <ul *ngFor="let s of assignedSocietyArr">
+                    <li (click)="clubDetails(s)">{{s.name}}</li>
+                </ul>
+            </div>
         </div>
     </div>
 
