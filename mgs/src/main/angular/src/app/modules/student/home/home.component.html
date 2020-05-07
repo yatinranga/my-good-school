@@ -203,7 +203,7 @@
               <h5>List of Supervisors :</h5>
               <ul *ngFor="let c of coaches; let i = index">
                 <li id="session_title" (click)="getSupervisorSession(c)">{{i+1}}. {{c.name}} -</li>
-                <li>{{c.profileBrief}}</li>
+                <li> {{c.profileBrief}} </li>
               </ul>
               <div *ngIf="coaches.length==0" id="null">
                 <div class="spinner-border text-secondary" role="status" *ngIf="sup_loader">
