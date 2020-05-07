@@ -175,4 +175,8 @@ export class TeacherService {
     return this.http.get("/api/students/activity?activityId=" + activityId + "&teacherId=" + teacherId);
   }
 
+  getSupervisorClubReq(clubId){
+    return this.http.get("/api/teacher/club/"+clubId+"/members")
+  }
+
 }

@@ -11,11 +11,9 @@ declare let $: any;
 })
 export class TeacherHomeComponent implements OnInit {
 
-  clubReqArr = [];
   assignedClubsArr = [];
   assignedSocietyArr = [];
   allAssignedActi = []; // All assigned activities
-  clubReqLoader = false;
 
   createSessionForm: FormGroup; // create session form
   teacherInfo: any;
@@ -35,12 +33,16 @@ export class TeacherHomeComponent implements OnInit {
   clubId: any;
   clubName = "";
   filterVal = "";
+  filterReqVal = "";
   clubSchedule = [];
   copySchedule = [];
   studentsArr = [];
   copyStudentArr = [];
+  clubReqArr = [];
+  copyClubReqArr = [];
   clubSch_loader = false;
   stu_loader = false;
+  clubReqLoader = false;
   gradeId = "";
 
 
@@ -258,20 +260,24 @@ export class TeacherHomeComponent implements OnInit {
   clubDetails(clubObj) {
     $('#clubDetailsModal').modal('show');
     this.clubSchedule = [];
+    this.studentsArr = [];
+    this.clubReqArr = [];
     this.filterVal = ""; // Reset Filter value
+    this.filterReqVal = "";
     this.gradeId = "";
     this.clubSch_loader = true;
     this.stu_loader = true;
+    this.clubReqLoader = true;
     this.clubName = clubObj.name;
     this.clubId = clubObj.id;
-    this.getClubSession(clubObj.id);
+    this.getClubRequests(clubObj.id);
     this.getClubStudents(clubObj.id, this.teacherId);
+    this.getClubSession(clubObj.id);
   }
 
   // get Session of a particualr Club/Society
   getClubSession(clubId) {
     this.teacherService.getSupervisedClubSession(clubId).subscribe((res) => {
-      console.log(res.sessions);
       this.clubSchedule = res.sessions;
       this.copySchedule = Object.assign([], res.sessions);
       this.clubSch_loader = false;
@@ -292,7 +298,6 @@ export class TeacherHomeComponent implements OnInit {
       this.studentsArr = res;
       this.copyStudentArr = Object.assign([], res);
       this.stu_loader = false;
-      console.log(res);
     }, (err) => {
       console.log(err);
       this.stu_loader = false;
@@ -303,6 +308,23 @@ export class TeacherHomeComponent implements OnInit {
   // Filter student on the bases of grade
   filterStudent(val) {
     this.studentsArr = this.filter(Object.assign([], this.copyStudentArr), val, "Student");
+  }
+
+  // Requests of a particular club/society
+  getClubRequests(clubId){
+    this.teacherService.getSupervisorClubReq(clubId).subscribe((res)=>{
+      console.log(res);
+      this.clubReqArr = res;
+      this.copyClubReqArr = Object.assign([], res);
+    this.clubReqLoader = false;
+    },(err)=>{
+      console.log(err);
+    this.clubReqLoader = false;
+    });
+  }
+
+  filterRequests(val){
+    this.clubReqArr = this.filter(Object.assign([], this.copyClubReqArr), val, "Request");
   }
 
   newSessionBtn(){
@@ -321,6 +343,12 @@ export class TeacherHomeComponent implements OnInit {
     if (type == "Student") {
       if (value)
         filterSessionArr = array.filter(e => e.gradeId == value);
+      else
+        filterSessionArr = array;
+    }
+    if (type == "Request") {
+      if (value)
+        filterSessionArr = array.filter(e => e.membershipStatus == value);
       else
         filterSessionArr = array;
     }
