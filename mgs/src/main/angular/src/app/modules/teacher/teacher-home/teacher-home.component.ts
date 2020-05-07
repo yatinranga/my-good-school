@@ -94,37 +94,40 @@ export class TeacherHomeComponent implements OnInit {
   //   });
   // }
 
-  // setClubReq(obj, index, verify) {
+  setClubReq(obj, index, verify) {
 
-  //   // To Verify/Approve the Club/Society Request
-  //   if (verify == 'true') {
-  //     this.alertService.confirmWithoutLoader('question', 'Sure you want to Approve ?', '', 'Yes').then(result => {
-  //       if (result.value) {
-  //         this.alertService.showLoader("");
-  //         this.teacherService.approveClubReq(obj.student.id, obj.club.id, verify).subscribe(res => {
-  //           this.alertService.showSuccessAlert("Request Approved!");
-  //           this.clubReqArr.splice(index, 1);
-  //           this.clubReqArr.unshift(res);
-  //         }, (err) => { console.log(err); })
-  //       }
-  //     })
-  //   }
+    // To Verify/Approve the Club/Society Request
+    if (verify == 'true') {
+      this.alertService.confirmWithoutLoader('question', 'Sure you want to Approve ?', '', 'Yes').then(result => {
+        if (result.value) {
+          this.alertService.showLoader("");
+          this.teacherService.approveClubReq(obj.student.id, obj.club.id, verify).subscribe(res => {
+            this.alertService.showSuccessAlert("Request Approved!");
+            this.clubReqArr.splice(index, 1);
+            // this.clubReqArr.unshift(res);
+            this.getClubRequests(this.clubId);
+          }, (err) => { console.log(err); })
+        }
+      })
+    }
 
-  //   // To Reject the Club/Society Request
-  //   if (verify == 'false') {
-  //     this.alertService.confirmWithoutLoader('question', 'Sure you want to Reject ?', '', 'Yes').then(result => {
-  //       if (result.value) {
-  //         this.alertService.showLoader("");
-  //         this.teacherService.approveClubReq(obj.student.id, obj.club.id, verify).subscribe(res => {
-  //           this.alertService.showSuccessAlert("Request Rejected!");
-  //           this.clubReqArr.splice(index, 1);
-  //           this.clubReqArr.unshift(res);
-  //         }, (err) => { console.log(err) })
-  //       }
-  //     })
-  //   }
+    // To Reject the Club/Society Request
+    if (verify == 'false') {
+      this.alertService.confirmWithoutLoader('question', 'Sure you want to Reject ?', '', 'Yes').then(result => {
+        if (result.value) {
+          this.alertService.showLoader("");
+          this.teacherService.approveClubReq(obj.student.id, obj.club.id, verify).subscribe(res => {
+            this.alertService.showSuccessAlert("Request Rejected!");
+            this.clubReqArr.splice(index, 1);
+            // this.clubReqArr.unshift(res);
+            this.getClubRequests(this.clubId);
 
-  // }
+          }, (err) => { console.log(err) })
+        }
+      })
+    }
+
+  }
 
   // get List of School Grades 
   getSchoolGrades(schoolId) {
