@@ -344,9 +344,8 @@ button.enrollment_button {
     width: 30%;
     display: inline-block;
     float: left;
-    border-right: 2px solid lightgrey;
     padding-right: 35px;
-    height: 600px;
+    height: 533px;
     overflow-y: auto;
 }
 .schedule{
@@ -379,23 +378,23 @@ button.enrollment_button {
     padding: 0;
     margin: 0;
 }
-.day:first-child(1) {
-    background: gold;
-}
-.day:nth-child(2) {
+.day:nth-child(1) {
     background: #ecaece;
 }
-.day:nth-child(3) {
+.day:nth-child(2) {
     background: #9fbb73;
 }
+.day:nth-child(3) {
+    background: #8eb6dc;
+}
 .day:nth-child(4) {
-    background: #c98dea;
+    background: #dea895;
 }
 .day:nth-child(5) {
-    background: #1f69ad;
+    background: #9e9e9e;
 }
 .day:nth-child(6) {
-    background: #1f69ad;
+    background: #846539a6;
 }
 .day:last-child {
     background: #f5dd60;
@@ -481,6 +480,21 @@ li#reference {
     color: white;
     padding: 0;
 }
+ul#student_list {
+    margin-top: 15px;
+    padding: 0;
+}
+.all_act.modal-content .day_post {
+    width: 100%;
+    display: inline-block;
+    margin-top: 15px;
+}
+ul#student_list li {
+    padding: 0;
+    font-size: 17px;
+    word-spacing: 3px;
+}
+
 
 /*-------------------------------------NAVIGATION BAR-------------------------------------*/
 
