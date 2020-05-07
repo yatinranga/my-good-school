@@ -106,6 +106,7 @@ export class TeacherHomeComponent implements OnInit {
             this.clubReqArr.splice(index, 1);
             // this.clubReqArr.unshift(res);
             this.getClubRequests(this.clubId);
+            this.getClubStudents(this.clubId, this.teacherId);
           }, (err) => { console.log(err); })
         }
       })
