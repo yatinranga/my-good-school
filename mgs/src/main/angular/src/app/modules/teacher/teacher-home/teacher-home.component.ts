@@ -29,6 +29,9 @@ export class TeacherHomeComponent implements OnInit {
   editSessionShow = false;
   teacherName: any;
 
+  createSessionView = true;
+  editSessionView = false;
+
   // Club details variable
   clubId: any;
   clubName = "";
@@ -59,6 +62,7 @@ export class TeacherHomeComponent implements OnInit {
     this.getSessionDetails();
 
     this.createSessionForm = this.formBuilder.group({
+      id : [null],
       number: [, [Validators.required]],
       startDate: [, [Validators.required]],
       endDate: [],
@@ -138,15 +142,32 @@ export class TeacherHomeComponent implements OnInit {
     console.log(this.createSessionForm.value);
 
     this.alertService.showLoader("");
-    this.teacherService.createNewSession(this.createSessionForm.value).subscribe((res) => {
-      console.log(res);
-      $('#createSessionModal').modal('hide');
-      $('.modal-backdrop').remove();
-      this.alertService.showMessageWithSym("Session Created !", "Success", "success");
-      this.resetForm();
-    }, (err) => {
-      console.log(err);
-    });
+
+    if(this.createSessionView){
+      this.teacherService.createNewSession(this.createSessionForm.value).subscribe((res) => {
+        console.log(res);
+        $('#createSessionModal').modal('hide');
+        $('.modal-backdrop').remove();
+        this.alertService.showMessageWithSym("Session Created !", "Success", "success");
+        this.resetForm();
+        this.getSessionDetails();
+      }, (err) => {
+        console.log(err);
+      });
+    }
+
+    if(this.editSessionView){
+      this.teacherService.editSession(this.createSessionForm.value).subscribe((res) => {
+        console.log(res);
+        $('#createSessionModal').modal('hide');
+        $('.modal-backdrop').remove();
+        this.alertService.showMessageWithSym("Session Edited !", "Success", "success");
+        this.resetForm();
+        this.getSessionDetails();
+      }, (err) => {
+        console.log(err);
+      });
+    }
   }
 
   // Reset Form
@@ -185,14 +206,14 @@ export class TeacherHomeComponent implements OnInit {
   }
 
   // Delete Scheduled Session
-  deleteSession(session, index) {
+  deleteSession(session, out_index, in_index) {
     console.log(session);
     this.alertService.confirmWithoutLoader('question', 'Sure you want to DELETE ?', '', 'Yes').then(result => {
       if (result.value) {
         this.alertService.showLoader("");
         this.teacherService.deleteSession(session.id).subscribe((res) => {
           console.log(res);
-          this.sessionsArr.splice(index, 1);
+          this.sessionsArr[out_index].responses.splice(in_index, 1);
           this.alertService.showMessageWithSym("Session Deleted", "Success", "success");
         }, (err) => { console.log(err) });
       }
@@ -200,17 +221,16 @@ export class TeacherHomeComponent implements OnInit {
     });
   }
 
-  // createSessionBtn() {
-  //   console.log("Create Session btn");
-  //   this.createSessionShow = true;
-  //   this.startTime = "";
-  //   this.endTime = "";
-  //   this.createSessionForm.reset();
-  // }
+  createSessionBtn() {
+    this.createSessionView = true;
+    this.editSessionView = false;
+  }
 
   // Edit Current Session
-  editSessionBtn(session, index) {
+  editSessionBtn(session,i,j) {
     $('#createSessionModal').modal('show');
+    this.createSessionView = false;
+    this.editSessionView = true;
     console.log(session);
     this.editSessionShow = true;
     let sDate = new Date(session.startDate);
@@ -244,6 +264,7 @@ export class TeacherHomeComponent implements OnInit {
 
     this.createSessionForm.controls.startDate.patchValue(session.startDate.split(' ')[0]);
     this.createSessionForm.patchValue({
+      id: session.id,
       number: session.number,
       title: session.title,
       clubId: session.club.id
@@ -273,6 +294,7 @@ export class TeacherHomeComponent implements OnInit {
     this.getClubRequests(clubObj.id);
     this.getClubStudents(clubObj.id, this.teacherId);
     this.getClubSession(clubObj.id);
+    this.createSessionForm.controls.clubId.patchValue(this.clubId);
   }
 
   // get Session of a particualr Club/Society
@@ -328,7 +350,7 @@ export class TeacherHomeComponent implements OnInit {
   }
 
   newSessionBtn(){
-    $('#createSessionModal').modal('show');
+    
   }
 
   // Actual Filtering of Sessions on the basis of type
