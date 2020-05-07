@@ -271,4 +271,8 @@ export class HomeComponent implements OnInit {
     this.clubSupervisor = [];
   }
 
+  enrollmentBtn(){
+    this.clubId="";
+  }
+
 }
