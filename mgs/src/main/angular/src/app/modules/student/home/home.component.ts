@@ -51,6 +51,9 @@ export class HomeComponent implements OnInit {
   sup_loader = false;
   csup_loader = false;
 
+  highlightClubArr = [];
+  highlightSocietyArr = [];
+
   filterVal = ""; // filter the activity by ALL, UPCOMING and ENDED
 
   constructor(private studentService: StudentService, public alertService: AlertService) { }
@@ -59,10 +62,10 @@ export class HomeComponent implements OnInit {
     this.studentInfo = JSON.parse(localStorage.getItem('user_info'));
     this.schoolId = this.studentInfo.student.schoolId;
     this.studentName = this.studentInfo.student.name;
-    this.getActivity(this.schoolId); // ALL Activites of School
     this.getGrades(this.schoolId); // ALL Grades of School
     this.getEnrolledClub(); // List of Enrolled Club
     this.getSessionDetails(); // List of Scheduled Session of a WEEK
+    this.getActivity(this.schoolId); // ALL Activites of School
   }
 
   // get List of Activities of School
@@ -70,9 +73,9 @@ export class HomeComponent implements OnInit {
     this.studentService.getActivity(schoolId).subscribe((res) => {
       this.activities = res;
       this.sportArr = res.filter((e) => (e.fourS == 'Sport'));
-      this.skillArr = res.filter((e) => (e.fourS == 'Skill'));
       this.serviceArr = res.filter((e) => (e.fourS == 'Service'));
       this.studyArr = res.filter((e) => (e.fourS == 'Study'));
+      this.skillArr = res.filter((e) => (e.fourS == 'Skill'));
     },
       (err) => console.log(err)
     );
@@ -84,6 +87,11 @@ export class HomeComponent implements OnInit {
       console.log(res);
       this.enrolledClubsArr = res.filter(e => e.clubOrSociety == "Club");
       this.enrolledSocietyArr = res.filter(e => e.clubOrSociety == "Society");
+      this.enrolledClubsArr.forEach(e=>this.highlightClubArr.push(e.name));
+      this.enrolledSocietyArr.forEach(e=>this.highlightSocietyArr.push(e.name));
+
+      console.log(this.highlightClubArr);
+      console.log(this.highlightSocietyArr);
     }, (err) => { console.log(err) });
   }
 
@@ -274,5 +282,4 @@ export class HomeComponent implements OnInit {
   enrollmentBtn(){
     this.clubId="";
   }
-
 }
