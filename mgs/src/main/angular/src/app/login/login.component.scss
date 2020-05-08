@@ -77,7 +77,7 @@ form {
     }
   }
   .forms_buttons-action {
-    background-color: #a36ea5bf;
+    background: #a36ea5bf;
     border-radius: 3px;
     padding: 10px 35px;
     font-size: 1rem;
@@ -184,4 +184,14 @@ form {
   margin-top: 30px;
   color: gray;
   text-decoration: underline;
+}
+
+button.forms_buttons-action.inactive {
+    background: gainsboro;
+    color: #333;
+}
+
+button.forms_buttons-action.inactive.active {
+    background: #a36ea5bf;
+    color: #fafafa;
 }

@@ -25,8 +25,7 @@
                 </fieldset>
                 <div class="forms_buttons">
                     <a (click)="forgetPassword()"> Forgot Password ? </a>
-                    <button *ngIf="loginForm.invalid" name="Submit_Button" type="submit"> Login </button>
-                    <button *ngIf="loginForm.valid" class="forms_buttons-action login-btn"  name="Submit_Button" type="submit"> Login 
+                    <button [ngClass]="{'active':loginForm.valid}" class="forms_buttons-action inactive"  name="Submit_Button" type="submit"> Login 
                         <span *ngIf="loader">
                             <div class="spinner-border" role="status"> </div>
                         </span>
