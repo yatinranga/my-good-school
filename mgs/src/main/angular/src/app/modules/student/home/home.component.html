@@ -202,7 +202,7 @@
             <div class="col-md-12">
               <h5>List of Supervisors :</h5>
               <ul *ngFor="let c of coaches; let i = index">
-                <li class="teachername" (click)="getSupervisorSession(c)">{{i+1}}. {{c.name}} -</li>
+                <li class="teachername" [ngClass]="{'active':supervisorId==c.id}" (click)="getSupervisorSession(c)">{{i+1}}. {{c.name}} -</li>
                 <li> {{c.profileBrief}} </li>
               </ul>
               <div *ngIf="coaches.length==0" id="null">
