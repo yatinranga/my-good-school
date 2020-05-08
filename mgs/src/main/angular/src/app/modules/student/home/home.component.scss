@@ -76,6 +76,17 @@
 button.btn.register.btn-primary{
     background: #8dc33a;
 }
+li.active {
+    background: #8dc33a;
+}
+
+li.teachername:hover {
+    background: gainsboro;
+}
+li.teachername {
+    color: red;
+}
+
 
 /*--------------------------------------MODAL------------------------------*/
 
