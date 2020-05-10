@@ -51,14 +51,14 @@
           <img src="assets/images/16.png">
           <h3> Study </h3>
           <ul *ngFor="let study of studyArr">
-            <li [ngClass]="{'reference':highlightClubArr.includes(study.name)}" (click)="clubDetails(study)">{{study.name}}</li>
+            <li [ngClass]="{'study reference':highlightClubArr.includes(study.name)}" (click)="clubDetails(study)">{{study.name}}</li>
           </ul>
         </div>
         <div class="skill fourskill">
           <img src="assets/images/21.png">
           <h3> Skill </h3>
           <ul *ngFor="let skill of skillArr;let i = index">
-            <li [ngClass]="{'reference':highlightClubArr.includes(skill.name)}" (click)="clubDetails(skill)">{{skill.name}}</li>
+            <li [ngClass]="{'skill reference':highlightClubArr.includes(skill.name)}" (click)="clubDetails(skill)">{{skill.name}}</li>
           </ul>
           <!-- For Reference -->
           <!-- <ul> 
@@ -75,14 +75,14 @@
           <img src="assets/images/24.png">
           <h3> Service </h3>
           <ul *ngFor="let service of serviceArr">
-            <li [ngClass]="{'reference':highlightSocietyArr.includes(service.name)}" (click)="clubDetails(service)">{{service.name}}</li>
+            <li [ngClass]="{'service reference':highlightSocietyArr.includes(service.name)}" (click)="clubDetails(service)">{{service.name}}</li>
           </ul>
         </div>
         <div class="sport fourskill">
           <img src="assets/images/23.png">
           <h3> Sport </h3>
           <ul *ngFor="let sport of sportArr">
-            <li [ngClass]="{'reference':highlightSocietyArr.includes(sport.name)}" (click)="clubDetails(sport)">{{sport.name}}</li>
+            <li [ngClass]="{'sport reference':highlightSocietyArr.includes(sport.name)}" (click)="clubDetails(sport)">{{sport.name}}</li>
           </ul>
         </div>
       </div>

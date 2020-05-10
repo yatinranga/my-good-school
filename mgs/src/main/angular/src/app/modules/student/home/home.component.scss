@@ -41,7 +41,6 @@
     font-size: 17px;
     line-height: 40px;
 }
-
 .study.fourskill h3{
     color: #4bafa5;
 }
@@ -54,44 +53,33 @@
 .sport.fourskill h3{
     color: #8dc33a;
 }
-.study.fourskill:hover {
+li.skill.reference {
+    background: #df408f;
+}
+li.study.reference {
     background: #4bafa5;
 }
-.skill.fourskill:hover {
+li.skill.reference {
     background: #e04090;
 }
-.service.fourskill:hover {
-    background: #1f69ad;
+li.service.reference {
+    background: #5482ad;
 }
-.sport.fourskill:hover {
+li.sport.reference {
     background: #8dc33a;
 }
-.fourskill:hover h3{
-    color: #333;
+.fourskill:hover{
+    background: gainsboro;
 }
 .fourskill:hover li{
     border-bottom: 1px solid #333; 
     color: #333;
 }
-button.btn.register.btn-primary{
-    background: #8dc33a;
-}
-li.active {
-    background: #8dc33a;
-}
-
-li.teachername:hover {
-    background: #8dc33a;
-}
-li.teachername {
-    color: red;
-}
 li.reference {
-    background: black;
-    color: white;
+    color: #333;
     padding: 0;
+    border-bottom: 1px solid #444 !important; 
 }
-
 
 /*--------------------------------------MODAL------------------------------*/
 
@@ -118,6 +106,18 @@ button.register_button.btn.btn-primary.btn-sm {
     float: right;
 }
 
+button.btn.register.btn-primary{
+    background: #8dc33a;
+}
+li.active {
+    background: #d3d4d3;
+}
+li.teachername:hover {
+    background: #d3d4d3;
+}
+li.teachername {
+    color: red;
+}
 
 
 
