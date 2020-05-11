@@ -83,6 +83,8 @@ li.reference {
 .modal-content {
     border: 5px solid #b4d673;
     top: 100px;
+    height: 600px;
+    overflow-y: scroll;
 }
 .enr_modal.modal-content .modal-body{
     padding: 10px;
@@ -96,13 +98,12 @@ li.reference {
     font-size: 26px;
     color: black;
 }
-.all_act.modal-content {
+.skillmodal .modal-content {
     top: 50px;
 }
 button.register_button.btn.btn-primary.btn-sm {
     float: right;
 }
-
 button.btn.register.btn-primary{
     background: #8dc33a;
 }
@@ -115,42 +116,59 @@ li.teachername:hover {
 li.teachername {
     color: red;
 }
+.modalstudentlist {
+    width: 100%;
+    display: inline-block;
+    height: 400px;
+    overflow-y: scroll;
+    margin-top: 30px;
+}
+.modalsessionschedule {
+    width: 100%;
+    display: inline-block;
+    margin-top: 30px;
+}
+button.register_act.btn.btn-primary.btn-sm {
+    background: darkgray;
+    color: #555;
+    font-size: 18px;
+    float: right;
+    border-radius: 3px !important;
+    margin: 0;
+    padding: 3px 10px;
+}
+button.close span {
+    color: #c10e0e;
+}
 
 
 /*          MODAL REFERENCE          */
 
 .sportmodal {
-    width: 200px;
-    height: 50px;
-    border: 2px solid #4bafa5;
+    border: 5px solid #4bafa5;
 }
 .skillmodal {
-    width: 200px;
-    height: 50px;
-    border: 2px solid #b4d673;
+    border: 5px solid #b4d673;
 }
 .servicemodal {
-    width: 200px;
-    height: 50px;
-    border: 2px solid #1f69ad;
+    border: 5px solid #d86ea3;
 }
 .studymodal {
-    width: 200px;
-    height: 50px;
-    border: 2px solid #e04090;
+    border: 5px solid #1f69ad;
 }
-.sportmodal h2{
+.sportmodal h3, .sportmodal h5 {
     color: #4bafa5;
 }
-.skillmodal h2{
+.skillmodal h3, .skillmodal h5 {
     color: #b4d673;
 }
-.servicemodal h2{
+.servicemodal h3, .servicemodal h5 {
+    color: #d86ea3;
+}
+.studymodal h3, .studymodal h5 {
     color: #1f69ad;
 }
-.studymodal h2{
-    color: #e04090;
-}
+
 
 /*
 
