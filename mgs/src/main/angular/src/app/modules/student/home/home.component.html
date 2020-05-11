@@ -47,11 +47,11 @@
     <div class="club_main">
       <h2> Clubs </h2>
       <div class="fourskill_main">
-        <div class="study fourskill">
-          <img src="assets/images/16.png">
-          <h3> Study </h3>
-          <ul *ngFor="let study of studyArr">
-            <li [ngClass]="{'study reference':highlightClubArr.includes(study.name)}" (click)="clubDetails(study)">{{study.name}}</li>
+        <div class="sport fourskill">
+          <img src="assets/images/23.png">
+          <h3> Sport </h3>
+          <ul *ngFor="let sport of sportArr">
+            <li [ngClass]="{'sport reference':highlightClubArr.includes(sport.name)}" (click)="clubDetails(sport)">{{sport.name}}</li>
           </ul>
         </div>
         <div class="skill fourskill">
@@ -78,13 +78,14 @@
             <li [ngClass]="{'service reference':highlightSocietyArr.includes(service.name)}" (click)="clubDetails(service)">{{service.name}}</li>
           </ul>
         </div>
-        <div class="sport fourskill">
-          <img src="assets/images/23.png">
-          <h3> Sport </h3>
-          <ul *ngFor="let sport of sportArr">
-            <li [ngClass]="{'sport reference':highlightSocietyArr.includes(sport.name)}" (click)="clubDetails(sport)">{{sport.name}}</li>
+        <div class="study fourskill">
+          <img src="assets/images/16.png">
+          <h3> Study </h3>
+          <ul *ngFor="let study of studyArr">
+            <li [ngClass]="{'study reference':highlightSocietyArr.includes(study.name)}" (click)="clubDetails(study)">{{study.name}}</li>
           </ul>
         </div>
+       
       </div>
     </div>
   </div>
@@ -274,3 +275,14 @@
     </div>
   </div>
 </div>
+
+
+
+
+<!------------------------MODAL REFERENCE----------------------------->
+
+
+<div class="sportmodal"> <h2> Sport </h2> </div>
+<div class="skillmodal"> <h2> Skill </h2> </div>
+<div class="servicemodal"> <h2> Service </h2> </div>
+<div class="studymodal"> <h2> Study </h2> </div>
