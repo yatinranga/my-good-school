@@ -70,6 +70,7 @@ export class LoginComponent implements OnInit {
       case "Admin": this.router.navigate(['Admin']); break;
       case "Student": this.router.navigate(['Student/' + '/home']); break;
       case "Teacher": this.router.navigate(['Teacher/' + '/home']); break;
+      case "School": this.router.navigate(['School/' + '/home']); break;
     }
   }
 }

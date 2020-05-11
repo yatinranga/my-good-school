@@ -10,6 +10,7 @@ declare let $: any;
 })
 export class HomeComponent implements OnInit {
 
+  modalClass=""; // ADD class according to Activity
   activities = [];
   coaches = [];
   students = [];
@@ -161,7 +162,14 @@ export class HomeComponent implements OnInit {
   }
 
    // Details of All Clubs and Societies
-   clubDetails(clubObj) {
+   clubDetails(clubObj,type) {
+     // Changing color on the basis of 
+     switch(type){
+       case 'sport': this.modalClass = "sportmodal"; break;
+       case 'skill': this.modalClass = "skillmodal"; break;
+       case 'service': this.modalClass = "servicemodal"; break;
+       case 'study': this.modalClass = "studymodal"; break;
+     }
     $('#clubDetailsModal').modal('show');
     this.clubName = clubObj.name;
     this.clubId = clubObj.id;
