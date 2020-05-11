@@ -25,7 +25,7 @@ const routes: Routes = [
   {
     path: 'Teacher',
     loadChildren: 'src/app/modules/teacher/teacher.module#TeacherModule'
-  },
+  }, 
   {
     path: '',
     redirectTo: ''+JSON.parse(localStorage.getItem('user_type')),
