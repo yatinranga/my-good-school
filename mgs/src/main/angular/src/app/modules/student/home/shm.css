@@ -13,7 +13,6 @@
     display: inline-block;
     padding: 10px;
     background: #156e96;
-    margin-bottom: 20px;
     padding-top: 20px;
 }
 h1 {
@@ -34,15 +33,53 @@ button {
     border: none;
     font-size: 13px;
 }
-.content{
-    width: 100%;
-    display: inline-flex;
+.sidenav {
+    float: left;
+    width: 25%;
+    background: #b9d0da;
+    border-right: 1px solid #b9d0da;
+    padding: 10px;
+    height: 100%;
+}
+.sidenav h2{
+    padding-left: 30px;
+    font-size: 28px;
+    font-weight: 500;
+    color: #333;
+}
+.sidenav ul {
+    margin-top: 60px;
+    padding: 0;
+}
+.sidenav ul li {
+    font-size: 22px;
+    list-style-type: disc;
+    list-style: inside;
+    color: #276e96;
+    font-weight: 600;
     margin: 20px 0;
+    line-height: 40px;
+    color: chocolate;
+    border-bottom: 1px solid chocolate;
+}
+.sidenav ul li:hover{
+    background: #c7c7c7;
+}
+.sidenav p{
+    font-size: 15px;
+    color: #555;
+    line-height: 24px;
+}
+.content{
+    float: right;
+    width: 74%;
+    display: inline-flex;
+    margin: 55px 0;
 }
 .content_box {
-    width: 32%;
+    width: 100%;
     padding: 10px;
-    margin: 10px 20px;
+    margin: 0 10px;
     background: #c7c7c7;
     box-shadow: 0 0 10px #ccc;
     border-radius: 5px;
@@ -54,15 +91,16 @@ button {
 }
 h2{
     float: left;
-    color: #333;
+    color: chocolate;
 }
 select {
     float: right;
-    width: 130px;
+    width: 104px;
     height: 30px;
     border: none;
-    font-size: 14px;
-    background: #989898;
+    font-size: 13px;
+    background: #276e96;
+    color: #fafafa;
 }
 li {
     font-size: 17px;
@@ -119,10 +157,9 @@ button.confirm {
     color: #fafafa;
 }
 button.delete {
-    background: #c72121;
+    background: chocolate;
     margin: 10px;
     color: #fafafa;
-}
 }
 h5 {
     color: #333;
