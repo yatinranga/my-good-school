@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { StudentService } from 'src/app/services/student.service';
+import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'app-activity-details',
-  templateUrl: './activity-details.component.html',
-  styleUrls: ['./activity-details.component.scss']
+  templateUrl: './student-club-details.component.html',
+  styleUrls: ['./student-club-details.component.scss']
 })
-export class ActivityDetailsComponent implements OnInit {
+export class StudentClubDetailsComponent implements OnInit {
 
   clubObject: any;
   studentInfo: any;
@@ -17,6 +18,7 @@ export class ActivityDetailsComponent implements OnInit {
   grades = [];
   gradeId = "";
   filterVal = "";
+  supervisorName = "";
 
   coaches = [];
   students = [];
@@ -26,7 +28,7 @@ export class ActivityDetailsComponent implements OnInit {
   stu_loader = false;
   sup_loader = true;
   enrollSch_loader = false;
-  constructor(private studentService: StudentService) { }
+  constructor(private studentService: StudentService, private alertService: AlertService) { }
 
   ngOnInit() {
 
@@ -62,6 +64,7 @@ export class ActivityDetailsComponent implements OnInit {
   getSupervisorSession(supervisor_obj){
     this.enrollSch_loader = true;
     this.supervisorId = supervisor_obj.id;
+    this.supervisorName = supervisor_obj.name;
     this.getStudents(supervisor_obj.id);
 
     this.studentService.getSupervisorSchedule(this.clubObject.id,supervisor_obj.id).subscribe((res) => {
@@ -114,6 +117,20 @@ export class ActivityDetailsComponent implements OnInit {
     }
 
     return filterSessionArr;
+  }
+
+  clubRegBtn() {
+    let a = "Activity : " + this.clubObject.name + "\n, Supervisor : " + this.supervisorName;
+    this.alertService.confirmWithoutLoader("info", "Are you sure you want to register ?", a, "Yes").then(result => {
+      if (result.value) {
+        this.alertService.showLoader("");
+        this.studentService.postEnrollInClub(this.clubObject.id, this.supervisorId).subscribe(res => {
+          console.log(res)
+          this.alertService.showSuccessAlert("Request Sent");
+        }, (err) => { console.log(err); });
+      }
+    })
+
   }
 
 }

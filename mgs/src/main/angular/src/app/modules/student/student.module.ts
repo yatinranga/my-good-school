@@ -12,7 +12,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { SavedActitvityComponent } from './student-activity/saved-actitvity/saved-actitvity.component';
 import { StudentActivityComponent } from './student-activity/student-activity.component';
 import { CertificatesComponent } from './certificates/certificates.component';
-import { ActivityDetailsComponent } from './activity-details/activity-details.component';
+import {  StudentClubDetailsComponent } from './student-club-details/student-club-details.component';
 
 
 const routes: Routes = [
@@ -58,7 +58,7 @@ const routes: Routes = [
   },
   {
     path: 'club',
-    component: ActivityDetailsComponent,
+    component: StudentClubDetailsComponent,
   },
 ]
 
@@ -72,7 +72,7 @@ const routes: Routes = [
     StudentActivityComponent,
     ProfileComponent,
     CertificatesComponent,
-    ActivityDetailsComponent
+    StudentClubDetailsComponent
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,64 @@
+<h3>{{clubObject.name}} Details</h3>
+<button [disabled]="stu_loader && clubSch_loader" class="btn btn-primary btn-sm" data-toggle="modal"
+    data-target="#createSessionModal" data-dismiss="modal" aria-label="Close">Create Session</button>
+<hr>
+
+<!-- List of Requests -->
+<div>
+    <div class="act_details_section_two">
+        <h5>Requests :</h5>
+        <select name="status" [disabled]="clubReqLoader" (ngModelChange)="filterRequests($event)"
+            [(ngModel)]="filterReqVal"> Filter :
+            <option value="" selected>ALL</option>
+            <option value="VERIFIED">VERIFIED</option>
+            <option value="PENDING">PENDING</option>
+            <option value="REJECTED">REJECTED</option>
+        </select>
+    </div>
+    <ul id="student_list">
+        <li *ngFor="let req of clubReqArr; let i = index">{{i+1}}. {{req.student.name}}
+            <div>
+                <span *ngIf="req.membershipStatus=='PENDING'"
+                    style="color: blue">({{req.membershipStatus | uppercase}})</span>
+                <span *ngIf="req.membershipStatus=='VERIFIED'"
+                    style="color: green">({{req.membershipStatus | uppercase}})</span>
+                <span *ngIf="req.membershipStatus=='REJECTED'"
+                    style="color: red">({{req.membershipStatus | uppercase}})</span>
+            </div>
+
+            <span>Grade - {{req.student.grade}} {{req.student.section}}</span><br>
+            <button *ngIf="req.membershipStatus=='PENDING'" class="btn btn-success"
+                (click)="setClubReq(req,i,'true')">Verify</button>
+            <button *ngIf="req.membershipStatus=='PENDING'" class="btn btn-danger"
+                (click)="setClubReq(req,i,'false')">Reject</button>
+        </li>
+        <li *ngIf="clubReqArr.length==0" id="null">
+            <div class="spinner-border text-secondary" role="membershipStatus" *ngIf="stu_loader">
+            </div> {{stu_loader ? ' Loading...' : 'No Requests'}}
+        </li>
+    </ul>
+</div>
+<hr>
+
+<!-- List of Students -->
+<div>
+    <div class="act_details_section_two">
+        <h5>List of Students :</h5>
+        <select name="grade" [disabled]="stu_loader" (ngModelChange)="filterStudent($event)"
+            [(ngModel)]="gradeId">
+            <option value="" selected>Select Grade</option>
+            <option *ngFor="let g of schoolGrades" value={{g.id}}>{{g.grade}} {{g.section}}
+            </option>
+            <option disabled *ngIf="!schoolGrades.length">No Grades Available</option>
+        </select>
+    </div>
+    <ul id="student_list">
+        <li *ngFor="let s of studentsArr; let i = index"> {{i+1}}. {{s.name}} - {{s.grade}}
+            {{s.section}}</li>
+        <li *ngIf="studentsArr.length==0" id="null">
+            <div class="spinner-border text-secondary" role="status" *ngIf="stu_loader">
+            </div> {{stu_loader ? ' Loading...' : 'No Students'}}
+        </li>
+    </ul>
+
+</div>

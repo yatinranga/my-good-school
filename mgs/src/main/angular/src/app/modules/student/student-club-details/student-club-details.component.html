@@ -1,4 +1,6 @@
 <h2>{{clubObject['name']}} Details</h2>
+<button [disabled]="!(supervisorId)" class="register_act btn btn-primary btn-sm"
+                  (click)="clubRegBtn()"> Register </button>
 <hr>
 
 <!-- List of supervisor -->

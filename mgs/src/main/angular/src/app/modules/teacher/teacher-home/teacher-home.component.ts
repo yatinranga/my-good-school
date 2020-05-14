@@ -283,7 +283,8 @@ export class TeacherHomeComponent implements OnInit {
 
   // Details of All Clubs and Societies
   clubDetails(clubObj) {
-    $('#clubDetailsModal').modal('show');
+    // $('#clubDetailsModal').modal('show');
+    localStorage.setItem('club',JSON.stringify(clubObj));
     this.clubSchedule = [];
     this.studentsArr = [];
     this.clubReqArr = [];
