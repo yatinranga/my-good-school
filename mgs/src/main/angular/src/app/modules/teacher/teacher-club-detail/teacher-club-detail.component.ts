@@ -16,6 +16,8 @@ export class TeacherClubDetailComponent implements OnInit {
   studentsArr = [];
   copyStudentArr = [];
   schoolGrades = [];
+  clubSchedule = [];
+  copySchedule = [];
 
   stu_loader = false;
   clubSch_loader = false;
@@ -23,6 +25,7 @@ export class TeacherClubDetailComponent implements OnInit {
 
   filterReqVal = "";
   gradeId = "";
+  filterVal = "";
 
   constructor(private teacherService: TeacherService, private alertService: AlertService) { }
 
@@ -32,6 +35,7 @@ export class TeacherClubDetailComponent implements OnInit {
     this.getSchoolGrades(this.teacherInfo.teacher.schoolId);
     this.getClubRequests(this.clubObject.id);
     this.getClubStudents(this.clubObject.id,this.teacherInfo.teacher.id);
+    this.getClubSession(this.clubObject.id);
   }
 
     // get List of School Grades 
@@ -101,6 +105,11 @@ export class TeacherClubDetailComponent implements OnInit {
       this.studentsArr = this.filter(Object.assign([], this.copyStudentArr), val, "Student");
     }
 
+    // Filter session on the bases of ALL, UPCOMING and ENDED
+    filterSession(val) {
+      this.clubSchedule = this.filter(Object.assign([], this.copySchedule), val, "Session");
+    }
+
     // List of Students of the particular Club
     getClubStudents(clubId, teacherId) {
       this.stu_loader = true;
@@ -114,6 +123,19 @@ export class TeacherClubDetailComponent implements OnInit {
       });
   
     }
+
+      // get Session of a particualr Club/Society
+  getClubSession(clubId) {
+    this.clubSch_loader = true;
+    this.teacherService.getSupervisedClubSession(clubId).subscribe((res) => {
+      this.clubSchedule = res.sessions;
+      this.copySchedule = Object.assign([], res.sessions);
+      this.clubSch_loader = false;
+    }, (err) => {
+      console.log(err);
+      this.clubSch_loader = false;
+    });
+  }
 
   // Actual Filtering of Sessions on the basis of type
   filter(array: any[], value: string, type: string) {

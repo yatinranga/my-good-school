@@ -60,5 +60,43 @@
             </div> {{stu_loader ? ' Loading...' : 'No Students'}}
         </li>
     </ul>
+</div>
+<hr>
+
+<!-- List of Scheduled Sessions -->
+<div>
+    <div class="act_details_section_two">
+        <h5>Session Schedule :</h5>
+        <select name="status" [disabled]="clubSch_loader"
+            (ngModelChange)="filterSession($event)" [(ngModel)]="filterVal"> Filter :
+            <option value="" selected>ALL</option>
+            <option value="upcoming">UPCOMIMG</option>
+            <option value="ended">ENDED</option>
+        </select>
+    </div>
+
+    <div *ngIf="clubSch_loader">
+        <div class="spinner-border text-secondary" role="status" *ngIf="clubSch_loader">
+        </div>{{clubSch_loader?'  Loading...':''}}
+    </div>{{clubSchedule.length==0&&!clubSch_loader?'No Session Available !': ''}}
+
+    <div class="day_post">
+        <div class="day" *ngFor="let club of clubSchedule; let i = index;">
+            <h3>{{club.criterionValue | date}} - {{club.criterionValue | date:'EEEE'}} </h3>
+            <ul *ngFor="let res of club.responses; let i = index;">
+                <li id="session_title"> {{i+1}}. {{res.title}}
+                    <span *ngIf="res.status=='upcoming'"
+                        style="color: red">({{res.status | uppercase}})</span>
+                    <span *ngIf="res.status=='ended'"
+                        style="color: green">({{res.status | uppercase}})</span>
+                </li>
+                <li>{{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs
+                </li>
+                <li>Grades - <span *ngFor="let g of res.grades; let i = index">
+                        {{ (i === res.grades.length-1) ? g.grade+" "+g.section : g.grade+" "+g.section + "," + ' '}}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
 
 </div>
