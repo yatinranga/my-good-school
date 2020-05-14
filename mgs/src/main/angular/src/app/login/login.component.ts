@@ -56,9 +56,9 @@ export class LoginComponent implements OnInit {
 
   getUserInfo() {
     this.authService.getInfo().subscribe((res) => {
-      this.loader = false;
       localStorage.setItem('user_info', JSON.stringify(res));
       this.userInfo = JSON.parse(localStorage.getItem('user_info'));
+      this.loader = false;
       this.checkUserType(this.userInfo.userType);
     }, (err) => {
       this.loader = false;

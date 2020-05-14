@@ -51,15 +51,21 @@
           <img src="assets/images/23.png">
           <h3> Sport </h3>
           <ul *ngFor="let sport of sportArr">
-            <li [ngClass]="{'sport reference':highlightClubArr.includes(sport.name)}" (click)="clubDetails(sport,'sport')">{{sport.name}}</li>
+            <li [ngClass]="{'sport reference':highlightClubArr.includes(sport.name)}" (click)="clubDetails(sport,'sport')">
+              <a target="_blank" [routerLink]="['../club']" [state]="sport">
+              {{sport.name}}</a></li>
           </ul>
         </div>
         <div class="skill fourskill">
           <img src="assets/images/21.png">
           <h3> Skill </h3>
           <ul *ngFor="let skill of skillArr;let i = index">
-            <li [ngClass]="{'skill reference':highlightClubArr.includes(skill.name)}" (click)="clubDetails(skill,'skill')">{{skill.name}}</li>
+            <li [ngClass]="{'skill reference':highlightClubArr.includes(skill.name)}" (click)="clubDetails(skill,'skill')">
+              <a target="_blank" [routerLink]="['../club']" [state]="skill">
+                {{skill.name}}</a>
+            </li>
           </ul>
+          
           <!-- For Reference -->
           <!-- <ul> 
             <li class="reference"> Literary Society English </li>
@@ -75,14 +81,16 @@
           <img src="assets/images/24.png">
           <h3> Service </h3>
           <ul *ngFor="let service of serviceArr">
-            <li [ngClass]="{'service reference':highlightSocietyArr.includes(service.name)}" (click)="clubDetails(service,'service')">{{service.name}}</li>
+            <li [ngClass]="{'service reference':highlightSocietyArr.includes(service.name)}" (click)="clubDetails(service,'service')">
+              <a target="_blank" [routerLink]="['../club']" [state]="service">{{service.name}}</a></li>
           </ul>
         </div>
         <div class="study fourskill">
           <img src="assets/images/16.png">
           <h3> Study </h3>
           <ul *ngFor="let study of studyArr">
-            <li [ngClass]="{'study reference':highlightSocietyArr.includes(study.name)}" (click)="clubDetails(study,'study')">{{study.name}}</li>
+            <li [ngClass]="{'study reference':highlightSocietyArr.includes(study.name)}" (click)="clubDetails(study,'study')">
+              <a target="_blank" [routerLink]="['../club']" [state]="study">{{study.name}}</a></li>
           </ul>
         </div>
        

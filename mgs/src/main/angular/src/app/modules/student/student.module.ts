@@ -12,6 +12,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { SavedActitvityComponent } from './student-activity/saved-actitvity/saved-actitvity.component';
 import { StudentActivityComponent } from './student-activity/student-activity.component';
 import { CertificatesComponent } from './certificates/certificates.component';
+import { ActivityDetailsComponent } from './activity-details/activity-details.component';
 
 
 const routes: Routes = [
@@ -45,11 +46,19 @@ const routes: Routes = [
         path: 'certificates',
         component: CertificatesComponent
       },
+      // {
+      //   path: 'details',
+      //   component: ActivityDetailsComponent,
+      // },
       {
         path: '',
         redirectTo: 'home'
       }
-    ]
+    ],
+  },
+  {
+    path: 'club',
+    component: ActivityDetailsComponent,
   },
 ]
 
@@ -62,7 +71,8 @@ const routes: Routes = [
     SavedActitvityComponent,
     StudentActivityComponent,
     ProfileComponent,
-    CertificatesComponent
+    CertificatesComponent,
+    ActivityDetailsComponent
   ],
   imports: [
     CommonModule,
