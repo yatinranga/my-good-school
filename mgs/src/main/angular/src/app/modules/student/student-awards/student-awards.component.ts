@@ -9,10 +9,8 @@ import { StudentService } from 'src/app/services/student.service';
 export class StudentAwardsComponent implements OnInit {
   studentInfo: any;
   schoolId: any;
-  activities: any;
   studentId: any;
   awardsArr = [];
-  activityId = "All";
   copyAwardArr : any = [];
   loader : boolean = false ;
 
@@ -58,11 +56,13 @@ export class StudentAwardsComponent implements OnInit {
     (err) =>  {console.log(err)
     this.loader = false });
   }
-
+ 
+  // Filter Awards 
   filterAwards = () => {
     this.awardsArr = this.filter(Object.assign([],this.copyAwardArr));
   }
 
+  // Actual Filterting of Awards on the basis of selected criteria
   filter(array: any[]) {
     this.loader = true;
     let filterAwardsArr = [];
@@ -83,15 +83,15 @@ export class StudentAwardsComponent implements OnInit {
       this.loader = false;
     } 
     else if (this.psdAreas) {
-      filterAwardsArr = array.filter(e => e.psdAreas && e.psdAreas.includes(this.psdAreas));
+      filterAwardsArr = array.filter(e => e.criterionValue == this.psdAreas);
       this.loader = false;
     } 
     else if (this.fourS) {
-      filterAwardsArr = array.filter(e => e.fourS == this.fourS);
+      filterAwardsArr = array.filter(e => e.criterionValue == this.fourS);
       this.loader = false;
     } 
     else if (this.focusAreas) {
-      filterAwardsArr = array.filter(e => e.focusAreas && e.focusAreas.includes(this.focusAreas));
+      filterAwardsArr = array.filter(e => e.criterionValue == this.focusAreas);
       this.loader = false;
     } 
     else {
@@ -99,10 +99,5 @@ export class StudentAwardsComponent implements OnInit {
     }    
     return filterAwardsArr;    
   }
-
-  getDate(date) {
-    return new Date(date)
-  }
-
   
 }

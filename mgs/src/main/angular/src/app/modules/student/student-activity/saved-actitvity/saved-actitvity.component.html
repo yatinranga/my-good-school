@@ -289,8 +289,11 @@
                         <div class="form-group">
                             <h2> Note : All Fields Are Mandatory </h2>
                             <label for="recipient-name" class="col-form-label"> Activity Type : </label>
-                            <select class="form-control" name="activityName" (ngModelChange)="getStudentCoach($event)"
-                                formControlName="activityId">
+                            <select class="form-control" name="activityName"  formControlName="activityId"
+                            (ngModelChange)="getStudentCoach($event)">
+                                <!-- <option v
+                                    alue="" disabled selected>Select One</option> -->
+                                <option [ngValue]="null" disabled selected>Select One</option>
                                 <option *ngFor="let activity of activities; let i = index" value={{activity.id}}>
                                     {{activity.name}}</option>
                                 <option disabled *ngIf="!activities.length">No activities available</option>
