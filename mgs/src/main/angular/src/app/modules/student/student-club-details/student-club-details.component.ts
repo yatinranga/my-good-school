@@ -11,8 +11,10 @@ import { AlertService } from 'src/app/services/alert.service';
 })
 export class StudentClubDetailsComponent implements OnInit {
 
+
   clubObject: any;
   studentInfo: any;
+  modalClass = "";
   schoolId = "";
   supervisorId = ""; 
   grades = [];
@@ -35,11 +37,21 @@ export class StudentClubDetailsComponent implements OnInit {
     // console.log(history.state);
     // this.clubObject = history.state;
     this.clubObject = JSON.parse(localStorage.getItem('club'));
+    this.setClass(this.clubObject.fourS);
     this.studentInfo = JSON.parse(localStorage.getItem('user_info'));
     this.schoolId = this.studentInfo.student.schoolId;
     this.getCoaches(this.clubObject.id);
     this.getGrades(this.schoolId);
 
+  }
+  setClass(club_type){
+    console.log(club_type);
+    switch(club_type){
+      case 'sport': this.modalClass = "sportmodal"; break;
+      case 'skill': this.modalClass = "skillmodal"; break;
+      case 'service': this.modalClass = "servicemodal"; break;
+      case 'study': this.modalClass = "studymodal"; break;
+    }
   }
 
   getCoaches(actiId){

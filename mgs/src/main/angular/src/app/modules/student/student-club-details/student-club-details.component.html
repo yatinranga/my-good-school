@@ -1,89 +1,94 @@
-<div class="student_act_details_main">
-   <!----------------------------------List of supervisor------------------------>
-
-   <div class="sidenav">
-      <h2> Supervisors </h2>
-      <div class="supervisor_profile">
-        <img src="assets/images/maleteacher.jpg">
-      </div>
-      <div class="supervisor_list">
-          <ul *ngFor="let c of coaches; let i = index">
-              <li class="teachername" [ngClass]="{'active':supervisorId==c.id}" (click)="getSupervisorSession(c)">{{i+1}}.
-                {{c.name}} - </li>
-              <details> <summary> Click to see Brief </summary> {{c.profileBrief}} </details>
-            </ul>
-      </div>
-      <div *ngIf="coaches.length==0" id="null">
-        <div class="spinner-border text-secondary" role="status" *ngIf="sup_loader">
-        </div>{{sup_loader ? '  Loading...' : 'No Supervisor'}}
-      </div>
-    </div>
-  
- <div class="content_container">
-
-    <div class="title">
-        <h1> {{clubObject['name']}} Dashboard </h1>
-        <button [disabled]="!(supervisorId)" class="register_act btn btn-primary btn-sm" (click)="clubRegBtn()"> Register
-        </button>
-      </div>
-  
-    <!----------------------------------- List of Students----------------------->
-  
-    <div class="content">
-  
-      <div class="content_box">
-        <div class="content_title">
-          <h2> List of Students </h2>
-          <select name="grade" [disabled]="stu_loader" (ngModelChange)="filterStudent($event)" [(ngModel)]="gradeId">
-            <option value="" selected>Select Grade</option>
-            <option *ngFor="let g of grades" value={{g.id}}>{{g.grade}} {{g.section}}</option>
-            <option disbaled *ngIf="!grades.length">No Grades Available</option>
-          </select>
-        </div>
-        <ul class="student_list">
-          <li *ngFor="let s of students; let i = index"> {{i+1}}. {{s.name}} - {{s.grade}} {{s.section}}</li>
-          <li *ngIf="students.length==0" id="null">
-            <div class="spinner-border text-secondary" role="status" *ngIf="stu_loader">
-            </div> {{stu_loader ? ' Loading...' : 'No Students'}}
-          </li>
-        </ul>
-      </div>
-  
-      <!----------------------------------- Schedule of Sessions------------------>
-  
-      <div class="content_box">
-        <div class="content_title">
-          <h2> Schedule Schedule </h2>
-          <select name="status" [disabled]="enrollSch_loader" (ngModelChange)="filterSession($event)"
-            [(ngModel)]="filterVal">
-            Filter :
-            <option value="" selected>All</option>
-            <option value="upcoming">Upcoming</option>
-            <option value="ended">Ended</option>
-          </select>
-        </div>
-          <div class="day_post">
-            <div class="day" *ngFor="let club of clubSchedule; let i = index;">
-              <h3>{{club.criterionValue | date}} - {{club.criterionValue | date:'EEEE'}} </h3>
-              <ul *ngFor="let res of club.responses; let i = index;">
-                <li id="session_title"> {{i+1}}. {{res.title}}
-                  <span *ngIf="res.status=='upcoming'" style="color: red">({{res.status | uppercase}})</span>
-                  <span *ngIf="res.status=='ended'" style="color: green">({{res.status | uppercase}})</span>
-                <li>
-                <li>{{res.club.name}} - {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div *ngIf="enrollSch_loader" class="student_list">
-              <div class="spinner-border text-secondary" role="status" *ngIf="enrollSch_loader">
-              </div>{{enrollSch_loader?'  Loading...':''}}
-            </div> {{clubSchedule.length==0&&!enrollSch_loader?'No Session Available !': ''}}
-      </div>
-  
-    </div>
+<div [ngClass]='modalClass'>
+  <div  [ngClass]='modalClass' class="student_act_details_main ">
+    <!----------------------------------List of supervisor------------------------>
+ 
+    <div class="sidenav">
+       <h2> Supervisors </h2>
+       <div class="supervisor_profile">
+         <img src="assets/images/maleteacher.jpg">
+       </div>
+       <div class="supervisor_list">
+           <ul *ngFor="let c of coaches; let i = index">
+               <li class="teachername" [ngClass]="{'active':supervisorId==c.id}" (click)="getSupervisorSession(c)">{{i+1}}.
+                 {{c.name}} - </li>
+               <details> <summary> Click to see Brief </summary> {{c.profileBrief}} </details>
+             </ul>
+       </div>
+       <div *ngIf="coaches.length==0" id="null">
+         <div class="spinner-border text-secondary" role="status" *ngIf="sup_loader">
+         </div>{{sup_loader ? '  Loading...' : 'No Supervisor'}}
+       </div>
+     </div>
+   
+  <div class="content_container">
+ 
+     <div class="title">
+         <h1> {{clubObject['name']}} Dashboard </h1>
+         <button [disabled]="!(supervisorId)" class="register_act btn btn-primary btn-sm" (click)="clubRegBtn()"> Register
+         </button>
+       </div>
+   
+     <!----------------------------------- List of Students----------------------->
+   
+     <div class="content">
+   
+       <div class="content_box">
+         <div class="content_title">
+           <h2> List of Students </h2>
+           <select name="grade" [disabled]="stu_loader" (ngModelChange)="filterStudent($event)" [(ngModel)]="gradeId">
+             <option value="" selected>Select Grade</option>
+             <option *ngFor="let g of grades" value={{g.id}}>{{g.grade}} {{g.section}}</option>
+             <option disbaled *ngIf="!grades.length">No Grades Available</option>
+           </select>
+         </div>
+         <ul class="student_list">
+           <li *ngFor="let s of students; let i = index"> {{i+1}}. {{s.name}} - {{s.grade}} {{s.section}}</li>
+           <li *ngIf="students.length==0" id="null">
+             <div class="spinner-border text-secondary" role="status" *ngIf="stu_loader">
+             </div> {{stu_loader ? ' Loading...' : 'No Students'}}
+           </li>
+         </ul>
+       </div>
+   
+       <!----------------------------------- Schedule of Sessions------------------>
+   
+       <div class="content_box">
+         <div class="content_title">
+           <h2> Schedule Schedule </h2>
+           <select name="status" [disabled]="enrollSch_loader" (ngModelChange)="filterSession($event)"
+             [(ngModel)]="filterVal">
+             Filter :
+             <option value="" selected>All</option>
+             <option value="upcoming">Upcoming</option>
+             <option value="ended">Ended</option>
+           </select>
+         </div>
+           <div class="day_post">
+             <div class="day" *ngFor="let club of clubSchedule; let i = index;">
+               <h3>{{club.criterionValue | date}} - {{club.criterionValue | date:'EEEE'}} </h3>
+               <ul *ngFor="let res of club.responses; let i = index;">
+                 <li id="session_title"> {{i+1}}. {{res.title}}
+                   <span *ngIf="res.status=='upcoming'" style="color: red">({{res.status | uppercase}})</span>
+                   <span *ngIf="res.status=='ended'" style="color: green">({{res.status | uppercase}})</span>
+                 <li>
+                 <li>{{res.club.name}} - {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs
+                 </li>
+               </ul>
+             </div>
+           </div>
+           <div *ngIf="enrollSch_loader" class="student_list">
+               <div class="spinner-border text-secondary" role="status" *ngIf="enrollSch_loader">
+               </div>{{enrollSch_loader?'  Loading...':''}}
+             </div> {{clubSchedule.length==0&&!enrollSch_loader?'No Session Available !': ''}}
+       </div>
+   
+     </div>
+  </div>
  </div>
+ 
+
 </div>
+
 
  <!-------------------------MODAL REFERENCE------------------>
 
