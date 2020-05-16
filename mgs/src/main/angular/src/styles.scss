@@ -666,8 +666,13 @@ li.nav-item{
     display: -webkit-inline-box !important;
     border-right: 1px solid #777;
 }
-/*-------------------------------------PROFILE-------------------------------------*/
-
+/*-------------------------------------HOME PAGE DETAILS -------------------------------------*/
+.club_main ul li a:hover {
+    color: chocolate;
+}
+.club_main ul li a {
+    color: #333;
+}
 
 
 /*-------------------------------------ACTIVITY-------------------------------------*/

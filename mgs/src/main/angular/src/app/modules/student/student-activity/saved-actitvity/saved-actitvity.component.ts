@@ -34,7 +34,7 @@ export class SavedActitvityComponent implements OnInit {
   savedActivityForm: FormGroup;
 
 
-  activityId: any;
+  activityId: "";
   activityDate: any;
   files = [];
 
@@ -68,7 +68,7 @@ export class SavedActitvityComponent implements OnInit {
 
     this.savedActivityForm = this.formBuilder.group({
       activityId: [, [Validators.required]],
-      description: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(100), Validators.maxLength(250)]],
+      description: [{ value: '', disabled: true }, [Validators.required]],
       dateOfActivity: [{ value: '', disabled: true }, [Validators.required]],
       coachId: [{ value: '', disabled: true }, [Validators.required]],
       title: [{ value: '',disabled: true}, [Validators.required]],
@@ -163,6 +163,7 @@ export class SavedActitvityComponent implements OnInit {
       activityId: activity.activityId,
       description: activity.description,
       coachId: activity.coachId,
+      title: activity.title,
       id: activity.id,
     });
     this.files=activity.fileResponses;      
@@ -263,7 +264,9 @@ export class SavedActitvityComponent implements OnInit {
   // to get teacher/coach who perform selected activity
   getStudentCoach(activityId) {
     this.modal_loader = true;
+    this.savedActivityForm.value.activityId = activityId;
     this.coaches = [];
+    if(activityId)
     this.studentService.getCoach(this.schoolId, activityId).subscribe((res) => {
       this.coaches = res;
       if (this.coaches.length) {
