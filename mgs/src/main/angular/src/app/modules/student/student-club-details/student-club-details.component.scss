@@ -1,0 +1,212 @@
+.student_act_details_main{
+    width: 100%;
+    display: inline-flex;
+}
+.sidenav {
+    float: left;
+    width: 25%;
+    background: #656565;
+    padding: 10px;
+    height: 100%;
+}
+.sidenav h2{
+    font-size: 28px;
+    font-weight: 500;
+    color: #bbb;
+    margin: 12px 0 0 0;
+    padding-left: 50px;
+}
+.supervisor_profile{
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+    padding: 10px;
+    margin-top: 25px;
+    text-align: center;
+}
+.supervisor_profile img{
+    width: 100%;
+}
+.supervisor_list {
+    width: 100%;
+    display: inline-block;
+    margin-top: 20px;
+}
+.sidenav ul {
+    padding: 0;
+    margin: 0;
+}
+.sidenav ul li {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 20px 0;
+    line-height: 40px;
+    color: #bbb;
+}
+.sidenav ul li:hover{
+    color: #fafafa;
+}
+.sidenav p{
+    font-size: 15px;
+    color: #555;
+    line-height: 24px;
+}
+.title{
+    width: 100%;
+    display: inline-block;
+    background: #9fbb73;
+    margin: 0;
+    padding: 15px 0 0 0;
+}
+h1 {
+    color: #fafafa;
+    font-size: 29px;
+    text-align: center;
+    float: left;
+    font-weight: 300;
+    word-spacing: 5px;
+    padding: 0 10px;
+}
+button.register_act.btn.btn-primary.btn-sm {
+    background: #fff;
+    color: black;
+    z-index: 1;
+    opacity: 1;
+    font-size: 16px;
+    padding: 5px 15px;
+    margin-right: 10px;
+    float: right;
+    border-radius: 3px !important;
+}
+.content_container{
+    width: 100%;
+    display: inline-block;
+}
+
+.content{
+    float: right;
+    width: 100%;
+    display: inline-flex;
+    margin: 55px 0;
+    padding: 0 20px;
+}
+.content_box {
+    width: 100%;
+    padding: 10px;
+    margin: 0 20px;
+    background: #ffffff;
+    box-shadow: 0 0 10px #ccc;
+    border-radius: 5px;
+}
+.content_title{
+    width: 100%;
+    display: inline-block;
+    margin: 10px 0 30px 0;
+}
+h2{
+    float: left;
+    color: #9fbb73;
+}
+select {
+    float: right;
+    width: 104px;
+    height: 30px;
+    border: none;
+    font-size: 13px;
+    background: #9fbb73;
+    color: #fafafa;
+}
+li {
+    font-size: 17px;
+    line-height: 35px;
+}
+.schedule {
+    width: 100%;
+    display: inline-block;
+    margin: 10px 0;
+    background: none;
+    box-shadow: 0 0 10px #aaa;
+    padding: 10px;
+}
+h4 {
+    font-size: 18px;
+    color: #156e96;
+    margin: 10px 0;
+    font-weight: 500;
+}
+h3 {
+    font-size: 20px;
+    margin: 10px 0;
+    font-weight: 500;
+    color: #333;
+}
+p {
+    font-size: 17px;
+    padding: 0 23px;
+    line-height: 30px;
+}
+.request_box {
+    width: 100%;
+    display: inline-block;
+    background: none;
+    margin: 10px 0;
+    padding: 10px;
+    box-shadow: 0 0 10px #aaa;
+    border-radius: 5px;
+}
+.name {
+    float: left;
+    font-size: 19px;
+    line-height: 27px;
+}
+.action {
+    float: right;
+}
+button.confirm {
+    background: #156e96;
+    float: left;
+    margin: 10px;
+    font-size: 12px;
+    padding: 10px;
+    color: #fafafa;
+}
+button.delete {
+    background: #9fbb73;
+    margin: 10px;
+    color: #fafafa;
+}
+h5 {
+    color: #333;
+}
+.day_post {
+    width: 100%;
+    display: inline-block;
+    margin-top: 15px;
+}
+
+/*          MODAL REFERENCE          */
+
+.sportmodal {
+    border: 5px solid #4bafa5;
+}
+.skillmodal {
+    border: 5px solid #b4d673;
+}
+.servicemodal {
+    border: 5px solid #d86ea3;
+}
+.studymodal {
+    border: 5px solid #1f69ad;
+}
+.sportmodal h3, .sportmodal h5 {
+    color: #4bafa5;
+}
+.skillmodal h3, .skillmodal h5 {
+    color: #b4d673;
+}
+.servicemodal h3, .servicemodal h5 {
+    color: #d86ea3;
+}
+.studymodal h3, .studymodal h5 {
+    color: #1f69ad;
+}
