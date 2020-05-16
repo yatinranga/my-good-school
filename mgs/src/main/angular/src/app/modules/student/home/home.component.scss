@@ -77,6 +77,12 @@ li.reference {
     padding: 0;
     border-bottom: 1px solid #444 !important; 
 }
+ul li a:hover {
+    color: chocolate;
+}
+ul li a {
+    color: #333;
+}
 
 /*--------------------------------------MODAL------------------------------*/
 
@@ -168,38 +174,3 @@ button.close span {
 .studymodal h3, .studymodal h5 {
     color: #1f69ad;
 }
-
-
-/*
-
-.enrolled_main{
-    width: 100%;
-    float: left;
-    display: inline-block;
-    text-align: left;
-    padding: 0px;
-    height: 100%;
-}
-.enrolled_pre {
-    width: 50%;
-    display: inline-block;
-    text-align: center;
-    border: 1px solid lightgrey;
-    margin: 10px 0px;
-}
-.enrolled_pre h3 {
-    font-size: 22px;
-    color: #4bafa5;
-    border-bottom: 1px solid lightgray;
-}
-.enrolled_main li {
-    font-size: 17px;
-    line-height: 40px;
-    color: #555;
-}
-.enrolled_main ul {
-    padding: 0 5px;
-    margin: 0;
-    text-align: left;
-}
-*/
