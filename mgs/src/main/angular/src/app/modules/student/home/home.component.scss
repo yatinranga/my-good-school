@@ -87,6 +87,10 @@ li.reference {
     height: 600px;
     overflow-y: scroll;
 }
+.reg.modal-content{
+    height: inherit;
+    overflow: inherit;
+}
 .enr_modal.modal-content .modal-body{
     padding: 10px;
     display: inline-block;

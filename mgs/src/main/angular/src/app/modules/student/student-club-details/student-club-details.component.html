@@ -5,24 +5,20 @@
     <div class="sidenav">
        <h2> Supervisors </h2>
        <div class="supervisor_profile">
-         <img src="assets/images/maleteacher.jpg">
-       </div>
-       <div class="supervisor_list">
-           <ul *ngFor="let c of coaches; let i = index">
-             <li><img src="assets/images/maleteacher.jpg"></li>
-               <li class="teachername" [ngClass]="{'active':supervisorId==c.id}" (click)="getSupervisorSession(c)">{{i+1}}.
-                 {{c.name}} - </li>
-               <details> <summary> Click to see Brief </summary> {{c.profileBrief}} </details>
-             </ul>
-       </div>
-       <div *ngIf="coaches.length==0" id="null">
-         <div class="spinner-border text-secondary" role="status" *ngIf="sup_loader">
-         </div>{{sup_loader ? '  Loading...' : 'No Supervisor'}}
+          <ul *ngFor="let c of coaches; let i = index">
+              <li> <img src="assets/images/maleteacher.jpg"></li>
+              <li class="teachername" [ngClass]="{'active':supervisorId==c.id}" (click)="getSupervisorSession(c)">{{i+1}}.
+                  {{c.name}} - </li>
+                <details> <summary> Click to see Brief </summary> {{c.profileBrief}} </details>
+          </ul>
+          <div *ngIf="coaches.length==0" id="null">
+            <div class="spinner-border text-secondary" role="status" *ngIf="sup_loader">
+            </div>{{sup_loader ? '  Loading...' : 'No Supervisor'}}
+          </div>
        </div>
      </div>
    
   <div class="content_container">
- 
      <div class="title">
          <h1> {{clubObject['name']}} Dashboard </h1>
          <button [disabled]="!(supervisorId)" class="register_act btn btn-primary btn-sm" (click)="clubRegBtn()"> Register
@@ -31,8 +27,7 @@
    
      <!----------------------------------- List of Students----------------------->
    
-     <div class="content">
-   
+     <div class="content">   
        <div class="content_box">
          <div class="content_title">
            <h2> List of Students </h2>
@@ -91,11 +86,3 @@
 </div>
 
 
- <!-------------------------MODAL REFERENCE------------------>
- <br>
- <br>
- <br>
- <div class="sportmodal"> Sport </div>
- <div class="skillmodal"> Skill </div>
- <div class="servicemodal"> Service </div>
- <div class="studymodal"> Skill </div>

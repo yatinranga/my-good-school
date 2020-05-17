@@ -12,7 +12,7 @@
 .sidenav h2{
     font-size: 28px;
     font-weight: 500;
-    color: #bbb;
+    color: #bbb !important;
     margin: 12px 0 0 0;
     padding-left: 50px;
 }
@@ -54,7 +54,6 @@
 .title{
     width: 100%;
     display: inline-block;
-    background: #9fbb73;
     margin: 0;
     padding: 15px 0 0 0;
 }
@@ -186,27 +185,27 @@ h5 {
 
 /*          MODAL REFERENCE          */
 
-.sportmodal {
-    border: 5px solid #4bafa5;
+.sportmodal .title, .sportmodal select{
+    background: #4bafa5;
 }
-.skillmodal {
-    border: 5px solid #b4d673;
+.skillmodal .title, .skillmodal select {
+    background: #9fbb73;
 }
-.servicemodal {
-    border: 5px solid #d86ea3;
+.servicemodal .title, .servicemodal select{
+    background: #d86ea3;
 }
-.studymodal {
-    border: 5px solid #1f69ad;
+.studymodal .title, .studymodal select {
+    background: #1f69ad;
 }
-.sportmodal h3, .sportmodal h5 {
+.sportmodal h2 {
     color: #4bafa5;
 }
-.skillmodal h3, .skillmodal h5 {
+.skillmodal h2 {
     color: #b4d673;
 }
-.servicemodal h3, .servicemodal h5 {
+.servicemodal h2  {
     color: #d86ea3;
 }
-.studymodal h3, .studymodal h5 {
+.studymodal h2 {
     color: #1f69ad;
 }

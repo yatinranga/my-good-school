@@ -56,22 +56,20 @@
                         <option value="REJECTED">REJECTED</option>
                     </select>
                 </div>
-                <ul id="student_list">
-                    <li *ngFor="let req of clubReqArr; let i = index">{{i+1}}. {{req.student.name}}
-                        <div>
-                            <span *ngIf="req.membershipStatus=='PENDING'"
-                                style="color: blue">({{req.membershipStatus | uppercase}})</span>
-                            <span *ngIf="req.membershipStatus=='VERIFIED'"
-                                style="color: green">({{req.membershipStatus | uppercase}})</span>
-                            <span *ngIf="req.membershipStatus=='REJECTED'"
-                                style="color: red">({{req.membershipStatus | uppercase}})</span>
-                        </div>
-
-                        <span>Grade - {{req.student.grade}} {{req.student.section}}</span><br>
-                        <button *ngIf="req.membershipStatus=='PENDING'" class="btn btn-success"
-                            (click)="setClubReq(req,i,'true')">Verify</button>
-                        <button *ngIf="req.membershipStatus=='PENDING'" class="btn btn-danger"
-                            (click)="setClubReq(req,i,'false')">Reject</button>
+                <ul>
+                    <li *ngFor="let req of clubReqArr; let i = index" id="requestbox">
+                        <ul id="studentname">
+                            <li> {{i+1}}. {{req.student.name}}
+                            <p> Grade - {{req.student.grade}} {{req.student.section}}</p>
+                            </li>
+                        </ul>
+                        <ul id="actionbuttons"> 
+                            <li> <button *ngIf="req.membershipStatus=='PENDING'" class="verifyreq btn btn-success"
+                                (click)="setClubReq(req,i,'true')">Verify</button>
+                            <button *ngIf="req.membershipStatus=='PENDING'" class="rejectreq btn btn-danger"
+                                (click)="setClubReq(req,i,'false')">Reject</button></li>
+                        </ul>
+                        
                     </li>
                     <li *ngIf="clubReqArr.length==0" id="null">
                         <div class="spinner-border text-secondary" role="membershipStatus" *ngIf="stu_loader">
@@ -79,6 +77,16 @@
                     </li>
                 </ul>
             </div>
+            
+            <!-- <div>
+                            <span *ngIf="req.membershipStatus=='PENDING'"
+                                style="color: blue">({{req.membershipStatus | uppercase}})</span>
+                            <span *ngIf="req.membershipStatus=='VERIFIED'"
+                                style="color: green">({{req.membershipStatus | uppercase}})</span>
+                            <span *ngIf="req.membershipStatus=='REJECTED'"
+                                style="color: red">({{req.membershipStatus | uppercase}})</span>
+                        </div>
+                    -->
 
 
             <!-- List of Students -->
