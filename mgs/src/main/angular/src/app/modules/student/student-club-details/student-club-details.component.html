@@ -1,5 +1,5 @@
-<div [ngClass]='modalClass'>
-  <div  [ngClass]='modalClass' class="student_act_details_main ">
+<div [ngClass]="modalClass">
+  <div  [ngClass]="" class="student_act_details_main ">
     <!----------------------------------List of supervisor------------------------>
  
     <div class="sidenav">
@@ -9,6 +9,7 @@
        </div>
        <div class="supervisor_list">
            <ul *ngFor="let c of coaches; let i = index">
+             <li><img src="assets/images/maleteacher.jpg"></li>
                <li class="teachername" [ngClass]="{'active':supervisorId==c.id}" (click)="getSupervisorSession(c)">{{i+1}}.
                  {{c.name}} - </li>
                <details> <summary> Click to see Brief </summary> {{c.profileBrief}} </details>
@@ -91,7 +92,9 @@
 
 
  <!-------------------------MODAL REFERENCE------------------>
-
+ <br>
+ <br>
+ <br>
  <div class="sportmodal"> Sport </div>
  <div class="skillmodal"> Skill </div>
  <div class="servicemodal"> Service </div>

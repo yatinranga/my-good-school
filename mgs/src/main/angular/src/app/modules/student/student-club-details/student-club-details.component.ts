@@ -47,10 +47,10 @@ export class StudentClubDetailsComponent implements OnInit {
   setClass(club_type){
     console.log(club_type);
     switch(club_type){
-      case 'sport': this.modalClass = "sportmodal"; break;
-      case 'skill': this.modalClass = "skillmodal"; break;
-      case 'service': this.modalClass = "servicemodal"; break;
-      case 'study': this.modalClass = "studymodal"; break;
+      case 'Sport': this.modalClass = "sportmodal"; break;
+      case 'Skill': this.modalClass = "skillmodal"; break;
+      case 'Service': this.modalClass = "servicemodal"; break;
+      case 'Study': this.modalClass = "studymodal"; break;
     }
   }
 
