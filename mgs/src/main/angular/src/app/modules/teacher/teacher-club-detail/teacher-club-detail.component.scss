@@ -175,16 +175,25 @@ h5 {
     display: inline-block;
     margin-top: 15px;
 }
-li.requestbox{
-    display: inline-flex;
+.content_box ul{
+    width: 100%;
+    display: inline-block;
+}
+li#requestbox{
+    width: 100%;
+    display: inline-block;
+    margin: 15px 0;
 }
 ul#actionbuttons {
     float: right;
     margin: 0 auto;
+    width: 50%;
+    display: contents;
 }
 ul#studentname {
     float: left;
     padding: 0;
+    width: 50%;
 }
 ul#studentname p {
     padding: 0 13px;
