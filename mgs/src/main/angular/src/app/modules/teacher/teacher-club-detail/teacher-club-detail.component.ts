@@ -162,4 +162,19 @@ export class TeacherClubDetailComponent implements OnInit {
     return filterSessionArr;
   }
 
+  // Edit Current Session
+  editSessionBtn(session, i, j){}
+
+    // Delete Scheduled Session
+    deleteSession(session, out_index, in_index){}
+
+      // Reset Form
+  // resetForm() {
+  //   this.startTime = "";
+  //   this.endTime = "";
+  //   this.path = "";
+  //   this.files = [];
+  //   this.createSessionForm.reset();
+  // }
+
 }

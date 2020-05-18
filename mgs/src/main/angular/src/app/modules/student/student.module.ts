@@ -46,10 +46,6 @@ const routes: Routes = [
         path: 'certificates',
         component: CertificatesComponent
       },
-      // {
-      //   path: 'details',
-      //   component: ActivityDetailsComponent,
-      // },
       {
         path: '',
         redirectTo: 'home'

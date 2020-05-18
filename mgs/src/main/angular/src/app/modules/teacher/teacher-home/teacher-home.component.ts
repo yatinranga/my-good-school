@@ -48,6 +48,9 @@ export class TeacherHomeComponent implements OnInit {
   clubReqLoader = false;
   gradeId = "";
 
+  files = []; // Array to store the attachment during create session
+  path = "" // to Display the selected photos
+
 
   constructor(private teacherService: TeacherService, private formBuilder: FormBuilder, private alertService: AlertService) { }
 
@@ -57,18 +60,20 @@ export class TeacherHomeComponent implements OnInit {
     this.teacherName = this.teacherInfo.teacher.name;
     this.teacherId = this.teacherInfo.teacher.id;
     this.clubReqLoader = true;
-    // this.getAllClubReq();
     this.getAllClubs();
     this.getSessionDetails();
+    // this.getAllClubReq();
 
     this.createSessionForm = this.formBuilder.group({
-      id : [null],
+      id: [null],
       number: [, [Validators.required]],
+      description: [, [Validators.required]],
       startDate: [, [Validators.required]],
       endDate: [],
       title: [, [Validators.required]],
       clubId: [, [Validators.required]],
       gradeIds: [, [Validators.required]],
+      fileRequests: []
     });
 
     this.getSchoolGrades(this.schoolId);
@@ -145,10 +150,39 @@ export class TeacherHomeComponent implements OnInit {
     this.createSessionForm.value.startDate = this.createSessionForm.value.startDate + " " + this.startTime + ":00";
     console.log(this.createSessionForm.value);
 
-    this.alertService.showLoader("");
+    // this.alertService.showLoader("");
 
-    if(this.createSessionView){
-      this.teacherService.createNewSession(this.createSessionForm.value).subscribe((res) => {
+    if (this.createSessionView) {
+      const formData = new FormData();
+      // formData.append('id',this.createSessionForm.value.id);
+      // formData.append('number',this.createSessionForm.value.number);
+      // formData.append('startDate',this.createSessionForm.value.startDate);
+      // formData.append('endDate',this.createSessionForm.value.endDate);
+      // formData.append('title',this.createSessionForm.value.title);
+      // formData.append('clubId',this.createSessionForm.value.clubId);
+      // formData.append('gradeIds',this.createSessionForm.value.gradeIds);
+
+      Object.keys(this.createSessionForm.value).forEach(key => {
+        if (key == 'gradeIds') {
+          if (typeof (this.createSessionForm.value[key]) == 'object') {
+            this.createSessionForm.value.gradeIds.forEach((element, index) => {
+              formData.append(key + '[' + index + ']', element);
+            });
+          }
+        }
+        else if (key == 'fileRequests') {
+          formData.append(key + '[' + 0 + '].file', this.createSessionForm.value[key]);
+        }
+        else {
+          formData.append(key, this.createSessionForm.value[key])
+        }
+      });
+
+
+
+      this.teacherService.createNewSession(formData).subscribe((res) => {
+        this.alertService.showLoader("");
+
         console.log(res);
         $('#createSessionModal').modal('hide');
         $('.modal-backdrop').remove();
@@ -160,7 +194,7 @@ export class TeacherHomeComponent implements OnInit {
       });
     }
 
-    if(this.editSessionView){
+    if (this.editSessionView) {
       this.teacherService.editSession(this.createSessionForm.value).subscribe((res) => {
         console.log(res);
         $('#createSessionModal').modal('hide');
@@ -178,28 +212,10 @@ export class TeacherHomeComponent implements OnInit {
   resetForm() {
     this.startTime = "";
     this.endTime = "";
+    this.path = "";
+    this.files = [];
     this.createSessionForm.reset();
   }
-
-  // Sorting on the basis of Status
-  // order: boolean = false;
-  // sortByStatus() {
-  //   this.order = !this.order;
-  //   // sort by activityStatus
-  //   this.clubReqArr.sort((a, b) => {
-  //     const nameA = a.membershipStatus.toUpperCase(); // ignore upper and lowercase
-  //     const nameB = b.membershipStatus.toUpperCase(); // ignore upper and lowercase
-  //     if (nameA < nameB) {
-  //       return this.order ? -1 : 1;
-  //     }
-  //     if (nameA > nameB) {
-  //       return this.order ? 1 : -1;
-  //     }
-
-  //     // names must be equal
-  //     return 0;
-  //   });
-  // }
 
   // List of Sessions in current week
   getSessionDetails() {
@@ -231,7 +247,7 @@ export class TeacherHomeComponent implements OnInit {
   }
 
   // Edit Current Session
-  editSessionBtn(session,i,j) {
+  editSessionBtn(session, i, j) {
     $('#createSessionModal').modal('show');
     this.createSessionView = false;
     this.editSessionView = true;
@@ -284,7 +300,7 @@ export class TeacherHomeComponent implements OnInit {
   // Details of All Clubs and Societies
   clubDetails(clubObj) {
     // $('#clubDetailsModal').modal('show');
-    localStorage.setItem('club',JSON.stringify(clubObj));
+    localStorage.setItem('club', JSON.stringify(clubObj));
     this.clubSchedule = [];
     this.studentsArr = [];
     this.clubReqArr = [];
@@ -338,24 +354,24 @@ export class TeacherHomeComponent implements OnInit {
   }
 
   // Requests of a particular club/society
-  getClubRequests(clubId){
-    this.teacherService.getSupervisorClubReq(clubId).subscribe((res)=>{
+  getClubRequests(clubId) {
+    this.teacherService.getSupervisorClubReq(clubId).subscribe((res) => {
       console.log(res);
       this.clubReqArr = res;
       this.copyClubReqArr = Object.assign([], res);
-    this.clubReqLoader = false;
-    },(err)=>{
+      this.clubReqLoader = false;
+    }, (err) => {
       console.log(err);
-    this.clubReqLoader = false;
+      this.clubReqLoader = false;
     });
   }
 
-  filterRequests(val){
+  filterRequests(val) {
     this.clubReqArr = this.filter(Object.assign([], this.copyClubReqArr), val, "Request");
   }
 
-  newSessionBtn(){
-    
+  newSessionBtn() {
+
   }
 
   // Actual Filtering of Sessions on the basis of type
@@ -381,6 +397,21 @@ export class TeacherHomeComponent implements OnInit {
     }
 
     return filterSessionArr;
+  }
+
+  // Adding Attachment at the time of create session
+  onFileSelect(event) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.createSessionForm.value.fileRequests = file;
+
+      var reader = new FileReader();
+      reader.readAsDataURL(event.target.files[0]);
+
+      reader.onload = (event: any) => { this.path = event.target.result; }
+    } else {
+      this.path = null;
+    }
   }
 
 
