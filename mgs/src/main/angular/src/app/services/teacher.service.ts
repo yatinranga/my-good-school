@@ -24,15 +24,15 @@ export class TeacherService {
   }
 
   // get ALL Activities of Teacher
-  getAllActivity(coachId){
-    return this.http.get("/api/coach/activities?coachId=" + coachId );
+  getAllActivity(coachId) {
+    return this.http.get("/api/coach/activities?coachId=" + coachId);
   }
 
   // get SAVED Activities of Teacher
   getSavedActivity() {
     return this.http.get("api/coaches/activities");
   }
-  
+
   // get AWARDS of school
   getAwards() {
     return this.http.get("/awardTypes");
@@ -70,97 +70,113 @@ export class TeacherService {
   }
 
   // Assign Award to Students
-  assignAward(reqBody){
-      return this.http.post("/api/award",reqBody);      
-    
+  assignAward(reqBody) {
+    return this.http.post("/api/award", reqBody);
+
   }
 
   // List of Activities performed by student of particular activity
-  getStudentPerformedActivities(awardCriterion,criterionValue,startDate,endDate,gradeId?){
-    if(gradeId){
-      return this.http.get("/api/award/students?awardCriterion="+awardCriterion+"&criterionValue="+criterionValue+"&startDate="+startDate+"&endDate="+endDate+"&gradeId="+gradeId);      
+  getStudentPerformedActivities(awardCriterion, criterionValue, startDate, endDate, gradeId?) {
+    if (gradeId) {
+      return this.http.get("/api/award/students?awardCriterion=" + awardCriterion + "&criterionValue=" + criterionValue + "&startDate=" + startDate + "&endDate=" + endDate + "&gradeId=" + gradeId);
     }
     else {
-      return this.http.get("/api/award/students?awardCriterion="+awardCriterion+"&criterionValue="+criterionValue+"&startDate="+startDate+"&endDate="+endDate);      
+      return this.http.get("/api/award/students?awardCriterion=" + awardCriterion + "&criterionValue=" + criterionValue + "&startDate=" + startDate + "&endDate=" + endDate);
     }
   }
 
   // to get activities of student whose status = REVIEWED
-  getStudentActivities(studentCid){
-    return this.http.get("/api/student/activities?status=reviewed&studentId=" + studentCid );
+  getStudentActivities(studentCid) {
+    return this.http.get("/api/student/activities?status=reviewed&studentId=" + studentCid);
   }
 
   // Get the awards initiated/given by student
-  getTeacherAwards(){
+  getTeacherAwards() {
     return this.http.get("/api/teacher/awards");
   }
 
   // to verify the awards by teacher if is_management = TRUE;
-  verifyAwards(awardId){
-    return this.http.put("/api/teacher/award/"+ awardId +"?Verified=TRUE",{});
+  verifyAwards(awardId) {
+    return this.http.put("/api/teacher/award/" + awardId + "?Verified=TRUE", {});
   }
 
   // DOWNLOAD Attachmeents
-  downloadAttachment(filePath){
-    return this.http.get("/file/download?filePath="+filePath);
+  downloadAttachment(filePath) {
+    return this.http.get("/file/download?filePath=" + filePath);
   }
 
   // Profile Photo Update
-  putProfilePhoto(formData){
-    return this.http.put("/api/teacher/profilePic",formData);
+  putProfilePhoto(formData) {
+    return this.http.put("/api/teacher/profilePic", formData);
   }
 
   // Update Contact Details
-  updateProfile(teacherId,form){
-    return this.http.put("/api/teacher/update/"+teacherId,form);
+  updateProfile(teacherId, form) {
+    return this.http.put("/api/teacher/update/" + teacherId, form);
   }
 
   // to Award Criteria
-  getAwardCriteria(){
+  getAwardCriteria() {
     return this.http.get("/awardCriteria");
   }
 
   // get Values of PSD, Focus Area & 4s
-  getAwardCriteriaValue(){
+  getAwardCriteriaValue() {
     return this.http.get("/filters");
   }
 
   // get all club and society request
-  getClubReq(){
+  getClubReq() {
     return this.http.get("/api/teacher/club/members");
   }
 
   // Approve or reject club Request
-  approveClubReq(stuId,actId,verify){
-    return this.http.put("/api/teacher/club?studentId="+stuId+"&activityId="+actId+"&verified="+verify,{});
+  approveClubReq(stuId, actId, verify) {
+    return this.http.put("/api/teacher/club?studentId=" + stuId + "&activityId=" + actId + "&verified=" + verify, {});
   }
 
   // get all clubs and society under teacher
-  getAssignedClubs(){
+  getAssignedClubs() {
     return this.http.get("/api/teacher/clubs");
   }
 
   // Create new Session
-  createNewSession(sessionForm){
-    return this.http.post("/api/session",sessionForm);
+  createNewSession(sessionForm) {
+    return this.http.post("/api/session", sessionForm);
   }
+
 
   // get Student Session Schedule
-  getSession(duration){
-    return this.http.get("/api/teacher/sessions?sessionFetch="+duration);
-  }
-   // get Session Schedule for a particular club or society
-   getSupervisedClubSession(clubId,duration){
-    return this.http.get("/api/teacher/sessions/club/"+clubId+"?sessionFetch="+duration)
-  }
-
-  // delete Session Schedule
-  deleteSession(sessionId){
-    return this.http.delete("/api/session/"+sessionId);
+  getSession(duration) {
+    return this.http.get("/api/teacher/sessions?sessionFetch=" + duration);
   }
 
   // edit Session Schedule
-  editSession(sessionForm){
-    return this.http.put("/api/session",sessionForm);
-  } 
+  updateSession(sessionForm) {
+    return this.http.post("/api/session/update", sessionForm);
+  }
+
+  // delete Session Schedule
+  deleteSession(sessionId) {
+    return this.http.delete("/api/session/" + sessionId);
+  }
+
+  // get Session Schedule for a particular club or society
+  getSupervisedClubSession(clubId, duration?) {
+    // return this.http.get("/api/teacher/sessions/club/"+clubId+"?sessionFetch="+duration)
+    if (duration)
+      return this.http.get("/api/teacher/sessions/club/" + clubId + "?sessionFetch=" + duration);
+    else
+      return this.http.get("/api/teacher/sessions/club/" + clubId);
+  }
+
+  // get List of Students enrolled in a particular Club/Society under specific Supervisor and grade
+  getSupervisorClubStudents(activityId, teacherId) {
+    return this.http.get("/api/students/activity?activityId=" + activityId + "&teacherId=" + teacherId);
+  }
+
+  getSupervisorClubReq(clubId){
+    return this.http.get("/api/teacher/club/"+clubId+"/members")
+  }
+
 }

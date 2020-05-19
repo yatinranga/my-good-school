@@ -1,46 +1,14 @@
 
-.left_col{
-    width: 33%;
-}
-.enrolled_main{
-    width: 100%;
-    float: left;
-    display: inline-block;
-    text-align: left;
-    padding: 0px;
-    height: 100%;
-}
-.enrolled_pre {
-    width: 50%;
-    display: inline-block;
-    text-align: center;
-    border: 1px solid lightgrey;
-    margin: 10px 0px;
-}
-.enrolled_pre h3 {
-    font-size: 22px;
-    color: #4bafa5;
-    border-bottom: 1px solid lightgray;
-}
-.enrolled_main li {
-    font-size: 17px;
-    line-height: 40px;
-    color: #555;
-}
-.enrolled_main ul {
-    padding: 0 5px;
-    margin: 0;
-    text-align: left;
-}
-.schedule{
-    margin-top: 20px;
-}
 .cands {
-    width: 67%;
+    width: 70%;
     padding: 0 20px 0 30px;
 }
+.fourskill_main {
+    width: 100%;
+    display: inline-flex;
+}
 .society_main {
-    width: 49%;
+    width: 50%;
     float: right;
     text-align: center;
     display: inline-block;
@@ -73,103 +41,135 @@
     font-size: 17px;
     line-height: 40px;
 }
-
-.study.fourskill h3{
+.sport.fourskill h3{
     color: #4bafa5;
 }
 .skill.fourskill h3{
-    color: #e04090;
-}
-.service.fourskill h3{
-    color: #1f69ad;
-}
-.sport.fourskill h3{
     color: #8dc33a;
 }
-.study.fourskill:hover {
-    background: #4bafa5;
+.service.fourskill h3{
+    color: #e04090;
 }
-.skill.fourskill:hover {
-    background: #e04090;
+.study.fourskill h3{
+    color: #1f69ad;
 }
-.service.fourskill:hover {
-    background: #1f69ad;
+li.sport.reference {
+    background: #1db7a8;
 }
-.sport.fourskill:hover {
-    background: #8dc33a;
+li.skill.reference {
+    background: #9fbb73;
 }
-.fourskill:hover h3{
-    color: #333;
+li.service.reference {
+    background: #d86ea3;
+}
+li.study.reference {
+    background: #5482ad;
+}
+.fourskill:hover{
+    background: gainsboro;
 }
 .fourskill:hover li{
     border-bottom: 1px solid #333; 
     color: #333;
 }
-button.btn.register.btn-primary{
-    background: #8dc33a;
+li.reference {
+    color: #333;
+    padding: 0;
+    border-bottom: 1px solid #444 !important; 
 }
+
 
 /*--------------------------------------MODAL------------------------------*/
 
 .modal-content {
     border: 5px solid #b4d673;
     top: 100px;
+    height: 600px;
+    overflow-y: scroll;
+}
+.reg.modal-content{
+    height: inherit;
+    overflow: inherit;
 }
 .enr_modal.modal-content .modal-body{
     padding: 10px;
     display: inline-block;
 }
-.enr_modal.modal-content select, .all_act.modal-content select{
-    float: right;
-    width: 110px;
-    height: 31px;
-}
 .enr_modal.modal-content .day_pre{
     display: inline-block;
     width: 100%;
-}
-.day_pre .day h3{
-    margin-top: 0;
-}
-.day ul li {
-    line-height: 30px;
-    padding: 0 20px;
-}
-li#session_title {
-    font-size: 19px;
-    font-weight: normal;
-    word-spacing: 3px;
-    padding: 0px;
 }
 .modal-title{
     font-size: 26px;
     color: black;
 }
+.skillmodal .modal-content {
+    top: 50px;
+}
 button.register_button.btn.btn-primary.btn-sm {
     float: right;
 }
-.all_act.modal-content ul {
-    padding: 0;
-    margin: 0;
+button.btn.register.btn-primary{
+    background: #8dc33a;
 }
-.all_act.modal-content ul li {
-    padding: 0 0 0 10px;
-    margin: 0;
+li.active {
+    background: #d3d4d3;
 }
-.all_act.modal-content li#session_title {
+li.teachername:hover {
+    background: #d3d4d3;
+}
+li.teachername {
     color: red;
 }
-.all_act.modal-content h5 {
-    font-size: 21px;
-    color: cornflowerblue;
+.modalstudentlist {
+    width: 100%;
+    display: inline-block;
+    height: 400px;
+    overflow-y: scroll;
+    margin-top: 30px;
 }
-.day_post .day h3 {
-    font-size: 20px;
+.modalsessionschedule {
+    width: 100%;
+    display: inline-block;
+    margin-top: 30px;
 }
-.day_post li#session_title {
-    color: #333 !important;
+button.register_act.btn.btn-primary.btn-sm {
+    background: darkgray;
+    color: #555;
     font-size: 18px;
+    float: right;
+    border-radius: 3px !important;
+    margin: 0;
+    padding: 3px 10px;
 }
-.day_post ul li{
-   padding: 0 0 0 20px;
+button.close span {
+    color: #c10e0e;
+}
+
+
+/*          MODAL REFERENCE          */
+
+.sportmodal {
+    border: 5px solid #4bafa5;
+}
+.skillmodal {
+    border: 5px solid #b4d673;
+}
+.servicemodal {
+    border: 5px solid #d86ea3;
+}
+.studymodal {
+    border: 5px solid #1f69ad;
+}
+.sportmodal h3, .sportmodal h5 {
+    color: #4bafa5;
+}
+.skillmodal h3, .skillmodal h5 {
+    color: #b4d673;
+}
+.servicemodal h3, .servicemodal h5 {
+    color: #d86ea3;
+}
+.studymodal h3, .studymodal h5 {
+    color: #1f69ad;
 }

@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { StudentService } from 'src/app/services/student.service';
 import { AlertService } from 'src/app/services/alert.service';
+import { Router } from '@angular/router';
+
+// import { ActivityDetailsComponent } from 'src/app/modules/student/activity-details/activity-details.component.ts';
 declare let $: any;
 
 @Component({
@@ -10,6 +13,7 @@ declare let $: any;
 })
 export class HomeComponent implements OnInit {
 
+  modalClass=""; // ADD class according to Activity
   activities = [];
   coaches = [];
   students = [];
@@ -43,6 +47,7 @@ export class HomeComponent implements OnInit {
 
   // Details of All Club/Society Modal Variable
   clubName = "";
+  supervisorName = "";
   sessionView = false;
   copyStuArr = [];
 
@@ -50,18 +55,26 @@ export class HomeComponent implements OnInit {
   sup_loader = false;
   csup_loader = false;
 
+  highlightClubArr = [];
+  highlightSocietyArr = [];
+  clubObject = {};
+
+
+
   filterVal = ""; // filter the activity by ALL, UPCOMING and ENDED
 
-  constructor(private studentService: StudentService, public alertService: AlertService) { }
+  constructor(private studentService: StudentService, public alertService: AlertService, private router: Router) { }
 
+  
   ngOnInit() {
     this.studentInfo = JSON.parse(localStorage.getItem('user_info'));
     this.schoolId = this.studentInfo.student.schoolId;
     this.studentName = this.studentInfo.student.name;
-    this.getActivity(this.schoolId); // ALL Activites of School
     this.getGrades(this.schoolId); // ALL Grades of School
     this.getEnrolledClub(); // List of Enrolled Club
     this.getSessionDetails(); // List of Scheduled Session of a WEEK
+    this.getActivity(this.schoolId); // ALL Activites of School
+    // history.pushState({data : {name: 'hudakchullu'}},"Hello");
   }
 
   // get List of Activities of School
@@ -69,9 +82,9 @@ export class HomeComponent implements OnInit {
     this.studentService.getActivity(schoolId).subscribe((res) => {
       this.activities = res;
       this.sportArr = res.filter((e) => (e.fourS == 'Sport'));
-      this.skillArr = res.filter((e) => (e.fourS == 'Skill'));
       this.serviceArr = res.filter((e) => (e.fourS == 'Service'));
       this.studyArr = res.filter((e) => (e.fourS == 'Study'));
+      this.skillArr = res.filter((e) => (e.fourS == 'Skill'));
     },
       (err) => console.log(err)
     );
@@ -80,15 +93,20 @@ export class HomeComponent implements OnInit {
   // List of enrolled Clubs and Societies
   getEnrolledClub() {
     this.studentService.getAllEnrolledClub().subscribe(res => {
+      console.log(res);
       this.enrolledClubsArr = res.filter(e => e.clubOrSociety == "Club");
       this.enrolledSocietyArr = res.filter(e => e.clubOrSociety == "Society");
+      this.enrolledClubsArr.forEach(e=>this.highlightClubArr.push(e.name));
+      this.enrolledSocietyArr.forEach(e=>this.highlightSocietyArr.push(e.name));
+
+      console.log(this.highlightClubArr);
+      console.log(this.highlightSocietyArr);
     }, (err) => { console.log(err) });
   }
 
   // List of Sessions in current week
   getSessionDetails() {
     this.studentService.getSession("week").subscribe((res) => {
-      console.log(res.sessions);
       this.sessionsArr = res.sessions;
     }, (err) => { console.log(err); });
   }
@@ -152,9 +170,20 @@ export class HomeComponent implements OnInit {
   }
 
    // Details of All Clubs and Societies
-   clubDetails(clubObj) {
-    $('#clubDetailsModal').modal('show');
-    this.clubName = clubObj.name;
+   clubDetails(clubObj,type) {
+     // Changing color on the basis of 
+     this.clubName = clubObj.name;
+    //  this.router.navigate(['Student/details/'+clubObj.name],{ state: clubObj });
+     this.clubObject = clubObj;
+     localStorage.setItem('club',JSON.stringify(clubObj));
+     
+     switch(type){
+       case 'sport': this.modalClass = "sportmodal"; break;
+       case 'skill': this.modalClass = "skillmodal"; break;
+       case 'service': this.modalClass = "servicemodal"; break;
+       case 'study': this.modalClass = "studymodal"; break;
+     }
+    // $('#clubDetailsModal').modal('show');
     this.clubId = clubObj.id;
     this.supervisorId = "";
     this.sessionView = false;
@@ -182,6 +211,7 @@ export class HomeComponent implements OnInit {
     // Session Schedule of a particular Supervisor
     getSupervisorSession(obj_sup){
       this.getStudents(obj_sup.id);
+      this.supervisorName = obj_sup.name;
       this.clubSchedule = []; // reset club schedule
       this.students = [] //reset club+supervisor+student array
       this.sessionView = true; // Session+student view
@@ -218,7 +248,8 @@ export class HomeComponent implements OnInit {
   
     // Registration in a particular Club from Club Details Modal
     clubRegBtn(){
-      this.alertService.confirmWithoutLoader("info","Are you sure you want to register ?","","Yes").then(result =>{
+      let a ="Activity : "+this.clubName+"\n, Supervisor : "+this.supervisorName;
+      this.alertService.confirmWithoutLoader("info","Are you sure you want to register ?",a,"Yes").then(result =>{
         if(result.value){
           this.clubRegistration();
         }
@@ -268,4 +299,7 @@ export class HomeComponent implements OnInit {
     this.clubSupervisor = [];
   }
 
+  enrollmentBtn(){
+    this.clubId="";
+  }
 }

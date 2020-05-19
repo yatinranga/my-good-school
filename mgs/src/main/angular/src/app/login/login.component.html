@@ -24,11 +24,12 @@
                     </div>
                 </fieldset>
                 <div class="forms_buttons">
-                    <a (click)="forgetPassword()">Forgot Password ?</a>
-                    <button class="forms_buttons-action login-btn" name="Submit_Button" type="submit"> Login
+                    <a (click)="forgetPassword()"> Forgot Password ? </a>
+                    <button [ngClass]="{'active':loginForm.valid}" class="forms_buttons-action inactive"  name="Submit_Button" type="submit"> Login 
                         <span *ngIf="loader">
                             <div class="spinner-border" role="status"> </div>
-                        </span></button>
+                        </span>
+                    </button>
                 </div>
 
                 <!-- <div class="err-msg" *ngIf="errorMsg">

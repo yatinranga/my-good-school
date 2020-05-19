@@ -56,9 +56,9 @@ export class LoginComponent implements OnInit {
 
   getUserInfo() {
     this.authService.getInfo().subscribe((res) => {
-      this.loader = false;
       localStorage.setItem('user_info', JSON.stringify(res));
       this.userInfo = JSON.parse(localStorage.getItem('user_info'));
+      this.loader = false;
       this.checkUserType(this.userInfo.userType);
     }, (err) => {
       this.loader = false;
@@ -70,6 +70,7 @@ export class LoginComponent implements OnInit {
       case "Admin": this.router.navigate(['Admin']); break;
       case "Student": this.router.navigate(['Student/' + '/home']); break;
       case "Teacher": this.router.navigate(['Teacher/' + '/home']); break;
+      case "School": this.router.navigate(['School/' + '/home']); break;
     }
   }
 }

@@ -307,7 +307,7 @@ app-home{
     vertical-align: top;
     height: calc(100vh - 107px);
 }
-.student_home {
+.student_home, .teacher_home {
     width: 100%;
     display: inline-block;
     padding: 10px;
@@ -338,13 +338,15 @@ button.enrollment_button {
     border-radius: 4px;
     padding: 3px 5px;
     cursor: pointer;
+    width: 150px;
 }
 .left_col{
-    width: 20%;
+    width: 30%;
     display: inline-block;
     float: left;
-    border-right: 2px solid lightgrey;
     padding-right: 35px;
+    height: 533px;
+    overflow-y: auto;
 }
 .schedule{
     width: 100%;
@@ -357,16 +359,17 @@ button.enrollment_button {
 .enrolled_main h2, .schedule h2{
     font-size: 30px;
     color: #159487;
-    margin: 5px 0 10px 0;
+    margin: 0 0 15px 0;
 }
 .day h3 {
     font-size: 22px;
-    margin-top: 20px;
+    color: #333 !important;
 }
 .day {
     width: 100%;
-    padding: 0 10px;
+    padding: 10px;
     margin-bottom: 20px;
+    border-radius: 10px;
 }
 .day ul li {
     font-size: 17px;
@@ -376,28 +379,30 @@ button.enrollment_button {
     padding: 0;
     margin: 0;
 }
-.day:first-child h3 {
-    color: #e04090;
+.day:nth-child(1) {
+    background: #ecaece;
 }
-.day:nth-child(2) h3 {
-    color: #7c00c3;
+.day:nth-child(2) {
+    background: #9fbb73;
 }
-.day:nth-child(3) h3 {
-    color: #4bafa5;
+.day:nth-child(3) {
+    background: #8eb6dc;
 }
-.day:nth-child(4) h3 {
-    color: #8dc33a;
+.day:nth-child(4) {
+    background: #dea895;
 }
-.day:nth-child(5) h3 {
-    color: #1f69ad;
+.day:nth-child(5) {
+    background: #9e9e9e;
 }
-.day:last-child h3 {
-    color: #1ab3bb;
-    
+.day:nth-child(6) {
+    background: #846539a6;
+}
+.day:last-child {
+    background: #f5dd60;
 }
 .cands{
-    width: 78%;
-    padding: 0 20px 0 40px;
+    width: 70%;
+    padding: 0 20px 0 35px;
     display: inline-block;
 }
 .cands h2{
@@ -405,15 +410,91 @@ button.enrollment_button {
     color: #159487;
     margin: 0 0 15px 15px;
 }
-.fourskill_main {
-    width: 100%;
-    display: inline-flex;
-}
 .club_main {
-    width: 49%;
+    width: 50%;
     text-align: center;    
     display: inline-block;
 }
+li#session_title {
+    font-size: 20px;
+    font-weight: normal;
+    word-spacing: 3px;
+    padding: 0px;
+    margin-top: 10px;
+}
+.day ul li {
+    line-height: 30px;
+    padding: 0 20px;
+}
+.day button{
+    cursor: pointer;
+    margin: 5px;
+    padding: 0 10px;
+    background: gainsboro;
+    border: none;
+    color: #333;
+    border-radius: 4px;
+}
+.act_details_section_two{
+    width: 100%;
+    display: inline-block;
+}
+.all_act.modal-content ul {
+    padding: 0;
+    margin: 0;
+}
+.all_act.modal-content ul li {
+    padding: 0 0 0 20px;
+    margin: 0;
+}
+.all_act.modal-content li#session_title {
+    color: red;
+}
+.all_act.modal-content h5 {
+    font-size: 21px;
+}
+.day_post h3 {
+    font-size: 21px;
+}
+.day_post li#session_title {
+    color: #333 !important;
+    font-size: 18px;
+}
+.day_post ul li{
+   padding: 0 0 0 20px;
+   font-size: 17px;
+   color: #333;
+}
+.act_details_section_two h5, .day_post .day h5{
+    font-size: 20px;
+    margin: 0;
+    float: left;
+}
+.enr_modal.modal-content select, .all_act.modal-content select, .act_details_section_two select{
+    float: right;
+    width: 115px;
+    height: 29px;
+}
+li#reference {
+    background: black;
+    color: white;
+    padding: 0;
+}
+ul.student_list {
+    margin-top: 15px;
+    padding: 0;
+}
+.all_act.modal-content .day_post {
+    width: 100%;
+    display: inline-block;
+    margin-top: 15px;
+}
+ul.student_list li {
+    padding: 0;
+    font-size: 17px;
+    word-spacing: 3px;
+}
+
 
 /*-------------------------------------NAVIGATION BAR-------------------------------------*/
 
@@ -585,8 +666,13 @@ li.nav-item{
     display: -webkit-inline-box !important;
     border-right: 1px solid #777;
 }
-/*-------------------------------------PROFILE-------------------------------------*/
-
+/*-------------------------------------HOME PAGE DETAILS -------------------------------------*/
+.cands ul li a:hover {
+    color: chocolate;
+}
+.cands ul li a {
+    color: #333;
+}
 
 
 /*-------------------------------------ACTIVITY-------------------------------------*/

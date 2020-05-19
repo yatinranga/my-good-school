@@ -1,0 +1,128 @@
+<div class="student_act_details_main">
+    <div class="sidenav">
+        <h2> My Schedule </h2>
+        <div class="supervisor_profile">
+            <img src="assets/images/maleteacher.jpg">
+        </div>
+        <!---- List of Scheduled Sessions ---->
+        <div class="teacherschedule">
+            <select name="status" [disabled]="clubSch_loader" (ngModelChange)="filterSession($event)"
+                [(ngModel)]="filterVal"> Filter :
+                <option value="" selected>ALL</option>
+                <option value="upcoming">UPCOMIMG</option>
+                <option value="ended">ENDED</option>
+            </select>
+            <div class="day_post">
+                <div class="day" *ngFor="let club of clubSchedule; let i = index;">
+                    <h3>{{club.criterionValue | date}} - {{club.criterionValue | date:'EEEE'}} </h3>
+                    <ul *ngFor="let res of club.responses; let j = index;">
+                        <li id="session_title"> {{j+1}}. {{res.title}}
+                            <span *ngIf="res.status=='upcoming'" style="color: red">({{res.status | uppercase}})</span>
+                            <span *ngIf="res.status=='ended'" style="color: green">({{res.status | uppercase}})</span>
+                        </li>
+                        <li>{{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs
+                        </li>
+                        <li>Grades - <span *ngFor="let g of res.grades; let i = index">
+                                {{ (i === res.grades.length-1) ? g.grade+" "+g.section : g.grade+" "+g.section + "," + ' '}}</span>
+                        </li>
+                        <li>Description - {{res.description}}</li>
+                        <li><button class="btn btn-info" (click)="editSessionBtn(res,i,j)">Edit</button>
+                            <button class="btn btn-danger" (click)="deleteSession(res,i,j)">Delete</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div *ngIf="clubSch_loader">
+                <div class="spinner-border text-secondary" role="status" *ngIf="clubSch_loader">
+                </div>{{clubSch_loader?'  Loading...':''}}
+            </div>{{clubSchedule.length==0&&!clubSch_loader?'No Session Available !': ''}}
+        </div>
+    </div>
+
+    <div class="content_container">
+        <div class="title">
+            <h1> {{clubObject.name}} Dashboard </h1>
+            <button [disabled]="stu_loader && clubSch_loader" class="register_act btn btn-primary btn-sm"
+                data-toggle="modal" data-target="#createSessionModal" data-dismiss="modal" aria-label="Close">Create
+                Session</button>
+        </div>
+
+        <div class="content">
+            <!---- List of Requests ---->
+            <div class="content_box">
+                <div class="content_title">
+                    <h2> Requests </h2>
+                    <select name="status" [disabled]="clubReqLoader" (ngModelChange)="filterRequests($event)"
+                        [(ngModel)]="filterReqVal"> Filter :
+                        <option value="" selected>ALL</option>
+                        <option value="PENDING">PENDING</option>
+                        <option value="REJECTED">REJECTED</option>
+                    </select>
+                </div>
+                <ul>
+                    <li *ngFor="let req of clubReqArr; let i = index" id="requestbox">
+                        <ul id="studentname">
+                            <li> {{i+1}}. {{req.student.name}}
+                                <p> Grade - {{req.student.grade}} {{req.student.section}}</p>
+                                <div>
+                                    <span *ngIf="req.membershipStatus=='PENDING'"
+                                        style="color: blue">({{req.membershipStatus | uppercase}})</span>
+                                    <span *ngIf="req.membershipStatus=='VERIFIED'"
+                                        style="color: green">({{req.membershipStatus | uppercase}})</span>
+                                    <span *ngIf="req.membershipStatus=='REJECTED'"
+                                        style="color: red">({{req.membershipStatus | uppercase}})</span>
+                                </div>
+                            </li>
+                        </ul>
+                        <ul id="actionbuttons">
+                            <li> <button *ngIf="req.membershipStatus=='PENDING'" class="verifyreq btn btn-success"
+                                    (click)="setClubReq(req,i,'true')">Verify</button>
+                                <button *ngIf="req.membershipStatus=='PENDING'" class="rejectreq btn btn-danger"
+                                    (click)="setClubReq(req,i,'false')">Reject</button></li>
+                        </ul>
+
+                    </li>
+                    <li *ngIf="clubReqArr.length==0" id="null">
+                        <div class="spinner-border text-secondary" role="membershipStatus" *ngIf="stu_loader">
+                        </div> {{stu_loader ? ' Loading...' : 'No Requests'}}
+                    </li>
+                </ul>
+            </div>
+
+            <!-- <div>
+                            <span *ngIf="req.membershipStatus=='PENDING'"
+                                style="color: blue">({{req.membershipStatus | uppercase}})</span>
+                            <span *ngIf="req.membershipStatus=='VERIFIED'"
+                                style="color: green">({{req.membershipStatus | uppercase}})</span>
+                            <span *ngIf="req.membershipStatus=='REJECTED'"
+                                style="color: red">({{req.membershipStatus | uppercase}})</span>
+                        </div>
+                    -->
+
+
+            <!---- List of Students ---->
+            <div class="content_box">
+                <div class="content_title">
+                    <h2>List of Students </h2>
+                    <select name="grade" [disabled]="stu_loader" (ngModelChange)="filterStudent($event)"
+                        [(ngModel)]="gradeId">
+                        <option value="" selected>Select Grade</option>
+                        <option *ngFor="let g of schoolGrades" value={{g.id}}>{{g.grade}} {{g.section}}
+                        </option>
+                        <option disabled *ngIf="!schoolGrades.length">No Grades Available</option>
+                    </select>
+                </div>
+                <ul id="student_list">
+                    <li *ngFor="let s of studentsArr; let i = index"> {{i+1}}. {{s.name}} - {{s.grade}}
+                        {{s.section}}</li>
+                    <li *ngIf="studentsArr.length==0" id="null">
+                        <div class="spinner-border text-secondary" role="status" *ngIf="stu_loader">
+                        </div> {{stu_loader ? ' Loading...' : 'No Students'}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+</div>

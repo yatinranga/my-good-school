@@ -1,11 +1,10 @@
-<!-- Modal -->
 <div class="main">
     <div class="content_main">
         <div class="content_main_com">
             <div class="certi_box">
                 <div *ngFor="let certi of certificatesArr">
                     <div class="card_box">
-                        <img src="assets/images/banner.jpg">
+                        <img src="assets/images/award.jpg">
                         <div class="certi_text">
                             <h2>{{certi.title}}</h2>
                             <p>{{certi.description}}</p>
@@ -33,7 +32,7 @@
                 data-target="#certificateModal">
                 <i class="fa fa-plus"></i>
             </button>
-
+<!--------------------------------- Modal ------------------------------------->
             <div class="modal fade" id="certificateModal" tabindex="-1" role="dialog"
                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">

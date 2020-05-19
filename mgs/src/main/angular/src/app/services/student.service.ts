@@ -160,4 +160,9 @@ export class StudentService {
     return this.http.get("/api/students/activity?activityId="+activityId+"&teacherId="+teacherId);
   }
 
+  // get status 
+  getMembershipStatus(){
+    return this.http.get("api/student/club/membershipStatus");
+  }
+
 }
