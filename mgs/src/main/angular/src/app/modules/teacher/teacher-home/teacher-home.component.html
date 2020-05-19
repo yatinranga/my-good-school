@@ -141,17 +141,16 @@
                                 <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">Description : </label>
                                     <textarea class="form-control add" name="description" formControlName="description"
-                                    placeholder="Enter Description Here" rows="3"></textarea>
+                                        placeholder="Enter Description Here" rows="3"></textarea>
                                 </div>
+                            </div>
+
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">Date : </label>
                                     <input type="date" class="form-control" name="startDate"
                                         formControlName="startDate">
                                 </div>
-                                
-                            </div>
-
-                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">Timing : </label>
                                     <input type="time" class="form-control" name="startTime" [(ngModel)]="startTime"
@@ -168,9 +167,12 @@
                                         </option>
                                     </select>
                                 </div>
+
+                            </div>
+                            <div class="col-md-12" style="text-align: center;">
                                 <div class="form-group">
                                     <input type="file" accept="image/*, audio/*, video/*, application/pdf,application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
-                                        text/plain" name="selectedFile" (change)="onFileSelect($event)" />
+                                                text/plain" name="selectedFile" (change)="onFileSelect($event)" />
                                     <!-- <span class="choosefile choosefile-custom"> <i class="fa fa-file"> </i> </span> -->
                                     <img *ngIf="path" [src]="path" height="200">
                                 </div>
@@ -310,4 +312,3 @@
         </div>
     </div>
 </div>
-
