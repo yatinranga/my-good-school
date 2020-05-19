@@ -1,89 +1,69 @@
 package com.nxtlife.mgs.view.user;
 
-import com.nxtlife.mgs.entity.user.Teacher;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 import com.nxtlife.mgs.entity.user.User;
-import com.nxtlife.mgs.enums.UserType;
-import com.nxtlife.mgs.ex.ValidationException;
-import com.nxtlife.mgs.view.StudentRequest;
-import com.nxtlife.mgs.view.TeacherRequest;
+import com.nxtlife.mgs.view.Request;
 
-public class UserRequest {
+public class UserRequest extends Request {
 
-	public String username;
-	public String password;
-	public String type;
-	public String email;
-	public String contactNumber;
+	private String id ;
+	
+	@NotNull(message = "User's name can't be null")
+	private String name;
 
-	public StudentRequest student;
+	@NotNull(message = "User's name can't be null")
+	@Pattern(regexp = "^[@A-Za-z0-9_]{3,20}$", message = "username should contains only alphabets/digit/@ and length should be in between 4 to 20")
+	private String username;
 
-	public TeacherRequest teacher;
+	@NotEmpty(message = "User's email can't be empty")
+	@Email(message = "Email pattern isn't correct")
+	private String email;
+
+	@Size(min = 10, max = 10)
+	@Pattern(regexp = "^[0-9]*$", message = "Contact no should contain only digit")
+	private String contactNumber;
+
+	@NotEmpty(message = "Role ids can't be null or empty")
+	private Set<Long> roleIds;
+
+	public String getName() {
+		return name;
+	}
 
 	public String getUsername() {
 		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
 	}
 
 	public String getEmail() {
 		return email;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public String getId() {
+		return id;
 	}
 
 	public String getContactNumber() {
 		return contactNumber;
 	}
 
-	public void setContactNumber(String contactNumber) {
-		this.contactNumber = contactNumber;
-	}
-
-	public StudentRequest getStudent() {
-		return student;
-	}
-
-	public void setStudent(StudentRequest student) {
-		this.student = student;
-	}
-
-	public User toEntity(User user) {
-		user = user == null ? new User() : user;
-		user.setContactNumber(contactNumber);
-		user.setEmail(email);
-		if (!UserType.matches(type)) {
-			throw new ValidationException("Type not found");
-		}
-		if (type.equalsIgnoreCase(UserType.Student.name())) {
-			user.setStudent(student.toEntity());
-		} else if (type.equalsIgnoreCase(UserType.Teacher.name())) {
-			user.setTeacher(teacher.toEntity());
-		}
-
-		return user;
+	public Set<Long> getRoleIds() {
+		return roleIds;
 	}
 
 	public User toEntity() {
-		return toEntity(null);
+		User user = new User();
+		user.setName(name);
+		user.setEmail(email);
+		user.setContactNumber(contactNumber);
+		user.setUsername(username);
+		return user;
 	}
 }

@@ -4,14 +4,17 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -22,6 +25,7 @@ import javax.validation.constraints.NotNull;
 
 import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.activity.Activity;
+import com.nxtlife.mgs.entity.activity.File;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.enums.SessionStatus;
@@ -66,6 +70,12 @@ public class Event extends BaseEntity{
 	@NotNull
 	@ManyToOne
 	private Teacher teacher ;
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "event")
+	private List<File> files;
+	
+	@Column(columnDefinition = "TEXT ")
+	private String description;
 	
 	@Transient
 	private LocalDate startLocalDate;
@@ -144,6 +154,22 @@ public class Event extends BaseEntity{
 	
 	public LocalDate getStartLocalDate() {
 		return DateUtil.convertToLocalDate(this.startDate);
+	}
+
+	public List<File> getFiles() {
+		return files;
+	}
+
+	public void setFiles(List<File> files) {
+		this.files = files;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public Event() {

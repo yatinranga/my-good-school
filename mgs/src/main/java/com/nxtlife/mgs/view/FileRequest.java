@@ -1,5 +1,7 @@
 package com.nxtlife.mgs.view;
 
+import java.util.Arrays;
+
 import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 
@@ -18,6 +20,8 @@ public class FileRequest {
 	private Boolean active;
 	
 	private String extension;
+	
+	private Boolean isImage = false ;
 	
 	private MultipartFile file;
 
@@ -69,11 +73,26 @@ public class FileRequest {
 		this.file = file;
 	}
 
+	public Boolean getIsImage() {
+		return isImage;
+	}
+
+	public void setIsImage(Boolean isImage) {
+		this.isImage = isImage;
+	}
+
 	public File toEntity(File file) {
 		file = file==null?new File():file;
+		if(this.file != null) {
+			this.name = this.file.getOriginalFilename();
+			this.extension = this.name.substring(this.name.lastIndexOf("."));
+			if(Arrays.asList("png", "jpeg" , "jpg" , "PNG" ,"JPEG","JPG").contains(this.extension))
+				this.isImage = true;
+		}
 		file.setName(this.name);
-		file.setUrl(this.url);
-		file.setActive(this.active);
+		if(this.url != null)
+		   file.setUrl(this.url);
+		file.setActive(true);
 		file.setExtension(this.extension);
 		if(this.id !=null)
 			file.setCid(this.id);

@@ -1,14 +1,15 @@
 package com.nxtlife.mgs.jpa;
 
-import java.util.List;import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.nxtlife.mgs.entity.activity.Activity;
+import com.nxtlife.mgs.entity.common.StudentActivityId;
 import com.nxtlife.mgs.entity.school.StudentClub;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.enums.ApprovalStatus;
-import com.nxtlife.mgs.util.StudentActivityId;
 
 public interface StudentClubRepository extends JpaRepository<StudentClub, StudentActivityId> {
 
@@ -42,6 +43,8 @@ public interface StudentClubRepository extends JpaRepository<StudentClub, Studen
 	
 	@Query(value = "select sc.student from StudentClub sc where sc.activity.cid = :activityCid and sc.student.school.cid = :schoolCid and sc.membershipStatus = :membershipStatus and sc.active = true")
 	List<Student> findAllStudentByActivityCidAndStudentSchoolCidAndMembershipStatusAndActiveTrue(@Param("activityCid") String activityCid ,@Param("schoolCid") String schoolCid ,@Param("membershipStatus") ApprovalStatus membershipStatus);
+
+	List<StudentClub> findAllByTeacherIdAndActivityCidAndActiveTrue(Long teacherId, String activityId);
 
 	
 }

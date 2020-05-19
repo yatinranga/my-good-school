@@ -2,6 +2,7 @@ package com.nxtlife.mgs.service.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,11 +27,12 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.entity.activity.Activity;
+import com.nxtlife.mgs.entity.common.UserRoleKey;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.user.Role;
 import com.nxtlife.mgs.entity.user.User;
-import com.nxtlife.mgs.enums.UserType;
+import com.nxtlife.mgs.entity.user.UserRole;
 import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.ActivityRepository;
@@ -40,11 +42,11 @@ import com.nxtlife.mgs.jpa.SchoolRepository;
 import com.nxtlife.mgs.jpa.UserRepository;
 import com.nxtlife.mgs.service.ActivityService;
 import com.nxtlife.mgs.service.BaseService;
-import com.nxtlife.mgs.service.FileService;
+//import com.nxtlife.mgs.service.FileService;
+import com.nxtlife.mgs.service.FileStorageService;
 import com.nxtlife.mgs.service.SchoolService;
 import com.nxtlife.mgs.service.SequenceGeneratorService;
 import com.nxtlife.mgs.service.UserService;
-import com.nxtlife.mgs.store.FileStore;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.ActivityRequestResponse;
@@ -66,7 +68,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 	Utils utils;
 
 	@Autowired
-	FileStore filestore;
+	private FileStorageService<MultipartFile> fileStorageService;
 
 	@Autowired
 	SequenceGeneratorService sequenceGeneratorService;
@@ -83,8 +85,8 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 	@Autowired
 	GradeRepository gradeRepository;
 
-	@Autowired
-	FileService fileService;
+//	@Autowired
+//	FileService fileService;
 
 	@Autowired
 	ActivityService activityService;
@@ -98,7 +100,6 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 		Role role = roleRepository.getOneByName("School");
 		if (role == null) {
 			role = new Role();
-			role.setCid(utils.generateRandomAlphaNumString(8));
 			role.setName("School");
 			role.setActive(true);
 			roleRepository.save(role);
@@ -109,8 +110,9 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 		if (school == null) {
 			school = new School();
 			school.setName("my good school");
-			Long schoolsequence = sequenceGeneratorService.findSequenceByUserType(UserType.School);
-			sequenceGeneratorService.updateSequenceByUserType(schoolsequence, UserType.School);
+			school.setUsername(String.format("%s%08d", school.getName().substring(0, 3) ,utils.generateRandomNumString(8) ));
+//			Long schoolsequence = sequenceGeneratorService.findSequenceByUserType(UserType.School);
+//			sequenceGeneratorService.updateSequenceByUserType(schoolsequence, UserType.School);
 			school.setEmail("mygoodschool@gmail.com");
 			school.setCid(utils.generateRandomAlphaNumString(8));
 			school.setActive(true);
@@ -120,10 +122,10 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 				school.setActive(true);
 		}
 
-		if (userRepository.findByUserName(school.getUsername()) == null) {
+		if (userRepository.findByUsername(school.getUsername()) == null) {
 			User user = new User();
-			user.setRoleForUser(role);
-			user.setUserName(school.getUsername());
+			user.setRoles(Arrays.asList(role));
+			user.setUsername(school.getUsername());
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 			String encodedPassword = encoder.encode("root");
 			user.setPassword(encodedPassword);
@@ -155,18 +157,25 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 
 		School school = request.toEntity();
 
-		Long schoolsequence = sequenceGeneratorService.findSequenceByUserType(UserType.School);
+//		Long schoolsequence = sequenceGeneratorService.findSequenceByUserType(UserType.School);
 
-		school.setUsername(String.format("SCH%08d", schoolsequence));
-		school.setCid(utils.generateRandomAlphaNumString(8));
+//		school.setUsername(String.format("SCH%08d", schoolsequence));
+//		school.setCid(utils.generateRandomAlphaNumString(8));
 		school.setActive(true);
 
 //		User user = userService.createSchoolUser(school);
-		User user = userService.createUserForEntity(school);
+//		User user = userService.createUserForEntity(school);
+		Long roleId = roleRepository.findIdByName( "School");
+		if(roleId == null)
+			throw new ValidationException("Role School not created yet.");
+		User user = userService.createUser(school.getName(), school.getContactNumber(), school.getEmail(), school.getId());
+		user.setUserRoles(Arrays.asList(new UserRole(new UserRoleKey(roleId, user.getId()), new Role(roleId, "School"), user)));
+		
 
 		if (StringUtils.isEmpty(user))
 			throw new ValidationException("User not created successfully");
-		school.setUser(user);
+		school.setUser(user = userRepository.save(user));
+		school.setUsername(school.getUser().getUsername());
 		user.setSchool(school);
 
 		school = schoolRepository.save(school);
@@ -234,18 +243,11 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 		school.setActivities(allActivities);
 
 		if (request.getLogo() != null) {
-//			String fileExtn = request.getLogo().getOriginalFilename().split("\\.")[1];
-			String filename = UUID.randomUUID().toString() + "."
-					+ fileService.getFileExtension(request.getLogo().getOriginalFilename());
-			try {
-				String logoUrl = filestore.store("schoolLogo", filename, request.getLogo().getBytes());
-				school.setLogo(logoUrl);
-				if(school.getUser() != null)
-					school.getUser().setImagePath(logoUrl);
-			} catch (IOException e) {
-				e.printStackTrace();
-				throw new ValidationException("Something went wromg image not saved/uploaded.");
-			}
+			String logoUrl = fileStorageService.storeFile(request.getLogo(), request.getLogo().getOriginalFilename(),
+					"/school-image/", false, true);
+			school.setLogo(logoUrl);
+			if (school.getUser() != null)
+				school.getUser().setPicUrl(logoUrl);
 		}
 
 		school = schoolRepository.save(school);
@@ -285,7 +287,36 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 		if (school == null)
 			throw new NotFoundException(String.format("school havind id [%s] didn't exist", cid));
 
+		if(request.getName() != null) {
+			if(schoolRepository.existsByNameAndCidNotAndActiveTrue(request.getName() , request.getId()))
+				throw new ValidationException(String.format("Name (%s) already belongs to some other school."));
+		}
+		if(request.getAddress() != null) {
+			if(schoolRepository.existsByAddressAndCidNotAndActiveTrue(request.getAddress() , request.getId()))
+				throw new ValidationException(String.format("Address (%s) already belongs to some other school."));
+		}
+		
 		school = request.toEntity(school);
+
+		if (request.getContactNumber() != null) {
+			if (!userRepository.existsByContactNumberAndCidNot(request.getContactNumber(), school.getUser().getCid())) {
+				school.setContactNumber(request.getContactNumber());
+				school.getUser().setContactNumber(request.getContactNumber());
+			} else {
+				throw new ValidationException(String.format("Contact Number (%s) already belongs to some other user.",
+						request.getContactNumber()));
+			}
+		}
+
+		if (request.getEmail() != null) {
+			if (!userRepository.existsByEmailAndCidNot(request.getEmail(), school.getUser().getCid())) {
+				school.setEmail(request.getEmail());
+				school.getUser().setEmail(request.getEmail());
+			} else {
+				throw new ValidationException(
+						String.format("Email (%s) already belongs to some other user.", request.getEmail()));
+			}
+		}
 
 		if (request.getGradeRequests() != null && !request.getGradeRequests().isEmpty()) {
 			List<GradeRequest> gradeRequests = request.getGradeRequests();
@@ -321,19 +352,13 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			gradeRepository.save(gradesToDelete);
 		}
 
-		if (request.getLogo() != null) {
-//			String fileExtn = request.getLogo().getOriginalFilename().split("\\.")[1];
-			String filename = UUID.randomUUID().toString() + "."
-					+ fileService.getFileExtension(request.getLogo().getOriginalFilename());
-			try {
-				String logoUrl = filestore.store("schoolLogo", filename, request.getLogo().getBytes());
-				school.setLogo(logoUrl);
-				if(school.getUser() != null)
-					school.getUser().setImagePath(logoUrl);
-			} catch (IOException e) {
-				e.printStackTrace();
-				throw new ValidationException("Something went wromg image not saved/uploaded.");
-			}
+		if (request.getLogo() != null && school.getLogo() != null) {
+			fileStorageService.delete(school.getLogo());
+			String logoUrl = fileStorageService.storeFile(request.getLogo(), request.getLogo().getOriginalFilename(),
+					"/school-image/", true, true);
+			school.setLogo(logoUrl);
+			if (school.getUser() != null)
+				school.getUser().setPicUrl(logoUrl);
 		}
 
 		if (request.getActivities() != null && !request.getActivities().isEmpty()) {
@@ -367,8 +392,8 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			}
 
 			school.setActivities(previousActivities);
-			if(!activitiesToDelete.isEmpty())
-			   activityRepository.save(activitiesToDelete);
+			if (!activitiesToDelete.isEmpty())
+				activityRepository.save(activitiesToDelete);
 		}
 
 		school = schoolRepository.save(school);
@@ -393,7 +418,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 
 			} else {
 				List<String> schoolCids = actReq.getSchoolIds();
-				if(schoolCids == null)
+				if (schoolCids == null)
 					schoolCids = new ArrayList<String>();
 				schoolCids.add(school.getCid());
 				actReq.setSchoolIds(schoolCids);

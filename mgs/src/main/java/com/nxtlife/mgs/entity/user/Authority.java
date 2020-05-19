@@ -1,27 +1,55 @@
 package com.nxtlife.mgs.entity.user;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import java.util.List;
 
-import org.springframework.data.jpa.domain.AbstractAuditable;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
+
+import com.nxtlife.mgs.entity.BaseEntity;
 
 @SuppressWarnings("serial")
 @Entity
-public class Authority extends AbstractAuditable<Authority, Long> implements GrantedAuthority {
+@Table(name = "authority", uniqueConstraints = { @UniqueConstraint(columnNames = "name") })
+@DynamicInsert(value = true)
+@DynamicUpdate(value = true)
+public class Authority extends BaseEntity implements GrantedAuthority {
 
-	@Column(nullable = false)
+	@NotEmpty(message = "name can't be empty")
 	private String name;
 
-	@Column
-	private String description;
-	
-//	@Column(unique = true , nullable = false)
-//	private String cid;
+	@NotEmpty(message = "group name can't be empty")
+	private String groupName;
 
-	@Override
-	public String getAuthority() {
+	private String description;
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "authority")
+	private List<RoleAuthority> authorityRoles;
+
+	public String getName() {
 		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
 	}
 
 	public String getDescription() {
@@ -32,20 +60,54 @@ public class Authority extends AbstractAuditable<Authority, Long> implements Gra
 		this.description = description;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public List<RoleAuthority> getAuthorityRoles() {
+		return authorityRoles;
 	}
 
-	public Authority() {
-	}
-	
-	
-	public String getName() {
-		return name;
+	public void setAuthorityRoles(List<RoleAuthority> authorityRoles) {
+		this.authorityRoles = authorityRoles;
 	}
 
-	public Authority(String name, String description) {
-		this.name = name;
-		this.description = description;
+	@Override
+	public String getAuthority() {
+		return String.format("ROLE_%s", getName());
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((authorityRoles == null) ? 0 : authorityRoles.hashCode());
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Authority other = (Authority) obj;
+		if (authorityRoles == null) {
+			if (other.authorityRoles != null)
+				return false;
+		} else if (!authorityRoles.equals(other.authorityRoles))
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
+	}
+
 }

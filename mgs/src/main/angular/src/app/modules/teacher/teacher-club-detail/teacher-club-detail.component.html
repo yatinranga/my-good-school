@@ -4,7 +4,7 @@
         <div class="supervisor_profile">
             <img src="assets/images/maleteacher.jpg">
         </div>
-        <!-- List of Scheduled Sessions -->
+        <!---- List of Scheduled Sessions ---->
         <div class="teacherschedule">
             <select name="status" [disabled]="clubSch_loader" (ngModelChange)="filterSession($event)"
                 [(ngModel)]="filterVal"> Filter :
@@ -26,7 +26,7 @@
                                 {{ (i === res.grades.length-1) ? g.grade+" "+g.section : g.grade+" "+g.section + "," + ' '}}</span>
                         </li>
                         <li>Description - {{res.description}}</li>
-                        <li><button class="btn btn-info" (click)="editSessionBtn(res,i,j)">Edit</button> 
+                        <li><button class="btn btn-info" (click)="editSessionBtn(res,i,j)">Edit</button>
                             <button class="btn btn-danger" (click)="deleteSession(res,i,j)">Delete</button>
                         </li>
                     </ul>
@@ -48,14 +48,13 @@
         </div>
 
         <div class="content">
-            <!------------------------------------ List of Requests -->
+            <!---- List of Requests ---->
             <div class="content_box">
                 <div class="content_title">
                     <h2> Requests </h2>
                     <select name="status" [disabled]="clubReqLoader" (ngModelChange)="filterRequests($event)"
                         [(ngModel)]="filterReqVal"> Filter :
                         <option value="" selected>ALL</option>
-                        <option value="VERIFIED">VERIFIED</option>
                         <option value="PENDING">PENDING</option>
                         <option value="REJECTED">REJECTED</option>
                     </select>
@@ -64,16 +63,24 @@
                     <li *ngFor="let req of clubReqArr; let i = index" id="requestbox">
                         <ul id="studentname">
                             <li> {{i+1}}. {{req.student.name}}
-                            <p> Grade - {{req.student.grade}} {{req.student.section}}</p>
+                                <p> Grade - {{req.student.grade}} {{req.student.section}}</p>
+                                <div>
+                                    <span *ngIf="req.membershipStatus=='PENDING'"
+                                        style="color: blue">({{req.membershipStatus | uppercase}})</span>
+                                    <span *ngIf="req.membershipStatus=='VERIFIED'"
+                                        style="color: green">({{req.membershipStatus | uppercase}})</span>
+                                    <span *ngIf="req.membershipStatus=='REJECTED'"
+                                        style="color: red">({{req.membershipStatus | uppercase}})</span>
+                                </div>
                             </li>
                         </ul>
-                        <ul id="actionbuttons"> 
+                        <ul id="actionbuttons">
                             <li> <button *ngIf="req.membershipStatus=='PENDING'" class="verifyreq btn btn-success"
-                                (click)="setClubReq(req,i,'true')">Verify</button>
-                            <button *ngIf="req.membershipStatus=='PENDING'" class="rejectreq btn btn-danger"
-                                (click)="setClubReq(req,i,'false')">Reject</button></li>
+                                    (click)="setClubReq(req,i,'true')">Verify</button>
+                                <button *ngIf="req.membershipStatus=='PENDING'" class="rejectreq btn btn-danger"
+                                    (click)="setClubReq(req,i,'false')">Reject</button></li>
                         </ul>
-                        
+
                     </li>
                     <li *ngIf="clubReqArr.length==0" id="null">
                         <div class="spinner-border text-secondary" role="membershipStatus" *ngIf="stu_loader">
@@ -81,7 +88,7 @@
                     </li>
                 </ul>
             </div>
-            
+
             <!-- <div>
                             <span *ngIf="req.membershipStatus=='PENDING'"
                                 style="color: blue">({{req.membershipStatus | uppercase}})</span>
@@ -93,7 +100,7 @@
                     -->
 
 
-            <!-- List of Students -->
+            <!---- List of Students ---->
             <div class="content_box">
                 <div class="content_title">
                     <h2>List of Students </h2>

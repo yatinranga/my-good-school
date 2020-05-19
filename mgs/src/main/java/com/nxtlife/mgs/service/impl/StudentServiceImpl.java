@@ -30,23 +30,27 @@ import org.springframework.security.oauth2.common.exceptions.UnauthorizedUserExc
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.activity.ActivityPerformed;
 import com.nxtlife.mgs.entity.activity.Certificate;
-import com.nxtlife.mgs.entity.activity.FocusArea;
+import com.nxtlife.mgs.entity.common.UserRoleKey;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.school.StudentClub;
+import com.nxtlife.mgs.entity.user.Authority;
 import com.nxtlife.mgs.entity.user.Guardian;
+import com.nxtlife.mgs.entity.user.Role;
+import com.nxtlife.mgs.entity.user.RoleAuthority;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.entity.user.User;
+import com.nxtlife.mgs.entity.user.UserRole;
 import com.nxtlife.mgs.enums.ActivityStatus;
 import com.nxtlife.mgs.enums.ApprovalStatus;
 import com.nxtlife.mgs.enums.AwardCriterion;
 import com.nxtlife.mgs.enums.FourS;
 import com.nxtlife.mgs.enums.PSDArea;
-import com.nxtlife.mgs.enums.UserType;
 import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.ActivityPerformedRepository;
@@ -56,6 +60,7 @@ import com.nxtlife.mgs.jpa.CertificateRepository;
 import com.nxtlife.mgs.jpa.FocusAreaRepository;
 import com.nxtlife.mgs.jpa.GradeRepository;
 import com.nxtlife.mgs.jpa.GuardianRepository;
+import com.nxtlife.mgs.jpa.RoleRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
 import com.nxtlife.mgs.jpa.SequenceGeneratorRepo;
 import com.nxtlife.mgs.jpa.StudentClubRepository;
@@ -65,19 +70,20 @@ import com.nxtlife.mgs.jpa.TeacherRepository;
 import com.nxtlife.mgs.jpa.UserRepository;
 import com.nxtlife.mgs.service.ActivityPerformedService;
 import com.nxtlife.mgs.service.BaseService;
-import com.nxtlife.mgs.service.FileService;
+import com.nxtlife.mgs.service.FileStorageService;
+//import com.nxtlife.mgs.service.FileService;
 import com.nxtlife.mgs.service.SequenceGeneratorService;
 import com.nxtlife.mgs.service.StudentService;
 import com.nxtlife.mgs.service.UserService;
-import com.nxtlife.mgs.store.FileStore;
+//import com.nxtlife.mgs.store.FileStore;
 import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.Utils;
-import com.nxtlife.mgs.view.GroupResponseByActivityName;
 import com.nxtlife.mgs.view.ActivityPerformedResponse;
 import com.nxtlife.mgs.view.CertificateRequest;
 import com.nxtlife.mgs.view.CertificateResponse;
 import com.nxtlife.mgs.view.ClubMembershipResponse;
+import com.nxtlife.mgs.view.GroupResponseByActivityName;
 import com.nxtlife.mgs.view.GuardianRequest;
 import com.nxtlife.mgs.view.StudentRequest;
 import com.nxtlife.mgs.view.StudentResponse;
@@ -128,23 +134,26 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	@Autowired
 	ActivityPerformedRepository activityPerformedRepository;
 
-	@Autowired
-	FileStore filestore;
-	
+//	@Autowired
+//	FileStore filestore;
+
 	@Autowired
 	CertificateRepository certificateRepository;
-	
+
 	@Autowired
-	FileService fileService; 
-	
+	private FileStorageService<MultipartFile> fileStorageService;
+
 	@Autowired
 	UserRepository userRepository;
-	
+
 	@Autowired
 	FocusAreaRepository focusAreaRepository;
-	
+
 	@Autowired
 	StudentClubRepository studentClubRepository;
+
+	@Autowired
+	RoleRepository roleRepository;
 
 	@Value("${spring.mail.username}")
 	private String emailUsername;
@@ -152,6 +161,13 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	@Override
 	public StudentResponse save(StudentRequest request) {
 
+		User loggedInUser = getUser();
+		if (loggedInUser != null) {
+			Authority authority = null;// fetch from repo the student_write authority
+			if (!loggedInUser.getRoles().stream()
+					.anyMatch(r -> r.getRoleAuthorities().contains(new RoleAuthority(r.getId(), authority.getId()))))
+				throw new UnauthorizedUserException("Not authorized to create student.");
+		}
 		if (request.getEmail() == null)
 			throw new ValidationException("Email cannot be null.");
 
@@ -177,6 +193,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			if (school == null)
 				throw new ValidationException(String.format("School with id : %s not found.", request.getSchoolId()));
 		}
+
 		if (request.getGradeId() != null) {
 			grade = gradeRepository.getOneByCid(request.getGradeId());
 			if (grade == null) {
@@ -185,23 +202,30 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 		}
 
-		Long studsequence = sequenceGeneratorService.findSequenceByUserType(UserType.Student);
+//		Long studsequence = sequenceGeneratorService.findSequenceByUserType(UserType.Student);
 
 		List<Guardian> guardians = new ArrayList<>();
 		Guardian guardian;
 		Student student = request.toEntity();
-		student.setCid(utils.generateRandomAlphaNumString(8));
-		student.setUsername(String.format("STU%08d", studsequence));
+//		student.setCid(utils.generateRandomAlphaNumString(8));
+//		student.setUsername(String.format("STU%08d", studsequence));
 		student.setGrade(grade);
+		if (loggedInUser != null)
+			school = loggedInUser.getSchool();
 		student.setSchool(school);
 
 //		User user = userService.createStudentUser(student);
-		User user = userService.createUserForEntity(student);
-		
+//		User user = userService.createUserForEntity(student);
+		Role role = roleRepository.findBySchoolIdAndName(school.getId(), "Student");
+		User user = userService.createUser(student.getName(), student.getMobileNumber(), student.getEmail(),
+				school.getId());
+		user.setUserRoles(Arrays.asList(new UserRole(new UserRoleKey(role.getId(), user.getId()), role, user)));
+
 		if (StringUtils.isEmpty(user)) {
 			throw new ValidationException("User not created successfully");
 		}
-		student.setUser(user);
+		student.setUser(user = userRepository.save(user));
+		student.setUsername(student.getUser().getUsername());
 		student = studentRepository.save(student);
 
 		if (request.getGuardians() != null) {
@@ -209,20 +233,20 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				if ((guardianRequest.getMobileNumber() != null && guardianRequest.getEmail() != null)) {
 					guardian = guardianRepository.findByEmailOrMobileNumber(guardianRequest.getEmail(),
 							guardianRequest.getMobileNumber());
-					
-					createOrSetGuardianUtility(student, guardian, guardians,  guardianRequest);
-					
+
+					createOrSetGuardianUtility(student, guardian, guardians, guardianRequest);
+
 				} else if (guardianRequest.getMobileNumber() != null) {
-					
+
 					guardian = guardianRepository.getOneByMobileNumber(guardianRequest.getMobileNumber());
-					
-					createOrSetGuardianUtility(student, guardian, guardians,  guardianRequest);
+
+					createOrSetGuardianUtility(student, guardian, guardians, guardianRequest);
 
 				} else if (guardianRequest.getEmail() != null) {
-					
+
 					guardian = guardianRepository.getOneByEmail(guardianRequest.getEmail());
 
-					createOrSetGuardianUtility(student, guardian, guardians,  guardianRequest);
+					createOrSetGuardianUtility(student, guardian, guardians, guardianRequest);
 				}
 			}
 			student.setGuardians(guardians);
@@ -232,34 +256,46 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		if (student == null) {
 			throw new RuntimeException("Something went wrong student not saved.");
 		}
-		
+
 		Boolean emailFlag = false;
 
 		if (user.getEmail() != null)
-			emailFlag =userService.sendLoginCredentialsBySMTP(userService.usernamePasswordSendContentBuilder(user.getUsername(),
-					user.getRawPassword(), emailUsername, user.getEmail()));
-		
+			emailFlag = userService.sendLoginCredentialsBySMTP(userService.usernamePasswordSendContentBuilder(
+					user.getUsername(), user.getRawPassword(), emailUsername, user.getEmail()));
+
 		Map<String, Object> response = new HashMap<String, Object>();
 		response.put("Student", new StudentResponse(student));
-		String emailMessage = emailFlag?String.format("Email sent successfully to (%s)", user.getEmail()):String.format("Email not sent successfully to (%s) , email address might be wrong.", user.getEmail());
-		int emailStatusCode = emailFlag?200:400;
-		response.put("MailResponse", new SuccessResponse(emailStatusCode,emailMessage));
+		String emailMessage = emailFlag ? String.format("Email sent successfully to (%s)", user.getEmail())
+				: String.format("Email not sent successfully to (%s) , email address might be wrong.", user.getEmail());
+		int emailStatusCode = emailFlag ? 200 : 400;
+		response.put("MailResponse", new SuccessResponse(emailStatusCode, emailMessage));
 //		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 
 		return new StudentResponse(student);
 	}
-	
-	private void createOrSetGuardianUtility(Student student , Guardian guardian ,  List<Guardian> guardians ,GuardianRequest guardianRequest) {
-		 List<Student> studList;
-		 Long sequence;
-		 
+
+	private void createOrSetGuardianUtility(Student student, Guardian guardian, List<Guardian> guardians,
+			GuardianRequest guardianRequest) {
+		List<Student> studList;
+//		 Long sequence;
+
 		if (guardian == null) {
 			guardian = guardianRequest.toEntity();
-			sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
-			guardian.setUsername(String.format("GRD%08d", sequence));
-			guardian.setCid(utils.generateRandomAlphaNumString(8));
+			Role role = roleRepository.findBySchoolIdAndName(student.getSchool().getId(), "Guardian");
+			User user = userService.createUser(guardian.getName(), guardian.getMobileNumber(), guardian.getEmail(),
+					student.getSchool().getId());
+			user.setUserRoles(Arrays.asList(new UserRole(new UserRoleKey(role.getId(), user.getId()), role, user)));
+
+			if (StringUtils.isEmpty(user)) {
+				throw new ValidationException("User not created successfully");
+			}
+//			sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
+//			guardian.setUsername(String.format("GRD%08d", sequence));
+//			guardian.setCid(utils.generateRandomAlphaNumString(8));
 //			guardian.setUser(userService.createParentUser(guardian));
-			guardian.setUser(userService.createUserForEntity(guardian));
+//			guardian.setUser(userService.createUserForEntity(guardian));
+			guardian.setUser(user = userRepository.save(user));
+			guardian.setUsername(guardian.getUser().getUsername());
 			guardian = guardianRepository.save(guardian);
 			studList = new ArrayList<Student>();
 			studList.add(student);
@@ -285,7 +321,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		if (student == null) {
 			throw new NotFoundException(String.format("student having id [%s] didn't exist", cid));
 		}
-		
+
 		School school = null;
 		Grade grade = null;
 		if (request.getSchoolId() != null) {
@@ -302,7 +338,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		}
 
 		student = request.toEntity(student);
-		
+
 		if (request.getGuardians() != null && !request.getGuardians().isEmpty()) {
 			List<GuardianRequest> guardianRequests = request.getGuardians();
 			List<Guardian> previousGuardians = new ArrayList<Guardian>();
@@ -336,23 +372,25 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			student.setGuardians(previousGuardians);
 			guardianRepository.save(guardiansToDelete);
 		}
-		
+
 		student.setSchool(school);
 		student.setGrade(grade);
-		if(request.getMobileNumber() != null) {
-			if(userRepository.existsByContactNumber(request.getMobileNumber()))
-					throw new ValidationException(String.format("Mobile Number (%s) already belongs to some other user.",request.getMobileNumber()));
+		if (request.getMobileNumber() != null) {
+			if (userRepository.existsByContactNumberAndCidNot(request.getMobileNumber(), student.getCid()))
+				throw new ValidationException(String.format("Mobile Number (%s) already belongs to some other user.",
+						request.getMobileNumber()));
 			student.setMobileNumber(request.getMobileNumber());
 			student.getUser().setContactNumber(request.getMobileNumber());
 		}
-		
-		if(request.getEmail() != null) {
-			if(userRepository.existsByEmail(request.getEmail()))
-					throw new ValidationException(String.format("Email (%s) already belongs to some other user.",request.getEmail()));
+
+		if (request.getEmail() != null) {
+			if (userRepository.existsByEmailAndCidNot(request.getEmail(), student.getCid()))
+				throw new ValidationException(
+						String.format("Email (%s) already belongs to some other user.", request.getEmail()));
 			student.setEmail(request.getEmail());
 			student.getUser().setEmail(request.getEmail());
 		}
-		
+
 		student = studentRepository.save(student);
 
 		return new StudentResponse(student);
@@ -373,11 +411,21 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 			} else {
 				Guardian guardian = guardReq.toEntity();
-				Long sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
-				guardian.setUsername(String.format("GRD%08d", sequence));
 				guardian.setCid(utils.generateRandomAlphaNumString(8));
+//				Long sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
+//				guardian.setUsername(String.format("GRD%08d", sequence));
 //				guardian.setUser(userService.createParentUser(guardian));
-				guardian.setUser(userService.createUserForEntity(guardian));
+//				guardian.setUser(userService.createUserForEntity(guardian));
+				Role role = roleRepository.findBySchoolIdAndName(student.getSchool().getId(), "Guardian");
+				User user = userService.createUser(guardian.getName(), guardian.getMobileNumber(), guardian.getEmail(),
+						student.getSchool().getId());
+				user.setUserRoles(Arrays.asList(new UserRole(new UserRoleKey(role.getId(), user.getId()), role, user)));
+
+				if (StringUtils.isEmpty(user)) {
+					throw new ValidationException("User not created successfully");
+				}
+				guardian.setUser(user = userRepository.save(user));
+				guardian.setUsername(guardian.getUser().getUsername());
 				List<Student> students = new ArrayList<Student>();
 				students.add(student);
 				guardian.setStudents(students);
@@ -386,9 +434,9 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				previousGuardians.add(guardian);
 			}
 		}
-		
+
 	}
-	
+
 	@Override
 	public List<StudentResponse> findByName(String name) {
 
@@ -396,7 +444,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			throw new ValidationException("name can't be null");
 
 		List<Student> studentList = studentRepository.findByNameAndActiveTrue(name);
-		
+
 		if (studentList.isEmpty())
 			throw new NotFoundException(String.format("students having name [%s] didn't exist", name));
 
@@ -467,8 +515,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		if (studentList.isEmpty())
 			throw new NotFoundException("No student found");
 
-		return studentList.stream().map(StudentResponse :: new)
-				.collect(Collectors.toList());
+		return studentList.stream().map(StudentResponse::new).collect(Collectors.toList());
 	}
 
 	@Override
@@ -479,8 +526,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		List<Student> studentsList = studentRepository.findAllBySchoolCidAndActiveTrue(schoolCid);
 		if (studentsList.isEmpty())
 			throw new NotFoundException(String.format("No student found for school having id [%s]", schoolCid));
-		return studentsList.stream().map(StudentResponse :: new)
-				.collect(Collectors.toList());
+		return studentsList.stream().map(StudentResponse::new).collect(Collectors.toList());
 	}
 
 	@Override
@@ -491,8 +537,31 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		List<Student> studentsList = studentRepository.findAllByGradeCidAndActiveTrue(gradeId);
 		if (studentsList.isEmpty())
 			throw new NotFoundException(String.format("No student found for grade having id [%s]", gradeId));
-		return studentsList.stream().map(StudentResponse :: new)
-				.collect(Collectors.toList());
+		return studentsList.stream().map(StudentResponse::new).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<StudentResponse> getAllBySchoolIdAndGradeId(String schoolId, String gradeId) {
+		if (schoolId == null || gradeId == null) {
+			throw new NotFoundException("School and Grade id can't be null");
+		}
+		List<Student> studentsList = studentRepository.findAllBySchoolCidAndGradeCidAndActiveTrue(schoolId, gradeId);
+		if (studentsList.isEmpty())
+			throw new NotFoundException(
+					String.format("No student found for grade having id [%s] in the school (%s).", gradeId, schoolId));
+		return studentsList.stream().map(StudentResponse::new).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<StudentResponse> getAllBySchoolIdOrGradeIdOrBothOrNoneButAll(String schoolId, String gradeId) {
+		if (schoolId == null && gradeId == null)
+			return getAll();
+		else if (schoolId == null && gradeId != null)
+			return getAllByGradeId(gradeId);
+		else if (schoolId != null && gradeId == null)
+			return getAllBySchoolCid(schoolId);
+		else
+			return getAllBySchoolIdAndGradeId(schoolId, gradeId);
 	}
 
 	@Override
@@ -521,7 +590,9 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			throw new ValidationException(String.format("Teacher with id : %s not found.", teacherCid));
 		if (approvalStatus == null)
 			approvalStatus = ApprovalStatus.VERIFIED.toString();
-		List<Student> students = studentClubRepository.findAllStudentByActivityCidAndTeacherCidAndStudentSchoolCidAndStudentGradeCidAndMembershipStatusAndActiveTrue(activityCid, schoolCid, gradeCid, ApprovalStatus.valueOf(approvalStatus));
+		List<Student> students = studentClubRepository
+				.findAllStudentByActivityCidAndTeacherCidAndStudentSchoolCidAndStudentGradeCidAndMembershipStatusAndActiveTrue(
+						activityCid, schoolCid, gradeCid, ApprovalStatus.valueOf(approvalStatus));
 //				studentRepository
 //				.findAllBySchoolCidAndGradeCidAndActivitiesActivityCidAndActivitiesActivityStatusAndSchoolActiveTrueAndGradeActiveTrueAndActivitiesActivityActiveTrueAndActiveTrue(
 //						schoolCid, gradeCid, activityCid, ActivityStatus.valueOf(activityStatus));
@@ -544,20 +615,16 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 		Student student = studentRepository.findByCidAndActiveTrue(studentCid);
 
-		String filename = UUID.randomUUID().toString() + "." + fileService.getFileExtension(file.getOriginalFilename());
-		try {
-			String imageUrl = filestore.store("profilePic", filename, file.getBytes());
-			student.setImageUrl(imageUrl);
-			if(student.getUser() != null)
-				student.getUser().setImagePath(imageUrl);
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new ValidationException("Something went wromg image not saved/uploaded.");
-		}
+		if (student.getImageUrl() != null)
+			fileStorageService.delete(student.getImageUrl());
+		String imageUrl = fileStorageService.storeFile(file, file.getOriginalFilename(), "/profile-image/", true, true);
+		student.setImageUrl(imageUrl);
+		if (student.getUser() != null)
+			student.getUser().setPicUrl(imageUrl);
 
 		return new StudentResponse(studentRepository.save(student));
 	}
-	
+
 	@Override
 	public CertificateResponse uploadCertificate(CertificateRequest request) {
 		Long userId = getUserId();
@@ -565,52 +632,54 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		if (student == null) {
 			throw new ValidationException("User not login as a student.");
 		}
-		
-		if(request == null)
+
+		if (request == null)
 			throw new ValidationException("Request cannot be null.");
-		if(request.getImage() == null || request.getImage().isEmpty())
+		if (request.getImage() == null || request.getImage().isEmpty())
 			throw new ValidationException("Image file cannot be null or empty.");
 		final List<String> contentTypes = Arrays.asList("image/png", "image/jpeg", "image/gif");
-		if(!contentTypes.contains(request.getImage().getContentType()))
+		if (!contentTypes.contains(request.getImage().getContentType()))
 			throw new ValidationException("Please select image file only to upload not of any other type.");
-		
-		if(certificateRepository.existsByStudentCidAndTitleAndDescriptionAndActiveTrue(student.getCid(), request.getTitle(), request.getDescription()))
-			throw new ValidationException(String.format("A certificate for you under title : (%s) and description (%s) already exist.", request.getTitle(), request.getDescription()));
-		
+
+		if (certificateRepository.existsByStudentCidAndTitleAndDescriptionAndActiveTrue(student.getCid(),
+				request.getTitle(), request.getDescription()))
+			throw new ValidationException(
+					String.format("A certificate for you under title : (%s) and description (%s) already exist.",
+							request.getTitle(), request.getDescription()));
+
 		Certificate certificate = request.toEntity();
 
-		String filename = UUID.randomUUID().toString() + "." + fileService.getFileExtension(request.getImage().getOriginalFilename());
-		try {
-			String imageUrl = filestore.store("certificate", filename, request.getImage().getBytes());
-			certificate.setImageUrl(imageUrl);
-			certificate.setStudent(student);
+		if (request.getImage() != null && certificate.getImageUrl() != null)
+			fileStorageService.delete(certificate.getImageUrl());
+		String imageUrl = fileStorageService.storeFile(request.getImage(), request.getImage().getOriginalFilename(),
+				"/certificate/", true, true);
+		certificate.setImageUrl(imageUrl);
+		certificate.setStudent(student);
 //			List<Certificate> certificates = new ArrayList<Certificate>();
 //			certificates = student.getCertificates();
 //			certificates.add(certificate);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		certificate.setCid(utils.generateRandomAlphaNumString(8));
 		certificate = certificateRepository.save(certificate);
-		if(certificate == null)
+		if (certificate == null)
 			throw new RuntimeException("Something went wrong certificate not uploaded.");
 		return new CertificateResponse(certificate);
 	}
-	
+
 	@Override
-	public List<CertificateResponse> getAllCertificatesOfStudent(){
+	public List<CertificateResponse> getAllCertificatesOfStudent() {
 		Long userId = getUserId();
 		Student student = studentRepository.getByUserIdAndActiveTrue(userId);
 		if (student == null) {
 			throw new ValidationException("User not login as a student.");
 		}
-		List<CertificateResponse> responseList = certificateRepository.findAllByStudentCidAndActiveTrue(student.getCid());
-		if(responseList == null || responseList.isEmpty())
+		List<CertificateResponse> responseList = certificateRepository
+				.findAllByStudentCidAndActiveTrue(student.getCid());
+		if (responseList == null || responseList.isEmpty())
 			throw new ValidationException(String.format("No certificates found for student (%s)", student.getName()));
-		
-		return responseList;	
+
+		return responseList;
 	}
-	
+
 	@Override
 	public SuccessResponse delete(String cid) {
 		if (cid == null) {
@@ -624,8 +693,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		studentRepository.save(student);
 		return new SuccessResponse(org.springframework.http.HttpStatus.OK.value(), "student deleted successfully");
 	}
-	
-	
+
 	@Override
 	public ResponseEntity<?> uploadStudentsFromExcel(MultipartFile file, String schoolCid) {
 		if (file == null || file.isEmpty() || file.getSize() == 0)
@@ -753,8 +821,6 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 	}
 
-	
-
 	private StudentRequest validateStudentRequest(List<Map<String, Object>> studentDetails, List<String> errors,
 			String schoolCid) {
 		if (studentDetails == null || studentDetails.isEmpty()) {
@@ -809,111 +875,126 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	}
 
 	@Override
-	public Set<StudentResponse> getAllStudentsAndItsActivitiesByAwardCriterion(String awardCriterion , String criterionValue,String gradeCid ,String initial, String last){
-		
+	public Set<StudentResponse> getAllStudentsAndItsActivitiesByAwardCriterion(String awardCriterion,
+			String criterionValue, String gradeCid, String initial, String last) {
+
 		Long userId = getUserId();
-		if(userId == null)
+		if (userId == null)
 			throw new ValidationException("No user logged in currently.");
-		if(awardCriterion == null)
+		if (awardCriterion == null)
 			throw new ValidationException("Award Criterion cannot be null.");
-		if(criterionValue == null)
+		if (criterionValue == null)
 			throw new ValidationException("Criterion Value cannot be null.");
-		if(!AwardCriterion.matches(awardCriterion))
-			throw new ValidationException(String.format("Invalid value (%s) for awardCriterion it should be of form : [PSD Area ,Focus Area , 4S ,Activity Type]", awardCriterion));
-		
+		if (!AwardCriterion.matches(awardCriterion))
+			throw new ValidationException(String.format(
+					"Invalid value (%s) for awardCriterion it should be of form : [PSD Area ,Focus Area , 4S ,Activity Type]",
+					awardCriterion));
+
 		Teacher teacher = teacherRepository.getByUserId(userId);
-		if(teacher == null)
-			throw new UnauthorizedUserException("User not logged in as Faculty of school i.e(Teacher ,Coach , Management)");
+		if (teacher == null)
+			throw new UnauthorizedUserException(
+					"User not logged in as Faculty of school i.e(Teacher ,Coach , Management)");
 		LocalDateTime currentDateTime = LocalDateTime.now();
-		if((initial !=null && DateUtil.convertStringToDate(initial).after(currentDateTime.toDate())) ||
-				last !=null && DateUtil.convertStringToDate(last).after(currentDateTime.toDate()))
+		if ((initial != null && DateUtil.convertStringToDate(initial).after(currentDateTime.toDate()))
+				|| last != null && DateUtil.convertStringToDate(last).after(currentDateTime.toDate()))
 			throw new ValidationException("StartDate or endDate cannot be a future date.");
-		Date startDate,endDate; 
-		if(initial == null && last == null) {
+		Date startDate, endDate;
+		if (initial == null && last == null) {
 			endDate = currentDateTime.toDate();
 			startDate = currentDateTime.minusMonths(4).toDate();
-		}else if(initial == null && last!=null) {
+		} else if (initial == null && last != null) {
 			endDate = DateUtil.convertStringToDate(last);
 			startDate = LocalDateTime.fromDateFields(endDate).minusMonths(4).toDate();
-		}else if(initial != null && last == null) {
-			 startDate = DateUtil.convertStringToDate(initial);
-			 endDate = currentDateTime.toDate();
-		}else {
+		} else if (initial != null && last == null) {
 			startDate = DateUtil.convertStringToDate(initial);
-            endDate = DateUtil.convertStringToDate(last);
-            if(startDate.after(endDate))
-            	throw new ValidationException("startDate shall fall before end date.");
+			endDate = currentDateTime.toDate();
+		} else {
+			startDate = DateUtil.convertStringToDate(initial);
+			endDate = DateUtil.convertStringToDate(last);
+			if (startDate.after(endDate))
+				throw new ValidationException("startDate shall fall before end date.");
 		}
 //		Date startDate = DateUtil.convertStringToDate(initial);
 //		Date endDate = DateUtil.convertStringToDate(last);
-		
+
 		AwardCriterion criterion = AwardCriterion.fromString(awardCriterion);
-		
-		if(criterion.equals(AwardCriterion.PSDArea)) {
-			return getAllStudentsAndItsActivitiesByPsdArea(criterionValue, gradeCid , teacher.getSchool().getCid(),startDate,endDate);
-		}else if(criterion.equals(AwardCriterion.FocusArea)){
-			return getAllStudentsAndItsActivitiesByFocusArea(criterionValue, gradeCid, teacher.getSchool().getCid(),startDate,endDate);
-		}else if(criterion.equals(AwardCriterion.FourS)){
-			return getAllStudentsAndItsActivitiesByFourS(criterionValue, gradeCid, teacher.getSchool().getCid(),startDate,endDate);
-		}else if(criterion.equals(AwardCriterion.ActivityType)){
-			return getAllStudentsAndItsActivitiesByActivity(criterionValue, gradeCid, teacher.getSchool().getCid(),startDate,endDate);
-		}else {
-			throw new ValidationException(String.format("Invalid value (%s) for awardCriterion it should be of form : [PSD Area ,Focus Area , 4S ,Activity Type]", awardCriterion));
+
+		if (criterion.equals(AwardCriterion.PSDArea)) {
+			return getAllStudentsAndItsActivitiesByPsdArea(criterionValue, gradeCid, teacher.getSchool().getCid(),
+					startDate, endDate);
+		} else if (criterion.equals(AwardCriterion.FocusArea)) {
+			return getAllStudentsAndItsActivitiesByFocusArea(criterionValue, gradeCid, teacher.getSchool().getCid(),
+					startDate, endDate);
+		} else if (criterion.equals(AwardCriterion.FourS)) {
+			return getAllStudentsAndItsActivitiesByFourS(criterionValue, gradeCid, teacher.getSchool().getCid(),
+					startDate, endDate);
+		} else if (criterion.equals(AwardCriterion.ActivityType)) {
+			return getAllStudentsAndItsActivitiesByActivity(criterionValue, gradeCid, teacher.getSchool().getCid(),
+					startDate, endDate);
+		} else {
+			throw new ValidationException(String.format(
+					"Invalid value (%s) for awardCriterion it should be of form : [PSD Area ,Focus Area , 4S ,Activity Type]",
+					awardCriterion));
 		}
 	}
-	
-	private Set<StudentResponse> getAllStudentsAndItsActivitiesByActivity(String activityName ,String gradeCid , String schoolCid,Date startDate, Date endDate){
-		if(activityName == null)
+
+	private Set<StudentResponse> getAllStudentsAndItsActivitiesByActivity(String activityName, String gradeCid,
+			String schoolCid, Date startDate, Date endDate) {
+		if (activityName == null)
 			throw new ValidationException("activityName cannot be null.");
-		if(!activityRepository.existsByNameAndActiveTrue(activityName))
+		if (!activityRepository.existsByNameAndActiveTrue(activityName))
 			throw new ValidationException(String.format("Activity with name  (%s) does not exist.", activityName));
-		
-		Set<ActivityPerformed> activitiesPerformed = null ;
+
+		Set<ActivityPerformed> activitiesPerformed = null;
 		Set<StudentResponse> students = null;
-		Set<String> focusAreas,psdAreas,fourS;
-		if(gradeCid== null) {
+		Set<String> focusAreas, psdAreas, fourS;
+		if (gradeCid == null) {
 			activitiesPerformed = new HashSet<ActivityPerformed>();
-			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndActivityNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(schoolCid, activityName, ActivityStatus.Reviewed,startDate ,endDate);
+			activitiesPerformed = activityPerformedRepository
+					.findAllByStudentSchoolCidAndActivityNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
+							schoolCid, activityName, ActivityStatus.Reviewed, startDate, endDate);
 			students = new HashSet<StudentResponse>();
-			for(ActivityPerformed act : activitiesPerformed) {
-				if(!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())) )
-				  students.add( new StudentResponse(act.getStudent()));
+			for (ActivityPerformed act : activitiesPerformed) {
+				if (!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())))
+					students.add(new StudentResponse(act.getStudent()));
 			}
 //			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
-			
-			Map<StudentResponse,Double> studentScoreLookUp = new HashMap<StudentResponse,Double>();
-			for(StudentResponse studResp : students) {
-				List<ActivityPerformedResponse>	activitiesToReturn = activitiesPerformed.stream().filter(ap -> ap.getStudent().getCid().equals(studResp.getId())).map(ActivityPerformedResponse :: new).distinct().collect(Collectors.toList());
+
+			Map<StudentResponse, Double> studentScoreLookUp = new HashMap<StudentResponse, Double>();
+			for (StudentResponse studResp : students) {
+				List<ActivityPerformedResponse> activitiesToReturn = activitiesPerformed.stream()
+						.filter(ap -> ap.getStudent().getCid().equals(studResp.getId()))
+						.map(ActivityPerformedResponse::new).distinct().collect(Collectors.toList());
 				List<GroupResponseByActivityName<ActivityPerformedResponse>> finalActivitiesList = new ArrayList<GroupResponseByActivityName<ActivityPerformedResponse>>();
 				GroupResponseByActivityName<ActivityPerformedResponse> performedActivities = new GroupResponseByActivityName<ActivityPerformedResponse>();
 				performedActivities.setCriterion("activityName");
 				performedActivities.setCriterionValue(activityName);
 				performedActivities.setResponses(activitiesToReturn);
 				Long count = performedActivities.getResponses().stream().count();
-				if(count!= 0) {
+				if (count != 0) {
 					performedActivities.setCount(count);
 					double avgStars = 0d;
-					for(ActivityPerformedResponse act : performedActivities.getResponses()) {
-						avgStars+= act.getStar();
+					for (ActivityPerformedResponse act : performedActivities.getResponses()) {
+						avgStars += act.getStar();
 					}
-					performedActivities.setAverageStars(avgStars/count);
+					performedActivities.setAverageStars(avgStars / count);
 				}
 				finalActivitiesList.add(performedActivities);
 				studResp.setPerformedActivities(finalActivitiesList);
-				
+
 				Double score = 0d;
 				Double starSum = 0d;
 				focusAreas = new HashSet<String>();
 				psdAreas = new HashSet<String>();
 				fourS = new HashSet<String>();
-				
-				for(ActivityPerformedResponse act : activitiesToReturn) {
-					starSum+= act.getStar();
+
+				for (ActivityPerformedResponse act : activitiesToReturn) {
+					starSum += act.getStar();
 					focusAreas.addAll(act.getFocusAreas());
 					psdAreas.addAll(act.getPsdAreas());
 					fourS.add(act.getFourS());
 				}
-				score =  (starSum / activitiesToReturn.size());
+				score = (starSum / activitiesToReturn.size());
 				System.out.println(score);
 				studResp.setScoreForAward(score);
 				studResp.setFocusAreas(focusAreas);
@@ -921,56 +1002,63 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				studResp.setFourS(fourS);
 				studentScoreLookUp.put(studResp, score);
 			}
-			studentScoreLookUp = studentScoreLookUp.entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+			studentScoreLookUp = studentScoreLookUp.entrySet().stream()
+					.sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(Collectors
+							.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 			students = studentScoreLookUp.keySet();
 
-		}else {
-			if(!gradeRepository.existsBySchoolsCidAndCidAndActiveTrue(schoolCid,gradeCid))
-				throw new ValidationException(String.format("Grade with id (%s) does not exist in school having id (%s).",gradeCid,schoolCid));
-			
+		} else {
+			if (!gradeRepository.existsBySchoolsCidAndCidAndActiveTrue(schoolCid, gradeCid))
+				throw new ValidationException(String
+						.format("Grade with id (%s) does not exist in school having id (%s).", gradeCid, schoolCid));
+
 			activitiesPerformed = new HashSet<ActivityPerformed>();
-			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndStudentGradeCidAndActivityNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(schoolCid ,gradeCid ,activityName ,ActivityStatus.Reviewed,startDate ,endDate);
+			activitiesPerformed = activityPerformedRepository
+					.findAllByStudentSchoolCidAndStudentGradeCidAndActivityNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
+							schoolCid, gradeCid, activityName, ActivityStatus.Reviewed, startDate, endDate);
 			students = new HashSet<StudentResponse>();
-			for(ActivityPerformed act : activitiesPerformed) {
-				if(!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())) )
-					  students.add( new StudentResponse(act.getStudent()));
+			for (ActivityPerformed act : activitiesPerformed) {
+				if (!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())))
+					students.add(new StudentResponse(act.getStudent()));
 			}
 //			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
-			
-			Map<StudentResponse,Double> studentScoreLookUp = new HashMap<StudentResponse,Double>();
-			for(StudentResponse studResp : students) {
-				List<ActivityPerformedResponse>	activitiesToReturn = activitiesPerformed.stream().filter(ap -> ap.getStudent().getCid().equals(studResp.getId())).map(ActivityPerformedResponse :: new).distinct().collect(Collectors.toList());
-		
+
+			Map<StudentResponse, Double> studentScoreLookUp = new HashMap<StudentResponse, Double>();
+			for (StudentResponse studResp : students) {
+				List<ActivityPerformedResponse> activitiesToReturn = activitiesPerformed.stream()
+						.filter(ap -> ap.getStudent().getCid().equals(studResp.getId()))
+						.map(ActivityPerformedResponse::new).distinct().collect(Collectors.toList());
+
 				List<GroupResponseByActivityName<ActivityPerformedResponse>> finalActivitiesList = new ArrayList<GroupResponseByActivityName<ActivityPerformedResponse>>();
 				GroupResponseByActivityName<ActivityPerformedResponse> performedActivities = new GroupResponseByActivityName();
 				performedActivities.setCriterion("activityName");
 				performedActivities.setCriterionValue(activityName);
 				performedActivities.setResponses(activitiesToReturn);
 				Long count = performedActivities.getResponses().stream().count();
-				if(count!= 0) {
+				if (count != 0) {
 					performedActivities.setCount(count);
 					double avgStars = 0d;
-					for(ActivityPerformedResponse act : performedActivities.getResponses()) {
-						avgStars+= act.getStar();
+					for (ActivityPerformedResponse act : performedActivities.getResponses()) {
+						avgStars += act.getStar();
 					}
-					performedActivities.setAverageStars(avgStars/count);
+					performedActivities.setAverageStars(avgStars / count);
 				}
 				finalActivitiesList.add(performedActivities);
 				studResp.setPerformedActivities(finalActivitiesList);
-				
+
 				Double score = 0d;
 				Double starSum = 0d;
-				
+
 				focusAreas = new HashSet<String>();
 				psdAreas = new HashSet<String>();
 				fourS = new HashSet<String>();
-				for(ActivityPerformedResponse act : activitiesToReturn) {
-					starSum+= act.getStar();
+				for (ActivityPerformedResponse act : activitiesToReturn) {
+					starSum += act.getStar();
 					focusAreas.addAll(act.getFocusAreas());
 					psdAreas.addAll(act.getPsdAreas());
 					fourS.add(act.getFourS());
 				}
-				score =  (starSum / activitiesToReturn.size());
+				score = (starSum / activitiesToReturn.size());
 				System.out.println(score);
 				studResp.setScoreForAward(score);
 				studResp.setFocusAreas(focusAreas);
@@ -978,175 +1066,200 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				studResp.setFourS(fourS);
 				studentScoreLookUp.put(studResp, score);
 			}
-			studentScoreLookUp = studentScoreLookUp.entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+			studentScoreLookUp = studentScoreLookUp.entrySet().stream()
+					.sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(Collectors
+							.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 			students = studentScoreLookUp.keySet();
 		}
-		if(students == null || students.isEmpty())
-			throw new ValidationException("No Student found for Activity having name : "+activityName);
+		if (students == null || students.isEmpty())
+			throw new ValidationException("No Student found for Activity having name : " + activityName);
 		return students;
 	}
-	
-	private Set<StudentResponse> getAllStudentsAndItsActivitiesByFocusArea(String focusArea ,String gradeCid , String schoolCid,Date startDate, Date endDate){
-		if(focusArea == null)
+
+	private Set<StudentResponse> getAllStudentsAndItsActivitiesByFocusArea(String focusArea, String gradeCid,
+			String schoolCid, Date startDate, Date endDate) {
+		if (focusArea == null)
 			throw new ValidationException("focusArea cannot be null.");
-		if(!focusAreaRepository.existsByNameAndActiveTrue(focusArea))
+		if (!focusAreaRepository.existsByNameAndActiveTrue(focusArea))
 			throw new ValidationException(String.format("Focus Area  (%s) does not exist.", focusArea));
-		
-		Set<ActivityPerformed> activitiesPerformed = null ;
+
+		Set<ActivityPerformed> activitiesPerformed = null;
 		Set<StudentResponse> students = null;
-		Set<String> activityTypes ,psdAreas,fourS;
-		if(gradeCid== null) {
+		Set<String> activityTypes, psdAreas, fourS;
+		if (gradeCid == null) {
 			activitiesPerformed = new HashSet<ActivityPerformed>();
-			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndActivityFocusAreasNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(schoolCid, focusArea, ActivityStatus.Reviewed,startDate ,endDate);
+			activitiesPerformed = activityPerformedRepository
+					.findAllByStudentSchoolCidAndActivityFocusAreasNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
+							schoolCid, focusArea, ActivityStatus.Reviewed, startDate, endDate);
 			students = new HashSet<StudentResponse>();
-			for(ActivityPerformed act : activitiesPerformed) {
-				if(!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())) )
-					  students.add( new StudentResponse(act.getStudent()));
+			for (ActivityPerformed act : activitiesPerformed) {
+				if (!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())))
+					students.add(new StudentResponse(act.getStudent()));
 			}
 //			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
-			
-			Map<StudentResponse,Double> studentScoreLookUp = new HashMap<StudentResponse,Double>();
-			for(StudentResponse studResp : students) {
-				List<ActivityPerformedResponse>	activitiesToReturn = activitiesPerformed.stream().filter(ap -> ap.getStudent().getCid().equals(studResp.getId())).map(ActivityPerformedResponse :: new).distinct().collect(Collectors.toList());
-				
+
+			Map<StudentResponse, Double> studentScoreLookUp = new HashMap<StudentResponse, Double>();
+			for (StudentResponse studResp : students) {
+				List<ActivityPerformedResponse> activitiesToReturn = activitiesPerformed.stream()
+						.filter(ap -> ap.getStudent().getCid().equals(studResp.getId()))
+						.map(ActivityPerformedResponse::new).distinct().collect(Collectors.toList());
+
 				Double score = 0d;
 				Double starSum = 0d;
 				activityTypes = new HashSet<String>();
 				psdAreas = new HashSet<String>();
 				fourS = new HashSet<String>();
-				for(ActivityPerformedResponse act : activitiesToReturn) {
-					starSum+= act.getStar();
+				for (ActivityPerformedResponse act : activitiesToReturn) {
+					starSum += act.getStar();
 					activityTypes.add(act.getActivityName());
 //					focusAreas.addAll(act.getFocusAreas());
 					psdAreas.addAll(act.getPsdAreas());
 					fourS.add(act.getFourS());
 				}
 //				score = focusAreas.size() * (starSum / activitiesToReturn.size());
-				score =  (starSum / activitiesToReturn.size());
+				score = (starSum / activitiesToReturn.size());
 				System.out.println(score);
 				studResp.setScoreForAward(score);
 				studResp.setActivityTypes(activityTypes);
 				studResp.setPsdAreas(psdAreas);
 				studResp.setFourS(fourS);
-				
+
 				List<GroupResponseByActivityName<ActivityPerformedResponse>> finalActivitiesList = new ArrayList<GroupResponseByActivityName<ActivityPerformedResponse>>();
-				for(String type : activityTypes) {
-					
+				for (String type : activityTypes) {
+
 					GroupResponseByActivityName<ActivityPerformedResponse> activitiesPerformedResponse = new GroupResponseByActivityName();
 					activitiesPerformedResponse.setCriterion("activityName");
 					activitiesPerformedResponse.setCriterionValue(type);
-					activitiesPerformedResponse.setResponses(activitiesToReturn.stream().filter(act-> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
+					activitiesPerformedResponse.setResponses(activitiesToReturn.stream()
+							.filter(act -> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
 					Long count = activitiesPerformedResponse.getResponses().stream().count();
-					if(count!= 0) {
+					if (count != 0) {
 						activitiesPerformedResponse.setCount(count);
 						double avgStars = 0d;
-						for(ActivityPerformedResponse act : activitiesPerformedResponse.getResponses()) {
-							avgStars+= act.getStar();
+						for (ActivityPerformedResponse act : activitiesPerformedResponse.getResponses()) {
+							avgStars += act.getStar();
 						}
-						activitiesPerformedResponse.setAverageStars(avgStars/count);
+						activitiesPerformedResponse.setAverageStars(avgStars / count);
 					}
 					finalActivitiesList.add(activitiesPerformedResponse);
 				}
 				studResp.setPerformedActivities(finalActivitiesList);
 				studentScoreLookUp.put(studResp, score);
 			}
-			studentScoreLookUp = studentScoreLookUp.entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+			studentScoreLookUp = studentScoreLookUp.entrySet().stream()
+					.sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(Collectors
+							.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 			students = studentScoreLookUp.keySet();
 
-		}else {
-			if(!gradeRepository.existsBySchoolsCidAndCidAndActiveTrue(schoolCid,gradeCid))
-				throw new ValidationException(String.format("Grade with id (%s) does not exist in school having id (%s).",gradeCid,schoolCid));
-			
+		} else {
+			if (!gradeRepository.existsBySchoolsCidAndCidAndActiveTrue(schoolCid, gradeCid))
+				throw new ValidationException(String
+						.format("Grade with id (%s) does not exist in school having id (%s).", gradeCid, schoolCid));
+
 			activitiesPerformed = new HashSet<ActivityPerformed>();
-			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(schoolCid ,gradeCid ,focusArea,ActivityStatus.Reviewed,startDate ,endDate);
+			activitiesPerformed = activityPerformedRepository
+					.findAllByStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
+							schoolCid, gradeCid, focusArea, ActivityStatus.Reviewed, startDate, endDate);
 			students = new HashSet<StudentResponse>();
-			for(ActivityPerformed act : activitiesPerformed) {
-				if(!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())) )
-					  students.add( new StudentResponse(act.getStudent()));
+			for (ActivityPerformed act : activitiesPerformed) {
+				if (!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())))
+					students.add(new StudentResponse(act.getStudent()));
 			}
 //			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
-			
-			Map<StudentResponse,Double> studentScoreLookUp = new HashMap<StudentResponse,Double>();
-			for(StudentResponse studResp : students) {
-				List<ActivityPerformedResponse>	activitiesToReturn = activitiesPerformed.stream().filter(ap -> ap.getStudent().getCid().equals(studResp.getId())).map(ActivityPerformedResponse :: new).distinct().collect(Collectors.toList());
-				
+
+			Map<StudentResponse, Double> studentScoreLookUp = new HashMap<StudentResponse, Double>();
+			for (StudentResponse studResp : students) {
+				List<ActivityPerformedResponse> activitiesToReturn = activitiesPerformed.stream()
+						.filter(ap -> ap.getStudent().getCid().equals(studResp.getId()))
+						.map(ActivityPerformedResponse::new).distinct().collect(Collectors.toList());
+
 				Double score = 0d;
 				Double starSum = 0d;
 				activityTypes = new HashSet<String>();
 				psdAreas = new HashSet<String>();
 				fourS = new HashSet<String>();
-				for(ActivityPerformedResponse act : activitiesToReturn) {
-					starSum+= act.getStar();
+				for (ActivityPerformedResponse act : activitiesToReturn) {
+					starSum += act.getStar();
 					activityTypes.add(act.getActivityName());
 					psdAreas.addAll(act.getPsdAreas());
 					fourS.add(act.getFourS());
 				}
-				score =  (starSum / activitiesToReturn.size());
+				score = (starSum / activitiesToReturn.size());
 				System.out.println(score);
 				studResp.setScoreForAward(score);
 				studResp.setActivityTypes(activityTypes);
 				studResp.setPsdAreas(psdAreas);
 				studResp.setFourS(fourS);
-				
+
 				List<GroupResponseByActivityName<ActivityPerformedResponse>> finalActivitiesList = new ArrayList<GroupResponseByActivityName<ActivityPerformedResponse>>();
-				for(String type : activityTypes) {
-					
+				for (String type : activityTypes) {
+
 					GroupResponseByActivityName<ActivityPerformedResponse> activitiesPerformedResponse = new GroupResponseByActivityName();
 					activitiesPerformedResponse.setCriterion("activityName");
 					activitiesPerformedResponse.setCriterionValue(type);
-					activitiesPerformedResponse.setResponses(activitiesToReturn.stream().filter(act-> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
+					activitiesPerformedResponse.setResponses(activitiesToReturn.stream()
+							.filter(act -> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
 					Long count = activitiesPerformedResponse.getResponses().stream().count();
-					if(count!= 0) {
+					if (count != 0) {
 						activitiesPerformedResponse.setCount(count);
 						double avgStars = 0d;
-						for(ActivityPerformedResponse act : activitiesPerformedResponse.getResponses()) {
-							avgStars+= act.getStar();
+						for (ActivityPerformedResponse act : activitiesPerformedResponse.getResponses()) {
+							avgStars += act.getStar();
 						}
-						activitiesPerformedResponse.setAverageStars(avgStars/count);
+						activitiesPerformedResponse.setAverageStars(avgStars / count);
 					}
 					finalActivitiesList.add(activitiesPerformedResponse);
 				}
 				studResp.setPerformedActivities(finalActivitiesList);
 				studentScoreLookUp.put(studResp, score);
 			}
-			studentScoreLookUp = studentScoreLookUp.entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+			studentScoreLookUp = studentScoreLookUp.entrySet().stream()
+					.sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(Collectors
+							.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 			students = studentScoreLookUp.keySet();
 		}
-		if(students == null || students.isEmpty())
-			throw new ValidationException("No Student found for Focus Area : "+focusArea);
+		if (students == null || students.isEmpty())
+			throw new ValidationException("No Student found for Focus Area : " + focusArea);
 		return students;
 	}
-	
-	private Set<StudentResponse> getAllStudentsAndItsActivitiesByFourS(String fourS ,String gradeCid , String schoolCid,Date startDate, Date endDate){
-		if(fourS == null)
+
+	private Set<StudentResponse> getAllStudentsAndItsActivitiesByFourS(String fourS, String gradeCid, String schoolCid,
+			Date startDate, Date endDate) {
+		if (fourS == null)
 			throw new ValidationException("fourS cannot be null.");
-		if(!FourS.matches(fourS))
-			throw new ValidationException(String.format("FourS  (%s) does not matches with available values for fourS i.e [Skill , Sport ,Study ,Service]", fourS));
-		
-		Set<ActivityPerformed> activitiesPerformed = null ;
+		if (!FourS.matches(fourS))
+			throw new ValidationException(String.format(
+					"FourS  (%s) does not matches with available values for fourS i.e [Skill , Sport ,Study ,Service]",
+					fourS));
+
+		Set<ActivityPerformed> activitiesPerformed = null;
 		Set<StudentResponse> students = null;
-		Set<String> focusAreas ,activityTypes , psdAreas;
-		if(gradeCid== null) {
+		Set<String> focusAreas, activityTypes, psdAreas;
+		if (gradeCid == null) {
 			activitiesPerformed = new HashSet<ActivityPerformed>();
-			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndActivityFourSAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(schoolCid, FourS.valueOf(fourS), ActivityStatus.Reviewed,startDate ,endDate);
+			activitiesPerformed = activityPerformedRepository
+					.findAllByStudentSchoolCidAndActivityFourSAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
+							schoolCid, FourS.valueOf(fourS), ActivityStatus.Reviewed, startDate, endDate);
 			students = new HashSet<StudentResponse>();
-			for(ActivityPerformed act : activitiesPerformed) {
-				if(!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())) )
-					  students.add( new StudentResponse(act.getStudent()));
+			for (ActivityPerformed act : activitiesPerformed) {
+				if (!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())))
+					students.add(new StudentResponse(act.getStudent()));
 			}
 //			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
-			
-			Map<StudentResponse,Double> studentScoreLookUp = new HashMap<StudentResponse,Double>();
-			for(StudentResponse studResp : students) {
-				List<ActivityPerformedResponse>	activitiesToReturn = activitiesPerformed.stream().filter(ap -> ap.getStudent().getCid().equals(studResp.getId())).map(ActivityPerformedResponse :: new).distinct().collect(Collectors.toList());
-				
+
+			Map<StudentResponse, Double> studentScoreLookUp = new HashMap<StudentResponse, Double>();
+			for (StudentResponse studResp : students) {
+				List<ActivityPerformedResponse> activitiesToReturn = activitiesPerformed.stream()
+						.filter(ap -> ap.getStudent().getCid().equals(studResp.getId()))
+						.map(ActivityPerformedResponse::new).distinct().collect(Collectors.toList());
+
 				Double score = 0d;
 				Double starSum = 0d;
 				focusAreas = new HashSet<String>();
 				activityTypes = new HashSet<String>();
 				psdAreas = new HashSet<String>();
-				for(ActivityPerformedResponse act : activitiesToReturn) {
-					starSum+= act.getStar();
+				for (ActivityPerformedResponse act : activitiesToReturn) {
+					starSum += act.getStar();
 					focusAreas.addAll(act.getFocusAreas());
 					activityTypes.add(act.getActivityName());
 					psdAreas.addAll(act.getPsdAreas());
@@ -1157,56 +1270,64 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				studResp.setActivityTypes(activityTypes);
 				studResp.setFocusAreas(focusAreas);
 				studResp.setPsdAreas(psdAreas);
-				
+
 				List<GroupResponseByActivityName<ActivityPerformedResponse>> finalActivitiesList = new ArrayList<GroupResponseByActivityName<ActivityPerformedResponse>>();
-				for(String type : activityTypes) {
-					
+				for (String type : activityTypes) {
+
 					GroupResponseByActivityName<ActivityPerformedResponse> activitiesPerformedResponse = new GroupResponseByActivityName();
 					activitiesPerformedResponse.setCriterion("activityName");
 					activitiesPerformedResponse.setCriterionValue(type);
-					activitiesPerformedResponse.setResponses(activitiesToReturn.stream().filter(act-> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
+					activitiesPerformedResponse.setResponses(activitiesToReturn.stream()
+							.filter(act -> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
 					Long count = activitiesPerformedResponse.getResponses().stream().count();
-					if(count!= 0) {
+					if (count != 0) {
 						activitiesPerformedResponse.setCount(count);
 						double avgStars = 0d;
-						for(ActivityPerformedResponse act : activitiesPerformedResponse.getResponses()) {
-							avgStars+= act.getStar();
+						for (ActivityPerformedResponse act : activitiesPerformedResponse.getResponses()) {
+							avgStars += act.getStar();
 						}
-						activitiesPerformedResponse.setAverageStars(avgStars/count);
+						activitiesPerformedResponse.setAverageStars(avgStars / count);
 					}
 					finalActivitiesList.add(activitiesPerformedResponse);
 				}
 				studResp.setPerformedActivities(finalActivitiesList);
 				studentScoreLookUp.put(studResp, score);
 			}
-			studentScoreLookUp = studentScoreLookUp.entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+			studentScoreLookUp = studentScoreLookUp.entrySet().stream()
+					.sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(Collectors
+							.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 			students = studentScoreLookUp.keySet();
 
-		}else {
-			if(!gradeRepository.existsBySchoolsCidAndCidAndActiveTrue(schoolCid,gradeCid))
-				throw new ValidationException(String.format("Grade with id (%s) does not exist in school having id (%s).",gradeCid,schoolCid));
-			
+		} else {
+			if (!gradeRepository.existsBySchoolsCidAndCidAndActiveTrue(schoolCid, gradeCid))
+				throw new ValidationException(String
+						.format("Grade with id (%s) does not exist in school having id (%s).", gradeCid, schoolCid));
+
 			activitiesPerformed = new HashSet<ActivityPerformed>();
-			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndStudentGradeCidAndActivityFourSAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(schoolCid ,gradeCid ,FourS.valueOf(fourS),ActivityStatus.Reviewed,startDate ,endDate);
+			activitiesPerformed = activityPerformedRepository
+					.findAllByStudentSchoolCidAndStudentGradeCidAndActivityFourSAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
+							schoolCid, gradeCid, FourS.valueOf(fourS), ActivityStatus.Reviewed, startDate, endDate);
 			students = new HashSet<StudentResponse>();
-			
-			for(ActivityPerformed act : activitiesPerformed) {
-				if(!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())) )
-					  students.add( new StudentResponse(act.getStudent()));
+
+			for (ActivityPerformed act : activitiesPerformed) {
+				if (!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())))
+					students.add(new StudentResponse(act.getStudent()));
 			}
 //			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
-			
-			Map<StudentResponse,Double> studentScoreLookUp = new HashMap<StudentResponse,Double>();
-			for(StudentResponse studResp : students) {
-				List<ActivityPerformedResponse>	activitiesToReturn = activitiesPerformed.stream().filter(ap -> ap.getStudent().getCid().equals(studResp.getId())).map(ActivityPerformedResponse :: new).distinct().collect(Collectors.toList());
-				
+
+			Map<StudentResponse, Double> studentScoreLookUp = new HashMap<StudentResponse, Double>();
+			for (StudentResponse studResp : students) {
+				List<ActivityPerformedResponse> activitiesToReturn = activitiesPerformed.stream()
+						.filter(ap -> ap.getStudent().getCid().equals(studResp.getId()))
+						.map(ActivityPerformedResponse::new).distinct().collect(Collectors.toList());
+
 				Double score = 0d;
 				Double starSum = 0d;
 				focusAreas = new HashSet<String>();
 				activityTypes = new HashSet<String>();
 				psdAreas = new HashSet<String>();
-				for(ActivityPerformedResponse act : activitiesToReturn) {
-					starSum+= act.getStar();
+				for (ActivityPerformedResponse act : activitiesToReturn) {
+					starSum += act.getStar();
 					focusAreas.addAll(act.getFocusAreas());
 					activityTypes.add(act.getActivityName());
 					psdAreas.addAll(act.getPsdAreas());
@@ -1217,126 +1338,76 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				studResp.setActivityTypes(activityTypes);
 				studResp.setFocusAreas(focusAreas);
 				studResp.setPsdAreas(psdAreas);
-				
+
 				List<GroupResponseByActivityName<ActivityPerformedResponse>> finalActivitiesList = new ArrayList<GroupResponseByActivityName<ActivityPerformedResponse>>();
-				for(String type : activityTypes) {
-					
+				for (String type : activityTypes) {
+
 					GroupResponseByActivityName<ActivityPerformedResponse> activitiesPerformedResponse = new GroupResponseByActivityName();
 					activitiesPerformedResponse.setCriterion("activityName");
 					activitiesPerformedResponse.setCriterionValue(type);
-					activitiesPerformedResponse.setResponses(activitiesToReturn.stream().filter(act-> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
+					activitiesPerformedResponse.setResponses(activitiesToReturn.stream()
+							.filter(act -> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
 					Long count = activitiesPerformedResponse.getResponses().stream().count();
-					if(count!= 0) {
+					if (count != 0) {
 						activitiesPerformedResponse.setCount(count);
 						double avgStars = 0d;
-						for(ActivityPerformedResponse act : activitiesPerformedResponse.getResponses()) {
-							avgStars+= act.getStar();
+						for (ActivityPerformedResponse act : activitiesPerformedResponse.getResponses()) {
+							avgStars += act.getStar();
 						}
-						activitiesPerformedResponse.setAverageStars(avgStars/count);
+						activitiesPerformedResponse.setAverageStars(avgStars / count);
 					}
 					finalActivitiesList.add(activitiesPerformedResponse);
 				}
 				studResp.setPerformedActivities(finalActivitiesList);
 				studentScoreLookUp.put(studResp, score);
 			}
-			studentScoreLookUp = studentScoreLookUp.entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+			studentScoreLookUp = studentScoreLookUp.entrySet().stream()
+					.sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(Collectors
+							.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 			students = studentScoreLookUp.keySet();
 		}
-		if(students == null || students.isEmpty())
-			throw new ValidationException("No Student found for fourS : "+fourS);
+		if (students == null || students.isEmpty())
+			throw new ValidationException("No Student found for fourS : " + fourS);
 		return students;
 	}
-	
-	private Set<StudentResponse> getAllStudentsAndItsActivitiesByPsdArea(String psdArea ,String gradeCid , String schoolCid,Date startDate, Date endDate){
-		if(psdArea == null)
-			throw new ValidationException("Psd Area cannot be null.");
-		if(!PSDArea.matches(psdArea))
-			throw new ValidationException(String.format("PSD Area (%s) does not matches with available PSD Areas i.e [Personal Development, Social Development]", psdArea));
-		
-		Set<ActivityPerformed> activitiesPerformed = null ;
-		Set<StudentResponse> students = null;
-		Set<String> focusAreas, activityTypes , fourS;
-		if(gradeCid== null) {
-			activitiesPerformed = new HashSet<ActivityPerformed>();
-			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndActivityFocusAreasPsdAreaAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(schoolCid ,PSDArea.fromString(psdArea),ActivityStatus.Reviewed,startDate ,endDate);
-			students = new HashSet<StudentResponse>();
-			for(ActivityPerformed act : activitiesPerformed) {
-				if(!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())) )
-					  students.add( new StudentResponse(act.getStudent()));
-			}
-//			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
-			
-			Map<StudentResponse,Double> studentScoreLookUp = new HashMap<StudentResponse,Double>();
-			for(StudentResponse studResp : students) {
-				List<ActivityPerformedResponse>	activitiesToReturn = activitiesPerformed.stream().filter(ap -> ap.getStudent().getCid().equals(studResp.getId())).map(ActivityPerformedResponse :: new).distinct().collect(Collectors.toList());
-				
-				Double score = 0d;
-				Double starSum = 0d;
-				focusAreas = new HashSet<String>();
-				activityTypes = new HashSet<String>();
-			    fourS = new HashSet<String>();
-				for(ActivityPerformedResponse act : activitiesToReturn) {
-					starSum+= act.getStar();
-					focusAreas.addAll(act.getFocusAreas());
-					activityTypes.add(act.getActivityName());
-					fourS.add(act.getFourS());
-				}
-				score = focusAreas.size() * (starSum / activitiesToReturn.size());
-				System.out.println(score);
-				studResp.setScoreForAward(score);
-				studResp.setActivityTypes(activityTypes);
-				studResp.setFocusAreas(focusAreas);
-				studResp.setFourS(fourS);
-				
-				List<GroupResponseByActivityName<ActivityPerformedResponse>> finalActivitiesList = new ArrayList<GroupResponseByActivityName<ActivityPerformedResponse>>();
-				for(String type : activityTypes) {
-					
-					GroupResponseByActivityName<ActivityPerformedResponse> activitiesPerformedResponse = new GroupResponseByActivityName();
-					activitiesPerformedResponse.setCriterion("activityName");
-					activitiesPerformedResponse.setCriterionValue(type);
-					activitiesPerformedResponse.setResponses(activitiesToReturn.stream().filter(act-> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
-					Long count = activitiesPerformedResponse.getResponses().stream().count();
-					if(count!= 0) {
-						activitiesPerformedResponse.setCount(count);
-						double avgStars = 0d;
-						for(ActivityPerformedResponse act : activitiesPerformedResponse.getResponses()) {
-							avgStars+= act.getStar();
-						}
-						activitiesPerformedResponse.setAverageStars(avgStars/count);
-					}
-					   
-					finalActivitiesList.add(activitiesPerformedResponse);
-				}
-				studResp.setPerformedActivities(finalActivitiesList);
-				studentScoreLookUp.put(studResp, score);
-			}
-			studentScoreLookUp = studentScoreLookUp.entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
-			students = studentScoreLookUp.keySet();
 
-		}else {
-			if(!gradeRepository.existsBySchoolsCidAndCidAndActiveTrue(schoolCid,gradeCid))
-				throw new ValidationException(String.format("Grade with id (%s) does not exist in school having id (%s).",gradeCid,schoolCid));
-			
+	private Set<StudentResponse> getAllStudentsAndItsActivitiesByPsdArea(String psdArea, String gradeCid,
+			String schoolCid, Date startDate, Date endDate) {
+		if (psdArea == null)
+			throw new ValidationException("Psd Area cannot be null.");
+		if (!PSDArea.matches(psdArea))
+			throw new ValidationException(String.format(
+					"PSD Area (%s) does not matches with available PSD Areas i.e [Personal Development, Social Development]",
+					psdArea));
+
+		Set<ActivityPerformed> activitiesPerformed = null;
+		Set<StudentResponse> students = null;
+		Set<String> focusAreas, activityTypes, fourS;
+		if (gradeCid == null) {
 			activitiesPerformed = new HashSet<ActivityPerformed>();
-			activitiesPerformed = activityPerformedRepository.findAllByStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasPsdAreaAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(schoolCid ,gradeCid ,PSDArea.fromString(psdArea),ActivityStatus.Reviewed,startDate ,endDate);
+			activitiesPerformed = activityPerformedRepository
+					.findAllByStudentSchoolCidAndActivityFocusAreasPsdAreaAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
+							schoolCid, PSDArea.fromString(psdArea), ActivityStatus.Reviewed, startDate, endDate);
 			students = new HashSet<StudentResponse>();
-			for(ActivityPerformed act : activitiesPerformed) {
-				if(!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())) )
-					  students.add( new StudentResponse(act.getStudent()));
+			for (ActivityPerformed act : activitiesPerformed) {
+				if (!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())))
+					students.add(new StudentResponse(act.getStudent()));
 			}
 //			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
-			
-			Map<StudentResponse,Double> studentScoreLookUp = new HashMap<StudentResponse,Double>();
-			for(StudentResponse studResp : students) {
-				List<ActivityPerformedResponse>	activitiesToReturn = activitiesPerformed.stream().filter(ap -> ap.getStudent().getCid().equals(studResp.getId())).map(ActivityPerformedResponse :: new).distinct().collect(Collectors.toList());
-				
+
+			Map<StudentResponse, Double> studentScoreLookUp = new HashMap<StudentResponse, Double>();
+			for (StudentResponse studResp : students) {
+				List<ActivityPerformedResponse> activitiesToReturn = activitiesPerformed.stream()
+						.filter(ap -> ap.getStudent().getCid().equals(studResp.getId()))
+						.map(ActivityPerformedResponse::new).distinct().collect(Collectors.toList());
+
 				Double score = 0d;
 				Double starSum = 0d;
 				focusAreas = new HashSet<String>();
 				activityTypes = new HashSet<String>();
 				fourS = new HashSet<String>();
-				for(ActivityPerformedResponse act : activitiesToReturn) {
-					starSum+= act.getStar();
+				for (ActivityPerformedResponse act : activitiesToReturn) {
+					starSum += act.getStar();
 					focusAreas.addAll(act.getFocusAreas());
 					activityTypes.add(act.getActivityName());
 					fourS.add(act.getFourS());
@@ -1347,85 +1418,168 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				studResp.setActivityTypes(activityTypes);
 				studResp.setFocusAreas(focusAreas);
 				studResp.setFourS(fourS);
-				
+
 				List<GroupResponseByActivityName<ActivityPerformedResponse>> finalActivitiesList = new ArrayList<GroupResponseByActivityName<ActivityPerformedResponse>>();
-				for(String type : activityTypes) {
-					
+				for (String type : activityTypes) {
+
+					GroupResponseByActivityName<ActivityPerformedResponse> activitiesPerformedResponse = new GroupResponseByActivityName();
+					activitiesPerformedResponse.setCriterion("activityName");
+					activitiesPerformedResponse.setCriterionValue(type);
+					activitiesPerformedResponse.setResponses(activitiesToReturn.stream()
+							.filter(act -> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
+					Long count = activitiesPerformedResponse.getResponses().stream().count();
+					if (count != 0) {
+						activitiesPerformedResponse.setCount(count);
+						double avgStars = 0d;
+						for (ActivityPerformedResponse act : activitiesPerformedResponse.getResponses()) {
+							avgStars += act.getStar();
+						}
+						activitiesPerformedResponse.setAverageStars(avgStars / count);
+					}
+
+					finalActivitiesList.add(activitiesPerformedResponse);
+				}
+				studResp.setPerformedActivities(finalActivitiesList);
+				studentScoreLookUp.put(studResp, score);
+			}
+			studentScoreLookUp = studentScoreLookUp.entrySet().stream()
+					.sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(Collectors
+							.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+			students = studentScoreLookUp.keySet();
+
+		} else {
+			if (!gradeRepository.existsBySchoolsCidAndCidAndActiveTrue(schoolCid, gradeCid))
+				throw new ValidationException(String
+						.format("Grade with id (%s) does not exist in school having id (%s).", gradeCid, schoolCid));
+
+			activitiesPerformed = new HashSet<ActivityPerformed>();
+			activitiesPerformed = activityPerformedRepository
+					.findAllByStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasPsdAreaAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
+							schoolCid, gradeCid, PSDArea.fromString(psdArea), ActivityStatus.Reviewed, startDate,
+							endDate);
+			students = new HashSet<StudentResponse>();
+			for (ActivityPerformed act : activitiesPerformed) {
+				if (!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())))
+					students.add(new StudentResponse(act.getStudent()));
+			}
+//			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
+
+			Map<StudentResponse, Double> studentScoreLookUp = new HashMap<StudentResponse, Double>();
+			for (StudentResponse studResp : students) {
+				List<ActivityPerformedResponse> activitiesToReturn = activitiesPerformed.stream()
+						.filter(ap -> ap.getStudent().getCid().equals(studResp.getId()))
+						.map(ActivityPerformedResponse::new).distinct().collect(Collectors.toList());
+
+				Double score = 0d;
+				Double starSum = 0d;
+				focusAreas = new HashSet<String>();
+				activityTypes = new HashSet<String>();
+				fourS = new HashSet<String>();
+				for (ActivityPerformedResponse act : activitiesToReturn) {
+					starSum += act.getStar();
+					focusAreas.addAll(act.getFocusAreas());
+					activityTypes.add(act.getActivityName());
+					fourS.add(act.getFourS());
+				}
+				score = focusAreas.size() * (starSum / activitiesToReturn.size());
+				System.out.println(score);
+				studResp.setScoreForAward(score);
+				studResp.setActivityTypes(activityTypes);
+				studResp.setFocusAreas(focusAreas);
+				studResp.setFourS(fourS);
+
+				List<GroupResponseByActivityName<ActivityPerformedResponse>> finalActivitiesList = new ArrayList<GroupResponseByActivityName<ActivityPerformedResponse>>();
+				for (String type : activityTypes) {
+
 					GroupResponseByActivityName<ActivityPerformedResponse> activitiesPerformedResponse = new GroupResponseByActivityName<ActivityPerformedResponse>();
 					activitiesPerformedResponse.setCriterion("activityName");
 					activitiesPerformedResponse.setCriterionValue(type);
-					activitiesPerformedResponse.setResponses(activitiesToReturn.stream().filter(act-> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
+					activitiesPerformedResponse.setResponses(activitiesToReturn.stream()
+							.filter(act -> act.getActivityName().equalsIgnoreCase(type)).collect(Collectors.toList()));
 					Long count = activitiesPerformedResponse.getResponses().stream().count();
-					if(count!= 0) {
+					if (count != 0) {
 						activitiesPerformedResponse.setCount(count);
 						double avgStars = 0d;
-						for(ActivityPerformedResponse act : activitiesPerformedResponse.getResponses()) {
-							avgStars+= act.getStar();
+						for (ActivityPerformedResponse act : activitiesPerformedResponse.getResponses()) {
+							avgStars += act.getStar();
 						}
-						activitiesPerformedResponse.setAverageStars(avgStars/count);
+						activitiesPerformedResponse.setAverageStars(avgStars / count);
 					}
 					finalActivitiesList.add(activitiesPerformedResponse);
 				}
 				studResp.setPerformedActivities(finalActivitiesList);
 				studentScoreLookUp.put(studResp, score);
 			}
-			studentScoreLookUp = studentScoreLookUp.entrySet() .stream() .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) .collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+			studentScoreLookUp = studentScoreLookUp.entrySet().stream()
+					.sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(Collectors
+							.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 			students = studentScoreLookUp.keySet();
 		}
-		if(students == null || students.isEmpty())
-			throw new ValidationException("No Student found for PSD Area : "+psdArea);
+		if (students == null || students.isEmpty())
+			throw new ValidationException("No Student found for PSD Area : " + psdArea);
 		return students;
 	}
-	
+
 	@Override
-	public List<StudentResponse> getAllStudentsOfSchoolForParticularActivity(String activityCid ,String teacherId ,String gradeId , String approvalStatus){
+	public List<StudentResponse> getAllStudentsOfSchoolForParticularActivity(String activityCid, String teacherId,
+			String gradeId, String approvalStatus) {
 		Long userId = getUserId();
-		if(userId == null)
-			throw new ValidationException("Please login first as a teacher or coach or management or school or student to view students.");
-		Object user =null;
+		if (userId == null)
+			throw new ValidationException(
+					"Please login first as a teacher or coach or management or school or student to view students.");
+		Object user = null;
 		String schoolCid = null;
-		 user = teacherRepository.getByUserId(userId);
-		 if(user == null)
-			 user = studentRepository.getByUserId(userId);
-		 if(user == null)
-			 user = schoolRepository.getByUserId(userId);
-		 if(user == null)
-			 throw new UnauthorizedUserException("Not logged in as either a teacher or coach or management or school or student.");
-		if(user instanceof Teacher) {
-			if(((Teacher) user).getSchool()!=null)
+		user = teacherRepository.getByUserId(userId);
+		if (user == null)
+			user = studentRepository.getByUserId(userId);
+		if (user == null)
+			user = schoolRepository.getByUserId(userId);
+		if (user == null)
+			throw new UnauthorizedUserException(
+					"Not logged in as either a teacher or coach or management or school or student.");
+		if (user instanceof Teacher) {
+			if (((Teacher) user).getSchool() != null)
 				schoolCid = ((Teacher) user).getSchool().getCid();
 		}
-		if(user instanceof Student) {
-			if(((Student) user).getSchool()!=null)
+		if (user instanceof Student) {
+			if (((Student) user).getSchool() != null)
 				schoolCid = ((Student) user).getSchool().getCid();
 		}
-		if(user instanceof School) {
-				schoolCid = ((School) user).getCid();
+		if (user instanceof School) {
+			schoolCid = ((School) user).getCid();
 		}
-		if(activityCid == null)
+		if (activityCid == null)
 			throw new ValidationException("activity id cannot be null.");
-		if(!activityRepository.existsByCidAndActiveTrue(activityCid))
-			throw new ValidationException(String.format("Activity with id (%s) not found",activityCid));
-		if(!activityRepository.existsByCidAndSchoolsCidAndActiveTrue(activityCid, schoolCid)) 
-			throw new ValidationException(String.format("Activity with id (%s) not offered in school",activityCid));
+		if (!activityRepository.existsByCidAndActiveTrue(activityCid))
+			throw new ValidationException(String.format("Activity with id (%s) not found", activityCid));
+		if (!activityRepository.existsByCidAndSchoolsCidAndActiveTrue(activityCid, schoolCid))
+			throw new ValidationException(String.format("Activity with id (%s) not offered in school", activityCid));
 		List<Student> students = new ArrayList<Student>();
-		if(teacherId != null) {
-			if(!teacherRepository.existsByCidAndActiveTrue(teacherId))
+		if (teacherId != null) {
+			if (!teacherRepository.existsByCidAndActiveTrue(teacherId))
 				throw new ValidationException(String.format("Teacher with id (%s) does not exist.", teacherId));
-			if(gradeId != null) {
-				if(!gradeRepository.existsByCidAndActiveTrue(gradeId))
+			if (gradeId != null) {
+				if (!gradeRepository.existsByCidAndActiveTrue(gradeId))
 					throw new ValidationException(String.format("Grade with id (%s) does not exist.", gradeId));
-				students = studentClubRepository.findAllStudentByActivityCidAndStudentSchoolCidAndGradeCidAndTeacherCidAndMembershipStatusAndActiveTrue(activityCid, schoolCid, gradeId, teacherId, ApprovalStatus.valueOf(approvalStatus));
-			}else {
-				students = studentClubRepository.findAllStudentByActivityCidAndStudentSchoolCidAndTeacherCidAndMembershipStatusAndActiveTrue(activityCid, schoolCid, teacherId, ApprovalStatus.valueOf(approvalStatus));
+				students = studentClubRepository
+						.findAllStudentByActivityCidAndStudentSchoolCidAndGradeCidAndTeacherCidAndMembershipStatusAndActiveTrue(
+								activityCid, schoolCid, gradeId, teacherId, ApprovalStatus.valueOf(approvalStatus));
+			} else {
+				students = studentClubRepository
+						.findAllStudentByActivityCidAndStudentSchoolCidAndTeacherCidAndMembershipStatusAndActiveTrue(
+								activityCid, schoolCid, teacherId, ApprovalStatus.valueOf(approvalStatus));
 			}
-		}else {
-			if(gradeId != null) {
-				if(!gradeRepository.existsByCidAndActiveTrue(gradeId))
+		} else {
+			if (gradeId != null) {
+				if (!gradeRepository.existsByCidAndActiveTrue(gradeId))
 					throw new ValidationException(String.format("Grade with id (%s) does not exist.", gradeId));
-				students = studentClubRepository.findAllStudentByActivityCidAndStudentSchoolCidAndGradeCidAndMembershipStatusAndActiveTrue(activityCid, schoolCid, gradeId, ApprovalStatus.valueOf(approvalStatus));
-			}else {
-				students = studentClubRepository.findAllStudentByActivityCidAndStudentSchoolCidAndMembershipStatusAndActiveTrue(activityCid, schoolCid,  ApprovalStatus.valueOf(approvalStatus));
+				students = studentClubRepository
+						.findAllStudentByActivityCidAndStudentSchoolCidAndGradeCidAndMembershipStatusAndActiveTrue(
+								activityCid, schoolCid, gradeId, ApprovalStatus.valueOf(approvalStatus));
+			} else {
+				students = studentClubRepository
+						.findAllStudentByActivityCidAndStudentSchoolCidAndMembershipStatusAndActiveTrue(activityCid,
+								schoolCid, ApprovalStatus.valueOf(approvalStatus));
 			}
 		}
 //				studentRepository
@@ -1434,47 +1588,51 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		if (students == null || students.isEmpty())
 			throw new ValidationException(String.format(
 					"No student in the school found in club/society  having id (%s) or membership might not have been %s.",
-					 activityCid, approvalStatus));
+					activityCid, approvalStatus));
 		return students.stream().distinct().map(StudentResponse::new).collect(Collectors.toList());
 	}
 
 	@Override
-	public ClubMembershipResponse applyForClubMembership(String activityCid , String supervisorCid) {
+	public ClubMembershipResponse applyForClubMembership(String activityCid, String supervisorCid) {
 		Long userId = getUserId();
-		if(userId == null)
+		if (userId == null)
 			throw new ValidationException("Login first as student to apply for membership.");
-		Long  studentId = studentRepository.findIdByUserIdAndActiveTrue(userId);
-		if(studentId == null)
+		Long studentId = studentRepository.findIdByUserIdAndActiveTrue(userId);
+		if (studentId == null)
 			throw new ValidationException("Login as student to apply for membership.");
-		if(activityCid == null)
+		if (activityCid == null)
 			throw new ValidationException("activityCid cannot be null.");
-		if(supervisorCid == null)
+		if (supervisorCid == null)
 			throw new ValidationException("supervisorId cannot be null.");
-		if(studentClubRepository.existsByStudentIdAndActivityCidAndMembershipStatusAndActiveTrue(studentId, activityCid, ApprovalStatus.VERIFIED))
+		if (studentClubRepository.existsByStudentIdAndActivityCidAndMembershipStatusAndActiveTrue(studentId,
+				activityCid, ApprovalStatus.VERIFIED))
 			throw new ValidationException("Already member of this club.");
-		if(studentClubRepository.existsByStudentIdAndActivityCidAndMembershipStatusNotAndActiveTrue(studentId, activityCid, ApprovalStatus.VERIFIED))
-			throw new ValidationException("Already applied for the membership of this club and its status is pending or rejected.");
-		
-		StudentClub studentClub = new StudentClub(studentId, activityRepository.findIdByCidAndActiveTrue(activityCid), teacherRepository.findIdByCidAndActiveTrue(supervisorCid));
+		if (studentClubRepository.existsByStudentIdAndActivityCidAndMembershipStatusNotAndActiveTrue(studentId,
+				activityCid, ApprovalStatus.VERIFIED))
+			throw new ValidationException(
+					"Already applied for the membership of this club and its status is pending or rejected.");
+
+		StudentClub studentClub = new StudentClub(studentId, activityRepository.findIdByCidAndActiveTrue(activityCid),
+				teacherRepository.findIdByCidAndActiveTrue(supervisorCid));
 		studentClub.setAppliedOn(LocalDateTime.now().toDate());
 		studentClub.setMembershipStatus(ApprovalStatus.PENDING);
 		studentClub = studentClubRepository.save(studentClub);
 		return new ClubMembershipResponse(studentClub);
 	}
-	
+
 	@Override
-	public List<ClubMembershipResponse> getMembershipDetails(){
+	public List<ClubMembershipResponse> getMembershipDetails() {
 		Long userId = getUserId();
-		if(userId == null)
+		if (userId == null)
 			throw new ValidationException("Login as student to view membership details.");
 		Long studentId = studentRepository.findIdByUserIdAndActiveTrue(userId);
-		if(studentId == null)
+		if (studentId == null)
 			throw new ValidationException("Login as student to view membership details.");
 		List<StudentClub> membership = studentClubRepository.findAllByStudentIdAndActiveTrue(studentId);
-		
-		if(membership == null || membership.isEmpty())
+
+		if (membership == null || membership.isEmpty())
 			throw new ValidationException("No membership details found for you.");
-		
-		return membership.stream().map(ClubMembershipResponse :: new).distinct().collect(Collectors.toList());
+
+		return membership.stream().map(ClubMembershipResponse::new).distinct().collect(Collectors.toList());
 	}
 }

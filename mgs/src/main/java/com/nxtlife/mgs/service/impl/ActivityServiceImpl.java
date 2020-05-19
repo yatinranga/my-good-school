@@ -40,6 +40,7 @@ import com.nxtlife.mgs.jpa.FocusAreaRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
 import com.nxtlife.mgs.jpa.StudentClubRepository;
 import com.nxtlife.mgs.jpa.StudentRepository;
+import com.nxtlife.mgs.jpa.TeacherActivityGradeRepository;
 import com.nxtlife.mgs.jpa.TeacherRepository;
 import com.nxtlife.mgs.service.ActivityService;
 import com.nxtlife.mgs.service.BaseService;
@@ -76,6 +77,9 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 	
 	@Autowired
 	TeacherRepository teacherRepository;
+	
+	@Autowired
+	TeacherActivityGradeRepository teacherActivityGradeRepository;
 
 	@PostConstruct
 	public void init() {
@@ -591,10 +595,10 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 		Long teacherId =  teacherRepository.getIdByUserIdAndActiveTrue(userId);
 		if(teacherId == null)
 			throw new ValidationException("User not logged in as teacher.");
-		if(!activityRepository.existsByTeachersIdAndActiveTrue(teacherId))
+		if(!teacherActivityGradeRepository.existsByTeacherIdAndActiveTrue(teacherId))
 			throw new ValidationException("Teacher not running any clubs or societies.");
 		
-		activities = activityRepository.findAllByTeachersIdAndActiveTrue(teacherId);
+		activities = teacherActivityGradeRepository.findAllActivityByTeacherIdAndActiveTrue(teacherId);
 		
 		return activities.stream().map(ActivityRequestResponse:: new).collect(Collectors.toList());
 	}

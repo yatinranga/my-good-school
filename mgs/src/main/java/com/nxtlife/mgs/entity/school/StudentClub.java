@@ -16,10 +16,10 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import com.nxtlife.mgs.entity.activity.Activity;
+import com.nxtlife.mgs.entity.common.StudentActivityId;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.enums.ApprovalStatus;
-import com.nxtlife.mgs.util.StudentActivityId;
 
 @SuppressWarnings("serial")
 @Entity

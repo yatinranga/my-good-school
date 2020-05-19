@@ -2,11 +2,17 @@ package com.nxtlife.mgs.view;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.nxtlife.mgs.entity.activity.Activity;
+import com.nxtlife.mgs.entity.activity.TeacherActivityGrade;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.util.DateUtil;
@@ -35,8 +41,9 @@ public class TeacherResponse {
 	private String imagePath;
 	private String profileBrief;
 	private String yearOfEnrolment;
-	private List<String> activityIds;
+	private List<ActivityRequestResponse> activityAndGrades;
 	private List<TeacherResponse> teachers;
+	private Set<String> roles;
 
 	public String getId() {
 		return id;
@@ -206,12 +213,12 @@ public class TeacherResponse {
 		this.yearOfEnrolment = yearOfEnrolment;
 	}
 
-	public List<String> getActivityIds() {
-		return activityIds;
+	public List<ActivityRequestResponse> getActivityAndGrades() {
+		return activityAndGrades;
 	}
 
-	public void setActivityIds(List<String> activityIds) {
-		this.activityIds = activityIds;
+	public void setActivityAndGrades(List<ActivityRequestResponse> activityAndGrades) {
+		this.activityAndGrades = activityAndGrades;
 	}
 
 	public List<TeacherResponse> getTeachers() {
@@ -222,14 +229,25 @@ public class TeacherResponse {
 		this.teachers = teachers;
 	}
 
+	public Set<String> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<String> roles) {
+		this.roles = roles;
+	}
+
 	public TeacherResponse() {
 		
 	}
 	public TeacherResponse(Teacher teacher) {
 		this.id = teacher.getCid();
 
-		if (teacher.getUser() != null)
+		if (teacher.getUser() != null) {
 			this.userId = teacher.getUser().getCid();
+		 roles = teacher.getUser().getRoles().stream().map(r->r.getName()).collect(Collectors.toSet());	
+		}
+		
 
 		this.username = teacher.getUsername();
 		this.name = teacher.getName();
@@ -265,13 +283,47 @@ public class TeacherResponse {
 		// change database for activity and then get all activity names and add to
 		// member list in the view
 
-		if (teacher.getActivities() != null && !teacher.getActivities().isEmpty()) {
+		if (teacher.getTeacherActivityGrades() != null && !teacher.getTeacherActivityGrades().isEmpty()) {
 			if (activities == null)
 				activities = new ArrayList<String>();
-			if(activityIds == null)
-				activityIds = new ArrayList<String>();
-			teacher.getActivities().stream().distinct().forEach(act -> {activities.add(act.getName());
-			activityIds.add(act.getCid());});
+			if(activityAndGrades == null)
+				activityAndGrades = new ArrayList<ActivityRequestResponse>();
+//			Map<String,Set<String>> activityIdGradesIdMap = new HashMap<String, Set<String>>();
+			Map<Activity,Set<Grade>> activityGradesMap = new HashMap<Activity,Set<Grade>>();
+			teacher.getTeacherActivityGrades().stream().filter(i -> i.getActive()).forEach(item -> {
+				if(item.getActive()) {
+					if(!activities.contains(item.getActivity().getName()))
+						activities.add(item.getActivity().getName());
+//					if(!activityIdGradesIdMap.containsKey(item.getActivity().getCid())) 
+//						activityIdGradesIdMap.put(item.getActivity().getCid(), new HashSet<String>());
+					if(!activityGradesMap.containsKey(item.getActivity()))
+						activityGradesMap.put(item.getActivity(), new HashSet<Grade>());
+					
+					activityGradesMap.get(item.getActivity()).add(item.getGrade());
+//					activityIdGradesIdMap.get(item.getActivity().getCid()).add(item.getGrade().getCid());
+				}
+				});
+			
+			if(!activityGradesMap.isEmpty()) {
+				for(Activity activity : activityGradesMap.keySet()) {
+					ActivityRequestResponse act = new ActivityRequestResponse(activity);
+					act.setGradeResponses(activityGradesMap.get(activity).stream().map(GradeResponse :: new).collect(Collectors.toList()));
+					activityAndGrades.add(act);
+				}
+			}
+			
+//			if(!activityGradesMap.isEmpty()) {
+//				for(String actId : activityGradesMap.keySet()) {
+//					ActivityRequestResponse activity = new ActivityRequestResponse();
+//					activity.setId(actId);
+//					activity.setGrades(new ArrayList<String>(activityGradesMap.get(actId)));
+//					activityAndGrades.add(activity);
+//				}
+//			}
+			
+			
+//			teacher.getActivities().stream().distinct().forEach(act -> {activities.add(act.getName());
+//			activityIds.add(act.getCid());});
 //			for (Activity activity : teacher.getActivities()) {
 //				activities.add(String.format("%s", activity.getName()));
 //			}
@@ -281,8 +333,10 @@ public class TeacherResponse {
 	public TeacherResponse(Teacher teacher, Boolean teacherResponseForUser) {
 		this.id = teacher.getCid();
 
-		if (teacher.getUser() != null)
+		if (teacher.getUser() != null) {
 			this.userId = teacher.getUser().getCid();
+		roles = teacher.getUser().getRoles().stream().map(r->r.getName()).collect(Collectors.toSet());	
+		}
 
 		this.username = teacher.getUsername();
 		this.name = teacher.getName();
@@ -309,14 +363,53 @@ public class TeacherResponse {
 		this.designation = teacher.getDesignation();
 		this.imagePath = teacher.getImageUrl();
 		
-		if (teacher.getActivities() != null && !teacher.getActivities().isEmpty()) {
+		if (teacher.getTeacherActivityGrades() != null && !teacher.getTeacherActivityGrades().isEmpty()) {
 			if (activities == null)
 				activities = new ArrayList<String>();
-			if(activityIds == null)
-				activityIds = new ArrayList<String>();
-			teacher.getActivities().stream().distinct().forEach(act -> {activities.add(act.getName());
-			activityIds.add(act.getCid());});
+			if(activityAndGrades == null)
+				activityAndGrades = new ArrayList<ActivityRequestResponse>();
+//			Map<String,Set<String>> activityIdGradesIdMap = new HashMap<String, Set<String>>();
+			Map<Activity,Set<Grade>> activityGradesMap = new HashMap<Activity,Set<Grade>>();
+			teacher.getTeacherActivityGrades().stream().filter(i -> i.getActive()).forEach(item -> {
+				if(item.getActive()) {
+					if(!activities.contains(item.getActivity().getName()))
+						activities.add(item.getActivity().getName());
+//					if(!activityIdGradesIdMap.containsKey(item.getActivity().getCid())) 
+//						activityIdGradesIdMap.put(item.getActivity().getCid(), new HashSet<String>());
+					if(!activityGradesMap.containsKey(item.getActivity()))
+						activityGradesMap.put(item.getActivity(), new HashSet<Grade>());
+					
+					activityGradesMap.get(item.getActivity()).add(item.getGrade());
+//					activityIdGradesIdMap.get(item.getActivity().getCid()).add(item.getGrade().getCid());
+				}
+				});
+			
+			if(!activityGradesMap.isEmpty()) {
+				for(Activity activity : activityGradesMap.keySet()) {
+					ActivityRequestResponse act = new ActivityRequestResponse(activity);
+					act.setGradeResponses(activityGradesMap.get(activity).stream().map(GradeResponse :: new).collect(Collectors.toList()));
+					activityAndGrades.add(act);
+				}
+			}
+			
+//			if(!activityIdGradesIdMap.isEmpty()) {
+//				for(String actId : activityIdGradesIdMap.keySet()) {
+//					ActivityRequestResponse activity = new ActivityRequestResponse();
+//					activity.setId(actId);
+//					activity.setGrades(new ArrayList<String>(activityIdGradesIdMap.get(actId)));
+//					activityAndGrades.add(activity);
+//				}
+//			}
+			
 		}
+//		if (teacher.getActivities() != null && !teacher.getActivities().isEmpty()) {
+//			if (activities == null)
+//				activities = new ArrayList<String>();
+//			if(activityIds == null)
+//				activityIds = new ArrayList<String>();
+//			teacher.getActivities().stream().distinct().forEach(act -> {activities.add(act.getName());
+//			activityIds.add(act.getCid());});
+//		}
 	}
 
 }

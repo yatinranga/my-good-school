@@ -1,4 +1,4 @@
-package com.nxtlife.mgs.util;
+package com.nxtlife.mgs.entity.common;
 
 import java.io.Serializable;
 

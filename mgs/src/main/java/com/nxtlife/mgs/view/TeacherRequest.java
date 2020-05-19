@@ -2,6 +2,7 @@ package com.nxtlife.mgs.view;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.ex.ValidationException;
@@ -35,7 +36,7 @@ public class TeacherRequest extends Request {
 
 	private String gender;
 
-	private List<String> activityIds;
+	private List<ActivityRequestResponse> activities;
 
 	private List<String> gradeIds;
 
@@ -48,6 +49,8 @@ public class TeacherRequest extends Request {
 	private List<TeacherRequest> teachers;
 	
 	private String profileBrief;
+	
+	private Set<String> roles;
 
 	public String getName() {
 		return name;
@@ -145,12 +148,12 @@ public class TeacherRequest extends Request {
 		this.gender = gender;
 	}
 
-	public List<String> getActivityIds() {
-		return activityIds;
+	public List<ActivityRequestResponse> getActivities() {
+		return activities;
 	}
 
-	public void setActivityIds(List<String> activityIds) {
-		this.activityIds = activityIds;
+	public void setActivities(List<ActivityRequestResponse> activities) {
+		this.activities = activities;
 	}
 
 	public List<String> getGradeIds() {
@@ -199,6 +202,14 @@ public class TeacherRequest extends Request {
 
 	public void setProfileBrief(String profileBrief) {
 		this.profileBrief = profileBrief;
+	}
+
+	public Set<String> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<String> roles) {
+		this.roles = roles;
 	}
 
 	public Teacher toEntity() {

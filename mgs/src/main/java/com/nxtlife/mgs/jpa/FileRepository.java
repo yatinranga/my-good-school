@@ -29,8 +29,10 @@ public interface FileRepository extends JpaRepository<File, Long>{
 	
 //	int updateFileSetActiveBy
 	
-	List<File> findAllByActiveTrueAndActivityPerformedCidAndActiveTrue(String activityPerformedCid);
+	List<File> findAllByActivityPerformedCidAndActiveTrue(String activityPerformedCid);
 	
 	File findByUrlAndActiveTrue(String url);
+
+	List<File> findAllByEventCidAndActiveTrue(String eventCid);
 	
 }

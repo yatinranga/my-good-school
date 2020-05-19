@@ -1,23 +1,23 @@
-package com.nxtlife.mgs.util;
+package com.nxtlife.mgs.entity.common;
 
 import java.io.Serializable;
 
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class StudentActivityId implements Serializable{
+public class TeacherActivityGradeId implements Serializable{
 
-	private static final long serialVersionUID = 9024958092319550712L;
+	private static final long serialVersionUID = -9059163139254728235L;
 	
-	Long studentId;
-	Long activityId ;
 	Long teacherId;
+	Long activityId;
+	Long gradeId ;
 	
-	public Long getStudentId() {
-		return studentId;
+	public Long getTeacherId() {
+		return teacherId;
 	}
-	public void setStudentId(Long studentId) {
-		this.studentId = studentId;
+	public void setTeacherId(Long teacherId) {
+		this.teacherId = teacherId;
 	}
 	public Long getActivityId() {
 		return activityId;
@@ -25,23 +25,34 @@ public class StudentActivityId implements Serializable{
 	public void setActivityId(Long activityId) {
 		this.activityId = activityId;
 	}
-	public Long getTeacherId() {
-		return teacherId;
+	public Long getGradeId() {
+		return gradeId;
 	}
-	public void setTeacherId(Long teacherId) {
-		this.teacherId = teacherId;
+	public void setGradeId(Long gradeId) {
+		this.gradeId = gradeId;
 	}
 	
+	
+	public TeacherActivityGradeId(Long teacherId, Long activityId, Long gradeId) {
+		this.teacherId = teacherId;
+		this.activityId = activityId;
+		this.gradeId = gradeId;
+	}
+	public TeacherActivityGradeId() {
 		
+	}
+	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((activityId == null) ? 0 : activityId.hashCode());
-		result = prime * result + ((studentId == null) ? 0 : studentId.hashCode());
+		result = prime * result + ((gradeId == null) ? 0 : gradeId.hashCode());
 		result = prime * result + ((teacherId == null) ? 0 : teacherId.hashCode());
 		return result;
 	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -50,16 +61,16 @@ public class StudentActivityId implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		StudentActivityId other = (StudentActivityId) obj;
+		TeacherActivityGradeId other = (TeacherActivityGradeId) obj;
 		if (activityId == null) {
 			if (other.activityId != null)
 				return false;
 		} else if (!activityId.equals(other.activityId))
 			return false;
-		if (studentId == null) {
-			if (other.studentId != null)
+		if (gradeId == null) {
+			if (other.gradeId != null)
 				return false;
-		} else if (!studentId.equals(other.studentId))
+		} else if (!gradeId.equals(other.gradeId))
 			return false;
 		if (teacherId == null) {
 			if (other.teacherId != null)
@@ -68,14 +79,8 @@ public class StudentActivityId implements Serializable{
 			return false;
 		return true;
 	}
-	public StudentActivityId(Long studentId, Long activityId ,Long teacherId) {
-		this.studentId = studentId;
-		this.activityId = activityId;
-		this.teacherId = teacherId;
-	}
 	
-	public StudentActivityId() {
-		
-	}
+	
+	
 	
 }

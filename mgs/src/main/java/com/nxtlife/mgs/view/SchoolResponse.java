@@ -115,4 +115,15 @@ public class SchoolResponse {
 
 	}
 
+	public SchoolResponse(String name, String cid, String address, String email, String contactNumber, String logo) {
+		super();
+		this.name = name;
+		this.id = cid;
+		this.address = address;
+		this.email = email;
+		this.contactNumber = contactNumber;
+		this.logo = logo;
+	}
+	
+
 }

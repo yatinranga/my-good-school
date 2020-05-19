@@ -36,4 +36,7 @@ public interface GradeRepository extends JpaRepository<Grade, Long>{
 
 //	@Query("SELECT CASE WHEN count(g) > 0 THEN true ELSE false END FROM Grade g where g.cid = :gradeCid AND g.schools.cid =:schoolCid AND g.active = true")
 	boolean existsBySchoolsCidAndCidAndActiveTrue(String schoolCid, String gradeCid);
+	
+	@Query(value = "select a.id from Grade a where a.cid = :cid and a.active = true")
+	Long findIdByCidAndActiveTrue(@Param("cid") String cid);
 }

@@ -21,6 +21,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.nxtlife.mgs.entity.BaseEntity;
+import com.nxtlife.mgs.entity.activity.TeacherActivityGrade;
 import com.nxtlife.mgs.entity.session.Event;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
@@ -64,6 +65,9 @@ public class Grade extends BaseEntity {
 	
 	@ManyToMany(mappedBy = "grades")
 	private List<Event> sessions;
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "grade")
+	private List<TeacherActivityGrade> teacherActivityGrades;
 
 	public String getName() {
 		return name;
@@ -156,6 +160,14 @@ public class Grade extends BaseEntity {
 
 	public void setSessions(List<Event> sessions) {
 		this.sessions = sessions;
+	}
+
+	public List<TeacherActivityGrade> getTeacherActivityGrades() {
+		return teacherActivityGrades;
+	}
+
+	public void setTeacherActivityGrades(List<TeacherActivityGrade> teacherActivityGrades) {
+		this.teacherActivityGrades = teacherActivityGrades;
 	}
 
 	public Grade(@NotNull String name, @NotNull String cid, String section, Boolean active, List<School> schools, List<Student> students) {

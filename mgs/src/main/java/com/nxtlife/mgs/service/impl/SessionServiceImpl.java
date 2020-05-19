@@ -4,17 +4,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.ForbiddenException;
 
-import org.apache.poi.hssf.record.chart.DatRecord;
-import org.joda.time.LocalDateTime;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,9 +18,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.oauth2.common.exceptions.UnauthorizedUserException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.SuccessCallback;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.entity.activity.Activity;
+import com.nxtlife.mgs.entity.activity.File;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.session.Event;
 import com.nxtlife.mgs.entity.user.Student;
@@ -36,16 +33,18 @@ import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.filtering.filter.SessionFilter;
 import com.nxtlife.mgs.filtering.filter.SessionFilterBuilder;
 import com.nxtlife.mgs.jpa.ActivityRepository;
+import com.nxtlife.mgs.jpa.FileRepository;
 import com.nxtlife.mgs.jpa.GradeRepository;
 import com.nxtlife.mgs.jpa.SessionRepository;
 import com.nxtlife.mgs.jpa.StudentRepository;
 import com.nxtlife.mgs.jpa.TeacherRepository;
 import com.nxtlife.mgs.service.BaseService;
+import com.nxtlife.mgs.service.FileStorageService;
 import com.nxtlife.mgs.service.SessionService;
 import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.Utils;
+import com.nxtlife.mgs.view.FileRequest;
 import com.nxtlife.mgs.view.GroupResponseBy;
-import com.nxtlife.mgs.view.GroupResponseByActivityName;
 import com.nxtlife.mgs.view.SessionRequest;
 import com.nxtlife.mgs.view.SessionResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
@@ -73,6 +72,12 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 
 	@Autowired
 	StudentRepository studentRepository;
+	
+	@Autowired
+	private FileStorageService<MultipartFile> fileStorageService;
+	
+	@Autowired
+	FileRepository fileRepository;
 
 	@Override
 	public SessionResponse createSession(SessionRequest request) {
@@ -118,12 +123,43 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 			}
 			session.setGrades(finalGradeList);
 		}
+		
+		if (request.getFileRequests() != null && !request.getFileRequests().isEmpty()) {
+			List<File> sessionMedia = new ArrayList<>();
+			if(request.getFileRequests().size() > 5)
+				throw new ValidationException("Cannot attach more than 5 files to upload.");
+		
+			for (FileRequest fileReq : request.getFileRequests()) {
+				File file = saveMediaForSession(fileReq, "/session-file/", session);
+				if (file != null) {
+					if(file.getCid() == null)
+					    file.setCid(utils.generateRandomAlphaNumString(8));
+					sessionMedia.add(file);
+				}
+			}
+		/*
+		 * Assigned the returned files List set to Event entity
+		 */
+		session.setFiles(sessionMedia);
+		}
 
 		session.setCid(utils.generateRandomAlphaNumString(8));
 		session.setTeacher(teacher);
 		session.setClub(activityRepository.getOneByCidAndActiveTrue(request.getClubId()));
 		session = sessionRepository.save(session);
 		return new SessionResponse(session);
+	}
+	
+	private File saveMediaForSession(FileRequest fileRequest, String category,
+			Event session) {
+		File file = fileRequest.toEntity();
+		String fileUrl = fileStorageService.storeFile(fileRequest.getFile(), fileRequest.getFile().getOriginalFilename(), category,true , fileRequest.getIsImage());
+		file.setUrl(fileUrl);
+		
+		if (fileRequest.getId() != null)
+			file.setCid(fileRequest.getId());
+		file.setEvent(session);
+		return file;
 	}
 
 	@Override
@@ -178,6 +214,64 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 				}
 			session.setGrades(previousGrades);
 		}
+		
+		List<FileRequest> requestFiles = request.getFileRequests();
+		
+		if (requestFiles != null && !requestFiles.isEmpty()) {
+			
+			List<File> allValidFilesOfActivity = fileRepository
+					.findAllByEventCidAndActiveTrue(request.getId());
+			List<File> updatedFiles = new ArrayList<File>();
+			
+			for (int itr = 0; itr < requestFiles.size(); itr++) {
+				if (requestFiles.get(itr).getId() != null) {
+					for (int itr2 = 0; itr2 < allValidFilesOfActivity.size(); itr2++) {
+						if (requestFiles.get(itr).getId().equals(allValidFilesOfActivity.get(itr2).getCid())) {
+							if (requestFiles.get(itr).getFile() != null) {
+								File file = saveMediaForSession(requestFiles.get(itr), "/session-file/",
+										session);
+								file.setId(allValidFilesOfActivity.get(itr2).getId());
+								file.setCid(allValidFilesOfActivity.get(itr2).getCid());
+								if (file != null)
+									allValidFilesOfActivity.set(itr2, file);
+
+							}
+							updatedFiles.add(allValidFilesOfActivity.get(itr2));
+							allValidFilesOfActivity.remove(itr2);
+							itr2--;
+							requestFiles.remove(itr);
+							itr--;
+							break;
+						}
+					}
+
+				}
+			}
+			
+			/*
+			 * logic to delete the files which were previously there but in new request have
+			 * been removed.
+			 */
+			for (File f : allValidFilesOfActivity) {
+				fileRepository.updateFileSetActiveByCid(false, f.getCid());
+			}
+
+			// Logic to save new files and then add it to List updatedFiles
+			if (requestFiles != null && !requestFiles.isEmpty())
+				for (FileRequest fileReq : requestFiles) {
+					File file = saveMediaForSession(fileReq, "/session-file/", session);
+					if (file != null) {
+						file.setCid(utils.generateRandomAlphaNumString(8));
+						updatedFiles.add(file);
+					}
+				}
+
+			if(updatedFiles.size() > 5)
+				throw new ValidationException("Cannot attach more than 5 files to upload.");
+			// Setting files to session
+			session.setFiles(updatedFiles);
+
+		}
 
 		session = sessionRepository.save(session);
 		return new SessionResponse(session);
@@ -211,7 +305,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 		if (sessionFetch == null) {
 			sessions = getStudentSessionsOfClub(gradeId, clubId, teacherId, page, pageSize);
 		} else {
-			Date start = LocalDateTime.now().minusSeconds(60).toDate(), end;
+			Date start = DateTime.now().minusSeconds(60).toDate() , end;//LocalDateTime.now().minusSeconds(60).toDate(), end;
 			if (!SessionFetch.matches(sessionFetch))
 				throw new ValidationException(String.format(
 						"Invalid value (%s) for sessionFetch it should be from List : {today, week, year}",
@@ -264,7 +358,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 				break;
 			default:
 				throw new ValidationException(String.format(
-						"Invalid value (%s) for sessionFetch it should be from List : {today, week, year}",
+						"Invalid value (%s) for sessionFetch it should be from List : {today, week, month}",
 						sessionFetch));
 			}
 		}
@@ -331,7 +425,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 		if (sessionFetch == null) {
 			sessions = getStudentSessionsOfClubs(gradeId, clubs, teacherId, page, pageSize);
 		} else {
-			Date start = LocalDateTime.now().minusSeconds(60).toDate(), end;
+			Date start = DateTime.now().minusSeconds(60).toDate(), end;
 			if (!SessionFetch.matches(sessionFetch))
 				throw new ValidationException(String.format(
 						"Invalid value (%s) for sessionFetch it should be from List : {today, week, year}",
@@ -384,7 +478,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 				break;
 			default:
 				throw new ValidationException(String.format(
-						"Invalid value (%s) for sessionFetch it should be from List : {today, week, year}",
+						"Invalid value (%s) for sessionFetch it should be from List : {today, week, month}",
 						sessionFetch));
 			}
 		}
@@ -447,7 +541,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 		if (sessionFetch == null) {
 			sessions = getTeacherSessionsOfClub(teacherCid, clubId, page, pageSize);
 		} else {
-			Date start = LocalDateTime.now().minusSeconds(60).toDate(), end;
+			Date start = DateTime.now().minusSeconds(60).toDate(), end;
 			if (!SessionFetch.matches(sessionFetch))
 				throw new ValidationException(String.format(
 						"Invalid value (%s) for sessionFetch it should be from List : {today, week, year}",
@@ -473,7 +567,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 				break;
 			default:
 				throw new ValidationException(String.format(
-						"Invalid value (%s) for sessionFetch it should be from List : {today, week, year}",
+						"Invalid value (%s) for sessionFetch it should be from List : {today, week, month}",
 						sessionFetch));
 			}
 		}
@@ -518,13 +612,15 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 			throw new ForbiddenException("Login as a teacher to see sessions details.");
 		String teacherCid = teacher.getCid();
 		List<Activity> clubs = new ArrayList<Activity>();
-		clubs = teacher.getActivities();
+		teacher.getTeacherActivityGrades().stream().forEach(tag -> {
+			if(!clubs.contains(tag.getActivity()))
+				clubs.add(tag.getActivity());   }) ;
 
 		List<Event> sessions;
 		if (sessionFetch == null) {
 			sessions = getTeacherSessionsOfClubs(teacherCid, clubs, page, pageSize);
 		} else {
-			Date start = LocalDateTime.now().minusSeconds(60).toDate(), end;
+			Date start = DateTime.now().minusSeconds(60).toDate(), end;
 			if (!SessionFetch.matches(sessionFetch))
 				throw new ValidationException(String.format(
 						"Invalid value (%s) for sessionFetch it should be from List : {today, week, year}",
@@ -550,7 +646,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 				break;
 			default:
 				throw new ValidationException(String.format(
-						"Invalid value (%s) for sessionFetch it should be from List : {today, week, year}",
+						"Invalid value (%s) for sessionFetch it should be from List : {today, week, month}",
 						sessionFetch));
 			}
 		}

@@ -13,8 +13,8 @@ import javax.persistence.MapsId;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.nxtlife.mgs.entity.BaseEntity;
+import com.nxtlife.mgs.entity.common.TeacherSchoolGradeId;
 import com.nxtlife.mgs.entity.user.Teacher;
-import com.nxtlife.mgs.util.TeacherSchoolGradeId;
 
 @Entity
 @DynamicUpdate(true)

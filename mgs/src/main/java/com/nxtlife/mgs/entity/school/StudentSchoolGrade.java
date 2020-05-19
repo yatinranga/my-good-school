@@ -8,8 +8,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 
 import com.nxtlife.mgs.entity.BaseEntity;
+import com.nxtlife.mgs.entity.common.StudentSchoolGradeId;
 import com.nxtlife.mgs.entity.user.Student;
-import com.nxtlife.mgs.util.StudentSchoolGradeId;
 
 @Entity
 public class StudentSchoolGrade implements Serializable {

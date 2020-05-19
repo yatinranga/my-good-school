@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -30,7 +31,7 @@ public class SessionController {
 	SessionService sessionService;
 
 	@PostMapping(value = "api/session")
-	public SessionResponse createSession(@RequestBody @Validated SessionRequest request) {
+	public SessionResponse createSession(@ModelAttribute @Validated SessionRequest request) {
 		return sessionService.createSession(request);
 	}
 
@@ -65,8 +66,8 @@ public class SessionController {
 		return sessionService.getTeacherSessionsOfClubsBy(sessionFetch, page, pageSize);
 	}
 	
-	@PutMapping(value = "api/session")
-	public SessionResponse updateSession(@RequestBody SessionRequest request) {
+	@PostMapping(value = "api/session/update")
+	public SessionResponse updateSession(@ModelAttribute SessionRequest request) {
 		return sessionService.updateSession(request);
 	}
 	

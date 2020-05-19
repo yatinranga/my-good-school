@@ -67,6 +67,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 	@Query(value = "select s.id from Student s where s.cid = :cid and s.active = true")
 	Long findIdByCidAndActiveTrue(@Param("cid")String cid);
 
+	List<Student> findAllBySchoolCidAndGradeCidAndActiveTrue(String schoolId, String gradeId);
+
 
 
 	/*

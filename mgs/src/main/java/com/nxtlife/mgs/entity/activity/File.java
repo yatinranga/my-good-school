@@ -10,6 +10,7 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import com.nxtlife.mgs.entity.BaseEntity;
+import com.nxtlife.mgs.entity.session.Event;
 
 @Entity
 public class File extends BaseEntity{
@@ -35,6 +36,9 @@ public class File extends BaseEntity{
 	
 	@ManyToOne
 	private ActivityPerformed activityPerformed;
+	
+	@ManyToOne
+	private Event event;
 
 	public String getName() {
 		return name;
@@ -84,13 +88,13 @@ public class File extends BaseEntity{
 		this.cid = cid;
 	}
 
-//	public Long getId() {
-//		return id;
-//	}
-//
-//	public void setId(Long id) {
-//		super.setId(id);
-//	}
+	public Event getEvent() {
+		return event;
+	}
+
+	public void setEvent(Event event) {
+		this.event = event;
+	}
 
 	public File(String name, String url, Boolean active, String extension, ActivityPerformed activityPerformed) {
 		this.name = name;

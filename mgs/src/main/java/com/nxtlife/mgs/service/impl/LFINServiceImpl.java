@@ -2,6 +2,7 @@ package com.nxtlife.mgs.service.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -22,12 +23,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.nxtlife.mgs.entity.school.Grade;
+import com.nxtlife.mgs.entity.common.UserRoleKey;
 import com.nxtlife.mgs.entity.user.LFIN;
+import com.nxtlife.mgs.entity.user.Role;
 import com.nxtlife.mgs.entity.user.User;
-import com.nxtlife.mgs.enums.UserType;
+import com.nxtlife.mgs.entity.user.UserRole;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.LFINRepository;
+import com.nxtlife.mgs.jpa.RoleRepository;
 import com.nxtlife.mgs.jpa.UserRepository;
 import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.LFINService;
@@ -37,10 +40,7 @@ import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.ActivityRequestResponse;
-import com.nxtlife.mgs.view.GuardianRequest;
 import com.nxtlife.mgs.view.LFINRequestResponse;
-import com.nxtlife.mgs.view.StudentRequest;
-import com.nxtlife.mgs.view.StudentResponse;
 
 @Service
 public class LFINServiceImpl extends BaseService implements LFINService {
@@ -58,6 +58,9 @@ public class LFINServiceImpl extends BaseService implements LFINService {
 	SequenceGeneratorService sequenceGeneratorService;
 	
 	@Autowired
+	RoleRepository roleRepository;
+	
+	@Autowired
 	Utils utils;
 
 	@Override
@@ -68,7 +71,7 @@ public class LFINServiceImpl extends BaseService implements LFINService {
 			throw new ValidationException("You need to be logged in as main Admin to create and add LFIN.");
 		loggedInUser  = userRepository.getOne(loggedInUser.getId());
 		
-		if(loggedInUser.getRoleForUser().getAuthorities().stream().filter(a-> a.getName().equalsIgnoreCase("LFIN_WRITE_PRIVILEGE")).count() < 1)
+		if(!loggedInUser.getRoles().stream().anyMatch(a-> a.getName().equalsIgnoreCase("MainAdmin")))
 			throw new UnauthorizedUserException("You are not authorized to create and add LFIN.");
 
 		if (lFINRepository.existsByEmailAndActiveTrue(request.getEmail()))
@@ -76,16 +79,28 @@ public class LFINServiceImpl extends BaseService implements LFINService {
 					String.format("A LFIN member with email (%s) already exist.", request.getEmail()));
 
 		LFIN lfin = request.toEntity();
-		lfin.setCid(utils.generateRandomAlphaNumString(8));
-		Long lfinsequence = sequenceGeneratorService.findSequenceByUserType(UserType.LFIN);
-		lfin.setUsername(String.format("LFI%08d", lfinsequence));
+//		lfin.setCid(utils.generateRandomAlphaNumString(8));
+//		Long lfinsequence = sequenceGeneratorService.findSequenceByUserType(UserType.LFIN);
+//		lfin.setUsername(String.format("LFI%08d", lfinsequence));
 
-		User user = userService.createUserForEntity(lfin);
+//		User user = userService.createUserForEntity(lfin);
+		
+		Long roleId = roleRepository.findIdByName( "Lfin");
+		if(roleId == null)
+			throw new ValidationException("Role Lfin not created yet.");
+		User user = userService.createUser(lfin.getName(), lfin.getContactNumber(), lfin.getEmail(), null);
+		user.setUserRoles(Arrays.asList(new UserRole(new UserRoleKey(roleId, user.getId()), new Role(roleId, "Lfin"), user)));
+		
+
+		if (StringUtils.isEmpty(user))
+			throw new ValidationException("User not created successfully");
+		lfin.setUser(user = userRepository.save(user));
+		lfin.setUsername(lfin.getUser().getUsername());
 
 		if (StringUtils.isEmpty(user)) {
 			throw new ValidationException("User not created successfully");
 		}
-		lfin.setUser(user);
+		lfin.setUser(user = userRepository.save(user));
 		lfin.setActive(true);
 		lfin = lFINRepository.save(lfin);
 
