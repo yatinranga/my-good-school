@@ -51,8 +51,8 @@ export class TeacherClubDetailComponent implements OnInit {
     this.clubReqLoader = true;
     this.teacherService.getSupervisorClubReq(clubId).subscribe((res)=>{
       console.log(res);
-      this.clubReqArr = res;
-      this.copyClubReqArr = Object.assign([], res);
+      this.clubReqArr = res.filter(e => e.membershipStatus!='VERIFIED');
+      this.copyClubReqArr = Object.assign([], res.filter(e => e.membershipStatus!='VERIFIED'));
     this.clubReqLoader = false;
     },(err)=>{
       console.log(err);

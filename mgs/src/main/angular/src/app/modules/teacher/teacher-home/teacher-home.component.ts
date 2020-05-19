@@ -26,7 +26,6 @@ export class TeacherHomeComponent implements OnInit {
 
   sessionsArr = []; // Get Session of a week
   createSessionShow = false;
-  editSessionShow = false;
   teacherName: any;
 
   createSessionView = true;
@@ -153,7 +152,9 @@ export class TeacherHomeComponent implements OnInit {
     // this.alertService.showLoader("");
 
     if (this.createSessionView) {
+      this.alertService.showLoader("");
       const formData = new FormData();
+
       // formData.append('id',this.createSessionForm.value.id);
       // formData.append('number',this.createSessionForm.value.number);
       // formData.append('startDate',this.createSessionForm.value.startDate);
@@ -195,7 +196,35 @@ export class TeacherHomeComponent implements OnInit {
     }
 
     if (this.editSessionView) {
-      this.teacherService.editSession(this.createSessionForm.value).subscribe((res) => {
+      this.alertService.showLoader("");
+
+      const formData = new FormData();
+      Object.keys(this.createSessionForm.value).forEach(key => {
+        if (key == 'gradeIds') {
+          if (typeof (this.createSessionForm.value[key]) == 'object') {
+            this.createSessionForm.value.gradeIds.forEach((element, index) => {
+              formData.append(key + '[' + index + ']', element);
+            });
+          }
+        }
+        else if (key == 'fileRequests') {
+          if (this.createSessionForm.value[key].id) {
+            formData.append('fileRequests[' + 0 + '].id', this.createSessionForm.value[key].id);
+          } else {
+            formData.append(key + '[' + 0 + '].file', this.createSessionForm.value[key]);
+          }
+          // if(element.id){
+          //   console.log("Old file");
+          //   formData.append('fileRequests[' + index + '].id', element.id);
+          // } else {
+          //   console.log("New file");
+          //   formData.append('fileRequests[' + index + '].file', element);
+        }
+        else {
+          formData.append(key, this.createSessionForm.value[key])
+        }
+      });
+      this.teacherService.updateSession(formData).subscribe((res) => {
         console.log(res);
         $('#createSessionModal').modal('hide');
         $('.modal-backdrop').remove();
@@ -235,6 +264,7 @@ export class TeacherHomeComponent implements OnInit {
           console.log(res);
           this.sessionsArr[out_index].responses.splice(in_index, 1);
           this.alertService.showMessageWithSym("Session Deleted", "Success", "success");
+          this.getSessionDetails();
         }, (err) => { console.log(err) });
       }
 
@@ -246,13 +276,12 @@ export class TeacherHomeComponent implements OnInit {
     this.editSessionView = false;
   }
 
-  // Edit Current Session
-  editSessionBtn(session, i, j) {
+  // Edit/Update Current Session
+  editSessionBtn(session) {
     $('#createSessionModal').modal('show');
     this.createSessionView = false;
     this.editSessionView = true;
     console.log(session);
-    this.editSessionShow = true;
     let sDate = new Date(session.startDate);
     let eDate = new Date(session.endDate);
 
@@ -287,7 +316,9 @@ export class TeacherHomeComponent implements OnInit {
       id: session.id,
       number: session.number,
       title: session.title,
-      clubId: session.club.id
+      clubId: session.club.id,
+      description: session.description,
+      fileRequests: session.fileResponses[0]
     });
 
     let arr = [];
@@ -403,6 +434,7 @@ export class TeacherHomeComponent implements OnInit {
   onFileSelect(event) {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
+      console.log("File Uploaded",event.target.files[0]);
       this.createSessionForm.value.fileRequests = file;
 
       var reader = new FileReader();

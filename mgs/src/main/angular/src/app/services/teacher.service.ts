@@ -152,8 +152,8 @@ export class TeacherService {
   }
 
   // edit Session Schedule
-  editSession(sessionForm) {
-    return this.http.put("/api/session", sessionForm);
+  updateSession(sessionForm) {
+    return this.http.post("/api/session/update", sessionForm);
   }
 
   // delete Session Schedule

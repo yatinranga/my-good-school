@@ -68,7 +68,7 @@
                             {{ (i === res.grades.length-1) ? g.grade+" "+g.section : g.grade+" "+g.section + "," + ' '}}</span>
                     </li>
                     <li>Description - {{res.description}}</li>
-                    <li><button class="btn btn-info" (click)="editSessionBtn(res,i,j)">Edit</button>
+                    <li><button class="btn btn-info" (click)="editSessionBtn(res)">Edit</button>
                         <button class="btn btn-danger" (click)="deleteSession(res,i,j)">Delete</button>
                     </li>
                 </ul>
@@ -173,6 +173,8 @@
                                         text/plain" name="selectedFile" (change)="onFileSelect($event)" />
                                     <!-- <span class="choosefile choosefile-custom"> <i class="fa fa-file"> </i> </span> -->
                                     <img *ngIf="path" [src]="path" height="200">
+                                    <!-- <i class="fa fa-trash"></i> -->
+                                    
                                 </div>
                             </div>
                         </div>
