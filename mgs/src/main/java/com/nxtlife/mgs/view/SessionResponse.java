@@ -42,6 +42,10 @@ public class SessionResponse {
 	
 	private String status;
 	
+	private String description;
+	
+	private List<FileResponse> fileResponses;
+	
 	private List<GroupResponseBy<SessionResponse>> sessions;
 
 	
@@ -149,6 +153,22 @@ public class SessionResponse {
 		this.sessions = sessions;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public List<FileResponse> getFileResponses() {
+		return fileResponses;
+	}
+
+	public void setFileResponses(List<FileResponse> fileResponses) {
+		this.fileResponses = fileResponses;
+	}
+
 	public SessionResponse() {
 		
 	}
@@ -183,6 +203,8 @@ public class SessionResponse {
 		}
 		if(session.getClub() != null)
 			this.club = new ActivityRequestResponse(session.getClub());
+		this.description = session.getDescription();
+		this.fileResponses = session.getFiles().stream().map(FileResponse :: new).distinct().collect(Collectors.toList());
 		this.grades = session.getGrades().stream().map(GradeResponse :: new).distinct().collect(Collectors.toList());
 	}
 }

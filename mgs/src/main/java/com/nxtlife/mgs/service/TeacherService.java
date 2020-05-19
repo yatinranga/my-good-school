@@ -69,4 +69,6 @@ public interface TeacherService {
 
 	ClubMembershipResponse updateStatus(String studentId, String activityId, Boolean isVerified);
 
+	List<ClubMembershipResponse> getMembershipDetailsbyClub(String clubId);
+
 }

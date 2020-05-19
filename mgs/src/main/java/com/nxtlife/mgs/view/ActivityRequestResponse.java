@@ -34,6 +34,12 @@ public class ActivityRequestResponse {
 	private Set<FocusAreaRequestResponse> focusAreaResponses;
 	
 	private String clubOrSociety;
+	
+	private List<String> grades;
+	
+	private List<GradeResponse> gradeResponses;
+	
+	private Boolean visited = false;
 
 	public String getName() {
 		return name;
@@ -125,6 +131,30 @@ public class ActivityRequestResponse {
 
 	public void setClubOrSociety(String clubOrSociety) {
 		this.clubOrSociety = clubOrSociety;
+	}
+
+	public List<String> getGrades() {
+		return grades;
+	}
+
+	public void setGrades(List<String> grades) {
+		this.grades = grades;
+	}
+
+	public Boolean getVisited() {
+		return visited;
+	}
+
+	public void setVisited(Boolean visited) {
+		this.visited = visited;
+	}
+
+	public List<GradeResponse> getGradeResponses() {
+		return gradeResponses;
+	}
+
+	public void setGradeResponses(List<GradeResponse> gradeResponses) {
+		this.gradeResponses = gradeResponses;
 	}
 
 	public Activity toEntity(Activity activity) {

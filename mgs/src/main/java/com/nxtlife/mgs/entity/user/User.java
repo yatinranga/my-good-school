@@ -1,127 +1,134 @@
 package com.nxtlife.mgs.entity.user;
 
+import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Transient;
-//import javax.validation.constraints.Email;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.validator.constraints.Email;
-import org.joda.time.DateTime;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.school.School;
-import com.nxtlife.mgs.enums.RegisterType;
-import com.nxtlife.mgs.enums.UserType;
 
 @SuppressWarnings("serial")
 @Entity
-@DynamicInsert
-@DynamicUpdate(true)
-public class User extends BaseEntity implements UserDetails {
+@Table(name = "user", uniqueConstraints = { @UniqueConstraint(columnNames = { "username", "school_id" }) })
+@DynamicInsert(value = true)
+@DynamicUpdate(value = true)
+public class User extends BaseEntity implements UserDetails, Serializable {
 
-	@Column(unique = true, nullable = false)
-	private String cid;
-
-	@Transient
-	private Long userId;
-
-	@Column(nullable = false, unique = true)
-	private String userName;
-
-	@Column(unique = true,nullable = true ,columnDefinition = "VARCHAR(10)")
-//	@Size(min = 10, max = 10)
-//	@Pattern(regexp = "^[6-9]{1}[0-9]]{9}$")
-	private String contactNumber;
-
-//	@Email
+	@NotNull
 	@Column(unique = true)
-	private String email;
+	private String cid;
+	
+	@NotNull(message = "name can't be null")
+	private String name;
 
-	@Column(nullable = false)
+	@NotNull(message = "username can't be null")
+	@Pattern(regexp = "^[@A-Za-z0-9_]{3,20}$", message = "username should contains only alphabets/digit/@ and length should be in between 4 to 20")
+	private String username;
+
+	@NotNull(message = "password can't be null")
 	private String password;
 
-	@Column
-	private String picUrl;
-
-	@Column
 	private Boolean active;
 
-	@Column
-	@Enumerated(EnumType.STRING)
-	private UserType userType;
-
-	@Column
-	private String imagePath;
-
-	@Transient
-	private Collection<Authority> authorities;
-
-	@ManyToOne
-	@JoinColumn(name = "role_id")
-	private Role roleForUser;
-
-	private Boolean isPaid = false;
-
-	@Enumerated(EnumType.STRING)
-	private RegisterType registerType;
-
-	@OneToOne(cascade = CascadeType.ALL)
-	private Student student;
-
-	@OneToOne(cascade = CascadeType.ALL)
-	private School school;
-
-	@OneToOne(cascade = CascadeType.ALL)
-	private Teacher teacher;
-
-	@OneToOne(cascade = CascadeType.ALL)
-	private LFIN lfin;
-
-	@OneToOne(cascade = CascadeType.ALL)
-	private Guardian guardian;
+	private String generatedPassword;
 	
 	@Transient
 	private String rawPassword;
 
-	@PrePersist
-	public void prePersist() {
-		this.setCreatedDate(DateTime.now());
+	private String email;
+
+	@Size(min = 10, max = 10)
+	@Pattern(regexp = "^[0-9]*$", message = "Contact no should contain only digit")
+	private String contactNumber;
+
+	private String notificationToken;
+
+	private String picUrl;
+
+	@Column(columnDefinition = "boolean default false")
+	private boolean accountExpired = false;
+
+	@Column(columnDefinition = "boolean default false")
+	private boolean accountLocked = false;
+
+	@Column(columnDefinition = "boolean default false")
+	private boolean credentialsExpired = false;
+
+	@Column(columnDefinition = "boolean default false")
+	private boolean enabled = true;
+
+	@ManyToOne
+	private School school;
+
+	@Transient
+	private Long tschoolId;
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+	private List<UserRole> userRoles;
+
+	@Transient
+	private Collection<Authority> authorities;
+
+	@Transient
+	private Collection<Role> roles;
+
+	@Transient
+	private Long userId;
+
+	public User() {
 
 	}
 
-	public Long getUserId() {
-		return userId;
+	public User(
+			@NotNull @Pattern(regexp = "^[@A-Za-z0-9_]{3,20}$", message = "username should contains only alphabets/digit/@ and length should be in between 4 to 20") String username,
+			@NotNull String password, Collection<Authority> authorities) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.authorities = authorities;
 	}
 
-	public void setUserId(Long userId) {
-		this.userId = this.getId();
+	@Override
+	public String getUsername() {
+		return username;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	@Override
+	public String getPassword() {
+		return password;
 	}
 
-	public String getContactNumber() {
-		return contactNumber;
+	@Override
+	public boolean isEnabled() {
+		return enabled;
 	}
 
-	public void setContactNumber(String contactNumber) {
-		this.contactNumber = contactNumber;
+	@Override
+	public Collection<Authority> getAuthorities() {
+		return authorities;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getEmail() {
@@ -132,8 +139,20 @@ public class User extends BaseEntity implements UserDetails {
 		this.email = email;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public String getContactNumber() {
+		return contactNumber;
+	}
+
+	public void setContactNumber(String contactNumber) {
+		this.contactNumber = contactNumber;
+	}
+
+	public String getNotificationToken() {
+		return notificationToken;
+	}
+
+	public void setNotificationToken(String notificationToken) {
+		this.notificationToken = notificationToken;
 	}
 
 	public String getPicUrl() {
@@ -144,111 +163,67 @@ public class User extends BaseEntity implements UserDetails {
 		this.picUrl = picUrl;
 	}
 
-	public Boolean getActive() {
-		return active;
+	public boolean isAccountExpired() {
+		return accountExpired;
 	}
 
-	public void setActive(Boolean active) {
-		this.active = active;
+	public void setAccountExpired(boolean accountExpired) {
+		this.accountExpired = accountExpired;
 	}
 
-	public UserType getUserType() {
-		return userType;
+	public boolean isAccountLocked() {
+		return accountLocked;
 	}
 
-	public void setUserType(UserType userType) {
-		this.userType = userType;
+	public void setAccountLocked(boolean accountLocked) {
+		this.accountLocked = accountLocked;
 	}
 
-	public String getImagePath() {
-		return imagePath;
+	public boolean isCredentialsExpired() {
+		return credentialsExpired;
 	}
 
-	public void setImagePath(String imagePath) {
-		this.imagePath = imagePath;
+	public void setCredentialsExpired(boolean credentialsExpired) {
+		this.credentialsExpired = credentialsExpired;
 	}
 
-	@Override
-	public String getPassword() {
-		return password;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
-	@Override
-	public String getUsername() {
-		return userName;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return this.getRoleForUser().getAuthorities();
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return true;
-	}
-
-	public Role getRoleForUser() {
-		return roleForUser;
-	}
-
-	public void setRoleForUser(Role roleForUser) {
-		this.roleForUser = roleForUser;
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 
 	public void setAuthorities(Collection<Authority> authorities) {
 		this.authorities = authorities;
 	}
 
-	public String getCid() {
-		return cid;
+	@Override
+	public boolean isAccountNonExpired() {
+		return !isAccountExpired();
 	}
 
-	public void setCid(String cid) {
-		this.cid = cid;
+	@Override
+	public boolean isAccountNonLocked() {
+		return !isAccountLocked();
 	}
 
-	public RegisterType getRegisterType() {
-		return registerType;
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return !isCredentialsExpired();
 	}
 
-	public void setRegisterType(RegisterType registerType) {
-		this.registerType = registerType;
+	public String getGeneratedPassword() {
+		return generatedPassword;
 	}
 
-	public String getUserName() {
-		return userName;
-	}
-
-	public Boolean getIsPaid() {
-		return isPaid;
-	}
-
-	public void setIsPaid(Boolean isPaid) {
-		this.isPaid = isPaid;
-	}
-
-	public Student getStudent() {
-		return student;
-	}
-
-	public void setStudent(Student student) {
-		this.student = student;
+	public void setGeneratedPassword(String generatedPassword) {
+		this.generatedPassword = generatedPassword;
 	}
 
 	public School getSchool() {
@@ -259,28 +234,48 @@ public class User extends BaseEntity implements UserDetails {
 		this.school = school;
 	}
 
-	public Teacher getTeacher() {
-		return teacher;
+	public List<UserRole> getUserRoles() {
+		return userRoles;
 	}
 
-	public void setTeacher(Teacher teacher) {
-		this.teacher = teacher;
+	public void setUserRoles(List<UserRole> userRoles) {
+		this.userRoles = userRoles;
 	}
 
-	public LFIN getLfin() {
-		return lfin;
+	public Boolean getActive() {
+		return active;
 	}
 
-	public void setLfin(LFIN lfin) {
-		this.lfin = lfin;
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 
-	public Guardian getGuardian() {
-		return guardian;
+	public Long getUserId() {
+		return userId;
 	}
 
-	public void setGuardian(Guardian guardian) {
-		this.guardian = guardian;
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	public Long gettSchoolId() {
+		return tschoolId;
+	}
+
+	public void settSchoolId(Long schoolId) {
+		if (schoolId != null) {
+			this.school = new School();
+			this.school.setId(schoolId);
+		}
+		this.tschoolId = schoolId;
+	}
+
+	public Collection<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Collection<Role> roles) {
+		this.roles = roles;
 	}
 
 	public String getRawPassword() {
@@ -291,32 +286,12 @@ public class User extends BaseEntity implements UserDetails {
 		this.rawPassword = rawPassword;
 	}
 
-	public User(String cid, String userName,
-			@Size(min = 10, max = 10) @Pattern(regexp = "^[6-9]{1}[0-9]]{9}$") String mobileNo, @Email String email,
-			String password, String picUrl, Boolean active, UserType userType, String imagePath,
-			Collection<Authority> authorities, Role roleForUser, Boolean isPaid, RegisterType registerType,
-			Student student, School school, Teacher teacher, LFIN lfin) {
-		this.cid = cid;
-		this.userName = userName;
-		this.contactNumber = mobileNo;
-		this.email = email;
-		this.password = password;
-		this.picUrl = picUrl;
-		this.active = active;
-		this.userType = userType;
-		this.imagePath = imagePath;
-		this.authorities = authorities;
-		this.roleForUser = roleForUser;
-		this.isPaid = isPaid;
-		this.registerType = registerType;
-		this.student = student;
-		this.school = school;
-		this.teacher = teacher;
-		this.lfin = lfin;
+	public String getCid() {
+		return cid;
 	}
 
-	public User() {
-
+	public void setCid(String cid) {
+		this.cid = cid;
 	}
 
 }

@@ -2,10 +2,13 @@ package com.nxtlife.mgs.service.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -23,20 +26,23 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.oauth2.common.exceptions.UnauthorizedUserException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.entity.activity.Activity;
-import com.nxtlife.mgs.entity.school.Award;
+import com.nxtlife.mgs.entity.activity.TeacherActivityGrade;
+import com.nxtlife.mgs.entity.common.StudentActivityId;
+import com.nxtlife.mgs.entity.common.UserRoleKey;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.school.StudentClub;
-import com.nxtlife.mgs.entity.user.Student;
+import com.nxtlife.mgs.entity.user.Role;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.entity.user.User;
+import com.nxtlife.mgs.entity.user.UserRole;
 import com.nxtlife.mgs.enums.ApprovalStatus;
-import com.nxtlife.mgs.enums.UserType;
 import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.ActivityPerformedRepository;
@@ -47,22 +53,23 @@ import com.nxtlife.mgs.jpa.SchoolRepository;
 import com.nxtlife.mgs.jpa.SequenceGeneratorRepo;
 import com.nxtlife.mgs.jpa.StudentClubRepository;
 import com.nxtlife.mgs.jpa.StudentRepository;
+import com.nxtlife.mgs.jpa.TeacherActivityGradeRepository;
 import com.nxtlife.mgs.jpa.TeacherRepository;
 import com.nxtlife.mgs.jpa.UserRepository;
+import com.nxtlife.mgs.jpa.UserRoleRepository;
 import com.nxtlife.mgs.service.BaseService;
-import com.nxtlife.mgs.service.FileService;
+import com.nxtlife.mgs.service.FileStorageService;
+//import com.nxtlife.mgs.service.FileService;
 import com.nxtlife.mgs.service.SequenceGeneratorService;
 import com.nxtlife.mgs.service.TeacherService;
 import com.nxtlife.mgs.service.UserService;
-import com.nxtlife.mgs.store.FileStore;
+//import com.nxtlife.mgs.store.FileStore;
+import com.nxtlife.mgs.util.AuthorityUtils;
 import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.ExcelUtil;
-import com.nxtlife.mgs.util.StudentActivityId;
 import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.ActivityRequestResponse;
-import com.nxtlife.mgs.view.AwardResponse;
 import com.nxtlife.mgs.view.ClubMembershipResponse;
-import com.nxtlife.mgs.view.StudentResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
 import com.nxtlife.mgs.view.TeacherRequest;
 import com.nxtlife.mgs.view.TeacherResponse;
@@ -92,6 +99,9 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	RoleRepository roleRepository;
 
 	@Autowired
+	UserRoleRepository userRoleRepository;
+
+	@Autowired
 	UserService userService;
 
 	@Autowired
@@ -107,28 +117,44 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	private String emailUsername;
 
 	@Autowired
-	private FileService fileService;
+	private FileStorageService<MultipartFile> fileStorageService;
+
+//	@Autowired
+//	private FileStore filestore;
 
 	@Autowired
-	private FileStore filestore;
-	
-	@Autowired
 	StudentClubRepository studentClubRepository;
-	
+
 	@Autowired
 	StudentRepository studentRepository;
 
+	@Autowired
+	TeacherActivityGradeRepository teacherActivityGradeRepository;
+
+	@Secured(AuthorityUtils.SCHOOL_STAKEHOLDER_CREATE)
+//	@PreAuthorize("hasRole('SchoolAdmin') or hasRole('MainAdmin') or hasRole('Lfin')")
 	@Override
 	public TeacherResponse save(TeacherRequest request) {
 
+		User loggedInUser = getUser();
+		if (loggedInUser != null) {
+			if (!loggedInUser.getRoles().stream()
+					.anyMatch(r -> r.getName().equalsIgnoreCase("SchoolAdmin")
+							|| r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")
+							|| r.getName().equalsIgnoreCase("mainAdmin")))
+				throw new UnauthorizedUserException("Not authorized to create stakeholders for school.");
+		}
+
 		if (request == null)
 			throw new ValidationException("Request can not be null.");
-		if (request.getSchoolId() == null)
+		if ((getUser() == null || getUser().getSchool() == null) && request.getSchoolId() == null)
 			throw new ValidationException(String.format("School id cannot be null."));
 		if (request.getEmail() == null)
 			throw new ValidationException("Email can not be null");
 		if (request.getName() == null)
 			throw new ValidationException("Teacher name can not be null");
+		if (request.getRoles() == null || request.getRoles().isEmpty())
+			throw new ValidationException("Roles cannot be empty.");
 
 		// int emailCount =
 		// teacherRepository.countByEmailAndActiveTrue(request.getEmail());
@@ -142,31 +168,54 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 
 		Teacher teacher = request.toEntity();
 
-		Long teachersequence;
-		if (request.getIsCoach() != null && request.getIsCoach()) {
-			teachersequence = sequenceGeneratorService.findSequenceByUserType(UserType.Coach);
-			teacher.setUsername(String.format("COA%08d", teachersequence));
-
-		} else if (request.getIsManagmentMember() != null && request.getIsManagmentMember()) {
-			teachersequence = sequenceGeneratorService.findSequenceByUserType(UserType.SchoolManagement);
-			teacher.setUsername(String.format("MGM%08d", teachersequence));
-		} else {
-			teachersequence = sequenceGeneratorService.findSequenceByUserType(UserType.Teacher);
-			teacher.setUsername(String.format("TEA%08d", teachersequence));
-		}
+//		Long teachersequence;
+//		if (request.getIsCoach() != null && request.getIsCoach()) {
+//			teachersequence = sequenceGeneratorService.findSequenceByUserType(UserType.Coach);
+//			teacher.setUsername(String.format("COA%08d", teachersequence));
+//
+//		} else if (request.getIsManagmentMember() != null && request.getIsManagmentMember()) {
+//			teachersequence = sequenceGeneratorService.findSequenceByUserType(UserType.SchoolManagement);
+//			teacher.setUsername(String.format("MGM%08d", teachersequence));
+//		} else {
+//			teachersequence = sequenceGeneratorService.findSequenceByUserType(UserType.Teacher);
+//			teacher.setUsername(String.format("TEA%08d", teachersequence));
+//		}
 
 		// saving school
 
+		School school = null;
 		if (request.getSchoolId() != null) {
 
-			School school = schoolRepository.findByCidAndActiveTrue(request.getSchoolId());
+			school = schoolRepository.findByCidAndActiveTrue(request.getSchoolId());
 
-			if (school == null) {
+			if (school == null)
 				throw new NotFoundException(String.format("school having id [%s] didn't exist", request.getSchoolId()));
-			}
-			teacher.setSchool(school);
 
 		}
+
+		if (loggedInUser != null)
+			school = loggedInUser.getSchool();
+		teacher.setSchool(school);
+
+		User user = userService.createUser(teacher.getName(), teacher.getMobileNumber(), teacher.getEmail(),
+				school.getId());
+		Set<String> existingRoles = roleRepository.findNameBySchoolId(school.getId());
+		if (request.getRoles() != null && !request.getRoles().isEmpty()) {
+			for (String role : request.getRoles()) {
+				if (!existingRoles.contains(role))
+					throw new ValidationException(String.format("Role (%s) not present in school yet.", role));
+			}
+			List<Role> roles = roleRepository.findAllBySchoolIdAndNameIn(school.getId(), existingRoles);
+			List<UserRole> userRoles = roles.stream().distinct()
+					.map(r -> new UserRole(new UserRoleKey(r.getId(), user.getId()), r, user))
+					.collect(Collectors.toList());
+			user.setUserRoles(userRoles);
+		}
+		if (user == null)
+			throw new ValidationException("User not created successfully");
+
+		teacher.setUser(userRepository.save(user));
+		teacher.setUsername(teacher.getUser().getUsername());
 
 		// saving grades
 
@@ -202,69 +251,76 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 			teacher.setIsClassTeacher(true);
 		}
 
-		// saving activities
-
-		if (request.getActivityIds() != null && !request.getActivityIds().isEmpty()) {
-
-			List<Activity> repoActivityList = activityRepository
-					.findAllBySchoolsCidAndActiveTrue(request.getSchoolId());
-
-			List<Activity> finalActivityList = new ArrayList<Activity>();
-
-			// validating activities present in request are also present in school activity
-			// list or not.
-
-			for (int i = 0; i < request.getActivityIds().size(); i++) {
-
-				boolean flag = false, aptFlag = false;
-
-				for (Activity activity : repoActivityList) {
-
-					if (activity.getCid().equals(request.getActivityIds().get(i))) {
-						flag = true;
-						finalActivityList.add(activity);
-
-						for (Teacher apt /* apt = alreadyPresentTeacher */ : activity.getTeachers()) {
-
-							if (apt.getEmail() == teacher.getEmail()
-									|| apt.getMobileNumber() == teacher.getMobileNumber()) {
-								aptFlag = true;
-								break;
-							}
-						}
-
-						if (aptFlag == false) {
-							activity.getTeachers().add(teacher);
-						}
-
-						break;
-					}
-				}
-
-				if (flag == false) {
-					throw new NotFoundException(
-							String.format("activity having id [%s] didn't exist", request.getActivityIds().get(i)));
-				}
-			}
-			teacher.setActivities(finalActivityList);
-			teacher.setIsCoach(true);
-		}
-
 		teacher.setCid(utils.generateRandomAlphaNumString(8));
 
 //		User user = userService.createTeacherUser(teacher);
-		User user = userService.createUserForEntity(teacher);
+//		User user = userService.createUserForEntity(teacher);
 
-		if (user == null)
-			throw new ValidationException("User not created successfully");
-
-		teacher.setUser(user);
 		teacher.setActive(true);
 
 		teacher = teacherRepository.save(teacher);
 
 		if (teacher == null)
 			throw new RuntimeException("Something went wrong teacher not saved.");
+
+		// saving activities
+
+		if (request.getActivities() != null && !request.getActivities().isEmpty()) {
+
+			List<Activity> repoActivityList = activityRepository
+					.findAllBySchoolsCidAndActiveTrue(request.getSchoolId());
+
+			List<TeacherActivityGrade> finalActivityList = new ArrayList<TeacherActivityGrade>();
+
+			// validating activities present in request are also present in school activity
+			// list or not.
+
+			for (int i = 0; i < request.getActivities().size(); i++) {
+
+				boolean flag = false;
+//						aptFlag = false;
+
+				for (Activity activity : repoActivityList) {
+
+					if (activity.getCid().equals(request.getActivities().get(i).getId())) {
+						flag = true;
+						teacher.setIsCoach(true);
+						if (request.getActivities().get(i).getGrades() == null
+								|| request.getActivities().get(i).getGrades().isEmpty())
+							throw new ValidationException("Grades cannot be null or empty.");
+						for (String gradeId : request.getActivities().get(i).getGrades()) {
+							if (!gradeRepository.existsByCidAndActiveTrue(gradeId))
+								throw new ValidationException(String.format("Grade with id (%s) not found.", gradeId));
+							TeacherActivityGrade activityGrade = new TeacherActivityGrade(teacher.getId(),
+									activity.getId(), gradeRepository.getOneByCid(gradeId).getId());
+							finalActivityList.add(activityGrade);
+						}
+
+//						for (Teacher apt /* apt = alreadyPresentTeacher */ : activity.getTeachers()) {
+//
+//							if (apt.getEmail() == teacher.getEmail()
+//									|| apt.getMobileNumber() == teacher.getMobileNumber()) {
+//								aptFlag = true;
+//								break;
+//							}
+//						}
+
+//						if (aptFlag == false) {
+//							activity.getTeachers().add(teacher);
+//						}
+
+						break;
+					}
+				}
+
+				if (flag == false) {
+					throw new NotFoundException(String.format("activity having id [%s] didn't exist",
+							request.getActivities().get(i).getId()));
+				}
+			}
+			teacher.setTeacherActivityGrades(
+					finalActivityList = teacherActivityGradeRepository.save(finalActivityList));
+		}
 
 		Boolean emailFlag = false;
 
@@ -282,6 +338,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		return new TeacherResponse(teacher);
 	}
 
+	@Secured(AuthorityUtils.SCHOOL_FACULTY_UPDATE)
 	@Override
 	public TeacherResponse update(TeacherRequest request, String cid) {
 
@@ -297,51 +354,156 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 
 		teacher = request.toEntity(teacher);
 
-		if (request.getActivityIds() != null && !request.getActivityIds().isEmpty()) {
-			List<String> requestActivityIds = request.getActivityIds();
-			List<Activity> previousActivities = teacher.getActivities();
-			List<Activity> toBeDeletedActivities = new ArrayList<Activity>();
+		if (request.getMobileNumber() != null) {
 
-			for (int i = 0; i < previousActivities.size(); i++) {
+//			if(!userRepository.existsByContactNumberAndCid(request.getMobileNumber(),teacher.getUser().getCid())) {
+			if (!userRepository.existsByContactNumberAndCidNot(request.getMobileNumber(), teacher.getUser().getCid())) {
+				teacher.setMobileNumber(request.getMobileNumber());
+				teacher.getUser().setContactNumber(request.getMobileNumber());
+			} else {
+				throw new ValidationException(String.format("Mobile Number (%s) already belongs to some other user.",
+						request.getMobileNumber()));
+			}
+//			}
+		}
 
-				if (requestActivityIds.contains(previousActivities.get(i).getCid())) {
-					requestActivityIds.remove(previousActivities.get(i).getCid());
-				} else {
-					if (activityPerformedRepository.existsByTeacherCidAndActivityCidAndActiveTrue(teacher.getCid(),previousActivities.get(i).getCid())) {
+		if (request.getEmail() != null) {
+//			if(!userRepository.existsByEmailAndCid(request.getEmail(),teacher.getUser().getCid())) {
+			if (!userRepository.existsByEmailAndCidNot(request.getEmail(), teacher.getUser().getCid())) {
+				teacher.setEmail(request.getEmail());
+				teacher.getUser().setEmail(request.getEmail());
+			} else {
+				throw new ValidationException(
+						String.format("Email (%s) already belongs to some other user.", request.getEmail()));
+			}
+//			}
+		}
+
+		if (request.getActivities() != null && !request.getActivities().isEmpty()) {
+			List<ActivityRequestResponse> requestActivityGrades = request.getActivities();
+			List<TeacherActivityGrade> teacherActivityGradesOldList = teacher.getTeacherActivityGrades();
+			List<TeacherActivityGrade> toDelete = new ArrayList<TeacherActivityGrade>();
+
+			for (int j = 0; j < teacherActivityGradesOldList.size(); j++) {
+				final int i = j;
+				ActivityRequestResponse activity = requestActivityGrades.stream()
+						.filter(act -> teacherActivityGradesOldList.get(i).getActivity().getCid().equals(act.getId()))
+						.findFirst().orElse(null);
+
+				if (activity == null) {
+					if (toDelete.stream().anyMatch(actGrd -> actGrd.getActivity().getId()
+							.equals(teacherActivityGradesOldList.get(i).getActivity().getId())))
+						continue;
+
+					if (activityPerformedRepository.existsByTeacherCidAndActivityCidAndActiveTrue(teacher.getCid(),
+							teacherActivityGradesOldList.get(j).getActivity().getCid()))
 						throw new ValidationException(String.format(
-								"You cannot delete the activty : %s as few student has already performed activity %s under you.",
-								previousActivities.get(i).getName(), previousActivities.get(i).getName()));
-					} else {
-						List<Teacher> teachers = previousActivities.get(i).getTeachers();
-						if (teachers != null && !teachers.isEmpty()) {
-							teachers.remove(teacher);
-							previousActivities.get(i).setTeachers(teachers);
-							toBeDeletedActivities.add(previousActivities.get(i));
+								"You cannot delete the activty : %s as few student has already performed this activity under you.",
+								teacherActivityGradesOldList.get(j).getActivity().getName()));
+					else
+						toDelete.addAll(teacherActivityGradesOldList.stream()
+								.filter(old -> old.getActivity().getId()
+										.equals(teacherActivityGradesOldList.get(i).getActivity().getId()))
+								.collect(Collectors.toList()));
+//							teacherActivityGradeRepository.deleteAllByTeacherCidAndActivityCid(teacher.getCid() ,teacherActivityGradesOldList.get(j).getActivity().getCid() );
+				} else {
+					if (activity.getGrades() == null || activity.getGrades().isEmpty()) {
+						ActivityRequestResponse deletedActivity = request.getActivities().stream()
+								.filter(act -> act.getId().equals(activity.getId())
+										&& (act.getGrades() == null || act.getGrades().isEmpty()) && !act.getVisited())
+								.findFirst().orElse(null);
+						if (deletedActivity != null) {
+							toDelete.addAll(teacherActivityGradesOldList.stream()
+									.filter(old -> old.getActivity().getCid().equals(deletedActivity.getId()))
+									.collect(Collectors.toList()));
 						}
-						previousActivities.remove(i--);
+						requestActivityGrades.remove(deletedActivity);
+					}
+//							requestActivityGrades.removeIf(actGrd -> actGrd.getId().equals(activity.getId()));
+//							throw new ValidationException(String.format("Grades cannot be null or empty for activity with id (%s)",activity.getId()));
+
+					if (!activity.getGrades().contains(teacherActivityGradesOldList.get(j).getGrade().getCid()))
+						toDelete.add(teacherActivityGradesOldList.get(j));
+					else {
+						activity.getGrades().remove(teacherActivityGradesOldList.get(i).getGrade().getCid());
+						activity.setVisited(true);
+					}
+//							If(grd -> grd.equals(teacherActivityGradesOldList.get(i).getGrade().getCid()));
+
+				}
+			}
+
+			teacherActivityGradesOldList.removeAll(toDelete);
+			// now delete from db
+			if (!requestActivityGrades.isEmpty()) {
+				for (ActivityRequestResponse actGrades : requestActivityGrades) {
+					if (!activityRepository.existsByCidAndActiveTrue(actGrades.getId()))
+						throw new ValidationException(
+								String.format("Activity with id (%s) not found.", actGrades.getId()));
+					if (actGrades.getGrades() != null) {
+						for (String gradeCid : actGrades.getGrades()) {
+							if (!gradeRepository.existsByCidAndActiveTrue(gradeCid))
+								throw new ValidationException(String.format("Grade with id (%s) not found.", gradeCid));
+							teacherActivityGradesOldList
+									.add(teacherActivityGradeRepository.save(new TeacherActivityGrade(teacher.getId(),
+											activityRepository.findIdByCidAndActiveTrue(actGrades.getId()),
+											gradeRepository.findIdByCidAndActiveTrue(gradeCid))));
+						}
 					}
 				}
 			}
-
-			if (requestActivityIds != null && !requestActivityIds.isEmpty()) {
-				for (String actId : requestActivityIds) {
-					if (!activityRepository.existsByCidAndActiveTrue(actId))
-						throw new ValidationException(String.format("Activity with id (%s) not found .", actId));
-					Activity activity = activityRepository.findByCidAndActiveTrue(actId);
-					List<Teacher> teachers = new ArrayList<Teacher>();
-					teachers = activity.getTeachers();
-					teachers.add(teacher);
-					activity.setTeachers(teachers);
-					previousActivities.add(activity);
-				}
-			}
-			if (previousActivities != null && !previousActivities.isEmpty())
-				teacher.setIsCoach(true);
-			teacher.setActivities(previousActivities);
-			activityRepository.save(toBeDeletedActivities);
-//			teacher.setActivities(activityRepository.save(previousActivities));
-
+//				teacherActivityGradeRepository.delete(toDelete);
+//				teacherActivityGradeRepository.save(teacherActivityGradesOldList)
+//				teacher.setTeacherActivityGrades(teacherActivityGradesOldList);
+//				teacherActivityGradeRepository.save(teacherActivityGradesOldList);
+			teacherActivityGradeRepository.delete(toDelete);
 		}
+
+//		if (request.getActivityIds() != null && !request.getActivityIds().isEmpty()) {
+//			List<String> requestActivityIds = request.getActivityIds();
+//			List<Activity> previousActivities = teacher.getActivities();
+//			List<Activity> toBeDeletedActivities = new ArrayList<Activity>();
+//
+//			for (int i = 0; i < previousActivities.size(); i++) {
+//
+//				if (requestActivityIds.contains(previousActivities.get(i).getCid())) {
+//					requestActivityIds.remove(previousActivities.get(i).getCid());
+//				} else {
+//					if (activityPerformedRepository.existsByTeacherCidAndActivityCidAndActiveTrue(teacher.getCid(),previousActivities.get(i).getCid())) {
+//						throw new ValidationException(String.format(
+//								"You cannot delete the activty : %s as few student has already performed activity %s under you.",
+//								previousActivities.get(i).getName(), previousActivities.get(i).getName()));
+//					} else {
+//						List<Teacher> teachers = previousActivities.get(i).getTeachers();
+//						if (teachers != null && !teachers.isEmpty()) {
+//							teachers.remove(teacher);
+//							previousActivities.get(i).setTeachers(teachers);
+//							toBeDeletedActivities.add(previousActivities.get(i));
+//						}
+//						previousActivities.remove(i--);
+//					}
+//				}
+//			}
+//
+//			if (requestActivityIds != null && !requestActivityIds.isEmpty()) {
+//				for (String actId : requestActivityIds) {
+//					if (!activityRepository.existsByCidAndActiveTrue(actId))
+//						throw new ValidationException(String.format("Activity with id (%s) not found .", actId));
+//					Activity activity = activityRepository.findByCidAndActiveTrue(actId);
+//					List<Teacher> teachers = new ArrayList<Teacher>();
+//					teachers = activity.getTeachers();
+//					teachers.add(teacher);
+//					activity.setTeachers(teachers);
+//					previousActivities.add(activity);
+//				}
+//			}
+//			if (previousActivities != null && !previousActivities.isEmpty())
+//				teacher.setIsCoach(true);
+//			teacher.setActivities(previousActivities);
+//			activityRepository.save(toBeDeletedActivities);
+////			teacher.setActivities(activityRepository.save(previousActivities));
+//
+//		}
 
 		if (request.getGradeIds() != null && !request.getGradeIds().isEmpty()) {
 			List<String> requestGradeIds = request.getGradeIds();
@@ -371,30 +533,6 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 				}
 			teacher.setGrades(previousGrades);
 		}
-		
-		if(request.getMobileNumber() != null) {
-			
-//			if(!userRepository.existsByContactNumberAndCid(request.getMobileNumber(),teacher.getUser().getCid())) {
-				if(!userRepository.existsByContactNumberAndCidNot(request.getMobileNumber(),teacher.getUser().getCid())) {
-					teacher.setMobileNumber(request.getMobileNumber());
-					teacher.getUser().setContactNumber(request.getMobileNumber());
-				}else {
-					throw new ValidationException(String.format("Mobile Number (%s) already belongs to some other user.",request.getMobileNumber()));
-				}
-//			}
-		}
-		
-		if(request.getEmail() != null) {
-//			if(!userRepository.existsByEmailAndCid(request.getEmail(),teacher.getUser().getCid())) {
-				if(!userRepository.existsByEmailAndCidNot(request.getEmail(),teacher.getUser().getCid())) {
-					teacher.setEmail(request.getEmail());
-					teacher.getUser().setEmail(request.getEmail());
-				}else {
-					throw new ValidationException(String.format("Email (%s) already belongs to some other user.",request.getEmail()));
-				}
-//			}
-		}
-		
 
 		teacher = teacherRepository.save(teacher);
 
@@ -444,8 +582,8 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	public List<TeacherResponse> findCoachesBySchoolAndActivityName(String schoolCid, String activityName) {
 		if (activityName == null)
 			throw new ValidationException("Activity name can not be null");
-		List<Teacher> teachersList = teacherRepository
-				.findAllBySchoolCidAndActivitiesNameAndIsCoachTrueAndActiveTrue(schoolCid, activityName);
+		List<Teacher> teachersList = teacherActivityGradeRepository
+				.findAllTeacherByActivityNameAndTeacherSchoolCidActiveTrue(activityName, schoolCid);
 
 		if (teachersList == null || teachersList.isEmpty())
 			throw new ValidationException(
@@ -460,7 +598,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		if (id == null)
 			throw new ValidationException("Id can not be null");
 
-		List<Activity> activities = activityRepository.findAllByTeachersIdAndActiveTrue(id);
+		List<Activity> activities = teacherActivityGradeRepository.findAllActivityByTeacherIdAndActiveTrue(id);
 		if (activities == null || activities.isEmpty())
 			throw new ValidationException("No Activities found.");
 
@@ -471,7 +609,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	public List<ActivityRequestResponse> findAllActivitiesByCoachCId(String cId) {
 		if (cId == null)
 			throw new ValidationException("Id can not be null");
-		List<Activity> activities = activityRepository.findAllByTeachersCidAndActiveTrue(cId);
+		List<Activity> activities = teacherActivityGradeRepository.findAllActivityByTeacherCidAndActiveTrue(cId);
 		if (activities == null || activities.isEmpty())
 			throw new ValidationException("No Activities found.");
 
@@ -496,7 +634,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	@Override
 	public List<TeacherResponse> getAllCoaches() {
 		List<Teacher> teachers = new ArrayList<Teacher>();
-		teachers = teacherRepository.findAllByIsCoachTrueAndActiveTrue();
+		teachers = teacherActivityGradeRepository.findAllTeacherByActiveTrue();
 //				findAllBySchoolCidAndIsCoachTrue();
 		if (teachers == null)
 			throw new ValidationException("No coaches found.");
@@ -574,7 +712,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	@Override
 	public List<TeacherResponse> getAllCoachesOfSchool(String schoolCid) {
 		List<Teacher> teachers = new ArrayList<Teacher>();
-		teachers = teacherRepository.findAllBySchoolCidAndIsCoachTrueAndActiveTrue(schoolCid);
+		teachers = teacherActivityGradeRepository.findAllTeacherByTeacherSchoolCidActiveTrue(schoolCid);
 //				findAllBySchoolCidAndIsCoachTrue();
 		if (teachers == null)
 			throw new ValidationException("No coaches found.");
@@ -584,15 +722,16 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	@Override
 	public List<TeacherResponse> findCoachesBySchoolCidAndActivityCid(String schoolCid, String activityCid) {
 
-		if(!schoolRepository.existsByCidAndActiveTrue(schoolCid))
+		if (!schoolRepository.existsByCidAndActiveTrue(schoolCid))
 			throw new ValidationException(String.format("School having id (%s) does not exist.", schoolCid));
-		if(!activityRepository.existsByCidAndActiveTrue(activityCid))
+		if (!activityRepository.existsByCidAndActiveTrue(activityCid))
 			throw new ValidationException(String.format("Activity having id (%s) does not exist.", activityCid));
-		
-		List<Teacher> teachers = teacherRepository
-				.findAllBySchoolCidAndActivitiesCidAndIsCoachTrueAndActiveTrue(schoolCid, activityCid);
+
+		List<Teacher> teachers = teacherActivityGradeRepository
+				.findAllTeacherByActivityCidAndTeacherSchoolCidActiveTrue(activityCid, schoolCid);
 		if (teachers == null)
-			throw new ValidationException(String.format("No coaches found for activity having id (%s) in school having id (%s)." , activityCid , schoolCid));
+			throw new ValidationException(String.format(
+					"No coaches found for activity having id (%s) in school having id (%s).", activityCid, schoolCid));
 
 		return teachers.stream().map(TeacherResponse::new).distinct().collect(Collectors.toList());
 	}
@@ -613,6 +752,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		return managmentMembers.stream().map(TeacherResponse::new).distinct().collect(Collectors.toList());
 	}
 
+	@Secured(AuthorityUtils.SCHOOL_STAKEHOLDER_DELETE)
 	@Override
 	public SuccessResponse delete(String cid) {
 
@@ -635,35 +775,33 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 
 		return new SuccessResponse(org.springframework.http.HttpStatus.OK.value(), "teacher deleted successfully");
 	}
-	
+
+	@Secured(AuthorityUtils.SCHOOL_FACULTY_UPDATE)
 	@Override
 	public TeacherResponse setProfilePic(MultipartFile file) {
 		if (file == null || file.getSize() == 0)
 			throw new ValidationException("profilePic cannot be null or empty.");
-		
+
 		Long userId = getUserId();
-		if(userId == null)
+		if (userId == null)
 			throw new ValidationException("No user logged in currently.");
-		
+
 		Teacher teacher = teacherRepository.getByUserId(userId);
 		if (teacher == null) {
 			throw new ValidationException("User not login as either of them [Teacher, Coach, Management]");
 		}
-		
-		String filename = UUID.randomUUID().toString() + "." + fileService.getFileExtension(file.getOriginalFilename());
-		try {
-			String imageUrl = filestore.store("profilePic", filename, file.getBytes());
-			teacher.setImageUrl(imageUrl);
-			if(teacher.getUser() != null)
-				teacher.getUser().setImagePath(imageUrl);
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new ValidationException("Something went wromg image not saved/uploaded.");
-		}
+
+		if (teacher.getImageUrl() != null)
+			fileStorageService.delete(teacher.getImageUrl());
+		String imageUrl = fileStorageService.storeFile(file, file.getOriginalFilename(), "/profile-image/", true, true);
+		teacher.setImageUrl(imageUrl);
+		if (teacher.getUser() != null)
+			teacher.getUser().setPicUrl(imageUrl);
 
 		return new TeacherResponse(teacherRepository.save(teacher));
 	}
 
+	@Secured(AuthorityUtils.SCHOOL_STAKEHOLDER_CREATE)
 	@Override
 	public ResponseEntity<?> uploadTeachersFromExcel(MultipartFile file, Boolean isCoach, String schoolCid) {
 
@@ -708,6 +846,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		return new ResponseEntity<Map<String, Object>>(responseMap, HttpStatus.OK);
 	}
 
+	@Secured(AuthorityUtils.SCHOOL_STAKEHOLDER_CREATE)
 	@Override
 	public ResponseEntity<?> uploadManagementFromExcel(MultipartFile file, String schoolCid) {
 
@@ -799,7 +938,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 //						if(columnTypes.get(headers.get(j)).equals(cell.getCellType()))
 						if (headers.get(j).equalsIgnoreCase("NAME") || headers.get(j).equalsIgnoreCase("EMAIL")
 								|| headers.get(j).equalsIgnoreCase("MOBILE NUMBER")
-								|| headers.get(j).equalsIgnoreCase("GRADE"))
+								|| headers.get(j).equalsIgnoreCase("GRADE") || headers.get(j).equalsIgnoreCase("ROLE"))
 							errors.add(String.format("Cell at row %d and column %d is blank for header %s.", i + 1,
 									j + 1, headers.get(j)));
 						columnValues.put(headers.get(j), null);
@@ -870,13 +1009,17 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 						errors.add(String.format("Activity with name : %s does not exist.", activity));
 				}
 				teacherRequest.setIsCoach(true);
-				teacherRequest.setActivityIds(activityCIds);
+//				teacherRequest.setActivityIds(activityCIds);
 			} else {
 				if (!teacherRequest.getIsManagmentMember())
 					errors.add(String.format("No activities provided for %s.", teacherRequest.getName()));
 			}
 		}
 
+		if (teacherDetails.get(0).get("ROLE") != null) {
+			teacherRequest
+					.setRoles(new HashSet<>(Arrays.asList(((String) teacherDetails.get(0).get("ROLE")).split(","))));
+		}
 		String standard = (String) teacherDetails.get(0).get("GRADE");
 		String gradeNames[] = null;
 		List<String> gradeCIds = new ArrayList<String>();
@@ -925,118 +1068,292 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		return teacherRequest;
 
 	}
-	
+
+	@Secured(AuthorityUtils.SCHOOL_ACTIVITY_ASSIGN)
 	@Override
 	public TeacherResponse addOrRemoveActivitiesToTeachers(TeacherRequest request) {
 		Long userId = getUserId();
-		if(userId == null)
-			throw new ValidationException("No user logged in currently, kindly log in as School or School Management to assign activities to Teachers.");
-		if(!schoolRepository.existsByUserIdAndActiveTrue(userId) && !teacherRepository.existsByUserIdAndIsManagmentMemberTrueAndActiveTrue(userId))
-			throw new UnauthorizedUserException("Not Authorized to assign activities to Teachers pls login as School or Management Member.");
-		if(request == null)
+		if (userId == null)
+			throw new ValidationException(
+					"No user logged in currently, kindly log in as School or School Management to assign activities to Teachers.");
+		if (!schoolRepository.existsByUserIdAndActiveTrue(userId)
+				&& !teacherRepository.existsByUserIdAndIsManagmentMemberTrueAndActiveTrue(userId))
+			throw new UnauthorizedUserException(
+					"Not Authorized to assign activities to Teachers pls login as School or Management Member.");
+		if (request == null)
 			throw new ValidationException("Request cannot be null.");
-		if(request.getTeachers() == null || request.getTeachers().isEmpty())
-			throw new ValidationException("teachers cannot be null or empty, its required to add activities to teachers.");
+		if (request.getTeachers() == null || request.getTeachers().isEmpty())
+			throw new ValidationException(
+					"teachers cannot be null or empty, its required to add activities to teachers.");
 		List<Teacher> teachersToSave = new ArrayList<Teacher>();
-		for(TeacherRequest teacherRequest : request.getTeachers()) {
-			if(!teacherRepository.existsByCidAndActiveTrue(teacherRequest.getId()))
-				throw new ValidationException(String.format("Teacher or Coach with id (%s) does not exist.",teacherRequest.getId()));
+		for (TeacherRequest teacherRequest : request.getTeachers()) {
+			if (!teacherRepository.existsByCidAndActiveTrue(teacherRequest.getId()))
+				throw new ValidationException(
+						String.format("Teacher or Coach with id (%s) does not exist.", teacherRequest.getId()));
 			Teacher teacher = teacherRepository.findByCidAndActiveTrue(teacherRequest.getId());
-			
-			if (teacherRequest.getActivityIds() != null && !teacherRequest.getActivityIds().isEmpty()) {
-				List<String> requestActivityIds = teacherRequest.getActivityIds();
-				List<Activity> previousActivities = teacher.getActivities();
-				List<Activity> toBeDeletedActivities = new ArrayList<Activity>();
 
-				for (int i = 0; i < previousActivities.size(); i++) {
+			if (teacherRequest.getActivities() != null && !teacherRequest.getActivities().isEmpty()) {
+				List<ActivityRequestResponse> requestActivityGrades = teacherRequest.getActivities();
+				List<TeacherActivityGrade> teacherActivityGradesOldList = teacher.getTeacherActivityGrades();
+				List<TeacherActivityGrade> toDelete = new ArrayList<TeacherActivityGrade>();
 
-					if (requestActivityIds.contains(previousActivities.get(i).getCid())) {
-						requestActivityIds.remove(previousActivities.get(i).getCid());
-					} else {
-						if (activityPerformedRepository.existsByTeacherCidAndActivityCidAndActiveTrue(teacher.getCid(),previousActivities.get(i).getCid())) {
+				for (int j = 0; j < teacherActivityGradesOldList.size(); j++) {
+					final int i = j;
+					ActivityRequestResponse activity = requestActivityGrades.stream().filter(
+							act -> teacherActivityGradesOldList.get(i).getActivity().getCid().equals(act.getId()))
+							.findFirst().orElse(null);
+
+					if (activity == null) {
+						if (toDelete.stream().anyMatch(actGrd -> actGrd.getActivity().getId()
+								.equals(teacherActivityGradesOldList.get(i).getActivity().getId())))
+							continue;
+
+						if (activityPerformedRepository.existsByTeacherCidAndActivityCidAndActiveTrue(teacher.getCid(),
+								teacherActivityGradesOldList.get(j).getActivity().getCid()))
 							throw new ValidationException(String.format(
-									"You cannot delete the activty : %s as few student has already performed activity %s under you.",
-									previousActivities.get(i).getName(), previousActivities.get(i).getName()));
-						} else {
-							List<Teacher> teachers = previousActivities.get(i).getTeachers();
-							if (teachers != null && !teachers.isEmpty()) {
-								teachers.remove(teacher);
-								previousActivities.get(i).setTeachers(teachers);
-								toBeDeletedActivities.add(previousActivities.get(i));
+									"You cannot delete the activty : %s as few student has already performed this activity under you.",
+									teacherActivityGradesOldList.get(j).getActivity().getName()));
+						else
+							toDelete.addAll(teacherActivityGradesOldList.stream()
+									.filter(old -> old.getActivity().getId()
+											.equals(teacherActivityGradesOldList.get(i).getActivity().getId()))
+									.collect(Collectors.toList()));
+//								teacherActivityGradeRepository.deleteAllByTeacherCidAndActivityCid(teacher.getCid() ,teacherActivityGradesOldList.get(j).getActivity().getCid() );
+					} else {
+						if (activity.getGrades() == null || activity.getGrades().isEmpty()) {
+							ActivityRequestResponse deletedActivity = teacherRequest.getActivities().stream()
+									.filter(act -> act.getId().equals(activity.getId())
+											&& (act.getGrades() == null || act.getGrades().isEmpty())
+											&& !act.getVisited())
+									.findFirst().orElse(null);
+							if (deletedActivity != null) {
+								toDelete.addAll(teacherActivityGradesOldList.stream()
+										.filter(old -> old.getActivity().getCid().equals(deletedActivity.getId()))
+										.collect(Collectors.toList()));
 							}
-							previousActivities.remove(i--);
+							requestActivityGrades.remove(deletedActivity);
+						}
+//								requestActivityGrades.removeIf(actGrd -> actGrd.getId().equals(activity.getId()));
+//								throw new ValidationException(String.format("Grades cannot be null or empty for activity with id (%s)",activity.getId()));
+
+						if (!activity.getGrades().contains(teacherActivityGradesOldList.get(j).getGrade().getCid()))
+							toDelete.add(teacherActivityGradesOldList.get(j));
+						else {
+							activity.getGrades().remove(teacherActivityGradesOldList.get(i).getGrade().getCid());
+							activity.setVisited(true);
+						}
+//								If(grd -> grd.equals(teacherActivityGradesOldList.get(i).getGrade().getCid()));
+
+					}
+				}
+
+				teacherActivityGradesOldList.removeAll(toDelete);
+				// now delete from db
+				if (!requestActivityGrades.isEmpty()) {
+					for (ActivityRequestResponse actGrades : requestActivityGrades) {
+						if (!activityRepository.existsByCidAndActiveTrue(actGrades.getId()))
+							throw new ValidationException(
+									String.format("Activity with id (%s) not found.", actGrades.getId()));
+						if (actGrades.getGrades() != null) {
+							for (String gradeCid : actGrades.getGrades()) {
+								if (!gradeRepository.existsByCidAndActiveTrue(gradeCid))
+									throw new ValidationException(
+											String.format("Grade with id (%s) not found.", gradeCid));
+								teacherActivityGradesOldList.add(
+										teacherActivityGradeRepository.save(new TeacherActivityGrade(teacher.getId(),
+												activityRepository.findIdByCidAndActiveTrue(actGrades.getId()),
+												gradeRepository.findIdByCidAndActiveTrue(gradeCid))));
+							}
 						}
 					}
 				}
-
-				if (requestActivityIds != null && !requestActivityIds.isEmpty()) {
-					for (String actId : requestActivityIds) {
-						if (!activityRepository.existsByCidAndActiveTrue(actId))
-							throw new ValidationException(String.format("Activity with id (%s) not found .", actId));
-						Activity activity = activityRepository.findByCidAndActiveTrue(actId);
-						List<Teacher> teachers = new ArrayList<Teacher>();
-						teachers = activity.getTeachers();
-						teachers.add(teacher);
-						activity.setTeachers(teachers);
-						previousActivities.add(activity);
-					}
-				}
-				if (previousActivities != null && !previousActivities.isEmpty())
-					teacher.setIsCoach(true);
-				teacher.setActivities(previousActivities);
-				activityRepository.save(toBeDeletedActivities);
+				teacherActivityGradeRepository.delete(toDelete);
 				teachersToSave.add(teacher);
-//				teacher.setActivities(activityRepository.save(previousActivities));
-
 			}
+
+//			if(teacherRequest.getActivities() != null && !teacherRequest.getActivities().isEmpty()) {
+//				List<ActivityRequestResponse> requestActivityGrades = teacherRequest.getActivities();
+//				List<TeacherActivityGrade> teacherActivityGradesOldList = teacher.getTeacherActivityGrades();
+//				List<TeacherActivityGrade> toDelete = new ArrayList<TeacherActivityGrade>();
+//				
+//					for(int j = 0 ; j<teacherActivityGradesOldList.size() ; j++) {
+//						final int i = j;
+//						ActivityRequestResponse activity = requestActivityGrades.stream().filter(act -> teacherActivityGradesOldList.get(i).getActivity().getCid().equals(act.getId())).findFirst().orElse(null);
+//						
+//						if(activity == null) {
+//							if(toDelete.stream().anyMatch(actGrd -> actGrd.getActivity().getId().equals(teacherActivityGradesOldList.get(i).getActivity().getId())))
+//								continue;
+//							
+//							if (activityPerformedRepository.existsByTeacherCidAndActivityCidAndActiveTrue(teacher.getCid(),teacherActivityGradesOldList.get(j).getActivity().getCid())) 
+//								throw new ValidationException(String.format(
+//										"You cannot delete the activty : %s as few student has already performed this activity under you.",
+//										teacherActivityGradesOldList.get(j).getActivity().getName()));
+//								else
+//								   toDelete.addAll(teacherActivityGradesOldList.stream().filter(old -> old.getActivity().getId().equals(teacherActivityGradesOldList.get(i).getActivity().getId())).collect(Collectors.toList()));
+////								teacherActivityGradeRepository.deleteAllByTeacherCidAndActivityCid(teacher.getCid() ,teacherActivityGradesOldList.get(j).getActivity().getCid() );
+//						}else {
+//							if(activity.getGrades() == null || activity.getGrades().isEmpty()) {
+//								ActivityRequestResponse deletedActivity = teacherRequest.getActivities().stream().filter(act -> act.getId().equals(activity.getId()) && (act.getGrades() == null || act.getGrades().isEmpty())).findFirst().orElse(null);
+//								if(deletedActivity != null) {
+//									toDelete.addAll(teacherActivityGradesOldList.stream().filter(old -> old.getActivity().getCid().equals(deletedActivity.getId())).collect(Collectors.toList()));
+//								}
+//								requestActivityGrades.remove(deletedActivity);
+//							}
+////								requestActivityGrades.removeIf(actGrd -> actGrd.getId().equals(activity.getId()));
+////								throw new ValidationException(String.format("Grades cannot be null or empty for activity with id (%s)",activity.getId()));
+//							
+//							if(!activity.getGrades().contains(teacherActivityGradesOldList.get(j).getGrade().getCid()))
+//								toDelete.add(teacherActivityGradesOldList.get(j));
+//							else {
+//								activity.getGrades().remove(teacherActivityGradesOldList.get(i).getGrade().getCid());
+//								requestActivityGrades.removeIf(act -> act.getId().equals(activity.getId()));
+//								requestActivityGrades.add(activity);
+//							}
+//								
+////								If(grd -> grd.equals(teacherActivityGradesOldList.get(i).getGrade().getCid()));
+//									
+//								
+//						}
+//					}
+//				
+//					teacherActivityGradesOldList.removeAll(toDelete);
+//					//now delete from db 
+//					if(!requestActivityGrades.isEmpty()) {
+//						for(ActivityRequestResponse actGrades : requestActivityGrades) {
+//							if(!activityRepository.existsByCidAndActiveTrue(actGrades.getId()))
+//								throw new ValidationException(String.format("Activity with id (%s) not found.",actGrades.getId()));
+//							if(actGrades.getGrades() != null) {
+//								for(String gradeCid : actGrades.getGrades()) {
+//									if(!gradeRepository.existsByCidAndActiveTrue(gradeCid))
+//										throw new ValidationException(String.format("Grade with id (%s) not found.",gradeCid));
+//									teacherActivityGradesOldList.add(new TeacherActivityGrade(teacher.getId(), activityRepository.findIdByCidAndActiveTrue(actGrades.getId()), gradeRepository.findIdByCidAndActiveTrue(gradeCid)));
+//								}
+//							}
+//						}
+//					}
+////					teacherActivityGradeRepository.delete(toDelete);
+////					teacherActivityGradeRepository.save(teacherActivityGradesOldList)
+//					teacher.setTeacherActivityGrades(teacherActivityGradesOldList);
+//					teachersToSave.add(teacher);
+//			}
+
+//			if (teacherRequest.getActivityIds() != null && !teacherRequest.getActivityIds().isEmpty()) {
+//				List<String> requestActivityIds = teacherRequest.getActivityIds();
+//				List<Activity> previousActivities = teacher.getActivities();
+//				List<Activity> toBeDeletedActivities = new ArrayList<Activity>();
+//
+//				for (int i = 0; i < previousActivities.size(); i++) {
+//
+//					if (requestActivityIds.contains(previousActivities.get(i).getCid())) {
+//						requestActivityIds.remove(previousActivities.get(i).getCid());
+//					} else {
+//						if (activityPerformedRepository.existsByTeacherCidAndActivityCidAndActiveTrue(teacher.getCid(),previousActivities.get(i).getCid())) {
+//							throw new ValidationException(String.format(
+//									"You cannot delete the activty : %s as few student has already performed activity %s under you.",
+//									previousActivities.get(i).getName(), previousActivities.get(i).getName()));
+//						} else {
+//							List<Teacher> teachers = previousActivities.get(i).getTeachers();
+//							if (teachers != null && !teachers.isEmpty()) {
+//								teachers.remove(teacher);
+//								previousActivities.get(i).setTeachers(teachers);
+//								toBeDeletedActivities.add(previousActivities.get(i));
+//							}
+//							previousActivities.remove(i--);
+//						}
+//					}
+//				}
+//
+//				if (requestActivityIds != null && !requestActivityIds.isEmpty()) {
+//					for (String actId : requestActivityIds) {
+//						if (!activityRepository.existsByCidAndActiveTrue(actId))
+//							throw new ValidationException(String.format("Activity with id (%s) not found .", actId));
+//						Activity activity = activityRepository.findByCidAndActiveTrue(actId);
+//						List<Teacher> teachers = new ArrayList<Teacher>();
+//						teachers = activity.getTeachers();
+//						teachers.add(teacher);
+//						activity.setTeachers(teachers);
+//						previousActivities.add(activity);
+//					}
+//				}
+//				if (previousActivities != null && !previousActivities.isEmpty())
+//					teacher.setIsCoach(true);
+//				teacher.setActivities(previousActivities);
+//				activityRepository.save(toBeDeletedActivities);
+//				teachersToSave.add(teacher);
+////				teacher.setActivities(activityRepository.save(previousActivities));
+//
+//			}
 		}
 		teachersToSave = teacherRepository.save(teachersToSave);
-		if(teachersToSave.isEmpty())
+		if (teachersToSave.isEmpty())
 			throw new RuntimeException("Something went wrong operation failed ,please try again.");
-		
-		TeacherResponse response =  new TeacherResponse();
-		response.setTeachers(teachersToSave.stream().map(TeacherResponse :: new).collect(Collectors.toList()));
+
+		TeacherResponse response = new TeacherResponse();
+		response.setTeachers(teachersToSave.stream().map(TeacherResponse::new).collect(Collectors.toList()));
 		return response;
 	}
-	
 
 	@Override
-	public List<ClubMembershipResponse> getMembershipDetails(){
+	public List<ClubMembershipResponse> getMembershipDetails() {
 		Long userId = getUserId();
-		if(userId == null)
+		if (userId == null)
 			throw new ValidationException("Login as teacher/coach to view pending requests.");
 		Long teacherId = teacherRepository.getIdByUserIdAndActiveTrue(userId);
-		if(teacherId == null)
+		if (teacherId == null)
 			throw new ValidationException("Login as teacher/coach to view pending requests.");
 		List<StudentClub> membership = studentClubRepository.findAllByTeacherIdAndActiveTrue(teacherId);
-		
-		if(membership == null || membership.isEmpty())
+
+		if (membership == null || membership.isEmpty())
 			throw new ValidationException("No membership application found for you.");
-		
-		return membership.stream().map(ClubMembershipResponse :: new).distinct().collect(Collectors.toList());
+
+		return membership.stream().map(ClubMembershipResponse::new).distinct().collect(Collectors.toList());
 	}
-	
+
 	@Override
-	public ClubMembershipResponse updateStatus(String studentId,String activityId , Boolean isVerified) {
+	public List<ClubMembershipResponse> getMembershipDetailsbyClub(String clubId) {
+		if (clubId == null)
+			throw new ValidationException("club id cannot be null.");
+		if (!activityRepository.existsByCidAndActiveTrue(clubId))
+			throw new ValidationException(String.format("club with id (%s) not found.", clubId));
 		Long userId = getUserId();
-		if(userId == null)
+		if (userId == null)
+			throw new ValidationException("Login as teacher/coach to view pending requests.");
+		Long teacherId = teacherRepository.getIdByUserIdAndActiveTrue(userId);
+		if (teacherId == null)
+			throw new ValidationException("Login as teacher/coach to view pending requests.");
+		List<StudentClub> membership = studentClubRepository.findAllByTeacherIdAndActivityCidAndActiveTrue(teacherId,
+				clubId);
+
+		if (membership == null || membership.isEmpty())
+			throw new ValidationException("No membership application found for you.");
+
+		return membership.stream().map(ClubMembershipResponse::new).distinct().collect(Collectors.toList());
+	}
+
+	@Override
+	public ClubMembershipResponse updateStatus(String studentId, String activityId, Boolean isVerified) {
+		Long userId = getUserId();
+		if (userId == null)
 			throw new ValidationException("Login as teacher/coach to verify/reject pending requests.");
 		Long teacherId = teacherRepository.getIdByUserIdAndActiveTrue(userId);
-		if(teacherId == null)
+		if (teacherId == null)
 			throw new ValidationException("Login as teacher/coach to verify/reject pending requests.");
-		StudentClub studentClub = studentClubRepository.findOne(new StudentActivityId(studentRepository.findIdByCidAndActiveTrue(studentId), activityRepository.findIdByCidAndActiveTrue(activityId), teacherId));
+		StudentClub studentClub = studentClubRepository
+				.findOne(new StudentActivityId(studentRepository.findIdByCidAndActiveTrue(studentId),
+						activityRepository.findIdByCidAndActiveTrue(activityId), teacherId));
 		if (studentClub == null) {
 			throw new ValidationException(String.format("This membership request not found in records."));
 		}
 		if (studentClub.getMembershipStatus().equals(ApprovalStatus.PENDING)) {
 			studentClub.setMembershipStatus(isVerified ? ApprovalStatus.VERIFIED : ApprovalStatus.REJECTED);
-				
+
 			studentClub.setConsideredOn(new Date());
 		} else {
 			throw new ValidationException("This membership request already rejected or verified");
 		}
-		
+
 		studentClub = studentClubRepository.save(studentClub);
 		return new ClubMembershipResponse(studentClub);
 	}
+
 }

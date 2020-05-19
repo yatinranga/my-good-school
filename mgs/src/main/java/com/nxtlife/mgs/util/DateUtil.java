@@ -1,5 +1,7 @@
 package com.nxtlife.mgs.util;
 
+import static java.time.DayOfWeek.SATURDAY;
+import static java.time.temporal.TemporalAdjusters.nextOrSame;
 import org.apache.commons.lang3.time.DateUtils;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
@@ -139,10 +141,12 @@ public class DateUtil {
 		 }
 	
 	public static Date getLastDayOfWeek() {
-		 Calendar c = Calendar.getInstance();
-	     c.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-	     c.add(Calendar.DATE,6);
-	     return c.getTime();
+		
+		LocalDate saturday = LocalDate.now().with(nextOrSame(DayOfWeek.SATURDAY));
+//		 Calendar c = Calendar.getInstance();
+//	     c.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+//	     c.add(Calendar.DATE,6);
+	     return convertLocalDateToDateAtEndOfDay(saturday);
 	}
 	
 	public static Date getlastWorkingDayOfWeek(Date lastWorkingDayOfWeek) {

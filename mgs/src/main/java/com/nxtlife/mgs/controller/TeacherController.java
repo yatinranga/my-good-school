@@ -66,6 +66,11 @@ public class TeacherController {
 	public TeacherResponse setProfilePic(@RequestParam("profilePic") MultipartFile file) {
 		return teacherService.setProfilePic(file);
 	}
+	
+	@DeleteMapping("api/teacher/{cid}")
+	public SuccessResponse delete(@PathVariable String cid) {
+		return teacherService.delete(cid);
+	}
 
 	@GetMapping("api/teachers")
 	public List<TeacherResponse> getAllTeachers(@RequestParam(defaultValue = "0") Integer pageNo,
@@ -95,19 +100,19 @@ public class TeacherController {
 		return teacherService.findClassTeacherByCId(cId);
 	}
 
-	@GetMapping(value = "api/{schoolCid}/managment")
+	@GetMapping(value = "api/managment/{schoolCid}")
 	public List<TeacherResponse> getAllManagmentBySchool(@PathVariable("schoolCid") String schoolCid) {
 		return teacherService.getAllManagmentBySchool(schoolCid);
-	}
-
-	@DeleteMapping("api/teacher/{cid}")
-	public SuccessResponse delete(@PathVariable String cid) {
-		return teacherService.delete(cid);
 	}
 	
 	@GetMapping(value = "api/teacher/club/members")
 	public List<ClubMembershipResponse> getMembershipDetails(){
 		return teacherService.getMembershipDetails();
+	}
+	
+	@GetMapping(value = "api/teacher/club/{clubId}/members")
+	public List<ClubMembershipResponse> getMembershipDetailsbyClub(@PathVariable("clubId") String clubId){
+		return teacherService.getMembershipDetailsbyClub(clubId);
 	}
 	
 	@GetMapping(value = "api/teacher/clubs")

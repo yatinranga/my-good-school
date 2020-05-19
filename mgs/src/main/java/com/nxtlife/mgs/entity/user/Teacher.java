@@ -26,9 +26,11 @@ import com.nxtlife.mgs.entity.activity.Activity;
 //import com.nxtlife.mgs.entity.activity.ActivityOffered;
 //import com.nxtlife.mgs.entity.activity.ActivityOfferedFocusArea;
 import com.nxtlife.mgs.entity.activity.ActivityPerformed;
+import com.nxtlife.mgs.entity.activity.TeacherActivityGrade;
 import com.nxtlife.mgs.entity.school.Award;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
+import com.nxtlife.mgs.entity.school.StudentClub;
 import com.nxtlife.mgs.entity.school.TeacherSchoolGrade;
 import com.nxtlife.mgs.entity.session.Event;
 
@@ -110,6 +112,9 @@ public class Teacher extends BaseEntity {
 	
 	@OneToMany(mappedBy = "teacher" , cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
 	private List<Event> sessions;
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "teacher")
+	private List<TeacherActivityGrade> teacherActivityGrades;
 	
 	public String getName() {
 		return name;
@@ -309,6 +314,14 @@ public class Teacher extends BaseEntity {
 
 	public void setSessions(List<Event> sessions) {
 		this.sessions = sessions;
+	}
+
+	public List<TeacherActivityGrade> getTeacherActivityGrades() {
+		return teacherActivityGrades;
+	}
+
+	public void setTeacherActivityGrades(List<TeacherActivityGrade> teacherActivityGrades) {
+		this.teacherActivityGrades = teacherActivityGrades;
 	}
 
 	public Teacher(@NotNull String cid, @NotNull String name, String username, String gender, @NotNull Date dob,

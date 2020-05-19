@@ -33,6 +33,10 @@ public class SessionRequest extends Request{
 	@NotEmpty(message = "grade ids for session cannot be null or empty.")
 	private List<String> gradeIds ;
 	
+	private String description;
+	
+	private List<FileRequest> fileRequests;
+	
 //	@NotEmpty(message = "teacher id cannot be null or empty.")
 //	private String teacherId;
 
@@ -64,7 +68,50 @@ public class SessionRequest extends Request{
 		return gradeIds;
 	}
 	
-	
+	public String getDescription() {
+		return description;
+	}
+
+	public List<FileRequest> getFileRequests() {
+		return fileRequests;
+	}
+
+	public void setGradeIds(List<String> gradeIds) {
+		this.gradeIds = gradeIds;
+	}
+
+	public void setFileRequests(List<FileRequest> fileRequests) {
+		this.fileRequests = fileRequests;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public void setNumber(Long number) {
+		this.number = number;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public void setClubId(String clubId) {
+		this.clubId = clubId;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public Event toEntity(){
 		return toEntity(null);
 	}
@@ -76,9 +123,15 @@ public class SessionRequest extends Request{
 			session.setTitle(this.title);
 		if(this.number != null)
 			session.setNumber(this.number);
+		if(this.description != null)
+			session.setDescription(this.description);
 		LocalDateTime currentDateTime = LocalDateTime.now();
+		if((session.getStartDate() != null && session.getStartDate().before(currentDateTime.toDate())) ||
+				(session.getEndDate() !=null && session.getEndDate().before(currentDateTime.toDate())))
+			throw new ValidationException("The session has already begun or had end , so it can't be edited now.");
+		
 		if((startDate !=null && DateUtil.convertStringToDate(startDate).before(currentDateTime.toDate())) ||
-				endDate !=null && DateUtil.convertStringToDate(endDate).before(currentDateTime.toDate()))
+				(endDate !=null && DateUtil.convertStringToDate(endDate).before(currentDateTime.toDate())))
 			throw new ValidationException("StartDate or endDate cannot be a past date.");
 		
 		

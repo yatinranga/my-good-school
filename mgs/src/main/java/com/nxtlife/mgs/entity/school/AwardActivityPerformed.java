@@ -8,7 +8,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 
 import com.nxtlife.mgs.entity.activity.ActivityPerformed;
-import com.nxtlife.mgs.util.AwardActivityPerformedId;
+import com.nxtlife.mgs.entity.common.AwardActivityPerformedId;
 
 @SuppressWarnings("serial")
 @Entity

@@ -60,6 +60,10 @@ public interface StudentService extends ExcelUtil {
 
 	List<ClubMembershipResponse> getMembershipDetails();
 
+	List<StudentResponse> getAllBySchoolIdAndGradeId(String schoolId, String gradeId);
+
+	List<StudentResponse> getAllBySchoolIdOrGradeIdOrBothOrNoneButAll(String schoolId, String gradeId);
+
 	// List<AwardResponse> getAllAwardsOfStudentByActivityId(String studentCid,
 	// String awardCid);
 

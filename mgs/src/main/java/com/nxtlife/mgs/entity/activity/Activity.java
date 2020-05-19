@@ -72,6 +72,9 @@ public class Activity extends BaseEntity {
 	
 	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY , mappedBy = "activity")
 	private List<StudentClub> studentClubs;
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "activity")
+	private List<TeacherActivityGrade> teacherActivityGrades;
 
 	public String getName() {
 		return name;
@@ -165,6 +168,14 @@ public class Activity extends BaseEntity {
 
 	public void setClubOrSociety(ClubOrSociety clubOrSociety) {
 		this.clubOrSociety = clubOrSociety;
+	}
+
+	public List<TeacherActivityGrade> getTeacherActivityGrades() {
+		return teacherActivityGrades;
+	}
+
+	public void setTeacherActivityGrades(List<TeacherActivityGrade> teacherActivityGrades) {
+		this.teacherActivityGrades = teacherActivityGrades;
 	}
 
 	public Activity(@NotNull String name, FourS fourS, @NotNull String cid, String description, Boolean active,

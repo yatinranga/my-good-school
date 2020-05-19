@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.activity.ActivityPerformed;
@@ -38,7 +39,7 @@ import com.nxtlife.mgs.jpa.StudentRepository;
 import com.nxtlife.mgs.jpa.TeacherRepository;
 import com.nxtlife.mgs.service.ActivityPerformedService;
 import com.nxtlife.mgs.service.BaseService;
-import com.nxtlife.mgs.service.FileService;
+import com.nxtlife.mgs.service.FileStorageService;
 import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.ActivityPerformedRequest;
@@ -55,7 +56,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 	FileRepository fileRepository;
 
 	@Autowired
-	FileService fileService;
+	private FileStorageService<MultipartFile> fileStorageService;
 
 	@Autowired
 	StudentRepository studentRepository;
@@ -86,7 +87,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 
 	@Override
 	public List<FileResponse> getAllFilesOfActivity(String activityCId) {
-		List<File> files = fileRepository.findAllByActiveTrueAndActivityPerformedCidAndActiveTrue(activityCId);
+		List<File> files = fileRepository.findAllByActivityPerformedCidAndActiveTrue(activityCId);
 		if (files == null || files.isEmpty())
 			throw new NotFoundException("No files found for this activity.");
 
@@ -96,7 +97,10 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 	@Override
 	public File saveMediaForActivityPerformed(FileRequest fileRequest, String category,
 			ActivityPerformed activityPerformed) {
-		File file = fileService.saveMedia(fileRequest, category);
+//		File file = fileService.saveMedia(fileRequest, category);
+		File file = fileRequest.toEntity();
+		String fileUrl = fileStorageService.storeFile(fileRequest.getFile(), fileRequest.getFile().getOriginalFilename(), category,true , fileRequest.getIsImage());
+		file.setUrl(fileUrl);
 		if (fileRequest.getId() != null)
 			file.setCid(fileRequest.getId());
 		file.setActivityPerformed(activityPerformed);
@@ -181,7 +185,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			if (requestFiles != null && !requestFiles.isEmpty()) {
 				
 				List<File> allValidFilesOfActivity = fileRepository
-						.findAllByActiveTrueAndActivityPerformedCidAndActiveTrue(request.getId());
+						.findAllByActivityPerformedCidAndActiveTrue(request.getId());
 				List<File> updatedFiles = new ArrayList<File>();
 				
 				for (int itr = 0; itr < requestFiles.size(); itr++) {
@@ -189,7 +193,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 						for (int itr2 = 0; itr2 < allValidFilesOfActivity.size(); itr2++) {
 							if (requestFiles.get(itr).getId().equals(allValidFilesOfActivity.get(itr2).getCid())) {
 								if (requestFiles.get(itr).getFile() != null) {
-									File file = saveMediaForActivityPerformed(requestFiles.get(itr), "activity",
+									File file = saveMediaForActivityPerformed(requestFiles.get(itr), "/activity-file/",
 											activityPerformed);
 									file.setId(allValidFilesOfActivity.get(itr2).getId());
 									file.setCid(allValidFilesOfActivity.get(itr2).getCid());
@@ -220,7 +224,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 				// Logic to save new files and then add it to List updatedFiles
 				if (requestFiles != null && !requestFiles.isEmpty())
 					for (FileRequest fileReq : requestFiles) {
-						File file = saveMediaForActivityPerformed(fileReq, "activity", activityPerformed);
+						File file = saveMediaForActivityPerformed(fileReq, "/activity-file/", activityPerformed);
 						if (file != null) {
 							file.setCid(utils.generateRandomAlphaNumString(8));
 							updatedFiles.add(file);
@@ -239,15 +243,17 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			activityPerformed = request.toEntity();
 
 			/* Saving files associated with activity */
-			List<File> activityPerformedMedia = new ArrayList<>();
+			
 			if (request.getFileRequests() != null && !request.getFileRequests().isEmpty()) {
+				List<File> activityPerformedMedia = new ArrayList<>();
 				if(request.getFileRequests().size() > 5)
 					throw new ValidationException("Cannot attach more than 5 files to upload.");
 			
 				for (FileRequest fileReq : request.getFileRequests()) {
-					File file = saveMediaForActivityPerformed(fileReq, "activity", activityPerformed);
+					File file = saveMediaForActivityPerformed(fileReq, "/activity-file/", activityPerformed);
 					if (file != null) {
-						file.setCid(utils.generateRandomAlphaNumString(8));
+						if(file.getCid() == null)
+						    file.setCid(utils.generateRandomAlphaNumString(8));
 						activityPerformedMedia.add(file);
 					}
 				}

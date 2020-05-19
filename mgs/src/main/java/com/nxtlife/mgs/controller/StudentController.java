@@ -69,13 +69,7 @@ public class StudentController {
 	@GetMapping("api/students")
 	public List<StudentResponse> getAll(@RequestParam(name = "schoolId", required = false) String schoolId,
 			@RequestParam(name = "gradeId", required = false) String gradeId) {
-		if(schoolId!=null){
-			return studentService.getAllBySchoolCid(schoolId);
-		}else if(gradeId!=null){
-			return studentService.getAllByGradeId(gradeId);
-		}else{
-			return studentService.getAll();
-		}
+		return studentService.getAllBySchoolIdOrGradeIdOrBothOrNoneButAll(schoolId, gradeId);
 	}
 
 
