@@ -2,12 +2,16 @@ package com.nxtlife.mgs;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import com.nxtlife.mgs.config.FileStorageProperties;
 
 //import com.nxtlife.mgs.security.AppProperties;
 
 @SpringBootApplication
+@EnableConfigurationProperties({ FileStorageProperties.class })
 public class MgsApplication {
 
 	public static void main(String[] args) {
