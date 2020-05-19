@@ -1,37 +1,44 @@
 <div class="main">
     <div class="content_main">
         <div class="content_main_com">
-            <div class="certi_box">
                 <div *ngFor="let certi of certificatesArr">
-                    <div class="card_box">
-                        <img src="assets/images/award.jpg">
-                        <div class="certi_text">
-                            <h2>{{certi.title}}</h2>
-                            <p>{{certi.description}}</p>
-                            <p>
-                                <span *ngIf="certi.fourS=='Skill'" style="color: #4bafa5;">
-                                    {{certi.fourS}}
-                                </span>
-                                <span *ngIf="certi.fourS=='Sport'" style="color: #e04090;">
-                                    {{certi.fourS}}
-                                </span>
-                                <span *ngIf="certi.fourS=='Study'" style="color: #1f69ad;">
-                                    {{certi.fourS}}
-                                </span>
-                                <span *ngIf="certi.fourS=='Service'" style="color: #8dc33a;">
-                                    {{certi.fourS}}
-                                </span>
-                            </p>
-                            <p>{{certi.certificationAuthority}}</p>
+                        <div class="certi_box">
+                            <div class="card_box">
+                                <img src="assets/images/award.jpg">
+                                <div class="certi_text">
+                                    <h2>{{certi.title}}</h2>
+                                    <p>{{certi.description}}</p>
+                                    <p>
+                                        <span *ngIf="certi.fourS=='Skill'" style="color: #4bafa5;">
+                                            {{certi.fourS}}
+                                        </span>
+                                        <span *ngIf="certi.fourS=='Sport'" style="color: #e04090;">
+                                            {{certi.fourS}}
+                                        </span>
+                                        <span *ngIf="certi.fourS=='Study'" style="color: #1f69ad;">
+                                            {{certi.fourS}}
+                                        </span>
+                                        <span *ngIf="certi.fourS=='Service'" style="color: #8dc33a;">
+                                            {{certi.fourS}}
+                                        </span>
+                                    </p>
+                                    <p>{{certi.certificationAuthority}}</p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
                 </div>
-            </div>
-
             <button id="add_certi" type="button" class="btn btn-primary" data-toggle="modal"
                 data-target="#certificateModal">
                 <i class="fa fa-plus"></i>
             </button>
+           <!--
+                <div class="container">
+                    <div class="row">
+                        <div class="col-4">
+                        </div>
+                    </div>
+            </div>
+           -->
 <!--------------------------------- Modal ------------------------------------->
             <div class="modal fade" id="certificateModal" tabindex="-1" role="dialog"
                 aria-labelledby="exampleModalLabel" aria-hidden="true">

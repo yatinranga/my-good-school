@@ -224,7 +224,8 @@
                             </div>
                             <ul id="student_list">
                                 <li *ngFor="let req of clubReqArr; let i = index">{{i+1}}. {{req.student.name}}
-                                    <div>
+                                    <!--
+                                          <div>
                                         <span *ngIf="req.membershipStatus=='PENDING'"
                                             style="color: blue">({{req.membershipStatus | uppercase}})</span>
                                         <span *ngIf="req.membershipStatus=='VERIFIED'"
@@ -232,7 +233,7 @@
                                         <span *ngIf="req.membershipStatus=='REJECTED'"
                                             style="color: red">({{req.membershipStatus | uppercase}})</span>
                                     </div>
-
+                                    -->
                                     <span>Grade - {{req.student.grade}} {{req.student.section}}</span><br>
                                     <button *ngIf="req.membershipStatus=='PENDING'" class="btn btn-success"
                                         (click)="setClubReq(req,i,'true')">Verify</button>
