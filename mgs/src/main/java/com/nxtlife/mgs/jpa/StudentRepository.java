@@ -14,7 +14,7 @@ import com.nxtlife.mgs.enums.ActivityStatus;
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
 	Student getOneByCidAndActiveTrue(String cid);
-	
+
 	Student getByUserId(Long userId);
 
 	int countByEmail(String email);
@@ -27,12 +27,10 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
 	List<Student> findAllBySchoolCidAndGradeCid(String schooolCid, String gradeCid);
 
-	Student findById(Long id);
-
 	void deleteByCid(String cid);
 
 	List<Student> findAllBySchoolCidAndActiveTrue(String schoolCid);
-	
+
 	List<Student> findAllByGradeCidAndActiveTrue(String gradeCid);
 
 	List<Student> findAllByActiveTrue();
@@ -47,7 +45,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
 	Student findByCid(String cid);
 
-
 	List<Student> findAllBySchoolCidAndSchoolActiveTrueAndGradeCidAndGradeActiveTrueAndActivitiesActivityCidAndActivitiesActivityActiveTrueAndActivitiesActivityStatusAndActivitiesTeacherCidAndActivitiesTeacherActiveTrueAndActiveTrue(
 			String schoolCid, String gradeCid, String activityCid, ActivityStatus activityStatus, String teacherCid);
 
@@ -57,7 +54,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 	Boolean existsByCidAndActiveTrue(String studentCid);
 
 	Student getByUserIdAndActiveTrue(Long userId);
-	
+
 	@Query(value = "select s.id from Student s where s.user.id = :userId and s.active = true")
 	Long findIdByUserIdAndActiveTrue(@Param("userId") Long userId);
 
@@ -65,11 +62,9 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 			String schoolCid, String activityCid, ActivityStatus valueOf);
 
 	@Query(value = "select s.id from Student s where s.cid = :cid and s.active = true")
-	Long findIdByCidAndActiveTrue(@Param("cid")String cid);
+	Long findIdByCidAndActiveTrue(@Param("cid") String cid);
 
 	List<Student> findAllBySchoolCidAndGradeCidAndActiveTrue(String schoolId, String gradeId);
-
-
 
 	/*
 	 * List<Student>

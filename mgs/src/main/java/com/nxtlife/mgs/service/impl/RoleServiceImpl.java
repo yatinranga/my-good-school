@@ -94,7 +94,7 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 	@Secured(AuthorityUtils.ROLE_FETCH)
 	@Override
 	public RoleResponse findById(Long id) {
-		RoleResponse role = roleDao.findById(id);
+		RoleResponse role = roleDao.findResponseById(id);
 		if (role == null) {
 			throw new NotFoundException(String.format("Role(%s) not found", id));
 		}
@@ -135,8 +135,8 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 				roleAuthorities.add(new RoleAuthority(role.getId(), authorityId));
 			}
 		}
-		roleAuthorityJpaDao.save(roleAuthorities);
-		RoleResponse roleResponse = roleDao.findById(role.getId());
+		roleAuthorityJpaDao.saveAll(roleAuthorities);
+		RoleResponse roleResponse = roleDao.findResponseById(role.getId());
 		roleResponse.setAuthorities(authorityDao.findByAuthorityRolesRoleId(role.getId()));
 		return roleResponse;
 	}
@@ -145,7 +145,7 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 	@Secured(AuthorityUtils.ROLE_UPDATE)
 	public RoleResponse update(Long id, RoleRequest request) {
 		Long schoolId = getUser().gettSchoolId();
-		RoleResponse role = roleDao.findById(id);
+		RoleResponse role = roleDao.findResponseById(id);
 		if (role == null) {
 			throw new NotFoundException(String.format("Role (%s) not found", id));
 		}
@@ -169,12 +169,12 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 		}
 		roleAuthorityIds.removeAll(request.getAuthorityIds());
 		if (!roleAuthorities.isEmpty())
-			roleAuthorityJpaDao.save(roleAuthorities);
+			roleAuthorityJpaDao.saveAll(roleAuthorities);
 		if (!roleAuthorityIds.isEmpty()) {
 			roleAuthorityJpaDao.deleteByRoleIdAndAuthorityIds(id, roleAuthorityIds);
 		}
 		logger.info("Role {} updated successfully", request.getName());
-		RoleResponse roleResponse = roleDao.findById(id);
+		RoleResponse roleResponse = roleDao.findResponseById(id);
 		roleResponse.setAuthorities(authorityDao.findByAuthorityRolesRoleId(id));
 		return roleResponse;
 
@@ -183,7 +183,7 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 	@Override
 	@Secured(AuthorityUtils.ROLE_UPDATE)
 	public SuccessResponse activate(Long id) {
-		RoleResponse role = roleDao.findById(id);
+		RoleResponse role = roleDao.findResponseById(id);
 		if (role == null) {
 			throw new NotFoundException(String.format("Role (%s) not found", id));
 		}
@@ -197,7 +197,7 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 	@Override
 	@Secured(AuthorityUtils.ROLE_DELETE)
 	public SuccessResponse delete(Long id) {
-		RoleResponse role = roleDao.findById(id);
+		RoleResponse role = roleDao.findResponseById(id);
 		if (role == null) {
 			throw new NotFoundException(String.format("Role (%s) not found", id));
 		}

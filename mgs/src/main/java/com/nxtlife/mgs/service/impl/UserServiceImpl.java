@@ -64,12 +64,12 @@ import com.nxtlife.mgs.view.user.UserResponse;
 import com.nxtlife.mgs.view.user.security.AuthorityResponse;
 import com.nxtlife.mgs.view.user.security.RoleResponse;
 
-@Service
+@Service("userService")
 public class UserServiceImpl extends BaseService implements UserService, UserDetailsService {
 
 	@Autowired
 	UserRepository userRepository;
-	
+
 	@Autowired
 	UserRoleRepository userRoleRepository;
 
@@ -80,23 +80,20 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	AuthorityRepository authorityRepository;
 
 	@Autowired
-	Utils utils;
-
-	@Autowired
 	NotificationServiceImpl notificationService;
 
 	@Autowired
 	MailService mailService;
-	
+
 	@Value("${spring.mail.username}")
 	private String emailUsername;
-	
+
 	@Autowired
 	SchoolRepository schoolRepository;
-	
+
 	@Autowired
 	RoleAuthorityRepository roleAuthorityRepository;
-	
+
 	@Autowired
 	private HttpServletRequest httpServletRequest;
 
@@ -104,453 +101,520 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	private static Logger logger = org.slf4j.LoggerFactory.getLogger(UserServiceImpl.class);
 
-//	private static Logger logger = LoggerFactory.getLogger(UserService.class);
+	// private static Logger logger =
+	// LoggerFactory.getLogger(UserService.class);
 
-//	@PostConstruct
-//	public void init() {
-//
-//		// Iterate through the authority list and add it to the database!
-//
-//		Set<Authority> authorityList = new HashSet<Authority>();
-//
-//		Field[] fields = MgsAuth.Authorities.class.getDeclaredFields();
-//		for (Field f : fields) {
-//			if (Modifier.isStatic(f.getModifiers()) && Modifier.isFinal(f.getModifiers())) {
-//				logger.info("Found authority {} ", f.getName());
-//				Authority a = authorityRepository.getOneByName(f.getName());
-//
-//				if (a == null) {
-//					a = new Authority();
-//					a.setName(f.getName());
-//					a.setDescription(f.getName());
-//					a = authorityRepository.save(a);
-//
-//				}
-//				authorityList.add(a);
-//			}
-//		}
-//
-//		// attach it to tech admin role:)
-//		Role role = roleRepository.getOneByName("Admin");
-//		if (role == null) {
-//			role = new Role();
-//			role.setName("Admin");
-////			role.setCid(utils.generateRandomAlphaNumString(8));
-//		}
-//		role.setAuthorities(authorityList);
-//		role.setActive(true);
-//		roleRepository.save(role);
-//
-//		logger.info("attached Authorities to admin.");
-//		
-//		User user = userRepository.findByUserName("mainAdmin");
-//
-//		if (user == null) {
-//			 user = new User();
-//			// user.setUserName("Admin0001");
-//			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//			String encodedPassword = encoder.encode("root");
-//			user.setPassword(encodedPassword);
-//			user.setCid(utils.generateRandomAlphaNumString(8));
-//			user.setContactNumber("8860571043");
-//			user.setEmail("admin@gmail.com");
-//			user.setUsername("mainAdmin");
-////			user.setUserType(UserType.Admin);
-//		}
-//		user.setRoleForUser(role);
-//		user.setActive(true);
-//		userRepository.save(user);
-//	}
-	
-//	@Override
-//	public User createUserForEntity(Object entity) {
-//		User user = new User();
-//		user.setActive(true);
-////		user.setRegisterType(RegisterType.MANUALLY);
-//		setPasswordAndCidForUser(user);
-//		Role defaultRole = null;
-//		
-//		if(entity instanceof Student) {
-//			if (userRepository.countByUsernameAndActiveTrue(((Student) entity).getUsername()) > 0) {
-//				throw new ValidationException("This username is already registered");
-//			}
-//			
-//			if ((((Student)entity).getMobileNumber() != null && (userRepository.countByContactNumber(((Student)entity).getMobileNumber())) > 0)
-//					|| (((Student)entity).getEmail() != null && userRepository.countByEmail(((Student)entity).getEmail()) > 0)) {
-//				throw new ValidationException(String.format(
-//						"mobile number [%s] or email [%s] for Student [%s] is already registered for some other Student",
-//						((Student)entity).getMobileNumber(), ((Student)entity).getEmail(), ((Student)entity).getName()));
-//			}
-//			
-////			user.setUserType(UserType.Student);
-//			user.setUsername(((Student) entity).getUsername());
-//			
-//			if (((Student) entity).getSubscriptionEndDate() != null) 
-//				if (((Student) entity).getSubscriptionEndDate()
-//						.after(Date.from(java.time.LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())))
-////					user.setIsPaid(true);
-//			
-//			
-//			defaultRole = roleRepository.getOneByName("Student");
-//			if (defaultRole == null)
-//				throw new ValidationException("Role Student does not exist");
-//			
-////			user.setStudent(((Student) entity));
-//			user.setContactNumber(((Student) entity).getMobileNumber());
-//			user.setEmail(((Student) entity).getEmail());
-//			
-//		}else if(entity instanceof Guardian) {
-//			
-//			if (userRepository.countByUsernameAndActiveTrue(((Guardian)entity).getUsername()) > 0) {
-//				throw new ValidationException("This username is already registered");
-//			}
-//
-//			if ((((Guardian)entity).getMobileNumber() != null && (userRepository.countByContactNumber(((Guardian)entity).getMobileNumber())) > 0)
-//					|| (((Guardian)entity).getEmail() != null && userRepository.countByEmail(((Guardian)entity).getEmail()) > 0)) {
-//				throw new ValidationException(String.format(
-//						"mobile number [%s] or email [%s] for guardian [%s] is already registered for some other guardian",
-//						((Guardian)entity).getMobileNumber(), ((Guardian)entity).getEmail(), ((Guardian)entity).getName()));
-//			}
-//			
-////			user.setUserType(UserType.Parent);
-//			user.setUsername(((Guardian)entity).getUsername());
-//			
-//			if (((Guardian)entity).getStudents() != null && !((Guardian)entity).getStudents().isEmpty())
-//				for (Student s : ((Guardian)entity).getStudents()) {
-//
-//					if (s.getSubscriptionEndDate() != null) {
-//						if (s.getSubscriptionEndDate().after(
-//								Date.from(java.time.LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))) {
-////							user.setIsPaid(true);
-//							break;
-//						}
-//					}
-//				}
-//			
-//			defaultRole = roleRepository.getOneByName("Guardian");
-//			if (defaultRole == null)
-//				throw new ValidationException("Role Guardian does not exist");
-//			
-////			user.setGuardian(((Guardian)entity));
-//			user.setContactNumber(((Guardian)entity).getMobileNumber());
-//			user.setEmail(((Guardian)entity).getEmail());
-//			
-//		}else if(entity instanceof Teacher) {
-//			
-//			if (userRepository.countByUsernameAndActiveTrue(((Teacher)entity).getUsername()) > 0) {
-//				throw new ValidationException("This username is already registered");
-//			}
-//			if ((((Teacher)entity).getMobileNumber() != null && (userRepository.countByContactNumber(((Teacher)entity).getMobileNumber())) > 0)
-//					|| (((Teacher)entity).getEmail() != null && userRepository.countByEmail(((Teacher)entity).getEmail()) > 0)) {
-//				throw new ValidationException(String.format(
-//						"mobile number [%s] or email [%s] for Teacher [%s] is already registered for some other teacher",
-//						((Teacher)entity).getMobileNumber(), ((Teacher)entity).getEmail(), ((Teacher)entity).getName()));
-//			}
-//			
-////			user.setUserType(UserType.Teacher);
-//			user.setUsername(((Teacher)entity).getUsername());
-//			defaultRole = roleRepository.getOneByName("Teacher");
-//			if (defaultRole == null)
-//				throw new ValidationException("Role Teacher does not exist");
-//
-//			if (((Teacher)entity).getIsCoach() != null && ((Teacher)entity).getIsCoach() == true) {
-//				defaultRole = roleRepository.getOneByName("Coach");
-//				if (defaultRole == null)
-//					throw new ValidationException("Role Coach does not exist");
-//			}
-////			user.setTeacher(((Teacher)entity));
-//			user.setContactNumber(((Teacher)entity).getMobileNumber());
-//			user.setEmail(((Teacher)entity).getEmail());
-//			
-//		}else if(entity instanceof School) {
-//			
-//			if (userRepository.countByUsernameAndActiveTrue(((School)entity).getUsername()) > 0) {
-//				throw new ValidationException("This username is already registered");
-//			}
-//			if ((((School)entity).getContactNumber() != null && (userRepository.countByContactNumber(((School)entity).getContactNumber())) > 0)
-//					|| (((School)entity).getEmail() != null && userRepository.countByEmail(((School)entity).getEmail()) > 0)) {
-//				throw new ValidationException(String.format(
-//						"mobile number [%s] or email [%s] for School [%s] is already registered for some other school",
-//						((School)entity).getContactNumber(), ((School)entity).getEmail(), ((School)entity).getName()));
-//			}
-//			
-////			user.setUserType(UserType.School);
-//			user.setUsername(((School)entity).getUsername());
-//			defaultRole = roleRepository.getOneByName("School");
-//			if (defaultRole == null)
-//				throw new ValidationException("Role School does not exist");
-//			
-//			user.setSchool(((School)entity));
-//			user.setEmail(((School)entity).getEmail());
-//			user.setContactNumber(((School)entity).getContactNumber());
-//			
-//		}else if(entity instanceof LFIN){
-//			if (userRepository.countByUsernameAndActiveTrue(((LFIN)entity).getUsername()) > 0) {
-//				throw new ValidationException("This username is already registered");
-//			}
-//			if ((((LFIN)entity).getContactNumber() != null && (userRepository.countByContactNumber(((LFIN)entity).getContactNumber())) > 0)
-//					|| (((LFIN)entity).getEmail() != null && userRepository.countByEmail(((LFIN)entity).getEmail()) > 0)) {
-//				throw new ValidationException(String.format(
-//						"mobile number [%s] or email [%s] for LFIN [%s] is already registered for some other LFIN",
-//						((LFIN)entity).getContactNumber(), ((LFIN)entity).getEmail(), ((LFIN)entity).getName()));
-//			}
-//			
-////			user.setUserType(UserType.LFIN);
-//			user.setUsername(((LFIN)entity).getUsername());
-//			if (!roleRepository.existsByName("Lfin"))
-//				throw new ValidationException("Role Lfin does not exist");
-//			defaultRole = new Role("Lfin");
-//			user.setUserRoles(Arrays.asList(new UserRole(new UserRoleKey(defaultRole.getId(), user.getId()), defaultRole, user)));
-////			user.setLfin(((LFIN)entity));
-//			user.setEmail(((LFIN)entity).getEmail());
-//			user.setContactNumber(((LFIN)entity).getContactNumber());
-//			
-//		}else {
-//			throw new ValidationException(String.format("User for this entity type (%s) cannot be created.", entity.getClass().getSimpleName()));
-//		}
-//		
-//		
-////		user.setRoleForUser(defaultRole);
-//		return user;
-//	}
-	
-//	@Override
-//	public User createSchoolUser(School school) {
-//		if (userRepository.countByUserNameAndActiveTrue(school.getUsername()) > 0) {
-//			throw new ValidationException("This username is already registered");
-//		}
-//		if ((school.getContactNumber() != null && (userRepository.countByMobileNo(school.getContactNumber())) > 0)
-//				|| (school.getEmail() != null && userRepository.countByEmail(school.getEmail()) > 0)) {
-//			throw new ValidationException(String.format(
-//					"mobile number [%s] or email [%s] for School [%s] is already registered for some other school",
-//					school.getContactNumber(), school.getEmail(), school.getName()));
-//		}
-//		User user = new User();
-//		user.setActive(true);
-//		user.setUserType(UserType.School);
-//		user.setRegisterType(RegisterType.MANUALLY);
-//		user.setUserName(school.getUsername());
-//		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//		String password = utils.generateRandomAlphaNumString(10);
-//		String encodedPassword = encoder.encode(password);
-//		user.setPassword(encodedPassword);
-//		user.setRawPassword(password);
-//		System.out.println(String.format("Password : %s ANd EncodedPassword : %s", user.getRawPassword() , user.getPassword()) );
-//		user.setCid(utils.generateRandomAlphaNumString(8));
-//
-//		// user.setIsPaid(true);
-//
-//		Role defaultRole = roleRepository.getOneByName("School");
-//		if (defaultRole == null)
-//			throw new ValidationException("Role School does not exist");
-//
-//		user.setRoleForUser(defaultRole);
-//		user.setSchool(school);
-//		user.setEmail(school.getEmail());
-//		user.setMobileNo(school.getContactNumber());
-//		return user;
-//	}
-//	
-//	
-//	@Override
-//	public User createStudentUser(Student student) {
-//
-//		if (userRepository.countByUserNameAndActiveTrue(student.getUsername()) > 0) {
-//			throw new ValidationException("This username is already registered");
-//		}
-//		User user = new User();
-//		user.setActive(true);
-//		user.setUserType(UserType.Student);
-//		user.setRegisterType(RegisterType.MANUALLY);
-//		user.setUserName(student.getUsername());
-//		// setting encrypted password
-//		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//		String password = utils.generateRandomAlphaNumString(10);
-//		String encodedPassword = encoder.encode(password);
-//		user.setPassword(encodedPassword);
-//		user.setRawPassword(password);
-//		System.out.println(String.format("Password : %s ANd EncodedPassword : %s", user.getRawPassword() , user.getPassword()) );
-//		user.setCid(utils.generateRandomAlphaNumString(8));
-//
-//		if (student.getSubscriptionEndDate() != null) {
-//			if (student.getSubscriptionEndDate()
-//					.after(Date.from(java.time.LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())))
-//				user.setIsPaid(true);
-//		}
-//		Role defaultRole = roleRepository.getOneByName("Student");
-//		if (defaultRole == null)
-//			throw new ValidationException("Role Student does not exist");
-//
-//		user.setRoleForUser(defaultRole);
-//		user.setStudent(student);
-//		user.setMobileNo(student.getMobileNumber());
-//		user.setEmail(student.getEmail());
-//		// return userRepository.save(user);
-//		return user;
-//	}
-//
-//	@Override
-//	public User createTeacherUser(Teacher teacher) {
-//		if (userRepository.countByUserNameAndActiveTrue(teacher.getUsername()) > 0) {
-//			throw new ValidationException("This username is already registered");
-//		}
-//		if ((teacher.getMobileNumber() != null && (userRepository.countByMobileNo(teacher.getMobileNumber())) > 0)
-//				|| (teacher.getEmail() != null && userRepository.countByEmail(teacher.getEmail()) > 0)) {
-//			throw new ValidationException(String.format(
-//					"mobile number [%s] or email [%s] for Teacher [%s] is already registered for some other teacher",
-//					teacher.getMobileNumber(), teacher.getEmail(), teacher.getName()));
-//		}
-//		User user = new User();
-//		user.setActive(true);
-//		user.setUserType(UserType.Teacher);
-//		user.setRegisterType(RegisterType.MANUALLY); // setting it to manual may be required to passed as an argument
-//		user.setUserName(teacher.getUsername());
-//
-//		// setting encrypted password
-//		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//		String password = utils.generateRandomAlphaNumString(10);
-//		String encodedPassword = encoder.encode(password);
-//		user.setPassword(encodedPassword);
-//		user.setRawPassword(password);
-//		System.out.println(String.format("Password : %s ANd EncodedPassword : %s", user.getRawPassword() , user.getPassword()) );
-//
-//		Role defaultRole = roleRepository.getOneByName("Teacher");
-//		if (defaultRole == null)
-//			throw new ValidationException("Role Teacher does not exist");
-//
-//		if (teacher.getIsCoach() != null && teacher.getIsCoach() == true) {
-//			defaultRole = roleRepository.getOneByName("Coach");
-//			if (defaultRole == null)
-//				throw new ValidationException("Role Coach does not exist");
-//		}
-//		user.setRoleForUser(defaultRole);
-//		user.setTeacher(teacher);
-//		user.setMobileNo(teacher.getMobileNumber());
-//		user.setEmail(teacher.getEmail());
-//		// return userRepository.save(user);
-//		return user;
-//	}
-//
-//
-//	@Override
-//	public User createParentUser(Guardian guardian) {
-//		if (userRepository.countByUserNameAndActiveTrue(guardian.getUsername()) > 0) {
-//			throw new ValidationException("This username is already registered");
-//		}
-//
-//		if ((guardian.getMobileNumber() != null && (userRepository.countByMobileNo(guardian.getMobileNumber())) > 0)
-//				|| (guardian.getEmail() != null && userRepository.countByEmail(guardian.getEmail()) > 0)) {
-//			throw new ValidationException(String.format(
-//					"mobile number [%s] or email [%s] for guardian [%s] is already registered for some other guardian",
-//					guardian.getMobileNumber(), guardian.getEmail(), guardian.getName()));
-//		}
-//
-//		User user = new User();
-//		user.setActive(true);
-//		user.setUserType(UserType.Parent);
-//		user.setRegisterType(RegisterType.MANUALLY);
-//		user.setUserName(guardian.getUsername());
-//
-//		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//		String password = utils.generateRandomAlphaNumString(10);
-//		String encodedPassword = encoder.encode(password);
-//		user.setPassword(encodedPassword);
-//		user.setRawPassword(password);
-//		System.out.println(String.format("Password : %s ANd EncodedPassword : %s", user.getRawPassword() , user.getPassword()) );
-//		// try {
-//		user.setCid(utils.generateRandomAlphaNumString(8));
-//		
-//		if (guardian.getStudents() != null && !guardian.getStudents().isEmpty())
-//			for (Student s : guardian.getStudents()) {
-//
-//				if (s.getSubscriptionEndDate() != null) {
-//					if (s.getSubscriptionEndDate().after(
-//							Date.from(java.time.LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))) {
-//						user.setIsPaid(true);
-//						break;
-//					}
-//				}
-//			}
-//
-//		Role defaultRole = roleRepository.getOneByName("Guardian");
-//		if (defaultRole == null)
-//			throw new ValidationException("Role Guardian does not exist");
-//
-//		user.setRoleForUser(defaultRole);
-//		user.setGuardian(guardian);
-//		user.setMobileNo(guardian.getMobileNumber());
-//		user.setEmail(guardian.getEmail());
-//		// return userRepository.save(user);
-//		return user;
-//
-//	}
-	
+	// @PostConstruct
+	// public void init() {
+	//
+	// // Iterate through the authority list and add it to the database!
+	//
+	// Set<Authority> authorityList = new HashSet<Authority>();
+	//
+	// Field[] fields = MgsAuth.Authorities.class.getDeclaredFields();
+	// for (Field f : fields) {
+	// if (Modifier.isStatic(f.getModifiers()) &&
+	// Modifier.isFinal(f.getModifiers())) {
+	// logger.info("Found authority {} ", f.getName());
+	// Authority a = authorityRepository.getOneByName(f.getName());
+	//
+	// if (a == null) {
+	// a = new Authority();
+	// a.setName(f.getName());
+	// a.setDescription(f.getName());
+	// a = authorityRepository.save(a);
+	//
+	// }
+	// authorityList.add(a);
+	// }
+	// }
+	//
+	// // attach it to tech admin role:)
+	// Role role = roleRepository.getOneByName("Admin");
+	// if (role == null) {
+	// role = new Role();
+	// role.setName("Admin");
+	//// role.setCid(Utils.generateRandomAlphaNumString(8));
+	// }
+	// role.setAuthorities(authorityList);
+	// role.setActive(true);
+	// roleRepository.save(role);
+	//
+	// logger.info("attached Authorities to admin.");
+	//
+	// User user = userRepository.findByUserName("mainAdmin");
+	//
+	// if (user == null) {
+	// user = new User();
+	// // user.setUserName("Admin0001");
+	// BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+	// String encodedPassword = encoder.encode("root");
+	// user.setPassword(encodedPassword);
+	// user.setCid(Utils.generateRandomAlphaNumString(8));
+	// user.setContactNumber("8860571043");
+	// user.setEmail("admin@gmail.com");
+	// user.setUsername("mainAdmin");
+	//// user.setUserType(UserType.Admin);
+	// }
+	// user.setRoleForUser(role);
+	// user.setActive(true);
+	// userRepository.save(user);
+	// }
 
-//	public SuccessResponse changePassword(PasswordRequest request) {
-//
-//		request.checkPassword();
-//
-//		User user = getUser();
-//
-//		if (user == null)
-//			throw new ValidationException("No user found.");
-//		user = userRepository.findByIdAndActiveTrue(user.getId());
-//		
-//		String encodedPassword = user.getPassword();
-//
-//		if (encodedPassword == null) {
-//			throw new NotFoundException(
-//					String.format("Old Password of user having [id-%s] not set. ", user.getCid()));
-//		}
-//		
-//		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//
-//		if (!encoder.matches(request.getOldPassword(), encodedPassword)) {
-//			throw new ValidationException(String.format("old password[%s] is  incorrect", request.getOldPassword()));
-//		}
-//		user.setPassword(encoder.encode(request.getPassword()));
-//		user = userRepository.save(user);
-//
-//		return new SuccessResponse(HttpStatus.OK.value(), "password changed successfully");
-//	}
+	// @Override
+	// public User createUserForEntity(Object entity) {
+	// User user = new User();
+	// user.setActive(true);
+	//// user.setRegisterType(RegisterType.MANUALLY);
+	// setPasswordAndCidForUser(user);
+	// Role defaultRole = null;
+	//
+	// if(entity instanceof Student) {
+	// if (userRepository.countByUsernameAndActiveTrue(((Student)
+	// entity).getUsername()) > 0) {
+	// throw new ValidationException("This username is already registered");
+	// }
+	//
+	// if ((((Student)entity).getMobileNumber() != null &&
+	// (userRepository.countByContactNumber(((Student)entity).getMobileNumber()))
+	// > 0)
+	// || (((Student)entity).getEmail() != null &&
+	// userRepository.countByEmail(((Student)entity).getEmail()) > 0)) {
+	// throw new ValidationException(String.format(
+	// "mobile number [%s] or email [%s] for Student [%s] is already registered
+	// for some other Student",
+	// ((Student)entity).getMobileNumber(), ((Student)entity).getEmail(),
+	// ((Student)entity).getName()));
+	// }
+	//
+	//// user.setUserType(UserType.Student);
+	// user.setUsername(((Student) entity).getUsername());
+	//
+	// if (((Student) entity).getSubscriptionEndDate() != null)
+	// if (((Student) entity).getSubscriptionEndDate()
+	// .after(Date.from(java.time.LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())))
+	//// user.setIsPaid(true);
+	//
+	//
+	// defaultRole = roleRepository.getOneByName("Student");
+	// if (defaultRole == null)
+	// throw new ValidationException("Role Student does not exist");
+	//
+	//// user.setStudent(((Student) entity));
+	// user.setContactNumber(((Student) entity).getMobileNumber());
+	// user.setEmail(((Student) entity).getEmail());
+	//
+	// }else if(entity instanceof Guardian) {
+	//
+	// if
+	// (userRepository.countByUsernameAndActiveTrue(((Guardian)entity).getUsername())
+	// > 0) {
+	// throw new ValidationException("This username is already registered");
+	// }
+	//
+	// if ((((Guardian)entity).getMobileNumber() != null &&
+	// (userRepository.countByContactNumber(((Guardian)entity).getMobileNumber()))
+	// > 0)
+	// || (((Guardian)entity).getEmail() != null &&
+	// userRepository.countByEmail(((Guardian)entity).getEmail()) > 0)) {
+	// throw new ValidationException(String.format(
+	// "mobile number [%s] or email [%s] for guardian [%s] is already registered
+	// for some other guardian",
+	// ((Guardian)entity).getMobileNumber(), ((Guardian)entity).getEmail(),
+	// ((Guardian)entity).getName()));
+	// }
+	//
+	//// user.setUserType(UserType.Parent);
+	// user.setUsername(((Guardian)entity).getUsername());
+	//
+	// if (((Guardian)entity).getStudents() != null &&
+	// !((Guardian)entity).getStudents().isEmpty())
+	// for (Student s : ((Guardian)entity).getStudents()) {
+	//
+	// if (s.getSubscriptionEndDate() != null) {
+	// if (s.getSubscriptionEndDate().after(
+	// Date.from(java.time.LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())))
+	// {
+	//// user.setIsPaid(true);
+	// break;
+	// }
+	// }
+	// }
+	//
+	// defaultRole = roleRepository.getOneByName("Guardian");
+	// if (defaultRole == null)
+	// throw new ValidationException("Role Guardian does not exist");
+	//
+	//// user.setGuardian(((Guardian)entity));
+	// user.setContactNumber(((Guardian)entity).getMobileNumber());
+	// user.setEmail(((Guardian)entity).getEmail());
+	//
+	// }else if(entity instanceof Teacher) {
+	//
+	// if
+	// (userRepository.countByUsernameAndActiveTrue(((Teacher)entity).getUsername())
+	// > 0) {
+	// throw new ValidationException("This username is already registered");
+	// }
+	// if ((((Teacher)entity).getMobileNumber() != null &&
+	// (userRepository.countByContactNumber(((Teacher)entity).getMobileNumber()))
+	// > 0)
+	// || (((Teacher)entity).getEmail() != null &&
+	// userRepository.countByEmail(((Teacher)entity).getEmail()) > 0)) {
+	// throw new ValidationException(String.format(
+	// "mobile number [%s] or email [%s] for Teacher [%s] is already registered
+	// for some other teacher",
+	// ((Teacher)entity).getMobileNumber(), ((Teacher)entity).getEmail(),
+	// ((Teacher)entity).getName()));
+	// }
+	//
+	//// user.setUserType(UserType.Teacher);
+	// user.setUsername(((Teacher)entity).getUsername());
+	// defaultRole = roleRepository.getOneByName("Teacher");
+	// if (defaultRole == null)
+	// throw new ValidationException("Role Teacher does not exist");
+	//
+	// if (((Teacher)entity).getIsCoach() != null &&
+	// ((Teacher)entity).getIsCoach() == true) {
+	// defaultRole = roleRepository.getOneByName("Coach");
+	// if (defaultRole == null)
+	// throw new ValidationException("Role Coach does not exist");
+	// }
+	//// user.setTeacher(((Teacher)entity));
+	// user.setContactNumber(((Teacher)entity).getMobileNumber());
+	// user.setEmail(((Teacher)entity).getEmail());
+	//
+	// }else if(entity instanceof School) {
+	//
+	// if
+	// (userRepository.countByUsernameAndActiveTrue(((School)entity).getUsername())
+	// > 0) {
+	// throw new ValidationException("This username is already registered");
+	// }
+	// if ((((School)entity).getContactNumber() != null &&
+	// (userRepository.countByContactNumber(((School)entity).getContactNumber()))
+	// > 0)
+	// || (((School)entity).getEmail() != null &&
+	// userRepository.countByEmail(((School)entity).getEmail()) > 0)) {
+	// throw new ValidationException(String.format(
+	// "mobile number [%s] or email [%s] for School [%s] is already registered
+	// for some other school",
+	// ((School)entity).getContactNumber(), ((School)entity).getEmail(),
+	// ((School)entity).getName()));
+	// }
+	//
+	//// user.setUserType(UserType.School);
+	// user.setUsername(((School)entity).getUsername());
+	// defaultRole = roleRepository.getOneByName("School");
+	// if (defaultRole == null)
+	// throw new ValidationException("Role School does not exist");
+	//
+	// user.setSchool(((School)entity));
+	// user.setEmail(((School)entity).getEmail());
+	// user.setContactNumber(((School)entity).getContactNumber());
+	//
+	// }else if(entity instanceof LFIN){
+	// if
+	// (userRepository.countByUsernameAndActiveTrue(((LFIN)entity).getUsername())
+	// > 0) {
+	// throw new ValidationException("This username is already registered");
+	// }
+	// if ((((LFIN)entity).getContactNumber() != null &&
+	// (userRepository.countByContactNumber(((LFIN)entity).getContactNumber()))
+	// > 0)
+	// || (((LFIN)entity).getEmail() != null &&
+	// userRepository.countByEmail(((LFIN)entity).getEmail()) > 0)) {
+	// throw new ValidationException(String.format(
+	// "mobile number [%s] or email [%s] for LFIN [%s] is already registered for
+	// some other LFIN",
+	// ((LFIN)entity).getContactNumber(), ((LFIN)entity).getEmail(),
+	// ((LFIN)entity).getName()));
+	// }
+	//
+	//// user.setUserType(UserType.LFIN);
+	// user.setUsername(((LFIN)entity).getUsername());
+	// if (!roleRepository.existsByName("Lfin"))
+	// throw new ValidationException("Role Lfin does not exist");
+	// defaultRole = new Role("Lfin");
+	// user.setUserRoles(Arrays.asList(new UserRole(new
+	// UserRoleKey(defaultRole.getId(), user.getId()), defaultRole, user)));
+	//// user.setLfin(((LFIN)entity));
+	// user.setEmail(((LFIN)entity).getEmail());
+	// user.setContactNumber(((LFIN)entity).getContactNumber());
+	//
+	// }else {
+	// throw new ValidationException(String.format("User for this entity type
+	// (%s) cannot be created.", entity.getClass().getSimpleName()));
+	// }
+	//
+	//
+	//// user.setRoleForUser(defaultRole);
+	// return user;
+	// }
 
-//	@Override
-//	public SuccessResponse forgotPassword(String username) {
-//
-////		if (!username.matches("^[@A-Za-z0-9_]")) {
-////			throw new ValidationException(String.format("incorrect username [%s]", username));
-////		}
-//		if(username == null)
-//			throw new ValidationException("username cannot be null.");
-//
-//		User user = userRepository.findByUserNameAndActiveTrue(username);
-//
-//		if (user == null) {
-//			throw new NotFoundException(String.format("No user found having username : [%s] ", username));
-//		}
-//
-//		if (user.getEmail() == null && user.getContactNumber() == null) {
-//			throw new ValidationException("User email/contact not registered with us");
-//		}
-//
-//		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//		
-//		String generatedPassword = utils.generateRandomAlphaNumString(8);
-//		user.setPassword(encoder.encode(generatedPassword));
-//		user = userRepository.save(user);
-//		Boolean emailFlag =false;
-//		if (user.getEmail() != null) {
-//			Mail mail = usernamePasswordSendContentBuilder(user.getUsername(),
-//					generatedPassword, emailUsername, user.getEmail());
-//			mail.setMailSubject("Password reset successful.");
-//			emailFlag = sendLoginCredentialsBySMTP(mail);
-//		}
-//		if(!emailFlag || user.getEmail() == null)
-//			throw new ValidationException("Password could not be sent because email may not be registered or email is wrong.");
-//		return new SuccessResponse(HttpStatus.OK.value(),
-//				"New generated password has been sent to your email and/or contact number");
-//
-//	}
+	// @Override
+	// public User createSchoolUser(School school) {
+	// if (userRepository.countByUserNameAndActiveTrue(school.getUsername()) >
+	// 0) {
+	// throw new ValidationException("This username is already registered");
+	// }
+	// if ((school.getContactNumber() != null &&
+	// (userRepository.countByMobileNo(school.getContactNumber())) > 0)
+	// || (school.getEmail() != null &&
+	// userRepository.countByEmail(school.getEmail()) > 0)) {
+	// throw new ValidationException(String.format(
+	// "mobile number [%s] or email [%s] for School [%s] is already registered
+	// for some other school",
+	// school.getContactNumber(), school.getEmail(), school.getName()));
+	// }
+	// User user = new User();
+	// user.setActive(true);
+	// user.setUserType(UserType.School);
+	// user.setRegisterType(RegisterType.MANUALLY);
+	// user.setUserName(school.getUsername());
+	// BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+	// String password = Utils.generateRandomAlphaNumString(10);
+	// String encodedPassword = encoder.encode(password);
+	// user.setPassword(encodedPassword);
+	// user.setRawPassword(password);
+	// System.out.println(String.format("Password : %s ANd EncodedPassword :
+	// %s", user.getRawPassword() , user.getPassword()) );
+	// user.setCid(Utils.generateRandomAlphaNumString(8));
+	//
+	// // user.setIsPaid(true);
+	//
+	// Role defaultRole = roleRepository.getOneByName("School");
+	// if (defaultRole == null)
+	// throw new ValidationException("Role School does not exist");
+	//
+	// user.setRoleForUser(defaultRole);
+	// user.setSchool(school);
+	// user.setEmail(school.getEmail());
+	// user.setMobileNo(school.getContactNumber());
+	// return user;
+	// }
+	//
+	//
+	// @Override
+	// public User createStudentUser(Student student) {
+	//
+	// if (userRepository.countByUserNameAndActiveTrue(student.getUsername()) >
+	// 0) {
+	// throw new ValidationException("This username is already registered");
+	// }
+	// User user = new User();
+	// user.setActive(true);
+	// user.setUserType(UserType.Student);
+	// user.setRegisterType(RegisterType.MANUALLY);
+	// user.setUserName(student.getUsername());
+	// // setting encrypted password
+	// BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+	// String password = Utils.generateRandomAlphaNumString(10);
+	// String encodedPassword = encoder.encode(password);
+	// user.setPassword(encodedPassword);
+	// user.setRawPassword(password);
+	// System.out.println(String.format("Password : %s ANd EncodedPassword :
+	// %s", user.getRawPassword() , user.getPassword()) );
+	// user.setCid(Utils.generateRandomAlphaNumString(8));
+	//
+	// if (student.getSubscriptionEndDate() != null) {
+	// if (student.getSubscriptionEndDate()
+	// .after(Date.from(java.time.LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())))
+	// user.setIsPaid(true);
+	// }
+	// Role defaultRole = roleRepository.getOneByName("Student");
+	// if (defaultRole == null)
+	// throw new ValidationException("Role Student does not exist");
+	//
+	// user.setRoleForUser(defaultRole);
+	// user.setStudent(student);
+	// user.setMobileNo(student.getMobileNumber());
+	// user.setEmail(student.getEmail());
+	// // return userRepository.save(user);
+	// return user;
+	// }
+	//
+	// @Override
+	// public User createTeacherUser(Teacher teacher) {
+	// if (userRepository.countByUserNameAndActiveTrue(teacher.getUsername()) >
+	// 0) {
+	// throw new ValidationException("This username is already registered");
+	// }
+	// if ((teacher.getMobileNumber() != null &&
+	// (userRepository.countByMobileNo(teacher.getMobileNumber())) > 0)
+	// || (teacher.getEmail() != null &&
+	// userRepository.countByEmail(teacher.getEmail()) > 0)) {
+	// throw new ValidationException(String.format(
+	// "mobile number [%s] or email [%s] for Teacher [%s] is already registered
+	// for some other teacher",
+	// teacher.getMobileNumber(), teacher.getEmail(), teacher.getName()));
+	// }
+	// User user = new User();
+	// user.setActive(true);
+	// user.setUserType(UserType.Teacher);
+	// user.setRegisterType(RegisterType.MANUALLY); // setting it to manual may
+	// be required to passed as an argument
+	// user.setUserName(teacher.getUsername());
+	//
+	// // setting encrypted password
+	// BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+	// String password = Utils.generateRandomAlphaNumString(10);
+	// String encodedPassword = encoder.encode(password);
+	// user.setPassword(encodedPassword);
+	// user.setRawPassword(password);
+	// System.out.println(String.format("Password : %s ANd EncodedPassword :
+	// %s", user.getRawPassword() , user.getPassword()) );
+	//
+	// Role defaultRole = roleRepository.getOneByName("Teacher");
+	// if (defaultRole == null)
+	// throw new ValidationException("Role Teacher does not exist");
+	//
+	// if (teacher.getIsCoach() != null && teacher.getIsCoach() == true) {
+	// defaultRole = roleRepository.getOneByName("Coach");
+	// if (defaultRole == null)
+	// throw new ValidationException("Role Coach does not exist");
+	// }
+	// user.setRoleForUser(defaultRole);
+	// user.setTeacher(teacher);
+	// user.setMobileNo(teacher.getMobileNumber());
+	// user.setEmail(teacher.getEmail());
+	// // return userRepository.save(user);
+	// return user;
+	// }
+	//
+	//
+	// @Override
+	// public User createParentUser(Guardian guardian) {
+	// if (userRepository.countByUserNameAndActiveTrue(guardian.getUsername()) >
+	// 0) {
+	// throw new ValidationException("This username is already registered");
+	// }
+	//
+	// if ((guardian.getMobileNumber() != null &&
+	// (userRepository.countByMobileNo(guardian.getMobileNumber())) > 0)
+	// || (guardian.getEmail() != null &&
+	// userRepository.countByEmail(guardian.getEmail()) > 0)) {
+	// throw new ValidationException(String.format(
+	// "mobile number [%s] or email [%s] for guardian [%s] is already registered
+	// for some other guardian",
+	// guardian.getMobileNumber(), guardian.getEmail(), guardian.getName()));
+	// }
+	//
+	// User user = new User();
+	// user.setActive(true);
+	// user.setUserType(UserType.Parent);
+	// user.setRegisterType(RegisterType.MANUALLY);
+	// user.setUserName(guardian.getUsername());
+	//
+	// BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+	// String password = Utils.generateRandomAlphaNumString(10);
+	// String encodedPassword = encoder.encode(password);
+	// user.setPassword(encodedPassword);
+	// user.setRawPassword(password);
+	// System.out.println(String.format("Password : %s ANd EncodedPassword :
+	// %s", user.getRawPassword() , user.getPassword()) );
+	// // try {
+	// user.setCid(Utils.generateRandomAlphaNumString(8));
+	//
+	// if (guardian.getStudents() != null && !guardian.getStudents().isEmpty())
+	// for (Student s : guardian.getStudents()) {
+	//
+	// if (s.getSubscriptionEndDate() != null) {
+	// if (s.getSubscriptionEndDate().after(
+	// Date.from(java.time.LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())))
+	// {
+	// user.setIsPaid(true);
+	// break;
+	// }
+	// }
+	// }
+	//
+	// Role defaultRole = roleRepository.getOneByName("Guardian");
+	// if (defaultRole == null)
+	// throw new ValidationException("Role Guardian does not exist");
+	//
+	// user.setRoleForUser(defaultRole);
+	// user.setGuardian(guardian);
+	// user.setMobileNo(guardian.getMobileNumber());
+	// user.setEmail(guardian.getEmail());
+	// // return userRepository.save(user);
+	// return user;
+	//
+	// }
+
+	// public SuccessResponse changePassword(PasswordRequest request) {
+	//
+	// request.checkPassword();
+	//
+	// User user = getUser();
+	//
+	// if (user == null)
+	// throw new ValidationException("No user found.");
+	// user = userRepository.findByIdAndActiveTrue(user.getId());
+	//
+	// String encodedPassword = user.getPassword();
+	//
+	// if (encodedPassword == null) {
+	// throw new NotFoundException(
+	// String.format("Old Password of user having [id-%s] not set. ",
+	// user.getCid()));
+	// }
+	//
+	// BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+	//
+	// if (!encoder.matches(request.getOldPassword(), encodedPassword)) {
+	// throw new ValidationException(String.format("old password[%s] is
+	// incorrect", request.getOldPassword()));
+	// }
+	// user.setPassword(encoder.encode(request.getPassword()));
+	// user = userRepository.save(user);
+	//
+	// return new SuccessResponse(HttpStatus.OK.value(), "password changed
+	// successfully");
+	// }
+
+	// @Override
+	// public SuccessResponse forgotPassword(String username) {
+	//
+	//// if (!username.matches("^[@A-Za-z0-9_]")) {
+	//// throw new ValidationException(String.format("incorrect username [%s]",
+	// username));
+	//// }
+	// if(username == null)
+	// throw new ValidationException("username cannot be null.");
+	//
+	// User user = userRepository.findByUserNameAndActiveTrue(username);
+	//
+	// if (user == null) {
+	// throw new NotFoundException(String.format("No user found having username
+	// : [%s] ", username));
+	// }
+	//
+	// if (user.getEmail() == null && user.getContactNumber() == null) {
+	// throw new ValidationException("User email/contact not registered with
+	// us");
+	// }
+	//
+	// BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+	//
+	// String generatedPassword = Utils.generateRandomAlphaNumString(8);
+	// user.setPassword(encoder.encode(generatedPassword));
+	// user = userRepository.save(user);
+	// Boolean emailFlag =false;
+	// if (user.getEmail() != null) {
+	// Mail mail = usernamePasswordSendContentBuilder(user.getUsername(),
+	// generatedPassword, emailUsername, user.getEmail());
+	// mail.setMailSubject("Password reset successful.");
+	// emailFlag = sendLoginCredentialsBySMTP(mail);
+	// }
+	// if(!emailFlag || user.getEmail() == null)
+	// throw new ValidationException("Password could not be sent because email
+	// may not be registered or email is wrong.");
+	// return new SuccessResponse(HttpStatus.OK.value(),
+	// "New generated password has been sent to your email and/or contact
+	// number");
+	//
+	// }
 
 	@Override
 	public void sendLoginCredentialsByGmailApi(MailRequest request) {
@@ -577,13 +641,15 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		try {
 			mailService.sendEmail(request);
 		} catch (UnsupportedEncodingException | MessagingException e) {
-			logger.info(String.format("Email not sent successfuly to email address %s , email might be incorrect. ", request.getMailTo()));
+			logger.info(String.format("Email not sent successfuly to email address %s , email might be incorrect. ",
+					request.getMailTo()));
 			return false;
-			//throw new ValidationException(String.format("Something went wrong unable to send email to (%s)", request.getMailTo()));
+			// throw new ValidationException(String.format("Something went wrong
+			// unable to send email to (%s)", request.getMailTo()));
 		}
 		logger.info(String.format("Email sent successfuly to email address %s ", request.getMailTo()));
 		System.out.println(String.format("Email sent successfuly to email address %s ", request.getMailTo()));
-		
+
 		return true;
 	}
 
@@ -603,9 +669,10 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		if ((school = schoolRepository.findByNameAndActiveTrue("my good school")) == null) {
 			school = new School();
 			school.setName("my good school");
-			school.setUsername(String.format("%s%08d", school.getName().substring(0, 3) ,utils.generateRandomNumString(8) ));
+			school.setUsername(
+					String.format("%s%s", school.getName().trim().substring(0, 3), Utils.generateRandomNumString(8)));
 			school.setEmail("mygoodschool@gmail.com");
-			school.setCid(utils.generateRandomAlphaNumString(8));
+			school.setCid(Utils.generateRandomAlphaNumString(8));
 			school.setActive(true);
 			schoolRepository.save(school);
 		}
@@ -618,10 +685,10 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		if (userRepository.findByUsernameAndSchoolId("mgsadmin", school.getId()) == null) {
 			User user = new User("mgsadmin", userPasswordEncoder.encode("12345"), null);
 			user.setName("Mgs Admin");
-			user.setCid(utils.generateRandomAlphaNumString(8));
+			user.setCid(Utils.generateRandomAlphaNumString(8));
 			user.setSchool(school);
 			user.setUserRoles(Arrays.asList(new UserRole(new UserRoleKey(role.getId(), user.getId()), role, user)));
-			userRepository.save(Arrays.asList(user));
+			userRepository.save(user);
 			List<Authority> authorities = authorityRepository.findAll();
 			for (Authority authority : authorities) {
 				roleAuthorityRepository.save(
@@ -630,21 +697,22 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		}
 
 	}
-	
+
 	@Override
-	public User createUser(String name ,String contactNumber ,String email , Long schoolId) {
+	public User createUser(String name, String contactNumber, String email, Long schoolId) {
 		User user = new User();
 		user.setActive(true);
 		user.setName(name);
-		user.setUsername(String.format("%s%08d", name.substring(0, 3) ,utils.generateRandomNumString(8) ));
-		if(email != null && userRepository.existsByEmail(email))
+		user.setUsername(String.format("%s%08d", name.substring(0, 3), Utils.generateRandomNumString(8)));
+		if (email != null && userRepository.existsByEmail(email))
 			throw new ValidationException(String.format("User with email (%s) already exists.", email));
 		user.setEmail(email);
-		if(contactNumber != null && userRepository.existsByContactNumber(contactNumber))
-			throw new ValidationException(String.format("User with contact number (%s) already exists.", contactNumber));
+		if (contactNumber != null && userRepository.existsByContactNumber(contactNumber))
+			throw new ValidationException(
+					String.format("User with contact number (%s) already exists.", contactNumber));
 		user.setContactNumber(contactNumber);
-		user.setCid(utils.generateRandomAlphaNumString(6));
-		if(schoolId != null) {
+		user.setCid(Utils.generateRandomAlphaNumString(6));
+		if (schoolId != null) {
 			School school = new School();
 			school.setId(schoolId);
 			user.setSchool(school);
@@ -653,28 +721,24 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		return user;
 	}
 
-
-	
-	
 	private void setPasswordAndCidForUser(User user) {
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		String password = utils.generateRandomAlphaNumString(10);
+		String password = Utils.generateRandomAlphaNumString(10);
 		String encodedPassword = encoder.encode(password);
 		user.setPassword(encodedPassword);
 		user.setRawPassword(password);
-		System.out.println(String.format("Password : %s ANd EncodedPassword : %s", user.getRawPassword() , user.getPassword()) );
-		user.setCid(utils.generateRandomAlphaNumString(8));
+		System.out.println(
+				String.format("Password : %s ANd EncodedPassword : %s", user.getRawPassword(), user.getPassword()));
+		user.setCid(Utils.generateRandomAlphaNumString(8));
 	}
-	
 
-	
-	
-//	@Override
-//	public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-//		User user = userRepository.findByUserName(s);
-//		user.setUserId(user.getId());
-//		return user;
-//	}
+	// @Override
+	// public UserDetails loadUserByUsername(String s) throws
+	// UsernameNotFoundException {
+	// User user = userRepository.findByUserName(s);
+	// user.setUserId(user.getId());
+	// return user;
+	// }
 
 	@Override
 	@Transactional
@@ -687,8 +751,6 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	}
 
-
-	
 	/**
 	 * this method used to validate role ids that these role ids exist in
 	 * database or not for an organization
@@ -705,7 +767,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 		}
 	}
-	
+
 	private void validateRoleIds(Set<Long> requestRoleIds, Long schoolId) {
 		List<Long> roleIds = roleRepository.getAllIdsByActive(true);
 		if (!roleIds.containsAll(requestRoleIds)) {
@@ -723,6 +785,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	 * @param request
 	 * @param schoolId
 	 */
+	@SuppressWarnings("unused")
 	private void validate(UserRequest request, String schoolId) {
 		if (userRepository.existsByUsernameAndSchoolCid(request.getUsername(), schoolId)) {
 			throw new ValidationException(String.format("This user (%s) already exist", request.getUsername()));
@@ -730,13 +793,12 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 				true) != null) {
 			throw new ValidationException(String.format("This user's contactNo (%s) already exists",
 					request.getContactNumber() == null ? "NA" : request.getContactNumber()));
-		} else if (userRepository.findIdBySchoolCidAndEmailAndActive(schoolId, request.getEmail(),
-				true) != null) {
+		} else if (userRepository.findIdBySchoolCidAndEmailAndActive(schoolId, request.getEmail(), true) != null) {
 			throw new ValidationException(String.format("This user's email (%s) already exists", request.getEmail()));
 		}
 		validateRoleIds(request.getRoleIds(), schoolId);
 	}
-	
+
 	private void validate(UserRequest request, Long schoolId) {
 		if (userRepository.existsByUsernameAndSchoolId(request.getUsername(), schoolId)) {
 			throw new ValidationException(String.format("This user (%s) already exist", request.getUsername()));
@@ -744,8 +806,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 				true) != null) {
 			throw new ValidationException(String.format("This user's contactNo (%s) already exists",
 					request.getContactNumber() == null ? "NA" : request.getContactNumber()));
-		} else if (userRepository.findIdBySchoolIdAndEmailAndActive(schoolId, request.getEmail(),
-				true) != null) {
+		} else if (userRepository.findIdBySchoolIdAndEmailAndActive(schoolId, request.getEmail(), true) != null) {
 			throw new ValidationException(String.format("This user's email (%s) already exists", request.getEmail()));
 		}
 		validateRoleIds(request.getRoleIds(), schoolId);
@@ -763,7 +824,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		response.setRoles(new HashSet<>());
 		RoleResponse roleResponse;
 		for (Long roleId : roleIds) {
-			roleResponse = roleRepository.findById(roleId);
+			roleResponse = roleRepository.findResponseById(roleId);
 			roleResponse.setAuthorities(authorityRepository.findByAuthorityRolesRoleId(roleId));
 			response.getRoles().add(roleResponse);
 		}
@@ -876,7 +937,8 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			validateRoleIds(request.getRoleIds(), schoolId);
 			requestBody = true;
 		}
-		if (request.getContactNumber() == null && request.getEmail() == null && request.getName() == null && !requestBody) {
+		if (request.getContactNumber() == null && request.getEmail() == null && request.getName() == null
+				&& !requestBody) {
 			throw new ValidationException("Request body is not valid");
 		}
 		Long id;
@@ -889,7 +951,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 				throw new ValidationException("Contact number value is not correct");
 			}
 			id = userRepository.findIdBySchoolIdAndContactNumberAndActive(schoolId, request.getContactNumber(), true);
-			if (id != null ) {
+			if (id != null) {
 				throw new ValidationException(
 						String.format("This contact number (%s) already exists", request.getContactNumber()));
 			}
@@ -897,7 +959,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		}
 		if (request.getEmail() != null) {
 			id = userRepository.findIdBySchoolIdAndEmailAndActive(schoolId, request.getEmail(), true);
-			if (id != null ) {
+			if (id != null) {
 				throw new ValidationException(String.format("This email (%s) already exists", request.getEmail()));
 			}
 			user.setEmail(request.getEmail());
@@ -935,8 +997,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		if (schoolId == null) {
 			throw new NotFoundException(String.format("Organization(%s) not found", client));
 		}
-		Map<String, String> response = userRepository.findEmailAndContactByUsernameAndSchoolId(username,
-				schoolId);
+		Map<String, String> response = userRepository.findEmailAndContactByUsernameAndSchoolId(username, schoolId);
 		if (response == null) {
 			throw new NotFoundException(String.format("User[username-%s] not found", username));
 		}
@@ -1000,8 +1061,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		request.checkPassword();
 		String encodedPassword = userRepository.findPasswordById(getUserId());
 		if (encodedPassword == null) {
-			throw new NotFoundException(
-					String.format("User[id-%s] not found or password already set", getUserId()));
+			throw new NotFoundException(String.format("User[id-%s] not found or password already set", getUserId()));
 		}
 		if (!userPasswordEncoder.matches(request.getOldPassword(), encodedPassword)) {
 			throw new ValidationException(String.format("Old password[%s] incorrect", request.getOldPassword()));

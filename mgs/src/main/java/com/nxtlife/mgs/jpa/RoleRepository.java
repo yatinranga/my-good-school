@@ -14,49 +14,48 @@ import com.nxtlife.mgs.entity.user.Role;
 import com.nxtlife.mgs.view.user.security.RoleResponse;
 
 @Repository(value = "roleRepository")
-public interface RoleRepository extends JpaRepository<Role, Long>
-{
-    Role getOneByName(String name);
-    
-    Role getOneById(Long id);
-    
-    Role findByName(String name);
+public interface RoleRepository extends JpaRepository<Role, Long> {
+	Role getOneByName(String name);
+
+	Role getOneById(Long id);
+
+	Role findByName(String name);
 
 	boolean existsByName(String string);
-	
-	boolean existsByNameAndSchoolCid(String name , String schoolCid);
-	
-	boolean existsByNameAndSchoolId(String name , Long schoolId);
+
+	boolean existsByNameAndSchoolCid(String name, String schoolCid);
+
+	boolean existsByNameAndSchoolId(String name, Long schoolId);
 
 	Role findBySchoolIdAndName(Long schoolId, String name);
-	
-	/* Imported Code*/
-	
+
+	/* Imported Code */
+
 	public List<RoleResponse> findBySchoolId(Long schoolId);
-	
+
 	public List<RoleResponse> findBySchoolCid(String schoolId);
 
 	public Role findBySchoolCidAndName(String schoolId, String name);
 
-	public RoleResponse findById(Long id);
+	public RoleResponse findResponseById(Long id);
 
 	public Set<RoleResponse> findByRoleUsersUserId(Long userId);
-	
+
 	public Set<RoleResponse> findByRoleUsersUserCid(String userId);
 
 	public Boolean existsRoleByNameAndSchoolId(String name, Long schoolId);
-	
+
 	public Boolean existsRoleByNameAndSchoolCid(String name, String schoolId);
-	
+
 	@Query(value = "select r.id from Role r where r.name=?1 ")
 	public Long findIdByName(String name);
 
 	@Query(value = "select r.id from Role r where r.name=?1 and r.school.id=?2")
 	public Long findIdByNameAndSchoolId(String name, Long schoolId);
-	
+
 	@Query(value = "select r.name from Role r where r.school.id=?2")
 	public Set<String> findNameBySchoolId(Long schoolId);
-	
+
 	@Query(value = "select r.id from Role r where r.name=?1 and r.school.cid=?2")
 	public Long findIdByNameAndSchoolCid(String name, String schoolId);
 
@@ -65,13 +64,13 @@ public interface RoleRepository extends JpaRepository<Role, Long>
 
 	@Query(value = "select r.id from Role r")
 	public List<Long> getAllIds();
-	
+
 	@Query(value = "select r.id from Role r where r.active=?1")
 	public List<Long> getAllIdsByActive(Boolean active);
 
 	@Query(value = "select r.id from Role r where r.school.id=?1 and active=?2")
 	public Set<Long> findIdsBySchoolIdAandActive(Long schoolId, Boolean active);
-	
+
 	@Query(value = "select r.id from Role r where r.school.cid=?1 and r.active=?2")
 	public Set<Long> findIdsBySchoolCidAandActive(String schoolId, Boolean active);
 
@@ -90,5 +89,5 @@ public interface RoleRepository extends JpaRepository<Role, Long>
 	@Query(value = "select r from Role r where r.school.id=?1 and r.name in ?2")
 	List<Role> findAllBySchoolIdAndNameIn(Long id, Collection<String> existingRoles);
 
-	Boolean existsById(Long roleId);
+	boolean existsById(Long roleId);
 }

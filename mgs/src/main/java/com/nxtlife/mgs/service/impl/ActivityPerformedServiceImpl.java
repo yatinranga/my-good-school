@@ -1,7 +1,6 @@
 package com.nxtlife.mgs.service.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,9 +64,6 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 	TeacherRepository teacherRepository;
 
 	@Autowired
-	Utils utils;
-
-	@Autowired
 	ActivityPerformedRepository activityPerformedRepository;
 
 	@Autowired
@@ -81,7 +77,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 
 	@Autowired
 	ActivityRepository activityRepository;
-	
+
 	@Autowired
 	StudentClubRepository studentClubRepository;
 
@@ -97,9 +93,10 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 	@Override
 	public File saveMediaForActivityPerformed(FileRequest fileRequest, String category,
 			ActivityPerformed activityPerformed) {
-//		File file = fileService.saveMedia(fileRequest, category);
+		// File file = fileService.saveMedia(fileRequest, category);
 		File file = fileRequest.toEntity();
-		String fileUrl = fileStorageService.storeFile(fileRequest.getFile(), fileRequest.getFile().getOriginalFilename(), category,true , fileRequest.getIsImage());
+		String fileUrl = fileStorageService.storeFile(fileRequest.getFile(),
+				fileRequest.getFile().getOriginalFilename(), category, true, fileRequest.getIsImage());
 		file.setUrl(fileUrl);
 		if (fileRequest.getId() != null)
 			file.setCid(fileRequest.getId());
@@ -132,9 +129,12 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 		if (activity == null)
 			throw new ValidationException(
 					String.format("Activity with id : %s does not exist.", request.getActivityId()));
-		
-		if(!studentClubRepository.existsByStudentIdAndActivityIdAndMembershipStatusAndActiveTrue(student.getId(), activity.getId(), ApprovalStatus.VERIFIED))
-			throw new ValidationException(String.format("You are not a member of %s : %s please apply for membership first.", activity.getClubOrSociety().toString() , activity.getName()));
+
+		if (!studentClubRepository.existsByStudentIdAndActivityIdAndMembershipStatusAndActiveTrue(student.getId(),
+				activity.getId(), ApprovalStatus.VERIFIED))
+			throw new ValidationException(
+					String.format("You are not a member of %s : %s please apply for membership first.",
+							activity.getClubOrSociety().toString(), activity.getName()));
 
 		if (request.getCoachId() == null)
 			throw new ValidationException("Coach Id can not be null.");
@@ -146,7 +146,8 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 					String.format("Coach id is invalid no coach with id : %s found.", request.getCoachId()));
 
 		/*
-		 * setting those fields in request to null which needs to filled by Coach
+		 * setting those fields in request to null which needs to filled by
+		 * Coach
 		 */
 		if (request.getCoachRemark() != null || request.getAchievementScore() != null
 				|| request.getParticipationScore() != null || request.getInitiativeScore() != null) {
@@ -174,20 +175,19 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			if (request.getDescription() != null)
 				activityPerformed.setDescription(request.getDescription());
 
-			
 			/*
-			 * write logic here to add new files if any and remove files which is not
-			 * present now but were present earlier
+			 * write logic here to add new files if any and remove files which
+			 * is not present now but were present earlier
 			 */
 
 			List<FileRequest> requestFiles = request.getFileRequests();
-			
+
 			if (requestFiles != null && !requestFiles.isEmpty()) {
-				
+
 				List<File> allValidFilesOfActivity = fileRepository
 						.findAllByActivityPerformedCidAndActiveTrue(request.getId());
 				List<File> updatedFiles = new ArrayList<File>();
-				
+
 				for (int itr = 0; itr < requestFiles.size(); itr++) {
 					if (requestFiles.get(itr).getId() != null) {
 						for (int itr2 = 0; itr2 < allValidFilesOfActivity.size(); itr2++) {
@@ -212,10 +212,10 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 
 					}
 				}
-				
+
 				/*
-				 * logic to delete the files which were previously there but in new request have
-				 * been removed.
+				 * logic to delete the files which were previously there but in
+				 * new request have been removed.
 				 */
 				for (File f : allValidFilesOfActivity) {
 					fileRepository.updateFileSetActiveByCid(false, f.getCid());
@@ -226,46 +226,47 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 					for (FileRequest fileReq : requestFiles) {
 						File file = saveMediaForActivityPerformed(fileReq, "/activity-file/", activityPerformed);
 						if (file != null) {
-							file.setCid(utils.generateRandomAlphaNumString(8));
+							file.setCid(Utils.generateRandomAlphaNumString(8));
 							updatedFiles.add(file);
 						}
 					}
 
-				if(updatedFiles.size() > 5)
+				if (updatedFiles.size() > 5)
 					throw new ValidationException("Cannot attach more than 5 files to upload.");
 				// Setting files to activityPerformed
 				activityPerformed.setFiles(updatedFiles);
 
 			}
-			
+
 		} else {
 			/* Converting request to entity */
 			activityPerformed = request.toEntity();
 
 			/* Saving files associated with activity */
-			
+
 			if (request.getFileRequests() != null && !request.getFileRequests().isEmpty()) {
 				List<File> activityPerformedMedia = new ArrayList<>();
-				if(request.getFileRequests().size() > 5)
+				if (request.getFileRequests().size() > 5)
 					throw new ValidationException("Cannot attach more than 5 files to upload.");
-			
+
 				for (FileRequest fileReq : request.getFileRequests()) {
 					File file = saveMediaForActivityPerformed(fileReq, "/activity-file/", activityPerformed);
 					if (file != null) {
-						if(file.getCid() == null)
-						    file.setCid(utils.generateRandomAlphaNumString(8));
+						if (file.getCid() == null)
+							file.setCid(Utils.generateRandomAlphaNumString(8));
 						activityPerformedMedia.add(file);
 					}
 				}
-			/*
-			 * Assigned the returned files List set to ActivityPerformed entity
-			 */
-			activityPerformed.setFiles(activityPerformedMedia);
+				/*
+				 * Assigned the returned files List set to ActivityPerformed
+				 * entity
+				 */
+				activityPerformed.setFiles(activityPerformedMedia);
 			}
 
 			activityPerformed.setActive(true);
 			if (activityPerformed.getCid() == null)
-				activityPerformed.setCid(utils.generateRandomAlphaNumString(8));
+				activityPerformed.setCid(Utils.generateRandomAlphaNumString(8));
 		}
 
 		actStatus = ActivityStatus.SavedByStudent;
@@ -293,10 +294,11 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 					String.format("Activity with the id : %s is already submitted by you and cannot be edited.",
 							activityPerformedCid));
 
-		if (activity.getDateOfActivity() == null
-				|| activity.getDescription() == null/*
-													 * || activity.getFiles() == null || activity.getFiles().isEmpty()
-													 */)
+		if (activity.getDateOfActivity() == null || activity
+				.getDescription() == null/*
+											 * || activity.getFiles() == null ||
+											 * activity.getFiles().isEmpty()
+											 */)
 			throw new ValidationException("Activity cannot be submitted first fill all the mandatory fields.");
 
 		activity.setActivityStatus(ActivityStatus.SubmittedByStudent);
@@ -700,8 +702,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 
 		List<ActivityPerformed> performedActivities = activityPerformedRepository
 				.findAllByStudentCidAndActivityStatusAndActiveTrue(studentCid, ActivityStatus.SavedByStudent,
-						(Pageable) new PageRequest(page, pageSize,
-								new Sort(Direction.DESC, Arrays.asList("dateOfActivity"))));
+						(Pageable) PageRequest.of(page, pageSize, Sort.by(Direction.DESC, "dateOfActivity")));
 		if (performedActivities == null || performedActivities.isEmpty())
 			throw new ValidationException("No activities saved by student.");
 		return performedActivities.stream().map(ActivityPerformedResponse::new).collect(Collectors.toList());
@@ -716,24 +717,24 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			throw new ValidationException("No student found with id : " + studentCid);
 
 		List<ActivityPerformed> performedActivities = activityPerformedRepository.findAllByStudentCidAndActiveTrue(
-				studentCid,
-				(Pageable) new PageRequest(page, pageSize, new Sort(Direction.DESC, Arrays.asList("dateOfActivity"))));
+				studentCid, (Pageable) PageRequest.of(page, pageSize, Sort.by(Direction.DESC, "dateOfActivity")));
 		if (performedActivities == null || performedActivities.isEmpty())
 			throw new ValidationException("No activities performed by student.");
 
-//		performedActivities.stream().forEach(act -> {
-//			if (act.getActivityStatus()!=null && !act.getActivityStatus().equals(ActivityStatus.SavedByStudent)
-//					&& !act.getActivityStatus().equals(ActivityStatus.SubmittedByStudent)
-//					&& !act.getActivityStatus().equals(ActivityStatus.Reviewed))
-//				performedActivities.remove(act);
-//			else
-//				performedActivityResponses.add(new ActivityPerformedResponse(act));
-//		});
-		performedActivities.removeIf(act -> 
-			act.getActivityStatus()!=null && !act.getActivityStatus().equals(ActivityStatus.SavedByStudent)
-					&& !act.getActivityStatus().equals(ActivityStatus.SubmittedByStudent)
-					&& !act.getActivityStatus().equals(ActivityStatus.Reviewed));
-		
+		// performedActivities.stream().forEach(act -> {
+		// if (act.getActivityStatus()!=null &&
+		// !act.getActivityStatus().equals(ActivityStatus.SavedByStudent)
+		// && !act.getActivityStatus().equals(ActivityStatus.SubmittedByStudent)
+		// && !act.getActivityStatus().equals(ActivityStatus.Reviewed))
+		// performedActivities.remove(act);
+		// else
+		// performedActivityResponses.add(new ActivityPerformedResponse(act));
+		// });
+		performedActivities.removeIf(
+				act -> act.getActivityStatus() != null && !act.getActivityStatus().equals(ActivityStatus.SavedByStudent)
+						&& !act.getActivityStatus().equals(ActivityStatus.SubmittedByStudent)
+						&& !act.getActivityStatus().equals(ActivityStatus.Reviewed));
+
 		return performedActivities.stream().map(ActivityPerformedResponse::new).collect(Collectors.toList());
 	}
 
@@ -744,8 +745,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			throw new ValidationException("Student id cannot be null.");
 		List<ActivityPerformed> performedActivities = activityPerformedRepository
 				.findAllByStudentCidAndActivityStatusAndActiveTrue(studentCid, ActivityStatus.SubmittedByStudent,
-						(Pageable) new PageRequest(page, pageSize,
-								new Sort(Direction.DESC, Arrays.asList("dateOfActivity"))));
+						(Pageable) PageRequest.of(page, pageSize, Sort.by(Direction.DESC, "dateOfActivity")));
 		if (performedActivities == null || performedActivities.isEmpty())
 			throw new ValidationException("No activities submitted by student.");
 		return performedActivities.stream().map(ActivityPerformedResponse::new).collect(Collectors.toList());
@@ -758,8 +758,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			throw new ValidationException("Student id cannot be null.");
 		List<ActivityPerformed> performedActivities = activityPerformedRepository
 				.findAllByStudentCidAndActivityStatusAndActiveTrue(studentCid, ActivityStatus.Reviewed,
-						(Pageable) new PageRequest(page, pageSize,
-								new Sort(Direction.DESC, Arrays.asList("dateOfActivity"))));
+						(Pageable) PageRequest.of(page, pageSize, Sort.by(Direction.DESC, "dateOfActivity")));
 		if (performedActivities == null || performedActivities.isEmpty())
 			throw new ValidationException("No activities Reviewed yet.");
 		return performedActivities.stream().map(ActivityPerformedResponse::new).collect(Collectors.toList());

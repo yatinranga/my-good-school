@@ -11,7 +11,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.CellType;
@@ -117,9 +116,6 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	SequenceGeneratorRepo sequenceGeneratorRepo;
 
 	@Autowired
-	Utils utils;
-
-	@Autowired
 	ActivityPerformedService activityPerformedService;
 
 	@Autowired
@@ -134,8 +130,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	@Autowired
 	ActivityPerformedRepository activityPerformedRepository;
 
-//	@Autowired
-//	FileStore filestore;
+	// @Autowired
+	// FileStore filestore;
 
 	@Autowired
 	CertificateRepository certificateRepository;
@@ -163,7 +159,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 		User loggedInUser = getUser();
 		if (loggedInUser != null) {
-			Authority authority = null;// fetch from repo the student_write authority
+			Authority authority = null;// fetch from repo the student_write
+										// authority
 			if (!loggedInUser.getRoles().stream()
 					.anyMatch(r -> r.getRoleAuthorities().contains(new RoleAuthority(r.getId(), authority.getId()))))
 				throw new UnauthorizedUserException("Not authorized to create student.");
@@ -202,20 +199,21 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 		}
 
-//		Long studsequence = sequenceGeneratorService.findSequenceByUserType(UserType.Student);
+		// Long studsequence =
+		// sequenceGeneratorService.findSequenceByUserType(UserType.Student);
 
 		List<Guardian> guardians = new ArrayList<>();
 		Guardian guardian;
 		Student student = request.toEntity();
-//		student.setCid(utils.generateRandomAlphaNumString(8));
-//		student.setUsername(String.format("STU%08d", studsequence));
+		// student.setCid(Utils.generateRandomAlphaNumString(8));
+		// student.setUsername(String.format("STU%08d", studsequence));
 		student.setGrade(grade);
 		if (loggedInUser != null)
 			school = loggedInUser.getSchool();
 		student.setSchool(school);
 
-//		User user = userService.createStudentUser(student);
-//		User user = userService.createUserForEntity(student);
+		// User user = userService.createStudentUser(student);
+		// User user = userService.createUserForEntity(student);
 		Role role = roleRepository.findBySchoolIdAndName(school.getId(), "Student");
 		User user = userService.createUser(student.getName(), student.getMobileNumber(), student.getEmail(),
 				school.getId());
@@ -269,7 +267,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				: String.format("Email not sent successfully to (%s) , email address might be wrong.", user.getEmail());
 		int emailStatusCode = emailFlag ? 200 : 400;
 		response.put("MailResponse", new SuccessResponse(emailStatusCode, emailMessage));
-//		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+		// return new ResponseEntity<Map<String, Object>>(response,
+		// HttpStatus.OK);
 
 		return new StudentResponse(student);
 	}
@@ -277,7 +276,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	private void createOrSetGuardianUtility(Student student, Guardian guardian, List<Guardian> guardians,
 			GuardianRequest guardianRequest) {
 		List<Student> studList;
-//		 Long sequence;
+		// Long sequence;
 
 		if (guardian == null) {
 			guardian = guardianRequest.toEntity();
@@ -289,11 +288,12 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			if (StringUtils.isEmpty(user)) {
 				throw new ValidationException("User not created successfully");
 			}
-//			sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
-//			guardian.setUsername(String.format("GRD%08d", sequence));
-//			guardian.setCid(utils.generateRandomAlphaNumString(8));
-//			guardian.setUser(userService.createParentUser(guardian));
-//			guardian.setUser(userService.createUserForEntity(guardian));
+			// sequence =
+			// sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
+			// guardian.setUsername(String.format("GRD%08d", sequence));
+			// guardian.setCid(Utils.generateRandomAlphaNumString(8));
+			// guardian.setUser(userService.createParentUser(guardian));
+			// guardian.setUser(userService.createUserForEntity(guardian));
 			guardian.setUser(user = userRepository.save(user));
 			guardian.setUsername(guardian.getUser().getUsername());
 			guardian = guardianRepository.save(guardian);
@@ -370,7 +370,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			}
 
 			student.setGuardians(previousGuardians);
-			guardianRepository.save(guardiansToDelete);
+			guardianRepository.saveAll(guardiansToDelete);
 		}
 
 		student.setSchool(school);
@@ -411,11 +411,12 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 			} else {
 				Guardian guardian = guardReq.toEntity();
-				guardian.setCid(utils.generateRandomAlphaNumString(8));
-//				Long sequence = sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
-//				guardian.setUsername(String.format("GRD%08d", sequence));
-//				guardian.setUser(userService.createParentUser(guardian));
-//				guardian.setUser(userService.createUserForEntity(guardian));
+				guardian.setCid(Utils.generateRandomAlphaNumString(8));
+				// Long sequence =
+				// sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
+				// guardian.setUsername(String.format("GRD%08d", sequence));
+				// guardian.setUser(userService.createParentUser(guardian));
+				// guardian.setUser(userService.createUserForEntity(guardian));
 				Role role = roleRepository.findBySchoolIdAndName(student.getSchool().getId(), "Guardian");
 				User user = userService.createUser(guardian.getName(), guardian.getMobileNumber(), guardian.getEmail(),
 						student.getSchool().getId());
@@ -593,9 +594,10 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		List<Student> students = studentClubRepository
 				.findAllStudentByActivityCidAndTeacherCidAndStudentSchoolCidAndStudentGradeCidAndMembershipStatusAndActiveTrue(
 						activityCid, schoolCid, gradeCid, ApprovalStatus.valueOf(approvalStatus));
-//				studentRepository
-//				.findAllBySchoolCidAndGradeCidAndActivitiesActivityCidAndActivitiesActivityStatusAndSchoolActiveTrueAndGradeActiveTrueAndActivitiesActivityActiveTrueAndActiveTrue(
-//						schoolCid, gradeCid, activityCid, ActivityStatus.valueOf(activityStatus));
+		// studentRepository
+		// .findAllBySchoolCidAndGradeCidAndActivitiesActivityCidAndActivitiesActivityStatusAndSchoolActiveTrueAndGradeActiveTrueAndActivitiesActivityActiveTrueAndActiveTrue(
+		// schoolCid, gradeCid, activityCid,
+		// ActivityStatus.valueOf(activityStatus));
 		if (students == null)
 			throw new ValidationException(String.format(
 					"No student found in the school : %s under teacher : %s having performed activity : %s and status is %s .",
@@ -655,10 +657,10 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				"/certificate/", true, true);
 		certificate.setImageUrl(imageUrl);
 		certificate.setStudent(student);
-//			List<Certificate> certificates = new ArrayList<Certificate>();
-//			certificates = student.getCertificates();
-//			certificates.add(certificate);
-		certificate.setCid(utils.generateRandomAlphaNumString(8));
+		// List<Certificate> certificates = new ArrayList<Certificate>();
+		// certificates = student.getCertificates();
+		// certificates.add(certificate);
+		certificate.setCid(Utils.generateRandomAlphaNumString(8));
 		certificate = certificateRepository.save(certificate);
 		if (certificate == null)
 			throw new RuntimeException("Something went wrong certificate not uploaded.");
@@ -711,7 +713,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		try {
 			XSSFWorkbook studentsSheet = new XSSFWorkbook(file.getInputStream());
 			studentsRecords = findSheetRowValues(studentsSheet, "STUDENT", errors);
-//			errors = (List<String>) studentsRecords.get(studentsRecords.size() - 1).get("errors");
+			// errors = (List<String>)
+			// studentsRecords.get(studentsRecords.size() - 1).get("errors");
 			for (int i = 0; i < studentsRecords.size() - 1; i++) {
 				List<Map<String, Object>> tempStudentsRecords = new ArrayList<Map<String, Object>>();
 				tempStudentsRecords.add(studentsRecords.get(i));
@@ -914,8 +917,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			if (startDate.after(endDate))
 				throw new ValidationException("startDate shall fall before end date.");
 		}
-//		Date startDate = DateUtil.convertStringToDate(initial);
-//		Date endDate = DateUtil.convertStringToDate(last);
+		// Date startDate = DateUtil.convertStringToDate(initial);
+		// Date endDate = DateUtil.convertStringToDate(last);
 
 		AwardCriterion criterion = AwardCriterion.fromString(awardCriterion);
 
@@ -958,7 +961,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				if (!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())))
 					students.add(new StudentResponse(act.getStudent()));
 			}
-//			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
+			// activitiesPerformed.stream().forEach(ap -> students.add( new
+			// StudentResponse(ap.getStudent())));
 
 			Map<StudentResponse, Double> studentScoreLookUp = new HashMap<StudentResponse, Double>();
 			for (StudentResponse studResp : students) {
@@ -1021,7 +1025,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				if (!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())))
 					students.add(new StudentResponse(act.getStudent()));
 			}
-//			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
+			// activitiesPerformed.stream().forEach(ap -> students.add( new
+			// StudentResponse(ap.getStudent())));
 
 			Map<StudentResponse, Double> studentScoreLookUp = new HashMap<StudentResponse, Double>();
 			for (StudentResponse studResp : students) {
@@ -1096,7 +1101,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				if (!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())))
 					students.add(new StudentResponse(act.getStudent()));
 			}
-//			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
+			// activitiesPerformed.stream().forEach(ap -> students.add( new
+			// StudentResponse(ap.getStudent())));
 
 			Map<StudentResponse, Double> studentScoreLookUp = new HashMap<StudentResponse, Double>();
 			for (StudentResponse studResp : students) {
@@ -1112,11 +1118,12 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				for (ActivityPerformedResponse act : activitiesToReturn) {
 					starSum += act.getStar();
 					activityTypes.add(act.getActivityName());
-//					focusAreas.addAll(act.getFocusAreas());
+					// focusAreas.addAll(act.getFocusAreas());
 					psdAreas.addAll(act.getPsdAreas());
 					fourS.add(act.getFourS());
 				}
-//				score = focusAreas.size() * (starSum / activitiesToReturn.size());
+				// score = focusAreas.size() * (starSum /
+				// activitiesToReturn.size());
 				score = (starSum / activitiesToReturn.size());
 				System.out.println(score);
 				studResp.setScoreForAward(score);
@@ -1165,7 +1172,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				if (!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())))
 					students.add(new StudentResponse(act.getStudent()));
 			}
-//			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
+			// activitiesPerformed.stream().forEach(ap -> students.add( new
+			// StudentResponse(ap.getStudent())));
 
 			Map<StudentResponse, Double> studentScoreLookUp = new HashMap<StudentResponse, Double>();
 			for (StudentResponse studResp : students) {
@@ -1245,7 +1253,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				if (!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())))
 					students.add(new StudentResponse(act.getStudent()));
 			}
-//			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
+			// activitiesPerformed.stream().forEach(ap -> students.add( new
+			// StudentResponse(ap.getStudent())));
 
 			Map<StudentResponse, Double> studentScoreLookUp = new HashMap<StudentResponse, Double>();
 			for (StudentResponse studResp : students) {
@@ -1313,7 +1322,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				if (!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())))
 					students.add(new StudentResponse(act.getStudent()));
 			}
-//			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
+			// activitiesPerformed.stream().forEach(ap -> students.add( new
+			// StudentResponse(ap.getStudent())));
 
 			Map<StudentResponse, Double> studentScoreLookUp = new HashMap<StudentResponse, Double>();
 			for (StudentResponse studResp : students) {
@@ -1393,7 +1403,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				if (!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())))
 					students.add(new StudentResponse(act.getStudent()));
 			}
-//			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
+			// activitiesPerformed.stream().forEach(ap -> students.add( new
+			// StudentResponse(ap.getStudent())));
 
 			Map<StudentResponse, Double> studentScoreLookUp = new HashMap<StudentResponse, Double>();
 			for (StudentResponse studResp : students) {
@@ -1462,7 +1473,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				if (!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())))
 					students.add(new StudentResponse(act.getStudent()));
 			}
-//			activitiesPerformed.stream().forEach(ap -> students.add( new StudentResponse(ap.getStudent())));
+			// activitiesPerformed.stream().forEach(ap -> students.add( new
+			// StudentResponse(ap.getStudent())));
 
 			Map<StudentResponse, Double> studentScoreLookUp = new HashMap<StudentResponse, Double>();
 			for (StudentResponse studResp : students) {
@@ -1582,9 +1594,9 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 								schoolCid, ApprovalStatus.valueOf(approvalStatus));
 			}
 		}
-//				studentRepository
-//				.findAllBySchoolCidAndActivitiesActivityCidAndActivitiesActivityStatusAndSchoolActiveTrueAndActivitiesActivityActiveTrueAndActiveTrue(
-//						schoolCid, activityCid, ActivityStatus.valueOf(activityStatus));
+		// studentRepository
+		// .findAllBySchoolCidAndActivitiesActivityCidAndActivitiesActivityStatusAndSchoolActiveTrueAndActivitiesActivityActiveTrueAndActiveTrue(
+		// schoolCid, activityCid, ActivityStatus.valueOf(activityStatus));
 		if (students == null || students.isEmpty())
 			throw new ValidationException(String.format(
 					"No student in the school found in club/society  having id (%s) or membership might not have been %s.",
