@@ -8,6 +8,17 @@ export class TeacherService {
 
   constructor(private http: CustomHttpService) { }
 
+    // Single teacher signup
+  uploadTeacherDetails(data) {
+    const url = "/teacher/signUp"
+    return this.http.post(url, data);
+  }
+  
+  // to get the list of all schools
+  getSchools(url) {
+    return this.http.get(url);
+  }
+
   // get Profile of Teacher
   getProfile(teacherId) {
     return this.http.get("/api/teacher/" + teacherId);
