@@ -68,31 +68,31 @@ import com.nxtlife.mgs.view.user.security.RoleResponse;
 public class UserServiceImpl extends BaseService implements UserService, UserDetailsService {
 
 	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
 
 	@Autowired
-	UserRoleRepository userRoleRepository;
+	private UserRoleRepository userRoleRepository;
 
 	@Autowired
-	RoleRepository roleRepository;
+	private RoleRepository roleRepository;
 
 	@Autowired
-	AuthorityRepository authorityRepository;
+	private AuthorityRepository authorityRepository;
 
 	@Autowired
-	NotificationServiceImpl notificationService;
+	private NotificationServiceImpl notificationService;
 
 	@Autowired
-	MailService mailService;
+	private MailService mailService;
 
 	@Value("${spring.mail.username}")
 	private String emailUsername;
 
 	@Autowired
-	SchoolRepository schoolRepository;
+	private SchoolRepository schoolRepository;
 
 	@Autowired
-	RoleAuthorityRepository roleAuthorityRepository;
+	private RoleAuthorityRepository roleAuthorityRepository;
 
 	@Autowired
 	private HttpServletRequest httpServletRequest;

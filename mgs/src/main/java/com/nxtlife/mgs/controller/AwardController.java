@@ -24,7 +24,7 @@ import com.nxtlife.mgs.view.PropertyCount;
 public class AwardController {
 
 	@Autowired
-	AwardService awardService;
+	private AwardService awardService;
 	
 	@GetMapping("awardCriteria")
 	public Set<String> getAwardCriteria(){

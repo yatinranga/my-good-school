@@ -55,28 +55,28 @@ import com.nxtlife.mgs.view.SuccessResponse;
 public class ActivityServiceImpl extends BaseService implements ActivityService {
 
 	@Autowired
-	ActivityRepository activityRepository;
+	private ActivityRepository activityRepository;
 
 	@Autowired
-	FocusAreaRepository focusAreaRepository;
+	private FocusAreaRepository focusAreaRepository;
 
 	@Autowired
-	SchoolRepository schoolRepository;
+	private SchoolRepository schoolRepository;
 
 	@Autowired
-	FocusAreaService focusAreaService;
+	private FocusAreaService focusAreaService;
 
 	@Autowired
-	StudentClubRepository studentClubRepository;
+	private StudentClubRepository studentClubRepository;
 
 	@Autowired
-	StudentRepository studentRepository;
+	private StudentRepository studentRepository;
 
 	@Autowired
-	TeacherRepository teacherRepository;
+	private TeacherRepository teacherRepository;
 
 	@Autowired
-	TeacherActivityGradeRepository teacherActivityGradeRepository;
+	private TeacherActivityGradeRepository teacherActivityGradeRepository;
 
 	@PostConstruct
 	public void init() {

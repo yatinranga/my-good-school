@@ -52,34 +52,34 @@ import com.nxtlife.mgs.view.SuccessResponse;
 public class ActivityPerformedServiceImpl extends BaseService implements ActivityPerformedService {
 
 	@Autowired
-	FileRepository fileRepository;
+	private FileRepository fileRepository;
 
 	@Autowired
 	private FileStorageService<MultipartFile> fileStorageService;
 
 	@Autowired
-	StudentRepository studentRepository;
+	private StudentRepository studentRepository;
 
 	@Autowired
-	TeacherRepository teacherRepository;
+	private TeacherRepository teacherRepository;
 
 	@Autowired
-	ActivityPerformedRepository activityPerformedRepository;
+	private ActivityPerformedRepository activityPerformedRepository;
 
 	@Autowired
-	FocusAreaRepository focusAreaRepository;
+	private FocusAreaRepository focusAreaRepository;
 
 	@Autowired
 	SchoolRepository schoolRepository;
 
 	@Autowired
-	GradeRepository gradeRepository;
+	private GradeRepository gradeRepository;
 
 	@Autowired
-	ActivityRepository activityRepository;
+	private ActivityRepository activityRepository;
 
 	@Autowired
-	StudentClubRepository studentClubRepository;
+	private StudentClubRepository studentClubRepository;
 
 	@Override
 	public List<FileResponse> getAllFilesOfActivity(String activityCId) {

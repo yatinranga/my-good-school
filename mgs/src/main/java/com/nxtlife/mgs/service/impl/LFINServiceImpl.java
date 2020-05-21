@@ -45,19 +45,19 @@ import com.nxtlife.mgs.view.LFINRequestResponse;
 public class LFINServiceImpl extends BaseService implements LFINService {
 
 	@Autowired
-	LFINRepository lFINRepository;
+	private LFINRepository lFINRepository;
 
 	@Autowired
-	UserService userService;
+	private UserService userService;
 
 	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
 
 	@Autowired
-	SequenceGeneratorService sequenceGeneratorService;
+	private SequenceGeneratorService sequenceGeneratorService;
 
 	@Autowired
-	RoleRepository roleRepository;
+	private RoleRepository roleRepository;
 
 	@Override
 	public LFINRequestResponse save(LFINRequestResponse request) {
@@ -108,7 +108,7 @@ public class LFINServiceImpl extends BaseService implements LFINService {
 	}
 
 	@Override
-	public ActivityRequestResponse updateActivityStatus(String awardId, Boolean isVerified) {
+	public ActivityRequestResponse updateActivityStatus(String activityId, Boolean isVerified) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -92,64 +92,64 @@ import com.nxtlife.mgs.view.SuccessResponse;
 public class StudentServiceImpl extends BaseService implements StudentService {
 
 	@Autowired
-	StudentRepository studentRepository;
+	private StudentRepository studentRepository;
 
 	@Autowired
-	GuardianRepository guardianRepository;
+	private GuardianRepository guardianRepository;
 
 	@Autowired
-	SchoolRepository schoolRepository;
+	private SchoolRepository schoolRepository;
 
 	@Autowired
-	GradeRepository gradeRepository;
+	private GradeRepository gradeRepository;
 
 	@Autowired
-	StudentSchoolGradeRepository studentSchoolGradeRepository;
+	private StudentSchoolGradeRepository studentSchoolGradeRepository;
 
 	@Autowired
-	UserService userService;
+	private UserService userService;
 
 	@Autowired
-	SequenceGeneratorService sequenceGeneratorService;
+	private SequenceGeneratorService sequenceGeneratorService;
 
 	@Autowired
-	SequenceGeneratorRepo sequenceGeneratorRepo;
+	private SequenceGeneratorRepo sequenceGeneratorRepo;
 
 	@Autowired
-	ActivityPerformedService activityPerformedService;
+	private ActivityPerformedService activityPerformedService;
 
 	@Autowired
-	ActivityRepository activityRepository;
+	private ActivityRepository activityRepository;
 
 	@Autowired
-	TeacherRepository teacherRepository;
+	private TeacherRepository teacherRepository;
 
 	@Autowired
-	AwardActivityPerformedRepository awardActivityPerformedRepository;
+	private AwardActivityPerformedRepository awardActivityPerformedRepository;
 
 	@Autowired
-	ActivityPerformedRepository activityPerformedRepository;
+	private ActivityPerformedRepository activityPerformedRepository;
 
 	// @Autowired
 	// FileStore filestore;
 
 	@Autowired
-	CertificateRepository certificateRepository;
+	private CertificateRepository certificateRepository;
 
 	@Autowired
 	private FileStorageService<MultipartFile> fileStorageService;
 
 	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
 
 	@Autowired
-	FocusAreaRepository focusAreaRepository;
+	private FocusAreaRepository focusAreaRepository;
 
 	@Autowired
-	StudentClubRepository studentClubRepository;
+	private StudentClubRepository studentClubRepository;
 
 	@Autowired
-	RoleRepository roleRepository;
+	private RoleRepository roleRepository;
 
 	@Value("${spring.mail.username}")
 	private String emailUsername;

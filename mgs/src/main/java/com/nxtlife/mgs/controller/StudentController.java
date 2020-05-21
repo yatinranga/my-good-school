@@ -42,13 +42,13 @@ import com.nxtlife.mgs.view.SuccessResponse;
 public class StudentController {
 
 	@Autowired
-	StudentService studentService;
+	private StudentService studentService;
 
 	@Autowired
-	ActivityPerformedService activityPerformedService;
+	private ActivityPerformedService activityPerformedService;
 	
 	@Autowired
-	ActivityService activityService;
+	private ActivityService activityService;
 
 
 	@PostMapping(value = "/student/signUp")

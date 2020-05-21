@@ -29,21 +29,11 @@ import com.nxtlife.mgs.view.TeacherResponse;
 public class TeacherController {
 
 	@Autowired
-	TeacherService teacherService;
+	private TeacherService teacherService;
 	
 	@Autowired
-	ActivityService activityService;
+	private ActivityService activityService;
 
-//	@RequestMapping(value = "importTeachers", method = RequestMethod.POST)
-//	public List<TeacherResponse> uploadTeachersFromExcel(@RequestParam("file") MultipartFile file) {
-//		return teacherService.uploadTeachersFromExcel(file, false);
-//	}
-//
-//	@RequestMapping(value = "importCoaches", method = RequestMethod.POST)
-//	public List<TeacherResponse> uploadCoachesFromExcel(@RequestParam("file") MultipartFile file,
-//			@RequestParam Integer rowLimit) {
-//		return teacherService.uploadTeachersFromExcel(file, true);
-//	}
 
 	@PostMapping("api/teacher/")
 	public TeacherResponse saveTeacher(@RequestBody TeacherRequest teacherRequest) {

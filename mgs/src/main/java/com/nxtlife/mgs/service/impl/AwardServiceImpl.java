@@ -52,34 +52,34 @@ import com.nxtlife.mgs.view.PropertyCount;
 public class AwardServiceImpl extends BaseService implements AwardService {
 
 	@Autowired
-	AwardRepository awardRepository;
+	private AwardRepository awardRepository;
 
 	@Autowired
-	SchoolRepository schoolRepository;
+	private SchoolRepository schoolRepository;
 
 	@Autowired
-	ActivityPerformedRepository activityPerformedRepository;
+	private ActivityPerformedRepository activityPerformedRepository;
 
 	@Autowired
-	AwardActivityPerformedRepository awardActivityPerformedRepository;
+	private AwardActivityPerformedRepository awardActivityPerformedRepository;
 
 	@Autowired
-	GradeRepository gradeRepository;
+	private GradeRepository gradeRepository;
 
 	@Autowired
-	ActivityRepository activityRepository;
+	private ActivityRepository activityRepository;
 
 	@Autowired
-	TeacherRepository teacherRepository;
+	private TeacherRepository teacherRepository;
 
 	@Autowired
-	StudentRepository studentRepository;
+	private StudentRepository studentRepository;
 
 	@Autowired
-	FocusAreaRepository focusAreaRepository;
+	private FocusAreaRepository focusAreaRepository;
 
 	@Autowired
-	AwardTypeRepository awardTypeRepository;
+	private AwardTypeRepository awardTypeRepository;
 
 	@PostConstruct
 	public void init() {

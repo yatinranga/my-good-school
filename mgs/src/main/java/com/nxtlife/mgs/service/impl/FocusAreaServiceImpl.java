@@ -34,10 +34,10 @@ import com.nxtlife.mgs.view.FocusAreaRequestResponse;
 public class FocusAreaServiceImpl extends BaseService implements FocusAreaService {
 
 	@Autowired
-	FocusAreaRepository focusAreaRepository;
+	private FocusAreaRepository focusAreaRepository;
 
 	@Autowired
-	SchoolRepository schoolRepository;
+	private SchoolRepository schoolRepository;
 
 	@Override
 	public FocusAreaRequestResponse save(FocusAreaRequestResponse request) {

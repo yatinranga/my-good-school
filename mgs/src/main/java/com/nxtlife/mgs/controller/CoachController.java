@@ -22,7 +22,7 @@ import com.nxtlife.mgs.view.TeacherResponse;
 public class CoachController {
 
 	@Autowired
-	TeacherService teacherService;
+	private TeacherService teacherService;
 	
 	@GetMapping("coaches/{schoolId}/{activityId}")
 	public List<TeacherResponse> getAllCoachesBySchoolCidAndActivityCid(@PathVariable("schoolId") @NotNull(message = "School Id cannot be null.") String schoolCid,@PathVariable("activityId") @NotNull(message = "Activity Id cannot be null.") String activityCid){

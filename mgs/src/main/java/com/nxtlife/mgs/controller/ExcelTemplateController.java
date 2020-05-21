@@ -36,28 +36,28 @@ import com.nxtlife.mgs.service.TeacherService;
 public class ExcelTemplateController {
 
 	@Autowired
-	ExcelTemplateService excelTemplateService;
+	private ExcelTemplateService excelTemplateService;
 	
 	@Autowired
-	TeacherService teacherService;
+	private TeacherService teacherService;
 	
 	@Autowired
-	StudentService studentService;
+	private StudentService studentService;
 	
 	@Autowired
-	SchoolService schoolService;
+	private SchoolService schoolService;
 	
 	@Autowired
-	GradeService gradeService;
+	private GradeService gradeService;
 	
 	@Autowired
-	FocusAreaService focusAreaService;
+	private FocusAreaService focusAreaService;
 	
 	@Autowired
-	ActivityService activityService;
+	private ActivityService activityService;
 	
 	@Autowired
-	LFINService lFINService;
+	private LFINService lFINService;
 
 	@GetMapping("template/export")
 	public ResponseEntity<?> exportExampleTemplate(@RequestParam String type , HttpServletResponse response) throws IOException {

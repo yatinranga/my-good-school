@@ -19,7 +19,7 @@ import com.nxtlife.mgs.view.Mail;
 public class MailServiceImpl extends BaseService implements MailService {
 
 	@Autowired
-	JavaMailSender mailSender;
+	private JavaMailSender mailSender;
 
 	public void sendEmail(Mail mail) throws UnsupportedEncodingException, MessagingException {
 		MimeMessage mimeMessage = mailSender.createMimeMessage();

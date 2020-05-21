@@ -78,38 +78,38 @@ import com.nxtlife.mgs.view.TeacherResponse;
 public class TeacherServiceImpl extends BaseService implements TeacherService {
 
 	@Autowired
-	TeacherRepository teacherRepository;
+	private TeacherRepository teacherRepository;
 
 	@Autowired
-	SchoolRepository schoolRepository;
+	private SchoolRepository schoolRepository;
 
 	@Autowired
-	GradeRepository gradeRepository;
+	private GradeRepository gradeRepository;
 
 	@Autowired
-	SequenceGeneratorService sequenceGeneratorService;
+	private SequenceGeneratorService sequenceGeneratorService;
 
 	@Autowired
-	SequenceGeneratorRepo sequenceGeneratorRepo;
+	private SequenceGeneratorRepo sequenceGeneratorRepo;
 
 	@Autowired
-	ActivityRepository activityRepository;
+	private ActivityRepository activityRepository;
 
 	@Autowired
-	RoleRepository roleRepository;
+	private RoleRepository roleRepository;
 
 	@Autowired
-	UserRoleRepository userRoleRepository;
+	private UserRoleRepository userRoleRepository;
 
 	@Autowired
-	UserService userService;
+	private UserService userService;
 
 	@Autowired
 	private UserRepository userRepository;
 
 
 	@Autowired
-	ActivityPerformedRepository activityPerformedRepository;
+	private ActivityPerformedRepository activityPerformedRepository;
 
 	@Value("${spring.mail.username}")
 	private String emailUsername;
@@ -121,13 +121,13 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	// private FileStore filestore;
 
 	@Autowired
-	StudentClubRepository studentClubRepository;
+	private StudentClubRepository studentClubRepository;
 
 	@Autowired
-	StudentRepository studentRepository;
+	private StudentRepository studentRepository;
 
 	@Autowired
-	TeacherActivityGradeRepository teacherActivityGradeRepository;
+	private TeacherActivityGradeRepository teacherActivityGradeRepository;
 
 	@Secured(AuthorityUtils.SCHOOL_STAKEHOLDER_CREATE)
 	// @PreAuthorize("hasRole('SchoolAdmin') or hasRole('MainAdmin') or

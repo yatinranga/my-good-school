@@ -52,28 +52,28 @@ import com.nxtlife.mgs.view.SuccessResponse;
 public class SessionServiceImpl extends BaseService implements SessionService {
 
 	@Autowired
-	SessionRepository sessionRepository;
+	private SessionRepository sessionRepository;
 
 	@Autowired
-	ActivityRepository activityRepository;
+	private ActivityRepository activityRepository;
 
 	@Autowired
-	TeacherRepository teacherRepository;
+	private TeacherRepository teacherRepository;
 
 	@Autowired
-	GradeRepository gradeRepository;
+	private GradeRepository gradeRepository;
 
 	@Autowired
-	SessionFilterBuilder builder;
+	private SessionFilterBuilder builder;
 
 	@Autowired
-	StudentRepository studentRepository;
+	private StudentRepository studentRepository;
 
 	@Autowired
 	private FileStorageService<MultipartFile> fileStorageService;
 
 	@Autowired
-	FileRepository fileRepository;
+	private FileRepository fileRepository;
 
 	@Override
 	public SessionResponse createSession(SessionRequest request) {

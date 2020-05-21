@@ -15,7 +15,7 @@ import com.nxtlife.mgs.view.LFINRequestResponse;
 public class LFINController {
 	
 	@Autowired
-	LFINService lFINService; 
+	private LFINService lFINService; 
 
 	@PostMapping
 	public LFINRequestResponse save (@Validated @RequestBody LFINRequestResponse request) {

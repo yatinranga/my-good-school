@@ -26,10 +26,10 @@ import com.nxtlife.mgs.view.TeacherResponse;
 public class SchoolController {
 
 	@Autowired
-	SchoolService schoolService;
+	private SchoolService schoolService;
 	
 	@Autowired
-	TeacherService teacherService;
+	private TeacherService teacherService;
 
 	@PostMapping(consumes = { "multipart/form-data" }, value = "school/signUp")
 	public SchoolResponse signUp(@ModelAttribute SchoolRequest schoolRequest) {

@@ -35,10 +35,10 @@ import com.nxtlife.mgs.view.GradeResponse;
 public class GradeServiceImpl extends BaseService implements GradeService {
 
 	@Autowired
-	SchoolRepository schoolRepository;
+	private SchoolRepository schoolRepository;
 
 	@Autowired
-	GradeRepository gradeRepository;
+	private GradeRepository gradeRepository;
 
 	@Override
 	public GradeResponse save(GradeRequest request) {

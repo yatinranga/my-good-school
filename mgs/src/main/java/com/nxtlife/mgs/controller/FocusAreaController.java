@@ -23,7 +23,7 @@ import com.nxtlife.mgs.view.FocusAreaRequestResponse;
 @RequestMapping("/")
 public class FocusAreaController {
 	@Autowired
-	FocusAreaService focusAreaService;
+	private FocusAreaService focusAreaService;
 	
 	@GetMapping(value = "focusAreas")
 	public List<FocusAreaRequestResponse> getAllFocusAreas(){

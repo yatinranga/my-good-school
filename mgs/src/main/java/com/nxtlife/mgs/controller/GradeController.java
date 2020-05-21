@@ -22,7 +22,7 @@ import com.nxtlife.mgs.view.GradeResponse;
 public class GradeController {
 
 	@Autowired
-	GradeService gradeService;
+	private GradeService gradeService;
 
 //	@RequestMapping(value = "importGrades", method = RequestMethod.POST)
 //	public List<GradeResponse> uploadGradesFromExcel(@RequestParam("file") MultipartFile file) {

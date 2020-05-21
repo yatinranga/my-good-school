@@ -28,7 +28,7 @@ import com.nxtlife.mgs.view.SuccessResponse;
 @RequestMapping("/")
 public class SessionController {
 	@Autowired
-	SessionService sessionService;
+	private SessionService sessionService;
 
 	@PostMapping(value = "api/session")
 	public SessionResponse createSession(@ModelAttribute @Validated SessionRequest request) {

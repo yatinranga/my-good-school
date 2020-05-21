@@ -59,34 +59,34 @@ import com.nxtlife.mgs.view.SuccessResponse;
 public class SchoolServiceImpl extends BaseService implements SchoolService {
 
 	@Autowired
-	SchoolRepository schoolRepository;
+	private SchoolRepository schoolRepository;
 
 	@Autowired
-	UserService userService;
+	private UserService userService;
 
 	@Autowired
 	private FileStorageService<MultipartFile> fileStorageService;
 
 	@Autowired
-	SequenceGeneratorService sequenceGeneratorService;
+	private SequenceGeneratorService sequenceGeneratorService;
 
 	@Autowired
-	RoleRepository roleRepository;
+	private RoleRepository roleRepository;
 
 	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
 
 	@Autowired
-	ActivityRepository activityRepository;
+	private ActivityRepository activityRepository;
 
 	@Autowired
-	GradeRepository gradeRepository;
+	private GradeRepository gradeRepository;
 
 	// @Autowired
 	// FileService fileService;
 
 	@Autowired
-	ActivityService activityService;
+	private ActivityService activityService;
 
 	@Value("${spring.mail.username}")
 	private String emailUsername;

@@ -29,7 +29,7 @@ import com.nxtlife.mgs.view.SuccessResponse;
 public class ActivityPerformedController {
 
 	@Autowired
-	ActivityPerformedService activityPerformedService;
+	private ActivityPerformedService activityPerformedService;
 
 	@PostMapping(value = "api/student/activities") //change activities to activity
 	public ActivityPerformedResponse saveActivity(@ModelAttribute ActivityPerformedRequest request) {
