@@ -1,4 +1,21 @@
-
+.container {
+    width: 100%;
+    max-width: 1470px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 15px;
+}
+.row{
+    width: auto;
+    margin-left: -15px;
+    margin-right: -15px;
+    display: block;
+}
+.col-3{
+    width: 25%;
+    display: inline-block;
+    padding: 0 15px;
+}
 .certi_box {
     width: 100%;
     display: inline-flex;
@@ -9,8 +26,8 @@
     background: #d0c5ae;
     text-align: center;
     opacity: 0.8;
-    margin: 0 auto;
-    width: 90%;
+    margin: 10px;
+    width: 100%;
     min-height: 385px;
     max-width: 500px;
 }
