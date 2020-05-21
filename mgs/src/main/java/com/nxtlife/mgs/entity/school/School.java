@@ -1,5 +1,6 @@
 package com.nxtlife.mgs.entity.school;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -64,7 +65,8 @@ public class School extends BaseEntity {
 	@JoinColumn(name = "user_id")
 	User user;
 
-	@ManyToMany(mappedBy = "schools")
+	@ManyToMany(mappedBy = "schools",fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SUBSELECT)
 	private List<Grade> grades;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "school")

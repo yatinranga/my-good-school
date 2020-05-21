@@ -17,6 +17,9 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.enums.PSDArea;
 
@@ -42,6 +45,7 @@ public class FocusArea extends BaseEntity{
 	PSDArea psdArea;
 	
 	@ManyToMany(mappedBy = "focusAreas",fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SUBSELECT)
 	private List<Activity> activities;
 	
 //	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY,mappedBy ="focusArea")

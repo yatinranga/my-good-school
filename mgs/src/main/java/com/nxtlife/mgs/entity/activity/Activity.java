@@ -56,6 +56,7 @@ public class Activity extends BaseEntity {
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "activity_focus_area", joinColumns = { @JoinColumn(name = "activity_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "focus_area_id") },uniqueConstraints = @UniqueConstraint(columnNames = {"activity_id" , "focus_area_id"}))
+	@Fetch(FetchMode.SUBSELECT)
 	private List<FocusArea> focusAreas;
 
 	@ManyToMany(cascade = CascadeType.ALL)
