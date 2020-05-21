@@ -7,7 +7,6 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -79,7 +78,7 @@ public class User extends BaseEntity implements UserDetails, Serializable {
 	@Transient
 	private Long tschoolId;
 
-	@OneToMany(fetch = FetchType.EAGER ,cascade = CascadeType.ALL, mappedBy = "user")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	private List<UserRole> userRoles;
 
 	@Transient

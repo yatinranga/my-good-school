@@ -1,6 +1,5 @@
 package com.nxtlife.mgs.entity;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.MappedSuperclass;
@@ -12,9 +11,8 @@ import org.springframework.data.jpa.domain.AbstractAuditable;
 import com.nxtlife.mgs.entity.user.User;
 import com.nxtlife.mgs.service.BaseService;
 
-@SuppressWarnings("serial")
 @MappedSuperclass
-public abstract class BaseEntity extends AbstractAuditable<User, Long> implements Serializable{
+public abstract class BaseEntity extends AbstractAuditable<User, Long> {
 
 	@PrePersist
 	private void preCreate() {
