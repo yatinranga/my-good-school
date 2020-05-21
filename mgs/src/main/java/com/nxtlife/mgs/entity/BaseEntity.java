@@ -14,7 +14,7 @@ import com.nxtlife.mgs.service.BaseService;
 
 @SuppressWarnings("serial")
 @MappedSuperclass
-public abstract class BaseEntity extends AbstractAuditable<User, Long> implements Serializable{
+public abstract class BaseEntity extends AbstractAuditable<User, Long> implements Serializable {
 
 	@PrePersist
 	private void preCreate() {

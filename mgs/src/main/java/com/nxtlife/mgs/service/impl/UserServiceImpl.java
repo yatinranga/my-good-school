@@ -666,11 +666,11 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@PostConstruct
 	public void init() {
 		School school;
-		if ((school = schoolRepository.findByNameAndActiveTrue("my-good-school")) == null) {
+		if ((school = schoolRepository.findByNameAndActiveTrue("MyGoodSchool")) == null) {
 			school = new School();
-			school.setName("my-good-school");
+			school.setName("MyGoodSchool");
 			school.setUsername(
-					String.format("%s%s", school.getName().trim().substring(0, 3), Utils.generateRandomNumString(8)));
+					String.format("%s%s", school.getName().toLowerCase().substring(0, 3), Utils.generateRandomNumString(8)));
 			school.setEmail("mygoodschool@gmail.com");
 			school.setCid(Utils.generateRandomAlphaNumString(8));
 			school.setActive(true);
@@ -703,7 +703,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		User user = new User();
 		user.setActive(true);
 		user.setName(name);
-		user.setUsername(String.format("%s%s", name.substring(0, 3), Utils.generateRandomNumString(8)));
+		user.setUsername(String.format("%s%08d", name.substring(0, 3), Utils.generateRandomNumString(8)));
 		if (email != null && userRepository.existsByEmail(email))
 			throw new ValidationException(String.format("User with email (%s) already exists.", email));
 		user.setEmail(email);
@@ -886,15 +886,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@Override
 	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		String client = httpServletRequest.getUserPrincipal().getName();
-		if (client == null) {
-			throw new ValidationException("Client header not found");
-		}
-		Long schoolId = schoolRepository.findIdByName(client);
-		if (schoolId == null) {
-			throw new NotFoundException(String.format("Client(%s) not found", client));
-		}
-		User user = userRepository.findByUsernameAndSchoolId(username, schoolId);
+		User user = userRepository.findByUsername(username);
 
 		if (user == null) {
 			throw new UsernameNotFoundException(String.format("username(%s) not found", username));

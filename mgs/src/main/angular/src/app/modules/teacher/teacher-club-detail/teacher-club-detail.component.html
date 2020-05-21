@@ -20,12 +20,12 @@
                             <span *ngIf="res.status=='upcoming'" style="color: red">({{res.status | uppercase}})</span>
                             <span *ngIf="res.status=='ended'" style="color: green">({{res.status | uppercase}})</span>
                         </li>
+                        <li>Description - {{res.description}}</li>
                         <li>{{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs
                         </li>
                         <li>Grades - <span *ngFor="let g of res.grades; let i = index">
                                 {{ (i === res.grades.length-1) ? g.grade+" "+g.section : g.grade+" "+g.section + "," + ' '}}</span>
                         </li>
-                        <li>Description - {{res.description}}</li>
                         <li><button class="btn btn-info" (click)="editSessionBtn(res,i,j)">Edit</button>
                             <button class="btn btn-danger" (click)="deleteSession(res,i,j)">Delete</button>
                         </li>
@@ -64,7 +64,8 @@
                         <ul id="studentname">
                             <li> {{i+1}}. {{req.student.name}}
                                 <p> Grade - {{req.student.grade}} {{req.student.section}}</p>
-                                <div>
+                                <!--
+                                                                    <div>
                                     <span *ngIf="req.membershipStatus=='PENDING'"
                                         style="color: blue">({{req.membershipStatus | uppercase}})</span>
                                     <span *ngIf="req.membershipStatus=='VERIFIED'"
@@ -72,6 +73,7 @@
                                     <span *ngIf="req.membershipStatus=='REJECTED'"
                                         style="color: red">({{req.membershipStatus | uppercase}})</span>
                                 </div>
+                                -->
                             </li>
                         </ul>
                         <ul id="actionbuttons">

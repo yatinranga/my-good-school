@@ -15,12 +15,6 @@ export class StudentService {
     return this.http.post(url, data);
   }
   
-  // Single teacher signup
-  uploadTeacherDetails(data) {
-    const url = "/teacher/signUp"
-    return this.http.post(url, data);
-  }
-
   // to get profile of student
   getProfile(studentId) {
     return this.http.get("/api/student/" + studentId);

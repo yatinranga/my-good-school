@@ -18,6 +18,10 @@ const routes: Routes = [
         component: SchoolHomeComponent
       },
       {
+        path: 'profile',
+        component: SchoolProfileComponent
+      },
+      {
         path: '',
         redirectTo: 'home'
       }

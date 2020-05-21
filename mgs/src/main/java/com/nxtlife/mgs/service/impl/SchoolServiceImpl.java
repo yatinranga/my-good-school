@@ -103,12 +103,12 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 		}
 		// Logic for authorities missing
 
-		School school = schoolRepository.findByNameAndActiveTrue("my-good-school");
+		School school = schoolRepository.findByNameAndActiveTrue("MyGoodSchool");
 		if (school == null) {
 			school = new School();
-			school.setName("my good school");
+			school.setName("MyGoodSchool");
 			school.setUsername(
-					String.format("%s%s", school.getName().trim().substring(0, 3), Utils.generateRandomNumString(8)));
+					String.format("%s%s", school.getName().toLowerCase().substring(0, 3), Utils.generateRandomNumString(8)));
 			// Long schoolsequence =
 			// sequenceGeneratorService.findSequenceByUserType(UserType.School);
 			// sequenceGeneratorService.updateSequenceByUserType(schoolsequence,
@@ -134,7 +134,8 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			user.setActive(true);
 			user.setContactNumber(Utils.generateRandomNumString(10));
 			user.setEmail(school.getEmail());
-			userRepository.save(user);
+			if(school.getId()!=null)
+				userRepository.save(user);
 			school.setUser(user);
 		}
 

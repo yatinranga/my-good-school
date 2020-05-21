@@ -9,7 +9,7 @@ declare let $;
 })
 export class StudentComponent implements OnInit{
 
-  constructor(private studentService: StudentService, public authService: AuthService) { }
+  constructor(public authService: AuthService) { }
 
   ngOnInit(): void {
     $('button').click(function(){
