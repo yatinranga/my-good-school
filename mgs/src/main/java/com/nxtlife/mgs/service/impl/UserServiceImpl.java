@@ -666,11 +666,11 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@PostConstruct
 	public void init() {
 		School school;
-		if ((school = schoolRepository.findByNameAndActiveTrue("my good school")) == null) {
+		if ((school = schoolRepository.findByNameAndActiveTrue("MyGoodSchool")) == null) {
 			school = new School();
-			school.setName("my good school");
+			school.setName("MyGoodSchool");
 			school.setUsername(
-					String.format("%s%s", school.getName().trim().substring(0, 3), Utils.generateRandomNumString(8)));
+					String.format("%s%s", school.getName().toLowerCase().substring(0, 3), Utils.generateRandomNumString(8)));
 			school.setEmail("mygoodschool@gmail.com");
 			school.setCid(Utils.generateRandomAlphaNumString(8));
 			school.setActive(true);
@@ -886,15 +886,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@Override
 	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		String client = httpServletRequest.getUserPrincipal().getName();
-		if (client == null) {
-			throw new ValidationException("Client header not found");
-		}
-		Long schoolId = schoolRepository.findIdByName(client);
-		if (schoolId == null) {
-			throw new NotFoundException(String.format("Client(%s) not found", client));
-		}
-		User user = userRepository.findByUsernameAndSchoolId(username, schoolId);
+		User user = userRepository.findByUsername(username);
 
 		if (user == null) {
 			throw new UsernameNotFoundException(String.format("username(%s) not found", username));

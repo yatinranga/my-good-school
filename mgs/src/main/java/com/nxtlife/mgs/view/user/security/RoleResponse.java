@@ -1,14 +1,15 @@
 package com.nxtlife.mgs.view.user.security;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.nxtlife.mgs.entity.user.Role;
 
-
+@SuppressWarnings("serial")
 @JsonInclude(value = Include.NON_ABSENT)
-public class RoleResponse  {
+public class RoleResponse implements Serializable {
 
 	public String name;
 
@@ -19,14 +20,14 @@ public class RoleResponse  {
 	public List<AuthorityResponse> authorities;
 
 	public RoleResponse() {
-		
+
 	}
-	
+
 	public RoleResponse(Long id, String name, Boolean active) {
 		this.id = id;
 		this.name = name;
 		this.active = active;
-		}
+	}
 
 	public String getName() {
 		return name;
