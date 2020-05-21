@@ -39,9 +39,6 @@ public class FocusAreaServiceImpl extends BaseService implements FocusAreaServic
 	@Autowired
 	SchoolRepository schoolRepository;
 
-	@Autowired
-	Utils utils;
-
 	@Override
 	public FocusAreaRequestResponse save(FocusAreaRequestResponse request) {
 
@@ -56,7 +53,7 @@ public class FocusAreaServiceImpl extends BaseService implements FocusAreaServic
 		if (focusArea != null)
 			throw new ValidationException("This focus Area already exists.");
 		focusArea = request.toEntity();
-		focusArea.setCid(utils.generateRandomAlphaNumString(8));
+		focusArea.setCid(Utils.generateRandomAlphaNumString(8));
 		focusArea = focusAreaRepository.save(focusArea);
 		if (focusArea == null)
 			throw new RuntimeException("Something went wrong Focus Area not saved.");

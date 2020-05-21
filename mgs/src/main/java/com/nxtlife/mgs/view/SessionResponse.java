@@ -1,12 +1,9 @@
 package com.nxtlife.mgs.view;
 
-import java.time.LocalDate;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.mina.core.session.SessionState;
 import org.joda.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -18,37 +15,36 @@ import com.nxtlife.mgs.util.DateUtil;
 @JsonInclude(content = Include.NON_ABSENT)
 public class SessionResponse {
 
-    private String id;
-	
-    private String startDay;
-    
-    private String endDay;
-    
+	private String id;
+
+	private String startDay;
+
+	private String endDay;
+
 	private Long number;
-	
+
 	private String startDate;
-	
+
 	private String endDate;
-	
+
 	private String title;
-	
+
 	private ActivityRequestResponse club;
-	
-	private List<GradeResponse> grades ;
-	
+
+	private List<GradeResponse> grades;
+
 	private String teacherId;
-	
+
 	private String teacherName;
-	
+
 	private String status;
-	
+
 	private String description;
-	
+
 	private List<FileResponse> fileResponses;
-	
+
 	private List<GroupResponseBy<SessionResponse>> sessions;
 
-	
 	public String getId() {
 		return id;
 	}
@@ -140,7 +136,7 @@ public class SessionResponse {
 	public void setTeacherName(String teacherName) {
 		this.teacherName = teacherName;
 	}
-	
+
 	public void setStatus(String status) {
 		this.status = status;
 	}
@@ -170,41 +166,41 @@ public class SessionResponse {
 	}
 
 	public SessionResponse() {
-		
+
 	}
-	
+
 	public SessionResponse(Event session) {
 		this.id = session.getCid();
 		this.title = session.getTitle();
 		this.number = session.getNumber();
-		if(session.getStartDate() != null)
-		   this.startDate = DateUtil.formatDate(session.getStartDate());
-		if(session.getEndDate() != null)
-			   this.endDate = DateUtil.formatDate(session.getEndDate());
+		if (session.getStartDate() != null)
+			this.startDate = DateUtil.formatDate(session.getStartDate());
+		if (session.getEndDate() != null)
+			this.endDate = DateUtil.formatDate(session.getEndDate());
 		Date now = LocalDateTime.now().toDate();
-		if(session.getStartDate() != null && session.getEndDate() != null) {
-			
+		if (session.getStartDate() != null && session.getEndDate() != null) {
+
 			startDay = LocalDateTime.fromDateFields(session.getStartDate()).dayOfWeek().getAsShortText();
 			endDay = LocalDateTime.fromDateFields(session.getEndDate()).dayOfWeek().getAsShortText();
-			
-			if(session.getStartDate().before(now))
-				if(session.getEndDate().before(now))
+
+			if (session.getStartDate().before(now))
+				if (session.getEndDate().before(now))
 					status = SessionStatus.ended.toString();
 				else
 					status = SessionStatus.running.toString();
-			else if(session.getStartDate().compareTo(now) == 0)
+			else if (session.getStartDate().compareTo(now) == 0)
 				status = SessionStatus.running.toString();
 			else
 				status = SessionStatus.upcoming.toString();
 		}
-		if(session.getTeacher() != null) {
+		if (session.getTeacher() != null) {
 			this.teacherId = session.getTeacher().getCid();
 			this.teacherName = session.getTeacher().getName();
 		}
-		if(session.getClub() != null)
+		if (session.getClub() != null)
 			this.club = new ActivityRequestResponse(session.getClub());
 		this.description = session.getDescription();
-		this.fileResponses = session.getFiles().stream().map(FileResponse :: new).distinct().collect(Collectors.toList());
-		this.grades = session.getGrades().stream().map(GradeResponse :: new).distinct().collect(Collectors.toList());
+		this.fileResponses = session.getFiles().stream().map(FileResponse::new).distinct().collect(Collectors.toList());
+		this.grades = session.getGrades().stream().map(GradeResponse::new).distinct().collect(Collectors.toList());
 	}
 }

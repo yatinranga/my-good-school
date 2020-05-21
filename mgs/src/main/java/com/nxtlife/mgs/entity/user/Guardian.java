@@ -59,7 +59,7 @@ public class Guardian extends BaseEntity {
 
 	private String relationship;
 
-	@OneToOne(cascade = CascadeType.ALL ,fetch = FetchType.EAGER)
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
 	User user;
 
@@ -67,7 +67,7 @@ public class Guardian extends BaseEntity {
 	 * @ManyToOne(cascade = CascadeType.PERSIST) private Student student;
 	 */
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany()
 	@JoinTable(name = "student_guardian", joinColumns = { @JoinColumn(name = "guardian_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "student_id") })
 	private List<Student> students;

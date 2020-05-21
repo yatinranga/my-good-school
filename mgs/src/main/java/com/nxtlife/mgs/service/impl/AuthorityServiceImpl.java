@@ -1,9 +1,9 @@
 package com.nxtlife.mgs.service.impl;
 
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,7 +26,6 @@ import com.nxtlife.mgs.service.AuthorityService;
 import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.util.AuthorityUtils;
 import com.nxtlife.mgs.view.user.security.AuthorityResponse;
-
 
 @Service("authorityServiceImpl")
 @Transactional
@@ -92,9 +91,9 @@ public class AuthorityServiceImpl extends BaseService implements AuthorityServic
 	 */
 	@Override
 	public Authority findById(long id) {
-		Authority authority = authorityDao.findOne(id);
-		if (authority != null) {
-			return authority;
+		Optional<Authority> authority = authorityDao.findById(id);
+		if (authority != null && authority.isPresent()) {
+			return authority.get();
 		} else {
 			logger.error("Authority {} not found", id);
 			throw new NotFoundException(String.format("Authority (%s) not found", id));

@@ -1,22 +1,24 @@
 package com.nxtlife.mgs.entity;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
-import org.joda.time.DateTime;
 import org.springframework.data.jpa.domain.AbstractAuditable;
 
 import com.nxtlife.mgs.entity.user.User;
 import com.nxtlife.mgs.service.BaseService;
 
-@MappedSuperclass
 @SuppressWarnings("serial")
-public abstract class BaseEntity extends AbstractAuditable<User, Long> {
+@MappedSuperclass
+public abstract class BaseEntity extends AbstractAuditable<User, Long> implements Serializable{
 
 	@PrePersist
 	private void preCreate() {
-		this.setCreatedDate(DateTime.now());
+		this.setCreatedDate(LocalDateTime.now());
 
 		User current = BaseService.getUser();
 		if (current != null) {
@@ -26,7 +28,7 @@ public abstract class BaseEntity extends AbstractAuditable<User, Long> {
 
 	@PreUpdate
 	private void preUpdate() {
-		this.setLastModifiedDate(DateTime.now());
+		this.setLastModifiedDate(LocalDateTime.now());
 		User current = BaseService.getUser();
 		if (current != null) {
 			this.setLastModifiedBy(current);

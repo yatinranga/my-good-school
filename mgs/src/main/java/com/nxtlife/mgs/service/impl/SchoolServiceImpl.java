@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
@@ -65,9 +65,6 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 	UserService userService;
 
 	@Autowired
-	Utils utils;
-
-	@Autowired
 	private FileStorageService<MultipartFile> fileStorageService;
 
 	@Autowired
@@ -85,8 +82,8 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 	@Autowired
 	GradeRepository gradeRepository;
 
-//	@Autowired
-//	FileService fileService;
+	// @Autowired
+	// FileService fileService;
 
 	@Autowired
 	ActivityService activityService;
@@ -104,17 +101,20 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			role.setActive(true);
 			roleRepository.save(role);
 		}
-//		 Logic for authorities missing
+		// Logic for authorities missing
 
-		School school = schoolRepository.findByNameAndActiveTrue("my good school");
+		School school = schoolRepository.findByNameAndActiveTrue("my-good-school");
 		if (school == null) {
 			school = new School();
 			school.setName("my good school");
-			school.setUsername(String.format("%s%08d", school.getName().substring(0, 3) ,utils.generateRandomNumString(8) ));
-//			Long schoolsequence = sequenceGeneratorService.findSequenceByUserType(UserType.School);
-//			sequenceGeneratorService.updateSequenceByUserType(schoolsequence, UserType.School);
+			school.setUsername(
+					String.format("%s%s", school.getName().trim().substring(0, 3), Utils.generateRandomNumString(8)));
+			// Long schoolsequence =
+			// sequenceGeneratorService.findSequenceByUserType(UserType.School);
+			// sequenceGeneratorService.updateSequenceByUserType(schoolsequence,
+			// UserType.School);
 			school.setEmail("mygoodschool@gmail.com");
-			school.setCid(utils.generateRandomAlphaNumString(8));
+			school.setCid(Utils.generateRandomAlphaNumString(8));
 			school.setActive(true);
 
 		} else {
@@ -125,13 +125,14 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 		if (userRepository.findByUsername(school.getUsername()) == null) {
 			User user = new User();
 			user.setRoles(Arrays.asList(role));
+			user.setName(school.getName());
 			user.setUsername(school.getUsername());
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 			String encodedPassword = encoder.encode("root");
 			user.setPassword(encodedPassword);
-			user.setCid(utils.generateRandomAlphaNumString(8));
+			user.setCid(Utils.generateRandomAlphaNumString(8));
 			user.setActive(true);
-			user.setContactNumber(utils.generateRandomNumString(10));
+			user.setContactNumber(Utils.generateRandomNumString(10));
 			user.setEmail(school.getEmail());
 			userRepository.save(user);
 			school.setUser(user);
@@ -157,20 +158,22 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 
 		School school = request.toEntity();
 
-//		Long schoolsequence = sequenceGeneratorService.findSequenceByUserType(UserType.School);
+		// Long schoolsequence =
+		// sequenceGeneratorService.findSequenceByUserType(UserType.School);
 
-//		school.setUsername(String.format("SCH%08d", schoolsequence));
-//		school.setCid(utils.generateRandomAlphaNumString(8));
+		// school.setUsername(String.format("SCH%08d", schoolsequence));
+		// school.setCid(Utils.generateRandomAlphaNumString(8));
 		school.setActive(true);
 
-//		User user = userService.createSchoolUser(school);
-//		User user = userService.createUserForEntity(school);
-		Long roleId = roleRepository.findIdByName( "School");
-		if(roleId == null)
+		// User user = userService.createSchoolUser(school);
+		// User user = userService.createUserForEntity(school);
+		Long roleId = roleRepository.findIdByName("School");
+		if (roleId == null)
 			throw new ValidationException("Role School not created yet.");
-		User user = userService.createUser(school.getName(), school.getContactNumber(), school.getEmail(), school.getId());
-		user.setUserRoles(Arrays.asList(new UserRole(new UserRoleKey(roleId, user.getId()), new Role(roleId, "School"), user)));
-		
+		User user = userService.createUser(school.getName(), school.getContactNumber(), school.getEmail(),
+				school.getId());
+		user.setUserRoles(
+				Arrays.asList(new UserRole(new UserRoleKey(roleId, user.getId()), new Role(roleId, "School"), user)));
 
 		if (StringUtils.isEmpty(user))
 			throw new ValidationException("User not created successfully");
@@ -217,7 +220,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 						List<School> schoolList = new ArrayList<School>();
 						schoolList.add(school);
 						activity.setSchools(schoolList);
-						// activity.setCid(utils.generateRandomAlphaNumString(8));
+						// activity.setCid(Utils.generateRandomAlphaNumString(8));
 						allActivities.add(activity);
 					} else {
 						activity.getSchools().add(school);
@@ -231,7 +234,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 					List<School> sl = new ArrayList<School>();
 					sl.add(school);
 					activity.setSchools(sl);
-					activity.setCid(utils.generateRandomAlphaNumString(8));
+					activity.setCid(Utils.generateRandomAlphaNumString(8));
 					activity.setActive(true);
 					allActivities.add(activity);
 
@@ -269,7 +272,8 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 				: String.format("Email not sent successfully to (%s) , email address might be wrong.", user.getEmail());
 		int emailStatusCode = emailFlag ? 200 : 400;
 		response.put("MailResponse", new SuccessResponse(emailStatusCode, emailMessage));
-//		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+		// return new ResponseEntity<Map<String, Object>>(response,
+		// HttpStatus.OK);
 
 		return new SchoolResponse(school);
 
@@ -287,15 +291,15 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 		if (school == null)
 			throw new NotFoundException(String.format("school havind id [%s] didn't exist", cid));
 
-		if(request.getName() != null) {
-			if(schoolRepository.existsByNameAndCidNotAndActiveTrue(request.getName() , request.getId()))
+		if (request.getName() != null) {
+			if (schoolRepository.existsByNameAndCidNotAndActiveTrue(request.getName(), request.getId()))
 				throw new ValidationException(String.format("Name (%s) already belongs to some other school."));
 		}
-		if(request.getAddress() != null) {
-			if(schoolRepository.existsByAddressAndCidNotAndActiveTrue(request.getAddress() , request.getId()))
+		if (request.getAddress() != null) {
+			if (schoolRepository.existsByAddressAndCidNotAndActiveTrue(request.getAddress(), request.getId()))
 				throw new ValidationException(String.format("Address (%s) already belongs to some other school."));
 		}
-		
+
 		school = request.toEntity(school);
 
 		if (request.getContactNumber() != null) {
@@ -349,7 +353,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			}
 
 			school.setGrades(previousGrades);
-			gradeRepository.save(gradesToDelete);
+			gradeRepository.saveAll(gradesToDelete);
 		}
 
 		if (request.getLogo() != null && school.getLogo() != null) {
@@ -393,7 +397,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 
 			school.setActivities(previousActivities);
 			if (!activitiesToDelete.isEmpty())
-				activityRepository.save(activitiesToDelete);
+				activityRepository.saveAll(activitiesToDelete);
 		}
 
 		school = schoolRepository.save(school);
@@ -449,7 +453,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 				List<School> schools = new ArrayList<School>();
 				schools.add(school);
 				grade.setSchools(schools);
-				grade.setCid(utils.generateRandomAlphaNumString(8));
+				grade.setCid(Utils.generateRandomAlphaNumString(8));
 				grade.setActive(true);
 				grade = gradeRepository.save(grade);
 				previousGrades.add(grade);
@@ -461,11 +465,10 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 	public SchoolResponse findById(Long id) {
 		if (id == null)
 			throw new ValidationException("id cannot be null.");
-		School school = schoolRepository.findById(id);
-		if (school == null)
+		Optional<School> school = schoolRepository.findById(id);
+		if (school == null || !school.isPresent())
 			throw new ValidationException("School not found.");
-
-		return new SchoolResponse(school);
+		return new SchoolResponse(school.get());
 	}
 
 	@Override
@@ -516,7 +519,8 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 		try {
 			XSSFWorkbook studentsSheet = new XSSFWorkbook(file.getInputStream());
 			schoolRecords = findSheetRowValues(studentsSheet, "SCHOOL", errors);
-//			errors = (List<String>) schoolRecords.get(schoolRecords.size() - 1).get("errors");
+			// errors = (List<String>) schoolRecords.get(schoolRecords.size() -
+			// 1).get("errors");
 			for (int i = 0; i < schoolRecords.size(); i++) {
 				List<Map<String, Object>> tempSchoolRecords = new ArrayList<Map<String, Object>>();
 				tempSchoolRecords.add(schoolRecords.get(i));
@@ -541,8 +545,9 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 		if (schoolDetails.get(0).get("NAME") != null) {
 			schoolRequest.setName((String) schoolDetails.get(0).get("NAME"));
 		}
-//		if(schoolDetails.get(0).get("USERNAME")!=null)
-//		   schoolRequest.setUsername((String) schoolDetails.get(0).get("USERNAME"));
+		// if(schoolDetails.get(0).get("USERNAME")!=null)
+		// schoolRequest.setUsername((String)
+		// schoolDetails.get(0).get("USERNAME"));
 
 		if (schoolDetails.get(0).get("EMAIL") != null)
 			schoolRequest.setEmail((String) schoolDetails.get(0).get("EMAIL"));
@@ -569,7 +574,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			if (row.getPhysicalNumberOfCells() != columnSize) {
 				errors.add(String.format("Some of the cells (Row number : %d) are missing or extras in %s sheet", i + 1,
 						sheetName));
-//					continue;
+				// continue;
 				if (i == 0)
 					throw new ValidationException(String.format(
 							"Some of the cells (Row number : %d) are missing or extras in %s sheet", i + 1, sheetName));
@@ -577,7 +582,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			if (i == 0) {
 				row.forEach(c -> {
 					System.out.println(c.getStringCellValue());
-//					 c.getStringCellValue().trim();
+					// c.getStringCellValue().trim();
 					if (!columnTypes.containsKey(c.getStringCellValue().trim())) {
 						errors.add(String.format("This cell (%s) is not valid", c.getStringCellValue()));
 					} else {
@@ -607,7 +612,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 									columnTypes.get(headers.get(j)), cell.getCellType(), headers.get(j), sheetName));
 						}
 					} else {
-//						if(columnTypes.get(headers.get(j)).equals(cell.getCellType()))
+						// if(columnTypes.get(headers.get(j)).equals(cell.getCellType()))
 						if (headers.get(j).equalsIgnoreCase("NAME") || headers.get(j).equalsIgnoreCase("EMAIL"))
 							errors.add(String.format("Cell at row %d and column %d is blank for header %s.", i + 1,
 									j + 1, headers.get(j)));
@@ -624,15 +629,16 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 	}
 
 	private List<Map<String, Object>> findSheetRowValues(XSSFWorkbook workbook, String sheetName, List<String> errors) {
-//		XSSFSheet sheet = workbook.getSheet(sheetName);
+		// XSSFSheet sheet = workbook.getSheet(sheetName);
 		XSSFSheet sheet = workbook.getSheetAt(0);
 		if (sheet == null) {
 			errors.add(sheetName + " sheet not found");
 			return null;
 		}
-//		if (sheet.getPhysicalNumberOfRows() > rowLimit) {
-//			errors.add(String.format("Number of row can't be more than %d for %s sheet", rowLimit, sheetName));
-//		}
+		// if (sheet.getPhysicalNumberOfRows() > rowLimit) {
+		// errors.add(String.format("Number of row can't be more than %d for %s
+		// sheet", rowLimit, sheetName));
+		// }
 		Map<String, CellType> columnTypes = ExcelUtil.sheetColumns(sheetName);
 		return fetchRowValues(columnTypes, sheet, errors, sheetName);
 	}

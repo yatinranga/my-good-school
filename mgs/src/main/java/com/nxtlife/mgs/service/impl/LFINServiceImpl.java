@@ -38,7 +38,6 @@ import com.nxtlife.mgs.service.SequenceGeneratorService;
 import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.ExcelUtil;
-import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.ActivityRequestResponse;
 import com.nxtlife.mgs.view.LFINRequestResponse;
 
@@ -47,31 +46,28 @@ public class LFINServiceImpl extends BaseService implements LFINService {
 
 	@Autowired
 	LFINRepository lFINRepository;
-	
+
 	@Autowired
 	UserService userService;
-	
+
 	@Autowired
 	UserRepository userRepository;
-	
+
 	@Autowired
 	SequenceGeneratorService sequenceGeneratorService;
-	
+
 	@Autowired
 	RoleRepository roleRepository;
-	
-	@Autowired
-	Utils utils;
 
 	@Override
 	public LFINRequestResponse save(LFINRequestResponse request) {
-		
+
 		User loggedInUser = getUser();
-		if(loggedInUser == null)
+		if (loggedInUser == null)
 			throw new ValidationException("You need to be logged in as main Admin to create and add LFIN.");
-		loggedInUser  = userRepository.getOne(loggedInUser.getId());
-		
-		if(!loggedInUser.getRoles().stream().anyMatch(a-> a.getName().equalsIgnoreCase("MainAdmin")))
+		loggedInUser = userRepository.getOne(loggedInUser.getId());
+
+		if (!loggedInUser.getRoles().stream().anyMatch(a -> a.getName().equalsIgnoreCase("MainAdmin")))
 			throw new UnauthorizedUserException("You are not authorized to create and add LFIN.");
 
 		if (lFINRepository.existsByEmailAndActiveTrue(request.getEmail()))
@@ -79,18 +75,19 @@ public class LFINServiceImpl extends BaseService implements LFINService {
 					String.format("A LFIN member with email (%s) already exist.", request.getEmail()));
 
 		LFIN lfin = request.toEntity();
-//		lfin.setCid(utils.generateRandomAlphaNumString(8));
-//		Long lfinsequence = sequenceGeneratorService.findSequenceByUserType(UserType.LFIN);
-//		lfin.setUsername(String.format("LFI%08d", lfinsequence));
+		// lfin.setCid(utils.generateRandomAlphaNumString(8));
+		// Long lfinsequence =
+		// sequenceGeneratorService.findSequenceByUserType(UserType.LFIN);
+		// lfin.setUsername(String.format("LFI%08d", lfinsequence));
 
-//		User user = userService.createUserForEntity(lfin);
-		
-		Long roleId = roleRepository.findIdByName( "Lfin");
-		if(roleId == null)
+		// User user = userService.createUserForEntity(lfin);
+
+		Long roleId = roleRepository.findIdByName("Lfin");
+		if (roleId == null)
 			throw new ValidationException("Role Lfin not created yet.");
 		User user = userService.createUser(lfin.getName(), lfin.getContactNumber(), lfin.getEmail(), null);
-		user.setUserRoles(Arrays.asList(new UserRole(new UserRoleKey(roleId, user.getId()), new Role(roleId, "Lfin"), user)));
-		
+		user.setUserRoles(
+				Arrays.asList(new UserRole(new UserRoleKey(roleId, user.getId()), new Role(roleId, "Lfin"), user)));
 
 		if (StringUtils.isEmpty(user))
 			throw new ValidationException("User not created successfully");
@@ -128,7 +125,8 @@ public class LFINServiceImpl extends BaseService implements LFINService {
 		try {
 			XSSFWorkbook lfinsSheet = new XSSFWorkbook(file.getInputStream());
 			lfinsRecords = findSheetRowValues(lfinsSheet, "LFIN", errors);
-//			errors = (List<String>) studentsRecords.get(studentsRecords.size() - 1).get("errors");
+			// errors = (List<String>)
+			// studentsRecords.get(studentsRecords.size() - 1).get("errors");
 			for (int i = 0; i < lfinsRecords.size() - 1; i++) {
 				List<Map<String, Object>> tempLfinsRecords = new ArrayList<Map<String, Object>>();
 				tempLfinsRecords.add(lfinsRecords.get(i));

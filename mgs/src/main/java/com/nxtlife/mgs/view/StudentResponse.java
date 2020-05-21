@@ -1,7 +1,6 @@
 package com.nxtlife.mgs.view;
 
 import java.text.DecimalFormat;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -10,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.util.DateUtil;
-import com.nxtlife.mgs.util.Utils;
 
 @JsonInclude(value = Include.NON_ABSENT)
 public class StudentResponse {
@@ -180,7 +178,8 @@ public class StudentResponse {
 		return performedActivities;
 	}
 
-	public void setPerformedActivities(List<GroupResponseByActivityName<ActivityPerformedResponse>> performedActivities) {
+	public void setPerformedActivities(
+			List<GroupResponseByActivityName<ActivityPerformedResponse>> performedActivities) {
 		this.performedActivities = performedActivities;
 	}
 
@@ -201,7 +200,7 @@ public class StudentResponse {
 	}
 
 	public String getScoreForAward() {
-		if(this.scoreForAward != null) {
+		if (this.scoreForAward != null) {
 			DecimalFormat df = new DecimalFormat("####0.00");
 			return df.format((double) scoreForAward);
 		}
@@ -248,7 +247,7 @@ public class StudentResponse {
 		this.active = student.getActive();
 		this.profileImage = student.getImageUrl();
 		if (student.getCreatedDate() != null)
-			this.yearOfEnrolment = Integer.toString(student.getCreatedDate().getYear());
+			this.yearOfEnrolment = Integer.toString(student.getCreatedDate().get().getYear());
 
 		if (student.getSubscriptionEndDate() != null)
 			this.subscriptionEndDate = DateUtil.formatDate(student.getSubscriptionEndDate());
@@ -287,7 +286,7 @@ public class StudentResponse {
 			this.active = student.getActive();
 			this.profileImage = student.getImageUrl();
 			if (student.getCreatedDate() != null)
-				this.yearOfEnrolment = Integer.toString(student.getCreatedDate().getYear());
+				this.yearOfEnrolment = Integer.toString(student.getCreatedDate().get().getYear());
 
 			if (student.getSubscriptionEndDate() != null)
 				this.subscriptionEndDate = DateUtil.formatDate(student.getSubscriptionEndDate());
