@@ -47,10 +47,10 @@ export class TeacherHomeComponent implements OnInit {
   clubReqLoader = false;
   gradeId = "";
 
-  files = []; // Array to store the attachment during create session
+  // files = []; // Array to store the attachment during create session
   path = "" // to Display the selected photos
   minDate = "" // Min Date to create session
-
+  name = "" // Name of the File attached in Session
 
   constructor(private teacherService: TeacherService, private formBuilder: FormBuilder, private alertService: AlertService) { }
 
@@ -209,10 +209,12 @@ export class TeacherHomeComponent implements OnInit {
           }
         }
         else if (key == 'fileRequests') {
-          if (this.createSessionForm.value[key].id) {
-            formData.append('fileRequests[' + 0 + '].id', this.createSessionForm.value[key].id);
-          } else {
-            formData.append(key + '[' + 0 + '].file', this.createSessionForm.value[key]);
+          if (!(this.createSessionForm.value[key]) == null) {
+            if (this.createSessionForm.value[key].id) {
+              formData.append('fileRequests[' + 0 + '].id', this.createSessionForm.value[key].id);
+            } else {
+              formData.append(key + '[' + 0 + '].file', this.createSessionForm.value[key]);
+            }
           }
           // if(element.id){
           //   console.log("Old file");
@@ -243,7 +245,8 @@ export class TeacherHomeComponent implements OnInit {
     this.startTime = "";
     this.endTime = "";
     this.path = "";
-    this.files = [];
+    // this.files = [];
+    this.name = "";
     this.createSessionForm.reset();
   }
 
@@ -294,21 +297,24 @@ export class TeacherHomeComponent implements OnInit {
     let eMinutes: any = eDate.getMinutes();
     let eHours: any = eDate.getHours();
 
-    if(sHours<10){
-      sHours = "0"+sHours;
+    if (sHours < 10) {
+      sHours = "0" + sHours;
     }
-    if(sMinutes==0){
-      sMinutes = "0"+sMinutes;
+    if (sMinutes == 0) {
+      sMinutes = "0" + sMinutes;
     }
-    if(eHours<10){
-      eHours = "0"+eHours;
+    if (eHours < 10) {
+      eHours = "0" + eHours;
     }
-    if(eMinutes==0){
-      eMinutes = "0"+eMinutes;
+    if (eMinutes == 0) {
+      eMinutes = "0" + eMinutes;
     }
-    
+
     this.startTime = sHours + ":" + sMinutes;
     this.endTime = eHours + ":" + eMinutes;
+
+    this.name = session.fileResponses[0].name;
+    this.path = session.fileResponses[0].url;
 
     this.createSessionForm.controls.startDate.patchValue(session.startDate.split(' ')[0]);
     this.createSessionForm.patchValue({
@@ -431,10 +437,12 @@ export class TeacherHomeComponent implements OnInit {
 
   // Adding Attachment at the time of create session
   onFileSelect(event) {
+    this.name = ""; //reset the file name
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
-      console.log("File Uploaded",event.target.files[0]);
+      console.log("File Uploaded", event.target.files[0]);
       this.createSessionForm.value.fileRequests = file;
+      this.name = file.name;
 
       var reader = new FileReader();
       reader.readAsDataURL(event.target.files[0]);
@@ -445,8 +453,15 @@ export class TeacherHomeComponent implements OnInit {
     }
   }
 
+  // Remove the file from Session Schedule
+  removeFile() {
+    this.name = "";
+    this.path = "";
+    this.createSessionForm.value.fileRequests = null;
+  }
+
   // Set Min Date
-  setMinDate(){
+  setMinDate() {
     const minDate = new Date();
     let month: any = minDate.getMonth() + 1;
     let day: any = minDate.getDate();
