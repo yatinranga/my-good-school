@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
@@ -65,4 +66,8 @@ public interface SessionRepository extends JpaRepository<Event, Long>, QuerydslP
 	public List<Event> findAllByTeacherCidAndClubInAndStartDateGreaterThanAndStartDateLessThanAndActiveTrueGroupByClubId(
 			@Param("teacherCid") String teacherCid, @Param("clubs") Collection<Activity> clubs,
 			@Param("rangeBegin") Date rangeBegin, @Param("rangeEnd") Date rangeEnd, Sort sort);
+	
+	@Modifying
+	@Query(value = "update Event s set s.active = ?2 where s.cid = ?1 and s.active = true")
+	int deleteByCidAndActiveTrue(String cid ,Boolean active);
 }

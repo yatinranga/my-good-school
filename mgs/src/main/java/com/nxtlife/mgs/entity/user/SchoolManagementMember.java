@@ -43,8 +43,6 @@ public class SchoolManagementMember extends BaseEntity{
 	@Column(unique = true)
 	private String mobileNumber;
 	
-	private Boolean active;
-	
 	private String gender;
 	
 	private String designation;
@@ -102,14 +100,6 @@ public class SchoolManagementMember extends BaseEntity{
 
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
-	}
-
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
 	}
 
 	public String getGender() {
@@ -171,7 +161,7 @@ public class SchoolManagementMember extends BaseEntity{
 		this.imageUrl = imageUrl;
 		this.email = email;
 		this.mobileNumber = mobileNumber;
-		this.active = active;
+		this.setActive(active);
 		this.gender = gender;
 		this.designation = designation;
 		this.school = school;

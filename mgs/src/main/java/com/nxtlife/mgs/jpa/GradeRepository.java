@@ -1,6 +1,7 @@
 package com.nxtlife.mgs.jpa;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -39,4 +40,10 @@ public interface GradeRepository extends JpaRepository<Grade, Long>{
 	
 	@Query(value = "select a.id from Grade a where a.cid = :cid and a.active = true")
 	Long findIdByCidAndActiveTrue(@Param("cid") String cid);
+	
+	@Query("Select distinct g.id from Grade g join g.teachers ts where ts.cid = ?1")
+	public List<Long> findGradeIdsOfTeacher(String teacherCid);
+	
+	@Query("Select distinct g.id from Grade g join g.teachers ts where ts.id = ?1")
+	public List<Long> findGradeIdsOfTeacher(Long teacherId);
 }

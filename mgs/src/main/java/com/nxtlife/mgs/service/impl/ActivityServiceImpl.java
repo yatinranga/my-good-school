@@ -24,6 +24,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,6 +46,7 @@ import com.nxtlife.mgs.jpa.TeacherRepository;
 import com.nxtlife.mgs.service.ActivityService;
 import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.FocusAreaService;
+import com.nxtlife.mgs.util.AuthorityUtils;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.ActivityRequestResponse;
@@ -55,28 +57,28 @@ import com.nxtlife.mgs.view.SuccessResponse;
 public class ActivityServiceImpl extends BaseService implements ActivityService {
 
 	@Autowired
-	ActivityRepository activityRepository;
+	private ActivityRepository activityRepository;
 
 	@Autowired
-	FocusAreaRepository focusAreaRepository;
+	private FocusAreaRepository focusAreaRepository;
 
 	@Autowired
-	SchoolRepository schoolRepository;
+	private SchoolRepository schoolRepository;
 
 	@Autowired
-	FocusAreaService focusAreaService;
+	private FocusAreaService focusAreaService;
 
 	@Autowired
-	StudentClubRepository studentClubRepository;
+	private StudentClubRepository studentClubRepository;
 
 	@Autowired
-	StudentRepository studentRepository;
+	private StudentRepository studentRepository;
 
 	@Autowired
-	TeacherRepository teacherRepository;
+	private TeacherRepository teacherRepository;
 
 	@Autowired
-	TeacherActivityGradeRepository teacherActivityGradeRepository;
+	private TeacherActivityGradeRepository teacherActivityGradeRepository;
 
 	@PostConstruct
 	public void init() {
@@ -429,6 +431,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 	}
 
 	@Override
+	@Secured(AuthorityUtils.SCHOOL_ACTIVITY_CREATE)
 	public ActivityRequestResponse saveActivity(ActivityRequestResponse request) {
 		if (request == null)
 			throw new ValidationException("Request cannot be null");
@@ -562,12 +565,14 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 	}
 
 	@Override
+//	@Secured(AuthorityUtils.SCHOOL_ACTIVITY_VIEW)
 	public List<ActivityRequestResponse> getAllOfferedActivitiesBySchool(String schoolCid) {
 		List<Activity> activities;
 
 		if (schoolCid == null)
-			activities = activityRepository.findAllByIsGeneralTrueAndActiveTrue();
-		else
+			schoolCid = getUser().getSchool().getCid();
+//			activities = activityRepository.findAllByIsGeneralTrueAndActiveTrue();
+//		else
 			activities = activityRepository.findAllBySchoolsCidAndActiveTrue(schoolCid);
 
 		if (activities == null || activities.isEmpty())
@@ -577,14 +582,17 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 	}
 
 	@Override
-	public List<ActivityRequestResponse> getAllClubsOfStudent() {
+	@Secured(AuthorityUtils.SCHOOL_CLUB_MEMBERSHIP_VIEW)
+	public List<ActivityRequestResponse> getAllClubsOfStudent(String studentCid) {
 		List<Activity> activities;
-		Long userId = getUserId();
-		if (userId == null)
-			throw new ValidationException("Login as student to see your activities.");
-		Long studentId = studentRepository.findIdByUserIdAndActiveTrue(userId);
-		if (studentId == null)
-			throw new ValidationException("User not logged in as student.");
+		Long studentId = null;
+		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student"))) {
+			if(studentCid == null)
+				throw new ValidationException("StudentId cannot be null.");
+			studentId = studentRepository.findIdByCidAndActiveTrue(studentCid);
+		}else {
+			studentId = studentRepository.findIdByUserIdAndActiveTrue(getUserId());
+		}
 		if (!studentClubRepository.existsByStudentIdAndMembershipStatusAndActiveTrue(studentId,
 				ApprovalStatus.VERIFIED))
 			throw new ValidationException("Student not member of any Clubs.");
@@ -596,12 +604,17 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 	}
 
 	@Override
-	public List<ActivityRequestResponse> getAllClubsOfTeacher() {
+	@Secured(AuthorityUtils.SCHOOL_CLUB_MEMBERSHIP_VIEW)
+	public List<ActivityRequestResponse> getAllClubsOfTeacher(String teacherCid) {
 		List<Activity> activities;
-		Long userId = getUserId();
-		if (userId == null)
-			throw new ValidationException("Login as teacher to see your activities.");
-		Long teacherId = teacherRepository.getIdByUserIdAndActiveTrue(userId);
+		Long teacherId = null;
+		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor") || r.getName().equalsIgnoreCase("Coordinator") || r.getName().equalsIgnoreCase("Head"))) {
+			if(teacherCid == null)
+				throw new ValidationException("TeacherId cannot be null.");
+			teacherId = teacherRepository.findIdByCidAndActiveTrue(teacherCid);
+		}else {
+			teacherId = teacherRepository.getIdByUserIdAndActiveTrue(getUserId());
+		}
 		if (teacherId == null)
 			throw new ValidationException("User not logged in as teacher.");
 		if (!teacherActivityGradeRepository.existsByTeacherIdAndActiveTrue(teacherId))
@@ -613,6 +626,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 	}
 
 	@Override
+//	@Secured(AuthorityUtils.SCHOOL_ACTIVITY_VIEW)
 	public List<ActivityRequestResponse> getAllGeneralActivities() {
 
 		List<Activity> generalActivities = activityRepository.findAllByIsGeneralTrueAndActiveTrue();
@@ -650,6 +664,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 	}
 
 	@Override
+	@Secured(AuthorityUtils.SCHOOL_ACTIVITY_DELETE)
 	public SuccessResponse deleteActivityByCid(String cid) {
 		Activity activity = activityRepository.getOneByCidAndActiveTrue(cid);
 		if (activity == null)
@@ -662,6 +677,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 
 	@SuppressWarnings("unchecked")
 	@Override
+	@Secured(AuthorityUtils.SCHOOL_ACTIVITY_CREATE)
 	public ResponseEntity<?> uploadActivityFromExcel(MultipartFile file, String schoolCid) {
 		if (file == null || file.isEmpty() || file.getSize() == 0)
 			throw new ValidationException("Pls upload valid excel file.");

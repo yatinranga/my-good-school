@@ -41,8 +41,6 @@ public class Grade extends BaseEntity {
 
 	private String section;
 
-	private Boolean active = true;
-
 	@ManyToMany
 	@JoinTable(name = "school_grade", joinColumns = { @JoinColumn(name = "grade_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "school_id") })
@@ -83,14 +81,6 @@ public class Grade extends BaseEntity {
 
 	public void setSection(String section) {
 		this.section = section;
-	}
-
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
 	}
 
 	public List<School> getSchools() {
@@ -174,7 +164,7 @@ public class Grade extends BaseEntity {
 		this.name = name;
 		this.cid = cid;
 		this.section = section;
-		this.active = active;
+		this.setActive(active);
 		this.schools = schools;
 //		this.teacher = teacher;
 		this.students = students;

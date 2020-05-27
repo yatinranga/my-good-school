@@ -20,6 +20,7 @@ import org.hibernate.validator.constraints.Email;
 
 import com.nxtlife.mgs.entity.BaseEntity;
 
+@SuppressWarnings("serial")
 @Entity
 @DynamicUpdate(true)
 public class Guardian extends BaseEntity {
@@ -52,8 +53,6 @@ public class Guardian extends BaseEntity {
 	@Pattern(regexp = "^[0-9]*$", message = "Mobile no. should contain only digit")
 	@Column(unique = true)
 	private String mobileNumber;
-
-	private Boolean active;
 
 	private String gender;
 
@@ -120,14 +119,6 @@ public class Guardian extends BaseEntity {
 		this.mobileNumber = mobileNumber;
 	}
 
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
-
 	public String getGender() {
 		return gender;
 	}
@@ -183,7 +174,7 @@ public class Guardian extends BaseEntity {
 		this.imageUrl = imageUrl;
 		this.email = email;
 		this.mobileNumber = mobileNumber;
-		this.active = active;
+		this.setActive(active);
 		this.gender = gender;
 		this.user = user;
 		this.students = students;

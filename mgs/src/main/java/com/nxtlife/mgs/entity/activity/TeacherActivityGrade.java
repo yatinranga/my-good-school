@@ -2,13 +2,16 @@ package com.nxtlife.mgs.entity.activity;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 
+import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.common.TeacherActivityGradeId;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.user.Teacher;
@@ -33,7 +36,18 @@ public class TeacherActivityGrade implements Serializable{
 	@ManyToOne
 	private Activity activity;
 	
-	Boolean active = true;
+	@NotNull
+	@Column(name = "active", columnDefinition = "boolean default true")
+	private Boolean active = true;
+	
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
 
 	public TeacherActivityGradeId getTeacherActivityGradeId() {
 		return teacherActivityGradeId;
@@ -67,14 +81,6 @@ public class TeacherActivityGrade implements Serializable{
 		this.activity = activity;
 	}
 
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
-
 	public TeacherActivityGrade(TeacherActivityGradeId teacherActivityGradeId, Grade grade, Teacher teacher,
 			Activity activity, Boolean active) {
 		super();
@@ -82,7 +88,7 @@ public class TeacherActivityGrade implements Serializable{
 		this.grade = grade;
 		this.teacher = teacher;
 		this.activity = activity;
-		this.active = active;
+		this.setActive(active);
 	}
 
 	public TeacherActivityGrade() {

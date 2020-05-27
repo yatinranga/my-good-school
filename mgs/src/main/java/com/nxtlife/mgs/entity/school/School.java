@@ -58,8 +58,6 @@ public class School extends BaseEntity {
 
 	private String logo;
 
-	private Boolean active;
-
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
 	User user;
@@ -116,14 +114,6 @@ public class School extends BaseEntity {
 
 	public void setContactNumber(String contactNumber) {
 		this.contactNumber = contactNumber;
-	}
-
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
 	}
 
 	public List<Grade> getGrades() {
@@ -233,7 +223,7 @@ public class School extends BaseEntity {
 		this.email = email;
 		this.contactNumber = contactNumber;
 		this.logo = logo;
-		this.active = active;
+		this.setActive(active);
 		this.user = user;
 		this.grades = grades;
 		this.teachers = teachers;

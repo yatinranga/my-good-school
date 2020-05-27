@@ -18,8 +18,6 @@ public class AwardType extends BaseEntity {
 	@Column(unique = true)
 	private String name;
 	
-	private Boolean active = true;
-	
 	@OneToMany(cascade = CascadeType.ALL , mappedBy = "awardType")
 	private List<Award> awards;
 
@@ -37,14 +35,6 @@ public class AwardType extends BaseEntity {
 
 	public void setAwards(List<Award> awards) {
 		this.awards = awards;
-	}
-
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
 	}
 
 	public AwardType(String name, List<Award> awards) {

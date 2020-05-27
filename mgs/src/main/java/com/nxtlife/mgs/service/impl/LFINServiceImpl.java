@@ -18,6 +18,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.common.exceptions.UnauthorizedUserException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -45,21 +46,22 @@ import com.nxtlife.mgs.view.LFINRequestResponse;
 public class LFINServiceImpl extends BaseService implements LFINService {
 
 	@Autowired
-	LFINRepository lFINRepository;
+	private LFINRepository lFINRepository;
 
 	@Autowired
-	UserService userService;
+	private UserService userService;
 
 	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
 
 	@Autowired
-	SequenceGeneratorService sequenceGeneratorService;
+	private SequenceGeneratorService sequenceGeneratorService;
 
 	@Autowired
-	RoleRepository roleRepository;
+	private RoleRepository roleRepository;
 
 	@Override
+	@PreAuthorize("hasRole('ROLE_MainAdmin') or hasRole('ROLE_Lfin')")
 	public LFINRequestResponse save(LFINRequestResponse request) {
 
 		User loggedInUser = getUser();
@@ -108,12 +110,13 @@ public class LFINServiceImpl extends BaseService implements LFINService {
 	}
 
 	@Override
-	public ActivityRequestResponse updateActivityStatus(String awardId, Boolean isVerified) {
+	public ActivityRequestResponse updateActivityStatus(String activityId, Boolean isVerified) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
+	@PreAuthorize("hasRole('ROLE_MainAdmin') or hasRole('ROLE_Lfin')")
 	public ResponseEntity<?> uploadLFINFromExcel(MultipartFile file) {
 		if (file == null || file.isEmpty() || file.getSize() == 0)
 			throw new ValidationException("Pls upload valid excel file.");

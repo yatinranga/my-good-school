@@ -24,7 +24,7 @@ import com.nxtlife.mgs.view.PropertyCount;
 public class AwardController {
 
 	@Autowired
-	AwardService awardService;
+	private AwardService awardService;
 	
 	@GetMapping("awardCriteria")
 	public Set<String> getAwardCriteria(){
@@ -37,13 +37,13 @@ public class AwardController {
 	}
 	
 	@GetMapping("api/student/awards")
-	public List<AwardResponse> getAwardsByStudent(){
-		return awardService.findAllByStudent();
+	public List<AwardResponse> getAwardsByStudent(@RequestParam(value = "studentId" , required = false) String studentCid){
+		return awardService.findAllByStudent(studentCid);
 	}
 	
 	@GetMapping("api/teacher/awards")
-	public List<AwardResponse> getAwardsByManagement(){
-		return awardService.findAllByManagement();
+	public List<AwardResponse> getAwardsByManagement(@RequestParam(value = "teacherId" , required = false) String teacherCid){
+		return awardService.findAllByManagement(teacherCid);
 	}
 
 	@PutMapping("api/teacher/award/{awardId}")
@@ -52,17 +52,17 @@ public class AwardController {
 	}
 	
 	@PostMapping("api/student/awards")
-	private List<AwardResponse> getAwardsByStudent(@RequestBody AwardFilter filter){
-		return awardService.findAllByStudent(filter);
+	private List<AwardResponse> getAwardsByStudent(@RequestBody AwardFilter filter ,@RequestParam(value = "studentId" , required = false) String studentCid){
+		return awardService.findAllByStudent(filter ,studentCid);
 	}
 	
 	@PostMapping("api/teacher/awards")
-	private List<AwardResponse> getAwardsByManagement(@RequestBody AwardFilter filter){
-		return awardService.findAllByManagement(filter);
+	private List<AwardResponse> getAwardsByManagement(@RequestBody AwardFilter filter ,@RequestParam(value = "teacherId" , required = false) String teacherCid){
+		return awardService.findAllByManagement(filter ,teacherCid);
 	}
 	
 	@GetMapping(value = "api/student/{studentId}/awards/count" )
-	public List<PropertyCount> getCount(@PathVariable("studentId") String studentCid ,@RequestParam(name = "status" , required = false ,defaultValue = "Reviewed") String status ,@RequestParam("type") String type){
+	public List<PropertyCount> getCount(@PathVariable(value = "studentId" ,required = false) String studentCid ,@RequestParam(name = "status" , required = false ,defaultValue = "Reviewed") String status ,@RequestParam("type") String type){
 		return awardService.getCount(studentCid , status,type);
 	}
 	

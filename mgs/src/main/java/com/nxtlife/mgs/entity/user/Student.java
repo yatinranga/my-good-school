@@ -61,8 +61,6 @@ public class Student  extends BaseEntity {
 	@Column(unique = true)
 	private String mobileNumber;
 
-	private Boolean active = true;
-
 	private String gender;
 
 	private Date subscriptionEndDate;
@@ -162,15 +160,7 @@ public class Student  extends BaseEntity {
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
 	}
-
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
-
+	
 	public String getGender() {
 		return gender;
 	}
@@ -279,7 +269,7 @@ public class Student  extends BaseEntity {
 		this.imageUrl = imageUrl;
 		this.email = email;
 		this.mobileNumber = mobileNumber;
-		this.active = active;
+		this.setActive(active);
 		this.gender = gender;
 		this.subscriptionEndDate = subscriptionEndDate;
 		this.user = user;

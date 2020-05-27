@@ -12,7 +12,7 @@ import com.nxtlife.mgs.entity.common.StudentSchoolGradeId;
 import com.nxtlife.mgs.entity.user.Student;
 
 @Entity
-public class StudentSchoolGrade implements Serializable {
+public class StudentSchoolGrade  implements Serializable {
 
 	private static final long serialVersionUID = 2848327034025855705L;
 	

@@ -27,6 +27,10 @@ const routes: Routes = [
     loadChildren: 'src/app/modules/teacher/teacher.module#TeacherModule'
   }, 
   {
+    path: 'School',
+    loadChildren: 'src/app/modules/school/school.module#SchoolModule'
+  }, 
+  {
     path: '',
     redirectTo: ''+JSON.parse(localStorage.getItem('user_type')),
     pathMatch: 'full'

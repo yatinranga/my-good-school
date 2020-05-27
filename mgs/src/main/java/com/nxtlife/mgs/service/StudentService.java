@@ -47,18 +47,18 @@ public interface StudentService extends ExcelUtil {
 
 	StudentResponse setProfilePic(MultipartFile file, String studentCid);
 
-	CertificateResponse uploadCertificate(CertificateRequest request);
+	CertificateResponse uploadCertificate(CertificateRequest request ,String studentId);
 
-	List<CertificateResponse> getAllCertificatesOfStudent();
+	List<CertificateResponse> getAllCertificatesOfStudent(String studentId);
 
-	Set<StudentResponse> getAllStudentsAndItsActivitiesByAwardCriterion(String awardCriterion, String criterionValue,
+	Set<StudentResponse> getAllStudentsAndItsActivitiesByAwardCriterion(String schoolCid ,String awardCriterion, String criterionValue,
 			String gradeCid,String startDate,String endDate);
 
-	List<StudentResponse> getAllStudentsOfSchoolForParticularActivity(String activityCid,String teacherId ,String gradeId, String activityStatus);
+	List<StudentResponse> getAllStudentsOfSchoolForParticularActivity(String schoolCid ,String activityCid,String teacherId ,String gradeId, String activityStatus);
 
-	ClubMembershipResponse applyForClubMembership(String activityCid, String supervisorCid);
+	ClubMembershipResponse applyForClubMembership( String studentCid ,String activityCid, String supervisorCid);
 
-	List<ClubMembershipResponse> getMembershipDetails();
+	List<ClubMembershipResponse> getMembershipDetails(String studentCid);
 
 	List<StudentResponse> getAllBySchoolIdAndGradeId(String schoolId, String gradeId);
 

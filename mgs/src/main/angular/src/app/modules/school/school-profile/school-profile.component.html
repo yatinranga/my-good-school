@@ -1,1 +1,33 @@
-<p>school-profile works!</p>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 ml-auto">
+            <button (click)="updateProfile()" class="update"> {{setDisabled ? 'Update Profile' :'Save'}}</button>
+            <p>Name - <input type="text" [disabled]="setDisabled" [(ngModel)]="name"></p>
+            <p>Contact - {{schoolDetails['contactNumber']}}</p>
+            <p>Address - <textarea [disabled]="setDisabled" [(ngModel)]="address" row="4" cols="40"></textarea></p>
+            <p>Email - {{schoolDetails['email']}}</p>
+
+            <h5>List of Grades :</h5>
+            <ul *ngFor="let grade of schoolDetails['grades']">
+                <li>{{grade.grade}} - {{grade.section}}</li>
+            </ul>
+        </div>
+        <div class="col-4 ml-auto">
+            <div>
+                <h5>CLUBS</h5>
+                <ul *ngFor="let club of schoolDetails['activities']">
+                    <li *ngIf="club['clubOrSociety']=='Club'">{{club.name}}</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-4 ml-auto">
+            <div>
+                <h5>SOCIETIES</h5>
+                <ul *ngFor="let society of schoolDetails['activities']">
+                    <li *ngIf="society['clubOrSociety']=='Society'">{{society.name}}</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>

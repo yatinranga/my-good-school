@@ -155,7 +155,7 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 		validateAuthorityIds(request.getAuthorityIds());
 		Long existRoleId = roleDao.findIdByNameAndSchoolId(request.getName(), schoolId);
 		if (existRoleId != null && !existRoleId.equals(id)) {
-			throw new ValidationException("This role already exists for this organization");
+			throw new ValidationException("This role already exists for this School");
 		}
 		List<Long> requestAuthorityIds = new ArrayList<>(request.getAuthorityIds());
 		List<Long> roleAuthorityIds = roleAuthorityJpaDao.getAllAuthorityIdsByRoleId(id);

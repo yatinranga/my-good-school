@@ -68,31 +68,31 @@ import com.nxtlife.mgs.view.user.security.RoleResponse;
 public class UserServiceImpl extends BaseService implements UserService, UserDetailsService {
 
 	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
 
 	@Autowired
-	UserRoleRepository userRoleRepository;
+	private UserRoleRepository userRoleRepository;
 
 	@Autowired
-	RoleRepository roleRepository;
+	private RoleRepository roleRepository;
 
 	@Autowired
-	AuthorityRepository authorityRepository;
+	private AuthorityRepository authorityRepository;
 
 	@Autowired
-	NotificationServiceImpl notificationService;
+	private NotificationServiceImpl notificationService;
 
 	@Autowired
-	MailService mailService;
+	private MailService mailService;
 
 	@Value("${spring.mail.username}")
 	private String emailUsername;
 
 	@Autowired
-	SchoolRepository schoolRepository;
+	private SchoolRepository schoolRepository;
 
 	@Autowired
-	RoleAuthorityRepository roleAuthorityRepository;
+	private RoleAuthorityRepository roleAuthorityRepository;
 
 	@Autowired
 	private HttpServletRequest httpServletRequest;
@@ -666,11 +666,11 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@PostConstruct
 	public void init() {
 		School school;
-		if ((school = schoolRepository.findByNameAndActiveTrue("my good school")) == null) {
+		if ((school = schoolRepository.findByNameAndActiveTrue("MyGoodSchool")) == null) {
 			school = new School();
-			school.setName("my good school");
+			school.setName("MyGoodSchool");
 			school.setUsername(
-					String.format("%s%s", school.getName().trim().substring(0, 3), Utils.generateRandomNumString(8)));
+					String.format("%s%s", school.getName().toLowerCase().substring(0, 3), Utils.generateRandomNumString(8)));
 			school.setEmail("mygoodschool@gmail.com");
 			school.setCid(Utils.generateRandomAlphaNumString(8));
 			school.setActive(true);
@@ -703,7 +703,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		User user = new User();
 		user.setActive(true);
 		user.setName(name);
-		user.setUsername(String.format("%s%08d", name.substring(0, 3), Utils.generateRandomNumString(8)));
+		user.setUsername(String.format("%s%s", name.substring(0, 3), Utils.generateRandomNumString(8)));
 		if (email != null && userRepository.existsByEmail(email))
 			throw new ValidationException(String.format("User with email (%s) already exists.", email));
 		user.setEmail(email);
@@ -834,7 +834,12 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@Override
 	@Secured(AuthorityUtils.USER_CREATE)
 	public UserResponse save(UserRequest request) {
-		Long schoolId = getUser().gettSchoolId();
+		Long schoolId = null;
+		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin")))
+			schoolId = schoolRepository.findIdByCid(request.getSchoolId());
+		else
+			schoolId = getUser().gettSchoolId();
+		
 		validate(request, schoolId);
 		User user = request.toEntity();
 		user.settSchoolId(schoolId);
@@ -886,15 +891,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@Override
 	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		String client = httpServletRequest.getUserPrincipal().getName();
-		if (client == null) {
-			throw new ValidationException("Client header not found");
-		}
-		Long schoolId = schoolRepository.findIdByName(client);
-		if (schoolId == null) {
-			throw new NotFoundException(String.format("Client(%s) not found", client));
-		}
-		User user = userRepository.findByUsernameAndSchoolId(username, schoolId);
+		User user = userRepository.findByUsername(username);
 
 		if (user == null) {
 			throw new UsernameNotFoundException(String.format("username(%s) not found", username));

@@ -29,8 +29,6 @@ public class File extends BaseEntity{
 	@Column(unique = true)
 	private String url;
 	
-	private Boolean active;
-	
 	@NotNull
 	private String extension;
 	
@@ -54,14 +52,6 @@ public class File extends BaseEntity{
 
 	public void setUrl(String url) {
 		this.url = url;
-	}
-
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
 	}
 
 	public String getExtension() {
@@ -99,7 +89,7 @@ public class File extends BaseEntity{
 	public File(String name, String url, Boolean active, String extension, ActivityPerformed activityPerformed) {
 		this.name = name;
 		this.url = url;
-		this.active = active;
+		this.setActive(active);
 		this.extension = extension;
 		this.activityPerformed = activityPerformed;
 	} 

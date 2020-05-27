@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { AdminService } from 'src/app/services/admin.service';
-import { StudentService } from 'src/app/services/student.service';
+import { TeacherService } from 'src/app/services/teacher.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { Router } from '@angular/router';
 
@@ -19,11 +19,11 @@ export class TeacherSignupComponent implements OnInit {
   schoolActivities = [];
 
   constructor(private formBuilder: FormBuilder, private adminService: AdminService,
-    private studentService: StudentService, private alertService: AlertService,
+    private teacherService: TeacherService, private alertService: AlertService,
     private router: Router) { }
 
   ngOnInit() {
-    this.studentService.getSchools("/schools").subscribe(
+    this.teacherService.getSchools("/schools").subscribe(
       (res) => { this.schoolsList = res },
       (err) => console.log(err))
 
@@ -78,7 +78,7 @@ export class TeacherSignupComponent implements OnInit {
     this.teacherSignup.value.dob = time;
     console.log(this.teacherSignup.value);
     
-    this.studentService.uploadTeacherDetails(this.teacherSignup.value).subscribe((res) => {
+    this.teacherService.uploadTeacherDetails(this.teacherSignup.value).subscribe((res) => {
       this.alertService.showSuccessAlert(""); 
       this.router.navigate(['./login']);
     },

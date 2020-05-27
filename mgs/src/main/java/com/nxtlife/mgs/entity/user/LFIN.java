@@ -41,8 +41,6 @@ public class LFIN extends BaseEntity{
 	@Column(unique = true)
 	private String contactNumber;
 	
-	private Boolean active;
-	
 	private String gender;
 	
 	@OneToOne(cascade = CascadeType.ALL)
@@ -96,14 +94,6 @@ public class LFIN extends BaseEntity{
 		this.contactNumber = contactNumber;
 	}
 
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
-
 	public String getGender() {
 		return gender;
 	}
@@ -146,7 +136,7 @@ public class LFIN extends BaseEntity{
 		this.imageUrl = imageUrl;
 		this.email = email;
 		this.contactNumber = mobileNumber;
-		this.active = active;
+		this.setActive(active);
 		this.gender = gender;
 	}
 

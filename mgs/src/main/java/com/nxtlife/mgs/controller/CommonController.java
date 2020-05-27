@@ -17,7 +17,7 @@ import com.nxtlife.mgs.service.CommonService;
 public class CommonController {
 
 	@Autowired
-	CommonService commonService;
+	private CommonService commonService;
 	
 	@RequestMapping(value = "/file/download", method = RequestMethod.GET)
 	public ResponseEntity<?> downloadFile(@RequestParam("filePath") String filePath) {
