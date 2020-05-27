@@ -49,6 +49,7 @@ export class TeacherHomeComponent implements OnInit {
 
   files = []; // Array to store the attachment during create session
   path = "" // to Display the selected photos
+  minDate = "" // Min Date to create session
 
 
   constructor(private teacherService: TeacherService, private formBuilder: FormBuilder, private alertService: AlertService) { }
@@ -274,6 +275,7 @@ export class TeacherHomeComponent implements OnInit {
   createSessionBtn() {
     this.createSessionView = true;
     this.editSessionView = false;
+    this.setMinDate();
   }
 
   // Edit/Update Current Session
@@ -282,34 +284,31 @@ export class TeacherHomeComponent implements OnInit {
     this.createSessionView = false;
     this.editSessionView = true;
     console.log(session);
+    this.setMinDate();
+
     let sDate = new Date(session.startDate);
     let eDate = new Date(session.endDate);
 
-    if (sDate.getHours() < 10) {
-      if (sDate.getMinutes() == 0)
-        this.startTime = "0" + sDate.getHours() + ":" + sDate.getMinutes() + "0";
-      else
-        this.startTime = "0" + sDate.getHours() + ":" + sDate.getMinutes();
-    }
-    else {
-      if (sDate.getMinutes() == 0)
-        this.startTime = sDate.getHours() + ":" + sDate.getMinutes() + "0";
-      else
-        this.startTime = sDate.getHours() + ":" + sDate.getMinutes();
-    }
+    let sMinutes: any = sDate.getMinutes();
+    let sHours: any = sDate.getHours();
+    let eMinutes: any = eDate.getMinutes();
+    let eHours: any = eDate.getHours();
 
-    if (eDate.getHours() < 10) {
-      if (eDate.getMinutes() == 0)
-        this.endTime = "0" + eDate.getHours() + ":" + eDate.getMinutes() + "0";
-      else
-        this.endTime = "0" + eDate.getHours() + ":" + eDate.getMinutes();
+    if(sHours<10){
+      sHours = "0"+sHours;
     }
-    else {
-      if (eDate.getMinutes() == 0)
-        this.endTime = eDate.getHours() + ":" + eDate.getMinutes() + "0";
-      else
-        this.endTime = eDate.getHours() + ":" + eDate.getMinutes();
+    if(sMinutes==0){
+      sMinutes = "0"+sMinutes;
     }
+    if(eHours<10){
+      eHours = "0"+eHours;
+    }
+    if(eMinutes==0){
+      eMinutes = "0"+eMinutes;
+    }
+    
+    this.startTime = sHours + ":" + sMinutes;
+    this.endTime = eHours + ":" + eMinutes;
 
     this.createSessionForm.controls.startDate.patchValue(session.startDate.split(' ')[0]);
     this.createSessionForm.patchValue({
@@ -444,6 +443,20 @@ export class TeacherHomeComponent implements OnInit {
     } else {
       this.path = null;
     }
+  }
+
+  // Set Min Date
+  setMinDate(){
+    const minDate = new Date();
+    let month: any = minDate.getMonth() + 1;
+    let day: any = minDate.getDate();
+    let year: any = minDate.getFullYear();
+
+    if (month < 10)
+      month = '0' + month.toString();
+    if (day < 10)
+      day = '0' + day.toString();
+    this.minDate = [year, month, day].join('-');
   }
 
 

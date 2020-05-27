@@ -26,11 +26,11 @@
                                <!-- <i class="fa fa-phone-alt"></i> --> 
                    <input type="tel" maxlength="10" pattern="[0-9]{10}" name="mobileNumbe"
                      [(ngModel)]="mobileNumber" [disabled]="setDisabled"
-                        (ngModelChange)="temp($event)"/>
+                        (ngModelChange)="temp($event)" [ngClass]="{'active': setDisabled}"/>
                 </div>
                 <div class="number">
                                 <!-- <i class="fa fa-envelope"></i> -->  
-                    <input [(ngModel)]="email" [disabled]="setDisabled"/>
+                    <input [(ngModel)]="email" [disabled]="setDisabled" [ngClass]="{'active': setDisabled}"/>
                 </div>                          
             </div>
 
