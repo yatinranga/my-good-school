@@ -62,8 +62,6 @@ public class Teacher extends BaseEntity {
 	@Column(unique = true)
 	private String mobileNumber;
 
-	private Boolean active;
-
 	private String qualification;
 
 	private Boolean isClassTeacher;
@@ -170,14 +168,6 @@ public class Teacher extends BaseEntity {
 
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
-	}
-
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
 	}
 
 	public String getQualification() {
@@ -337,7 +327,7 @@ public class Teacher extends BaseEntity {
 		this.imageUrl = imageUrl;
 		this.email = email;
 		this.mobileNumber = mobileNumber;
-		this.active = active;
+		this.setActive(active);
 		this.qualification = qualification;
 		this.isClassTeacher = isClassTeacher;
 		this.isCoach = isCoach;

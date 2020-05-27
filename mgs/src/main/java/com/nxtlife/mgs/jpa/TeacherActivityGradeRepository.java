@@ -1,5 +1,6 @@
 package com.nxtlife.mgs.jpa;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -37,6 +38,12 @@ public interface TeacherActivityGradeRepository extends JpaRepository<TeacherAct
 	
 	@Query(value = "select tag.teacher from TeacherActivityGrade tag where tag.teacher.school.cid = :schoolCid and tag.active = true")
 	List<Teacher> findAllTeacherByTeacherSchoolCidActiveTrue(@Param("schoolCid") String schoolCid );
+	
+	@Query(value = "select tag.teacher from TeacherActivityGrade tag where tag.teacher.school.cid = ?1 and tag.grade.id in ?2 and tag.active = true")
+	List<Teacher> findAllTeacherByTeacherSchoolCidAndGradeIdsInAndActiveTrue( String schoolCid , Collection<Long> gradeIds);
 
+//	@Query(value = "select tag.teacher from TeacherActivityGrade tag where tag.teacher.school.cid = ?1 and tag.grade.id in ?2 and tag.activity.cid = ?3 and tag.active = true")
+//	List<Teacher> findAllTeacherByTeacherSchoolCidAndGradeIdsInAndActiveTrue( String schoolCid , Collection<Long> gradeIds , String activityCid);
+	
 	boolean existsByTeacherIdAndActiveTrue(Long teacherId);
 }

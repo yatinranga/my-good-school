@@ -14,11 +14,7 @@ public interface ExcelUtil {
 	public static Map<String, CellType> studentColumns() {
 		Map<String, CellType> columnTypes = new LinkedHashMap<>();
 		columnTypes.put("NAME", CellType.STRING);
-//		columnTypes.put("SCHOOL", CellType.STRING);
-//		columnTypes.put("SCHOOLS EMAIL", CellType.STRING);
-//		columnTypes.put("USERNAME", CellType.STRING);
 		columnTypes.put("DOB", CellType.NUMERIC);
-//		columnTypes.put("ACTIVE", CellType.BOOLEAN);
 		columnTypes.put("EMAIL", CellType.STRING);
 		columnTypes.put("MOBILE NUMBER", CellType.NUMERIC);
 		columnTypes.put("GENDER", CellType.STRING);
@@ -56,54 +52,46 @@ public interface ExcelUtil {
 	public static Map<String, CellType> teacherColumns() {
 		Map<String, CellType> columnTypes = new LinkedHashMap<>();
 		columnTypes.put("NAME", CellType.STRING);
-//		columnTypes.put("SCHOOL", CellType.STRING);
-//		columnTypes.put("SCHOOLS EMAIL", CellType.STRING);
-//		columnTypes.put("USERNAME", CellType.STRING);
 		columnTypes.put("DOB", CellType.NUMERIC);
-//		columnTypes.put("ACTIVE", CellType.BOOLEAN);
 		columnTypes.put("EMAIL", CellType.STRING);
 		columnTypes.put("MOBILE NUMBER", CellType.NUMERIC);
 		columnTypes.put("GENDER", CellType.STRING);
 		columnTypes.put("QUALIFICATION", CellType.STRING);
-		columnTypes.put("GRADE", CellType.STRING);
-//		columnTypes.put("SECTION", CellType.STRING);
-//		columnTypes.put("ACTIVE", CellType.BOOLEAN);
-		
-		return columnTypes;
-	}
-	
-	public static Map<String, CellType> coachColumns() {
-		Map<String, CellType> columnTypes = new LinkedHashMap<>();
-		columnTypes.put("NAME", CellType.STRING);
-//		columnTypes.put("SCHOOL", CellType.STRING);
-//		columnTypes.put("SCHOOLS EMAIL", CellType.STRING);
-//		columnTypes.put("USERNAME", CellType.STRING);
-		columnTypes.put("DOB", CellType.NUMERIC);
-//		columnTypes.put("ACTIVE", CellType.BOOLEAN);
-		columnTypes.put("EMAIL", CellType.STRING);
-		columnTypes.put("MOBILE NUMBER", CellType.NUMERIC);
-		columnTypes.put("GENDER", CellType.STRING);
-		columnTypes.put("QUALIFICATION", CellType.STRING);
-		columnTypes.put("ACTIVITY NAME", CellType.STRING);
-		columnTypes.put("GRADE", CellType.STRING);
-//		columnTypes.put("FOCUS AREA", CellType.STRING);
-//		columnTypes.put("PSD AREA", CellType.STRING);
-//		columnTypes.put("4S TYPE", CellType.STRING);
-		
-		return columnTypes;
-	}
-	
-	public static Map<String, CellType> managementColumns() {
-		Map<String, CellType> columnTypes = new LinkedHashMap<>();
-		columnTypes.put("NAME", CellType.STRING);
-//		columnTypes.put("SCHOOL", CellType.STRING);
 		columnTypes.put("DESIGNATION", CellType.STRING);
-		columnTypes.put("DOB", CellType.NUMERIC);
-		columnTypes.put("EMAIL", CellType.STRING);
-		columnTypes.put("MOBILE NUMBER", CellType.NUMERIC);
-		columnTypes.put("GENDER", CellType.STRING);
+		columnTypes.put("GRADE", CellType.STRING);
+		columnTypes.put("ROLE", CellType.STRING);
+		columnTypes.put("ACTIVITY NAME", CellType.STRING);
+		
 		return columnTypes;
 	}
+	
+//	public static Map<String, CellType> coachColumns() {
+//		Map<String, CellType> columnTypes = new LinkedHashMap<>();
+//		columnTypes.put("NAME", CellType.STRING);
+//		columnTypes.put("DOB", CellType.NUMERIC);
+//		columnTypes.put("EMAIL", CellType.STRING);
+//		columnTypes.put("MOBILE NUMBER", CellType.NUMERIC);
+//		columnTypes.put("GENDER", CellType.STRING);
+//		columnTypes.put("QUALIFICATION", CellType.STRING);
+//		columnTypes.put("DESIGNATION", CellType.STRING);
+//		columnTypes.put("GRADE", CellType.STRING);
+//		columnTypes.put("ROLE", CellType.STRING);
+//		columnTypes.put("ACTIVITY NAME", CellType.STRING);
+//		
+//		return columnTypes;
+//	}
+//	
+//	public static Map<String, CellType> managementColumns() {
+//		Map<String, CellType> columnTypes = new LinkedHashMap<>();
+//		columnTypes.put("NAME", CellType.STRING);
+////		columnTypes.put("SCHOOL", CellType.STRING);
+//		columnTypes.put("DESIGNATION", CellType.STRING);
+//		columnTypes.put("DOB", CellType.NUMERIC);
+//		columnTypes.put("EMAIL", CellType.STRING);
+//		columnTypes.put("MOBILE NUMBER", CellType.NUMERIC);
+//		columnTypes.put("GENDER", CellType.STRING);
+//		return columnTypes;
+//	}
 	
 	public static Map<String, CellType> lfinColumns() {
 		Map<String, CellType> columnTypes = new LinkedHashMap<>();
@@ -152,10 +140,6 @@ public interface ExcelUtil {
 			return schoolColumns();
 		case "TEACHER":
 			return teacherColumns();
-		case "COACH":
-			return coachColumns();
-		case "MANAGEMENT":
-			return managementColumns();
 		case "LFIN":
 			return lfinColumns();
 		case "GRADE":
@@ -170,6 +154,6 @@ public interface ExcelUtil {
 	}
 
 	public static List<String> sheets() {
-		return Arrays.asList("STUDENT", "USER", "SCHOOL", "TEACHER", "COACH", "MANAGEMENT","LFIN","GRADE","ACTIVITY","FOCUS AREA");
+		return Arrays.asList("STUDENT", "USER", "SCHOOL", "TEACHER", "LFIN","GRADE","ACTIVITY","FOCUS AREA");
 	}
 }

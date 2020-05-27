@@ -36,28 +36,28 @@ import com.nxtlife.mgs.service.TeacherService;
 public class ExcelTemplateController {
 
 	@Autowired
-	ExcelTemplateService excelTemplateService;
+	private ExcelTemplateService excelTemplateService;
 	
 	@Autowired
-	TeacherService teacherService;
+	private TeacherService teacherService;
 	
 	@Autowired
-	StudentService studentService;
+	private StudentService studentService;
 	
 	@Autowired
-	SchoolService schoolService;
+	private SchoolService schoolService;
 	
 	@Autowired
-	GradeService gradeService;
+	private GradeService gradeService;
 	
 	@Autowired
-	FocusAreaService focusAreaService;
+	private FocusAreaService focusAreaService;
 	
 	@Autowired
-	ActivityService activityService;
+	private ActivityService activityService;
 	
 	@Autowired
-	LFINService lFINService;
+	private LFINService lFINService;
 
 	@GetMapping("template/export")
 	public ResponseEntity<?> exportExampleTemplate(@RequestParam String type , HttpServletResponse response) throws IOException {
@@ -65,14 +65,10 @@ public class ExcelTemplateController {
 			return exportExampleFile("STUDENT", response);
 		else if(type.equalsIgnoreCase("TEACHER"))
 			return exportExampleFile("TEACHER", response);
-		else if(type.equalsIgnoreCase("COACH"))
-			return exportExampleFile("COACH", response);
 		else if(type.equalsIgnoreCase("USER"))
 			return exportExampleFile("USER", response);
 		else if(type.equalsIgnoreCase("SCHOOL"))
 			return exportExampleFile("SCHOOL", response);
-		else if(type.equalsIgnoreCase("MANAGEMENT"))
-			return exportExampleFile("MANAGEMENT", response);
 		else if(type.equalsIgnoreCase("LFIN"))
 			return exportExampleFile("LFIN", response);
 		else if(type.equalsIgnoreCase("GRADE"))
@@ -89,14 +85,12 @@ public class ExcelTemplateController {
 	
 	@Transactional
 	@RequestMapping(value = "/api/template/bulkUpload", method = RequestMethod.POST)
-	public ResponseEntity<?> uploadTeachersFromExcel(@RequestParam("file") MultipartFile file , @RequestParam("type") String type ,@RequestParam(required = false ,value = "schoolId") String schoolCid) {
+	public ResponseEntity<?> uploadStakeholdersFromExcel(@RequestParam("file") MultipartFile file , @RequestParam("type") String type ,@RequestParam(required = false ,value = "schoolId") String schoolCid) {
 		if (file == null || file.isEmpty() || file.getSize() == 0)
 			throw new ValidationException("Pls upload valid excel file.");
 		
 		if(type.equalsIgnoreCase("TEACHER"))
-			 return teacherService.uploadTeachersFromExcel(file, false,schoolCid);
-		else if(type.equalsIgnoreCase("COACH"))
-			 return teacherService.uploadTeachersFromExcel(file, true,schoolCid);
+			 return teacherService.uploadTeachersFromExcel(file,schoolCid);
 		else if(type.equalsIgnoreCase("STUDENT"))
 			 return studentService.uploadStudentsFromExcel(file,schoolCid);
 		else if(type.equalsIgnoreCase("SCHOOL"))
@@ -107,8 +101,6 @@ public class ExcelTemplateController {
 			return focusAreaService.uploadFocusAreasFromExcel(file);
 		else if(type.equalsIgnoreCase("ACTIVITY"))
 			return activityService.uploadActivityFromExcel(file ,schoolCid);
-		else if(type.equalsIgnoreCase("MANAGEMENT"))
-			return teacherService.uploadManagementFromExcel(file, schoolCid);
 		else if(type.equalsIgnoreCase("LFIN"))
 			return lFINService.uploadLFINFromExcel(file);
 		else

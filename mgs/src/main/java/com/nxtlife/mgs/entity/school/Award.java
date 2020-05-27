@@ -22,6 +22,7 @@ import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
+import com.nxtlife.mgs.entity.user.User;
 import com.nxtlife.mgs.enums.ApprovalStatus;
 import com.nxtlife.mgs.enums.AwardCriterion;
 
@@ -42,8 +43,6 @@ public class Award extends BaseEntity {
 	@Column(columnDefinition = "TEXT ")
 	private String description;
 
-	private Boolean active = true;
-
 	private Date dateOfReceipt;
 	
 	private Date validFrom;
@@ -62,7 +61,7 @@ public class Award extends BaseEntity {
 	private Student student;
 	
 	@ManyToOne
-	private Teacher statusModifiedBy;
+	private User statusModifiedBy;
 	
 	private Date statusModifiedAt;
 
@@ -93,14 +92,6 @@ public class Award extends BaseEntity {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
 	}
 
 	public Teacher getTeacher() {
@@ -159,11 +150,11 @@ public class Award extends BaseEntity {
 		this.activity = activity;
 	}
 
-	public Teacher getStatusModifiedBy() {
+	public User getStatusModifiedBy() {
 		return statusModifiedBy;
 	}
 
-	public void setStatusModifiedBy(Teacher statusModifiedBy) {
+	public void setStatusModifiedBy(User statusModifiedBy) {
 		this.statusModifiedBy = statusModifiedBy;
 	}
 
@@ -226,7 +217,7 @@ public class Award extends BaseEntity {
 	public Award(@NotNull AwardType awardType, @NotNull String description, Boolean active, Teacher teacher) {
 		this.awardType = awardType;
 		this.description = description;
-		this.active = active;
+		this.setActive(active);
 		this.teacher = teacher;
 	}
 

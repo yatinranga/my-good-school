@@ -16,6 +16,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +27,7 @@ import com.nxtlife.mgs.jpa.GradeRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
 import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.GradeService;
+import com.nxtlife.mgs.util.AuthorityUtils;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.GradeRequest;
@@ -35,12 +37,13 @@ import com.nxtlife.mgs.view.GradeResponse;
 public class GradeServiceImpl extends BaseService implements GradeService {
 
 	@Autowired
-	SchoolRepository schoolRepository;
+	private SchoolRepository schoolRepository;
 
 	@Autowired
-	GradeRepository gradeRepository;
+	private GradeRepository gradeRepository;
 
 	@Override
+	@Secured(AuthorityUtils.SCHOOL_STAKEHOLDER_CREATE)
 	public GradeResponse save(GradeRequest request) {
 		if (request == null)
 			throw new ValidationException("Request can not be null.");
@@ -117,6 +120,7 @@ public class GradeServiceImpl extends BaseService implements GradeService {
 	}
 
 	@Override
+	@Secured(AuthorityUtils.SCHOOL_STAKEHOLDER_CREATE)
 	public ResponseEntity<?> uploadGradesFromExcel(MultipartFile file, String schoolCid) {
 		if (file == null || file.isEmpty() || file.getSize() == 0)
 			throw new ValidationException("Pls upload valid excel file.");

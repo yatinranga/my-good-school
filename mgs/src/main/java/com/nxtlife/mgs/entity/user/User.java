@@ -43,8 +43,6 @@ public class User extends BaseEntity implements UserDetails, Serializable {
 	@NotNull(message = "password can't be null")
 	private String password;
 
-	private Boolean active;
-
 	private String generatedPassword;
 	
 	@Transient
@@ -240,14 +238,6 @@ public class User extends BaseEntity implements UserDetails, Serializable {
 
 	public void setUserRoles(List<UserRole> userRoles) {
 		this.userRoles = userRoles;
-	}
-
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
 	}
 
 	public Long getUserId() {

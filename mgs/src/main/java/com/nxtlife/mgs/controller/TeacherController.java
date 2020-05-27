@@ -29,46 +29,36 @@ import com.nxtlife.mgs.view.TeacherResponse;
 public class TeacherController {
 
 	@Autowired
-	TeacherService teacherService;
+	private TeacherService teacherService;
 	
 	@Autowired
-	ActivityService activityService;
+	private ActivityService activityService;
 
-//	@RequestMapping(value = "importTeachers", method = RequestMethod.POST)
-//	public List<TeacherResponse> uploadTeachersFromExcel(@RequestParam("file") MultipartFile file) {
-//		return teacherService.uploadTeachersFromExcel(file, false);
-//	}
-//
-//	@RequestMapping(value = "importCoaches", method = RequestMethod.POST)
-//	public List<TeacherResponse> uploadCoachesFromExcel(@RequestParam("file") MultipartFile file,
-//			@RequestParam Integer rowLimit) {
-//		return teacherService.uploadTeachersFromExcel(file, true);
-//	}
 
-	@PostMapping("api/teacher/")
+	@PostMapping(value = {"api/teacher/" ,"teacher/signUp"})
 	public TeacherResponse saveTeacher(@RequestBody TeacherRequest teacherRequest) {
-		return teacherService.saveClassTeacher(teacherRequest);
+		return teacherService.save(teacherRequest);
 	}
 
-	@PostMapping("teacher/signUp")
-	public TeacherResponse signUp(@RequestBody TeacherRequest teacherRequest) {
-		if (teacherRequest.getIsCoach())
-			return teacherService.saveCoach(teacherRequest);
-		return teacherService.saveClassTeacher(teacherRequest);
-	}
+//	@PostMapping("teacher/signUp")
+//	public TeacherResponse signUp(@RequestBody TeacherRequest teacherRequest) {
+//		if (teacherRequest.getIsCoach())
+//			return teacherService.saveCoach(teacherRequest);
+//		return teacherService.saveClassTeacher(teacherRequest);
+//	}
 
 	@PutMapping("api/teacher/update/{cid}")
-	public TeacherResponse update(@RequestBody TeacherRequest request, @PathVariable String cid) {
+	public TeacherResponse update(@RequestBody TeacherRequest request, @PathVariable(value = "cid" ,required = false) String cid) {
 		return teacherService.update(request, cid);
 	}
 	
 	@PutMapping("api/teacher/profilePic")
-	public TeacherResponse setProfilePic(@RequestParam("profilePic") MultipartFile file) {
-		return teacherService.setProfilePic(file);
+	public TeacherResponse setProfilePic(@RequestParam("profilePic") MultipartFile file,@RequestParam(value = "cid" ,required = false) String cid) {
+		return teacherService.setProfilePic(file,cid);
 	}
 	
 	@DeleteMapping("api/teacher/{cid}")
-	public SuccessResponse delete(@PathVariable String cid) {
+	public SuccessResponse delete(@PathVariable(value = "cid" ,required = false) String cid) {
 		return teacherService.delete(cid);
 	}
 
@@ -79,50 +69,50 @@ public class TeacherController {
 	}
 	
 	@GetMapping(value = "api/teachers/{schoolId}")
-	public List<TeacherResponse> getAllTeachersBySchool(@PathVariable("schoolId") String schoolId){
+	public List<TeacherResponse> getAllTeachersBySchool(@PathVariable(value = "schoolId" ,required = false) String schoolId){
 		return teacherService.getAllTeachersOfSchool(schoolId);
 	}
 
-	@GetMapping(value = "q" +
-			"" +
-			"classTeachers")
-	public List<TeacherResponse> getAllClassTeachers() {
-		return teacherService.getAllClassTeachers();
-	}
+//	@GetMapping(value = "q" +
+//			"" +
+//			"classTeachers")
+//	public List<TeacherResponse> getAllClassTeachers() {
+//		return teacherService.getAllClassTeachers();
+//	}
 
 	@GetMapping(value = "api/teacher/{cId}")
-	public TeacherResponse getTeacherByCId(@PathVariable("cId") String cId) {
+	public TeacherResponse getTeacherByCId(@PathVariable(value = "cId" , required = false) String cId) {
 		return teacherService.findByCId(cId);
 	}
 
-	@GetMapping(value = "api/teacher/classTeacher/{cId}")
-	public TeacherResponse getClassTeacherByCId(@PathVariable("cId") String cId) {
-		return teacherService.findClassTeacherByCId(cId);
-	}
+//	@GetMapping(value = "api/teacher/classTeacher/{cId}")
+//	public TeacherResponse getClassTeacherByCId(@PathVariable("cId") String cId) {
+//		return teacherService.findClassTeacherByCId(cId);
+//	}
 
-	@GetMapping(value = "api/managment/{schoolCid}")
-	public List<TeacherResponse> getAllManagmentBySchool(@PathVariable("schoolCid") String schoolCid) {
-		return teacherService.getAllManagmentBySchool(schoolCid);
-	}
+//	@GetMapping(value = "api/managment/{schoolCid}")
+//	public List<TeacherResponse> getAllManagmentBySchool(@PathVariable("schoolCid") String schoolCid) {
+//		return teacherService.getAllManagmentBySchool(schoolCid);
+//	}
 	
 	@GetMapping(value = "api/teacher/club/members")
-	public List<ClubMembershipResponse> getMembershipDetails(){
-		return teacherService.getMembershipDetails();
+	public List<ClubMembershipResponse> getMembershipDetails(@RequestParam(value = "teacherId" , required = false) String teacherId){
+		return teacherService.getMembershipDetails(teacherId);
 	}
 	
 	@GetMapping(value = "api/teacher/club/{clubId}/members")
-	public List<ClubMembershipResponse> getMembershipDetailsbyClub(@PathVariable("clubId") String clubId){
-		return teacherService.getMembershipDetailsbyClub(clubId);
+	public List<ClubMembershipResponse> getMembershipDetailsbyClub(@PathVariable("clubId") String clubId ,@RequestParam(value = "teacherId" , required = false) String teacherId){
+		return teacherService.getMembershipDetailsbyClub(clubId,teacherId);
 	}
 	
 	@GetMapping(value = "api/teacher/clubs")
-	public List<ActivityRequestResponse> getAllClubsOfTeacher(){
-		return activityService.getAllClubsOfTeacher();
+	public List<ActivityRequestResponse> getAllClubsOfTeacher(@RequestParam(value = "teacherId" , required = false) String teacherId){
+		return activityService.getAllClubsOfTeacher(teacherId);
 	}
 	
 	@PutMapping(value = "api/teacher/club")
-	public ClubMembershipResponse updateStatus(@RequestParam(name = "studentId")  String studentId,@RequestParam(name = "activityId") String activityId , @RequestParam(name="verified",defaultValue="true") Boolean verified) {
-		return teacherService.updateStatus(studentId, activityId, verified);
+	public ClubMembershipResponse updateStatus(@RequestParam(name = "studentId")  String studentId,@RequestParam(name = "activityId") String activityId , @RequestParam(name="verified",defaultValue="true") Boolean verified ,@RequestParam(value = "teacherId" , required = false) String teacherId) {
+		return teacherService.updateStatus(studentId, activityId, verified ,teacherId);
 	}
 
 }

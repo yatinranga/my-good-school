@@ -9,7 +9,7 @@ import com.nxtlife.mgs.view.SuccessResponse;
 
 public interface SessionService {
 
-	SessionResponse createSession(SessionRequest request);
+	SessionResponse createSession(SessionRequest request ,String teacherCid);
 
 	List<SessionResponse> getSessions(SessionFilter filter);
 
@@ -17,14 +17,14 @@ public interface SessionService {
 
 	SuccessResponse deleteSession(String sessionCid);
 
-	SessionResponse getStudentSessionsOfClubBy(String clubId, String sessionFetch ,String teacherId , Integer page,
+	SessionResponse getStudentSessionsOfClubBy(String clubId, String sessionFetch ,String teacherId, String studentId, Integer page,
 			Integer pageSize);
 
-	SessionResponse getStudentSessionsOfClubsBy(String sessionFetch,String teacherId , Integer page, Integer pageSize);
+	SessionResponse getStudentSessionsOfClubsBy(String sessionFetch,String teacherId ,String studentId , Integer page, Integer pageSize);
 
-	SessionResponse getTeacherSessionsOfClubsBy(String sessionFetch, Integer page, Integer pageSize);
+	SessionResponse getTeacherSessionsOfClubsBy(String sessionFetch,String teacherCid , Integer page, Integer pageSize);
 
-	SessionResponse getTeacherSessionsOfClubBy(String clubId, String sessionFetch, Integer page,
+	SessionResponse getTeacherSessionsOfClubBy(String clubId, String sessionFetch,String teacherCid , Integer page,
 			Integer pageSize);
 
 }

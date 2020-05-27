@@ -29,7 +29,7 @@ import com.nxtlife.mgs.view.SuccessResponse;
 public class ActivityPerformedController {
 
 	@Autowired
-	ActivityPerformedService activityPerformedService;
+	private ActivityPerformedService activityPerformedService;
 
 	@PostMapping(value = "api/student/activities") //change activities to activity
 	public ActivityPerformedResponse saveActivity(@ModelAttribute ActivityPerformedRequest request) {
@@ -53,7 +53,7 @@ public class ActivityPerformedController {
 	}
 
 	@GetMapping(value = "api/coach/activities")
-	public List<ActivityPerformedResponse> getAllPendingActivitiesByCoach(@RequestParam("coachId") String coachCid,
+	public List<ActivityPerformedResponse> getAllPendingActivitiesByCoach(@RequestParam(value = "coachId" , required = false) String coachCid,
 			@RequestParam(name = "status", required = false) String status) {
 		return activityPerformedService.getAllActivitiesAssignedToCoachforReview(coachCid, status);
 	}
@@ -61,7 +61,7 @@ public class ActivityPerformedController {
 	@GetMapping(value = "api/student/activities")
 	public List<ActivityPerformedResponse> getAllActivitiesOfStudentByStatus(
 			@RequestParam(value = "status", required = false) String status,
-			@RequestParam("studentId") String studentCid,
+			@RequestParam(value ="studentId" ,required = false) String studentCid,
 			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
 			@RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
 		return activityPerformedService.getAllActivitiesOfStudentByStatus(status, studentCid, page, pageSize);
@@ -74,13 +74,13 @@ public class ActivityPerformedController {
 	
 	@GetMapping(value = "api/student/{studentId}/activities")
 	public List<ActivityPerformedResponse> getAllReviewedActivityOfStudentByActivityId(
-			@RequestParam("activityId") String activityCid, @PathVariable("studentId") String studentCid) {
+			@RequestParam("activityId") String activityCid, @PathVariable(value = "studentId" ,required = false) String studentCid) {
 		return activityPerformedService.getAllActivityOfStudentByActivityId(studentCid, activityCid,
 				ActivityStatus.Reviewed.toString());
 	}
 	
 	@GetMapping(value = "api/student/{studentId}/activities/count" )
-	public List<PropertyCount> getCount(@PathVariable("studentId") String studentCid ,@RequestParam(name = "status" , required = false ,defaultValue = "Reviewed") String status ,@RequestParam("type") String type){
+	public List<PropertyCount> getCount(@PathVariable(value = "studentId" ,required = false) String studentCid ,@RequestParam(name = "status" , required = false ,defaultValue = "Reviewed") String status ,@RequestParam("type") String type){
 		return activityPerformedService.getCount(studentCid , status,type);
 	}
 
@@ -89,57 +89,57 @@ public class ActivityPerformedController {
 		return activityPerformedService.deleteActivityOfStudent(activityPerformedCid);
 	}
 
-	@GetMapping(value = "api/coach/activities/filterByClass")
-	public List<ActivityPerformedResponse> getAllPendingActivitiesByClass(@RequestParam("coachId") String coachCid,
-			@RequestParam("classId") String gradeCid) {
-		return activityPerformedService.getAllPendingActivitiesByClass(coachCid, gradeCid);
-	}
+//	@GetMapping(value = "api/coach/activities/filterByClass")
+//	public List<ActivityPerformedResponse> getAllPendingActivitiesByClass(@RequestParam("coachId") String coachCid,
+//			@RequestParam("classId") String gradeCid) {
+//		return activityPerformedService.getAllPendingActivitiesByClass(coachCid, gradeCid);
+//	}
+//
+//	@GetMapping(value = "api/coach/activities/filterByService")
+//	public List<ActivityPerformedResponse> getAllPendingActivitiesByActivity(@RequestParam("coachId") String coachCid,
+//			@RequestParam("activityId") String activityCid) {
+//		return activityPerformedService.getAllPendingActivitiesByService(coachCid, activityCid);
+//	}
+//
+//	@GetMapping(value = "api/coach/activities/filterByClassAndService")
+//	public List<ActivityPerformedResponse> getAllPendingActivitiesByClassAndActivity(
+//			@RequestParam("coachId") String coachCid, @RequestParam("classId") String gradeCid,
+//			@RequestParam("activityId") String activityCid) {
+//		return activityPerformedService.getAllPendingActivitiesByClassAndService(coachCid, gradeCid, activityCid);
+//	}
+//
+//	@GetMapping(value = "api/student/activities/filterByFourS")
+//	public List<ActivityPerformedResponse> filterActivitiesByFourS(@RequestParam("studentId") String studentCid,
+//			@RequestParam("fourS") String fourS, @RequestParam("status") String status) {
+//		return activityPerformedService.findAllByStudentCidAndActivityFourSAndActivityStatusAndActiveTrue(studentCid,
+//				fourS, status);
+//	}
+//
+//	@GetMapping(value = "api/student/activities/filterByFocusArea")
+//	public List<ActivityPerformedResponse> filterActivitiesByFocusArea(@RequestParam("studentId") String studentCid,
+//			@RequestParam("focusArea") String focusAreaCid, @RequestParam("status") String activityStatus) {
+//		return activityPerformedService.findAllByStudentCidAndActivityFocusAreasCidAndActivityStatusAndActiveTrue(
+//				studentCid, focusAreaCid, activityStatus);
+//	}
+//
+//	@GetMapping(value = "api/students/activities/filterByCoach")
+//	public List<ActivityPerformedResponse> filterActivitiesByCoach(@RequestParam("studentId") String studentCid,
+//			@RequestParam("coachId") String teacherCid, @RequestParam("status") String activityStatus) {
+//		return activityPerformedService.findAllByStudentCidAndTeacherCidAndActivityStatusAndActiveTrue(studentCid,
+//				teacherCid, activityStatus);
+//	}
+//
+//	@GetMapping(value = "api/students/activities/filterByPsdArea")
+//	public List<ActivityPerformedResponse> filterActivitiesByPsdArea(@RequestParam("studentId") String studentCid,
+//			@RequestParam("psdArea") String psdArea, @RequestParam("status") String activityStatus) {
+//		return activityPerformedService.findAllByStudentCidAndActivityFocusAreasPsdAreaAndActivityStatusAndActiveTrue(
+//				studentCid, psdArea, activityStatus);
+//	}
 
-	@GetMapping(value = "api/coach/activities/filterByService")
-	public List<ActivityPerformedResponse> getAllPendingActivitiesByActivity(@RequestParam("coachId") String coachCid,
-			@RequestParam("activityId") String activityCid) {
-		return activityPerformedService.getAllPendingActivitiesByService(coachCid, activityCid);
-	}
-
-	@GetMapping(value = "api/coach/activities/filterByClassAndService")
-	public List<ActivityPerformedResponse> getAllPendingActivitiesByClassAndActivity(
-			@RequestParam("coachId") String coachCid, @RequestParam("classId") String gradeCid,
-			@RequestParam("activityId") String activityCid) {
-		return activityPerformedService.getAllPendingActivitiesByClassAndService(coachCid, gradeCid, activityCid);
-	}
-
-	@GetMapping(value = "api/student/activities/filterByFourS")
-	public List<ActivityPerformedResponse> filterActivitiesByFourS(@RequestParam("studentId") String studentCid,
-			@RequestParam("fourS") String fourS, @RequestParam("status") String status) {
-		return activityPerformedService.findAllByStudentCidAndActivityFourSAndActivityStatusAndActiveTrue(studentCid,
-				fourS, status);
-	}
-
-	@GetMapping(value = "api/student/activities/filterByFocusArea")
-	public List<ActivityPerformedResponse> filterActivitiesByFocusArea(@RequestParam("studentId") String studentCid,
-			@RequestParam("focusArea") String focusAreaCid, @RequestParam("status") String activityStatus) {
-		return activityPerformedService.findAllByStudentCidAndActivityFocusAreasCidAndActivityStatusAndActiveTrue(
-				studentCid, focusAreaCid, activityStatus);
-	}
-
-	@GetMapping(value = "api/students/activities/filterByCoach")
-	public List<ActivityPerformedResponse> filterActivitiesByCoach(@RequestParam("studentId") String studentCid,
-			@RequestParam("coachId") String teacherCid, @RequestParam("status") String activityStatus) {
-		return activityPerformedService.findAllByStudentCidAndTeacherCidAndActivityStatusAndActiveTrue(studentCid,
-				teacherCid, activityStatus);
-	}
-
-	@GetMapping(value = "api/students/activities/filterByPsdArea")
-	public List<ActivityPerformedResponse> filterActivitiesByPsdArea(@RequestParam("studentId") String studentCid,
-			@RequestParam("psdArea") String psdArea, @RequestParam("status") String activityStatus) {
-		return activityPerformedService.findAllByStudentCidAndActivityFocusAreasPsdAreaAndActivityStatusAndActiveTrue(
-				studentCid, psdArea, activityStatus);
-	}
-
-	@GetMapping(value = "api/students/activities/filterByYear")
-	public List<ActivityPerformedResponse> filterActivitiesByYearPerformed(@RequestParam("year") String year,
-			@RequestParam("studentId") String studentId) {
-		return activityPerformedService.filterActivityByYearPerformed(year, studentId);
-	}
+//	@GetMapping(value = "api/students/activities/filterByYear")
+//	public List<ActivityPerformedResponse> filterActivitiesByYearPerformed(@RequestParam("year") String year,
+//			@RequestParam("studentId") String studentId) {
+//		return activityPerformedService.filterActivityByYearPerformed(year, studentId);
+//	}
 	
 }
