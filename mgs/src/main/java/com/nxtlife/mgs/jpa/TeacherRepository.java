@@ -1,14 +1,19 @@
 package com.nxtlife.mgs.jpa;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.nxtlife.mgs.entity.activity.TeacherActivityGrade;
 import com.nxtlife.mgs.entity.user.Teacher;
 
 @Repository
@@ -72,6 +77,20 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 
 	Teacher findByUserIdAndActiveTrue(Long userId);
 
+	@Query(value = "select s.cid from Teacher s where s.user.id = :userId and s.active = true")
+	String findCidByUserIdAndActiveTrue(@Param("userId") Long userId);
+
+	@Modifying
+	@Query(value = "update Teacher s set s.active = ?2 where s.cid = ?1 and s.active = true")
+	int deleteByCidAndActiveTrue(String cid ,Boolean active);
+
+	@Query(value = "select s.id as id , s.cid as cid from Teacher s where s.user.id = :userId and s.active = true")
+	public Map<String, Object> findIdAndCidByUserIdAndActiveTrue(@Param("userId") Long userId);
+	
+	@Query(value = "select  s.teacherActivityGrades as clubs from Teacher s where s.cid = ?1 and s.active = true")
+	Map<String,Collection<TeacherActivityGrade>> findClubsByCidAndActiveTrue(String cid);
+
+	
 //	List<Teacher> findAllByActivitiesCid(String cid);
 
 }

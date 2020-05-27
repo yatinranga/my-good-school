@@ -1,8 +1,11 @@
 package com.nxtlife.mgs.jpa;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -27,7 +30,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
 	List<Student> findAllBySchoolCidAndGradeCid(String schooolCid, String gradeCid);
 
-	void deleteByCid(String cid);
+	int deleteByCid(String cid);
 
 	List<Student> findAllBySchoolCidAndActiveTrue(String schoolCid);
 
@@ -57,6 +60,12 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
 	@Query(value = "select s.id from Student s where s.user.id = :userId and s.active = true")
 	Long findIdByUserIdAndActiveTrue(@Param("userId") Long userId);
+	
+	@Query(value = "select s.cid from Student s where s.user.id = :userId and s.active = true")
+	String findCidByUserIdAndActiveTrue(@Param("userId") Long userId);
+	
+	@Query(value = "select s.id as id , s.cid as cid from Student s where s.user.id = :userId and s.active = true")
+	public Map<String, Object> findIdAndCidByUserIdAndActiveTrue(@Param("userId") Long userId);
 
 	List<Student> findAllBySchoolCidAndActivitiesActivityCidAndActivitiesActivityStatusAndSchoolActiveTrueAndActivitiesActivityActiveTrueAndActiveTrue(
 			String schoolCid, String activityCid, ActivityStatus valueOf);
@@ -65,6 +74,16 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 	Long findIdByCidAndActiveTrue(@Param("cid") String cid);
 
 	List<Student> findAllBySchoolCidAndGradeCidAndActiveTrue(String schoolId, String gradeId);
+	
+	@Modifying
+	@Query(value = "update Student s set s.active = ?2 where s.cid = ?1 and s.active = true")
+	int deleteByCidAndActiveTrue(String cid ,Boolean active);
+	
+	@Query(value = "select s.grade.cid from Student s where s.cid = ?1 and s.active = true")
+	String findGradeCidByCidAndActiveTrue(String cid);
+	
+	@Query(value = "select s.grade.cid as gradeId , s.studentClubs as clubs from Student s where s.cid = ?1 and s.active = true")
+	Map<String,Object> findGradeCidAndClubsByCidAndActiveTrue(String cid);
 
 	/*
 	 * List<Student>

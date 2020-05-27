@@ -1,5 +1,6 @@
 package com.nxtlife.mgs.jpa;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,10 +18,12 @@ import com.querydsl.core.types.Predicate;
 public interface AwardRepository extends JpaRepository<Award, Long>, QuerydslPredicateExecutor<Award> {
 
 	public List<Award> findByStudentIdAndStatus(Long studentId, ApprovalStatus status);
+	
+	public List<Award> findByStudentCidAndStatus(String studentId, ApprovalStatus status);
 
-	public List<Award> findByActivityIn(List<Activity> activities);
+	public List<Award> findByActivityIn(Collection<Activity> activities);
 
-	public List<Award> findByActivityInOrActivityNull(List<Activity> activities);
+	public List<Award> findByActivityInOrActivityNullAndTeacherCid(Collection<Activity> activities ,String teacherCid);
 
 	public List<Award> findAll(Predicate predicate);
 

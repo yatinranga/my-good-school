@@ -25,8 +25,8 @@ public interface ActivityService {
 
 	Map<String, Object> getAvailableFilters();
 
-	List<ActivityRequestResponse> getAllClubsOfStudent();
+	List<ActivityRequestResponse> getAllClubsOfStudent(String studentCid);
 
-	List<ActivityRequestResponse> getAllClubsOfTeacher();
+	List<ActivityRequestResponse> getAllClubsOfTeacher(String teacherCid);
 
 }

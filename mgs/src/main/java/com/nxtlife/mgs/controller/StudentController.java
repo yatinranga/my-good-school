@@ -62,7 +62,7 @@ public class StudentController {
 	}
 
 	@PutMapping("api/student/{cid}")
-	public StudentResponse update(@RequestBody StudentRequest request, @PathVariable String cid) {
+	public StudentResponse update(@RequestBody StudentRequest request, @PathVariable(value = "cid",required = false) String cid) {
 		return studentService.update(request, cid);
 	}
 
@@ -79,61 +79,61 @@ public class StudentController {
 	}
 
 	@GetMapping("/api/school/{id}/students")
-	public List<StudentResponse> getAllBySchoolId(@PathVariable String schoolCid) {
+	public List<StudentResponse> getAllBySchoolId(@PathVariable(value = "id" , required = false) String schoolCid) {
 		return studentService.getAllBySchoolCid(schoolCid);
 	}
 
 	@GetMapping(value = "api/student/activity/{activityCid}")
 	public List<StudentResponse> getAllStudentsBySchoolAndActivityAndCoachAndStatusReviewed(
-			@RequestParam("schoolId") String schoolCid, @RequestParam("gradeId") String gradeCid,
+			@RequestParam(value = "schoolId" , required = false) String schoolCid, @RequestParam("gradeId") String gradeCid,
 			@PathVariable("activityCid") String activityCid, @RequestParam("teacherId") String teacherCid) {
 		return studentService.getAllStudentsBySchoolAndActivityAndCoachAndStatusReviewed(schoolCid, gradeCid,
 				activityCid, ApprovalStatus.VERIFIED.toString(), teacherCid);
 	}
 	
 	@GetMapping(value = "api/students/activity")
-	public List<StudentResponse> getAllStudentsOfSchoolForParticularActivity(@RequestParam("activityId") String activityCid ,@RequestParam(value = "teacherId" , required = false) String teacherId , @RequestParam(value = "gradeId" , required = false) String gradeId){
-		return studentService.getAllStudentsOfSchoolForParticularActivity(activityCid,teacherId ,gradeId ,ApprovalStatus.VERIFIED.toString());
+	public List<StudentResponse> getAllStudentsOfSchoolForParticularActivity(@RequestParam(value = "schoolId" ,required = false) String schoolCid , @RequestParam("activityId") String activityCid ,@RequestParam(value = "teacherId" , required = false) String teacherId , @RequestParam(value = "gradeId" , required = false) String gradeId){
+		return studentService.getAllStudentsOfSchoolForParticularActivity(schoolCid ,activityCid,teacherId ,gradeId ,ApprovalStatus.VERIFIED.toString());
 	}
 
 	@DeleteMapping("api/student/{cid}")
-	public SuccessResponse delete(@PathVariable String cid) {
+	public SuccessResponse delete(@PathVariable(value = "cid" , required = false) String cid) {
 		return studentService.delete(cid);
 	}
 	
 	@PutMapping("api/student/{cid}/profilePic")
-	public StudentResponse setProfilePic(@RequestParam("profilePic") MultipartFile file, @PathVariable("cid") String studentCid) {
+	public StudentResponse setProfilePic(@RequestParam("profilePic") MultipartFile file, @PathVariable(value = "cid" ,required = false) String studentCid) {
 		return studentService.setProfilePic(file, studentCid);
 	}
 	
 	@PostMapping(value = "api/student/certificate" , consumes = { "multipart/form-data" })
-	public CertificateResponse uploadCertificate(@Validated @ModelAttribute CertificateRequest certificateRequest) {
-		return studentService.uploadCertificate(certificateRequest);
+	public CertificateResponse uploadCertificate(@Validated @ModelAttribute CertificateRequest certificateRequest , @RequestParam(value = "studentId" ,required = false) String studentId) {
+		return studentService.uploadCertificate(certificateRequest , studentId);
 	}
 	
 	@GetMapping(value = "api/student/certificates" )
-	public List<CertificateResponse> getAllCertificatesOfStudent(){
-		return studentService.getAllCertificatesOfStudent();
+	public List<CertificateResponse> getAllCertificatesOfStudent(@RequestParam(value = "studentId" ,required = false) String studentId){
+		return studentService.getAllCertificatesOfStudent(studentId);
 	}
 	
 	@GetMapping(value = "api/award/students")
-	public Set<StudentResponse> getAllStudentsAndItsActivitiesByAwardCriterion(@RequestParam(name = "awardCriterion") String awardCriterion ,@RequestParam(name = "criterionValue") String criterionValue, @RequestParam(name = "gradeId" , required = false) String gradeId,@RequestParam(name = "startDate" , required = false) String startDate ,@RequestParam(name = "endDate" , required = false) String endDate){
-		return studentService.getAllStudentsAndItsActivitiesByAwardCriterion(awardCriterion, criterionValue, gradeId,startDate ,endDate);
+	public Set<StudentResponse> getAllStudentsAndItsActivitiesByAwardCriterion(@RequestParam(value = "schoolId" ,required = false) String schoolCid ,@RequestParam(name = "awardCriterion") String awardCriterion ,@RequestParam(name = "criterionValue") String criterionValue, @RequestParam(name = "gradeId" , required = false) String gradeId,@RequestParam(name = "startDate" , required = false) String startDate ,@RequestParam(name = "endDate" , required = false) String endDate){
+		return studentService.getAllStudentsAndItsActivitiesByAwardCriterion(schoolCid,awardCriterion, criterionValue, gradeId,startDate ,endDate);
 	}
 	
 	@PostMapping(value = "api/student/club")
-	public ClubMembershipResponse applyForClubMembership(@RequestParam("activityId") String activityId ,@RequestParam("supervisorId") String supervisorId) {
-		return studentService.applyForClubMembership(activityId, supervisorId);
+	public ClubMembershipResponse applyForClubMembership(@RequestParam(value = "studentId" , required = false) String studentId ,@RequestParam("activityId") String activityId ,@RequestParam("supervisorId") String supervisorId) {
+		return studentService.applyForClubMembership(studentId ,activityId, supervisorId);
 	}
 	
 	@GetMapping(value = "api/student/clubs")
-	public List<ActivityRequestResponse> getAllClubsOfStudent(){
-		return activityService.getAllClubsOfStudent();
+	public List<ActivityRequestResponse> getAllClubsOfStudent(@RequestParam(value = "studentId" , required = false) String studentId){
+		return activityService.getAllClubsOfStudent(studentId);
 	}
 	
 	@GetMapping(value = "api/student/club/membershipStatus")
-	public List<ClubMembershipResponse> getMembershipDetails(){
-		return studentService.getMembershipDetails();
+	public List<ClubMembershipResponse> getMembershipDetails(@RequestParam(value = "studentId" , required = false) String studentId){
+		return studentService.getMembershipDetails(studentId);
 	}
 
 }

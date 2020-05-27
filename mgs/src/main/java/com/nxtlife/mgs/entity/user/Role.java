@@ -39,10 +39,6 @@ public class Role extends BaseEntity implements Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "role")
 	private List<UserRole> roleUsers;
-	
-	@NotNull
-	@Column(name = "active", columnDefinition = "boolean default true")
-	private Boolean active = true;
 
 	public Role(Long id, String name) {
 		super();
@@ -89,14 +85,6 @@ public class Role extends BaseEntity implements Serializable {
 
 	public void setSchool(School school) {
 		this.school = school;
-	}
-
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
 	}
 
 	@Override

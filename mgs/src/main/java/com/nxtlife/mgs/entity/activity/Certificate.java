@@ -38,8 +38,6 @@ public class Certificate extends BaseEntity{
 	@NotNull
 	private String imageUrl;
 	
-	private Boolean active=true;
-	
 	@NotNull
 	@ManyToOne
 //	@Column(name = "student_id")
@@ -100,14 +98,6 @@ public class Certificate extends BaseEntity{
 
 	public void setCid(String cid) {
 		this.cid = cid;
-	}
-
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
 	}
 
 	public Certificate(String title, String description, FourS fourS, String certificationAuthority, String imageUrl) {

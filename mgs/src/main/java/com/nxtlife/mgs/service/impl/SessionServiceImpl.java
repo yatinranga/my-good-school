@@ -2,9 +2,11 @@ package com.nxtlife.mgs.service.impl;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.ForbiddenException;
@@ -15,13 +17,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.oauth2.common.exceptions.UnauthorizedUserException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.activity.File;
+import com.nxtlife.mgs.entity.activity.TeacherActivityGrade;
 import com.nxtlife.mgs.entity.school.Grade;
+import com.nxtlife.mgs.entity.school.StudentClub;
 import com.nxtlife.mgs.entity.session.Event;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
@@ -40,6 +45,7 @@ import com.nxtlife.mgs.jpa.TeacherRepository;
 import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.FileStorageService;
 import com.nxtlife.mgs.service.SessionService;
+import com.nxtlife.mgs.util.AuthorityUtils;
 import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.FileRequest;
@@ -76,13 +82,27 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 	private FileRepository fileRepository;
 
 	@Override
-	public SessionResponse createSession(SessionRequest request) {
-		Long userId = getUserId();
-		if (userId == null)
-			throw new UnauthorizedUserException("Login as a teacher to create session.");
-		Teacher teacher = teacherRepository.getByUserId(userId);
-		if (teacher == null)
-			throw new ForbiddenException("Login as a teacher to create session");
+	@Secured(AuthorityUtils.SCHOOL_SESSION_CREATE)
+	public SessionResponse createSession(SessionRequest request ,String teacherCid) {
+		Teacher teacher = null;
+		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor") || r.getName().equalsIgnoreCase("Coordinator") || r.getName().equalsIgnoreCase("Head") )) {
+			if (teacherCid == null) {
+				throw new ValidationException("teacherId cannot be null.");
+			}
+			Long id = teacherRepository.findIdByCidAndActiveTrue(teacherCid);
+			if(id == null)
+				throw new ValidationException(String.format("Invalid teacherId (%s) ." , teacherCid));
+			teacher = new Teacher();
+			teacher.setId(id);
+		}else {
+			Map<String, Object> response = teacherRepository.findIdAndCidByUserIdAndActiveTrue(getUserId());
+			if (response == null) 
+				throw new ValidationException("Teacher not found probably userId is not set for teacher.");
+			
+			teacherCid = (String) response.get("cid");
+			teacher = new Teacher();
+			teacher.setId((Long) response.get("id"));
+		}
 		if (request == null)
 			throw new ValidationException("request cannot be null.");
 		if (!activityRepository.existsByCidAndActiveTrue(request.getClubId()))
@@ -159,6 +179,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 	}
 
 	@Override
+	@Secured(AuthorityUtils.SCHOOL_SESSION_UPDATE)
 	public SessionResponse updateSession(SessionRequest request) {
 		Long userId = getUserId();
 		if (userId == null)
@@ -272,6 +293,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 	}
 
 	@Override
+	@Secured(AuthorityUtils.SCHOOL_SESSION_VIEW)
 	public List<SessionResponse> getSessions(SessionFilter filter) {
 		List<SessionResponse> sessions = sessionRepository.findAll(builder.build(filter)).stream()
 				.map(SessionResponse::new).collect(Collectors.toList());
@@ -281,20 +303,25 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 	}
 
 	@Override
-	public SessionResponse getStudentSessionsOfClubBy(String clubId, String sessionFetch, String teacherId,
+	@Secured(AuthorityUtils.SCHOOL_SESSION_VIEW)
+	public SessionResponse getStudentSessionsOfClubBy(String clubId, String sessionFetch, String teacherId, String studentCid ,
 			Integer page, Integer pageSize) {
-		Long userId = getUserId();
-		if (userId == null)
-			throw new UnauthorizedUserException("Login as a student to see sessions details.");
-		Student student = studentRepository.getByUserIdAndActiveTrue(userId);
-		if (student == null)
-			throw new ForbiddenException("Login as a student to see sessions details.");
+		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student") )) {
+			if (studentCid == null || !studentRepository.existsByCidAndActiveTrue(studentCid)) {
+				throw new ValidationException("studentId cannot be null or invalid.");
+			}
+			}else {
+				 studentCid = studentRepository.findCidByUserIdAndActiveTrue(getUserId());
+				if (studentCid == null) 
+					throw new ValidationException("Student not found probably userId is not set for student.");
+			}
+		
 		if (clubId == null)
 			throw new ValidationException("Club Id cannot be null.");
 		if (!activityRepository.existsByCidAndActiveTrue(clubId))
 			throw new ValidationException(String.format("Club with id (%s) does not exist.", clubId));
 		// Activity club = activityRepository.getOneByCid(clubId);
-		String gradeId = student.getGrade().getCid();
+		String gradeId = studentRepository.findGradeCidByCidAndActiveTrue(studentCid);
 		List<Event> sessions;
 		if (sessionFetch == null) {
 			sessions = getStudentSessionsOfClub(gradeId, clubId, teacherId, page, pageSize);
@@ -402,18 +429,29 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 		// new).distinct().collect(Collectors.toList());
 	}
 
+	@SuppressWarnings("unchecked")
+	@Secured(AuthorityUtils.SCHOOL_SESSION_VIEW)
 	@Override
-	public SessionResponse getStudentSessionsOfClubsBy(String sessionFetch, String teacherId, Integer page,
+	public SessionResponse getStudentSessionsOfClubsBy(String sessionFetch, String teacherId,String studentCid, Integer page,
 			Integer pageSize) {
-		Long userId = getUserId();
-		if (userId == null)
-			throw new UnauthorizedUserException("Login as a student to see sessions details.");
-		Student student = studentRepository.getByUserIdAndActiveTrue(userId);
-		if (student == null)
-			throw new ForbiddenException("Login as a student to see sessions details.");
-		String gradeId = student.getGrade().getCid();
+		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student") )) {
+			if (studentCid == null || !studentRepository.existsByCidAndActiveTrue(studentCid)) {
+				throw new ValidationException("studentId cannot be null or invalid.");
+			}
+			}else {
+				 studentCid = studentRepository.findCidByUserIdAndActiveTrue(getUserId());
+				if (studentCid == null) 
+					throw new ValidationException("Student not found probably userId is not set for student.");
+			}
+		Map<String,Object> gradeIdAndClubs = studentRepository.findGradeCidAndClubsByCidAndActiveTrue(studentCid);
+		if (gradeIdAndClubs == null)
+			throw new ForbiddenException("Details of student unavailable.");
+//		Student student = studentRepository.getByUserIdAndActiveTrue(getUserId());
+//		if (student == null)
+//			throw new ForbiddenException("Login as a student to see sessions details.");
+		String gradeId = (String) gradeIdAndClubs.get("gradeId");
 		List<Activity> clubs = new ArrayList<Activity>();
-		student.getStudentClubs().stream().forEach(sc -> {
+		((ArrayList<StudentClub>)gradeIdAndClubs.get("clubs")).stream().forEach(sc -> {
 			if (sc.getMembershipStatus().equals(ApprovalStatus.VERIFIED))
 				clubs.add(sc.getActivity());
 		});
@@ -520,15 +558,19 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 	}
 
 	@Override
-	public SessionResponse getTeacherSessionsOfClubBy(String clubId, String sessionFetch, Integer page,
+	@Secured(AuthorityUtils.SCHOOL_SESSION_VIEW)
+	public SessionResponse getTeacherSessionsOfClubBy(String clubId, String sessionFetch,String teacherCid , Integer page,
 			Integer pageSize) {
-		Long userId = getUserId();
-		if (userId == null)
-			throw new UnauthorizedUserException("Login as a teacher to see sessions details.");
-		Teacher teacher = teacherRepository.findByUserIdAndActiveTrue(userId);
-		if (teacher == null)
-			throw new ForbiddenException("Login as a teacher to see sessions details.");
-		String teacherCid = teacher.getCid();
+		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor") || r.getName().equalsIgnoreCase("Coordinator") || r.getName().equalsIgnoreCase("Head"))) {
+			if (teacherCid == null || !teacherRepository.existsByCidAndActiveTrue(teacherCid)) {
+				throw new ValidationException("teacherId cannot be null or invalid.");
+			}
+			}else {
+				 teacherCid = teacherRepository.findCidByUserIdAndActiveTrue(getUserId());
+				if (teacherCid == null) 
+					throw new ValidationException("Teacher not found probably userId is not set for teacher.");
+			}
+		
 		if (clubId == null)
 			throw new ValidationException("Club Id cannot be null.");
 		if (!activityRepository.existsByCidAndActiveTrue(clubId))
@@ -602,16 +644,20 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 	}
 
 	@Override
-	public SessionResponse getTeacherSessionsOfClubsBy(String sessionFetch, Integer page, Integer pageSize) {
-		Long userId = getUserId();
-		if (userId == null)
-			throw new UnauthorizedUserException("Login as a teacher to see sessions details.");
-		Teacher teacher = teacherRepository.findByUserIdAndActiveTrue(userId);
-		if (teacher == null)
-			throw new ForbiddenException("Login as a teacher to see sessions details.");
-		String teacherCid = teacher.getCid();
+	@Secured(AuthorityUtils.SCHOOL_SESSION_VIEW)
+	public SessionResponse getTeacherSessionsOfClubsBy(String sessionFetch,String teacherCid , Integer page, Integer pageSize) {
+		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor") || r.getName().equalsIgnoreCase("Coordinator") || r.getName().equalsIgnoreCase("Head"))) {
+			if (teacherCid == null || !teacherRepository.existsByCidAndActiveTrue(teacherCid)) {
+				throw new ValidationException("teacherId cannot be null or invalid.");
+			}
+			}else {
+				 teacherCid = teacherRepository.findCidByUserIdAndActiveTrue(getUserId());
+				if (teacherCid == null) 
+					throw new ValidationException("Teacher not found probably userId is not set for teacher.");
+			}
+		Map<String,Collection<TeacherActivityGrade>> clubList = teacherRepository.findClubsByCidAndActiveTrue(teacherCid);
 		List<Activity> clubs = new ArrayList<Activity>();
-		teacher.getTeacherActivityGrades().stream().forEach(tag -> {
+		clubList.get("clubs").stream().forEach(tag -> {
 			if (!clubs.contains(tag.getActivity()))
 				clubs.add(tag.getActivity());
 		});
@@ -684,17 +730,14 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 	}
 
 	@Override
+	@Secured(AuthorityUtils.SCHOOL_SESSION_DELETE)
 	public SuccessResponse deleteSession(String sessionCid) {
 		if (sessionCid == null)
 			throw new ValidationException("Session id cannot be null.");
+		
+		String msg = sessionRepository.deleteByCidAndActiveTrue(sessionCid, false) == 0 ? "Session already inactive" : "Session deleted successfuly" ;
 
-		Event session = sessionRepository.findByCidAndActiveTrue(sessionCid);
-		if (session == null)
-			throw new ValidationException(String.format("Session with id (%s) not found", sessionCid));
-		session.setActive(false);
-		session = sessionRepository.save(session);
-
-		return new SuccessResponse(200, String.format("Session titled (%s) deleted.", session.getTitle()));
+		return new SuccessResponse(200, String.format(msg));
 	}
 
 }

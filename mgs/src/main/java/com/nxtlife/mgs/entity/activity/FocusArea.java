@@ -34,8 +34,6 @@ public class FocusArea extends BaseEntity{
 	@Column(unique = true)
 	private String cid;
 	
-	private Boolean active;
-	
 	private String description;
 	
 	@Enumerated(EnumType.STRING)
@@ -53,14 +51,6 @@ public class FocusArea extends BaseEntity{
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
 	}
 
 	public String getDescription() {
@@ -107,7 +97,7 @@ public class FocusArea extends BaseEntity{
 			List<Activity> activities) {
 		this.name = name;
 		this.cid = cid;
-		this.active = active;
+		this.setActive(active);
 		this.description = description;
 		this.psdArea = psdArea;
 		this.activities = activities;

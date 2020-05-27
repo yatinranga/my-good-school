@@ -46,8 +46,6 @@ public class Activity extends BaseEntity {
 
 	private String description;
 
-	private Boolean active;
-
 	private Boolean isGeneral;
 	
 	@Enumerated(EnumType.STRING)
@@ -114,14 +112,6 @@ public class Activity extends BaseEntity {
 		this.description = description;
 	}
 
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
-
 	public List<FocusArea> getFocusAreas() {
 		return focusAreas;
 	}
@@ -184,7 +174,7 @@ public class Activity extends BaseEntity {
 		this.fourS = fourS;
 		this.cid = cid;
 		this.description = description;
-		this.active = active;
+		this.setActive(active);
 		this.focusAreas = focusAreas;
 	}
 
@@ -194,7 +184,7 @@ public class Activity extends BaseEntity {
 		this.fourS = fourS;
 		this.cid = cid;
 		this.description = description;
-		this.active = active;
+		this.setActive(active);
 		this.focusAreas = focusAreas;
 		this.teachers = teachers;
 		this.schools = schools;

@@ -703,7 +703,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		User user = new User();
 		user.setActive(true);
 		user.setName(name);
-		user.setUsername(String.format("%s%08d", name.substring(0, 3), Utils.generateRandomNumString(8)));
+		user.setUsername(String.format("%s%s", name.substring(0, 3), Utils.generateRandomNumString(8)));
 		if (email != null && userRepository.existsByEmail(email))
 			throw new ValidationException(String.format("User with email (%s) already exists.", email));
 		user.setEmail(email);
@@ -834,7 +834,12 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@Override
 	@Secured(AuthorityUtils.USER_CREATE)
 	public UserResponse save(UserRequest request) {
-		Long schoolId = getUser().gettSchoolId();
+		Long schoolId = null;
+		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin")))
+			schoolId = schoolRepository.findIdByCid(request.getSchoolId());
+		else
+			schoolId = getUser().gettSchoolId();
+		
 		validate(request, schoolId);
 		User user = request.toEntity();
 		user.settSchoolId(schoolId);

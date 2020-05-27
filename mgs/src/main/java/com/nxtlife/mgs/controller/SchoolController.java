@@ -31,18 +31,13 @@ public class SchoolController {
 	@Autowired
 	private TeacherService teacherService;
 
-	@PostMapping(consumes = { "multipart/form-data" }, value = "school/signUp")
+	@PostMapping(consumes = { "multipart/form-data" }, value = {"school/signUp","api/school"})
 	public SchoolResponse signUp(@ModelAttribute SchoolRequest schoolRequest) {
 		return schoolService.save(schoolRequest);
 	}
 
-	@PostMapping(consumes = { "multipart/form-data" }, value = "api/school")
-	public SchoolResponse save(@ModelAttribute SchoolRequest schoolRequest) {
-		return schoolService.save(schoolRequest);
-	}
-
 	@GetMapping(value = "api/school/{id}")
-	public SchoolResponse getByCid(@PathVariable("id") String cid) {
+	public SchoolResponse getByCid(@PathVariable(value = "id" , required = false) String cid) {
 		return schoolService.findByCid(cid);
 	}
 
@@ -52,7 +47,7 @@ public class SchoolController {
 	}
 
 	@PostMapping(consumes = { "multipart/form-data" }, value = "api/school/{cid}")
-	public SchoolResponse update(@ModelAttribute SchoolRequest request, @PathVariable("cid") String cid) {
+	public SchoolResponse update(@ModelAttribute SchoolRequest request, @PathVariable(value = "cid", required = false) String cid) {
 		return schoolService.update(request, cid);
 	}
 
@@ -62,7 +57,7 @@ public class SchoolController {
 	}
 	
 	@DeleteMapping(value = "api/school/{id}")
-	public SuccessResponse delete(@PathVariable("id") String cid) {
+	public SuccessResponse delete(@PathVariable(value = "id" ,required = false) String cid) {
 		return schoolService.delete(cid);
 	}
 

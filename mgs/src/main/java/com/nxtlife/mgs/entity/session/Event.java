@@ -55,8 +55,6 @@ public class Event extends BaseEntity{
 //	@Enumerated(EnumType.STRING)
 //	private SessionStatus status;
 	
-	private Boolean active = true;
-	
 	@NotNull
 	@OneToOne
 	private Activity club;
@@ -120,14 +118,6 @@ public class Event extends BaseEntity{
 		this.title = title;
 	}
 
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
-
 	public Activity getClub() {
 		return club;
 	}
@@ -182,7 +172,7 @@ public class Event extends BaseEntity{
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.title = title;
-		this.active = active;
+		this.setActive(active);
 		this.club = club;
 		this.grades = grades;
 		this.teacher = teacher;

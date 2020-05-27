@@ -13,13 +13,11 @@ import com.nxtlife.mgs.view.TeacherResponse;
 
 public interface TeacherService {
 
-	ResponseEntity<?> uploadTeachersFromExcel(MultipartFile file, Boolean isCoach, String schoolCid);
+	ResponseEntity<?> uploadTeachersFromExcel(MultipartFile file , String schoolCid);
+	
+//	ResponseEntity<?> uploadManagementFromExcel(MultipartFile file, String schoolCid);
 
 	TeacherResponse save(TeacherRequest request);
-
-	TeacherResponse saveClassTeacher(TeacherRequest request);
-
-	TeacherResponse saveCoach(TeacherRequest request);
 
 	TeacherResponse findByCId(String cId);
 
@@ -47,7 +45,7 @@ public interface TeacherService {
 
 	List<TeacherResponse> getAllClassTeachersOfSchool(String schoolCid);
 
-	List<TeacherResponse> getAllCoachesOfSchool(String schoolCid);
+	List<TeacherResponse> getAllCoachesOfSchool(String schoolCid , String gradeId);
 
 	List<TeacherResponse> findCoachesBySchoolAndActivityName(String schoolCid, String activityName);
 
@@ -59,16 +57,14 @@ public interface TeacherService {
 
 	List<TeacherResponse> getAllManagmentBySchool(String schoolCid);
 
-	ResponseEntity<?> uploadManagementFromExcel(MultipartFile file, String schoolCid);
-
-	TeacherResponse setProfilePic(MultipartFile file);
+	TeacherResponse setProfilePic(MultipartFile file,String teacherCid);
 
 	TeacherResponse addOrRemoveActivitiesToTeachers(TeacherRequest request);
 
-	List<ClubMembershipResponse> getMembershipDetails();
+	List<ClubMembershipResponse> getMembershipDetails(String teacherCid);
 
-	ClubMembershipResponse updateStatus(String studentId, String activityId, Boolean isVerified);
+	ClubMembershipResponse updateStatus(String studentId, String activityId, Boolean isVerified ,String teacherCid);
 
-	List<ClubMembershipResponse> getMembershipDetailsbyClub(String clubId);
+	List<ClubMembershipResponse> getMembershipDetailsbyClub(String clubId ,String teacherCid);
 
 }

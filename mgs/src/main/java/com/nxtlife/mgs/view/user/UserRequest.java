@@ -33,6 +33,8 @@ public class UserRequest extends Request {
 
 	@NotEmpty(message = "Role ids can't be null or empty")
 	private Set<Long> roleIds;
+	
+	private String schoolId;
 
 	public String getName() {
 		return name;
@@ -56,6 +58,10 @@ public class UserRequest extends Request {
 
 	public Set<Long> getRoleIds() {
 		return roleIds;
+	}
+
+	public String getSchoolId() {
+		return schoolId;
 	}
 
 	public User toEntity() {

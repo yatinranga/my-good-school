@@ -2,6 +2,7 @@ package com.nxtlife.mgs.entity.school;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -36,6 +38,20 @@ public class TeacherSchoolGrade implements Serializable {
 	private Grade grade;
 
 	private String year;
+	
+	@NotNull
+	@Column(name = "active", columnDefinition = "boolean default true")
+	private Boolean active = true;
+	
+	
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
 
 	public TeacherSchoolGradeId getTeacherSchoolGradeId() {
 		return teacherSchoolGradeId;

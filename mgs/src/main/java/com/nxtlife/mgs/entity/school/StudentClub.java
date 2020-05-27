@@ -14,7 +14,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 
+import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.common.StudentActivityId;
 import com.nxtlife.mgs.entity.user.Student;
@@ -24,7 +26,7 @@ import com.nxtlife.mgs.enums.ApprovalStatus;
 @SuppressWarnings("serial")
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"student_id","activityId"}))
-public class StudentClub implements Serializable {
+public class StudentClub  implements Serializable {
 
 	@EmbeddedId
 	StudentActivityId studentActivityId;
@@ -48,8 +50,12 @@ public class StudentClub implements Serializable {
 	Date appliedOn;
 
 	Date consideredOn;
-
-	Boolean active = true;
+	
+	@NotNull
+	@Column(name = "active", columnDefinition = "boolean default true")
+	private Boolean active = true;
+	
+	
 
 	public StudentActivityId getStudentActivityId() {
 		return studentActivityId;
@@ -57,6 +63,14 @@ public class StudentClub implements Serializable {
 
 	public void setStudentActivityId(StudentActivityId studentActivityId) {
 		this.studentActivityId = studentActivityId;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 
 	public Student getStudent() {
@@ -97,14 +111,6 @@ public class StudentClub implements Serializable {
 
 	public void setConsideredOn(Date consideredOn) {
 		this.consideredOn = consideredOn;
-	}
-
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
 	}
 
 	public Teacher getTeacher() {

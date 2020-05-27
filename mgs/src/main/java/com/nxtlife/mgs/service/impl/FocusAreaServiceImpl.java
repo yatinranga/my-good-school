@@ -17,6 +17,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.nxtlife.mgs.entity.activity.FocusArea;
@@ -26,6 +27,7 @@ import com.nxtlife.mgs.jpa.FocusAreaRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
 import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.FocusAreaService;
+import com.nxtlife.mgs.util.AuthorityUtils;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.FocusAreaRequestResponse;
@@ -40,6 +42,7 @@ public class FocusAreaServiceImpl extends BaseService implements FocusAreaServic
 	private SchoolRepository schoolRepository;
 
 	@Override
+	@Secured(AuthorityUtils.SCHOOL_ACTIVITY_CREATE)
 	public FocusAreaRequestResponse save(FocusAreaRequestResponse request) {
 
 		if (request == null)
@@ -85,6 +88,7 @@ public class FocusAreaServiceImpl extends BaseService implements FocusAreaServic
 
 	@SuppressWarnings("unchecked")
 	@Override
+	@Secured(AuthorityUtils.SCHOOL_ACTIVITY_CREATE)
 	public ResponseEntity<?> uploadFocusAreasFromExcel(MultipartFile file) {
 		if (file == null || file.isEmpty() || file.getSize() == 0)
 			throw new ValidationException("Pls upload valid excel file.");

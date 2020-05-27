@@ -18,6 +18,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.common.exceptions.UnauthorizedUserException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -60,6 +61,7 @@ public class LFINServiceImpl extends BaseService implements LFINService {
 	private RoleRepository roleRepository;
 
 	@Override
+	@PreAuthorize("hasRole('ROLE_MainAdmin') or hasRole('ROLE_Lfin')")
 	public LFINRequestResponse save(LFINRequestResponse request) {
 
 		User loggedInUser = getUser();
@@ -114,6 +116,7 @@ public class LFINServiceImpl extends BaseService implements LFINService {
 	}
 
 	@Override
+	@PreAuthorize("hasRole('ROLE_MainAdmin') or hasRole('ROLE_Lfin')")
 	public ResponseEntity<?> uploadLFINFromExcel(MultipartFile file) {
 		if (file == null || file.isEmpty() || file.getSize() == 0)
 			throw new ValidationException("Pls upload valid excel file.");

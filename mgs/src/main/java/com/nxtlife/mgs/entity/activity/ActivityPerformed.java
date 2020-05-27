@@ -52,8 +52,6 @@ public class ActivityPerformed extends BaseEntity {
 
 	private Date coachRemarkDate;
 
-	private Boolean active;
-
 	@Min(value = 0,message = "Minimum permissible value is 0.")
 	@Max(value = 10,message = "Maximum permissible value is 10.")
 	@Column(columnDefinition = " Default INT 0 ")
@@ -136,14 +134,6 @@ public class ActivityPerformed extends BaseEntity {
 
 	public void setCoachRemarkDate(Date coachRemarkDate) {
 		this.coachRemarkDate = coachRemarkDate;
-	}
-
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
 	}
 
 	public Integer getParticipationScore() {
@@ -267,7 +257,7 @@ public class ActivityPerformed extends BaseEntity {
 		this.description = description;
 		this.coachRemark = coachRemark;
 		this.coachRemarkDate = coachRemarkDate;
-		this.active = active;
+		this.setActive(active);
 		this.participationScore = participationScore;
 		this.initiativeScore = initiativeScore;
 		this.achievementScore = achievementScore;
