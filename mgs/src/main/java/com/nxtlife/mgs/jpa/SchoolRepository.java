@@ -13,11 +13,11 @@ import com.nxtlife.mgs.view.SchoolResponse;
 public interface SchoolRepository extends JpaRepository<School, Long> {
 
 	School getOneByCidAndActiveTrue(String cid);
-	
-	School findByNameOrEmail(String name , String email);
-	
+
+	School findByNameOrEmail(String name, String email);
+
 	School findByNameAndActiveTrue(String name);
-	
+
 	School findByEmail(String email);
 
 	int countByEmailAndActiveTrue(String email);
@@ -25,8 +25,6 @@ public interface SchoolRepository extends JpaRepository<School, Long> {
 	int countByUsername(String username);
 
 	School findByCidAndActiveTrue(String cid);
-
-	School findById(Long id);
 
 	List<School> findAllByActiveTrue();
 
@@ -48,6 +46,5 @@ public interface SchoolRepository extends JpaRepository<School, Long> {
 
 	@Query(value = "select id from School where name=?1")
 	public Long findIdByName(String name);
-	
-	
+
 }

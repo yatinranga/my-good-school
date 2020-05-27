@@ -28,9 +28,7 @@ public class CommonServiceImpl extends BaseService implements CommonService {
 	
 	@Autowired
 	private FileStorageService<MultipartFile> fileStorageService;
-	
-	@Autowired
-	Utils utils;
+
 	
 //	@Override
 	public ResponseEntity<?> downloadFile(String filePath) {
@@ -45,7 +43,7 @@ public class CommonServiceImpl extends BaseService implements CommonService {
 			// headers.add("fileName"," Incidents.xls");
 
 			// set filename in header
-			headers.add("Content-Disposition", "attachment; filename= mgs_file_" + utils.generateRandomAlphaNumString(4)  + filePath.substring(filePath.lastIndexOf(".")));
+			headers.add("Content-Disposition", "attachment; filename= mgs_file_" + Utils.generateRandomAlphaNumString(4)  + filePath.substring(filePath.lastIndexOf(".")));
 			Resource resource = null;
 			try {
 				resource = fileStorageService.loadFileAsResource(filePath);

@@ -2,7 +2,6 @@ package com.nxtlife.mgs.service.impl;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -68,14 +67,11 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 	SessionFilterBuilder builder;
 
 	@Autowired
-	Utils utils;
+	StudentRepository studentRepository;
 
 	@Autowired
-	StudentRepository studentRepository;
-	
-	@Autowired
 	private FileStorageService<MultipartFile> fileStorageService;
-	
+
 	@Autowired
 	FileRepository fileRepository;
 
@@ -123,39 +119,39 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 			}
 			session.setGrades(finalGradeList);
 		}
-		
+
 		if (request.getFileRequests() != null && !request.getFileRequests().isEmpty()) {
 			List<File> sessionMedia = new ArrayList<>();
-			if(request.getFileRequests().size() > 5)
+			if (request.getFileRequests().size() > 5)
 				throw new ValidationException("Cannot attach more than 5 files to upload.");
-		
+
 			for (FileRequest fileReq : request.getFileRequests()) {
 				File file = saveMediaForSession(fileReq, "/session-file/", session);
 				if (file != null) {
-					if(file.getCid() == null)
-					    file.setCid(utils.generateRandomAlphaNumString(8));
+					if (file.getCid() == null)
+						file.setCid(Utils.generateRandomAlphaNumString(8));
 					sessionMedia.add(file);
 				}
 			}
-		/*
-		 * Assigned the returned files List set to Event entity
-		 */
-		session.setFiles(sessionMedia);
+			/*
+			 * Assigned the returned files List set to Event entity
+			 */
+			session.setFiles(sessionMedia);
 		}
 
-		session.setCid(utils.generateRandomAlphaNumString(8));
+		session.setCid(Utils.generateRandomAlphaNumString(8));
 		session.setTeacher(teacher);
 		session.setClub(activityRepository.getOneByCidAndActiveTrue(request.getClubId()));
 		session = sessionRepository.save(session);
 		return new SessionResponse(session);
 	}
-	
-	private File saveMediaForSession(FileRequest fileRequest, String category,
-			Event session) {
+
+	private File saveMediaForSession(FileRequest fileRequest, String category, Event session) {
 		File file = fileRequest.toEntity();
-		String fileUrl = fileStorageService.storeFile(fileRequest.getFile(), fileRequest.getFile().getOriginalFilename(), category,true , fileRequest.getIsImage());
+		String fileUrl = fileStorageService.storeFile(fileRequest.getFile(),
+				fileRequest.getFile().getOriginalFilename(), category, true, fileRequest.getIsImage());
 		file.setUrl(fileUrl);
-		
+
 		if (fileRequest.getId() != null)
 			file.setCid(fileRequest.getId());
 		file.setEvent(session);
@@ -214,22 +210,20 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 				}
 			session.setGrades(previousGrades);
 		}
-		
+
 		List<FileRequest> requestFiles = request.getFileRequests();
-		
+
 		if (requestFiles != null && !requestFiles.isEmpty()) {
-			
-			List<File> allValidFilesOfActivity = fileRepository
-					.findAllByEventCidAndActiveTrue(request.getId());
+
+			List<File> allValidFilesOfActivity = fileRepository.findAllByEventCidAndActiveTrue(request.getId());
 			List<File> updatedFiles = new ArrayList<File>();
-			
+
 			for (int itr = 0; itr < requestFiles.size(); itr++) {
 				if (requestFiles.get(itr).getId() != null) {
 					for (int itr2 = 0; itr2 < allValidFilesOfActivity.size(); itr2++) {
 						if (requestFiles.get(itr).getId().equals(allValidFilesOfActivity.get(itr2).getCid())) {
 							if (requestFiles.get(itr).getFile() != null) {
-								File file = saveMediaForSession(requestFiles.get(itr), "/session-file/",
-										session);
+								File file = saveMediaForSession(requestFiles.get(itr), "/session-file/", session);
 								file.setId(allValidFilesOfActivity.get(itr2).getId());
 								file.setCid(allValidFilesOfActivity.get(itr2).getCid());
 								if (file != null)
@@ -247,10 +241,10 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 
 				}
 			}
-			
+
 			/*
-			 * logic to delete the files which were previously there but in new request have
-			 * been removed.
+			 * logic to delete the files which were previously there but in new
+			 * request have been removed.
 			 */
 			for (File f : allValidFilesOfActivity) {
 				fileRepository.updateFileSetActiveByCid(false, f.getCid());
@@ -261,12 +255,12 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 				for (FileRequest fileReq : requestFiles) {
 					File file = saveMediaForSession(fileReq, "/session-file/", session);
 					if (file != null) {
-						file.setCid(utils.generateRandomAlphaNumString(8));
+						file.setCid(Utils.generateRandomAlphaNumString(8));
 						updatedFiles.add(file);
 					}
 				}
 
-			if(updatedFiles.size() > 5)
+			if (updatedFiles.size() > 5)
 				throw new ValidationException("Cannot attach more than 5 files to upload.");
 			// Setting files to session
 			session.setFiles(updatedFiles);
@@ -299,13 +293,14 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 			throw new ValidationException("Club Id cannot be null.");
 		if (!activityRepository.existsByCidAndActiveTrue(clubId))
 			throw new ValidationException(String.format("Club with id (%s) does not exist.", clubId));
-//		Activity club = activityRepository.getOneByCid(clubId);
+		// Activity club = activityRepository.getOneByCid(clubId);
 		String gradeId = student.getGrade().getCid();
 		List<Event> sessions;
 		if (sessionFetch == null) {
 			sessions = getStudentSessionsOfClub(gradeId, clubId, teacherId, page, pageSize);
 		} else {
-			Date start = DateTime.now().minusSeconds(60).toDate() , end;//LocalDateTime.now().minusSeconds(60).toDate(), end;
+			Date start = DateTime.now().minusSeconds(60).toDate(), end;// LocalDateTime.now().minusSeconds(60).toDate(),
+																		// end;
 			if (!SessionFetch.matches(sessionFetch))
 				throw new ValidationException(String.format(
 						"Invalid value (%s) for sessionFetch it should be from List : {today, week, year}",
@@ -319,11 +314,11 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 					sessions = sessionRepository
 							.findAllByGradesCidAndClubCidAndStartDateGreaterThanAndStartDateLessThanAndTeacherCidAndActiveTrue(
 									gradeId, clubId, start, end, teacherId,
-									new Sort(Direction.ASC, Arrays.asList("startDate")));
+									Sort.by(Direction.ASC, "startDate"));
 				} else {
 					sessions = sessionRepository
 							.findAllByGradesCidAndClubCidAndStartDateGreaterThanAndStartDateLessThanAndActiveTrue(
-									gradeId, clubId, start, end, new Sort(Direction.ASC, Arrays.asList("startDate")));
+									gradeId, clubId, start, end, Sort.by(Direction.ASC, "startDate"));
 				}
 				break;
 			case week:
@@ -334,11 +329,11 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 					sessions = sessionRepository
 							.findAllByGradesCidAndClubCidAndStartDateGreaterThanAndStartDateLessThanAndTeacherCidAndActiveTrue(
 									gradeId, clubId, start, end, teacherId,
-									new Sort(Direction.ASC, Arrays.asList("startDate")));
+									Sort.by(Direction.ASC, "startDate"));
 				} else {
 					sessions = sessionRepository
 							.findAllByGradesCidAndClubCidAndStartDateGreaterThanAndStartDateLessThanAndActiveTrue(
-									gradeId, clubId, start, end, new Sort(Direction.ASC, Arrays.asList("startDate")));
+									gradeId, clubId, start, end, Sort.by(Direction.ASC, "startDate"));
 				}
 				break;
 			case month:
@@ -349,11 +344,11 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 					sessions = sessionRepository
 							.findAllByGradesCidAndClubCidAndStartDateGreaterThanAndStartDateLessThanAndTeacherCidAndActiveTrue(
 									gradeId, clubId, start, end, teacherId,
-									new Sort(Direction.ASC, Arrays.asList("startDate")));
+									Sort.by(Direction.ASC, "startDate"));
 				} else {
 					sessions = sessionRepository
 							.findAllByGradesCidAndClubCidAndStartDateGreaterThanAndStartDateLessThanAndActiveTrue(
-									gradeId, clubId, start, end, new Sort(Direction.ASC, Arrays.asList("startDate")));
+									gradeId, clubId, start, end, Sort.by(Direction.ASC, "startDate"));
 				}
 				break;
 			default:
@@ -384,25 +379,27 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 			finalSessionList.add(tempSessionList);
 		}
 		response.setSessions(finalSessionList);
-//		return sessions.stream().map(SessionResponse::new).collect(Collectors.toList());
+		// return
+		// sessions.stream().map(SessionResponse::new).collect(Collectors.toList());
 		return response;
 	}
 
 	private List<Event> getStudentSessionsOfClub(String gradeId, String clubId, String teacherId, Integer page,
 			Integer pageSize) {
-//		List<Event> sessions = 
+		// List<Event> sessions =
 		if (teacherId != null) {
 			if (!teacherRepository.existsByCidAndActiveTrue(teacherId))
 				throw new ValidationException(String.format("Teacher with id (%s) not found.", teacherId));
 			return sessionRepository.findAllByGradesCidAndClubCidAndTeacherCidAndActiveTrue(gradeId, clubId, teacherId,
-					(Pageable) new PageRequest(page, pageSize, new Sort(Direction.ASC, Arrays.asList("startDate"))));
+					(Pageable) PageRequest.of(page, pageSize, Sort.by(Direction.ASC, "startDate")));
 		}
 		return sessionRepository.findAllByGradesCidAndClubCidAndActiveTrue(gradeId, clubId,
-				(Pageable) new PageRequest(page, pageSize, new Sort(Direction.ASC, Arrays.asList("startDate"))));
-//		
-//		if(sessions == null || sessions.isEmpty())
-//			throw new ValidationException("No sessions found for you.");
-//		return sessions.stream().map(SessionResponse :: new).distinct().collect(Collectors.toList());
+				(Pageable) PageRequest.of(page, pageSize, Sort.by(Direction.ASC, "startDate")));
+		//
+		// if(sessions == null || sessions.isEmpty())
+		// throw new ValidationException("No sessions found for you.");
+		// return sessions.stream().map(SessionResponse ::
+		// new).distinct().collect(Collectors.toList());
 	}
 
 	@Override
@@ -439,11 +436,11 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 					sessions = sessionRepository
 							.findAllByGradesCidAndClubInAndStartDateGreaterThanAndStartDateLessThanAndTeacherCidAndActiveTrueGroupByClubId(
 									gradeId, clubs, start, end, teacherId,
-									new Sort(Direction.ASC, Arrays.asList("startDate")));
+									Sort.by(Direction.ASC, "startDate"));
 				} else {
 					sessions = sessionRepository
 							.findAllByGradesCidAndClubInAndStartDateGreaterThanAndStartDateLessThanAndActiveTrueGroupByClubId(
-									gradeId, clubs, start, end, new Sort(Direction.ASC, Arrays.asList("startDate")));
+									gradeId, clubs, start, end, Sort.by(Direction.ASC, "startDate"));
 				}
 				break;
 			case week:
@@ -454,11 +451,11 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 					sessions = sessionRepository
 							.findAllByGradesCidAndClubInAndStartDateGreaterThanAndStartDateLessThanAndTeacherCidAndActiveTrueGroupByClubId(
 									gradeId, clubs, start, end, teacherId,
-									new Sort(Direction.ASC, Arrays.asList("startDate")));
+									Sort.by(Direction.ASC, "startDate"));
 				} else {
 					sessions = sessionRepository
 							.findAllByGradesCidAndClubInAndStartDateGreaterThanAndStartDateLessThanAndActiveTrueGroupByClubId(
-									gradeId, clubs, start, end, new Sort(Direction.ASC, Arrays.asList("startDate")));
+									gradeId, clubs, start, end, Sort.by(Direction.ASC, "startDate"));
 				}
 				break;
 			case month:
@@ -469,11 +466,11 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 					sessions = sessionRepository
 							.findAllByGradesCidAndClubInAndStartDateGreaterThanAndStartDateLessThanAndTeacherCidAndActiveTrueGroupByClubId(
 									gradeId, clubs, start, end, teacherId,
-									new Sort(Direction.ASC, Arrays.asList("startDate")));
+									Sort.by(Direction.ASC, "startDate"));
 				} else {
 					sessions = sessionRepository
 							.findAllByGradesCidAndClubInAndStartDateGreaterThanAndStartDateLessThanAndActiveTrueGroupByClubId(
-									gradeId, clubs, start, end, new Sort(Direction.ASC, Arrays.asList("startDate")));
+									gradeId, clubs, start, end, Sort.by(Direction.ASC, "startDate"));
 				}
 				break;
 			default:
@@ -504,7 +501,8 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 			finalSessionList.add(tempSessionList);
 		}
 		response.setSessions(finalSessionList);
-//		return sessions.stream().map(SessionResponse::new).collect(Collectors.toList());
+		// return
+		// sessions.stream().map(SessionResponse::new).collect(Collectors.toList());
 		return response;
 	}
 
@@ -515,10 +513,10 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 				throw new ValidationException(String.format("Teacher with id (%s) not found.", teacherId));
 			return sessionRepository.findAllByGradesCidAndClubInAndTeacherCidAndActiveTrueGroupByClubId(gradeCid, clubs,
 					teacherId,
-					(Pageable) new PageRequest(page, pageSize, new Sort(Direction.ASC, Arrays.asList("startDate"))));
+					(Pageable) PageRequest.of(page, pageSize, Sort.by(Direction.ASC, "startDate")));
 		}
 		return sessionRepository.findAllByGradesCidAndClubInAndActiveTrueGroupByClubId(gradeCid, clubs,
-				(Pageable) new PageRequest(page, pageSize, new Sort(Direction.ASC, Arrays.asList("startDate"))));
+				(Pageable) PageRequest.of(page, pageSize, Sort.by(Direction.ASC, "startDate")));
 	}
 
 	@Override
@@ -535,7 +533,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 			throw new ValidationException("Club Id cannot be null.");
 		if (!activityRepository.existsByCidAndActiveTrue(clubId))
 			throw new ValidationException(String.format("Club with id (%s) does not exist.", clubId));
-//		Activity club = activityRepository.getOneByCid(clubId);
+		// Activity club = activityRepository.getOneByCid(clubId);
 
 		List<Event> sessions;
 		if (sessionFetch == null) {
@@ -551,19 +549,19 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 				end = DateUtil.atEndOfDay(start);
 				sessions = sessionRepository
 						.findAllByTeacherCidAndClubCidAndStartDateGreaterThanAndStartDateLessThanAndActiveTrue(
-								teacherCid, clubId, start, end, new Sort(Direction.ASC, Arrays.asList("startDate")));
+								teacherCid, clubId, start, end, Sort.by(Direction.ASC, "startDate"));
 				break;
 			case week:
 				end = DateUtil.getlastWorkingDayOfWeek(DateUtil.getLastDayOfWeek());
 				sessions = sessionRepository
 						.findAllByTeacherCidAndClubCidAndStartDateGreaterThanAndStartDateLessThanAndActiveTrue(
-								teacherCid, clubId, start, end, new Sort(Direction.ASC, Arrays.asList("startDate")));
+								teacherCid, clubId, start, end, Sort.by(Direction.ASC, "startDate"));
 				break;
 			case month:
 				end = DateUtil.getLastWorkingDayOfMonth(DateUtil.getLastDayOfMonth());
 				sessions = sessionRepository
 						.findAllByTeacherCidAndClubCidAndStartDateGreaterThanAndStartDateLessThanAndActiveTrue(
-								teacherCid, clubId, start, end, new Sort(Direction.ASC, Arrays.asList("startDate")));
+								teacherCid, clubId, start, end, Sort.by(Direction.ASC, "startDate"));
 				break;
 			default:
 				throw new ValidationException(String.format(
@@ -593,13 +591,14 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 			finalSessionList.add(tempSessionList);
 		}
 		response.setSessions(finalSessionList);
-//		return sessions.stream().map(SessionResponse::new).collect(Collectors.toList());
+		// return
+		// sessions.stream().map(SessionResponse::new).collect(Collectors.toList());
 		return response;
 	}
 
 	private List<Event> getTeacherSessionsOfClub(String teacherCid, String clubId, Integer page, Integer pageSize) {
 		return sessionRepository.findAllByTeacherCidAndClubCidAndActiveTrue(teacherCid, clubId,
-				(Pageable) new PageRequest(page, pageSize, new Sort(Direction.ASC, Arrays.asList("startDate"))));
+				(Pageable) PageRequest.of(page, pageSize, Sort.by(Direction.ASC, "startDate")));
 	}
 
 	@Override
@@ -613,8 +612,9 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 		String teacherCid = teacher.getCid();
 		List<Activity> clubs = new ArrayList<Activity>();
 		teacher.getTeacherActivityGrades().stream().forEach(tag -> {
-			if(!clubs.contains(tag.getActivity()))
-				clubs.add(tag.getActivity());   }) ;
+			if (!clubs.contains(tag.getActivity()))
+				clubs.add(tag.getActivity());
+		});
 
 		List<Event> sessions;
 		if (sessionFetch == null) {
@@ -630,19 +630,19 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 				end = DateUtil.atEndOfDay(start);
 				sessions = sessionRepository
 						.findAllByTeacherCidAndClubInAndStartDateGreaterThanAndStartDateLessThanAndActiveTrueGroupByClubId(
-								teacherCid, clubs, start, end, new Sort(Direction.ASC, Arrays.asList("startDate")));
+								teacherCid, clubs, start, end, Sort.by(Direction.ASC, "startDate"));
 				break;
 			case week:
 				end = DateUtil.getlastWorkingDayOfWeek(DateUtil.getLastDayOfWeek());
 				sessions = sessionRepository
 						.findAllByTeacherCidAndClubInAndStartDateGreaterThanAndStartDateLessThanAndActiveTrueGroupByClubId(
-								teacherCid, clubs, start, end, new Sort(Direction.ASC, Arrays.asList("startDate")));
+								teacherCid, clubs, start, end, Sort.by(Direction.ASC, "startDate"));
 				break;
 			case month:
 				end = DateUtil.getLastWorkingDayOfMonth(DateUtil.getLastDayOfMonth());
 				sessions = sessionRepository
 						.findAllByTeacherCidAndClubInAndStartDateGreaterThanAndStartDateLessThanAndActiveTrueGroupByClubId(
-								teacherCid, clubs, start, end, new Sort(Direction.ASC, Arrays.asList("startDate")));
+								teacherCid, clubs, start, end, Sort.by(Direction.ASC, "startDate"));
 				break;
 			default:
 				throw new ValidationException(String.format(
@@ -672,14 +672,15 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 			finalSessionList.add(tempSessionList);
 		}
 		response.setSessions(finalSessionList);
-//		return sessions.stream().map(SessionResponse::new).collect(Collectors.toList());
+		// return
+		// sessions.stream().map(SessionResponse::new).collect(Collectors.toList());
 		return response;
 	}
 
 	private List<Event> getTeacherSessionsOfClubs(String teacherCid, List<Activity> clubs, Integer page,
 			Integer pageSize) {
 		return sessionRepository.findAllByTeacherCidAndClubInAndActiveTrueGroupByClubId(teacherCid, clubs,
-				(Pageable) new PageRequest(page, pageSize, new Sort(Direction.ASC, Arrays.asList("startDate"))));
+				(Pageable) PageRequest.of(page, pageSize, Sort.by(Direction.ASC, "startDate")));
 	}
 
 	@Override

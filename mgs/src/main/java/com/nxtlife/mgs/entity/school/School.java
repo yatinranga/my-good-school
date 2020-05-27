@@ -2,20 +2,14 @@ package com.nxtlife.mgs.entity.school;
 
 import java.util.List;
 
-import javax.jdo.annotations.Unique;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.DynamicUpdate;
@@ -32,12 +26,13 @@ import com.nxtlife.mgs.entity.user.User;
 @SuppressWarnings("serial")
 @Entity
 @DynamicUpdate(true)
-//@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name","activity_id"}))
+// @Table(uniqueConstraints = @UniqueConstraint(columnNames =
+// {"name","activity_id"}))
 public class School extends BaseEntity {
 
-//	@Id
-//	@GeneratedValue(strategy = GenerationType.AUTO)
-//	Long id;
+	// @Id
+	// @GeneratedValue(strategy = GenerationType.AUTO)
+	// Long id;
 
 	@NotNull
 	@Column(unique = true)
@@ -87,7 +82,6 @@ public class School extends BaseEntity {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "school")
 	private List<TeacherSchoolGrade> teacherSchoolGrades;
 
-	
 	@ManyToMany(mappedBy = "schools", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Activity> activities;
@@ -180,13 +174,13 @@ public class School extends BaseEntity {
 		this.logo = logo;
 	}
 
-//	public Long getId() {
-//		return id;
-//	}
-//
-//	public void setId(Long id) {
-//		this.id = id;
-//	}
+	// public Long getId() {
+	// return id;
+	// }
+	//
+	// public void setId(Long id) {
+	// this.id = id;
+	// }
 
 	public User getUser() {
 		return user;

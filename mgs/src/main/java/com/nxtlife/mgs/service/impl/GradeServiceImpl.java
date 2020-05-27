@@ -40,9 +40,6 @@ public class GradeServiceImpl extends BaseService implements GradeService {
 	@Autowired
 	GradeRepository gradeRepository;
 
-	@Autowired
-	Utils utils;
-
 	@Override
 	public GradeResponse save(GradeRequest request) {
 		if (request == null)
@@ -77,7 +74,7 @@ public class GradeServiceImpl extends BaseService implements GradeService {
 
 		grade.setSchools(schools);
 
-		grade.setCid(utils.generateRandomAlphaNumString(8));
+		grade.setCid(Utils.generateRandomAlphaNumString(8));
 
 		grade = gradeRepository.save(grade);
 
