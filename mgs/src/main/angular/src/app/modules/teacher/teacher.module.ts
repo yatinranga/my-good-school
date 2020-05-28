@@ -39,7 +39,7 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'club',
+    path: 'club/:name',
     component: TeacherClubDetailComponent
   },
 ]

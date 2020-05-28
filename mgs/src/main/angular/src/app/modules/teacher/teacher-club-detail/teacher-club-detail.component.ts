@@ -41,7 +41,16 @@ export class TeacherClubDetailComponent implements OnInit {
   constructor(private teacherService: TeacherService, private alertService: AlertService, private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-    this.clubObject = JSON.parse(localStorage.getItem('club'));
+
+    /**If Object is present in localStorage, move it to sessionStorage and clear object from localStorage */
+    if(localStorage.getItem('club')){
+      sessionStorage.setItem('club', JSON.stringify(JSON.parse(localStorage.getItem('club'))));
+      localStorage.removeItem('club');
+      this.clubObject = JSON.parse(sessionStorage.getItem('club'));
+    } else {
+      this.clubObject = JSON.parse(sessionStorage.getItem('club'));
+    }
+    
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
     this.getSchoolGrades(this.teacherInfo.teacher.schoolId);
     this.getClubRequests(this.clubObject.id);

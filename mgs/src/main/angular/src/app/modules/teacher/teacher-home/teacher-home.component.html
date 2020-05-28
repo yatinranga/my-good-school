@@ -82,7 +82,7 @@
             <div class="teacher_club_list">
                 <ul *ngFor="let c of assignedClubsArr">
                     <li (click)="clubDetails(c)">
-                        <a target="_blank" [routerLink]="['../club']">{{c.name}}</a></li>
+                        <a target="_blank" [routerLink]="['../club',c.name]">{{c.name}}</a></li>
                 </ul>
             </div>
         </div>
@@ -92,7 +92,7 @@
             <div class="teacher_club_list">
                 <ul *ngFor="let s of assignedSocietyArr">
                     <li (click)="clubDetails(s)">
-                        <a target="_blank" [routerLink]="['../club']">{{s.name}}</a></li>
+                        <a target="_blank" [routerLink]="['../club',s.name]">{{s.name}}</a></li>
                 </ul>
             </div>
         </div>
