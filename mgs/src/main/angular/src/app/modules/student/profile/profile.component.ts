@@ -31,7 +31,7 @@ export class ProfileComponent implements OnInit {
     })
 
     this.studentInfo = JSON.parse(localStorage.getItem('user_info'));
-    this.studentId = this.studentInfo['student'].id;
+    this.studentId = this.studentInfo.id;
     this.studentService.getProfile(this.studentId).subscribe((res) => {
       this.studentDetails = res;
       console.log(this.studentDetails);
@@ -49,7 +49,7 @@ export class ProfileComponent implements OnInit {
       (err) => console.log(err)
     );
 
-    this.getEnrolledClub();
+    // this.getEnrolledClub();
 
     // this.studentProfile = this.formBuilder.group({
     //   studentName : [''],

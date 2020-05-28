@@ -33,3 +33,14 @@ button.btn.register.btn-primary{
 .modal-header {
     padding: 5px 10px;
 }
+.choosemedia.form-group img {
+    width: 400px;
+    float: left;
+    margin: 50px auto;
+    text-align: center;
+    opacity: 1;
+}
+.choosemedia.form-group {
+    display: grid;
+    margin-top: 20px;
+}

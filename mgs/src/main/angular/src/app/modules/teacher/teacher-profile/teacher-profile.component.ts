@@ -11,7 +11,7 @@ import { AlertService } from 'src/app/services/alert.service';
 export class TeacherProfileComponent implements OnInit {
   teacherInfo: any;
   teacherId: any;
-  teacherDetails: any;
+  teacherDetails: any = {};
 
   profilePhotoForm: FormGroup;
   profileUpdateForm: FormGroup;
@@ -28,7 +28,7 @@ export class TeacherProfileComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private teacherService: TeacherService, private alertService: AlertService) { }
 
   ngOnInit() {
-    this.path = "assets/images/teacherprofile1.jpg";
+    // this.path = "assets/images/teacherprofile1.jpg";
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
     // this.teacherId = this.teacherInfo['teacher'].id;
     this.teacherId = this.teacherInfo.id;
@@ -37,6 +37,7 @@ export class TeacherProfileComponent implements OnInit {
       this.mobileNumber = res.mobileNumber;
       this.email = res.email;
       this.profileBrief = res.profileBrief;
+      this.path = res.imagePath;
       console.log(res);
       this.getAllClubs();
 
@@ -67,7 +68,6 @@ export class TeacherProfileComponent implements OnInit {
   // }
 
   getAllClubs() {
-    console.log("Ther is goes: ", this.teacherDetails['activityAndGrades']);
     this.assignedClubsArr = this.teacherDetails.activityAndGrades.filter((e) => (e.clubOrSociety == "Club"));
     this.assignedSocietyArr = this.teacherDetails.activityAndGrades.filter((e) => (e.clubOrSociety == "Society"));
   }
