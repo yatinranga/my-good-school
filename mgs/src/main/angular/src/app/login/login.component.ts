@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit {
   userInfo: any;
   loader: boolean = false;
 
-  constructor(private formBuilder: FormBuilder, private alertService : AlertService,
+  constructor(private formBuilder: FormBuilder, private alertService: AlertService,
     private router: Router,
     public authService: AuthService) { }
 
@@ -30,11 +30,32 @@ export class LoginComponent implements OnInit {
     this.loader = true;
     this.authService.loginUser(this.loginForm.value).subscribe((res) => {
       localStorage.setItem('access_token', res.access_token);
-      localStorage.setItem('user_type', JSON.stringify(res.user_type));
+      localStorage.setItem('user_type', JSON.stringify(res.user_role[0].name));
       this.getUserInfo();
     }, (err) => {
       this.loader = false;
     });
+  }
+
+  getUserInfo() {
+    this.authService.getInfo().subscribe((res) => {
+      localStorage.setItem('user_info', JSON.stringify(res));
+      this.userInfo = JSON.parse(localStorage.getItem('user_info'));
+      this.loader = false;
+      this.checkUserType(JSON.parse(localStorage.getItem('user_type')));
+    }, (err) => {
+      this.loader = false;
+    });
+  }
+
+  checkUserType(userType) {
+    switch (userType) {
+      case "MainAdmin": this.router.navigate(['Admin']); break;
+      case "Student": this.router.navigate(['Student/' + '/home']); break;
+      case "Supervisor": this.router.navigate(['Supervisor/' + '/home']); break;
+      case "Coordinator": this.router.navigate(['Supervisor/' + '/home']); break;
+      case "School": this.router.navigate(['School/' + '/home']); break;
+    }
   }
 
   forgetPassword() {
@@ -54,23 +75,4 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  getUserInfo() {
-    this.authService.getInfo().subscribe((res) => {
-      localStorage.setItem('user_info', JSON.stringify(res));
-      this.userInfo = JSON.parse(localStorage.getItem('user_info'));
-      this.loader = false;
-      this.checkUserType(this.userInfo.userType);
-    }, (err) => {
-      this.loader = false;
-    });
-  }
-
-  checkUserType(userType) {
-    switch (userType) {
-      case "Admin": this.router.navigate(['Admin']); break;
-      case "Student": this.router.navigate(['Student/' + '/home']); break;
-      case "Teacher": this.router.navigate(['Teacher/' + '/home']); break;
-      case "School": this.router.navigate(['School/' + '/home']); break;
-    }
-  }
 }

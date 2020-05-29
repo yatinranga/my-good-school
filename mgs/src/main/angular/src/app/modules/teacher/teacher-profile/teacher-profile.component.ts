@@ -11,7 +11,7 @@ import { AlertService } from 'src/app/services/alert.service';
 export class TeacherProfileComponent implements OnInit {
   teacherInfo: any;
   teacherId: any;
-  teacherDetails = {};
+  teacherDetails: any = {};
 
   profilePhotoForm: FormGroup;
   profileUpdateForm: FormGroup;
@@ -25,20 +25,24 @@ export class TeacherProfileComponent implements OnInit {
   assignedClubsArr = [];
   assignedSocietyArr = [];
 
-  constructor(private formBuilder: FormBuilder, private teacherService: TeacherService, private alertService : AlertService) { }
+  constructor(private formBuilder: FormBuilder, private teacherService: TeacherService, private alertService: AlertService) { }
 
   ngOnInit() {
     this.path = "assets/images/teacherprofile1.jpg";
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
-    this.teacherId = this.teacherInfo['teacher'].id;
+    // this.teacherId = this.teacherInfo['teacher'].id;
+    this.teacherId = this.teacherInfo.id;
     this.teacherService.getProfile(this.teacherId).subscribe((res) => {
       this.teacherDetails = res;
       this.mobileNumber = res.mobileNumber;
       this.email = res.email;
-      this.profileBrief = res.profileBrief; 
+      this.profileBrief = res.profileBrief;
+      // this.path = res.imagePath;
       console.log(res);
+      this.getAllClubs();
+
     },
-    (err) => console.log(err)
+      (err) => console.log(err)
     );
 
     this.profilePhotoForm = this.formBuilder.group({
@@ -46,23 +50,28 @@ export class TeacherProfileComponent implements OnInit {
     })
 
     this.profileUpdateForm = this.formBuilder.group({
-      id : this.teacherId,
-      mobileNumber : [],
+      id: this.teacherId,
+      mobileNumber: [],
       email: [],
       profileBrief: []
     })
 
-    this.getAllClubs();
+    // this.getAllClubs();
   }
 
-  //get list of assigned/supervised Clubs and Society
+  // //get list of assigned/supervised Clubs and Society
+  // getAllClubs() {
+  //   this.teacherService.getAssignedClubs().subscribe(res => {
+  //     this.assignedClubsArr = res.filter((e) => (e.clubOrSociety == "Club"));
+  //     this.assignedSocietyArr = res.filter((e) => (e.clubOrSociety == "Society"));
+  //   }, (err) => { console.log(err); });
+  // }
+
   getAllClubs() {
-    this.teacherService.getAssignedClubs().subscribe(res => {
-      this.assignedClubsArr = res.filter((e) => (e.clubOrSociety == "Club"));
-      this.assignedSocietyArr = res.filter((e) => (e.clubOrSociety == "Society"));
-    }, (err) => { console.log(err); });
+    this.assignedClubsArr = this.teacherDetails.activityAndGrades.filter((e) => (e.clubOrSociety == "Club"));
+    this.assignedSocietyArr = this.teacherDetails.activityAndGrades.filter((e) => (e.clubOrSociety == "Society"));
   }
-  
+
   // Select Profile Photo
   onFileSelect(event) {
     if (event.target.files.length > 0) {
@@ -103,7 +112,7 @@ export class TeacherProfileComponent implements OnInit {
   //   return !this.setDisabled;
   // }
 
-  temp(e){
+  temp(e) {
     // console.log(e);
   }
 
@@ -125,7 +134,7 @@ export class TeacherProfileComponent implements OnInit {
         });
       }
     } else {
-      
+
       // this.alertService.showErrorAlert("Fill the proper details");
       this.setDisabled = false;
     }

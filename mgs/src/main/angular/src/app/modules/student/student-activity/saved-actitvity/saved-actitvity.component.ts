@@ -60,8 +60,8 @@ export class SavedActitvityComponent implements OnInit {
     this.setMinDate();
     this.setMaxDate();
     this.studentInfo = JSON.parse(localStorage.getItem('user_info'));
-    this.studentId = this.studentInfo.student.id;
-    this.schoolId = this.studentInfo.student.schoolId;
+    this.studentId = this.studentInfo.id;
+    this.schoolId = this.studentInfo.schoolId;
     this.activityView(this.activityType);
     this.getStudentActivity();
     this.getAreas(); // to get PSD Areas, Focus Area and 4s 

@@ -34,12 +34,18 @@ export class StudentClubDetailsComponent implements OnInit {
 
   ngOnInit() {
 
-    // console.log(history.state);
-    // this.clubObject = history.state;
-    this.clubObject = JSON.parse(localStorage.getItem('club'));
+    /**If Object is present in localStorage, move it to sessionStorage and clear object from localStorage */
+    if(localStorage.getItem('club')){
+      sessionStorage.setItem('club', JSON.stringify(JSON.parse(localStorage.getItem('club'))));
+      localStorage.removeItem('club');
+      this.clubObject = JSON.parse(sessionStorage.getItem('club'));
+    } else {
+      this.clubObject = JSON.parse(sessionStorage.getItem('club'));
+    }
+
     this.setClass(this.clubObject.fourS);
     this.studentInfo = JSON.parse(localStorage.getItem('user_info'));
-    this.schoolId = this.studentInfo.student.schoolId;
+    this.schoolId = this.studentInfo.schoolId;
     this.getCoaches(this.clubObject.id);
     this.getGrades(this.schoolId);
 

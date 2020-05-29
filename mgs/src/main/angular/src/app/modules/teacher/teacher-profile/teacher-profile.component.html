@@ -3,13 +3,14 @@
         <div class="teacher_profile_main">
             <div class="bgimg">
                 <img src="assets/images/banner11.png">
-                <button (click)="updateProfile()" class="update"> {{setDisabled ? 'Edit Profile' :'Update'}}</button>   
+                <button (click)="updateProfile()" class="update"> {{setDisabled ? 'Edit Profile' :'Update'}}</button>
                 <div class="teacher_image">
                     <img [src]="path">
                 </div>
                 <div class="teachername">
-                        <h4> {{teacherDetails['name']}} </h4>
-                         <button class="edit_profile" (click)="photoInput.click()"> <i class="fa fa-edit" title="Edit"> </i> Edit Profile Photo </button> <br>
+                    <h4> {{teacherDetails['name']}} </h4>
+                    <button class="edit_profile" (click)="photoInput.click()"> <i class="fa fa-edit" title="Edit"> </i>
+                        Edit Profile Photo </button> <br>
                 </div>
             </div>
             <div class="lowerbox">
@@ -33,7 +34,7 @@
 
                 <div class="rightprofile">
                     <div class="heading">
-                       <h2> About Me </h2>
+                        <h2> About Me </h2>
                     </div>
                     <div class="rightprofiletext">
                         <div class="basic-info">
@@ -62,17 +63,21 @@
                                 </li>
                             </ul>
                         </div>
-                        <div *ngIf="teacherDetails['activities']" class="teacher_activities_main">
+                        <div class="teacher_activities_main">
                             <h3> Clubs </h3>
                             <ul *ngFor="let c of assignedClubsArr">
                                 <li>{{c.name}}</li>
                             </ul>
+                            <p *ngIf="!(assignedClubsArr.length)">No Society Assigned</p>
+
                         </div>
-                        <div *ngIf="teacherDetails['activities']" class="teacher_activities_main">
+                        <div class="teacher_activities_main">
                             <h3> Societies </h3>
                             <ul *ngFor="let s of assignedSocietyArr">
                                 <li>{{s.name}}</li>
                             </ul>
+                            <p *ngIf="!(assignedSocietyArr.length)">No Society Assigned</p>
+
                         </div>
                     </div>
                 </div>

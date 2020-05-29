@@ -23,7 +23,7 @@ const routes: Routes = [
     loadChildren: 'src/app/modules/student/student.module#StudentModule'
   },
   {
-    path: 'Teacher',
+    path: 'Supervisor',
     loadChildren: 'src/app/modules/teacher/teacher.module#TeacherModule'
   }, 
   {

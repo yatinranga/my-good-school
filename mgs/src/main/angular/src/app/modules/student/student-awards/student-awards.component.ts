@@ -26,8 +26,8 @@ export class StudentAwardsComponent implements OnInit {
 
   ngOnInit() {
     this.studentInfo = JSON.parse(localStorage.getItem('user_info'));
-    this.studentId = this.studentInfo['student'].id;
-    this.schoolId = this.studentInfo['student'].schoolId;
+    this.studentId = this.studentInfo.id;
+    this.schoolId = this.studentInfo.schoolId;
     
     this.getAwards();
     this.getAreas();
@@ -49,7 +49,6 @@ export class StudentAwardsComponent implements OnInit {
     this.studentService.getAllAwards(this.studentId).subscribe((res) => {
       this.awardsArr = res;
       this.copyAwardArr = Object.assign([],res);
-
       console.log(res);
       this.loader = false;
     },
