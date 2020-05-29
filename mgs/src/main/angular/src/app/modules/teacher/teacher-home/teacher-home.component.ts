@@ -56,16 +56,16 @@ export class TeacherHomeComponent implements OnInit {
 
   ngOnInit() {
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
-    this.schoolId = this.teacherInfo['teacher'].schoolId;
-    this.teacherName = this.teacherInfo.teacher.name;
-    this.teacherId = this.teacherInfo.teacher.id;
+    this.schoolId = this.teacherInfo.schoolId;
+    this.teacherName = this.teacherInfo.name;
+    this.teacherId = this.teacherInfo.id;
     this.clubReqLoader = true;
     this.getAllClubs();
     this.getSessionDetails();
     // this.getAllClubReq();
 
     this.createSessionForm = this.formBuilder.group({
-      id: [null],
+      // id: [null],
       number: [, [Validators.required]],
       description: [, [Validators.required]],
       startDate: [, [Validators.required]],
@@ -73,7 +73,7 @@ export class TeacherHomeComponent implements OnInit {
       title: [, [Validators.required]],
       clubId: [, [Validators.required]],
       gradeIds: [, [Validators.required]],
-      fileRequests: []
+      fileRequests: [null]
     });
 
     this.getSchoolGrades(this.schoolId);
@@ -146,6 +146,7 @@ export class TeacherHomeComponent implements OnInit {
   // Create Session
   createSession() {
     console.log("create session");
+    const startDate = this.createSessionForm.value.startDate;
     this.createSessionForm.value.endDate = this.createSessionForm.value.startDate + " " + this.endTime + ":00";
     this.createSessionForm.value.startDate = this.createSessionForm.value.startDate + " " + this.startTime + ":00";
     console.log(this.createSessionForm.value);
@@ -173,6 +174,7 @@ export class TeacherHomeComponent implements OnInit {
           }
         }
         else if (key == 'fileRequests') {
+          if(this.createSessionForm.value[key]!==null)
           formData.append(key + '[' + 0 + '].file', this.createSessionForm.value[key]);
         }
         else {
@@ -183,7 +185,6 @@ export class TeacherHomeComponent implements OnInit {
 
 
       this.teacherService.createNewSession(formData).subscribe((res) => {
-        this.alertService.showLoader("");
 
         console.log(res);
         $('#createSessionModal').modal('hide');
@@ -193,6 +194,14 @@ export class TeacherHomeComponent implements OnInit {
         this.getSessionDetails();
       }, (err) => {
         console.log(err);
+        console.log("Error MSg: ",err.msg);
+        this.createSessionForm.value.startDate = startDate;
+        if(err.status === 500){
+          this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !","Error","error");
+        } else {
+          this.alertService.showMessageWithSym("","Error","error");
+        }
+
       });
     }
 

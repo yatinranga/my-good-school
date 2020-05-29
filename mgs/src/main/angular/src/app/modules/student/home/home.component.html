@@ -41,6 +41,7 @@
           <li>Description - {{res.description}}</li>
         </ul>
       </div>
+      <p *ngIf="!(sessionsArr.length)">No Sessions Available for this week</p>
     </div>
 
   </div>
@@ -55,7 +56,7 @@
           <ul *ngFor="let sport of sportArr">
             <li [ngClass]="{'sport reference':highlightClubArr.includes(sport.name)}"
               (click)="clubDetails(sport,'sport')">
-              <a target="_blank" [routerLink]="['../club']" [state]="sport">
+              <a target="_blank" [routerLink]="['../club',sport.name]" [state]="sport">
                 {{sport.name}}</a></li>
           </ul>
         </div>
@@ -65,7 +66,7 @@
           <ul *ngFor="let skill of skillArr;let i = index">
             <li [ngClass]="{'skill reference':highlightClubArr.includes(skill.name)}"
               (click)="clubDetails(skill,'skill')">
-              <a target="_blank" [routerLink]="['../club']" [state]="skill">
+              <a target="_blank" [routerLink]="['../club',skill.name]" [state]="skill">
                 {{skill.name}}</a>
             </li>
           </ul>
@@ -87,7 +88,7 @@
           <ul *ngFor="let service of serviceArr">
             <li [ngClass]="{'service reference':highlightSocietyArr.includes(service.name)}"
               (click)="clubDetails(service,'service')">
-              <a target="_blank" [routerLink]="['../club']" [state]="service">{{service.name}}</a></li>
+              <a target="_blank" [routerLink]="['../club',service.name]" [state]="service">{{service.name}}</a></li>
           </ul>
         </div>
         <div class="study fourskill">
@@ -96,7 +97,7 @@
           <ul *ngFor="let study of studyArr">
             <li [ngClass]="{'study reference':highlightSocietyArr.includes(study.name)}"
               (click)="clubDetails(study,'study')">
-              <a target="_blank" [routerLink]="['../club']" [state]="study">{{study.name}}</a></li>
+              <a target="_blank" [routerLink]="['../club',study.name]" [state]="study">{{study.name}}</a></li>
           </ul>
         </div>
 

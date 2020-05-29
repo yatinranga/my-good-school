@@ -73,6 +73,7 @@
                     </li>
                 </ul>
             </div>
+            <p *ngIf="!(sessionsArr.length)">No Sessions Availables</p>
         </div>
     </div>
 
@@ -84,6 +85,7 @@
                     <li (click)="clubDetails(c)">
                         <a target="_blank" [routerLink]="['../club',c.name]">{{c.name}}</a></li>
                 </ul>
+                <p *ngIf="!(assignedClubsArr.length)">No Club Assigned</p>
             </div>
         </div>
 
@@ -94,6 +96,8 @@
                     <li (click)="clubDetails(s)">
                         <a target="_blank" [routerLink]="['../club',s.name]">{{s.name}}</a></li>
                 </ul>
+                <p *ngIf="!(assignedSocietyArr.length)">No Society Assigned</p>
+
             </div>
         </div>
     </div>

@@ -68,9 +68,9 @@ export class HomeComponent implements OnInit {
   
   ngOnInit() {
     this.studentInfo = JSON.parse(localStorage.getItem('user_info'));
-    this.schoolId = this.studentInfo.student.schoolId;
-    this.studentName = this.studentInfo.student.name;
-    this.getGrades(this.schoolId); // ALL Grades of School
+    this.schoolId = this.studentInfo.schoolId;
+    this.studentName = this.studentInfo.name;
+    // this.getGrades(this.schoolId); // ALL Grades of School
     this.getEnrolledClub(); // List of Enrolled Club
     this.getSessionDetails(); // List of Scheduled Session of a WEEK
     this.getActivity(this.schoolId); // ALL Activites of School
@@ -101,7 +101,8 @@ export class HomeComponent implements OnInit {
 
       console.log(this.highlightClubArr);
       console.log(this.highlightSocietyArr);
-    }, (err) => { console.log(err) });
+    }, (err) => { console.log(err);
+    this.alertService.showMessageWithSym("You are not member of any Club/Society","","info") });
   }
 
   // List of Sessions in current week

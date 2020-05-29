@@ -28,7 +28,7 @@ export class TeacherProfileComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private teacherService: TeacherService, private alertService: AlertService) { }
 
   ngOnInit() {
-    // this.path = "assets/images/teacherprofile1.jpg";
+    this.path = "assets/images/teacherprofile1.jpg";
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
     // this.teacherId = this.teacherInfo['teacher'].id;
     this.teacherId = this.teacherInfo.id;
@@ -37,7 +37,7 @@ export class TeacherProfileComponent implements OnInit {
       this.mobileNumber = res.mobileNumber;
       this.email = res.email;
       this.profileBrief = res.profileBrief;
-      this.path = res.imagePath;
+      // this.path = res.imagePath;
       console.log(res);
       this.getAllClubs();
 
