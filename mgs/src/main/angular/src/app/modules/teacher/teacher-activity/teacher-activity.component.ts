@@ -52,8 +52,8 @@ export class TeacherActivityComponent implements OnInit {
 
   ngOnInit() {
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
-    this.teacherId = this.teacherInfo['teacher'].id;
-    this.schoolId = this.teacherInfo['teacher'].schoolId;
+    this.teacherId = this.teacherInfo.id;
+    this.schoolId = this.teacherInfo.schoolId;
     this.reviewFormInit();
     this.activityView(this.activityType);
     this.getSchoolActivities();
