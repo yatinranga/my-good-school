@@ -43,14 +43,14 @@ export class TeacherClubDetailComponent implements OnInit {
   ngOnInit() {
 
     /**If Object is present in localStorage, move it to sessionStorage and clear object from localStorage */
-    if(localStorage.getItem('club')){
+    if (localStorage.getItem('club')) {
       sessionStorage.setItem('club', JSON.stringify(JSON.parse(localStorage.getItem('club'))));
       localStorage.removeItem('club');
       this.clubObject = JSON.parse(sessionStorage.getItem('club'));
     } else {
       this.clubObject = JSON.parse(sessionStorage.getItem('club'));
     }
-    
+
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
     this.getSchoolGrades(this.teacherInfo.schoolId);
     this.getClubRequests(this.clubObject.id);
@@ -342,25 +342,27 @@ export class TeacherClubDetailComponent implements OnInit {
     });
   }
 
-// Delete Scheduled Session
-deleteSession(session, out_index, in_index) {
-  console.log(session);
-  this.alertService.confirmWithoutLoader('question', 'Sure you want to DELETE ?', '', 'Yes').then(result => {
-    if (result.value) {
-      this.alertService.showLoader("");
-      this.teacherService.deleteSession(session.id).subscribe((res) => {
-        console.log(res);
-        this.clubSchedule[out_index].responses.splice(in_index, 1);
-        this.alertService.showMessageWithSym("Session Deleted", "Success", "success");
-        this.getClubSession(this.clubObject.id);
-      }, (err) => { console.log(err);
-        if(err.status === 500){
-          this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !","Error","error");
-        } });
-    }
+  // Delete Scheduled Session
+  deleteSession(session, out_index, in_index) {
+    console.log(session);
+    this.alertService.confirmWithoutLoader('question', 'Sure you want to DELETE ?', '', 'Yes').then(result => {
+      if (result.value) {
+        this.alertService.showLoader("");
+        this.teacherService.deleteSession(session.id).subscribe((res) => {
+          console.log(res);
+          this.clubSchedule[out_index].responses.splice(in_index, 1);
+          this.alertService.showMessageWithSym("Session Deleted", "Success", "success");
+          this.getClubSession(this.clubObject.id);
+        }, (err) => {
+          console.log(err);
+          if (err.status === 500) {
+            this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");
+          }
+        });
+      }
 
-  });
-}
+    });
+  }
 
   setMinDate() {
     const minDate = new Date();
@@ -397,7 +399,7 @@ deleteSession(session, out_index, in_index) {
     this.endTime = "";
     // this.path = "";
     // this.files = [];
-    this.filterVal="";
+    this.filterVal = "";
     this.createSessionForm.reset();
   }
 

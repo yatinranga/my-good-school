@@ -53,8 +53,8 @@ export class TeacherAwardsComponent implements OnInit {
 
   ngOnInit() {
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
-    this.schoolId = this.teacherInfo['teacher'].schoolId;
-    this.teacherId = this.teacherInfo['teacher'].id;
+    this.schoolId = this.teacherInfo.schoolId;
+    this.teacherId = this.teacherInfo.id;
     this.assignAwardInit();
     this.getSchoolGrades();
     this.awardView(this.awardViewType);
@@ -130,6 +130,12 @@ export class TeacherAwardsComponent implements OnInit {
     },
       (err) => {
         console.log(err);
+        if (err.status == 400) {
+          this.alertService.showMessageWithSym(err.msg, "", "info");
+        }
+        else {
+          this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");
+        }
         // $('#assignAwardModal').modal('hide');
         // $('.modal-backdrop').remove();
         this.pa_loader = false;
