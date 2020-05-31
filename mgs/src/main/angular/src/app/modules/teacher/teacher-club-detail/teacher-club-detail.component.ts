@@ -52,9 +52,9 @@ export class TeacherClubDetailComponent implements OnInit {
     }
     
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
-    this.getSchoolGrades(this.teacherInfo.teacher.schoolId);
+    this.getSchoolGrades(this.teacherInfo.schoolId);
     this.getClubRequests(this.clubObject.id);
-    this.getClubStudents(this.clubObject.id, this.teacherInfo.teacher.id);
+    this.getClubStudents(this.clubObject.id, this.teacherInfo.id);
     this.getClubSession(this.clubObject.id);
 
     this.createSessionForm = this.formBuilder.group({
@@ -342,8 +342,25 @@ export class TeacherClubDetailComponent implements OnInit {
     });
   }
 
-  // Delete Scheduled Session
-  deleteSession(session, out_index, in_index) { }
+// Delete Scheduled Session
+deleteSession(session, out_index, in_index) {
+  console.log(session);
+  this.alertService.confirmWithoutLoader('question', 'Sure you want to DELETE ?', '', 'Yes').then(result => {
+    if (result.value) {
+      this.alertService.showLoader("");
+      this.teacherService.deleteSession(session.id).subscribe((res) => {
+        console.log(res);
+        this.clubSchedule[out_index].responses.splice(in_index, 1);
+        this.alertService.showMessageWithSym("Session Deleted", "Success", "success");
+        this.getClubSession(this.clubObject.id);
+      }, (err) => { console.log(err);
+        if(err.status === 500){
+          this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !","Error","error");
+        } });
+    }
+
+  });
+}
 
   setMinDate() {
     const minDate = new Date();
