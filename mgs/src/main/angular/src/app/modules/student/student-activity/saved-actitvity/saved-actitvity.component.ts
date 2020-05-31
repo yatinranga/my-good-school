@@ -54,7 +54,8 @@ export class SavedActitvityComponent implements OnInit {
 
   activitiesArr = []; // single arr for performed actvities
   order = false;
-  count = 0; //to count the number of words enter
+  count = 0; // to count the number of words enter
+  index: number // used when Acti_Status  =  saved to update the table.
 
   ngOnInit() {
     this.setMinDate();
@@ -68,10 +69,10 @@ export class SavedActitvityComponent implements OnInit {
 
     this.savedActivityForm = this.formBuilder.group({
       activityId: [, [Validators.required]],
-      description: [{ value: '', disabled: true }, [Validators.required]],
+      description: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(50)]],
       dateOfActivity: [{ value: '', disabled: true }, [Validators.required]],
       coachId: [{ value: '', disabled: true }, [Validators.required]],
-      title: [{ value: '',disabled: true}, [Validators.required]],
+      title: [{ value: '', disabled: true }, [Validators.required]],
       attachment: [],
       id: []
     });
@@ -147,7 +148,8 @@ export class SavedActitvityComponent implements OnInit {
   }
 
   // on click of edit button
-  editSavedActivity(e, activity) {
+  editSavedActivity(e, activity, index) {
+    this.index = index;
     $('#addActivityModal').modal('show');
     $('#addActivityModal').modal({
       backdrop: 'static',
@@ -166,7 +168,7 @@ export class SavedActitvityComponent implements OnInit {
       title: activity.title,
       id: activity.id,
     });
-    this.files=activity.fileResponses;      
+    this.files = activity.fileResponses;
     this.editActivityShow = true;
     this.addActivityShow = false;
 
@@ -263,35 +265,36 @@ export class SavedActitvityComponent implements OnInit {
 
   // to get teacher/coach who perform selected activity
   getStudentCoach(activityId) {
-    this.modal_loader = true;
     this.savedActivityForm.value.activityId = activityId;
     this.coaches = [];
-    if(activityId)
-    this.studentService.getCoach(this.schoolId, activityId).subscribe((res) => {
-      this.coaches = res;
-      if (this.coaches.length) {
-        this.savedActivityForm.get('coachId').enable();
-        this.savedActivityForm.get('description').enable();
-        this.savedActivityForm.get('dateOfActivity').enable();
-        this.savedActivityForm.get('title').enable();
-      } else {
-        this.savedActivityForm.get('coachId').disable();
-        this.savedActivityForm.get('description').disable();
-        this.savedActivityForm.get('dateOfActivity').disable();
-        this.savedActivityForm.get('title').disable();
-      }
-      this.modal_loader = false;
-    },
-      (err) => {
-        console.log(err);
+    if (activityId != null) {
+      this.modal_loader = true;
+      this.studentService.getCoach(this.schoolId, activityId).subscribe((res) => {
+        this.coaches = res;
+        if (this.coaches.length) {
+          this.savedActivityForm.get('coachId').enable();
+          this.savedActivityForm.get('description').enable();
+          this.savedActivityForm.get('dateOfActivity').enable();
+          this.savedActivityForm.get('title').enable();
+        } else {
+          this.savedActivityForm.get('coachId').disable();
+          this.savedActivityForm.get('description').disable();
+          this.savedActivityForm.get('dateOfActivity').disable();
+          this.savedActivityForm.get('title').disable();
+        }
         this.modal_loader = false;
-      }
-    );
+      },
+        (err) => {
+          console.log(err);
+          this.modal_loader = false;
+        }
+      );
+    }
   }
 
   // to UPDATE the saved activity
   updateActivity() {
-     
+
     if (this.editActivityShow) {
       this.submit_loader = true;
       this.savedActivityForm.value.attachment = this.files;
@@ -300,17 +303,17 @@ export class SavedActitvityComponent implements OnInit {
       const activityDate = this.savedActivityForm.value.dateOfActivity + ' 00:00:00';
       // const activityDate = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
 
-      formData.append('studentId', this.studentInfo.student.id);
+      formData.append('studentId', this.studentInfo.id);
       formData.append('activityId', this.savedActivityForm.value.activityId);
       formData.append('coachId', this.savedActivityForm.value.coachId);
       formData.append('dateOfActivity', activityDate);
       formData.append('description', this.savedActivityForm.value.description);
-      formData.append('title',this.savedActivityForm.value.title);
+      formData.append('title', this.savedActivityForm.value.title);
       formData.append('id', this.savedActivityForm.value.id);
 
       if (this.savedActivityForm.value.attachment.length > 0) {
         this.savedActivityForm.value.attachment.forEach((element, index) => {
-          if(element.id){
+          if (element.id) {
             console.log("Old file");
             formData.append('fileRequests[' + index + '].id', element.id);
           } else {
@@ -319,11 +322,13 @@ export class SavedActitvityComponent implements OnInit {
           }
         });
       }
-      console.log(this.savedActivityForm.value);  
-      
-      this.studentService.addActivity('/api/student/activities', formData).subscribe(
+      console.log(this.savedActivityForm.value);
+
+      this.studentService.addActivity('/api/student/activity', formData).subscribe(
         (res) => {
           console.log(res);
+          this.activitiesArr.splice(this.index, 1);
+          this.activitiesArr.unshift(res);
           this.submit_loader = false;
           $('#addActivityModal').modal('hide');
           $('.modal-backdrop').remove();
@@ -333,6 +338,12 @@ export class SavedActitvityComponent implements OnInit {
         (err) => {
           this.submit_loader = false;
           console.log(err);
+          if (err.status == 400) {
+            this.alertService.showMessageWithSym(err.msg, "", "info");
+          }
+          else {
+            this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");
+          }
           // $('#addActivityModal').modal('hide');
           // $('.modal-backdrop').remove();
         }
@@ -346,12 +357,12 @@ export class SavedActitvityComponent implements OnInit {
       const time = this.savedActivityForm.value.dateOfActivity + ' 00:00:00';
       this.savedActivityForm.value.dateOfActivity = time;
       const formData = new FormData();
-      formData.append('studentId', this.studentInfo.student.id);
+      formData.append('studentId', this.studentInfo.id);
       formData.append('activityId', this.savedActivityForm.value.activityId);
       formData.append('coachId', this.savedActivityForm.value.coachId);
       formData.append('dateOfActivity', time);
       formData.append('description', this.savedActivityForm.value.description);
-      formData.append('title',this.savedActivityForm.value.title);
+      formData.append('title', this.savedActivityForm.value.title);
 
       if (this.savedActivityForm.value.attachment.length > 0) {
         this.savedActivityForm.value.attachment.forEach((element, index) => {
@@ -361,7 +372,7 @@ export class SavedActitvityComponent implements OnInit {
 
       console.log(this.savedActivityForm.value);
 
-      this.studentService.addActivity('/api/student/activities', formData).subscribe(
+      this.studentService.addActivity('/api/student/activity', formData).subscribe(
         (res) => {
           console.log(res);
           this.activitiesArr.unshift(res);
@@ -377,6 +388,12 @@ export class SavedActitvityComponent implements OnInit {
         (err) => {
           this.submit_loader = false;
           console.log(err);
+          if (err.status == 400) {
+            this.alertService.showMessageWithSym(err.msg, "", "info");
+          }
+          else {
+            this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");
+          }
           // $('#addActivityModal').modal('hide');
           // $('.modal-backdrop').remove();
         }
@@ -386,9 +403,9 @@ export class SavedActitvityComponent implements OnInit {
   }
 
   onFileSelect(event) {
-    if (event.target.files.length <= 5 && (this.files.length+event.target.files.length)<=5) {
+    if (event.target.files.length <= 5 && (this.files.length + event.target.files.length) <= 5) {
       if (event.target.files.length > 0) {
-        this.files = [...this.files,...event.target.files];
+        this.files = [...this.files, ...event.target.files];
         console.log(this.files.length);
         console.log(this.files);
         // this.savedActivityForm.value.attachment = this.files;
@@ -515,13 +532,14 @@ export class SavedActitvityComponent implements OnInit {
   // to reset the Add/Edit Form
   resetForm() {
     this.savedActivityForm.reset();
+    this.files = [];
   }
 
   // to DOWNLOAD the Attachments
-  downloadFile(url){
+  downloadFile(url) {
     this.studentService.downloadAttachment(url).subscribe((res) => {
       console.log(res);
-    }, (err) => {console.log(err)});
+    }, (err) => { console.log(err) });
   }
 
   setMinDate() {
@@ -551,18 +569,18 @@ export class SavedActitvityComponent implements OnInit {
     this.maxDate = [year, month, day].join('-');
   }
 
-    // stop toogle of table
-    stopCollapse(e) {
-      e.stopPropagation();
-    }
+  // stop toogle of table
+  stopCollapse(e) {
+    e.stopPropagation();
+  }
 
-    // to count the number of words 
-  wordCount(e){
-    if(e){
+  // to count the number of words 
+  wordCount(e) {
+    if (e) {
       this.count = e.split(/\s\w/).length;
     } else {
       this.count = 0;
     }
   }
-  
+
 }

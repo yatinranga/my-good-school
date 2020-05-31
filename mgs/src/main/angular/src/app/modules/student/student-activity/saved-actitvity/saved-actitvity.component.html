@@ -74,7 +74,7 @@
                             <td *ngIf="(activityType === 'All') || (activityType === 'Saved')"
                                 (click)="stopCollapse($event)">
                                 <div *ngIf="activity.activityStatus === 'SavedByStudent'">
-                                    <button (click)="editSavedActivity($event,activity)" class="saved icon_button"
+                                    <button (click)="editSavedActivity($event,activity,i)" class="saved icon_button"
                                         name="editActivity">
                                         <i class="fa fa-edit" title="Edit"></i>
                                     </button>
