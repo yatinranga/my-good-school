@@ -145,26 +145,14 @@ export class TeacherHomeComponent implements OnInit {
 
   // Create Session
   createSession() {
-    console.log("create session");
     const startDate = this.createSessionForm.value.startDate;
     this.createSessionForm.value.endDate = this.createSessionForm.value.startDate + " " + this.endTime + ":00";
     this.createSessionForm.value.startDate = this.createSessionForm.value.startDate + " " + this.startTime + ":00";
     console.log(this.createSessionForm.value);
 
-    // this.alertService.showLoader("");
-
     if (this.createSessionView) {
       this.alertService.showLoader("");
       const formData = new FormData();
-
-      // formData.append('id',this.createSessionForm.value.id);
-      // formData.append('number',this.createSessionForm.value.number);
-      // formData.append('startDate',this.createSessionForm.value.startDate);
-      // formData.append('endDate',this.createSessionForm.value.endDate);
-      // formData.append('title',this.createSessionForm.value.title);
-      // formData.append('clubId',this.createSessionForm.value.clubId);
-      // formData.append('gradeIds',this.createSessionForm.value.gradeIds);
-
       Object.keys(this.createSessionForm.value).forEach(key => {
         if (key == 'gradeIds') {
           if (typeof (this.createSessionForm.value[key]) == 'object') {
@@ -174,18 +162,15 @@ export class TeacherHomeComponent implements OnInit {
           }
         }
         else if (key == 'fileRequests') {
-          if(this.createSessionForm.value[key]!==null)
-          formData.append(key + '[' + 0 + '].file', this.createSessionForm.value[key]);
+          if (this.createSessionForm.value[key] !== null)
+            formData.append(key + '[' + 0 + '].file', this.createSessionForm.value[key]);
         }
         else {
           formData.append(key, this.createSessionForm.value[key])
         }
       });
 
-
-
       this.teacherService.createNewSession(formData).subscribe((res) => {
-
         console.log(res);
         $('#createSessionModal').modal('hide');
         $('.modal-backdrop').remove();
@@ -194,12 +179,12 @@ export class TeacherHomeComponent implements OnInit {
         this.getSessionDetails();
       }, (err) => {
         console.log(err);
-        console.log("Error MSg: ",err.msg);
+        console.log("Error MSg: ", err.msg);
         this.createSessionForm.value.startDate = startDate;
-        if(err.status === 500){
-          this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !","Error","error");
+        if (err.status === 500) {
+          this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");
         } else {
-          this.alertService.showMessageWithSym("","Error","error");
+          this.alertService.showMessageWithSym("", "Error", "error");
         }
 
       });
@@ -207,7 +192,6 @@ export class TeacherHomeComponent implements OnInit {
 
     if (this.editSessionView) {
       this.alertService.showLoader("");
-
       const formData = new FormData();
       Object.keys(this.createSessionForm.value).forEach(key => {
         if (key == 'gradeIds') {
@@ -225,17 +209,12 @@ export class TeacherHomeComponent implements OnInit {
               formData.append(key + '[' + 0 + '].file', this.createSessionForm.value[key]);
             }
           }
-          // if(element.id){
-          //   console.log("Old file");
-          //   formData.append('fileRequests[' + index + '].id', element.id);
-          // } else {
-          //   console.log("New file");
-          //   formData.append('fileRequests[' + index + '].file', element);
         }
         else {
           formData.append(key, this.createSessionForm.value[key])
         }
       });
+
       this.teacherService.updateSession(formData).subscribe((res) => {
         console.log(res);
         $('#createSessionModal').modal('hide');
@@ -245,6 +224,12 @@ export class TeacherHomeComponent implements OnInit {
         this.getSessionDetails();
       }, (err) => {
         console.log(err);
+        if (err.status == 400) {
+          this.alertService.showMessageWithSym(err.msg, "Error", "error");
+        }
+        else {
+          this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");
+        }
       });
     }
   }
