@@ -10,7 +10,7 @@ declare let $: any;
   styleUrls: ['./teacher-activity.component.scss']
 })
 export class TeacherActivityComponent implements OnInit {
-  
+
   activityType = "All";
 
   pendingActivitiesArr = [];
@@ -36,7 +36,7 @@ export class TeacherActivityComponent implements OnInit {
   activitiesArr = []; //single arr for performed actvities
   schoolId: any;
   activities: any = [];
-  activity:any = "";
+  activity: any = "";
   copyPendingActi: any;
   copySavedActi: any;
   copyAllActi: any;
@@ -45,15 +45,15 @@ export class TeacherActivityComponent implements OnInit {
   schoolGrades: any = [];
 
   count = 0; //to count the number of words enter
-  
+
 
 
   constructor(private teacherService: TeacherService, private alertService: AlertService, private formBuilder: FormBuilder) { }
 
   ngOnInit() {
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
-    this.teacherId = this.teacherInfo['teacher'].id;
-    this.schoolId = this.teacherInfo['teacher'].schoolId;
+    this.teacherId = this.teacherInfo.id;
+    this.schoolId = this.teacherInfo.schoolId;
     this.reviewFormInit();
     this.activityView(this.activityType);
     this.getSchoolActivities();
@@ -79,7 +79,7 @@ export class TeacherActivityComponent implements OnInit {
       participationScore: [, [Validators.min(0), Validators.max(10)]],
       initiativeScore: [, [Validators.min(0), Validators.max(10)]],
       // star: [],
-      coachRemark: [,[Validators.required,Validators.minLength(25)]]
+      coachRemark: [, [Validators.required, Validators.minLength(25)]]
     })
   }
 
@@ -179,11 +179,11 @@ export class TeacherActivityComponent implements OnInit {
 
     this.teacherService.saveReviewedActivity(formData).subscribe((res) => {
       console.log(res);
-      if(this.activityType == "All" || this.activityType == "Saved"){
-        this.activitiesArr.splice(this.index,1);
+      if (this.activityType == "All" || this.activityType == "Saved") {
+        this.activitiesArr.splice(this.index, 1);
         this.activitiesArr.unshift(res);
       } else {
-        this.activitiesArr.splice(this.index,1);
+        this.activitiesArr.splice(this.index, 1);
       }
 
       $('#reviewModal').modal('hide');
@@ -202,7 +202,7 @@ export class TeacherActivityComponent implements OnInit {
   }
 
   // Edit the Saved activity by teacher
-  editSavedActivity(activity,index, e) {
+  editSavedActivity(activity, index, e) {
     this.index = index;
     e.stopPropagation();
     this.activityId = activity.id;
@@ -222,13 +222,13 @@ export class TeacherActivityComponent implements OnInit {
   }
 
   // SUBMIT the saved activity by teacher
-  submitSavedActivity(activity,index, e) {
+  submitSavedActivity(activity, index, e) {
     e.stopPropagation();
-    this.alertService.confirmWithoutLoader('question',"Do you want to submit ?",'','Yes').then(result => {
-      if(result.value){
+    this.alertService.confirmWithoutLoader('question', "Do you want to submit ?", '', 'Yes').then(result => {
+      if (result.value) {
         var actCid: any;
         actCid = activity.id;
-    
+
         console.log(actCid);
         this.teacherService.submitActivity(actCid).subscribe((res) => {
           console.log(res);
@@ -240,15 +240,23 @@ export class TeacherActivityComponent implements OnInit {
           }
           this.alertService.showSuccessToast('Activity Submitted !');
         },
-          (err) => {console.log(err)});
+          (err) => {
+            console.log(err);
+            if (err.status == 400) {
+              this.alertService.showMessageWithSym(err.msg, "", "info");
+            }
+            else {
+              this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");
+            }
+          });
       }
     })
   }
 
-  directSubmitReview(activityId){
-    this.alertService.confirmWithoutLoader('question',"Do you want to submit ?",'','Yes').then(result => {
+  directSubmitReview(activityId) {
+    this.alertService.confirmWithoutLoader('question', "Do you want to submit ?", '', 'Yes').then(result => {
       console.log(result);
-      if(result.value)
+      if (result.value)
         this.teacherService.submitActivity(activityId).subscribe((res) => {
           console.log(res);
           this.save_loader = false;
@@ -267,7 +275,7 @@ export class TeacherActivityComponent implements OnInit {
 
   }
 
-  reviewActivity(activity,index, e) {
+  reviewActivity(activity, index, e) {
     this.index = index;
     this.selectedActivity = activity;
     e.stopPropagation();
@@ -311,34 +319,34 @@ export class TeacherActivityComponent implements OnInit {
   }
 
   // Calculate Total Marks
-  calTotalMarks(scoreType,value){
-    
-    if (scoreType == "achievement"){
+  calTotalMarks(scoreType, value) {
+
+    if (scoreType == "achievement") {
       this.achiScore = Number(value);
     }
-    if (scoreType == "participation"){
-      this.partiScore = Number(value);            
+    if (scoreType == "participation") {
+      this.partiScore = Number(value);
     }
-    if (scoreType == "initiative"){
-      this.initScore = Number(value);            
+    if (scoreType == "initiative") {
+      this.initScore = Number(value);
     }
 
-    if ((this.initScore > -1) && (this.partiScore > -1) && (this.achiScore > -1) 
-        && (this.initScore < 11) && (this.partiScore < 11) && (this.achiScore < 6)) {
+    if ((this.initScore > -1) && (this.partiScore > -1) && (this.achiScore > -1)
+      && (this.initScore < 11) && (this.partiScore < 11) && (this.achiScore < 6)) {
       this.totalScore = this.initScore + this.partiScore + this.achiScore;
       console.log("Total Score - " + this.totalScore);
-    } else if ( this.totalScore > 25){
-        this.totalScore  = 0;
+    } else if (this.totalScore > 25) {
+      this.totalScore = 0;
     } else {
       this.totalScore = 0;
     }
   }
 
   // to DOWNLOAD the Attachments
-  downloadFile(url){
+  downloadFile(url) {
     this.teacherService.downloadAttachment(url).subscribe((res) => {
       console.log(res);
-    }, (err) => {console.log(err)});
+    }, (err) => { console.log(err) });
   }
 
   // Filter Activities on the basis of Activity Type, Grade and Students
@@ -388,8 +396,8 @@ export class TeacherActivityComponent implements OnInit {
   }
 
   // to count the number of words 
-  wordCount(e){
-    if(e){
+  wordCount(e) {
+    if (e) {
       this.count = e.split(/\s\w/).length;
     } else {
       this.count = 0;

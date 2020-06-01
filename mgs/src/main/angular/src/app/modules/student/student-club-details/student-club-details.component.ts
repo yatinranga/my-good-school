@@ -16,7 +16,7 @@ export class StudentClubDetailsComponent implements OnInit {
   studentInfo: any;
   modalClass = "";
   schoolId = "";
-  supervisorId = ""; 
+  supervisorId = "";
   grades = [];
   gradeId = "";
   filterVal = "";
@@ -35,7 +35,7 @@ export class StudentClubDetailsComponent implements OnInit {
   ngOnInit() {
 
     /**If Object is present in localStorage, move it to sessionStorage and clear object from localStorage */
-    if(localStorage.getItem('club')){
+    if (localStorage.getItem('club')) {
       sessionStorage.setItem('club', JSON.stringify(JSON.parse(localStorage.getItem('club'))));
       localStorage.removeItem('club');
       this.clubObject = JSON.parse(sessionStorage.getItem('club'));
@@ -50,9 +50,9 @@ export class StudentClubDetailsComponent implements OnInit {
     this.getGrades(this.schoolId);
 
   }
-  setClass(club_type){
+  setClass(club_type) {
     console.log(club_type);
-    switch(club_type){
+    switch (club_type) {
       case 'Sport': this.modalClass = "sportmodal"; break;
       case 'Skill': this.modalClass = "skillmodal"; break;
       case 'Service': this.modalClass = "servicemodal"; break;
@@ -60,7 +60,7 @@ export class StudentClubDetailsComponent implements OnInit {
     }
   }
 
-  getCoaches(actiId){
+  getCoaches(actiId) {
     this.sup_loader = true;
     this.studentService.getCoach(this.schoolId, actiId).subscribe((res) => {
       this.coaches = res;
@@ -79,55 +79,58 @@ export class StudentClubDetailsComponent implements OnInit {
     }, (err) => { console.log(err) });
   }
 
-  getSupervisorSession(supervisor_obj){
+  getSupervisorSession(supervisor_obj) {
+    console.log(supervisor_obj);
     this.enrollSch_loader = true;
     this.supervisorId = supervisor_obj.id;
     this.supervisorName = supervisor_obj.name;
     this.getStudents(supervisor_obj.id);
 
-    this.studentService.getSupervisorSchedule(this.clubObject.id,supervisor_obj.id).subscribe((res) => {
+    this.studentService.getSupervisorSchedule(this.clubObject.id, supervisor_obj.id).subscribe((res) => {
       console.log(res.sessions);
       this.clubSchedule = res.sessions;
       this.copySchedule = Object.assign([], res.sessions);
       this.enrollSch_loader = false;
-    },(err) => {console.log(err);
-    this.enrollSch_loader = false;});
+    }, (err) => {
+      console.log(err);
+      this.enrollSch_loader = false;
+    });
 
   }
 
-      // List of Student of selected Club/Society under specific Supervisor
-      getStudents(supervisorId) {
-        this.stu_loader = true; // Student loader
-        this.studentService.getSupervisorStudent(this.clubObject.id,supervisorId).subscribe((res) => {
-          this.students = res;
-          this.copyStuArr = Object.assign([], res);
-          console.log(res);
-          this.stu_loader = false;
-        }, (err) => {
-          console.log(err);
-          this.stu_loader = false;
-        });
-      }
+  // List of Student of selected Club/Society under specific Supervisor
+  getStudents(supervisorId) {
+    this.stu_loader = true; // Student loader
+    this.studentService.getSupervisorStudent(this.clubObject.id, supervisorId).subscribe((res) => {
+      this.students = res;
+      this.copyStuArr = Object.assign([], res);
+      console.log(res);
+      this.stu_loader = false;
+    }, (err) => {
+      console.log(err);
+      this.stu_loader = false;
+    });
+  }
 
-  filterStudent(val){
+  filterStudent(val) {
     this.students = this.filter(Object.assign([], this.copyStuArr), val, "Student");
   }
 
-    // Filter session on the bases of ALL, UPCOMING and ENDED
-    filterSession(val) {
-      this.clubSchedule = this.filter(Object.assign([], this.copySchedule), val, "Session");
-    }
+  // Filter session on the bases of ALL, UPCOMING and ENDED
+  filterSession(val) {
+    this.clubSchedule = this.filter(Object.assign([], this.copySchedule), val, "Session");
+  }
 
   // Actual Filtering of Sessions on the basis of type
-  filter(array: any[], value: string , type:string) {
+  filter(array: any[], value: string, type: string) {
     let filterSessionArr = [];
-    if(type=="Session"){
+    if (type == "Session") {
       if (value)
         filterSessionArr = array.filter(e => e.responses[0].status == value);
       else
         filterSessionArr = array;
     }
-    if(type=="Student"){
+    if (type == "Student") {
       if (value)
         filterSessionArr = array.filter(e => e.gradeId == value);
       else
@@ -145,7 +148,15 @@ export class StudentClubDetailsComponent implements OnInit {
         this.studentService.postEnrollInClub(this.clubObject.id, this.supervisorId).subscribe(res => {
           console.log(res)
           this.alertService.showSuccessAlert("Request Sent");
-        }, (err) => { console.log(err); });
+        }, (err) => {
+          console.log(err);
+          if (err.status === 400) {
+            this.alertService.showMessageWithSym("Already applied for the membership of this club and its status is pending or rejected.", "", "info");
+          }
+          else {
+            this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");
+          }
+        });
       }
     })
 
