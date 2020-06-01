@@ -197,9 +197,9 @@ export class TeacherClubDetailComponent implements OnInit {
 
   // Create Session
   createSession() {
-    const startDate = this.createSessionForm.value.startDate;
-    this.createSessionForm.value.endDate = this.createSessionForm.value.startDate + " " + this.endTime + ":00";
-    this.createSessionForm.value.startDate = this.createSessionForm.value.startDate + " " + this.startTime + ":00";
+    const startDate = this.createSessionForm.value.startDate.split(" ")[0];
+    this.createSessionForm.value.endDate = startDate + " " + this.endTime + ":00";
+    this.createSessionForm.value.startDate = startDate + " " + this.startTime + ":00";
     console.log(this.createSessionForm.value);
 
     if (this.createSessionView) {

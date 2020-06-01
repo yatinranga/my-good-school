@@ -92,9 +92,11 @@
                                 </div>
                             </td>
                             <td>
-                                <span class="pull-right" *ngIf="activity.fileResponses.length">
-                                    <i class="fa fa-paperclip" title="Attachment" aria-hidden="true"></i>
-                                </span>
+                                <div *ngIf="activity.fileResponses">
+                                    <span class="pull-right" *ngIf="activity.fileResponses.length">
+                                        <i class="fa fa-paperclip" title="Attachment" aria-hidden="true"></i>
+                                    </span>
+                                </div>
                             </td>
                         </tr>
                         <tr>
@@ -136,8 +138,8 @@
                                                     </p>
                                                 </div>
                                             </div>
-                                            <div class="col-6" *ngIf="activity.fileResponses.length">
-                                                <div class="attachment">
+                                            <div class="col-6" *ngIf="activity.fileResponses">
+                                                <div class="attachment" *ngIf="activity.fileResponses.length">
                                                     <h5> Attachments </h5>
                                                     <div *ngFor="let file of activity.fileResponses">
                                                         {{activity.fileResponses.length ? "" : "NA"}}
@@ -229,8 +231,8 @@
                                                         </strong>{{activity.coachRemarkDate | date}}</p>
                                                 </div>
                                             </div>
-                                            <div class="col-3" *ngIf="activity.fileResponses.length">
-                                                <div class="attachment">
+                                            <div class="col-3" *ngIf="activity.fileResponses">
+                                                <div class="attachment" *ngIf="activity.fileResponses.length">
                                                     <h5> Attachments : </h5>
                                                     {{activity.fileResponses.length ? "" : "NA"}}
                                                     <div *ngFor="let file of activity.fileResponses">
@@ -273,9 +275,9 @@
 
 <!-- Edit Activity Form  -->
 <div *ngIf="editActivityShow || addActivityShow">
-    <div class="modal fade" id="addActivityModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
+    <div class="modal fade bd-example-modal-lg" id="addActivityModal" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">{{addActivityShow?'Add':'Edit'}} Activity </h5>
@@ -286,71 +288,84 @@
                 </div>
                 <div class="modal-body">
                     <form [formGroup]="savedActivityForm" (ngSubmit)="updateActivity()">
-                        <div class="form-group">
-                            <h2> Note : All Fields Are Mandatory </h2>
-                            <label for="recipient-name" class="col-form-label"> Activity Type : </label>
-                            <select class="form-control" name="activityName"  formControlName="activityId"
-                            (ngModelChange)="getStudentCoach($event)">
-                                <!-- <option v
-                                    alue="" disabled selected>Select One</option> -->
-                                <option [ngValue]="null" disabled selected>Select One</option>
-                                <option *ngFor="let activity of activities; let i = index" value={{activity.id}}>
-                                    {{activity.name}}</option>
-                                <option disabled *ngIf="!activities.length">No activities available</option>
-                            </select>
-                            <span *ngIf="savedActivityForm.value.activityId&&!modal_loader&&!coaches.length"
-                                style="color: red">No Teacher/Coaches for corresponding activity</span>
-                        </div>
-                        <div class="form-group">
-                            <label for="message-text" class="col-form-label"> Supervisor : </label>
-                            <select class="form-control" name="coachId" formControlName="coachId">
-                                <option *ngFor="let coach of coaches; let i = index;" value={{coach.id}}>
-                                    {{coach.name}}
-                                </option>
-                                <option disabled *ngIf="!coaches.length">No Supervisor available</option>
-                            </select>
-                            <div *ngIf="modal_loader" class="spinner-border text-dark" role="status">
-                                <span class="sr-only">Data Loading</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="recipient-name" class="col-form-label"> Title : </label>
-                            <input type="text" class="form-control add" name="title" formControlName="title">
-                        </div>
-                        <div class="form-group">
-                            <label for="recipient-name" class="col-form-label"> Description : </label>
-                            <textarea class="form-control add" name="description" formControlName="description" rows="3"
-                                (ngModelChange)="wordCount($event)"></textarea>
-                            <span class="text-muted">Word count - {{count}}</span><br>
-                            <small class="text-danger"
-                                *ngIf="!savedActivityForm.get('description').valid && savedActivityForm.get('description').touched">
-                                Length between 25-250 words.
-                            </small>
-
-                        </div>
-                        <div class="form-group">
-                            <label for="recipient-name" class="col-form-label"> Date of Activity Performed : </label>
-                            <input type="date" class="form-control" name="dateOfActivity"
-                                formControlName="dateOfActivity" [attr.min]="minDate" [attr.max]="maxDate" />
-                        </div>
-
-                        <div class="form-group">
-                            <div class="add-act choosefile_box">
-                                <input class="choosefile" type="file" accept="image/*, audio/*, video/*, application/pdf,application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
-                                text/plain" name="selectedFile" (change)="onFileSelect($event)" multiple />
-                                <span class="choosefile choosefile-custom"> <i class="fa fa-file"> </i> </span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <h2> Note : You can only add upto 5 files. </h2>
-                            <label for="recipient-name" class="col-form-label"> </label>
-                            <div *ngFor="let sf of files; let i = index;">
-                                <p id="attachment_name"> {{sf.name}}
-                                    <button type="button" name="removeFile" (click)="removeFile(i)"
-                                        class="reviewed icon_button">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </p>
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <h2> Note : All Fields Are Mandatory </h2>
+                                        <label for="recipient-name" class="col-form-label"> Activity Type : </label>
+                                        <select class="form-control" name="activityName" formControlName="activityId"
+                                            (ngModelChange)="getStudentCoach($event)">
+                                            <!-- <option v
+                                                alue="" disabled selected>Select One</option> -->
+                                            <option [ngValue]="null" disabled selected>Select One</option>
+                                            <option *ngFor="let activity of activities; let i = index"
+                                                value={{activity.id}}>
+                                                {{activity.name}}</option>
+                                            <option disabled *ngIf="!activities.length">No activities available</option>
+                                        </select>
+                                        <span *ngIf="savedActivityForm.value.activityId&&!modal_loader&&!coaches.length"
+                                            style="color: red">No Teacher/Coaches for corresponding activity</span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="message-text" class="col-form-label"> Supervisor : </label>
+                                        <select class="form-control" name="coachId" formControlName="coachId">
+                                            <option *ngFor="let coach of coaches; let i = index;" value={{coach.id}}>
+                                                {{coach.name}}
+                                            </option>
+                                            <option disabled *ngIf="!coaches.length">No Supervisor available</option>
+                                        </select>
+                                        <div *ngIf="modal_loader" class="spinner-border text-dark" role="status">
+                                            <span class="sr-only">Data Loading</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label"> Title : </label>
+                                        <input type="text" class="form-control add" name="title"
+                                            formControlName="title">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label"> Description : </label>
+                                        <textarea class="form-control add" name="description"
+                                            formControlName="description" rows="5"
+                                            (ngModelChange)="wordCount($event)"></textarea>
+                                        <span class="text-muted">Word count - {{count}}</span><br>
+                                        <small class="text-danger"
+                                            *ngIf="!savedActivityForm.get('description').valid && savedActivityForm.get('description').touched">
+                                            Length between 25-250 words.
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label"> Date of Activity Performed :
+                                        </label>
+                                        <input type="date" class="form-control" name="dateOfActivity"
+                                            formControlName="dateOfActivity" [attr.min]="minDate"
+                                            [attr.max]="maxDate" />
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <div class="add-act choosefile_box">
+                                            <input class="choosefile" type="file" accept="image/*, audio/*, video/*, application/pdf,application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
+                                            text/plain" name="selectedFile" (change)="onFileSelect($event)" multiple />
+                                            <span class="choosefile choosefile-custom"> <i class="fa fa-file"> </i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <h2> Note : You can only add upto 5 files. </h2>
+                                        <label for="recipient-name" class="col-form-label"> </label>
+                                        <div *ngFor="let sf of files; let i = index;">
+                                            <p id="attachment_name"> {{sf.name}}
+                                                <button type="button" name="removeFile" (click)="removeFile(i)"
+                                                    class="reviewed icon_button">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
