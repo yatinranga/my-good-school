@@ -9,6 +9,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -204,7 +205,7 @@ public class StudentRequest extends Request {
 			student.setGender(this.gender);
 		if (this.dob != null) {
 			Date dateOfBirth = DateUtil.convertStringToDate(this.dob);
-			if(dateOfBirth.before(LocalDateTime.now().minusYears(21).toDate()))
+			if(dateOfBirth.before(LocalDateTime.now(DateTimeZone.forTimeZone(DateUtil.defaultTimeZone)).minusYears(21).toDate()))
 				throw new ValidationException("Dob should be within 21 years from todays date.");
 			student.setDob(dateOfBirth);
 			

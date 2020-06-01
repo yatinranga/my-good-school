@@ -6,6 +6,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 
 import com.nxtlife.mgs.entity.session.Event;
@@ -125,7 +126,7 @@ public class SessionRequest extends Request{
 			session.setNumber(this.number);
 		if(this.description != null)
 			session.setDescription(this.description);
-		LocalDateTime currentDateTime = LocalDateTime.now();
+		LocalDateTime currentDateTime = LocalDateTime.now(DateTimeZone.forTimeZone(DateUtil.defaultTimeZone));
 		if((session.getStartDate() != null && session.getStartDate().before(currentDateTime.toDate())) ||
 				(session.getEndDate() !=null && session.getEndDate().before(currentDateTime.toDate())))
 			throw new ValidationException("The session has already begun or had end , so it can't be edited now.");

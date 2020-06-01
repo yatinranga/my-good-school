@@ -8,6 +8,7 @@ import javax.validation.constraints.Size;
 
 import org.glassfish.jersey.server.validation.ValidationError;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 
 import com.nxtlife.mgs.entity.school.Award;
@@ -165,7 +166,7 @@ public class AwardRequest extends Request{
 				throw new ValidationException("description cannot be less than 10 words.");
 			award.setDescription(this.description);
 		}
-		LocalDateTime currentDateTime = LocalDateTime.now();
+		LocalDateTime currentDateTime = LocalDateTime.now(DateTimeZone.forTimeZone(DateUtil.defaultTimeZone));
 		if((validFrom !=null && DateUtil.convertStringToDate(validFrom).after(currentDateTime.toDate())) ||
 				validUntil !=null && DateUtil.convertStringToDate(validUntil).after(currentDateTime.toDate()))
 			throw new ValidationException("StartDate or endDate cannot be a future date.");

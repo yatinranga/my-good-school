@@ -3,6 +3,7 @@ package com.nxtlife.mgs.util;
 import static java.time.DayOfWeek.SATURDAY;
 import static java.time.temporal.TemporalAdjusters.nextOrSame;
 import org.apache.commons.lang3.time.DateUtils;
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +83,7 @@ public class DateUtil {
 		if (date == null) {
 			return "";
 		}
-		format = StringUtils.isEmpty(format) ? defaultDateFormat : format;
+		format = format == null || StringUtils.isEmpty(format) ? defaultDateFormat : format;
 		timeZone = timeZone == null ? defaultTimeZone : timeZone;
 		SimpleDateFormat formatter = new SimpleDateFormat(format);
 		formatter.setTimeZone(timeZone);
@@ -106,7 +107,7 @@ public class DateUtil {
 	}
 	
 	public static LocalDate getLastDayOfMonth() {
-		return LocalDate.now().with(TemporalAdjusters.lastDayOfMonth());
+		return LocalDate.now(defaultTimeZone.toZoneId()).with(TemporalAdjusters.lastDayOfMonth());
 	}
 	
 	public static Date getLastDayOfMonth(LocalDate lastDayOfMonth) {
@@ -142,7 +143,7 @@ public class DateUtil {
 	
 	public static Date getLastDayOfWeek() {
 		
-		LocalDate saturday = LocalDate.now().with(nextOrSame(DayOfWeek.SATURDAY));
+		LocalDate saturday = LocalDate.now(defaultTimeZone.toZoneId()).with(nextOrSame(DayOfWeek.SATURDAY));
 //		 Calendar c = Calendar.getInstance();
 //	     c.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
 //	     c.add(Calendar.DATE,6);

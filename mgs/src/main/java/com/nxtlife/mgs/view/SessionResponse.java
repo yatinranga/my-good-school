@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -177,7 +178,7 @@ public class SessionResponse {
 			this.startDate = DateUtil.formatDate(session.getStartDate());
 		if (session.getEndDate() != null)
 			this.endDate = DateUtil.formatDate(session.getEndDate());
-		Date now = LocalDateTime.now().toDate();
+		Date now = LocalDateTime.now(DateTimeZone.forTimeZone(DateUtil.defaultTimeZone)).toDate();
 		if (session.getStartDate() != null && session.getEndDate() != null) {
 
 			startDay = LocalDateTime.fromDateFields(session.getStartDate()).dayOfWeek().getAsShortText();

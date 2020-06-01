@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -154,7 +155,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 						String.format("Activity with the id : %s is already submitted by you and cannot be edited.",
 								request.getId()));
 			if (request.getDateOfActivity() != null) {
-				if (LocalDateTime.now().toDate().before(DateUtil.convertStringToDate(request.getDateOfActivity())))
+				if (LocalDateTime.now(DateTimeZone.forTimeZone(DateUtil.defaultTimeZone)).toDate().before(DateUtil.convertStringToDate(request.getDateOfActivity())))
 					throw new ValidationException("Date of activity cannot be a future date.");
 				activityPerformed.setDateOfActivity(DateUtil.convertStringToDate(request.getDateOfActivity()));
 			}
@@ -350,7 +351,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			throw new ValidationException("Activity cannot be submitted first fill all the mandatory fields.");
 
 		activity.setActivityStatus(ActivityStatus.SubmittedByStudent);
-		activity.setSubmittedOn(LocalDateTime.now().toDate());
+		activity.setSubmittedOn(LocalDateTime.now(DateTimeZone.forTimeZone(DateUtil.defaultTimeZone)).toDate());
 		activity = activityPerformedRepository.save(activity);
 		if (activity == null)
 			throw new RuntimeException("Something went wrong activity not submitted.");
@@ -380,7 +381,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 		activity = request.toEntity(activity);
 
 		if (activity.getCoachRemark() != null)
-			activity.setCoachRemarkDate(LocalDateTime.now().toDate());
+			activity.setCoachRemarkDate(LocalDateTime.now(DateTimeZone.forTimeZone(DateUtil.defaultTimeZone)).toDate());
 		// DateUtil.convertStringToDate(LocalDate.now().toString())
 
 		activity.setActivityStatus(ActivityStatus.SavedByTeacher);
@@ -415,7 +416,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			throw new ValidationException("Activity cannot be submitted ,  fill all the mandatory fields first.");
 
 		activity.setActivityStatus(ActivityStatus.Reviewed);
-		activity.setReviewedOn(LocalDateTime.now().toDate());
+		activity.setReviewedOn(LocalDateTime.now(DateTimeZone.forTimeZone(DateUtil.defaultTimeZone)).toDate());
 
 		activity = activityPerformedRepository.save(activity);
 

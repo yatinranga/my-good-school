@@ -22,6 +22,7 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -971,7 +972,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 //		if (teacher == null)
 //			throw new UnauthorizedUserException(
 //					"User not logged in as Faculty of school i.e(Teacher ,Coach , Management)");
-		LocalDateTime currentDateTime = LocalDateTime.now();
+		LocalDateTime currentDateTime = LocalDateTime.now(DateTimeZone.forTimeZone(DateUtil.defaultTimeZone));
 		if ((initial != null && DateUtil.convertStringToDate(initial).after(currentDateTime.toDate()))
 				|| last != null && DateUtil.convertStringToDate(last).after(currentDateTime.toDate()))
 			throw new ValidationException("StartDate or endDate cannot be a future date.");
@@ -1681,7 +1682,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 		StudentClub studentClub = new StudentClub(studentId, activityRepository.findIdByCidAndActiveTrue(activityCid),
 				teacherRepository.findIdByCidAndActiveTrue(supervisorCid));
-		studentClub.setAppliedOn(LocalDateTime.now().toDate());
+		studentClub.setAppliedOn(LocalDateTime.now(DateTimeZone.forTimeZone(DateUtil.defaultTimeZone)).toDate());
 		studentClub.setMembershipStatus(ApprovalStatus.PENDING);
 		studentClub = studentClubRepository.save(studentClub);
 		return new ClubMembershipResponse(studentClub);

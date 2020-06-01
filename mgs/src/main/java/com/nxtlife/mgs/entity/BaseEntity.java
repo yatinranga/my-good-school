@@ -13,6 +13,7 @@ import org.springframework.data.jpa.domain.AbstractAuditable;
 
 import com.nxtlife.mgs.entity.user.User;
 import com.nxtlife.mgs.service.BaseService;
+import com.nxtlife.mgs.util.DateUtil;
 
 @SuppressWarnings("serial")
 @MappedSuperclass
@@ -32,7 +33,7 @@ public abstract class BaseEntity extends AbstractAuditable<User, Long> implement
 
 	@PrePersist
 	private void preCreate() {
-		this.setCreatedDate(LocalDateTime.now());
+		this.setCreatedDate(LocalDateTime.now(DateUtil.defaultTimeZone.toZoneId()));
 		this.setActive(true);
 		User current = BaseService.getUser();
 		if (current != null) {
@@ -42,7 +43,7 @@ public abstract class BaseEntity extends AbstractAuditable<User, Long> implement
 
 	@PreUpdate
 	private void preUpdate() {
-		this.setLastModifiedDate(LocalDateTime.now());
+		this.setLastModifiedDate(LocalDateTime.now(DateUtil.defaultTimeZone.toZoneId()));
 		User current = BaseService.getUser();
 		if (current != null) {
 			this.setLastModifiedBy(current);

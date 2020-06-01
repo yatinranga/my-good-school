@@ -75,4 +75,9 @@ public class SessionController {
 	public SuccessResponse deleteSession(@PathVariable("sessionId") String sessionId ,@RequestParam(value = "teacherId" ,required = false) String teacherCid) {
 		return sessionService.deleteSession(sessionId);
 	}
+	
+	@GetMapping(value = "api/session/{sessionId}")
+	public SessionResponse getSession(@PathVariable("sessionId") String sessionId) {
+		return sessionService.getSession(sessionId);
+	}
 }
