@@ -65,7 +65,7 @@ export class TeacherHomeComponent implements OnInit {
     // this.getAllClubReq();
 
     this.createSessionForm = this.formBuilder.group({
-      // id: [null],
+      id: [null],
       number: [, [Validators.required]],
       description: [, [Validators.required]],
       startDate: [, [Validators.required]],
@@ -145,9 +145,9 @@ export class TeacherHomeComponent implements OnInit {
 
   // Create Session
   createSession() {
-    const startDate = this.createSessionForm.value.startDate;
-    this.createSessionForm.value.endDate = this.createSessionForm.value.startDate + " " + this.endTime + ":00";
-    this.createSessionForm.value.startDate = this.createSessionForm.value.startDate + " " + this.startTime + ":00";
+    const startDate = this.createSessionForm.value.startDate.split(" ")[0];
+    this.createSessionForm.value.endDate = startDate + " " + this.endTime + ":00";
+    this.createSessionForm.value.startDate = startDate + " " + this.startTime + ":00";
     console.log(this.createSessionForm.value);
 
     if (this.createSessionView) {
@@ -202,7 +202,7 @@ export class TeacherHomeComponent implements OnInit {
           }
         }
         else if (key == 'fileRequests') {
-          if (!(this.createSessionForm.value[key]) == null) {
+          if (!(this.createSessionForm.value[key] == null)) {
             if (this.createSessionForm.value[key].id) {
               formData.append('fileRequests[' + 0 + '].id', this.createSessionForm.value[key].id);
             } else {
@@ -307,8 +307,10 @@ export class TeacherHomeComponent implements OnInit {
     this.startTime = sHours + ":" + sMinutes;
     this.endTime = eHours + ":" + eMinutes;
 
-    this.name = session.fileResponses[0].name;
-    this.path = session.fileResponses[0].url;
+    if (session.fileResponses.length) {
+      this.name = session.fileResponses[0].name;
+      this.path = session.fileResponses[0].url;
+    }
 
     this.createSessionForm.controls.startDate.patchValue(session.startDate.split(' ')[0]);
     this.createSessionForm.patchValue({

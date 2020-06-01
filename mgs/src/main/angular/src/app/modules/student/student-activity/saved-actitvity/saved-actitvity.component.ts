@@ -384,6 +384,7 @@ export class SavedActitvityComponent implements OnInit {
           //   this.directSubmitActivity(res.id);
           // });
           this.addActivityShow = false;
+          console.log(this.activitiesArr);
         },
         (err) => {
           this.submit_loader = false;
