@@ -3,6 +3,12 @@
         <div class="content_main_com">
             <div class="container">
                 <div class="row">
+                    <div class="col-12">
+                        <div class="nocerti">
+                            <h3 *ngIf="!(certificatesArr.length)"> OOPS! </h3>
+                            <h5 *ngIf="!(certificatesArr.length)"> You Have Not Added Any Certificate.</h5>
+                        </div>
+                    </div>
                     <div *ngFor="let certi of certificatesArr" class="col-3">
                         <div class="certi_box">
                             <div class="card_box">
@@ -10,7 +16,8 @@
                                 <div class="certi_text">
                                     <h2>{{certi.title}}</h2>
                                     <p>{{certi.description}}</p>
-                                    <p> <span *ngIf="certi.fourS=='Skill'" style="color: #4bafa5;"> {{certi.fourS}} </span>
+                                    <p> <span *ngIf="certi.fourS=='Skill'" style="color: #4bafa5;"> {{certi.fourS}}
+                                        </span>
                                         <span *ngIf="certi.fourS=='Sport'" style="color: #e04090;">
                                             {{certi.fourS}}
                                         </span>
@@ -26,7 +33,6 @@
                             </div>
                         </div>
                     </div>
-                    <h5 *ngIf="!(certificatesArr.length)">You Have Not Added Any Certificate.</h5>
                 </div>
             </div>
             <button id="add_certi" type="button" class="btn btn-primary" data-toggle="modal"
