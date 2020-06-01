@@ -283,6 +283,12 @@ export class TeacherClubDetailComponent implements OnInit {
         this.getClubSession(this.clubObject.id);
       }, (err) => {
         console.log(err);
+        if (err.status == 400) {
+          this.alertService.showMessageWithSym(err.msg, "Error", "error");
+        }
+        else {
+          this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");
+        }
       });
     }
   }
