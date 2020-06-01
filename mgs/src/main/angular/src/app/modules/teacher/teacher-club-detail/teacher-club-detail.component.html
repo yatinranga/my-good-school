@@ -43,8 +43,8 @@
         <div class="title">
             <h1> {{clubObject.name}} Dashboard </h1>
             <button [disabled]="stu_loader && clubSch_loader" class="register_act btn btn-primary btn-sm"
-                data-toggle="modal" data-target="#createSessionModal" data-dismiss="modal" aria-label="Close" (click)="createSessionBtn()"
-                >Create Session</button>
+                data-toggle="modal" data-target="#createSessionModal" data-dismiss="modal" aria-label="Close"
+                (click)="createSessionBtn()">Create Session</button>
         </div>
 
         <div class="content">
@@ -151,8 +151,8 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">Name of Session : </label>
-                                    <input type="text" class="form-control add" name="title" placeholder="Add Title Here"
-                                        formControlName="title">
+                                    <input type="text" class="form-control add" name="title"
+                                        placeholder="Add Title Here" formControlName="title">
                                 </div>
                                 <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">Sessionb Number : </label>
@@ -168,7 +168,8 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">Date : </label>
-                                    <input type="date" class="form-control" name="startDate" formControlName="startDate" [attr.min]="minDate">
+                                    <input type="date" class="form-control" name="startDate" formControlName="startDate"
+                                        [attr.min]="minDate">
                                 </div>
                                 <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">Timing : </label>
@@ -188,13 +189,20 @@
                                 </div>
                             </div>
                             <div class="col-md-12" style="text-align: center;">
-                                <div class="form-group">
+                                <div class="choosemedia form-group">
                                     <input type="file" accept="image/*, audio/*, video/*, application/pdf,application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
-                                                                text/plain" name="selectedFile" (change)="onFileSelect($event)" />
+                                                text/plain" name="selectedFile" (change)="onFileSelect($event)" />
                                     <!-- <span class="choosefile choosefile-custom"> <i class="fa fa-file"> </i> </span> -->
-                                    <img *ngIf="path" [src]="path" height="200">
                                     <!-- <i class="fa fa-trash"></i> -->
-                
+                                </div>
+                                <div class="form-group" *ngIf="path&&name">
+                                    <img *ngIf="path" [src]="path" height="200">
+                                    <p id="attachment_name"> {{name}}
+                                        <button type="button" name="removeFile" (click)="removeFile()"
+                                            class="reviewed icon_button">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </p>
                                 </div>
                             </div>
                         </div>

@@ -37,6 +37,7 @@ export class TeacherClubDetailComponent implements OnInit {
   endTime = "";
   minDate = ""; // Min Date to create Session
   path = "" // to show the selected attachment
+  name = "" // Name of the File attached in Session
 
   constructor(private teacherService: TeacherService, private alertService: AlertService, private formBuilder: FormBuilder) { }
 
@@ -196,24 +197,14 @@ export class TeacherClubDetailComponent implements OnInit {
 
   // Create Session
   createSession() {
+    const startDate = this.createSessionForm.value.startDate;
     this.createSessionForm.value.endDate = this.createSessionForm.value.startDate + " " + this.endTime + ":00";
     this.createSessionForm.value.startDate = this.createSessionForm.value.startDate + " " + this.startTime + ":00";
     console.log(this.createSessionForm.value);
 
-    this.alertService.showLoader("");
-    // this.alertService.showLoader("");
-
     if (this.createSessionView) {
+      this.alertService.showLoader("");
       const formData = new FormData();
-
-      // formData.append('id',this.createSessionForm.value.id);
-      // formData.append('number',this.createSessionForm.value.number);
-      // formData.append('startDate',this.createSessionForm.value.startDate);
-      // formData.append('endDate',this.createSessionForm.value.endDate);
-      // formData.append('title',this.createSessionForm.value.title);
-      // formData.append('clubId',this.createSessionForm.value.clubId);
-      // formData.append('gradeIds',this.createSessionForm.value.gradeIds);
-
       Object.keys(this.createSessionForm.value).forEach(key => {
         if (key == 'gradeIds') {
           if (typeof (this.createSessionForm.value[key]) == 'object') {
@@ -223,18 +214,15 @@ export class TeacherClubDetailComponent implements OnInit {
           }
         }
         else if (key == 'fileRequests') {
-          formData.append(key + '[' + 0 + '].file', this.createSessionForm.value[key]);
+          if (this.createSessionForm.value[key] !== null)
+            formData.append(key + '[' + 0 + '].file', this.createSessionForm.value[key]);
         }
         else {
           formData.append(key, this.createSessionForm.value[key])
         }
       });
 
-
-
       this.teacherService.createNewSession(formData).subscribe((res) => {
-        this.alertService.showLoader("");
-
         console.log(res);
         $('#createSessionModal').modal('hide');
         $('.modal-backdrop').remove();
@@ -243,11 +231,19 @@ export class TeacherClubDetailComponent implements OnInit {
         this.getClubSession(this.clubObject.id);
       }, (err) => {
         console.log(err);
+        console.log("Error MSg: ", err.msg);
+        this.createSessionForm.value.startDate = startDate;
+        if (err.status === 500) {
+          this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");
+        } else {
+          this.alertService.showMessageWithSym("", "Error", "error");
+        }
+
       });
     }
 
     if (this.editSessionView) {
-
+      this.alertService.showLoader("");
       const formData = new FormData();
       Object.keys(this.createSessionForm.value).forEach(key => {
         if (key == 'gradeIds') {
@@ -258,17 +254,13 @@ export class TeacherClubDetailComponent implements OnInit {
           }
         }
         else if (key == 'fileRequests') {
-          if (this.createSessionForm.value[key].id) {
-            formData.append('fileRequests[' + 0 + '].id', this.createSessionForm.value[key].id);
-          } else {
-            formData.append(key + '[' + 0 + '].file', this.createSessionForm.value[key]);
+          if (!(this.createSessionForm.value[key]) == null) {
+            if (this.createSessionForm.value[key].id) {
+              formData.append('fileRequests[' + 0 + '].id', this.createSessionForm.value[key].id);
+            } else {
+              formData.append(key + '[' + 0 + '].file', this.createSessionForm.value[key]);
+            }
           }
-          // if(element.id){
-          //   console.log("Old file");
-          //   formData.append('fileRequests[' + index + '].id', element.id);
-          // } else {
-          //   console.log("New file");
-          //   formData.append('fileRequests[' + index + '].file', element);
         }
         else {
           formData.append(key, this.createSessionForm.value[key])
@@ -283,6 +275,12 @@ export class TeacherClubDetailComponent implements OnInit {
         this.getClubSession(this.clubObject.id);
       }, (err) => {
         console.log(err);
+        if (err.status == 400) {
+          this.alertService.showMessageWithSym(err.msg, "Error", "error");
+        }
+        else {
+          this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");
+        }
       });
     }
   }
@@ -379,10 +377,12 @@ export class TeacherClubDetailComponent implements OnInit {
 
   // Adding Attachment at the time of create session
   onFileSelect(event) {
+    this.name = ""; //reset the file name
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
       console.log("File Uploaded", event.target.files[0]);
       this.createSessionForm.value.fileRequests = file;
+      this.name = file.name;
 
       var reader = new FileReader();
       reader.readAsDataURL(event.target.files[0]);
@@ -401,6 +401,13 @@ export class TeacherClubDetailComponent implements OnInit {
     // this.files = [];
     this.filterVal = "";
     this.createSessionForm.reset();
+  }
+
+  // Remove the file from Session Schedule
+  removeFile() {
+    this.name = "";
+    this.path = "";
+    this.createSessionForm.value.fileRequests = null;
   }
 
 }

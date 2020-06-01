@@ -147,3 +147,28 @@ button.icon_button {
     cursor: pointer;
     box-shadow: none !important;
 } 
+
+.nocerti {
+    width: 500px;
+    height: 150px;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    position: absolute;
+    left: 50%;
+    margin: 0 auto;
+    top: 100px;
+    padding: 15px;
+    border: 3px solid #8dc33a;
+    text-align: center;
+    border-radius: 5px;
+    box-shadow: 0 0 10px #ddd;
+}
+.nocerti h3 {
+    font-size: 45px;
+    font-family: initial !important;
+}
+.nocerti h5 {
+    font-size: 27px;
+    font-family: initial !important;
+    margin-top: 20px;
+}
