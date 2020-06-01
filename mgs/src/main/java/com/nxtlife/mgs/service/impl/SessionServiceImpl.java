@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
 import javax.ws.rs.ForbiddenException;
 
 import org.joda.time.DateTime;
@@ -40,6 +41,7 @@ import com.nxtlife.mgs.jpa.ActivityRepository;
 import com.nxtlife.mgs.jpa.FileRepository;
 import com.nxtlife.mgs.jpa.GradeRepository;
 import com.nxtlife.mgs.jpa.SessionRepository;
+import com.nxtlife.mgs.jpa.StudentClubRepository;
 import com.nxtlife.mgs.jpa.StudentRepository;
 import com.nxtlife.mgs.jpa.TeacherRepository;
 import com.nxtlife.mgs.service.BaseService;
@@ -80,11 +82,15 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 
 	@Autowired
 	private FileRepository fileRepository;
+	
+	@Autowired
+	StudentClubRepository studentClubRepository;
 
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_SESSION_CREATE)
 	public SessionResponse createSession(SessionRequest request ,String teacherCid) {
 		Teacher teacher = null;
+//		String schoolCid = null;
 		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor") || r.getName().equalsIgnoreCase("Coordinator") || r.getName().equalsIgnoreCase("Head") )) {
 			if (teacherCid == null) {
 				throw new ValidationException("teacherId cannot be null.");
@@ -112,7 +118,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 
 		if (request.getGradeIds() != null && !request.getGradeIds().isEmpty()) {
 
-			List<Grade> repoGradeList = gradeRepository.findAllBySchoolsCidAndActiveTrue(teacher.getSchool().getCid());
+			List<Grade> repoGradeList = gradeRepository.findAllBySchoolsCidAndActiveTrue(teacherRepository.findSchoolCidbyTeacherCid(teacherCid));
 			List<Grade> finalGradeList = new ArrayList<Grade>();
 
 			for (int i = 0; i < request.getGradeIds().size(); i++) {
@@ -233,67 +239,108 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 		}
 
 		List<FileRequest> requestFiles = request.getFileRequests();
-
+		
 		if (requestFiles != null && !requestFiles.isEmpty()) {
-
-			List<File> allValidFilesOfActivity = fileRepository.findAllByEventCidAndActiveTrue(request.getId());
-			List<File> updatedFiles = new ArrayList<File>();
-
-			for (int itr = 0; itr < requestFiles.size(); itr++) {
-				if (requestFiles.get(itr).getId() != null) {
-					for (int itr2 = 0; itr2 < allValidFilesOfActivity.size(); itr2++) {
-						if (requestFiles.get(itr).getId().equals(allValidFilesOfActivity.get(itr2).getCid())) {
-							if (requestFiles.get(itr).getFile() != null) {
-								File file = saveMediaForSession(requestFiles.get(itr), "/session-file/", session);
-								file.setId(allValidFilesOfActivity.get(itr2).getId());
-								file.setCid(allValidFilesOfActivity.get(itr2).getCid());
-								if (file != null)
-									allValidFilesOfActivity.set(itr2, file);
-
-							}
-							updatedFiles.add(allValidFilesOfActivity.get(itr2));
-							allValidFilesOfActivity.remove(itr2);
-							itr2--;
-							requestFiles.remove(itr);
-							itr--;
-							break;
-						}
-					}
-
-				}
+			List<String> repoFiles = fileRepository.findAllCidByEventCidAndActiveTrue(request.getId());
+			List<String> repoCopy = new ArrayList<>(repoFiles); // copy of repofile ids.
+			List<String> requestFileIds = requestFiles.stream().filter(f -> f.getId() != null).map(f -> f.getId()).distinct().collect(Collectors.toList());
+			repoCopy.removeAll(requestFileIds); // repoCopy now has fileIds that needs to be deleted.
+			if(repoFiles != null && requestFileIds != null ) {
+				 requestFileIds.removeAll(repoFiles); // if requestFileIds not empty then few ids are invalid
+				 if(!requestFileIds.isEmpty())
+					 throw new ValidationException(String.format("Some file ids are invalid (%s) .",requestFileIds));
 			}
-
-			/*
-			 * logic to delete the files which were previously there but in new
-			 * request have been removed.
-			 */
-			for (File f : allValidFilesOfActivity) {
-				fileRepository.updateFileSetActiveByCid(false, f.getCid());
-			}
-
-			// Logic to save new files and then add it to List updatedFiles
-			if (requestFiles != null && !requestFiles.isEmpty())
-				for (FileRequest fileReq : requestFiles) {
-					File file = saveMediaForSession(fileReq, "/session-file/", session);
-					if (file != null) {
-						file.setCid(Utils.generateRandomAlphaNumString(8));
-						updatedFiles.add(file);
-					}
-				}
-
-			if (updatedFiles.size() > 5)
+			
+			repoFiles.removeAll(repoCopy); //repoFiles now have files that remained after deleting files.
+			int fileLimit = repoFiles.size();
+			if(fileLimit > 5)
 				throw new ValidationException("Cannot attach more than 5 files to upload.");
-			// Setting files to session
-			session.setFiles(updatedFiles);
+			
+			fileRepository.updateFileSetActiveByCidIn(repoCopy, false); // delete files from repo i.e, set their active false.
+			
+			if(session.getFiles() != null)
+				session.getFiles().removeIf(f -> repoCopy.contains(f.getCid()));
+			
+			List<File> newFilesToInsert = new ArrayList<>();
+			Long sessionId = session.getId();
+			requestFiles.stream().filter(f -> f.getId() == null).forEach(f ->{ 
+				if(f.getFile() == null)
+					throw new ValidationException("Please provide file where id is null.");
+				
+				if(fileLimit + 1 > 5)
+					throw new ValidationException("Cannot attach more than 5 files to upload.");
+				Event finalSession = new Event();
+				finalSession.setId(sessionId);
+				File file = saveMediaForSession(f, "/session-file/", finalSession);
+				if (file != null) {
+					file.setCid(Utils.generateRandomAlphaNumString(8));
+					newFilesToInsert.add(file);
+				}
+			});
 
+			session.getFiles().addAll(newFilesToInsert);
 		}
+
+//		if (requestFiles != null && !requestFiles.isEmpty()) {
+//
+//			List<File> allValidFilesOfActivity = fileRepository.findAllByEventCidAndActiveTrue(request.getId());
+//			List<File> updatedFiles = new ArrayList<File>();
+//
+//			for (int itr = 0; itr < requestFiles.size(); itr++) {
+//				if (requestFiles.get(itr).getId() != null) {
+//					for (int itr2 = 0; itr2 < allValidFilesOfActivity.size(); itr2++) {
+//						if (requestFiles.get(itr).getId().equals(allValidFilesOfActivity.get(itr2).getCid())) {
+//							if (requestFiles.get(itr).getFile() != null) {
+//								File file = saveMediaForSession(requestFiles.get(itr), "/session-file/", session);
+//								file.setId(allValidFilesOfActivity.get(itr2).getId());
+////								file.setCid(allValidFilesOfActivity.get(itr2).getCid());
+//								if (file != null)
+//									allValidFilesOfActivity.set(itr2, file);
+//
+//							}
+//							updatedFiles.add(allValidFilesOfActivity.get(itr2));
+//							allValidFilesOfActivity.remove(itr2);
+//							itr2--;
+//							requestFiles.remove(itr);
+//							itr--;
+//							break;
+//						}
+//					}
+//
+//				}
+//			}
+//
+//			/*
+//			 * logic to delete the files which were previously there but in new
+//			 * request have been removed.
+//			 */
+//			for (File f : allValidFilesOfActivity) {
+//				fileRepository.updateFileSetActiveByCid(false, f.getCid());
+//			}
+//
+//			// Logic to save new files and then add it to List updatedFiles
+//			if (requestFiles != null && !requestFiles.isEmpty())
+//				for (FileRequest fileReq : requestFiles) {
+//					File file = saveMediaForSession(fileReq, "/session-file/", session);
+//					if (file != null) {
+//						file.setCid(Utils.generateRandomAlphaNumString(8));
+//						updatedFiles.add(file);
+//					}
+//				}
+//
+//			if (updatedFiles.size() > 5)
+//				throw new ValidationException("Cannot attach more than 5 files to upload.");
+//			// Setting files to session
+//			session.setFiles(updatedFiles);
+//
+//		}
 
 		session = sessionRepository.save(session);
 		return new SessionResponse(session);
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_SESSION_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_SESSION_FETCH)
 	public List<SessionResponse> getSessions(SessionFilter filter) {
 		List<SessionResponse> sessions = sessionRepository.findAll(builder.build(filter)).stream()
 				.map(SessionResponse::new).collect(Collectors.toList());
@@ -303,7 +350,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_SESSION_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_SESSION_FETCH)
 	public SessionResponse getStudentSessionsOfClubBy(String clubId, String sessionFetch, String teacherId, String studentCid ,
 			Integer page, Integer pageSize) {
 		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student") )) {
@@ -430,7 +477,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 	}
 
 	@SuppressWarnings("unchecked")
-	@Secured(AuthorityUtils.SCHOOL_SESSION_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_SESSION_FETCH)
 	@Override
 	public SessionResponse getStudentSessionsOfClubsBy(String sessionFetch, String teacherId,String studentCid, Integer page,
 			Integer pageSize) {
@@ -443,18 +490,15 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 				if (studentCid == null) 
 					throw new ValidationException("Student not found probably userId is not set for student.");
 			}
-		Map<String,Object> gradeIdAndClubs = studentRepository.findGradeCidAndClubsByCidAndActiveTrue(studentCid);
-		if (gradeIdAndClubs == null)
-			throw new ForbiddenException("Details of student unavailable.");
+		
 //		Student student = studentRepository.getByUserIdAndActiveTrue(getUserId());
 //		if (student == null)
 //			throw new ForbiddenException("Login as a student to see sessions details.");
-		String gradeId = (String) gradeIdAndClubs.get("gradeId");
-		List<Activity> clubs = new ArrayList<Activity>();
-		((ArrayList<StudentClub>)gradeIdAndClubs.get("clubs")).stream().forEach(sc -> {
-			if (sc.getMembershipStatus().equals(ApprovalStatus.VERIFIED))
-				clubs.add(sc.getActivity());
-		});
+		
+		String gradeId = gradeRepository.findIdByStudentCidAndActiveTrue(studentCid);
+		List<Activity> clubs = studentClubRepository.findActivityByStudentCidAndMembershipStatusAndActiveTrue(studentCid, ApprovalStatus.VERIFIED);
+		if(clubs == null || clubs.isEmpty())
+			throw new ValidationException("Student is not member of any club.");
 
 		List<Event> sessions;
 		if (sessionFetch == null) {
@@ -558,7 +602,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_SESSION_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_SESSION_FETCH)
 	public SessionResponse getTeacherSessionsOfClubBy(String clubId, String sessionFetch,String teacherCid , Integer page,
 			Integer pageSize) {
 		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor") || r.getName().equalsIgnoreCase("Coordinator") || r.getName().equalsIgnoreCase("Head"))) {
@@ -644,7 +688,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_SESSION_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_SESSION_FETCH)
 	public SessionResponse getTeacherSessionsOfClubsBy(String sessionFetch,String teacherCid , Integer page, Integer pageSize) {
 		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor") || r.getName().equalsIgnoreCase("Coordinator") || r.getName().equalsIgnoreCase("Head"))) {
 			if (teacherCid == null || !teacherRepository.existsByCidAndActiveTrue(teacherCid)) {
@@ -730,6 +774,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 	}
 
 	@Override
+	@Transactional
 	@Secured(AuthorityUtils.SCHOOL_SESSION_DELETE)
 	public SuccessResponse deleteSession(String sessionCid) {
 		if (sessionCid == null)

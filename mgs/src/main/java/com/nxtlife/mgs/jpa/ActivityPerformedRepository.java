@@ -144,18 +144,16 @@ public interface ActivityPerformedRepository
 	Set<ActivityPerformed> findAllByStudentSchoolCidAndActivityNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
 			String schoolCid, String activityName, ActivityStatus status, Date startDate, Date endDate);
 	
-	@Query("select ap.activity.name as criterionValue , COUNT(DISTINCT ap.id) as count , ap as responses from ActivityPerformed ap  where ap.student.school.id =?1 and ap.student.grade.id in ?2 and ap.activityStatus in ?3 and ap.active = true group by ap.activity.name")
-	Set<GroupResponseBy<ActivityPerformed>> findAllBySchoolIdAndGradesIdInAndActivityStatusIn(Long schoolId , Collection<Long> gradeIds ,Collection<ActivityStatus> statuses );
+//	@Query("select ap.activity.name as criterionValue , COUNT(DISTINCT ap.id) as count , ap as responses from ActivityPerformed ap  where ap.student.school.id =?1 and ap.student.grade.id in ?2 and ap.activityStatus in ?3 and ap.active = true group by ap.activity.name")
+//	Set<GroupResponseBy<ActivityPerformed>> findAllBySchoolIdAndGradesIdInAndActivityStatusIn(Long schoolId , Collection<Long> gradeIds ,Collection<ActivityStatus> statuses );
+//	
+//	@Query("select ap.activity.name as criterionValue , COUNT(DISTINCT ap.id) as count , ap as responses from ActivityPerformed ap  where ap.student.school.cid =?1 and ap.student.grade.id in ?2 and ap.activityStatus in ?3 and ap.active = true group by ap.activity.name")
+//	Set<GroupResponseBy<ActivityPerformed>> findAllBySchoolCidAndGradesIdInAndActivityStatusIn(String schoolId , Collection<Long> gradeIds ,Collection<ActivityStatus> statuses );
+//	
+//	@Query("select ap.activity.name as criterionValue , COUNT(DISTINCT ap.id) as count , ap as responses from ActivityPerformed ap  where ap.student.school.id =?1 and ap.student.grade.id in ?2 and ap.activityStatus in ?3 and ap.active = true group by ap.activity.name having ap.activity.cid = ?4")
+//	Set<GroupResponseBy<ActivityPerformed>> findAllBySchoolIdAndGradesIdInAndActivityStatusInAndClubId(Long schoolId , Collection<Long> gradeIds ,Collection<ActivityStatus> statuses ,String activityCid );
+//	
+//	@Query("select ap.activity.name as criterionValue , COUNT(DISTINCT ap.id) as count , ap as responses from ActivityPerformed ap  where ap.student.school.cid =?1 and ap.student.grade.id in ?2 and ap.activityStatus in ?3 and ap.active = true group by ap.activity.name having ap.activity.cid = ?4")
+//	Set<GroupResponseBy<ActivityPerformed>> findAllBySchoolCidAndGradesIdInAndActivityStatusInAndClubId(String schoolId , Collection<Long> gradeIds ,Collection<ActivityStatus> statuses ,String activityCid );
 	
-	@Query("select ap.activity.name as criterionValue , COUNT(DISTINCT ap.id) as count , ap as responses from ActivityPerformed ap  where ap.student.school.cid =?1 and ap.student.grade.id in ?2 and ap.activityStatus in ?3 and ap.active = true group by ap.activity.name")
-	Set<GroupResponseBy<ActivityPerformed>> findAllBySchoolCidAndGradesIdInAndActivityStatusIn(String schoolId , Collection<Long> gradeIds ,Collection<ActivityStatus> statuses );
-	
-	@Query("select ap.activity.name as criterionValue , COUNT(DISTINCT ap.id) as count , ap as responses from ActivityPerformed ap  where ap.student.school.id =?1 and ap.student.grade.id in ?2 and ap.activityStatus in ?3 and ap.active = true group by ap.activity.name having ap.activity.cid = ?4")
-	Set<GroupResponseBy<ActivityPerformed>> findAllBySchoolIdAndGradesIdInAndActivityStatusInAndClubId(Long schoolId , Collection<Long> gradeIds ,Collection<ActivityStatus> statuses ,String activityCid );
-	
-	@Query("select ap.activity.name as criterionValue , COUNT(DISTINCT ap.id) as count , ap as responses from ActivityPerformed ap  where ap.student.school.cid =?1 and ap.student.grade.id in ?2 and ap.activityStatus in ?3 and ap.active = true group by ap.activity.name having ap.activity.cid = ?4")
-	Set<GroupResponseBy<ActivityPerformed>> findAllBySchoolCidAndGradesIdInAndActivityStatusInAndClubId(String schoolId , Collection<Long> gradeIds ,Collection<ActivityStatus> statuses ,String activityCid );
-	
-//	@Query("select" +" new com.nxtlife.mgs.view.ActivityPerformedResponse( ap )  , " + " ap.activity.name as criterionValue , COUNT(DISTINCT ap.id) as count " +  "from " +" ActivityPerformed ap  where ap.student.school.cid =?1 and ap.student.grade.id in ?2 and ap.activityStatus in ?3 and ap.active = true group by ap.activity.name having ap.activity.cid = ?4")
-//	Set<GroupResponseBy<ActivityPerformedResponse>> findAlllBySchoolCidAndGradesIdInAndActivityStatusInAndClubId(String schoolId , Collection<Long> gradeIds ,Collection<ActivityStatus> statuses ,String activityCid );
 }

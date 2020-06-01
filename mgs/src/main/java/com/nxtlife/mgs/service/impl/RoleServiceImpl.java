@@ -149,15 +149,16 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 		if (role == null) {
 			throw new NotFoundException(String.format("Role (%s) not found", id));
 		}
-		if (role.getName().equalsIgnoreCase("SuperAdmin")) {
-			throw new ValidationException("Superadmin role can't be updated");
+		if (role.getName().equalsIgnoreCase("MainAdmin")) {
+			throw new ValidationException("MainAdmin role can't be updated");
 		}
+		List<Long> requestAuthorityIds = new ArrayList<>(request.getAuthorityIds());
 		validateAuthorityIds(request.getAuthorityIds());
 		Long existRoleId = roleDao.findIdByNameAndSchoolId(request.getName(), schoolId);
 		if (existRoleId != null && !existRoleId.equals(id)) {
 			throw new ValidationException("This role already exists for this School");
 		}
-		List<Long> requestAuthorityIds = new ArrayList<>(request.getAuthorityIds());
+		
 		List<Long> roleAuthorityIds = roleAuthorityJpaDao.getAllAuthorityIdsByRoleId(id);
 		List<RoleAuthority> roleAuthorities = new ArrayList<>();
 		if (request.getName() != null && !role.getName().equals(request.getName())) {
@@ -201,8 +202,8 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 		if (role == null) {
 			throw new NotFoundException(String.format("Role (%s) not found", id));
 		}
-		if (role.getName().equalsIgnoreCase("SuperAdmin")) {
-			throw new ValidationException("Superadmin role can't be deleted");
+		if (role.getName().equalsIgnoreCase("MainAdmin")) {
+			throw new ValidationException("MainAdmin role can't be deleted");
 		}
 		Set<Long> userIds = userRoleJpaDao.findUserIdsByRoleId(id);
 		if (userIds.isEmpty()) {

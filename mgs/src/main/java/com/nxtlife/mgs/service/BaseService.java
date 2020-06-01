@@ -14,7 +14,9 @@ public abstract class BaseService {
 		}
 
 		if (authentication.getPrincipal() instanceof User) {
-			return ((User) authentication.getPrincipal());
+			User user = ((User) authentication.getPrincipal());
+			user.setId(user.getUserId());
+			return user;
 		}
 		return null;
 	}

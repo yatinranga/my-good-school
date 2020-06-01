@@ -53,7 +53,7 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
 	@Query(value = "select r.id from Role r where r.name=?1 and r.school.id=?2")
 	public Long findIdByNameAndSchoolId(String name, Long schoolId);
 
-	@Query(value = "select r.name from Role r where r.school.id=?2")
+	@Query(value = "select r.name from Role r where r.school.id=?1")
 	public Set<String> findNameBySchoolId(Long schoolId);
 
 	@Query(value = "select r.id from Role r where r.name=?1 and r.school.cid=?2")

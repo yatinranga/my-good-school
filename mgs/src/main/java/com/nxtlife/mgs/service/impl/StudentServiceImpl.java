@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
@@ -63,7 +65,7 @@ import com.nxtlife.mgs.jpa.GradeRepository;
 import com.nxtlife.mgs.jpa.GuardianRepository;
 import com.nxtlife.mgs.jpa.RoleRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
-import com.nxtlife.mgs.jpa.SequenceGeneratorRepo;
+//import com.nxtlife.mgs.jpa.SequenceGeneratorRepo;
 import com.nxtlife.mgs.jpa.StudentClubRepository;
 import com.nxtlife.mgs.jpa.StudentRepository;
 import com.nxtlife.mgs.jpa.StudentSchoolGradeRepository;
@@ -73,7 +75,7 @@ import com.nxtlife.mgs.service.ActivityPerformedService;
 import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.FileStorageService;
 //import com.nxtlife.mgs.service.FileService;
-import com.nxtlife.mgs.service.SequenceGeneratorService;
+//import com.nxtlife.mgs.service.SequenceGeneratorService;
 import com.nxtlife.mgs.service.StudentService;
 import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.util.AuthorityUtils;
@@ -90,6 +92,7 @@ import com.nxtlife.mgs.view.GuardianRequest;
 import com.nxtlife.mgs.view.StudentRequest;
 import com.nxtlife.mgs.view.StudentResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
+import com.sun.mail.smtp.SMTPSendFailedException;
 
 @Service
 public class StudentServiceImpl extends BaseService implements StudentService {
@@ -112,11 +115,11 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	@Autowired
 	private UserService userService;
 
-	@Autowired
-	private SequenceGeneratorService sequenceGeneratorService;
-
-	@Autowired
-	private SequenceGeneratorRepo sequenceGeneratorRepo;
+//	@Autowired
+//	private SequenceGeneratorService sequenceGeneratorService;
+//
+//	@Autowired
+//	private SequenceGeneratorRepo sequenceGeneratorRepo;
 
 	@Autowired
 	private ActivityPerformedService activityPerformedService;
@@ -205,6 +208,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		school.setId(schoolId);
 		student.setSchool(school);
 		student.setGrade(grade);
+		student.setCid(Utils.generateRandomAlphaNumString(8));
 
 		// User user = userService.createStudentUser(student);
 		// User user = userService.createUserForEntity(student);
@@ -216,7 +220,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		if (StringUtils.isEmpty(user)) {
 			throw new ValidationException("User not created successfully");
 		}
-		student.setUser(user = userRepository.save(user));
+		student.setUser(user);
 		student.setUsername(student.getUser().getUsername());
 		student = studentRepository.save(student);
 
@@ -244,16 +248,21 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			student.setGuardians(guardians);
 		}
 
-		student = studentRepository.save(student);
-		if (student == null) {
-			throw new RuntimeException("Something went wrong student not saved.");
-		}
+//		student = studentRepository.save(student);
+//		if (student == null) {
+//			throw new RuntimeException("Something went wrong student not saved.");
+//		}
 
 		Boolean emailFlag = false;
 
-		if (user.getEmail() != null)
-			emailFlag = userService.sendLoginCredentialsBySMTP(userService.usernamePasswordSendContentBuilder(
-					user.getUsername(), user.getRawPassword(), emailUsername, user.getEmail()));
+//		if (user.getEmail() != null)
+//			try {
+//			emailFlag = userService.sendLoginCredentialsBySMTP(userService.usernamePasswordSendContentBuilder(
+//					user.getUsername(), user.getRawPassword(), emailUsername, user.getEmail()));
+//			}
+//			catch(SMTPSendFailedException e) {
+//				emailFlag = false;
+//			}
 
 		Map<String, Object> response = new HashMap<String, Object>();
 		response.put("Student", new StudentResponse(student));
@@ -285,10 +294,10 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			// sequence =
 			// sequenceGeneratorService.findSequenceByUserType(UserType.Parent);
 			// guardian.setUsername(String.format("GRD%08d", sequence));
-			// guardian.setCid(Utils.generateRandomAlphaNumString(8));
+			 guardian.setCid(Utils.generateRandomAlphaNumString(8));
 			// guardian.setUser(userService.createParentUser(guardian));
 			// guardian.setUser(userService.createUserForEntity(guardian));
-			guardian.setUser(user = userRepository.save(user));
+			guardian.setUser(user);
 			guardian.setUsername(guardian.getUser().getUsername());
 			guardian = guardianRepository.save(guardian);
 			studList = new ArrayList<Student>();
@@ -426,7 +435,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				if (StringUtils.isEmpty(user)) {
 					throw new ValidationException("User not created successfully");
 				}
-				guardian.setUser(user = userRepository.save(user));
+				guardian.setUser(user);
 				guardian.setUsername(guardian.getUser().getUsername());
 				List<Student> students = new ArrayList<Student>();
 				students.add(student);
@@ -468,7 +477,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_STUDENT_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_STUDENT_FETCH)
 	public StudentResponse findByCId(String studentId) {
 		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student") )) {
 			if (studentId == null || !studentRepository.existsByCidAndActiveTrue(studentId)) {
@@ -518,8 +527,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	}
 
 	@Override
-	@PreAuthorize("hasRole('ROLE_MainAdmin') or hasRole('ROLE_Lfin')")
-	@Secured(AuthorityUtils.SCHOOL_STUDENT_VIEW)
+//	@PreAuthorize("hasRole('ROLE_MainAdmin') or hasRole('ROLE_Lfin')")
+	@Secured(AuthorityUtils.SCHOOL_STUDENT_FETCH)
 	public List<StudentResponse> getAll() {
 
 		List<Student> studentList = studentRepository.findAllByActiveTrue();
@@ -531,7 +540,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_STUDENT_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_STUDENT_FETCH)
 	public List<StudentResponse> getAllBySchoolCid(String schoolCid) {
 		schoolCid = !getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))  ? getUser().getSchool().getCid() : schoolCid ; 
 		if(schoolCid == null)
@@ -544,7 +553,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 	@Override
 	@PreAuthorize("hasRole('ROLE_MainAdmin') or hasRole('ROLE_Lfin')")
-	@Secured(AuthorityUtils.SCHOOL_STUDENT_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_STUDENT_FETCH)
 	public List<StudentResponse> getAllByGradeId(String gradeId) {
 		if (gradeId == null) {
 			throw new NotFoundException("Grade id can't be null");
@@ -556,7 +565,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_STUDENT_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_STUDENT_FETCH)
 	public List<StudentResponse> getAllBySchoolIdAndGradeId(String schoolId, String gradeId) {
 		schoolId = !getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))  ? getUser().getSchool().getCid() : schoolId ; 
 
@@ -572,7 +581,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_STUDENT_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_STUDENT_FETCH)
 	public List<StudentResponse> getAllBySchoolIdOrGradeIdOrBothOrNoneButAll(String schoolId, String gradeId) {
 		if (schoolId == null && gradeId == null)
 			return getAll();
@@ -585,7 +594,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_STUDENT_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_STUDENT_FETCH)
 	public List<StudentResponse> getAllStudentsBySchoolAndActivityAndCoachAndStatusReviewed(String schoolCid,
 			String gradeCid, String activityCid, String approvalStatus, String teacherCid) {
 		schoolCid = !getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))  ? getUser().getSchool().getCid() : schoolCid ; 
@@ -657,7 +666,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_STUDENT_CERTIFICATE_ADD)
+	@Secured(AuthorityUtils.SCHOOL_STUDENT_CERTIFICATE_CREATE)
 	public CertificateResponse uploadCertificate(CertificateRequest request ,String studentId) {
 		Student student = null;
 		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student") )) {
@@ -712,7 +721,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_STUDENT_CERTIFICATE_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_STUDENT_CERTIFICATE_FETCH)
 	public List<CertificateResponse> getAllCertificatesOfStudent(String studentId) {
 		
 		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student") )) {
@@ -734,6 +743,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	}
 
 	@Override
+	@Transactional
 	@Secured(AuthorityUtils.SCHOOL_STUDENT_DELETE)
 	public SuccessResponse delete(String studentId) {
 		
@@ -939,7 +949,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_STUDENT_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_STUDENT_FETCH)
 	public Set<StudentResponse> getAllStudentsAndItsActivitiesByAwardCriterion(String schoolCid ,String awardCriterion,
 			String criterionValue, String gradeCid, String initial, String last) {
 		schoolCid = !getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))  ? getUser().getSchool().getCid() : schoolCid ; 
@@ -1597,7 +1607,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_STUDENT_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_STUDENT_FETCH)
 	public List<StudentResponse> getAllStudentsOfSchoolForParticularActivity(String schoolCid ,String activityCid, String teacherId,
 			String gradeId, String approvalStatus) {
 		schoolCid = !getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))  ? getUser().getSchool().getCid() : schoolCid ; 
@@ -1678,7 +1688,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_CLUB_MEMBERSHIP_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_CLUB_MEMBERSHIP_FETCH)
 	public List<ClubMembershipResponse> getMembershipDetails(String studentCid) {
 		Long studentId = null;
 		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student"))) {

@@ -12,6 +12,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
@@ -27,7 +29,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.common.exceptions.UnauthorizedUserException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -51,7 +52,6 @@ import com.nxtlife.mgs.jpa.ActivityRepository;
 import com.nxtlife.mgs.jpa.GradeRepository;
 import com.nxtlife.mgs.jpa.RoleRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
-import com.nxtlife.mgs.jpa.SequenceGeneratorRepo;
 import com.nxtlife.mgs.jpa.StudentClubRepository;
 import com.nxtlife.mgs.jpa.StudentRepository;
 import com.nxtlife.mgs.jpa.TeacherActivityGradeRepository;
@@ -61,7 +61,6 @@ import com.nxtlife.mgs.jpa.UserRoleRepository;
 import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.FileStorageService;
 //import com.nxtlife.mgs.service.FileService;
-import com.nxtlife.mgs.service.SequenceGeneratorService;
 import com.nxtlife.mgs.service.TeacherService;
 import com.nxtlife.mgs.service.UserService;
 //import com.nxtlife.mgs.store.FileStore;
@@ -69,10 +68,8 @@ import com.nxtlife.mgs.util.AuthorityUtils;
 import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.Utils;
-import com.nxtlife.mgs.view.ActivityPerformedResponse;
 import com.nxtlife.mgs.view.ActivityRequestResponse;
 import com.nxtlife.mgs.view.ClubMembershipResponse;
-import com.nxtlife.mgs.view.GroupResponseBy;
 import com.nxtlife.mgs.view.SuccessResponse;
 import com.nxtlife.mgs.view.TeacherRequest;
 import com.nxtlife.mgs.view.TeacherResponse;
@@ -89,11 +86,11 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	@Autowired
 	private GradeRepository gradeRepository;
 
-	@Autowired
-	private SequenceGeneratorService sequenceGeneratorService;
-
-	@Autowired
-	private SequenceGeneratorRepo sequenceGeneratorRepo;
+//	@Autowired
+//	private SequenceGeneratorService sequenceGeneratorService;
+//
+//	@Autowired
+//	private SequenceGeneratorRepo sequenceGeneratorRepo;
 
 	@Autowired
 	private ActivityRepository activityRepository;
@@ -183,7 +180,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 				if (!existingRoles.contains(role))
 					throw new ValidationException(String.format("Role (%s) not present in school yet.", role));
 			}
-			List<Role> roles = roleRepository.findAllBySchoolIdAndNameIn(school.getId(), existingRoles);
+			List<Role> roles = roleRepository.findAllBySchoolIdAndNameIn(school.getId(), request.getRoles());
 			List<UserRole> userRoles = roles.stream().distinct()
 					.map(r -> new UserRole(new UserRoleKey(r.getId(), user.getId()), r, user))
 					.collect(Collectors.toList());
@@ -192,7 +189,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		if (user == null)
 			throw new ValidationException("User not created successfully");
 
-		teacher.setUser(userRepository.save(user));
+		teacher.setUser(user);
 		teacher.setUsername(teacher.getUser().getUsername());
 
 		// saving grades
@@ -305,9 +302,13 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 
 		Boolean emailFlag = false;
 
-		if (user.getEmail() != null)
-			emailFlag = userService.sendLoginCredentialsBySMTP(userService.usernamePasswordSendContentBuilder(
-					user.getUsername(), user.getRawPassword(), emailUsername, user.getEmail()));
+//		if (user.getEmail() != null)
+//			try {
+//				emailFlag = userService.sendLoginCredentialsBySMTP(userService.usernamePasswordSendContentBuilder(
+//						user.getUsername(), user.getRawPassword(), emailUsername, user.getEmail()));
+//			} catch (SMTPSendFailedException e) {
+//				emailFlag= false;
+//			}
 		Map<String, Object> response = new HashMap<String, Object>();
 		response.put("Teacher", new TeacherResponse(teacher));
 		String emailMessage = emailFlag ? String.format("Email sent successfully to (%s)", user.getEmail())
@@ -559,7 +560,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_FACULTY_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_FACULTY_FETCH)
 	public TeacherResponse findByCId(String teacherId) {
 		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor") || r.getName().equalsIgnoreCase("Coordinator") || r.getName().equalsIgnoreCase("Head") )) {
 			if (teacherId == null || !teacherRepository.existsByCidAndActiveTrue(teacherId)) {
@@ -616,9 +617,11 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		return activities.stream().map(ActivityRequestResponse::new).distinct().collect(Collectors.toList());
 	}
 
+	
+	@Secured(AuthorityUtils.SCHOOL_FACULTY_FETCH)
 	@Override
-	@PreAuthorize("hasRole('ROLE_MainAdmin') or hasRole('ROLE_Lfin')")
-	@Secured(AuthorityUtils.SCHOOL_FACULTY_VIEW)
+//	@PreAuthorize("hasRole('MainAdmin') or hasRole('Lfin')")
+	
 	public List<TeacherResponse> getAllTeachers(Integer pageNo, Integer pageSize) {
 
 		Pageable paging = PageRequest.of(pageNo, pageSize);
@@ -654,7 +657,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_FACULTY_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_FACULTY_FETCH)
 	public TeacherResponse findCoachByCId(String teacherId) {
 		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor") || r.getName().equalsIgnoreCase("Coordinator") || r.getName().equalsIgnoreCase("Head") )) {
 			if (teacherId == null || !teacherRepository.existsByCidAndActiveTrue(teacherId)) {
@@ -702,7 +705,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_FACULTY_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_FACULTY_FETCH)
 	public List<TeacherResponse> getAllTeachersOfSchool(String schoolCid) {
 		schoolCid = !getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))  ? getUser().getSchool().getCid() : schoolCid ; 
 		if(schoolCid == null)
@@ -724,7 +727,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_FACULTY_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_FACULTY_FETCH)
 	public List<TeacherResponse> getAllCoachesOfSchool(String schoolCid ,String gradeId) {
 		schoolCid = !getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))  ? getUser().getSchool().getCid() : schoolCid ; 
 		if(schoolCid == null)
@@ -750,7 +753,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_FACULTY_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_FACULTY_FETCH)
 	public List<TeacherResponse> findCoachesBySchoolCidAndActivityCid(String schoolCid, String activityCid) {
 
 		schoolCid = !getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))  ? getUser().getSchool().getCid() : schoolCid ; 
@@ -789,6 +792,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 
 	@Secured(AuthorityUtils.SCHOOL_STAKEHOLDER_DELETE)
 	@Override
+	@Transactional
 	public SuccessResponse delete(String teacherId) {
 
 		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor") || r.getName().equalsIgnoreCase("Coordinator") || r.getName().equalsIgnoreCase("Head") )) {
@@ -1093,14 +1097,14 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	@Secured(AuthorityUtils.SCHOOL_ACTIVITY_ASSIGN)
 	@Override
 	public TeacherResponse addOrRemoveActivitiesToTeachers(TeacherRequest request) {
-		Long userId = getUserId();
-		if (userId == null)
-			throw new ValidationException(
-					"No user logged in currently, kindly log in as School Management to assign activities to Teachers.");
-		if (!schoolRepository.existsByUserIdAndActiveTrue(userId)
-				&& !teacherRepository.existsByUserIdAndIsManagmentMemberTrueAndActiveTrue(userId))
-			throw new UnauthorizedUserException(
-					"Not Authorized to assign activities to Teachers pls login as School or Management Member.");
+//		Long userId = getUserId();
+//		if (userId == null)
+//			throw new ValidationException(
+//					"No user logged in currently, kindly log in as School Management to assign activities to Teachers.");
+//		if (!schoolRepository.existsByUserIdAndActiveTrue(userId)
+//				&& !teacherRepository.existsByUserIdAndIsManagmentMemberTrueAndActiveTrue(userId))
+//			throw new UnauthorizedUserException(
+//					"Not Authorized to assign activities to Teachers pls login as School or Management Member.");
 		if (request == null)
 			throw new ValidationException("Request cannot be null.");
 		if (request.getTeachers() == null || request.getTeachers().isEmpty())
@@ -1210,7 +1214,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_CLUB_MEMBERSHIP_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_CLUB_MEMBERSHIP_FETCH)
 	public List<ClubMembershipResponse> getMembershipDetails(String teacherCid) {
 		Long teacherId = null;
 		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor") || r.getName().equalsIgnoreCase("Coordinator") || r.getName().equalsIgnoreCase("Head"))) {
@@ -1232,7 +1236,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_CLUB_MEMBERSHIP_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_CLUB_MEMBERSHIP_FETCH)
 	public List<ClubMembershipResponse> getMembershipDetailsbyClub(String clubId ,String teacherCid) {
 		if (clubId == null)
 			throw new ValidationException("club id cannot be null.");

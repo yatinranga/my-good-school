@@ -14,6 +14,7 @@ import com.nxtlife.mgs.view.PasswordRequest;
 import com.nxtlife.mgs.view.SuccessResponse;
 import com.nxtlife.mgs.view.user.UserRequest;
 import com.nxtlife.mgs.view.user.UserResponse;
+import com.sun.mail.smtp.SMTPSendFailedException;
 
 public interface UserService {
 
@@ -25,11 +26,11 @@ public interface UserService {
 //	
 //	User createSchoolUser(School school);
 
-	UserResponse getLoggedInUser();
+	UserResponse getLoggedInUserResponse();
 	
 	void sendLoginCredentialsByGmailApi(MailRequest request);
 
-	Boolean sendLoginCredentialsBySMTP(Mail request);
+	Boolean sendLoginCredentialsBySMTP(Mail request) throws SMTPSendFailedException;
 
 	SuccessResponse changePassword(PasswordRequest request);
 

@@ -27,6 +27,9 @@ public interface StudentClubRepository extends JpaRepository<StudentClub, Studen
 	@Query(value = "select sc.activity from StudentClub sc where sc.student.id = :studentId and sc.membershipStatus = :membershipStatus and sc.active = true")
 	List<Activity> findActivityByStudentIdAndMembershipStatusAndActiveTrue(@Param("studentId") Long studentId , @Param("membershipStatus") ApprovalStatus membershipStatus );
 	
+	@Query(value = "select sc.activity from StudentClub sc where sc.student.cid = :studentId and sc.membershipStatus = :membershipStatus and sc.active = true")
+	List<Activity> findActivityByStudentCidAndMembershipStatusAndActiveTrue(@Param("studentId") String studentId , @Param("membershipStatus") ApprovalStatus membershipStatus );
+	
 	//@Query(value = "select sc.activity from StudentClub sc where sc.teacher.id = :teacherId and sc.membershipStatus = :membershipStatus and sc.active = true")
 	List<StudentClub> findAllByTeacherIdAndActiveTrue(Long teacherId);
 	

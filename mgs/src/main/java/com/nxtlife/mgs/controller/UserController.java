@@ -39,7 +39,7 @@ public class UserController {
 
 	@GetMapping(value = "api/info")
 	public UserResponse getLoggedInUser() {
-		return userService.getLoggedInUser();
+		return userService.getLoggedInUserResponse();
 	}
 
 //	@PutMapping("api/change-password")

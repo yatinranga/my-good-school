@@ -229,7 +229,7 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_AWARD_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_AWARD_FETCH)
 	public List<AwardResponse> findAllByStudent(String studentCid) {
 		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student") )) {
 			if (studentCid == null || !studentRepository.existsByCidAndActiveTrue(studentCid)) {
@@ -249,7 +249,7 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_AWARD_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_AWARD_FETCH)
 	public List<AwardResponse> findAllByStudent(AwardFilter awardFilter ,String studentCid) {
 		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student") )) {
 			if (studentCid == null || !studentRepository.existsByCidAndActiveTrue(studentCid)) {
@@ -271,7 +271,7 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_AWARD_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_AWARD_FETCH)
 	public List<AwardResponse> findAllByManagement(String teacherCid) {
 		if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor")))
 			teacherCid = teacherRepository.findCidByUserIdAndActiveTrue(getUserId());
@@ -285,7 +285,7 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_AWARD_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_AWARD_FETCH)
 	public List<AwardResponse> findAllByManagement(AwardFilter awardFilter ,String teacherCid) {
 		if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor")))
 			teacherCid = teacherRepository.findCidByUserIdAndActiveTrue(getUserId());
@@ -323,7 +323,7 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_AWARD_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_AWARD_FETCH)
 	public List<PropertyCount> getCount(String studentCid, String status, String type) {
 		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student") )) {
 			if (studentCid == null || !studentRepository.existsByCidAndActiveTrue(studentCid)) {

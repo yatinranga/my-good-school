@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.session.Event;
 
+@SuppressWarnings("serial")
 @Entity
 public class File extends BaseEntity{
 	

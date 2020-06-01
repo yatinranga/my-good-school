@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
 
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -47,7 +48,7 @@ import com.nxtlife.mgs.service.BaseService;
 //import com.nxtlife.mgs.service.FileService;
 import com.nxtlife.mgs.service.FileStorageService;
 import com.nxtlife.mgs.service.SchoolService;
-import com.nxtlife.mgs.service.SequenceGeneratorService;
+//import com.nxtlife.mgs.service.SequenceGeneratorService;
 import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.util.AuthorityUtils;
 import com.nxtlife.mgs.util.ExcelUtil;
@@ -57,6 +58,7 @@ import com.nxtlife.mgs.view.GradeRequest;
 import com.nxtlife.mgs.view.SchoolRequest;
 import com.nxtlife.mgs.view.SchoolResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
+import com.sun.mail.smtp.SMTPSendFailedException;
 
 @Service
 public class SchoolServiceImpl extends BaseService implements SchoolService {
@@ -70,8 +72,8 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 	@Autowired
 	private FileStorageService<MultipartFile> fileStorageService;
 
-	@Autowired
-	private SequenceGeneratorService sequenceGeneratorService;
+//	@Autowired
+//	private SequenceGeneratorService sequenceGeneratorService;
 
 	@Autowired
 	private RoleRepository roleRepository;
@@ -182,7 +184,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 
 		if (StringUtils.isEmpty(user))
 			throw new ValidationException("User not created successfully");
-		school.setUser(user = userRepository.save(user));
+		school.setUser(user);
 		school.setUsername(school.getUser().getUsername());
 		user.setSchool(school);
 
@@ -268,8 +270,12 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 		Boolean emailFlag = false;
 
 		if (user.getEmail() != null)
-			emailFlag = userService.sendLoginCredentialsBySMTP(userService.usernamePasswordSendContentBuilder(
-					user.getUsername(), user.getRawPassword(), emailUsername, user.getEmail()));
+			try {
+				emailFlag = userService.sendLoginCredentialsBySMTP(userService.usernamePasswordSendContentBuilder(
+						user.getUsername(), user.getRawPassword(), emailUsername, user.getEmail()));
+			} catch (SMTPSendFailedException e) {
+				emailFlag = false;
+				}
 
 		Map<String, Object> response = new HashMap<String, Object>();
 		response.put("Teacher", new SchoolResponse(school));
@@ -479,7 +485,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_FETCH)
 	public SchoolResponse findByCid(String schoolCid) {
 		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")))
 			schoolCid = getUser().getSchool().getCid();
@@ -494,8 +500,8 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 	}
 
 	@Override
-	@PreAuthorize("hasRole('ROLE_MainAdmin') or hasRole('ROLE_Lfin')")
-	@Secured(AuthorityUtils.SCHOOL_VIEW)
+//	@PreAuthorize("hasRole('ROLE_MainAdmin') or hasRole('ROLE_Lfin')")
+	@Secured(AuthorityUtils.SCHOOL_FETCH)
 	public List<SchoolResponse> getAllSchools() {
 		List<School> schoolList = schoolRepository.findAll();
 		List<SchoolResponse> schoolResponses = new ArrayList<SchoolResponse>();
@@ -508,6 +514,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 	}
 
 	@Override
+	@Transactional
 	@Secured(AuthorityUtils.SCHOOL_DELETE)
 	public SuccessResponse delete(String cid) {
 		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")))

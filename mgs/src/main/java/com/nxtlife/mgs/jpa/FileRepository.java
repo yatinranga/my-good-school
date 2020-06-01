@@ -35,4 +35,14 @@ public interface FileRepository extends JpaRepository<File, Long>{
 
 	List<File> findAllByEventCidAndActiveTrue(String eventCid);
 	
+	@Query(value = "select f.cid from File f where f.event.cid = ?1 and f.active = true")
+	List<String> findAllCidByEventCidAndActiveTrue(String eventCid);
+	
+	@Query(value = "select f.cid from File f where f.activityPerformed.cid = ?1 and f.active = true")
+	List<String> findAllCidByActivityPerformedCidAndActiveTrue(String eventCid);
+	
+	@Transactional
+	@Modifying(clearAutomatically = true)
+	@Query(value="update File f set f.active = ?2 where f.cid in ?1")
+	int updateFileSetActiveByCidIn(List<String> cid ,Boolean active);
 }

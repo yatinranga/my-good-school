@@ -200,7 +200,9 @@ public class SessionResponse {
 		if (session.getClub() != null)
 			this.club = new ActivityRequestResponse(session.getClub());
 		this.description = session.getDescription();
-		this.fileResponses = session.getFiles().stream().map(FileResponse::new).distinct().collect(Collectors.toList());
-		this.grades = session.getGrades().stream().map(GradeResponse::new).distinct().collect(Collectors.toList());
+		if(session.getFiles() != null)
+			this.fileResponses = session.getFiles().stream().filter(f -> f.getActive()).distinct().map(FileResponse::new).collect(Collectors.toList());
+		if(session.getGrades() != null)
+			this.grades = session.getGrades().stream().map(GradeResponse::new).distinct().collect(Collectors.toList());
 	}
 }

@@ -31,7 +31,7 @@ public class ActivityPerformedController {
 	@Autowired
 	private ActivityPerformedService activityPerformedService;
 
-	@PostMapping(value = "api/student/activities") //change activities to activity
+	@PostMapping(value = "api/student/activity") //change activities to activity
 	public ActivityPerformedResponse saveActivity(@ModelAttribute ActivityPerformedRequest request) {
 		return activityPerformedService.saveActivity(request);
 	}

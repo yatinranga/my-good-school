@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
 
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -582,7 +583,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_CLUB_MEMBERSHIP_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_CLUB_MEMBERSHIP_FETCH)
 	public List<ActivityRequestResponse> getAllClubsOfStudent(String studentCid) {
 		List<Activity> activities;
 		Long studentId = null;
@@ -604,7 +605,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_CLUB_MEMBERSHIP_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_CLUB_MEMBERSHIP_FETCH)
 	public List<ActivityRequestResponse> getAllClubsOfTeacher(String teacherCid) {
 		List<Activity> activities;
 		Long teacherId = null;
@@ -664,6 +665,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 	}
 
 	@Override
+	@Transactional
 	@Secured(AuthorityUtils.SCHOOL_ACTIVITY_DELETE)
 	public SuccessResponse deleteActivityByCid(String cid) {
 		Activity activity = activityRepository.getOneByCidAndActiveTrue(cid);

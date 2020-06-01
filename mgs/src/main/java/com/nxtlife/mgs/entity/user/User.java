@@ -75,6 +75,9 @@ public class User extends BaseEntity implements UserDetails, Serializable {
 
 	@Transient
 	private Long tschoolId;
+	
+	@Transient
+	private String tschoolCid;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	private List<UserRole> userRoles;
@@ -254,11 +257,25 @@ public class User extends BaseEntity implements UserDetails, Serializable {
 
 	public void settSchoolId(Long schoolId) {
 		if (schoolId != null) {
-			this.school = new School();
+			this.school = this.school == null ? new School() : this.school;
 			this.school.setId(schoolId);
 		}
 		this.tschoolId = schoolId;
 	}
+	
+	public String gettSchoolCid() {
+		return tschoolCid;
+	}
+	
+	public void settSchoolCid(String schoolCid) {
+		if (schoolCid != null) {
+			this.school = this.school == null ? new School() : this.school;
+			this.school.setId(this.gettSchoolId());
+			this.school.setCid(schoolCid);
+		}
+		this.tschoolCid = schoolCid;
+	}
+	
 
 	public Collection<Role> getRoles() {
 		return roles;

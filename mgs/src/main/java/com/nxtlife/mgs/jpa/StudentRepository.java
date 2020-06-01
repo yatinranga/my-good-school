@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.nxtlife.mgs.entity.school.StudentClub;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.enums.ActivityStatus;
 
@@ -82,8 +83,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 	@Query(value = "select s.grade.cid from Student s where s.cid = ?1 and s.active = true")
 	String findGradeCidByCidAndActiveTrue(String cid);
 	
-	@Query(value = "select s.grade.cid as gradeId , s.studentClubs as clubs from Student s where s.cid = ?1 and s.active = true")
-	Map<String,Object> findGradeCidAndClubsByCidAndActiveTrue(String cid);
+	@Query(value = "select s.studentClubs from Student s where s.cid = ?1 and s.active = true")
+	List<StudentClub> findGradeCidAndClubsByCidAndActiveTrue(String cid);
 
 	/*
 	 * List<Student>

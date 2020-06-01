@@ -21,6 +21,7 @@ import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.activity.ActivityPerformed;
 import com.nxtlife.mgs.entity.activity.File;
 import com.nxtlife.mgs.entity.school.Grade;
+import com.nxtlife.mgs.entity.session.Event;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.enums.ActivityStatus;
@@ -117,37 +118,14 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 		if (request == null)
 			throw new ValidationException("Request can not be null.");
 
-		ActivityStatus actStatus = ActivityStatus.InProgressAtStudent;
-
 		ActivityPerformed activityPerformed;
 
 		Long studentId = studentRepository.findIdByUserIdAndActiveTrue(getUserId());
 
 		if (studentId == null)
 			throw new ValidationException(
-					String.format("Student id is invalid no student with id : %s found.", request.getStudentId()));
-		if (request.getActivityId() == null)
-			throw new ValidationException("Activity Id can not be null.");
-
-		Activity activity = activityRepository.findByCidAndActiveTrue(request.getActivityId());
-		if (activity == null)
-			throw new ValidationException(
-					String.format("Activity with id : %s does not exist.", request.getActivityId()));
-
-		if (!studentClubRepository.existsByStudentIdAndActivityIdAndMembershipStatusAndActiveTrue(studentId,
-				activity.getId(), ApprovalStatus.VERIFIED))
-			throw new ValidationException(
-					String.format("You are not a member of %s : %s please apply for membership first.",
-							activity.getClubOrSociety().toString(), activity.getName()));
-
-		if (request.getCoachId() == null)
-			throw new ValidationException("Coach Id can not be null.");
-
-		Long coachId = teacherRepository.findIdByCidAndActiveTrue(request.getCoachId());
-
-		if (coachId == null)
-			throw new ValidationException(
-					String.format("Coach id is invalid no coach with id : %s found.", request.getCoachId()));
+					String.format("User not logged in as student."));
+					
 
 		/*
 		 * setting those fields in request to null which needs to filled by
@@ -167,6 +145,10 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			activityPerformed = activityPerformedRepository.findByCidAndActiveTrue(request.getId());
 			if (activityPerformed == null)
 				throw new ValidationException(String.format("Activity having id : %s not found", request.getId()));
+			
+			if(!activityPerformed.getStudent().getId().equals(studentId))
+				throw new ValidationException("You cannot edit anyone else's activity.");
+			
 			if (!activityPerformed.getActivityStatus().equals(ActivityStatus.SavedByStudent))
 				throw new ValidationException(
 						String.format("Activity with the id : %s is already submitted by you and cannot be edited.",
@@ -185,6 +167,47 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			 */
 
 			List<FileRequest> requestFiles = request.getFileRequests();
+			
+//			if (requestFiles != null && !requestFiles.isEmpty()) {
+//				List<String> repoFiles = fileRepository.findAllCidByActivityPerformedCidAndActiveTrue(request.getId());
+//				List<String> repoCopy = new ArrayList<>(repoFiles); // copy of repofile ids.
+//				List<String> requestFileIds = requestFiles.stream().filter(f -> f.getId() != null).map(f -> f.getId()).distinct().collect(Collectors.toList());
+//				repoCopy.removeAll(requestFileIds); // repoCopy now has fileIds that needs to be deleted.
+//				if(repoFiles != null && requestFileIds != null ) {
+//					 requestFileIds.removeAll(repoFiles); // if requestFileIds not empty then few ids are invalid
+//					 if(!requestFileIds.isEmpty())
+//						 throw new ValidationException(String.format("Some file ids are invalid (%s) .",requestFileIds));
+//				}
+//				
+//				repoFiles.removeAll(repoCopy); //repoFiles now have files that remained after deleting files.
+//				int fileLimit = repoFiles.size();
+//				if(fileLimit > 5)
+//					throw new ValidationException("Cannot attach more than 5 files to upload.");
+//				
+//				fileRepository.updateFileSetActiveByCidIn(repoCopy, false); // delete files from repo i.e, set their active false.
+//				
+//				if(activityPerformed.getFiles() != null)
+//					activityPerformed.getFiles().removeIf(f -> repoCopy.contains(f.getCid()));
+//				
+//				List<File> newFilesToInsert = new ArrayList<>();
+//				Long sessionId = activityPerformed.getId();
+//				requestFiles.stream().filter(f -> f.getId() == null).forEach(f ->{ 
+//					if(f.getFile() == null)
+//						throw new ValidationException("Please provide file where id is null.");
+//					
+//					if(fileLimit + 1 > 5)
+//						throw new ValidationException("Cannot attach more than 5 files to upload.");
+//					ActivityPerformed finalSession = new ActivityPerformed();
+//					finalSession.setId(sessionId);
+//					File file = saveMediaForActivityPerformed(f, "/activity-file/", finalSession);
+//					if (file != null) {
+//						file.setCid(Utils.generateRandomAlphaNumString(8));
+//						newFilesToInsert.add(file);
+//					}
+//				});
+//
+//				activityPerformed.getFiles().addAll(newFilesToInsert);
+//			}
 
 			if (requestFiles != null && !requestFiles.isEmpty()) {
 
@@ -243,6 +266,26 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			}
 
 		} else {
+			
+			if (request.getActivityId() == null)
+				throw new ValidationException("Activity Id can not be null.");
+
+			Activity activity = activityRepository.findByCidAndActiveTrue(request.getActivityId());
+			if (activity == null)
+				throw new ValidationException(
+						String.format("Activity with id : %s does not exist.", request.getActivityId()));
+
+			if (!studentClubRepository.existsByStudentIdAndActivityIdAndMembershipStatusAndActiveTrue(studentId,
+					activity.getId(), ApprovalStatus.VERIFIED))
+				throw new ValidationException(
+						String.format("You are not a member of %s : %s please apply for membership first.",
+								activity.getClubOrSociety().toString(), activity.getName()));
+
+			if (request.getCoachId() == null || !teacherRepository.existsByCidAndActiveTrue(request.getCoachId()))
+				throw new ValidationException(
+						String.format("Coach id is invalid no coach with id : (%s) found.", request.getCoachId()));
+
+			 
 			/* Converting request to entity */
 			activityPerformed = request.toEntity();
 
@@ -271,17 +314,13 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 			activityPerformed.setActive(true);
 			if (activityPerformed.getCid() == null)
 				activityPerformed.setCid(Utils.generateRandomAlphaNumString(8));
+			
+			activityPerformed.setStudent(studentRepository.findByIdAndActiveTrue(studentId));
+			activityPerformed.setTeacher(teacherRepository.findByCidAndActiveTrue(request.getCoachId()));
+			activityPerformed.setActivity(activity);
 		}
 
-		actStatus = ActivityStatus.SavedByStudent;
-		activityPerformed.setActivityStatus(actStatus);
-		Student student = new Student();
-		student.setId(studentId);
-		activityPerformed.setStudent(student);
-		Teacher coach = new Teacher();
-		coach.setId(coachId);
-		activityPerformed.setTeacher(coach);
-		activityPerformed.setActivity(activity);
+		activityPerformed.setActivityStatus(ActivityStatus.SavedByStudent);
 		activityPerformed = activityPerformedRepository.save(activityPerformed);
 		if (activityPerformed == null)
 			throw new RuntimeException("Something went wrong activity not saved.");
@@ -387,7 +426,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_PERFORMED_ACTIVITY_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_PERFORMED_ACTIVITY_FETCH)
 	public List<ActivityPerformedResponse> getAllActivitiesOfStudentByStatus(String status, String studentCid,
 			Integer page, Integer pageSize) {
 		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student") )) {
@@ -423,7 +462,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_PERFORMED_ACTIVITY_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_PERFORMED_ACTIVITY_FETCH)
 	public List<ActivityPerformedResponse> getAllActivitiesAssignedToCoachforReview(String teacherCid, String status) {
 		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor") || r.getName().equalsIgnoreCase("Coordinator") || r.getName().equalsIgnoreCase("Head") )) {
 			if (teacherCid == null || !teacherRepository.existsByCidAndActiveTrue(teacherCid)) {
@@ -792,7 +831,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_PERFORMED_ACTIVITY_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_PERFORMED_ACTIVITY_FETCH)
 	public List<ActivityPerformedResponse> getAllActivityOfStudentByActivityId(String studentCid, String activityCid,
 			String activityStatus) {
 		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student") )) {
@@ -848,7 +887,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_PERFORMED_ACTIVITY_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_PERFORMED_ACTIVITY_FETCH)
 	public List<ActivityPerformedResponse> filter(ActivityPerformedFilter filterRequest) {
 		if (filterRequest.getStudentId() != null) {
 			if (!studentRepository.existsByCidAndActiveTrue(filterRequest.getStudentId()))
@@ -871,7 +910,7 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_PERFORMED_ACTIVITY_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_PERFORMED_ACTIVITY_FETCH)
 	public List<PropertyCount> getCount(String studentCid, String status, String type) {
 		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student") )) {
 			if (studentCid == null || !studentRepository.existsByCidAndActiveTrue(studentCid)) {
@@ -902,45 +941,45 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 					"invalid type : (%s) , type can have following values [psdArea , focusArea , fourS]", type));
 	}
 
-	public Set<GroupResponseBy<ActivityPerformedResponse>> getAllActivityPerformedForCoordinator(String schoolCid ,String gradeId ,String clubId ,String status){
-		
-		if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")) ) {
-			if(schoolCid == null || gradeId == null)
-				throw new ValidationException("SchoolId and Grade id cannot be null.");
-		}
-		schoolCid = getUser().getSchool().getCid();
-		List<Long> grades = null;
-		if(gradeId != null) {
-			grades = Arrays.asList(gradeRepository.findIdByCidAndActiveTrue(gradeId));
-		}else {
-			Long tId = teacherRepository.getIdByUserIdAndActiveTrue(getUserId());
-			if(tId != null)
-				grades = gradeRepository.findGradeIdsOfTeacher(tId);
-		}
-		List<ActivityStatus> statuses = null;
-		if(status == null) {
-			statuses = Arrays.asList(ActivityStatus.SubmittedByStudent, ActivityStatus.SavedByTeacher, ActivityStatus.Reviewed);
-		}else {
-			if(!ActivityStatus.matches(status))
-				throw new ValidationException(String.format("Invalid value (%s) for field status", status));
-			statuses = Arrays.asList(ActivityStatus.valueOf(status));
-		}
-		Set<GroupResponseBy<ActivityPerformed>> response = null;
-		
-		if(clubId == null) {
-			response = activityPerformedRepository.findAllBySchoolCidAndGradesIdInAndActivityStatusIn(schoolCid, grades, statuses);
-		}else {
-			response = activityPerformedRepository.findAllBySchoolCidAndGradesIdInAndActivityStatusInAndClubId(schoolCid, grades, statuses, clubId);
-		}
-		
-		Set<GroupResponseBy<ActivityPerformedResponse>> finalResponse = new HashSet<GroupResponseBy<ActivityPerformedResponse>>();
-		response.stream().forEach(r -> {
-			GroupResponseBy<ActivityPerformedResponse> member = new GroupResponseBy<>();
-			member.setCount(r.getCount());
-			member.setCriterionAndValue("activityName", r.getCriterionValue());
-			member.setResponses(r.getResponses().stream().map(ActivityPerformedResponse :: new).collect(Collectors.toList()));
-			finalResponse.add(member);
-		});
-		return finalResponse;
-	}
+//	public Set<GroupResponseBy<ActivityPerformedResponse>> getAllActivityPerformedForCoordinator(String schoolCid ,String gradeId ,String clubId ,String status){
+//		
+//		if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")) ) {
+//			if(schoolCid == null || gradeId == null)
+//				throw new ValidationException("SchoolId and Grade id cannot be null.");
+//		}
+//		schoolCid = getUser().getSchool().getCid();
+//		List<Long> grades = null;
+//		if(gradeId != null) {
+//			grades = Arrays.asList(gradeRepository.findIdByCidAndActiveTrue(gradeId));
+//		}else {
+//			Long tId = teacherRepository.getIdByUserIdAndActiveTrue(getUserId());
+//			if(tId != null)
+//				grades = gradeRepository.findGradeIdsOfTeacher(tId);
+//		}
+//		List<ActivityStatus> statuses = null;
+//		if(status == null) {
+//			statuses = Arrays.asList(ActivityStatus.SubmittedByStudent, ActivityStatus.SavedByTeacher, ActivityStatus.Reviewed);
+//		}else {
+//			if(!ActivityStatus.matches(status))
+//				throw new ValidationException(String.format("Invalid value (%s) for field status", status));
+//			statuses = Arrays.asList(ActivityStatus.valueOf(status));
+//		}
+//		Set<GroupResponseBy<ActivityPerformed>> response = null;
+//		
+//		if(clubId == null) {
+//			response = activityPerformedRepository.findAllBySchoolCidAndGradesIdInAndActivityStatusIn(schoolCid, grades, statuses);
+//		}else {
+//			response = activityPerformedRepository.findAllBySchoolCidAndGradesIdInAndActivityStatusInAndClubId(schoolCid, grades, statuses, clubId);
+//		}
+//		
+//		Set<GroupResponseBy<ActivityPerformedResponse>> finalResponse = new HashSet<GroupResponseBy<ActivityPerformedResponse>>();
+//		response.stream().forEach(r -> {
+//			GroupResponseBy<ActivityPerformedResponse> member = new GroupResponseBy<>();
+//			member.setCount(r.getCount());
+//			member.setCriterionAndValue("activityName", r.getCriterionValue());
+//			member.setResponses(r.getResponses().stream().map(ActivityPerformedResponse :: new).collect(Collectors.toList()));
+//			finalResponse.add(member);
+//		});
+//		return finalResponse;
+//	}
 }

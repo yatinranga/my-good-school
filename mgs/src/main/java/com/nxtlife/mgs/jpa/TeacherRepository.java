@@ -87,6 +87,12 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 	@Query(value = "select s.id as id , s.cid as cid from Teacher s where s.user.id = :userId and s.active = true")
 	public Map<String, Object> findIdAndCidByUserIdAndActiveTrue(@Param("userId") Long userId);
 	
+	@Query(value = "select t.school.cid from Teacher t where t.cid = ?1 and t.active = true")
+	public String findSchoolCidbyTeacherCid(String teacherCid);
+	
+	@Query(value = "select t.school.id from Teacher t where t.cid = ?1 and t.active = true")
+	public Long findSchoolIdbyTeacherCid(String teacherCid);
+	
 	@Query(value = "select  s.teacherActivityGrades as clubs from Teacher s where s.cid = ?1 and s.active = true")
 	Map<String,Collection<TeacherActivityGrade>> findClubsByCidAndActiveTrue(String cid);
 

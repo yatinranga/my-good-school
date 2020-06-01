@@ -63,8 +63,10 @@ import com.nxtlife.mgs.view.user.UserRequest;
 import com.nxtlife.mgs.view.user.UserResponse;
 import com.nxtlife.mgs.view.user.security.AuthorityResponse;
 import com.nxtlife.mgs.view.user.security.RoleResponse;
+import com.sun.mail.smtp.SMTPSendFailedException;
 
 @Service("userService")
+@Transactional
 public class UserServiceImpl extends BaseService implements UserService, UserDetailsService {
 
 	@Autowired
@@ -633,7 +635,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Override
 	@Async
-	public Boolean sendLoginCredentialsBySMTP(Mail request) {
+	public Boolean sendLoginCredentialsBySMTP(Mail request) throws SMTPSendFailedException{
 		if (request.getMailTo() == null || request.getMailFrom() == null || request.getMailSubject() == null)
 			throw new ValidationException("Please provide to , from and subject if not provided already.");
 		if (request.getMailContent() == null)
@@ -742,7 +744,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Override
 	@Transactional
-	public UserResponse getLoggedInUser() {
+	public UserResponse getLoggedInUserResponse() {
 		User user = getUser();
 		if (user == null)
 			throw new ValidationException("No user found.");
@@ -862,7 +864,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			roleAuthoritiesMap.put(roleId, authorityRepository.findByAuthorityRolesRoleId(roleId));
 		}
 		for (UserResponse user : userResponseList) {
-			user.setRoles(roleRepository.findByRoleUsersUserId(user.getId()));
+			user.setRoles(roleRepository.findByRoleUsersUserCid(user.getId()));
 			for (RoleResponse role : user.getRoles()) {
 				role.setAuthorities(roleAuthoritiesMap.get(role.getId()));
 			}
@@ -881,7 +883,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		if (!user.getSchoolId().equals(schoolId)) {
 			throw new AccessDeniedException("You aren't login with correct user to fetch this details");
 		}
-		user.setRoles(roleRepository.findByRoleUsersUserId(user.getId()));
+		user.setRoles(roleRepository.findByRoleUsersUserCid(user.getId()));
 		for (RoleResponse role : user.getRoles()) {
 			role.setAuthorities(authorityRepository.findByAuthorityRolesRoleId(role.getId()));
 		}

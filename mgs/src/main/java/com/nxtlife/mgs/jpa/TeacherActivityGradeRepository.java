@@ -18,28 +18,28 @@ public interface TeacherActivityGradeRepository extends JpaRepository<TeacherAct
 	
 	boolean findByTeacherCid(String teacherCid);
 	
-	@Query(value = "select tag.teacher from TeacherActivityGrade tag where tag.activity.cid = :activityCid and tag.teacher.school.cid = :schoolCid and tag.active = true")
+	@Query(value = "select distinct tag.teacher from TeacherActivityGrade tag where tag.activity.cid = :activityCid and tag.teacher.school.cid = :schoolCid and tag.active = true")
 	List<Teacher> findAllTeacherByActivityCidAndTeacherSchoolCidActiveTrue(@Param("activityCid") String activityCid ,@Param("schoolCid") String schoolCid );
 	
-	@Query(value = "select tag.teacher from TeacherActivityGrade tag where tag.activity.name = :activityName and tag.teacher.school.cid = :schoolCid and tag.active = true")
+	@Query(value = "select distinct tag.teacher from TeacherActivityGrade tag where tag.activity.name = :activityName and tag.teacher.school.cid = :schoolCid and tag.active = true")
 	List<Teacher> findAllTeacherByActivityNameAndTeacherSchoolCidActiveTrue(@Param("activityName") String activityName ,@Param("schoolCid") String schoolCid );
 	
-	@Query(value = "select tag.teacher from TeacherActivityGrade tag where tag.activity.cid = :activityCid and tag.teacher.school.cid = :schoolCid and tag.grade.cid = :gradeCid and tag.active = true")
+	@Query(value = "select distinct tag.teacher from TeacherActivityGrade tag where tag.activity.cid = :activityCid and tag.teacher.school.cid = :schoolCid and tag.grade.cid = :gradeCid and tag.active = true")
 	List<Teacher> findAllTeacherByActivityCidAndTeacherSchoolCidAndGradeCidAndActiveTrue(@Param("activityCid") String activityCid ,@Param("schoolCid") String schoolCid ,@Param("gradeCid") String gradeCid);
 	
-	@Query(value = "select tag.activity from TeacherActivityGrade tag where tag.teacher.cid = :teacherCid and tag.active = true")
+	@Query(value = "select distinct tag.activity from TeacherActivityGrade tag where tag.teacher.cid = :teacherCid and tag.active = true")
 	List<Activity> findAllActivityByTeacherCidAndActiveTrue(@Param("teacherCid") String teacherCid );
 	
-	@Query(value = "select tag.activity from TeacherActivityGrade tag where tag.teacher.id = :teacherId and tag.active = true")
+	@Query(value = "select distinct tag.activity from TeacherActivityGrade tag where tag.teacher.id = :teacherId and tag.active = true")
 	List<Activity> findAllActivityByTeacherIdAndActiveTrue(@Param("teacherId") Long teacherId);
 	
-	@Query(value = "select tag.teacher from TeacherActivityGrade tag where  tag.active = true")
+	@Query(value = "select distinct tag.teacher from TeacherActivityGrade tag where  tag.active = true")
 	List<Teacher> findAllTeacherByActiveTrue();
 	
-	@Query(value = "select tag.teacher from TeacherActivityGrade tag where tag.teacher.school.cid = :schoolCid and tag.active = true")
+	@Query(value = "select  distinct tag.teacher from TeacherActivityGrade tag where tag.teacher.school.cid = :schoolCid and tag.active = true")
 	List<Teacher> findAllTeacherByTeacherSchoolCidActiveTrue(@Param("schoolCid") String schoolCid );
 	
-	@Query(value = "select tag.teacher from TeacherActivityGrade tag where tag.teacher.school.cid = ?1 and tag.grade.id in ?2 and tag.active = true")
+	@Query(value = "select distinct tag.teacher from TeacherActivityGrade tag where tag.teacher.school.cid = ?1 and tag.grade.id in ?2 and tag.active = true")
 	List<Teacher> findAllTeacherByTeacherSchoolCidAndGradeIdsInAndActiveTrue( String schoolCid , Collection<Long> gradeIds);
 
 //	@Query(value = "select tag.teacher from TeacherActivityGrade tag where tag.teacher.school.cid = ?1 and tag.grade.id in ?2 and tag.activity.cid = ?3 and tag.active = true")

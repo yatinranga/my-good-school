@@ -41,6 +41,9 @@ public interface GradeRepository extends JpaRepository<Grade, Long>{
 	@Query(value = "select a.id from Grade a where a.cid = :cid and a.active = true")
 	Long findIdByCidAndActiveTrue(@Param("cid") String cid);
 	
+	@Query(value = "select g.cid from Grade g join g.students ts where ts.cid = ?1 and g.active = true")
+	String findIdByStudentCidAndActiveTrue(String cid);
+	
 	@Query("Select distinct g.id from Grade g join g.teachers ts where ts.cid = ?1")
 	public List<Long> findGradeIdsOfTeacher(String teacherCid);
 	
