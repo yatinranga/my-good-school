@@ -254,7 +254,7 @@ export class TeacherClubDetailComponent implements OnInit {
           }
         }
         else if (key == 'fileRequests') {
-          if (!(this.createSessionForm.value[key]) == null) {
+          if (!(this.createSessionForm.value[key] == null)) {
             if (this.createSessionForm.value[key].id) {
               formData.append('fileRequests[' + 0 + '].id', this.createSessionForm.value[key].id);
             } else {
@@ -322,6 +322,11 @@ export class TeacherClubDetailComponent implements OnInit {
 
     this.startTime = sHours + ":" + sMinutes;
     this.endTime = eHours + ":" + eMinutes;
+
+    if (session.fileResponses.length) {
+      this.name = session.fileResponses[0].name;
+      this.path = session.fileResponses[0].url;
+    }
 
     this.createSessionForm.controls.startDate.patchValue(session.startDate.split(' ')[0]);
     this.createSessionForm.patchValue({
