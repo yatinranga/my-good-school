@@ -177,8 +177,7 @@
                                                                 {{activity.fileResponses.length ? "" : "NA"}}
                                                                 <div *ngFor="let file of activity.fileResponses">
                                                                     <div>
-                                                                        <a [attr.href]="file.url"
-                                                                            (click)="downloadFile(file.url)">
+                                                                        <a  (click)="downloadFile(file.url)" download #dwnld>
                                                                             <i class="fa fa-file-audio"
                                                                                 *ngIf="file.extension == 'mp3'"></i>
                                                                             <i class="fa fa-image"
@@ -208,8 +207,7 @@
                                                                 {{activity.fileResponses.length ? "" : "NA"}}
                                                                 <div *ngFor="let file of activity.fileResponses">
                                                                     <div>
-                                                                        <a [attr.href]="file.url"
-                                                                            (click)="downloadFile(file.url)">
+                                                                        <a (click)="downloadFile(file.url)" download #dwnld>
                                                                             <i class="fa fa-file-audio"
                                                                                 *ngIf="file.extension == 'mp3'"></i>
                                                                             <i class="fa fa-image"

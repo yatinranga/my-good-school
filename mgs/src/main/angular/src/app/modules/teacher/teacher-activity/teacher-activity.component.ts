@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { BASE_URL } from 'src/app/services/app.constant';
+
 declare let $: any;
 
 @Component({
@@ -10,6 +12,9 @@ declare let $: any;
   styleUrls: ['./teacher-activity.component.scss']
 })
 export class TeacherActivityComponent implements OnInit {
+
+  @ViewChild('dwnld', { static: false }) dwnld: ElementRef;
+
 
   activityType = "All";
 
@@ -344,9 +349,8 @@ export class TeacherActivityComponent implements OnInit {
 
   // to DOWNLOAD the Attachments
   downloadFile(url) {
-    this.teacherService.downloadAttachment(url).subscribe((res) => {
-      console.log(res);
-    }, (err) => { console.log(err) });
+    this.dwnld.nativeElement.href = BASE_URL + "/file/download?filePath=" + url;
+    this.dwnld.nativeElement.click();
   }
 
   // Filter Activities on the basis of Activity Type, Grade and Students

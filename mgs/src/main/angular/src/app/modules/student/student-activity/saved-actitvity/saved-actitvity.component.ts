@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StudentService } from 'src/app/services/student.service';
 import { AlertService } from 'src/app/services/alert.service';
+import { BASE_URL } from 'src/app/services/app.constant';
+
 declare let $: any;
 
 @Component({
@@ -11,6 +13,7 @@ declare let $: any;
 })
 export class SavedActitvityComponent implements OnInit {
 
+  @ViewChild('dwnld', { static: false }) dwnld: ElementRef;
 
   maxDate: string;
   minDate: string;
@@ -538,9 +541,8 @@ export class SavedActitvityComponent implements OnInit {
 
   // to DOWNLOAD the Attachments
   downloadFile(url) {
-    this.studentService.downloadAttachment(url).subscribe((res) => {
-      console.log(res);
-    }, (err) => { console.log(err) });
+    this.dwnld.nativeElement.href = BASE_URL + "/file/download?filePath=" + url;
+    this.dwnld.nativeElement.click();
   }
 
   setMinDate() {
