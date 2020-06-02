@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { BASE_URL } from 'src/app/services/app.constant';
+
 declare let $: any;
 
 @Component({
@@ -309,7 +311,7 @@ export class TeacherHomeComponent implements OnInit {
 
     if (session.fileResponses.length) {
       this.name = session.fileResponses[0].name;
-      this.path = session.fileResponses[0].url;
+      this.path = BASE_URL + "/file/download?filePath=" +session.fileResponses[0].url;
     }
 
     this.createSessionForm.controls.startDate.patchValue(session.startDate.split(' ')[0]);
