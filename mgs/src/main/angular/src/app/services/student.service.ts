@@ -111,7 +111,7 @@ export class StudentService {
 
   // DOWNLOAD Attachmeents
   downloadAttachment(filePath) {
-    return this.httpClient.get(BASE_URL + "/file/download?filePath=" + filePath);
+    return this.http.get("/file/download?filePath=" + filePath);
   }
 
   // Profile Photo Update

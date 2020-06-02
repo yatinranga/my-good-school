@@ -13,9 +13,7 @@ declare let $: any;
 })
 export class TeacherActivityComponent implements OnInit {
 
-  @ViewChild('dwnld', { static: false }) dwnld: ElementRef;
-
-
+  BASE_URL: string;
   activityType = "All";
 
   pendingActivitiesArr = [];
@@ -53,7 +51,9 @@ export class TeacherActivityComponent implements OnInit {
 
 
 
-  constructor(private teacherService: TeacherService, private alertService: AlertService, private formBuilder: FormBuilder) { }
+  constructor(private teacherService: TeacherService, private alertService: AlertService, private formBuilder: FormBuilder) {
+    this.BASE_URL = BASE_URL + "/file/download?filePath=";
+  }
 
   ngOnInit() {
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
@@ -345,12 +345,6 @@ export class TeacherActivityComponent implements OnInit {
     } else {
       this.totalScore = 0;
     }
-  }
-
-  // to DOWNLOAD the Attachments
-  downloadFile(url) {
-    this.dwnld.nativeElement.href = BASE_URL + "/file/download?filePath=" + url;
-    this.dwnld.nativeElement.click();
   }
 
   // Filter Activities on the basis of Activity Type, Grade and Students

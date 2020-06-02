@@ -15,9 +15,12 @@ export class SavedActitvityComponent implements OnInit {
 
   @ViewChild('dwnld', { static: false }) dwnld: ElementRef;
 
+  BASE_URL: string;
   maxDate: string;
   minDate: string;
-  constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService) { }
+  constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService) {
+    this.BASE_URL = BASE_URL + "/file/download?filePath=";
+  }
 
   addActivityShow: boolean;
   studentInfo: any = [];
@@ -537,12 +540,6 @@ export class SavedActitvityComponent implements OnInit {
   resetForm() {
     this.savedActivityForm.reset();
     this.files = [];
-  }
-
-  // to DOWNLOAD the Attachments
-  downloadFile(url) {
-    this.dwnld.nativeElement.href = BASE_URL + "/file/download?filePath=" + url;
-    this.dwnld.nativeElement.click();
   }
 
   setMinDate() {

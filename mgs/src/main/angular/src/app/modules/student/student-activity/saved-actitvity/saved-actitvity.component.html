@@ -140,20 +140,19 @@
                                             </div>
                                             <div class="col-6" *ngIf="activity.fileResponses">
                                                 <div class="attachment" *ngIf="activity.fileResponses.length">
-                                                    <h5> Attachments </h5>
+                                                    <h5> Attachments : </h5>
+                                                    {{activity.fileResponses.length ? "" : "NA"}}
                                                     <div *ngFor="let file of activity.fileResponses">
-                                                        {{activity.fileResponses.length ? "" : "NA"}}
-                                                        <div>
-                                                            <a (click)="downloadFile(file.url)" download #dwnld>
-                                                                <i class="fa fa-file-audio"
-                                                                    *ngIf="file.extension == 'mp3'"></i>
-                                                                <i class="fa fa-image"
-                                                                    *ngIf="file.extension=='jpg' || file.extension=='png'"></i>
-                                                                <i class="fa fa-video-camera"
-                                                                    *ngIf="file.extension=='video'"></i>
-                                                                {{file.name}}
-                                                            </a>
-                                                        </div>
+
+                                                        <a [href]="BASE_URL + file.url" download>
+                                                            <i class="fa fa-file-audio"
+                                                                *ngIf="file.extension == 'mp3'"></i>
+                                                            <i class="fa fa-image"
+                                                                *ngIf="file.extension=='jpg' || file.extension=='png'"></i>
+                                                            <i class="fa fa-video-camera"
+                                                                *ngIf="file.extension=='video'"></i>
+                                                            {{file.name}}
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -236,7 +235,7 @@
                                                     {{activity.fileResponses.length ? "" : "NA"}}
                                                     <div *ngFor="let file of activity.fileResponses">
                                                         <div>
-                                                            <a (click)="downloadFile(file.url)" download #dwnld>
+                                                            <a [href]="BASE_URL + file.url" download>
                                                                 <i class="fa fa-file-audio"
                                                                     *ngIf="file.extension == 'mp3'"></i>
                                                                 <i class="fa fa-image"
