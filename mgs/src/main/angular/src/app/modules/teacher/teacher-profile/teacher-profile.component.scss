@@ -1,46 +1,22 @@
 .teacher_profile_main{
     width: 100%;
     display: inline-block;
+    padding: 20px 10px;
 }
-.bgimg img {
-    width: 100%;
-    height: 240px;
+
+.leftprofile{
+    width: 22%;
+    display: inline-block;
+    float: left;
     position: relative;
-}
-button:hover {
-    background: #c191b3 !important;
-    color: #fafafa;
-}
-button.update {
-    float: right;
-    position: absolute;
-    top: 250px;
-    right: 10px;
-    background: #cfc1cb;
-    padding: 3px 7px;
-    border: none;
+    z-index: 1;
+    padding: 10px;
+    border-right: 1px solid #ddd;
 }
 .teacher_image {
-    position: absolute;
-    left: 81px;
-    border: 5px solid #c192b3;
-    z-index: 2;
-    top: 225px;
-}
-.teachername h4 {
-    font-weight: 600;
-    font-size: 30px;
-}
-.teachername {
-    float: right;
-    position: absolute;
-    left: 300px;
-    top: 225px;
-    color: #c191b3;
-}
-.teachername button {
-    margin: 5px 0;
-    background: #cfc1cb;
+    width: 100%;
+    display: inline-block;
+    text-align: center;
 }
 .teacher_image img {
     opacity: 1;
@@ -48,54 +24,63 @@ button.update {
     height: 180px;
     z-index: 2;
 }
-.lowerbox{
-    width: 100%;
-    padding: 10px 30px;
-    display: inline-block;
-}
-.leftprofile{
-    width: 22%;
-    display: inline-block;
-    float: left;
-    position: relative;
-    z-index: 1;
-    top: 15px;
-    padding: 10px;
-    box-shadow: 0 0 10px #ccc;
-    border: 1px solid #d0d0d0;
-}
 .leftprofiletext{
     width: 100%;
-    margin-top: 50px;
     display: inline-block;
 }
-.leftprofiletext textarea {
-    max-width: 280px;
-    padding: 7px;
-    overflow: hidden;
-    min-height: 235px;
-    font-size: 15.5px;
-    line-height: 22px;
-    background: #cfc1cb;
-    color: black;
-    border: none;
+.teacher_image h4 {
+    font-weight: 600;
+    font-size: 30px;
+    margin-top: 10px;
 }
 .number {
     width: fit-content;
-    margin: 10px 0;
+    margin: 10px auto;
+    text-align: center;
 }
 .number input{
     background: #cfc1cb;
     color: black;
     border: none;
-    padding: 5px;
+    padding: 5px 10px;
     font-size: 17px;
+    border-radius: 3px;
+}
+.leftprofiletext textarea {
+    max-width: 280px;
+    padding: 7px;
+    overflow: hidden;
+    min-height: 175px;
+    font-size: 16px;
+    line-height: 22px;
+    background: #cfc1cb;
+    color: black;
+    border: none;
 }
 .rightprofile{
     width: 75%;
     display: grid;
     float: right;
-    margin-top: 50px;
+}
+.edit_buttons{
+    width: 100%;
+    display: inline-block;
+    margin: 10px 0;
+}
+button:hover {
+    background: #c191b3 !important;
+    color: #fafafa;
+}
+button.update {
+    float: right;
+    background: #cfc1cb;
+    padding: 3px 7px;
+    border: none;
+}
+.edit_buttons button  {
+    margin: 5px 0;
+    background: #cfc1cb;
+    border: none;
 }
 .rightprofile .heading{
     width: 100%;

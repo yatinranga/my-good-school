@@ -1,87 +1,82 @@
 <div class="main">
     <div class="content_main">
         <div class="teacher_profile_main">
-            <div class="bgimg">
-                <img src="assets/images/banner11.png">
-                <button (click)="updateProfile()" class="update"> {{setDisabled ? 'Edit Profile' :'Update'}}</button>
+            <div class="leftprofile">
                 <div class="teacher_image">
                     <img [src]="path">
-                </div>
-                <div class="teachername">
                     <h4> {{teacherDetails['name']}} </h4>
-                    <button class="edit_profile" (click)="photoInput.click()"> <i class="fa fa-edit" title="Edit"> </i>
-                        Edit Profile Photo </button> <br>
+                </div>
+                <div class="leftprofiletext">
+                    <div class="number">
+                        <!-- <i class="fa fa-phone-alt"></i> -->
+                        <input type="tel" maxlength="10" pattern="[0-9]{10}" name="mobileNumbe"
+                            [(ngModel)]="mobileNumber" [disabled]="setDisabled" (ngModelChange)="temp($event)" />
+                    </div>
+                    <hr>
+                    <div class="number">
+                        <!-- <i class="fa fa-envelope"></i> -->
+                        <input [(ngModel)]="email" [disabled]="setDisabled" [(ngModel)]="email" />
+                    </div>
+                    <hr>
+                    <div *ngIf="teacherDetails['profileBrief']">
+                        <textarea name="profileBrief" rows="6" cols="50" [disabled]="setDisabled"
+                            [(ngModel)]="profileBrief"></textarea>
+                    </div>
                 </div>
             </div>
-            <div class="lowerbox">
-                <div class="leftprofile">
-                    <div class="leftprofiletext">
-                        <div class="number">
-                            <!-- <i class="fa fa-phone-alt"></i> -->
-                            <input type="tel" maxlength="10" pattern="[0-9]{10}" name="mobileNumbe"
-                                [(ngModel)]="mobileNumber" [disabled]="setDisabled" (ngModelChange)="temp($event)" />
-                        </div>
-                        <div class="number">
-                            <!-- <i class="fa fa-envelope"></i> -->
-                            <input [(ngModel)]="email" [disabled]="setDisabled" [(ngModel)]="email" />
-                        </div>
-                        <div *ngIf="teacherDetails['profileBrief']">
-                            <textarea name="profileBrief" rows="6" cols="50" [disabled]="setDisabled"
-                                [(ngModel)]="profileBrief"></textarea>
-                        </div>
+            <div class="rightprofile">
+                <div class="edit_buttons">
+                    <button class="edit_profile" (click)="photoInput.click()"> <!-- <i class="fa fa-edit" title="Edit"> </i> -->
+                        Edit Profile Photo </button>
+                <button (click)="updateProfile()" class="update"> {{setDisabled ? 'Edit Profile' :'Update'}}</button>
+                </div>
+                <div class="heading">
+                    <h2> About Me </h2>
+                </div>
+                <div class="rightprofiletext">
+                    <div class="basic-info">
+                        <h3> Basic Info </h3>
+                        <ul>
+                            <!-- {{teacherDetails['mobileNumber']}} -->
+                            <!-- <input [(ngModel)]="email" placeholder="email" [disabled]="isEditable"/> -->
+                            <li>
+                                <!-- <i class="fa fa-calendar" aria-hidden="true"></i> -->
+                                DOB - <label> {{teacherDetails['dob'] | date }}</label></li>
+                            <li>
+                                <!-- <i class='fa fa-restroom'></i> -->
+                                Gender - <label> {{teacherDetails['gender']}}</label> </li>
+                            <li>
+                                <!-- <i class="fa fa-school"></i> -->
+                                School Name - <label> {{teacherDetails['schoolName']}}</label> </li>
+                            <li>
+                                <!-- <i class="fa fa-user-graduate"></i> -->
+                                Qualifications - <label> {{teacherDetails['qualification']}}</label> </li>
+                            <li>
+                                <!-- <i class="fa fa-running"></i> -->
+                                Coach - <label> {{teacherDetails['isCoach'] ? "Yes" : "No" }} </label> </li>
+                            <li>
+                                <!-- <i class="fa fa-chalkboard-teacher"></i> -->
+                                Class Teacher - <label> {{teacherDetails['isClassTeacher'] ? "Yes" : "No" }}</label>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="teacher_activities_main">
+                        <h3> Clubs </h3>
+                        <ul *ngFor="let c of assignedClubsArr">
+                            <li>{{c.name}}</li>
+                        </ul>
+                        <p *ngIf="!(assignedClubsArr.length)">No Society Assigned</p>
+
+                    </div>
+                    <div class="teacher_activities_main">
+                        <h3> Societies </h3>
+                        <ul *ngFor="let s of assignedSocietyArr">
+                            <li>{{s.name}}</li>
+                        </ul>
+                        <p *ngIf="!(assignedSocietyArr.length)">No Society Assigned</p>
+
                     </div>
                 </div>
-
-                <div class="rightprofile">
-                    <div class="heading">
-                        <h2> About Me </h2>
-                    </div>
-                    <div class="rightprofiletext">
-                        <div class="basic-info">
-                            <h3> Basic Info </h3>
-                            <ul>
-                                <!-- {{teacherDetails['mobileNumber']}} -->
-                                <!-- <input [(ngModel)]="email" placeholder="email" [disabled]="isEditable"/> -->
-                                <li>
-                                    <!-- <i class="fa fa-calendar" aria-hidden="true"></i> -->
-                                    DOB - <label> {{teacherDetails['dob'] | date }}</label></li>
-                                <li>
-                                    <!-- <i class='fa fa-restroom'></i> -->
-                                    Gender - <label> {{teacherDetails['gender']}}</label> </li>
-                                <li>
-                                    <!-- <i class="fa fa-school"></i> -->
-                                    School Name - <label> {{teacherDetails['schoolName']}}</label> </li>
-                                <li>
-                                    <!-- <i class="fa fa-user-graduate"></i> -->
-                                    Qualifications - <label> {{teacherDetails['qualification']}}</label> </li>
-                                <li>
-                                    <!-- <i class="fa fa-running"></i> -->
-                                    Coach - <label> {{teacherDetails['isCoach'] ? "Yes" : "No" }} </label> </li>
-                                <li>
-                                    <!-- <i class="fa fa-chalkboard-teacher"></i> -->
-                                    Class Teacher - <label> {{teacherDetails['isClassTeacher'] ? "Yes" : "No" }}</label>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="teacher_activities_main">
-                            <h3> Clubs </h3>
-                            <ul *ngFor="let c of assignedClubsArr">
-                                <li>{{c.name}}</li>
-                            </ul>
-                            <p *ngIf="!(assignedClubsArr.length)">No Society Assigned</p>
-
-                        </div>
-                        <div class="teacher_activities_main">
-                            <h3> Societies </h3>
-                            <ul *ngFor="let s of assignedSocietyArr">
-                                <li>{{s.name}}</li>
-                            </ul>
-                            <p *ngIf="!(assignedSocietyArr.length)">No Society Assigned</p>
-
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>
