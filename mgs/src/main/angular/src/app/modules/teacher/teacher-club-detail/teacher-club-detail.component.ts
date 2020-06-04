@@ -40,6 +40,8 @@ export class TeacherClubDetailComponent implements OnInit {
   minDate = ""; // Min Date to create Session
   path = "" // to show the selected attachment
   name = "" // Name of the File attached in Session
+  teacherId = "";
+
 
   constructor(private teacherService: TeacherService, private alertService: AlertService, private formBuilder: FormBuilder) { }
 
@@ -55,9 +57,13 @@ export class TeacherClubDetailComponent implements OnInit {
     }
 
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
+    this.teacherService.getProfile(this.teacherInfo.id).subscribe((res) => {
+      this.teacherId = res.id;
+      this.getClubStudents(this.clubObject.id, res.id);
+    })
+
     this.getSchoolGrades(this.teacherInfo.schoolId);
     this.getClubRequests(this.clubObject.id);
-    this.getClubStudents(this.clubObject.id, this.teacherInfo.id);
     this.getClubSession(this.clubObject.id);
 
     this.createSessionForm = this.formBuilder.group({
@@ -107,7 +113,7 @@ export class TeacherClubDetailComponent implements OnInit {
             this.clubReqArr.splice(index, 1);
             // this.clubReqArr.unshift(res);
             this.getClubRequests(this.clubObject.id);
-            this.getClubStudents(this.clubObject.id, this.teacherInfo.teacher.id);
+            this.getClubStudents(this.clubObject.id, this.teacherId);
           }, (err) => { console.log(err); })
         }
       })
@@ -327,7 +333,7 @@ export class TeacherClubDetailComponent implements OnInit {
 
     if (session.fileResponses.length) {
       this.name = session.fileResponses[0].name;
-      this.path = BASE_URL + "/file/download?filePath=" +session.fileResponses[0].url;
+      this.path = BASE_URL + "/file/download?filePath=" + session.fileResponses[0].url;
     }
 
     this.createSessionForm.controls.startDate.patchValue(session.startDate.split(' ')[0]);

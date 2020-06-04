@@ -1,21 +1,21 @@
 <div class="sortby"> PSD :
     <select (change)="filterActivities()" name="psdAreas" [(ngModel)]="psdAreas">
-        <option value="" selected disabled> Choose Here </option>
-        <option value="">None</option>
+        <!-- <option value="" selected disabled> Choose Here </option> -->
+        <option value="" selected> All </option>
         <option *ngFor="let ps of psdAreaArr" value={{ps}}>{{ps}}</option>
     </select>
 </div>
 <div class="sortby"> Focus Areas :
     <select (change)="filterActivities()" name="focusAreas" [(ngModel)]="focusAreas">
-        <option value="" selected disabled> Choose Here</option>
-        <option value="">None</option>
+        <!-- <option value="" selected disabled> Choose Here</option> -->
+        <option value="" selected> All </option>
         <option *ngFor="let ps of focusAreaArr" value={{ps}}>{{ps}}</option>
     </select>
 </div>
 <div class="sortby"> 4S :
     <select (change)="filterActivities()" name="fourS" [(ngModel)]="fourS">
-        <option value="" selected disabled> Choose Here </option>
-        <option value="">None</option>
+        <!-- <option value="" selected disabled> Choose Here </option> -->
+        <option value="" selected> All </option>
         <option *ngFor="let ps of fourSArr" value={{ps}}>{{ps}}</option>
     </select>
 </div>
