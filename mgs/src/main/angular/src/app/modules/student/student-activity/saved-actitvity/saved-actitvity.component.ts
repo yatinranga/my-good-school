@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StudentService } from 'src/app/services/student.service';
 import { AlertService } from 'src/app/services/alert.service';
@@ -13,55 +13,53 @@ declare let $: any;
 })
 export class SavedActitvityComponent implements OnInit {
 
-  @ViewChild('dwnld', { static: false }) dwnld: ElementRef;
-
   BASE_URL: string;
-  maxDate: string;
-  minDate: string;
-  constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService) {
-    this.BASE_URL = BASE_URL + "/file/download?filePath=";
-  }
+  maxDate: string; // max date to add a activity
+  minDate: string; // min date to add a activity
+  activityDate: any; // date on which activity is performed
 
-  addActivityShow: boolean;
   studentInfo: any = [];
+  schoolId: any;
+  studentId: any;
+  activityId: "";
+  activityType = 'All';
+
   savedActivitiesArr = [];
   submittedActivitiesArr = [];
   reviewedActivitiesArr = [];
-  allActivitiesArr = [];
-  activities = [];
-  coaches = [];
-
-  psdAreaArr = [];
-  focusAreaArr = [];
-  fourSArr = [];
-  schoolId: any;
-  studentId: any;
-  editActivityShow = false;
-  savedActivityForm: FormGroup;
-
-
-  activityId: "";
-  activityDate: any;
-  files = [];
-
-  activityType = 'All';
-  fourS: any = '';
-  psdAreas: any = '';
-  focusAreas: any = '';
-
-  loader = false;
-  modal_loader = false;
-  submit_loader = false;
-
+  allActivitiesArr = []; // single arr for performed actvities
   copySavedActi: any = []; // used for filter activity
   copysubmitActi: any = []; // used for filter activity
   copyAllActi: any = []; // used for filter activity
   copyReviewActi: any = []; // used for filter activity
 
-  activitiesArr = []; // single arr for performed actvities
-  order = false;
+  enrolledActivities = [];
+  coaches = [];
+  psdAreaArr = [];
+  focusAreaArr = [];
+  fourSArr = [];
+  fourS: any = '';
+  psdAreas: any = '';
+  focusAreas: any = '';
+
+  editActivityShow = false;
+  addActivityShow: boolean;
+
+  savedActivityForm: FormGroup;
+
+  files = []; // Attachment Array for Perforemd Activity
+
+  loader = false;
+  modal_loader = false;
+  submit_loader = false;
+
+  order = false; // sort the array
   count = 0; // to count the number of words enter
-  index: number // used when Acti_Status  =  saved to update the table.
+  index: number // used when (Acti_Status  =  saved ) to update the table.
+
+  constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService) {
+    this.BASE_URL = BASE_URL + "/file/download?filePath=";
+  }
 
   ngOnInit() {
     this.setMinDate();
@@ -100,7 +98,7 @@ export class SavedActitvityComponent implements OnInit {
       console.log(res);
       this.savedActivitiesArr = res;
       this.copySavedActi = Object.assign([], res);
-      this.activitiesArr = this.savedActivitiesArr;
+      this.allActivitiesArr = this.savedActivitiesArr;
       this.loader = false;
       this.filterActivities();
     }, (err) => {
@@ -114,7 +112,7 @@ export class SavedActitvityComponent implements OnInit {
     this.studentService.getSubmittedActivity(studentId).subscribe((res) => {
       this.submittedActivitiesArr = res;
       this.copysubmitActi = Object.assign([], res);
-      this.activitiesArr = this.submittedActivitiesArr;
+      this.allActivitiesArr = this.submittedActivitiesArr;
       this.loader = false;
       this.filterActivities();
     }, (err) => {
@@ -128,7 +126,6 @@ export class SavedActitvityComponent implements OnInit {
     this.studentService.getAllActivity(studentId).subscribe((res) => {
       this.allActivitiesArr = res;
       this.copyAllActi = Object.assign([], res);
-      this.activitiesArr = this.allActivitiesArr;
       this.loader = false;
       this.filterActivities();
     }, (err) => {
@@ -143,7 +140,7 @@ export class SavedActitvityComponent implements OnInit {
     this.studentService.getReviewedActivity(studentId).subscribe((res) => {
       this.reviewedActivitiesArr = res;
       this.copyReviewActi = Object.assign([], res);
-      this.activitiesArr = this.reviewedActivitiesArr;
+      this.allActivitiesArr = this.reviewedActivitiesArr;
       this.loader = false;
       this.filterActivities();
     }, (err) => {
@@ -187,11 +184,6 @@ export class SavedActitvityComponent implements OnInit {
     this.files = [];
     this.addActivityShow = true;
     this.editActivityShow = false;
-    // $('#addActivityModal').modal({
-    //   backdrop: 'static',
-    //   keyboard: false
-    // });
-    // $('#addActivityModal').modal('show');
   }
 
   // to SUBMIT the activity
@@ -228,10 +220,10 @@ export class SavedActitvityComponent implements OnInit {
   //       this.studentService.submitActivity(activityId).subscribe((res) => {
   //         console.log(res);
   //         if (this.activityType === 'All') {
-  //           this.activitiesArr.shift();
-  //           this.activitiesArr.unshift(res);
+  //           this.allActivitiesArr.shift();
+  //           this.allActivitiesArr.unshift(res);
   //         } else {
-  //           this.activitiesArr.shift();
+  //           this.allActivitiesArr.shift();
   //         }
   //         this.alertService.showSuccessAlert('Activity Submitted !');
   //       }, (err) => {
@@ -251,7 +243,7 @@ export class SavedActitvityComponent implements OnInit {
         console.log(activityId);
         this.studentService.deleteActivity(activityId).subscribe((res) => {
           console.log(res);
-          this.activitiesArr.splice(i, 1);
+          this.allActivitiesArr.splice(i, 1);
           this.alertService.showSuccessToast('Activity Deleted !');
         },
           (err) => console.log(err));
@@ -260,10 +252,10 @@ export class SavedActitvityComponent implements OnInit {
   }
 
 
-  // to get all activities of particular school
+  // to get all list of Club/Society Student enrolled in
   getStudentActivity() {
     this.studentService.getAllEnrolledClub().subscribe((res) => {
-      this.activities = res;
+      this.enrolledActivities = res;
     },
       (err) => console.log(err)
     );
@@ -333,8 +325,8 @@ export class SavedActitvityComponent implements OnInit {
       this.studentService.addActivity('/api/student/activity', formData).subscribe(
         (res) => {
           console.log(res);
-          this.activitiesArr.splice(this.index, 1);
-          this.activitiesArr.unshift(res);
+          this.allActivitiesArr.splice(this.index, 1);
+          this.allActivitiesArr.unshift(res);
           this.submit_loader = false;
           $('#addActivityModal').modal('hide');
           $('.modal-backdrop').remove();
@@ -381,7 +373,7 @@ export class SavedActitvityComponent implements OnInit {
       this.studentService.addActivity('/api/student/activity', formData).subscribe(
         (res) => {
           console.log(res);
-          this.activitiesArr.unshift(res);
+          this.allActivitiesArr.unshift(res);
           this.submit_loader = false;
           $('#addActivityModal').modal('hide');
           $('.modal-backdrop').remove();
@@ -390,7 +382,7 @@ export class SavedActitvityComponent implements OnInit {
           //   this.directSubmitActivity(res.id);
           // });
           this.addActivityShow = false;
-          console.log(this.activitiesArr);
+          console.log(this.allActivitiesArr);
         },
         (err) => {
           this.submit_loader = false;
@@ -428,7 +420,7 @@ export class SavedActitvityComponent implements OnInit {
   activityView(event) {
     this.activityType = event;
     this.loader = true;
-    this.activitiesArr = [];
+    this.allActivitiesArr = [];
     switch (this.activityType) {
       case 'All': {
         this.getStudentAllActivities(this.studentId);
@@ -457,22 +449,22 @@ export class SavedActitvityComponent implements OnInit {
   filterActivities = () => {
     switch (this.activityType) {
       case 'All': {
-        this.activitiesArr = this.filter(Object.assign([], this.copyAllActi));
+        this.allActivitiesArr = this.filter(Object.assign([], this.copyAllActi));
         break;
       }
 
       case 'Saved': {
-        this.activitiesArr = this.filter(Object.assign([], this.copySavedActi));
+        this.allActivitiesArr = this.filter(Object.assign([], this.copySavedActi));
         break;
       }
 
       case 'Reviewed': {
-        this.activitiesArr = this.filter(Object.assign([], this.copyReviewActi));
+        this.allActivitiesArr = this.filter(Object.assign([], this.copyReviewActi));
         break;
       }
 
       case 'Submitted': {
-        this.activitiesArr = this.filter(Object.assign([], this.copysubmitActi));
+        this.allActivitiesArr = this.filter(Object.assign([], this.copysubmitActi));
         break;
       }
     }
@@ -504,15 +496,12 @@ export class SavedActitvityComponent implements OnInit {
 
   }
 
-  getDate(date) {
-    return new Date(date);
-  }
-
   onCancel() {
     this.editActivityShow = false;
     this.addActivityShow = false;
   }
 
+  // Remove Attachments
   removeFile(index: number) {
     this.files.splice(index, 1);
   }
@@ -521,7 +510,7 @@ export class SavedActitvityComponent implements OnInit {
   sortByStatus() {
     this.order = !this.order;
     // sort by activityStatus
-    this.activitiesArr.sort((a, b) => {
+    this.allActivitiesArr.sort((a, b) => {
       const nameA = a.activityStatus.toUpperCase(); // ignore upper and lowercase
       const nameB = b.activityStatus.toUpperCase(); // ignore upper and lowercase
       if (nameA < nameB) {
@@ -542,6 +531,7 @@ export class SavedActitvityComponent implements OnInit {
     this.files = [];
   }
 
+  // Set min date to ADD Activity
   setMinDate() {
     const minDate = new Date();
     minDate.setDate(minDate.getDate() - 30);
@@ -556,6 +546,7 @@ export class SavedActitvityComponent implements OnInit {
     this.minDate = [year, month, day].join('-');
   }
 
+  // Set max date to ADD Activity
   setMaxDate() {
     const minDate = new Date();
     let month: any = minDate.getMonth() + 1;

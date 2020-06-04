@@ -10,7 +10,7 @@
                     <div class="number">
                         <!-- <i class="fa fa-phone-alt"></i> -->
                         <input type="tel" maxlength="10" pattern="[0-9]{10}" name="mobileNumbe"
-                            [(ngModel)]="mobileNumber" [disabled]="setDisabled" (ngModelChange)="temp($event)" />
+                            [(ngModel)]="mobileNumber" [disabled]="setDisabled" />
                     </div>
                     <hr>
                     <div class="number">
@@ -26,9 +26,11 @@
             </div>
             <div class="rightprofile">
                 <div class="edit_buttons">
-                    <button class="edit_profile" (click)="photoInput.click()"> <!-- <i class="fa fa-edit" title="Edit"> </i> -->
+                    <button class="edit_profile" (click)="photoInput.click()">
+                        <!-- <i class="fa fa-edit" title="Edit"> </i> -->
                         Edit Profile Photo </button>
-                <button (click)="updateProfile()" class="update"> {{setDisabled ? 'Edit Profile' :'Update'}}</button>
+                    <button (click)="updateProfile()" class="update">
+                        {{setDisabled ? 'Edit Profile' :'Update'}}</button>
                 </div>
                 <div class="heading">
                     <h2> About Me </h2>

@@ -11,54 +11,56 @@ export class StudentAwardsComponent implements OnInit {
   schoolId: any;
   studentId: any;
   awardsArr = [];
-  copyAwardArr : any = [];
-  loader : boolean = false ;
+  copyAwardArr: any = [];
+  loader: boolean = false;
 
   focusAreaArr = [];
   psdAreaArr = []
-  fourSArr =[];
+  fourSArr = [];
 
-  fourS :  any = "";
-  psdAreas : any = "";
-  focusAreas : any = "";
+  fourS: any = "";
+  psdAreas: any = "";
+  focusAreas: any = "";
 
-  constructor(private studentService : StudentService) { }
+  constructor(private studentService: StudentService) { }
 
   ngOnInit() {
     this.studentInfo = JSON.parse(localStorage.getItem('user_info'));
     this.studentId = this.studentInfo.id;
     this.schoolId = this.studentInfo.schoolId;
-    
+
     this.getAwards();
     this.getAreas();
   }
 
   // get PSD , Focus Area and 4S
-  getAreas(){
+  getAreas() {
     this.studentService.getActivityAreas().subscribe((res) => {
       this.psdAreaArr = res["PSD Areas"];
       this.focusAreaArr = res["Focus Areas"];
       this.fourSArr = res["Four S"];
     },
-    (err) => {console.log(err);});
+      (err) => { console.log(err); });
   }
 
   // get All awards of Student
-  getAwards(){
+  getAwards() {
     this.loader = true;
     this.studentService.getAllAwards(this.studentId).subscribe((res) => {
       this.awardsArr = res;
-      this.copyAwardArr = Object.assign([],res);
+      this.copyAwardArr = Object.assign([], res);
       console.log(res);
       this.loader = false;
     },
-    (err) =>  {console.log(err)
-    this.loader = false });
+      (err) => {
+        console.log(err)
+        this.loader = false
+      });
   }
- 
+
   // Filter Awards 
   filterAwards = () => {
-    this.awardsArr = this.filter(Object.assign([],this.copyAwardArr));
+    this.awardsArr = this.filter(Object.assign([], this.copyAwardArr));
   }
 
   // Actual Filterting of Awards on the basis of selected criteria
@@ -68,35 +70,35 @@ export class StudentAwardsComponent implements OnInit {
     if (this.psdAreas && this.fourS && this.focusAreas) {
       filterAwardsArr = array.filter(e => e.psdAreas && e.psdAreas.includes(this.psdAreas) && e.fourS == this.fourS && e.focusAreas && e.focusAreas.includes(this.focusAreas));
       this.loader = false;
-    } 
+    }
     else if (this.psdAreas && this.fourS) {
       filterAwardsArr = array.filter(e => e.psdAreas && e.psdAreas.includes(this.psdAreas) && e.fourS == this.fourS);
       this.loader = false;
-    } 
+    }
     else if (this.fourS && this.focusAreas) {
       filterAwardsArr = array.filter(e => e.fourS == this.fourS && e.focusAreas && e.focusAreas.includes(this.focusAreas));
-      this.loader = false; 
-    } 
+      this.loader = false;
+    }
     else if (this.psdAreas && this.focusAreas) {
       filterAwardsArr = array.filter(e => e.psdAreas && e.psdAreas.includes(this.psdAreas) && e.focusAreas && e.focusAreas.includes(this.focusAreas));
       this.loader = false;
-    } 
+    }
     else if (this.psdAreas) {
       filterAwardsArr = array.filter(e => e.criterionValue == this.psdAreas);
       this.loader = false;
-    } 
+    }
     else if (this.fourS) {
       filterAwardsArr = array.filter(e => e.criterionValue == this.fourS);
       this.loader = false;
-    } 
+    }
     else if (this.focusAreas) {
       filterAwardsArr = array.filter(e => e.criterionValue == this.focusAreas);
       this.loader = false;
-    } 
+    }
     else {
       filterAwardsArr = array;
-    }    
-    return filterAwardsArr;    
+    }
+    return filterAwardsArr;
   }
-  
+
 }

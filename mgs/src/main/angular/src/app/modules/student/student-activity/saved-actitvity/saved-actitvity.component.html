@@ -56,12 +56,12 @@
                     </tr>
                 </thead>
                 <tbody id="accordionExample1">
-                    <ng-container *ngFor="let activity of activitiesArr ; let i = index;">
+                    <ng-container *ngFor="let activity of allActivitiesArr ; let i = index;">
                         <tr data-toggle="collapse" [attr.data-target]="'#collapse' + i + 'all'">
                             <td>{{i+1}}</td>
                             <td>{{activity.activityName}}</td>
                             <td>{{activity.title}}</td>
-                            <td>{{getDate(activity.dateOfActivity) | date}}</td>
+                            <td>{{activity.dateOfActivity | date}}</td>
                             <td>{{activity.coachName}}</td>
                             <td>
                                 <div *ngIf="activity.activityStatus === 'SubmittedByStudent'" class="submitted">
@@ -78,7 +78,7 @@
                                         name="editActivity">
                                         <i class="fa fa-edit" title="Edit"></i>
                                     </button>
-                                    <button (click)="submitSavedActivity($event,i,activitiesArr)"
+                                    <button (click)="submitSavedActivity($event,i,allActivitiesArr)"
                                         class="submitted icon_button" name="submitActivity">
                                         <i class="fa fa-paper-plane" title="Submit"></i>
                                     </button>
@@ -257,7 +257,7 @@
                         </tr>
                     </ng-container>
                 </tbody>
-                <tfoot *ngIf="activitiesArr.length == 0">
+                <tfoot *ngIf="allActivitiesArr.length == 0">
                     <tr>
                         <td colspan="8">
                             <div *ngIf="loader" class="spinner-border text-dark" role="status">
@@ -296,15 +296,16 @@
                                             <!-- <option v
                                                 alue="" disabled selected>Select One</option> -->
                                             <option [ngValue]="null" disabled selected>Select One</option>
-                                            <option *ngFor="let activity of activities; let i = index"
+                                            <option *ngFor="let activity of enrolledActivities; let i = index"
                                                 value={{activity.id}}>
                                                 {{activity.name}}</option>
-                                            <option disabled *ngIf="!activities.length">No activities available</option>
+                                            <option disabled *ngIf="!enrolledActivities.length">No activities available
+                                            </option>
                                         </select>
                                         <span *ngIf="savedActivityForm.value.activityId&&!modal_loader&&!coaches.length"
                                             style="color: red">No Teacher/Coaches for corresponding activity</span>
                                     </div>
-                              
+
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label"> Title : </label>
                                         <input type="text" class="form-control add" name="title"
@@ -323,18 +324,18 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                        <div class="form-group">
-                                                <label for="message-text" class="col-form-label"> Supervisor : </label>
-                                                <select class="form-control" name="coachId" formControlName="coachId">
-                                                    <option *ngFor="let coach of coaches; let i = index;" value={{coach.id}}>
-                                                        {{coach.name}}
-                                                    </option>
-                                                    <option disabled *ngIf="!coaches.length">No Supervisor available</option>
-                                                </select>
-                                                <div *ngIf="modal_loader" class="spinner-border text-dark" role="status">
-                                                    <span class="sr-only">Data Loading</span>
-                                                </div>
+                                    <div class="form-group">
+                                        <label for="message-text" class="col-form-label"> Supervisor : </label>
+                                        <select class="form-control" name="coachId" formControlName="coachId">
+                                            <option *ngFor="let coach of coaches; let i = index;" value={{coach.id}}>
+                                                {{coach.name}}
+                                            </option>
+                                            <option disabled *ngIf="!coaches.length">No Supervisor available</option>
+                                        </select>
+                                        <div *ngIf="modal_loader" class="spinner-border text-dark" role="status">
+                                            <span class="sr-only">Data Loading</span>
                                         </div>
+                                    </div>
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label"> Date of Activity Performed :
                                         </label>
