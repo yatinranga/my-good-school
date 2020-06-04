@@ -27,7 +27,7 @@ export class SchoolProfileComponent implements OnInit {
   ngOnInit() {
     this.schoolInfo = JSON.parse(localStorage.getItem('user_info'));
     // this.schoolId = this.schoolInfo.id;
-    this.schoolId = "xBrlC4KI";
+    this.schoolId = "lNw8Vpcn";
     this.getProfileDetails(this.schoolId);
 
     this.profileUpdateForm = this.formBuilder.group({

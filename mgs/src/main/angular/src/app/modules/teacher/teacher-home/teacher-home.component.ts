@@ -78,7 +78,7 @@ export class TeacherHomeComponent implements OnInit {
       fileRequests: [null]
     });
 
-    this.getSchoolGrades(this.schoolId);
+    // this.getSchoolGrades(this.schoolId);
   }
 
   //get list of assigned/supervised Clubs and Society
@@ -87,6 +87,7 @@ export class TeacherHomeComponent implements OnInit {
       this.assignedClubsArr = res.filter((e) => (e.clubOrSociety == "Club"));
       this.assignedSocietyArr = res.filter((e) => (e.clubOrSociety == "Society"));
       this.allAssignedActi = res;
+      console.log(this.allAssignedActi);
     }, (err) => { console.log(err); });
   }
 
@@ -137,12 +138,20 @@ export class TeacherHomeComponent implements OnInit {
 
   }
 
-  // get List of School Grades 
-  getSchoolGrades(schoolId) {
-    this.teacherService.getGrades(schoolId).subscribe((res) => {
-      this.schoolGrades = res;
-    },
-      (err) => console.log(err));
+  // // get List of School Grades 
+  // getSchoolGrades(schoolId) {
+  //   this.teacherService.getGrades(schoolId).subscribe((res) => {
+  //     this.schoolGrades = res;
+  //   },
+  //     (err) => console.log(err));
+  // }
+
+  // Grades of Supervisor for particular Club/Society
+  clubGrades() {
+    this.createSessionForm.controls['gradeIds'].reset();
+    this.schoolGrades = [];
+    const arr = this.allAssignedActi.filter(e => e.id == this.createSessionForm.value.clubId);
+    this.schoolGrades = arr[0]['gradeResponses'];
   }
 
   // Create Session
@@ -243,13 +252,13 @@ export class TeacherHomeComponent implements OnInit {
     this.path = "";
     // this.files = [];
     this.name = "";
+    this.schoolGrades = [];
     this.createSessionForm.reset();
   }
 
   // List of Sessions in current week
   getSessionDetails() {
     this.teacherService.getSession("week").subscribe((res) => {
-      console.log(res.sessions);
       this.sessionsArr = res.sessions;
     }, (err) => { console.log(err); });
   }
@@ -311,7 +320,7 @@ export class TeacherHomeComponent implements OnInit {
 
     if (session.fileResponses.length) {
       this.name = session.fileResponses[0].name;
-      this.path = BASE_URL + "/file/download?filePath=" +session.fileResponses[0].url;
+      this.path = BASE_URL + "/file/download?filePath=" + session.fileResponses[0].url;
     }
 
     this.createSessionForm.controls.startDate.patchValue(session.startDate.split(' ')[0]);
@@ -323,7 +332,7 @@ export class TeacherHomeComponent implements OnInit {
       description: session.description,
       fileRequests: session.fileResponses[0]
     });
-
+    this.clubGrades();
     let arr = [];
     session.grades.forEach(element => {
       arr.push(element.id);
@@ -471,7 +480,4 @@ export class TeacherHomeComponent implements OnInit {
       day = '0' + day.toString();
     this.minDate = [year, month, day].join('-');
   }
-
-
 }
-

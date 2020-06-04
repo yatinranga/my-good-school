@@ -78,7 +78,7 @@
                                 <div class="form-group">
 
                                     <label for="recipient-name" class="col-form-label">Club/Society : </label>
-                                    <select class="form-control" name="activityId" formControlName="clubId">
+                                    <select class="form-control" name="activityId" formControlName="clubId" (change)="clubGrades()">
                                         <option [ngValue]=null selected disabled>Select One</option>
                                         <option *ngFor="let acti of allAssignedActi" value={{acti.id}}>
                                             {{acti.name}}
@@ -122,6 +122,7 @@
                                         <option *ngFor="let grade of schoolGrades" value={{grade.id}}>
                                             {{grade.grade}} {{grade.section}}
                                         </option>
+                                        <!-- <option *ngIf="!(schoolGrades.length)">Select Club/Society to get grades.</option> -->
                                     </select>
                                 </div>
 

@@ -62,7 +62,8 @@ export class TeacherClubDetailComponent implements OnInit {
       this.getClubStudents(this.clubObject.id, res.id);
     })
 
-    this.getSchoolGrades(this.teacherInfo.schoolId);
+
+    // this.getSchoolGrades(this.teacherInfo.schoolId);
     this.getClubRequests(this.clubObject.id);
     this.getClubSession(this.clubObject.id);
 
@@ -77,15 +78,18 @@ export class TeacherClubDetailComponent implements OnInit {
       gradeIds: [, [Validators.required]],
       fileRequests: []
     });
+
+    this.schoolGrades = this.clubObject.gradeResponses;
+
   }
 
-  // get List of School Grades 
-  getSchoolGrades(schoolId) {
-    this.teacherService.getGrades(schoolId).subscribe((res) => {
-      this.schoolGrades = res;
-    },
-      (err) => console.log(err));
-  }
+  // // get List of School Grades 
+  // getSchoolGrades(schoolId) {
+  //   this.teacherService.getGrades(schoolId).subscribe((res) => {
+  //     this.schoolGrades = res;
+  //   },
+  //     (err) => console.log(err));
+  // }
 
   // Requests of a particular club/society
   getClubRequests(clubId) {

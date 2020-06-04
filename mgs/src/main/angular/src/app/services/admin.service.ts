@@ -29,4 +29,8 @@ export class AdminService {
   getTemplate(url) {
     return this.http.get(url);
   }
+
+  getUsers(){
+    return this.http.get("/api/users");
+  }
 }
