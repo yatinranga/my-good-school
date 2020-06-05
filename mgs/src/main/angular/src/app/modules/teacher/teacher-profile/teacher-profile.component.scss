@@ -5,7 +5,7 @@
 }
 
 .leftprofile{
-    width: 22%;
+    width: 28%;
     display: inline-block;
     float: left;
     position: relative;
@@ -32,6 +32,7 @@
     font-weight: 600;
     font-size: 30px;
     margin-top: 10px;
+    color: #e04090;
 }
 .number {
     width: fit-content;
@@ -58,7 +59,7 @@
     border: none;
 }
 .rightprofile{
-    width: 75%;
+    width: 70%;
     display: grid;
     float: right;
 }
@@ -66,26 +67,28 @@
     width: 100%;
     display: inline-block;
     margin: 10px 0;
+    padding: 5px;
+    border-radius: 3px;
 }
 button:hover {
-    background: #c191b3 !important;
+    background: #e04090 !important;
     color: #fafafa;
 }
 button.update {
     float: right;
-    background: #cfc1cb;
+    background: #e6dce3;
     padding: 3px 7px;
     border: none;
 }
 .edit_buttons button  {
     margin: 5px 0;
-    background: #cfc1cb;
+    background: #e6dce3;
     border: none;
 }
 .rightprofile .heading{
     width: 100%;
     height: auto;
-    background: #c191b3;
+    background: #e04090;
     padding: 0px 10px;
     color: #fafafa;
     margin-top: 10px;
@@ -98,7 +101,7 @@ button.update {
     padding: 0;
 }
 .basic-info, .teacher_activities_main {
-    background: #cfc1cb;
+    background: #e6dce3;
     padding: 5px 10px;
     width: 33.33%;
     border-right: 1px solid;
@@ -109,8 +112,8 @@ button.update {
     width: 40%;
 }
 textarea.ng-untouched.ng-pristine.ng-valid {
-    background: #c191b3;
+    background: #e6dce3;
 }
 input.ng-untouched.ng-pristine.ng-valid {
-    background: #c191b3;
+    background: #e6dce3;
 }

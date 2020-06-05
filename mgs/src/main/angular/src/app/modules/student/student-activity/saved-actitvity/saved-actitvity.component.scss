@@ -148,7 +148,6 @@ textarea.form-control.add.ng-untouched.ng-pristine.ng-valid {
     text-align: center;
     position: relative;
     padding: 10px;
-    margin-top: 20px;
 }
 .add-act.choosefile_box span.choosefile.choosefile-custom {
     position: absolute;
@@ -187,7 +186,7 @@ span.choosefile.choosefile-custom:before {
 .add-act.choosefile_box i.fa.fa-file {
     float: left;
     position: absolute;
-    left: 12px;
+    left: 0px;
     top: 15px;
     font-size: 14px;
 }
@@ -321,7 +320,7 @@ button.btn.saved.btnSubmit.btn-success {
 }
 .modal-content{
     position: relative;
-    top: 50px;
+    top: 15px;
     outline: none !important;
     border: 5px solid #808080;
 }
