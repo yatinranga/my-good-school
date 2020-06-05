@@ -39,7 +39,7 @@
     text-align: center;
 }
 .number input{
-    background: #cfc1cb;
+    background: none;
     color: black;
     border: none;
     padding: 5px 10px;
@@ -50,10 +50,10 @@
     max-width: 280px;
     padding: 7px;
     overflow: hidden;
-    min-height: 175px;
+    min-height: 250px;
     font-size: 16px;
-    line-height: 22px;
-    background: #cfc1cb;
+    line-height: 32px;
+    background: none;
     color: black;
     border: none;
 }
@@ -88,6 +88,7 @@ button.update {
     background: #c191b3;
     padding: 0px 10px;
     color: #fafafa;
+    margin-top: 10px;
 }
 .rightprofiletext{
     width: 100%;
