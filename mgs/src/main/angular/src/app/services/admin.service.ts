@@ -33,4 +33,8 @@ export class AdminService {
   getUsers(){
     return this.http.get("/api/users");
   }
+
+  getRoles(){
+    return this.http.get("/api/roles");
+  }
 }

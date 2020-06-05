@@ -1,1 +1,142 @@
-<p>users works!</p>
+<br><br>
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Username</th>
+            <th scope="col">Email</th>
+            <th scope="col">School Id</th>
+            <th scope="col">Role</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody id="accordionExample">
+        <ng-container *ngFor="let user of usersArr; let i=index">
+            <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
+                <th>{{i+1}}</th>
+                <td>{{user.id}}</td>
+                <td>{{user.name}}</td>
+                <td>{{user.username}}</td>
+                <td>{{user.email}}</td>
+                <td>{{user.schoolId}}</td>
+                <td>
+                    <h5><span class="badge badge-success"
+                            *ngIf="user.roles[0].name == 'MainAdmin'">{{user.roles[0].name}}</span></h5>
+                    <h5><span class="badge badge-warning"
+                            *ngIf="user.roles[0].name == 'School'">{{user.roles[0].name}}</span></h5>
+                    <h5><span class="badge badge-primary"
+                            *ngIf="user.roles[0].name == 'Student'">{{user.roles[0].name}}</span></h5>
+                    <h5><span class="badge badge-danger"
+                            *ngIf="user.roles[0].name == 'Guardian'">{{user.roles[0].name}}</span></h5>
+                    <h5><span class="badge badge-secondary"
+                            *ngIf="user.roles[0].name == 'Coordinator'">{{user.roles[0].name}}</span></h5>
+                    <h5><span class="badge badge-secondary"
+                            *ngIf="user.roles[0].name == 'Supervisor'">{{user.roles[0].name}}</span></h5>
+                </td>
+                <td (click)="stopCollapse($event)">
+                    <button class="btn btn-secondary" (click)="editUser(user)">Edit</button>
+                </td>
+            </tr>
+            <tr>
+                <td class="collapse-td" colspan="12">
+                    <div [attr.id]="'collapse' + i " class="collapse" data-parent="#accordionExample">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-4" *ngFor="let authority of user.roles[0].authorities">
+                                    <p class="badge badge-dark">{{authority.name}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </ng-container>
+    </tbody>
+    <tfoot *ngIf="usersArr.length == 0">
+        <tr>
+            <td colspan="10">
+                <div *ngIf="user_loader" class="spinner-border text-dark" role="status">
+                </div>{{user_loader ? 'Loading...' : 'No Activities'}}
+            </td>
+        </tr>
+    </tfoot>
+</table>
+
+<div class="modal fade bd-example-modal-lg" id="editUserModal" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit User</h5>
+                <button type="button" class="close" name="closeModal" data-dismiss="modal" aria-label="Close"
+                    (click)="resetForm()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="editUserForm">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Name : </label>
+                                    <input type="text" class="form-control add" name="name" placeholder="Add Name Here"
+                                        formControlName="name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Username : </label>
+                                    <input type="text" class="form-control add" name="username"
+                                        placeholder="Add Username Here" formControlName="username">
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Email : </label>
+                                    <input type="email" class="form-control add" name="email"
+                                        placeholder="Add Email Here" formControlName="email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Contact No. : </label>
+                                    <input type="Number" class="form-control add" name="contactNumber"
+                                        placeholder="Add Contact Number Here" formControlName="contactNumber">
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Role : </label>
+                                    <select class="form-control" name="role" (ngModelChange)="getAuthorities($event)">
+                                        <option [ngValue]=null selected disabled>Select One</option>
+                                        <option *ngFor="let role of rolesArr" value={{role.name}}>
+                                            {{role.name}}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Authorities : </label>
+                                    <select class="form-control" name="authorities">
+                                        <option [ngValue]=null selected disabled>Select One</option>
+                                        <!-- <option *ngFor="let acti of allAssignedActi" value={{acti.id}}>
+                                            {{acti.name}}
+                                        </option> -->
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">School : </label>
+                                    <select class="form-control" name="schoolId">
+                                        <option [ngValue]=null selected disabled>Select One</option>
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" (click)="resetForm()">Reset</button>
+                <button class="btn btn-success">Update</button>
+            </div>
+        </div>
+    </div>
+</div>

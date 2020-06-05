@@ -154,10 +154,6 @@ export class SavedActitvityComponent implements OnInit {
   editSavedActivity(e, activity, index) {
     this.index = index;
     $('#addActivityModal').modal('show');
-    $('#addActivityModal').modal({
-      backdrop: 'static',
-      keyboard: false
-    });
 
     e.stopPropagation();
     console.log(activity);
