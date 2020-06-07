@@ -6,6 +6,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { StudentUploadComponent } from './student-upload/student-upload.component';
 import { TeacherUploadComponent } from './teacher-upload/teacher-upload.component';
 import { SchoolUploadComponent } from './school-upload/school-upload.component';
+import { UsersComponent } from './users/users.component';
+import { AddUserComponent } from './add-user/add-user.component';
 
 const routes: Routes = [
   {
@@ -15,13 +17,16 @@ const routes: Routes = [
       { path: 'student-upload', component: StudentUploadComponent },
       { path: 'supervisor-upload', component: TeacherUploadComponent },
       { path: 'school-upload', component: SchoolUploadComponent },
+      { path: 'users', component: UsersComponent },
+      { path: 'add-user', component: AddUserComponent },
+
       { path: '', redirectTo : 'student-upload' }
     ]
   }
 ]
 
 @NgModule({
-  declarations: [AdminComponent, StudentUploadComponent, TeacherUploadComponent, SchoolUploadComponent],
+  declarations: [AdminComponent, StudentUploadComponent, TeacherUploadComponent, SchoolUploadComponent, UsersComponent, AddUserComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,

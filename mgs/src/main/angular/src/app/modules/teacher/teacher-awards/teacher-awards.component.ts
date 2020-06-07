@@ -69,7 +69,7 @@ export class TeacherAwardsComponent implements OnInit {
       awardCriterion: [],
       criterionValue: [],
       validFrom: [],
-      validUntil:[],
+      validUntil: [],
       gradeId: [null],
       awardType: [, [Validators.required]],
       description: [, [Validators.required, Validators.minLength(40)]],
@@ -344,13 +344,6 @@ export class TeacherAwardsComponent implements OnInit {
     this.assignAwardForm.reset();
   }
 
-  // to DOWNLOAD the Attachments
-  downloadFile(url) {
-    this.teacherService.downloadAttachment(url).subscribe((res) => {
-      console.log(res);
-    }, (err) => { console.log(err) });
-  }
-
   // get Award Criteria
   awardCriteria() {
     this.awardcr_loader = true;
@@ -443,8 +436,8 @@ export class TeacherAwardsComponent implements OnInit {
   }
 
   // to count the number of words 
-  wordCount(e){
-    if(e){
+  wordCount(e) {
+    if (e) {
       this.count = e.split(/\s\w/).length;
     } else {
       this.count = 0;

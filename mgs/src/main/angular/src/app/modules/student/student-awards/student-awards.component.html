@@ -23,94 +23,96 @@
         </select>
     </div>
 
-    <div class="content_main_com">
-        <div class="table_main">
-            <table class="table table-hover">
-                <thead class="thead-light">
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">AWARD</th>
-                        <th scope="col">DESCRIPTION</th>
-                        <th scope="col">STUDENT NAME & GRADE</th>
-                        <th scope="col">AWARD CRITERIA</th>
-                        <th scope="col">CRITERIA VALUE</th>
-                        <th scope="col">VALID FROM</th>
-                        <th scope="col">VALID TO</th>
-                        <!-- <th scope="col">STATUS</th> -->
-                    </tr>
-                </thead>
-                <tbody id="accordionExample">
-                    <ng-container *ngFor="let al of awardsArr ; let i = index;">
-                        <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
-                            <td>{{i+1}}</td>
-                            <td>{{al.awardType}}</td>
-                            <td>{{al.description}}</td>
-                            <td>{{al.studentName}} {{al.studentGrade}}</td>
-                            <td>{{al.awardCriterion}}</td>
-                            <td>{{al.criterionValue}}</td>
-                            <td>{{al.validFrom | date }}</td>
-                            <td>{{al.validUntil | date}}</td>
-                            <!-- <td>
+    <div class="table_main">
+        <table class="table table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">AWARD</th>
+                    <th scope="col">DESCRIPTION</th>
+                    <th scope="col">STUDENT NAME & GRADE</th>
+                    <th scope="col">AWARD CRITERIA</th>
+                    <th scope="col">CRITERIA VALUE</th>
+                    <th scope="col">VALID FROM</th>
+                    <th scope="col">VALID TO</th>
+                    <!-- <th scope="col">STATUS</th> -->
+                </tr>
+            </thead>
+            <tbody id="accordionExample">
+                <ng-container *ngFor="let al of awardsArr ; let i = index;">
+                    <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
+                        <td>{{i+1}}</td>
+                        <td>{{al.awardType}}</td>
+                        <td>{{al.description}}</td>
+                        <td>{{al.studentName}} {{al.studentGrade}}</td>
+                        <td>{{al.awardCriterion}}</td>
+                        <td>{{al.criterionValue}}</td>
+                        <td>{{al.validFrom | date }}</td>
+                        <td>{{al.validUntil | date}}</td>
+                        <!-- <td>
                                 <div *ngIf="al.status === 'PENDING'" class="pending"> {{al.status}}
                                 </div>
                                 <div *ngIf="al.status === 'VERIFIED'" class="verified">
                                     {{al.status}} </div>
                             </td>                             -->
-                        </tr>
-                        <tr>
-                            <td class="collapse-td" colspan="8">
-                                <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
-                                    <table class="innertable">
-                                        <tbody id="innerAccordionExample">
-                                            <ng-container *ngFor="let pa of al.activityPerformedResponses; let i = index;">
-                                                <tr data-toggle="collapse" [attr.data-target]="'#collapsed'+i">
-                                                    <td>{{i+1}}</td>
-                                                    <td id="actname"> {{pa.criterionValue}}</td>
-                                                    <td>Activity Count - {{pa.count}}</td>
-                                                    <td>Average Stars - {{pa.averageStars}}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="last collapsed-td" colspan="12">
-                                                        <div [attr.id]="'collapsed' + i" class="collapse" data-parent="#innerAccordionExample">
-                                                            <div *ngFor="let ac of pa.responses; let j = index;">
-                                                                <div class="row">
-                                                                    <div class="col-6">
-                                                                        <div class="assign description">
-                                                                            <h5>{{i+1}}.{{j+1}} </h5>
-                                                                            <p> <strong>Title - </strong>{{ac.title}} </p>
-                                                                            <p> <strong>Description - </strong>{{ac.description}} </p>
-                                                                        </div>
+                    </tr>
+                    <tr>
+                        <td class="collapse-td" colspan="8">
+                            <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
+                                <table class="innertable">
+                                    <tbody id="innerAccordionExample">
+                                        <ng-container *ngFor="let pa of al.activityPerformedResponses; let i = index;">
+                                            <tr data-toggle="collapse" [attr.data-target]="'#collapsed'+i">
+                                                <td>{{i+1}}</td>
+                                                <td id="actname"> {{pa.criterionValue}}</td>
+                                                <td>Activity Count - {{pa.count}}</td>
+                                                <td>Average Stars - {{pa.averageStars}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="last collapsed-td" colspan="12">
+                                                    <div [attr.id]="'collapsed' + i" class="collapse"
+                                                        data-parent="#innerAccordionExample">
+                                                        <div *ngFor="let ac of pa.responses; let j = index;">
+                                                            <div class="row">
+                                                                <div class="col-6">
+                                                                    <div class="assign description">
+                                                                        <h5>{{i+1}}.{{j+1}} </h5>
+                                                                        <p> <strong>Title - </strong>{{ac.title}} </p>
+                                                                        <p> <strong>Description -
+                                                                            </strong>{{ac.description}} </p>
                                                                     </div>
-                                                                    <div class="col-6">
-                                                                        <div class="assign description">
-                                                                            <h5> Scoring </h5>
-                                                                            <p> <strong>Total Score - </strong>{{ac.totalMarks}} </p>
-                                                                            <p> <strong>Remarks - </strong>{{ac.coachRemark}} </p>
-                                                                        </div>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <div class="assign description">
+                                                                        <h5> Scoring </h5>
+                                                                        <p> <strong>Total Score -
+                                                                            </strong>{{ac.totalMarks}} </p>
+                                                                        <p> <strong>Remarks -
+                                                                            </strong>{{ac.coachRemark}} </p>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>                                                    
-                                                    </td>
-                                                </tr>
-                                            </ng-container>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </td>
-                        </tr>
-                    </ng-container>
-                </tbody>
-                <tfoot *ngIf="awardsArr.length == 0">
-                    <tr>
-                        <td colspan="8">
-                            <div *ngIf="loader" class="spinner-border text-dark" role="status">
-                            </div>{{loader ? 'Loading...' :  'No Awards'}}
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </ng-container>
+                                    </tbody>
+                                </table>
+                            </div>
                         </td>
                     </tr>
-                </tfoot>
-            </table>
-        </div>
+                </ng-container>
+            </tbody>
+            <tfoot *ngIf="awardsArr.length == 0">
+                <tr>
+                    <td colspan="8">
+                        <div *ngIf="loader" class="spinner-border text-dark" role="status">
+                        </div>{{loader ? 'Loading...' :  'No Awards'}}
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
     </div>
 
     <!-- <div class="content_main_com">

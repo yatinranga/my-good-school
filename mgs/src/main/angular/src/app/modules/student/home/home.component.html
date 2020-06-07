@@ -124,11 +124,11 @@
             <label class="input-group-text" for="inputGroupSelect01">Clubs and Societies</label>
           </div>
           <select class="custom-select" id="inputGroupSelect01" name="clubs" (ngModelChange)="getSupervisor($event)"
-            [(ngModel)]="clubId" [disabled]="!activities.length">
+            [(ngModel)]="clubId" [disabled]="!allActivities.length">
             <option value="" disabled>Select One</option>
-            <option *ngFor="let activity of activities;" value={{activity.id}}>
+            <option *ngFor="let activity of allActivities;" value={{activity.id}}>
               {{activity.name}} ({{activity.clubOrSociety}})</option>
-            <option disabled *ngIf="!activities.length">No activities available</option>
+            <option disabled *ngIf="!allActivities.length">No activities available</option>
           </select>
         </div>
         <!-- List of Supervisor associated with Specific clubs and societies -->
@@ -228,8 +228,8 @@
                 <li> {{c.profileBrief}} </li>
               </ul>
               <div *ngIf="coaches.length==0" id="null">
-                <div class="spinner-border text-secondary" role="status" *ngIf="sup_loader">
-                </div>{{sup_loader ? '  Loading...' : 'No Supervisor'}}
+                <div class="spinner-border text-secondary" role="status" *ngIf="supervisor_loader">
+                </div>{{supervisor_loader ? '  Loading...' : 'No Supervisor'}}
               </div>
             </div>
             <hr>
@@ -238,7 +238,7 @@
                 <div class="modalstudentlist">
                   <div class="act_details_section_two">
                     <h5>List of Students :</h5>
-                    <select name="grade" [disabled]="stu_loader" (ngModelChange)="filterStudent($event)"
+                    <select name="grade" [disabled]="student_loader" (ngModelChange)="filterStudent($event)"
                       [(ngModel)]="gradeId">
                       <option value="" selected>Select Grade</option>
                       <option *ngFor="let g of grades" value={{g.id}}>{{g.grade}} {{g.section}}</option>
@@ -248,8 +248,8 @@
                   <ul id="student_list">
                     <li *ngFor="let s of students; let i = index"> {{i+1}}. {{s.name}} - {{s.grade}} {{s.section}}</li>
                     <li *ngIf="students.length==0" id="null">
-                      <div class="spinner-border text-secondary" role="status" *ngIf="stu_loader">
-                      </div> {{stu_loader ? ' Loading...' : 'No Students'}}
+                      <div class="spinner-border text-secondary" role="status" *ngIf="student_loader">
+                      </div> {{student_loader? ' Loading...' : 'No Students'}}
                     </li>
                   </ul>
                 </div>

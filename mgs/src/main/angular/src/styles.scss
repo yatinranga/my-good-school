@@ -5,8 +5,10 @@
     margin: 0;
     outline: none !important;
     box-sizing: border-box;
-    border-radius: 0;
-    font-family: 'Baloo Paaji 2' !important; 
+    border-radius: 0; 
+}
+body{
+    font-family: 'Baloo Paaji 2' !important;
 }
 .card.bg-light {
     margin: 15px 0;
@@ -132,18 +134,18 @@ span.choosefile.choosefile-custom:before {
     display: inline-block;
     margin: 20px 15px;
     padding: 0px;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 600;
     color: #e04090;
 }
 .sortby select {
     border: none !important;
-    height: 35px;
+    height: 30px;
     border-radius: 0 !important;
     text-align: center;
     width: 150px;
     font-weight: 600;
-    font-size: 16px;
+    font-size: 15px;
     background: #ddd;
     color: #444;
 }
@@ -176,7 +178,7 @@ table.table {
     margin:0;
 }
 thead.thead-light {
-    font-size: 19px;
+    font-size: 18px;
     font-family: serif;
 }
 table.table, tr, th, td{
@@ -188,6 +190,7 @@ border: 1px solid #777 !important;
 .table_main{
     display: inline-block;
     width: 100%;
+    padding: 5px;
 }
 .table td, th{
     text-align: center;
@@ -205,11 +208,13 @@ border: 1px solid #777 !important;
 .main .table_main table thead tr th {
     background: #ddd;
     color: #e04090;
-    font-size: 18px;
+    font-size: 15px;
+    word-spacing: 5px;
 }
 .main .awards .table_main table thead tr th, .main .teacher_activity_main .table_main table thead tr th {
     color: #0d5ea9;
-    font-size: 18px;
+    font-size: 15px;
+    word-spacing: 5px;
 }
 .main .teacher_awards_main .table_main table thead tr th, .teacher_awards_main i.fa.fa-sort {
     color: #8dc33a;
@@ -239,7 +244,7 @@ td.collapse-td
 }
 i.fa.fa-user-circle, i.fa.fa-bars{
     padding: 36px 0px;
-    font-size: 22px !important;
+    font-size: 21px !important;
 }
 tbody#accordionExample > tr[aria-expanded="true"] {
     background: #ddd;
@@ -253,12 +258,12 @@ tbody#accordionExample > tr[aria-expanded="true"] {
 }
 i.fa.fa-sort {
     color: #e04090;
-    font-size: 16px;
+    font-size: 15px;
     margin: 0 !important;
     padding: 0 !important;
 }
 .table_main h5 {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 500;
     margin: 0 0 10px 0;
 }
@@ -287,9 +292,9 @@ app-home{
     vertical-align: top;
 }
 .content_main_com{
-    width: 100%;
+    width: 82%;
     display: inline-block;
-    padding: 15px;
+    padding: 0;
 }
 .content_main img {
     width: 100%;
@@ -297,6 +302,21 @@ app-home{
     margin: 0;
     padding: 0;
     opacity: 0.7;
+}
+.header {
+    width: 100%;
+    display: inline-block;
+    background: #868686;
+    height: auto;
+    margin-bottom: 20px;
+}
+.profile_right{
+    float: right;
+}
+a.logout.menu_link {
+    margin: 0;
+    padding: 15px;
+    color: black;
 }
 .banner {
     width: 100%;
@@ -340,12 +360,9 @@ button.enrollment_button {
     width: 150px;
 }
 .left_col{
-    width: 30%;
+    width: 25%;
     display: inline-block;
     float: left;
-    padding-right: 35px;
-    height: 533px;
-    overflow-y: auto;
 }
 .schedule{
     width: 100%;
@@ -502,54 +519,63 @@ ul.student_list li {
     background: #fff;
     color: #555;
     display: inline-block;
-    width: 100%;
+    width: 18%;
     padding: 0;
-    vertical-align: bottom;
+    position: -webkit-sticky;
     position: sticky;
-    top: 0;
-    right: 0;
-    left: 0;
+    height: 100vh;
     z-index: 22;
     box-shadow: 0 0 10px #333;
+    float: left;
 }
 .logo {
     padding: 0;
     float: left;
-    margin: 8px 20px;
-    width: 10%;
+    margin: 15px auto;
+    width: 100%;
+    text-align: center;
+    position: relative;
+}
+ul.logo:after {
+    position: absolute;
+    content: "";
+    width: 60%;
+    height: 2px;
+    background: #cecece;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    top: 125px;
 }
 .logo img{
-    width: 90px;
+    width: 100px;
     cursor: pointer;
+    opacity: 1;
 }
 .menu {
     display: inline-block;
     margin: 0px auto;
     float: left;
-    width: 85%;
+    width: 100%;
+    margin-top: 45px;
 }
 .menu ul {
     padding: 0;
     margin: 0;
-    display: inline-flex;
+    display: inline-grid;
+    width: 100%;
 }
-
 li {
     list-style-type: none;
     cursor: pointer;
 }
+
 a.menu_link{
     font-size: 19px;
-    text-align: left;
     width: 100%;
     display: inline-block;
-    padding: 37px 10px;
     color: #555;
-    margin: 0 10px;
-}
-a.logout.menu_link {
-    margin: 0;
-    padding: 39px 10px;
+    padding: 25px 0;
 }
 a.logout.menu_link:hover {
     text-decoration: underline;
@@ -609,16 +635,16 @@ cursor: pointer;}
 */
 
 li.cb{
- border-bottom: 5px solid #4bafa5;
+ border-bottom: 3px solid #4bafa5;
 }
 li.pink {
-    border-bottom: 5px solid #e04090;
+    border-bottom: 3px solid #e04090;
 }
 li.blue{
-    border-bottom: 5px solid #1f69ad;
+    border-bottom: 3px solid #1f69ad;
 }
 li.green{
-    border-bottom: 5px solid #8dc33a;
+    border-bottom: 3px solid #8dc33a;
 }
 a.menu_link:hover{
     text-decoration: none;

@@ -22,7 +22,7 @@ export class ProfileComponent implements OnInit {
   path: any;
   enrolledClubsArr = [];
 
-  constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService : AlertService) { }
+  constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService) { }
 
   ngOnInit() {
 
@@ -36,9 +36,9 @@ export class ProfileComponent implements OnInit {
       this.studentDetails = res;
       console.log(this.studentDetails);
 
-      if(res.gender = "Female"){
+      if (res.gender = "Female") {
         this.path = "assets/images/childprofile.jpg";
-      }else {
+      } else {
         this.path = "assets/images/boy.jpg";
       }
       // Profile Photo is there it will be added
@@ -47,30 +47,14 @@ export class ProfileComponent implements OnInit {
       // }
     },
       (err) => console.log(err)
-    );
-
-    // this.getEnrolledClub();
-
-    // this.studentProfile = this.formBuilder.group({
-    //   studentName : [''],
-    //   studentGender : [''],
-    //   studentDob : [''],
-    //   studentEmail : [''],
-    //   studentMob : [''],
-    //   studentSubscriptionEndDate : [''],
-    //   guardianName : [''],
-    //   guardianEmail : [''],
-    //   guardianMob : [''],
-    //   guardianRelationship : ['']
-    // });
-    // // this.student
+    );   
   }
 
   switchTabs(t) {
     console.log(t);
-
     this.tabs = t;
   }
+
   // Select Profile Photo
   onFileSelect(event) {
     if (event.target.files.length > 0) {
@@ -86,7 +70,6 @@ export class ProfileComponent implements OnInit {
     } else {
       this.path = null;
     }
-
     this.editProfilePhoto();
   }
 
@@ -104,26 +87,10 @@ export class ProfileComponent implements OnInit {
   }
 
   // List of enrolled Clubs and Societies
-  getEnrolledClub() {
-    this.studentService.getAllEnrolledClub().subscribe(res => {
-      console.log(res);
-      this.enrolledClubsArr = res;
-    }, (err) => { console.log(err) });
-  }
-
-  // setEditForm(value){
-  //   this.editForm = value;
-  //   console.log(this.editForm);
-  //   // return this.studentProfile.controls['studentName'].patchValue('ghv')
+  // getEnrolledClub() {
+  //   this.studentService.getAllEnrolledClub().subscribe(res => {
+  //     console.log(res);
+  //     this.enrolledClubsArr = res;
+  //   }, (err) => { console.log(err) });
   // }
-
-  // cancelEditForm(){
-  //   this.editForm = "Student Profile";
-  // }
-
-  // updateProfile(){
-  //   this.studentProfile.patchValue;
-  //   console.log(this.studentProfile);
-  // }
-
 }

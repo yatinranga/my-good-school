@@ -13,27 +13,27 @@ declare let $: any;
 })
 export class HomeComponent implements OnInit {
 
+  studentInfo: any;
+  studentId: any;
+  schoolId: any;
+  studentName: any;
+
   modalClass = ""; // ADD class according to Activity
-  activities = [];
+  allActivities = []; // List of All Club/Society in a school
+  enrolledClubsArr = [];
+  enrolledSocietyArr = [];
   coaches = [];
   students = [];
   grades = [];
-  copySchedule = [];
+  sessionsArr = []; // List of Session for a week
+  copySchedule = []; // used for filtering Session
 
   sportArr = [];
   skillArr = [];
   serviceArr = [];
   studyArr = [];
 
-  enrolledClubsArr = [];
-  enrolledSocietyArr = [];
-  sessionsArr = [];
   clubSupervisor = [];
-
-  studentInfo: any;
-  studentId: any;
-  schoolId: any;
-  studentName: any;
 
   activityId = "";
   gradeId = "";
@@ -51,16 +51,13 @@ export class HomeComponent implements OnInit {
   sessionView = false;
   copyStuArr = [];
 
-  stu_loader = false;
-  sup_loader = false;
+  student_loader = false;
+  supervisor_loader = false;
   csup_loader = false;
 
   highlightClubArr = [];
   highlightSocietyArr = [];
   clubObject = {};
-
-
-
   filterVal = ""; // filter the activity by ALL, UPCOMING and ENDED
 
   constructor(private studentService: StudentService, public alertService: AlertService, private router: Router) { }
@@ -80,7 +77,7 @@ export class HomeComponent implements OnInit {
   // get List of Activities of School
   getActivity(schoolId) {
     this.studentService.getActivity(schoolId).subscribe((res) => {
-      this.activities = res;
+      this.allActivities = res;
       this.sportArr = res.filter((e) => (e.fourS == 'Sport'));
       this.serviceArr = res.filter((e) => (e.fourS == 'Service'));
       this.studyArr = res.filter((e) => (e.fourS == 'Study'));
@@ -190,7 +187,8 @@ export class HomeComponent implements OnInit {
     this.clubId = clubObj.id;
     this.supervisorId = "";
     this.sessionView = false;
-    this.sup_loader = true;
+    this.supervisor_loader
+      = true;
     this.getCoaches(clubObj.id);
     console.log(clubObj);
   }
@@ -200,14 +198,17 @@ export class HomeComponent implements OnInit {
     this.coaches = [];
     this.students = [];
     this.gradeId = "";
-    this.sup_loader = true;
+    this.supervisor_loader
+      = true;
     this.studentService.getCoach(this.schoolId, actiId).subscribe((res) => {
       this.coaches = res;
       console.log(res);
-      this.sup_loader = false;
+      this.supervisor_loader
+        = false;
     }, (err) => {
       console.log(err);
-      this.sup_loader = false;
+      this.supervisor_loader
+        = false;
     })
   }
 
@@ -234,15 +235,18 @@ export class HomeComponent implements OnInit {
 
   // List of Student of selected Club/Society under specific Supervisor
   getStudents(supervisorId) {
-    this.stu_loader = true; // Student loader
+    this.student_loader
+      = true; // Student loader
     this.studentService.getSupervisorStudent(this.clubId, supervisorId).subscribe((res) => {
       this.students = res;
       this.copyStuArr = Object.assign([], res);
       console.log(res);
-      this.stu_loader = false;
+      this.student_loader
+        = false;
     }, (err) => {
       console.log(err);
-      this.stu_loader = false;
+      this.student_loader
+        = false;
     });
   }
 

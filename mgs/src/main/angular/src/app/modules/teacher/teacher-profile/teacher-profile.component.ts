@@ -104,18 +104,6 @@ export class TeacherProfileComponent implements OnInit {
     })
   }
 
-  // updateProfile(){
-  //   let oldMobile = this.mobileNumber;
-  //   if(this.setDisabled == false){
-
-  //   }
-  //   return !this.setDisabled;
-  // }
-
-  temp(e) {
-    // console.log(e);
-  }
-
   updateProfile() {
     if (this.setDisabled == false) {
       if (this.mobileNumber.length == 10) {
@@ -140,39 +128,5 @@ export class TeacherProfileComponent implements OnInit {
     }
   }
 
-  // updateMobileNo() {
-  //   if (this.setDisabled == false) {
-  //     if (this.oldMobNo != this.mobileNumber && this.mobileNumber.length == 10) {
-  //       this.profileUpdateForm.value.mobileNumber = this.mobileNumber;
-  //       this.alertService.showLoader("");
-
-  //       this.teacherService.putMobileNumber(this.teacherId, this.profileUpdateForm.value).subscribe((res) => {
-  //         console.log(res);
-  //         this.alertService.showSuccessToast("Mobile Phone Updated");
-  //         this.setDisabled = true;
-  //       }, (err) => {
-  //         console.log(err);
-  //         this.setDisabled = false;
-  //       });
-  //     } else {
-  //       if (this.mobileNumber.length == 10) {
-  //         this.oldMobNo = this.mobileNumber;
-  //         this.setDisabled = true;
-  //       } else {
-  //         this.alertService.showErrorAlert("Mobile Number can be less than 10");
-  //       }
-  //     }
-  //   } else {
-  //     this.oldMobNo = this.mobileNumber;
-  //     this.setDisabled = false;
-  //   }
-  // }
-
-  // Edit Mobile Number
-  // editMobileNumber(){
-  //   this.teacherService.putMobileNumber().subscribe((res) => {
-  //     console.log(res);
-  //   },(err) => {console.log(err)});
-  // }
 
 }

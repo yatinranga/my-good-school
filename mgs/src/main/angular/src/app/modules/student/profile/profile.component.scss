@@ -3,17 +3,17 @@
 .profile_main{
     width: 100%;
     display: inline-block;
-    height: calc(100vh - 145px);
+    vertical-align: top;
 }
 .student_main {
-    width: 25%;
+    width: 33%;
     float: left;
     display: inline-block;
     text-align: center;
     padding: 0;
-    height: 100%;
+    height: 100vh;
     border-right: 2px solid #999;
-    margin-right: 20px;
+    margin-right: 30px;
 }
 button.edit_profile {
     color: #555;
@@ -21,6 +21,7 @@ button.edit_profile {
     background: #adadad;
     padding: 5px;
     border-radius: 2px;
+    border: none;
 }
 
 .student_image {
@@ -72,13 +73,12 @@ button.edit_profile {
 }
 .guardian_main {
     margin: 0 10px;
-    width: 70%;
-    float: left;
+    width: 60%;
     padding: 0;
-    display: inline-block;
+    display: contents;
     padding: 0;
     text-align: left;
-    padding: 0 15px;
+    padding: 0 20px;
 }
 .guardian_profile_card {
     width: 45%;
