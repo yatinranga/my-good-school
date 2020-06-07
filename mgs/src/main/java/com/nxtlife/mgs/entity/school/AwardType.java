@@ -5,6 +5,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
@@ -17,6 +19,9 @@ public class AwardType extends BaseEntity {
 	@NotNull
 	@Column(unique = true)
 	private String name;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	private School school;
 	
 	@OneToMany(cascade = CascadeType.ALL , mappedBy = "awardType")
 	private List<Award> awards;
@@ -35,6 +40,14 @@ public class AwardType extends BaseEntity {
 
 	public void setAwards(List<Award> awards) {
 		this.awards = awards;
+	}
+
+	public School getSchool() {
+		return school;
+	}
+
+	public void setSchool(School school) {
+		this.school = school;
 	}
 
 	public AwardType(String name, List<Award> awards) {

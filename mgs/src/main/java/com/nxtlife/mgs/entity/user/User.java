@@ -3,6 +3,7 @@ package com.nxtlife.mgs.entity.user;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,6 +22,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.userdetails.UserDetails;
 import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.school.School;
+import com.nxtlife.mgs.view.user.security.RoleResponse;
 
 @SuppressWarnings("serial")
 @Entity
@@ -278,7 +280,7 @@ public class User extends BaseEntity implements UserDetails, Serializable {
 	
 
 	public Collection<Role> getRoles() {
-		return roles;
+		return roles = roles == null || roles.isEmpty() ? this.getUserRoles().stream().map(ur -> ur.getRole()).collect(Collectors.toSet()) : this.roles;
 	}
 
 	public void setRoles(Collection<Role> roles) {

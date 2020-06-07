@@ -837,7 +837,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@Secured(AuthorityUtils.USER_CREATE)
 	public UserResponse save(UserRequest request) {
 		Long schoolId = null;
-		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin")))
+		if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin")))
 			schoolId = schoolRepository.findIdByCid(request.getSchoolId());
 		else
 			schoolId = getUser().gettSchoolId();

@@ -339,6 +339,9 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 			// Setting files to session
 			session.setFiles(updatedFiles);
 
+		}else {
+			if(session.getFiles() != null && !session.getFiles().isEmpty())
+				session.getFiles().stream().forEach(f -> f.setActive(false));
 		}
 
 		session = sessionRepository.save(session);
@@ -375,11 +378,13 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 			throw new ValidationException(String.format("Club with id (%s) does not exist.", clubId));
 		// Activity club = activityRepository.getOneByCid(clubId);
 		String gradeId = studentRepository.findGradeCidByCidAndActiveTrue(studentCid);
+		TimeZone zone = DateUtil.defaultTimeZone;
 		List<Event> sessions;
 		if (sessionFetch == null) {
 			sessions = getStudentSessionsOfClub(gradeId, clubId, teacherId, page, pageSize);
 		} else {
-			Date start = DateTime.now(DateTimeZone.forTimeZone(TimeZone.getTimeZone("Asia/Calcutta"))).minusSeconds(60).toDate(), end;// LocalDateTime.now().minusSeconds(60).toDate(),
+	
+			Date start = DateTime.now(DateTimeZone.forTimeZone(zone)).minusSeconds(60).toDate(), end;// LocalDateTime.now().minusSeconds(60).toDate(),
 																		// end;
 			if (!SessionFetch.matches(sessionFetch))
 				throw new ValidationException(String.format(
@@ -402,7 +407,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 				}
 				break;
 			case week:
-				end = DateUtil.getlastWorkingDayOfWeek(DateUtil.getLastDayOfWeek());
+				end = DateUtil.getlastWorkingDayOfWeek(DateUtil.getLastDayOfWeek(DateUtil.convertToLocalDate(start, zone),zone),zone);
 				if (teacherId != null) {
 					if (!teacherRepository.existsByCidAndActiveTrue(teacherId))
 						throw new ValidationException(String.format("Teacher with id (%s) not found.", teacherId));
@@ -417,7 +422,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 				}
 				break;
 			case month:
-				end = DateUtil.getLastWorkingDayOfMonth(DateUtil.getLastDayOfMonth());
+				end = DateUtil.getLastWorkingDayOfMonth(DateUtil.getLastLocalDayOfMonth(DateUtil.convertToLocalDate(start, zone),zone),zone);
 				if (teacherId != null) {
 					if (!teacherRepository.existsByCidAndActiveTrue(teacherId))
 						throw new ValidationException(String.format("Teacher with id (%s) not found.", teacherId));
@@ -442,8 +447,8 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 
 		List<LocalDate> startDates = new ArrayList<LocalDate>();
 		sessions.stream().forEach(s -> {
-			if (!startDates.contains(s.getStartLocalDate()))
-				startDates.add(s.getStartLocalDate());
+			if (!startDates.contains(s.getStartLocalDate(zone)))
+				startDates.add(s.getStartLocalDate(zone));
 		});
 
 		Collections.sort(startDates);
@@ -452,9 +457,9 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 		List<GroupResponseBy<SessionResponse>> finalSessionList = new ArrayList<GroupResponseBy<SessionResponse>>();
 		for (LocalDate startDate : startDates) {
 			GroupResponseBy<SessionResponse> tempSessionList = new GroupResponseBy<SessionResponse>();
-			tempSessionList.setCriterionAndValue("date",
-					DateUtil.formatDate(DateUtil.convertLocalDateToDateAtStartOfDay(startDate)));
-			tempSessionList.setResponses(sessions.stream().filter(s -> s.getStartLocalDate().equals(startDate))
+			tempSessionList.setCriterionAndValue("date",startDate.toString()
+					/*DateUtil.formatDate(DateUtil.convertLocalDateToDateAtStartOfDay(startDate,zone))*/);
+			tempSessionList.setResponses(sessions.stream().filter(s -> s.getStartLocalDate(zone).equals(startDate))
 					.map(SessionResponse::new).distinct().collect(Collectors.toList()));
 			finalSessionList.add(tempSessionList);
 		}
@@ -505,11 +510,12 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 		if(clubs == null || clubs.isEmpty())
 			throw new ValidationException("Student is not member of any club.");
 
+		TimeZone zone = DateUtil.defaultTimeZone;
 		List<Event> sessions;
 		if (sessionFetch == null) {
 			sessions = getStudentSessionsOfClubs(gradeId, clubs, teacherId, page, pageSize);
 		} else {
-			Date start = DateTime.now(DateTimeZone.forTimeZone(TimeZone.getTimeZone("Asia/Calcutta"))).minusSeconds(60).toDate(), end;
+			Date start = DateTime.now(DateTimeZone.forTimeZone(zone)).minusSeconds(60).toDate(), end;
 			if (!SessionFetch.matches(sessionFetch))
 				throw new ValidationException(String.format(
 						"Invalid value (%s) for sessionFetch it should be from List : {today, week, year}",
@@ -531,7 +537,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 				}
 				break;
 			case week:
-				end = DateUtil.getlastWorkingDayOfWeek(DateUtil.getLastDayOfWeek());
+				end = DateUtil.getlastWorkingDayOfWeek(DateUtil.getLastDayOfWeek(DateUtil.convertToLocalDate(start, zone),zone),zone);
 				if (teacherId != null) {
 					if (!teacherRepository.existsByCidAndActiveTrue(teacherId))
 						throw new ValidationException(String.format("Teacher with id (%s) not found.", teacherId));
@@ -546,7 +552,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 				}
 				break;
 			case month:
-				end = DateUtil.getLastWorkingDayOfMonth(DateUtil.getLastDayOfMonth());
+				end = DateUtil.getLastWorkingDayOfMonth(DateUtil.getLastLocalDayOfMonth(DateUtil.convertToLocalDate(start, zone),zone),zone);
 				if (teacherId != null) {
 					if (!teacherRepository.existsByCidAndActiveTrue(teacherId))
 						throw new ValidationException(String.format("Teacher with id (%s) not found.", teacherId));
@@ -571,8 +577,8 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 
 		List<LocalDate> startDates = new ArrayList<LocalDate>();
 		sessions.stream().forEach(s -> {
-			if (!startDates.contains(s.getStartLocalDate()))
-				startDates.add(s.getStartLocalDate());
+			if (!startDates.contains(s.getStartLocalDate(zone)))
+				startDates.add(s.getStartLocalDate(zone));
 		});
 
 		Collections.sort(startDates);
@@ -581,9 +587,9 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 		List<GroupResponseBy<SessionResponse>> finalSessionList = new ArrayList<GroupResponseBy<SessionResponse>>();
 		for (LocalDate startDate : startDates) {
 			GroupResponseBy<SessionResponse> tempSessionList = new GroupResponseBy<SessionResponse>();
-			tempSessionList.setCriterionAndValue("date",
-					DateUtil.formatDate(DateUtil.convertLocalDateToDateAtStartOfDay(startDate)));
-			tempSessionList.setResponses(sessions.stream().filter(s -> s.getStartLocalDate().equals(startDate))
+			tempSessionList.setCriterionAndValue("date",startDate.toString()
+					/*DateUtil.formatDate(DateUtil.convertLocalDateToDateAtStartOfDay(startDate))*/);
+			tempSessionList.setResponses(sessions.stream().filter(s -> s.getStartLocalDate(zone).equals(startDate))
 					.map(SessionResponse::new).distinct().collect(Collectors.toList()));
 			finalSessionList.add(tempSessionList);
 		}
@@ -626,11 +632,12 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 			throw new ValidationException(String.format("Club with id (%s) does not exist.", clubId));
 		// Activity club = activityRepository.getOneByCid(clubId);
 
+		TimeZone zone = DateUtil.defaultTimeZone;
 		List<Event> sessions;
 		if (sessionFetch == null) {
 			sessions = getTeacherSessionsOfClub(teacherCid, clubId, page, pageSize);
 		} else {
-			Date start = DateTime.now(DateTimeZone.forTimeZone(TimeZone.getTimeZone("Asia/Calcutta"))).minusSeconds(60).toDate(), end;
+			Date start = DateTime.now(DateTimeZone.forTimeZone(zone)).minusSeconds(60).toDate(), end;
 			if (!SessionFetch.matches(sessionFetch))
 				throw new ValidationException(String.format(
 						"Invalid value (%s) for sessionFetch it should be from List : {today, week, year}",
@@ -643,13 +650,13 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 								teacherCid, clubId, start, end, Sort.by(Direction.ASC, "startDate"));
 				break;
 			case week:
-				end = DateUtil.getlastWorkingDayOfWeek(DateUtil.getLastDayOfWeek());
+				end = DateUtil.getlastWorkingDayOfWeek(DateUtil.getLastDayOfWeek(DateUtil.convertToLocalDate(start, zone),zone),zone);
 				sessions = sessionRepository
 						.findAllByTeacherCidAndClubCidAndStartDateGreaterThanAndStartDateLessThanAndActiveTrue(
 								teacherCid, clubId, start, end, Sort.by(Direction.ASC, "startDate"));
 				break;
 			case month:
-				end = DateUtil.getLastWorkingDayOfMonth(DateUtil.getLastDayOfMonth());
+				end = DateUtil.getLastWorkingDayOfMonth(DateUtil.getLastLocalDayOfMonth(DateUtil.convertToLocalDate(start, zone),zone),zone);
 				sessions = sessionRepository
 						.findAllByTeacherCidAndClubCidAndStartDateGreaterThanAndStartDateLessThanAndActiveTrue(
 								teacherCid, clubId, start, end, Sort.by(Direction.ASC, "startDate"));
@@ -665,8 +672,8 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 
 		List<LocalDate> startDates = new ArrayList<LocalDate>();
 		sessions.stream().forEach(s -> {
-			if (!startDates.contains(s.getStartLocalDate()))
-				startDates.add(s.getStartLocalDate());
+			if (!startDates.contains(s.getStartLocalDate(zone)))
+				startDates.add(s.getStartLocalDate(zone));
 		});
 
 		Collections.sort(startDates);
@@ -675,9 +682,9 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 		List<GroupResponseBy<SessionResponse>> finalSessionList = new ArrayList<GroupResponseBy<SessionResponse>>();
 		for (LocalDate startDate : startDates) {
 			GroupResponseBy<SessionResponse> tempSessionList = new GroupResponseBy<SessionResponse>();
-			tempSessionList.setCriterionAndValue("date",
-					DateUtil.formatDate(DateUtil.convertLocalDateToDateAtStartOfDay(startDate)));
-			tempSessionList.setResponses(sessions.stream().filter(s -> s.getStartLocalDate().equals(startDate))
+			tempSessionList.setCriterionAndValue("date",startDate.toString()
+					/*DateUtil.formatDate(DateUtil.convertLocalDateToDateAtStartOfDay(startDate))*/);
+			tempSessionList.setResponses(sessions.stream().filter(s -> s.getStartLocalDate(zone).equals(startDate))
 					.map(SessionResponse::new).distinct().collect(Collectors.toList()));
 			finalSessionList.add(tempSessionList);
 		}
@@ -706,11 +713,12 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 			}
 		List<Activity> clubs = teacherActivityGradeRepository.findAllActivityByTeacherCidAndActiveTrue(teacherCid);
 
+		TimeZone zone = DateUtil.defaultTimeZone;
 		List<Event> sessions;
 		if (sessionFetch == null) {
 			sessions = getTeacherSessionsOfClubs(teacherCid, clubs, page, pageSize);
 		} else {
-			Date start = DateTime.now(DateTimeZone.forTimeZone(TimeZone.getTimeZone("Asia/Calcutta"))).minusSeconds(60).toDate(), end;
+			Date start = DateTime.now(DateTimeZone.forTimeZone(zone)).minusSeconds(60).toDate(), end;
 			if (!SessionFetch.matches(sessionFetch))
 				throw new ValidationException(String.format(
 						"Invalid value (%s) for sessionFetch it should be from List : {today, week, year}",
@@ -723,13 +731,13 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 								teacherCid, clubs, start, end, Sort.by(Direction.ASC, "startDate"));
 				break;
 			case week:
-				end = DateUtil.getlastWorkingDayOfWeek(DateUtil.getLastDayOfWeek());
+				end = DateUtil.getlastWorkingDayOfWeek(DateUtil.getLastDayOfWeek(DateUtil.convertToLocalDate(start, zone),zone),zone);
 				sessions = sessionRepository
 						.findAllByTeacherCidAndClubInAndStartDateGreaterThanAndStartDateLessThanAndActiveTrueGroupByClubId(
 								teacherCid, clubs, start, end, Sort.by(Direction.ASC, "startDate"));
 				break;
 			case month:
-				end = DateUtil.getLastWorkingDayOfMonth(DateUtil.getLastDayOfMonth());
+				end = DateUtil.getLastWorkingDayOfMonth(DateUtil.getLastLocalDayOfMonth(DateUtil.convertToLocalDate(start, zone),zone),zone);
 				sessions = sessionRepository
 						.findAllByTeacherCidAndClubInAndStartDateGreaterThanAndStartDateLessThanAndActiveTrueGroupByClubId(
 								teacherCid, clubs, start, end, Sort.by(Direction.ASC, "startDate"));
@@ -745,8 +753,8 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 
 		List<LocalDate> startDates = new ArrayList<LocalDate>();
 		sessions.stream().forEach(s -> {
-			if (!startDates.contains(s.getStartLocalDate()))
-				startDates.add(s.getStartLocalDate());
+			if (!startDates.contains(s.getStartLocalDate(zone)))
+				startDates.add(s.getStartLocalDate(zone));
 		});
 
 		Collections.sort(startDates);
@@ -755,9 +763,9 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 		List<GroupResponseBy<SessionResponse>> finalSessionList = new ArrayList<GroupResponseBy<SessionResponse>>();
 		for (LocalDate startDate : startDates) {
 			GroupResponseBy<SessionResponse> tempSessionList = new GroupResponseBy<SessionResponse>();
-			tempSessionList.setCriterionAndValue("date",
-					DateUtil.formatDate(DateUtil.convertLocalDateToDateAtStartOfDay(startDate)));
-			tempSessionList.setResponses(sessions.stream().filter(s -> s.getStartLocalDate().equals(startDate))
+			tempSessionList.setCriterionAndValue("date",startDate.toString()
+					/*DateUtil.formatDate(DateUtil.convertLocalDateToDateAtStartOfDay(startDate))*/);
+			tempSessionList.setResponses(sessions.stream().filter(s -> s.getStartLocalDate(zone).equals(startDate))
 					.map(SessionResponse::new).distinct().collect(Collectors.toList()));
 			finalSessionList.add(tempSessionList);
 		}

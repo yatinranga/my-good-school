@@ -434,11 +434,11 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 				previousActivities.add(activity);
 
 			} else {
-				List<String> schoolCids = actReq.getSchoolIds();
-				if (schoolCids == null)
-					schoolCids = new ArrayList<String>();
-				schoolCids.add(school.getCid());
-				actReq.setSchoolIds(schoolCids);
+//				List<String> schoolCids = actReq.getSchoolIds();
+//				if (schoolCids == null)
+//					schoolCids = new ArrayList<String>();
+//				schoolCids.add(school.getCid());
+				actReq.setSchoolIds(Arrays.asList(school.getCid()));
 				ActivityRequestResponse actResponse = activityService.saveActivity(actReq);
 				if (actResponse == null)
 					throw new RuntimeException(String

@@ -45,7 +45,7 @@ public interface TeacherService {
 
 	List<TeacherResponse> getAllClassTeachersOfSchool(String schoolCid);
 
-	List<TeacherResponse> getAllCoachesOfSchool(String schoolCid , String gradeId);
+	List<TeacherResponse> getAllCoachesOfSchool(String schoolCid /* , String gradeId */);
 
 	List<TeacherResponse> findCoachesBySchoolAndActivityName(String schoolCid, String activityName);
 
@@ -61,10 +61,10 @@ public interface TeacherService {
 
 	TeacherResponse addOrRemoveActivitiesToTeachers(TeacherRequest request);
 
-	List<ClubMembershipResponse> getMembershipDetails(String teacherCid);
+	List<ClubMembershipResponse> getMembershipDetails(String teacherCid ,String schoolCid);
 
 	ClubMembershipResponse updateStatus(String studentId, String activityId, Boolean isVerified ,String teacherCid);
 
-	List<ClubMembershipResponse> getMembershipDetailsbyClub(String clubId ,String teacherCid);
+	List<ClubMembershipResponse> getMembershipDetailsbyClub(String clubId ,String teacherCid ,String schoolCid);
 
 }

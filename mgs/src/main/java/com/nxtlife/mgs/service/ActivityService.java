@@ -19,7 +19,7 @@ public interface ActivityService {
 
 	ActivityRequestResponse saveActivity(ActivityRequestResponse request);
 
-	SuccessResponse deleteActivityByCid(String cid);
+	SuccessResponse deleteActivityByCid(String cid ,String schoolCid , Boolean forAll);
 
 	List<ActivityRequestResponse> getAllGeneralActivities();
 
@@ -27,6 +27,8 @@ public interface ActivityService {
 
 	List<ActivityRequestResponse> getAllClubsOfStudent(String studentCid);
 
-	List<ActivityRequestResponse> getAllClubsOfTeacher(String teacherCid);
+//	List<ActivityRequestResponse> getAllClubsOfTeacher(String teacherCid);
+
+	List<ActivityRequestResponse> getAllClubsOfTeacher(String teacherCid, String schoolCid);
 
 }

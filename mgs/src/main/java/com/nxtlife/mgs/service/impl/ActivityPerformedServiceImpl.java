@@ -264,6 +264,9 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 				// Setting files to activityPerformed
 				activityPerformed.setFiles(updatedFiles);
 
+			}else {
+				if(activityPerformed.getFiles() != null && !activityPerformed.getFiles().isEmpty())
+					activityPerformed.getFiles().stream().forEach(f -> f.setActive(false));
 			}
 
 		} else {

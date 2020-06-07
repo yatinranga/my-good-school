@@ -312,8 +312,8 @@ public class AwardResponse {
 			this.statusModifiedBy=award.getStatusModifiedBy().getName();
 			this.statusModifierId=award.getStatusModifiedBy().getCid();
 		}
-		this.validFrom = DateUtil.formatDate(award.getValidFrom());
-		this.validUntil = DateUtil.formatDate(award.getValidUntil());
+		this.validFrom = award.getValidFrom().toString() ;//DateUtil.formatDate(award.getValidFrom());
+		this.validUntil = award.getValidUntil().toString() ; //DateUtil.formatDate(award.getValidUntil());
 		if(award.getAwardCriterion() != null)
 		   this.awardCriterion = award.getAwardCriterion().toString();
 		this.criterionValue = award.getCriterionValue();

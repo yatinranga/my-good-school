@@ -17,74 +17,78 @@ import com.nxtlife.mgs.enums.ActivityStatus;
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
-	Student getOneByCidAndActiveTrue(String cid);
+	public Student getOneByCidAndActiveTrue(String cid);
 
-	Student getByUserId(Long userId);
+	public Student getByUserId(Long userId);
 
-	int countByEmail(String email);
+	public int countByEmail(String email);
 
-	int countByUsername(String username);
+	public int countByUsername(String username);
 
-	List<Student> findAllBySchoolCid(String schooolCid);
+	public List<Student> findAllBySchoolCid(String schooolCid);
 
-	Student findByCidAndActiveTrue(String cid);
+	public Student findByCidAndActiveTrue(String cid);
 
-	List<Student> findAllBySchoolCidAndGradeCid(String schooolCid, String gradeCid);
+	public List<Student> findAllBySchoolCidAndGradeCid(String schooolCid, String gradeCid);
 
-	int deleteByCid(String cid);
+	public int deleteByCid(String cid);
 
-	List<Student> findAllBySchoolCidAndActiveTrue(String schoolCid);
+	public List<Student> findAllBySchoolCidAndActiveTrue(String schoolCid);
+	
+	public List<Student> findAllBySchoolCidAndGradeCidInAndActiveTrue(String schoolCid ,Collection<String> gradeIds);
 
-	List<Student> findAllByGradeCidAndActiveTrue(String gradeCid);
+	public List<Student> findAllByGradeCidAndActiveTrue(String gradeCid);
 
-	List<Student> findAllByActiveTrue();
+	public List<Student> findAllByActiveTrue();
 
-	Student findByUsernameAndActiveTrue(String username);
+	public Student findByUsernameAndActiveTrue(String username);
 
-	Student findByMobileNumberAndActiveTrue(String mobileNumber);
+	public Student findByMobileNumberAndActiveTrue(String mobileNumber);
 
-	Student findByIdAndActiveTrue(Long id);
+	public Student findByIdAndActiveTrue(Long id);
 
-	List<Student> findByNameAndActiveTrue(String name);
+	public List<Student> findByNameAndActiveTrue(String name);
 
-	Student findByCid(String cid);
+	public Student findByCid(String cid);
 
-	List<Student> findAllBySchoolCidAndSchoolActiveTrueAndGradeCidAndGradeActiveTrueAndActivitiesActivityCidAndActivitiesActivityActiveTrueAndActivitiesActivityStatusAndActivitiesTeacherCidAndActivitiesTeacherActiveTrueAndActiveTrue(
+	public List<Student> findAllBySchoolCidAndSchoolActiveTrueAndGradeCidAndGradeActiveTrueAndActivitiesActivityCidAndActivitiesActivityActiveTrueAndActivitiesActivityStatusAndActivitiesTeacherCidAndActivitiesTeacherActiveTrueAndActiveTrue(
 			String schoolCid, String gradeCid, String activityCid, ActivityStatus activityStatus, String teacherCid);
 
-	List<Student> findAllBySchoolCidAndGradeCidAndActivitiesActivityCidAndActivitiesActivityStatusAndSchoolActiveTrueAndGradeActiveTrueAndActivitiesActivityActiveTrueAndActiveTrue(
+	public List<Student> findAllBySchoolCidAndGradeCidAndActivitiesActivityCidAndActivitiesActivityStatusAndSchoolActiveTrueAndGradeActiveTrueAndActivitiesActivityActiveTrueAndActiveTrue(
 			String schoolCid, String gradeCid, String activityCid, ActivityStatus valueOf);
 
-	Boolean existsByCidAndActiveTrue(String studentCid);
+	public Boolean existsByCidAndActiveTrue(String studentCid);
 
-	Student getByUserIdAndActiveTrue(Long userId);
+	public Student getByUserIdAndActiveTrue(Long userId);
 
 	@Query(value = "select s.id from Student s where s.user.id = :userId and s.active = true")
-	Long findIdByUserIdAndActiveTrue(@Param("userId") Long userId);
+	public Long findIdByUserIdAndActiveTrue(@Param("userId") Long userId);
 	
 	@Query(value = "select s.cid from Student s where s.user.id = :userId and s.active = true")
-	String findCidByUserIdAndActiveTrue(@Param("userId") Long userId);
+	public String findCidByUserIdAndActiveTrue(@Param("userId") Long userId);
 	
 	@Query(value = "select s.id as id , s.cid as cid from Student s where s.user.id = :userId and s.active = true")
 	public Map<String, Object> findIdAndCidByUserIdAndActiveTrue(@Param("userId") Long userId);
 
-	List<Student> findAllBySchoolCidAndActivitiesActivityCidAndActivitiesActivityStatusAndSchoolActiveTrueAndActivitiesActivityActiveTrueAndActiveTrue(
+	public List<Student> findAllBySchoolCidAndActivitiesActivityCidAndActivitiesActivityStatusAndSchoolActiveTrueAndActivitiesActivityActiveTrueAndActiveTrue(
 			String schoolCid, String activityCid, ActivityStatus valueOf);
 
 	@Query(value = "select s.id from Student s where s.cid = :cid and s.active = true")
-	Long findIdByCidAndActiveTrue(@Param("cid") String cid);
+	public Long findIdByCidAndActiveTrue(@Param("cid") String cid);
 
-	List<Student> findAllBySchoolCidAndGradeCidAndActiveTrue(String schoolId, String gradeId);
+	public List<Student> findAllBySchoolCidAndGradeCidAndActiveTrue(String schoolId, String gradeId);
 	
 	@Modifying
 	@Query(value = "update Student s set s.active = ?2 where s.cid = ?1 and s.active = true")
-	int deleteByCidAndActiveTrue(String cid ,Boolean active);
+	public int deleteByCidAndActiveTrue(String cid ,Boolean active);
 	
 	@Query(value = "select s.grade.cid from Student s where s.cid = ?1 and s.active = true")
-	String findGradeCidByCidAndActiveTrue(String cid);
+	public String findGradeCidByCidAndActiveTrue(String cid);
 	
 	@Query(value = "select s.studentClubs from Student s where s.cid = ?1 and s.active = true")
-	List<StudentClub> findGradeCidAndClubsByCidAndActiveTrue(String cid);
+	public List<StudentClub> findGradeCidAndClubsByCidAndActiveTrue(String cid);
+
+	public boolean existsByUserIdAndActiveTrue(Long userId);
 
 	/*
 	 * List<Student>

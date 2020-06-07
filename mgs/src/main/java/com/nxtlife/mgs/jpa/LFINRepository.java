@@ -6,7 +6,7 @@ import com.nxtlife.mgs.entity.user.LFIN;
 
 public interface LFINRepository extends JpaRepository<LFIN	, Long> {
 
-	boolean existsByCidAndActiveTrue(String cid);
+	public boolean existsByCidAndActiveTrue(String cid);
 	
-	boolean existsByEmailAndActiveTrue(String email);
+	public boolean existsByEmailAndActiveTrue(String email);
 }

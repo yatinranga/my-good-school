@@ -212,6 +212,11 @@ public final class AuthorityUtils {
 	 * AUTHORITY TO CREATE SCHOOL AWARD
 	 */
 	public static final String SCHOOL_AWARD_CREATE = "ROLE_SCHOOL_AWARD_CREATE";
+	
+	/**
+	 * AUTHORITY TO ASSIGN SCHOOL AWARD
+	 */
+	public static final String SCHOOL_AWARD_ASSIGN = "ROLE_SCHOOL_AWARD_ASSIGN";
 
 	/**
 	 * AUTHORITY TO DELETE SCHOOL AWARD
@@ -224,7 +229,12 @@ public final class AuthorityUtils {
 	public static final String SCHOOL_AWARD_FETCH = "ROLE_SCHOOL_AWARD_FETCH";
 	
 	/**
-	 * AUTHORITY TO REVIEW(APPROVE / REJECT) SCHOOL AWARD
+	 * AUTHORITY TO REVIEW(FORWARD / REJECT) SCHOOL AWARD
 	 */
 	public static final String SCHOOL_AWARD_REVIEW = "ROLE_SCHOOL_AWARD_REVIEW";
+	
+	/**
+	 * AUTHORITY TO REVIEW(APPROVE / REJECT) SCHOOL AWARD
+	 */
+	public static final String SCHOOL_AWARD_APPROVE = "ROLE_SCHOOL_AWARD_APPROVE";
 }

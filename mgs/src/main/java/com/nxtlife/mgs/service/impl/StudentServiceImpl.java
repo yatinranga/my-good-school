@@ -70,6 +70,7 @@ import com.nxtlife.mgs.jpa.SchoolRepository;
 import com.nxtlife.mgs.jpa.StudentClubRepository;
 import com.nxtlife.mgs.jpa.StudentRepository;
 import com.nxtlife.mgs.jpa.StudentSchoolGradeRepository;
+import com.nxtlife.mgs.jpa.TeacherActivityGradeRepository;
 import com.nxtlife.mgs.jpa.TeacherRepository;
 import com.nxtlife.mgs.jpa.UserRepository;
 import com.nxtlife.mgs.service.ActivityPerformedService;
@@ -157,6 +158,9 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 	@Autowired
 	private RoleRepository roleRepository;
+	
+	@Autowired
+	TeacherActivityGradeRepository teacherActivityGradeRepository;
 
 	@Value("${spring.mail.username}")
 	private String emailUsername;
@@ -165,20 +169,47 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	@Secured(AuthorityUtils.SCHOOL_STAKEHOLDER_CREATE)
 	public StudentResponse save(StudentRequest request) {
 		Long schoolId = null;
-		if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")))
+		List<String> gradeIds = null;
+		if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))) {
+			if(request.getSchoolId() == null)
+				throw new ValidationException("School id cannot be null.");
 			schoolId = schoolRepository.findIdByCid(request.getSchoolId());
-		else
+		}
+		else {
 			schoolId = getUser().gettSchoolId();
+			request.setSchoolId(getUser().getSchool().getCid());
+		}
 		
 		if (!schoolRepository.existsById(schoolId)) {
 				throw new ValidationException(String.format("School with id : %s not found.", request.getSchoolId()));
 		}
+			
 		if (request.getEmail() == null)
 			throw new ValidationException("Email cannot be null.");
 
 		if (studentRepository.countByEmail(request.getEmail()) > 0) {
 			throw new ValidationException(String.format("Email [%s] already exist", request.getEmail()));
 		}
+		
+		Grade grade = null;
+
+		if (request.getGradeId() == null)
+			throw new ValidationException("Grade id cannot be null.");
+		
+			Long gradeId = gradeRepository.findIdByCidAndActiveTrue(request.getGradeId());
+			if (gradeId == null) {
+				throw new ValidationException(String.format("Grade (%s) not found", request.getGradeId()));
+			}
+			
+			if(!teacherRepository.existsByUserIdAndActiveTrue(getUserId()))
+				gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue(request.getSchoolId());
+			else
+				gradeIds = gradeRepository.findAllCidBySchoolsCidAndTeacherIdActiveTrue(request.getSchoolId(), teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
+		
+			if(!gradeIds.contains(request.getGradeId()))
+				throw new ValidationException("You are not authorized to add student in this class/grade.");
+			grade = new Grade();
+			grade.setId(gradeId);
 
 		if (request.getGuardians() != null) {
 			for (GuardianRequest guardian : request.getGuardians()) {
@@ -190,18 +221,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				}
 			}
 		}
-
-		Grade grade = null;
-
-		if (request.getGradeId() != null) {
-			Long gradeId = gradeRepository.findIdByCidAndActiveTrue(request.getGradeId());
-			if (gradeId == null) {
-				throw new ValidationException(String.format("Grade (%s) not found", request.getGradeId()));
-			}
-			grade = new Grade();
-			grade.setId(gradeId);
-		}
-
+		
 		List<Guardian> guardians = new ArrayList<>();
 		Guardian guardian;
 		Student student = request.toEntity();
@@ -543,12 +563,42 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_STUDENT_FETCH)
 	public List<StudentResponse> getAllBySchoolCid(String schoolCid) {
-		schoolCid = !getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))  ? getUser().getSchool().getCid() : schoolCid ; 
-		if(schoolCid == null)
-			throw new ValidationException("School id cannot be null.");
-		List<Student> studentsList = studentRepository.findAllBySchoolCidAndActiveTrue(schoolCid);
+		List<String> gradeIds = null;
+		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))) {
+			schoolCid = getUser().getSchool().getCid();
+			if(schoolCid == null)
+				throw new ValidationException("School id not assigned to user logged in.");
+			
+        if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("SchoolAdmin"))) {
+				
+				if(!teacherRepository.existsByUserIdAndActiveTrue(getUserId()))
+					gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue( schoolCid);
+				else
+					gradeIds = gradeRepository.findAllCidBySchoolsCidAndTeacherIdActiveTrue( schoolCid, teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
+			}else {
+				if(!teacherRepository.existsByUserIdAndActiveTrue(getUserId())) {
+					if(!studentRepository.existsByUserIdAndActiveTrue(getUserId()))
+						throw new ValidationException("Not Authorized to see details.");
+					gradeIds = Arrays.asList(studentRepository.findGradeCidByCidAndActiveTrue(studentRepository.findCidByUserIdAndActiveTrue(getUserId())));
+				}else {
+					gradeIds = gradeRepository.findAllCidBySchoolsCidAndTeacherIdActiveTrue( schoolCid,teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
+				}
+			}
+			
+		}else {	
+			if(schoolCid == null)
+				throw new ValidationException("School id cannot be null.");
+			gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue( schoolCid);
+		}
+		
+//		schoolCid = !getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))  ? getUser().getSchool().getCid() : schoolCid ; 
+		
+		
+		
+		List<Student> studentsList = studentRepository.findAllBySchoolCidAndGradeCidInAndActiveTrue(schoolCid, gradeIds);
+				//studentRepository.findAllBySchoolCidAndActiveTrue(schoolCid);
 		if (studentsList.isEmpty())
-			throw new NotFoundException(String.format("No student found for school having id [%s]", schoolCid));
+			throw new NotFoundException(String.format("No student found for school having id [%s] in grades (%s)", schoolCid ,gradeIds));
 		return studentsList.stream().map(StudentResponse::new).collect(Collectors.toList());
 	}
 
@@ -950,10 +1000,13 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_STUDENT_FETCH)
+	@Secured({AuthorityUtils.SCHOOL_STUDENT_FETCH , AuthorityUtils.SCHOOL_AWARD_ASSIGN})
 	public Set<StudentResponse> getAllStudentsAndItsActivitiesByAwardCriterion(String schoolCid ,String awardCriterion,
 			String criterionValue, String gradeCid, String initial, String last) {
-		schoolCid = !getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))  ? getUser().getSchool().getCid() : schoolCid ; 
+//		schoolCid = !getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))  ? getUser().getSchool().getCid() : schoolCid ; 
+		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor")))
+				throw new ValidationException("Only supervisors can assign awards.");
+		schoolCid = getUser().getSchool().getCid();
 		if(schoolCid == null)
 			throw new ValidationException("School id cannot be null.");
 		Long userId = getUserId();
@@ -967,7 +1020,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			throw new ValidationException(String.format(
 					"Invalid value (%s) for awardCriterion it should be of form : [PSD Area ,Focus Area , 4S ,Activity Type]",
 					awardCriterion));
-//
+		String teacherCid = teacherRepository.findCidByUserIdAndActiveTrue(getUserId());
+
 //		Teacher teacher = teacherRepository.getByUserId(userId);
 //		if (teacher == null)
 //			throw new UnauthorizedUserException(
@@ -998,16 +1052,16 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		AwardCriterion criterion = AwardCriterion.fromString(awardCriterion);
 
 		if (criterion.equals(AwardCriterion.PSDArea)) {
-			return getAllStudentsAndItsActivitiesByPsdArea(criterionValue, gradeCid, schoolCid,
+			return getAllStudentsAndItsActivitiesByPsdArea(teacherCid ,criterionValue, gradeCid, schoolCid,
 					startDate, endDate);
 		} else if (criterion.equals(AwardCriterion.FocusArea)) {
-			return getAllStudentsAndItsActivitiesByFocusArea(criterionValue, gradeCid, schoolCid,
+			return getAllStudentsAndItsActivitiesByFocusArea(teacherCid ,criterionValue, gradeCid, schoolCid,
 					startDate, endDate);
 		} else if (criterion.equals(AwardCriterion.FourS)) {
-			return getAllStudentsAndItsActivitiesByFourS(criterionValue, gradeCid, schoolCid,
+			return getAllStudentsAndItsActivitiesByFourS(teacherCid ,criterionValue, gradeCid, schoolCid,
 					startDate, endDate);
 		} else if (criterion.equals(AwardCriterion.ActivityType)) {
-			return getAllStudentsAndItsActivitiesByActivity(criterionValue, gradeCid, schoolCid,
+			return getAllStudentsAndItsActivitiesByActivity(teacherCid ,criterionValue, gradeCid, schoolCid,
 					startDate, endDate);
 		} else {
 			throw new ValidationException(String.format(
@@ -1016,7 +1070,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		}
 	}
 
-	private Set<StudentResponse> getAllStudentsAndItsActivitiesByActivity(String activityName, String gradeCid,
+	private Set<StudentResponse> getAllStudentsAndItsActivitiesByActivity(String teacherCid ,String activityName, String gradeCid,
 			String schoolCid, Date startDate, Date endDate) {
 		if (activityName == null)
 			throw new ValidationException("activityName cannot be null.");
@@ -1028,9 +1082,9 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		Set<String> focusAreas, psdAreas, fourS;
 		if (gradeCid == null) {
 			activitiesPerformed = new HashSet<ActivityPerformed>();
-			activitiesPerformed = activityPerformedRepository
-					.findAllByStudentSchoolCidAndActivityNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
-							schoolCid, activityName, ActivityStatus.Reviewed, startDate, endDate);
+			activitiesPerformed = activityPerformedRepository.findAllByTeacherCidAndStudentSchoolCidAndActivityNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(teacherCid, schoolCid, activityName, ActivityStatus.Reviewed, startDate, endDate);
+//					.findAllByStudentSchoolCidAndActivityNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
+//							schoolCid, activityName, ActivityStatus.Reviewed, startDate, endDate);
 			students = new HashSet<StudentResponse>();
 			for (ActivityPerformed act : activitiesPerformed) {
 				if (!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())))
@@ -1092,9 +1146,9 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 						.format("Grade with id (%s) does not exist in school having id (%s).", gradeCid, schoolCid));
 
 			activitiesPerformed = new HashSet<ActivityPerformed>();
-			activitiesPerformed = activityPerformedRepository
-					.findAllByStudentSchoolCidAndStudentGradeCidAndActivityNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
-							schoolCid, gradeCid, activityName, ActivityStatus.Reviewed, startDate, endDate);
+			activitiesPerformed = activityPerformedRepository.findAllByTeacherCidAndStudentSchoolCidAndStudentGradeCidAndActivityNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(teacherCid, schoolCid, gradeCid, activityName, ActivityStatus.Reviewed, startDate, endDate);
+//					.findAllByStudentSchoolCidAndStudentGradeCidAndActivityNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
+//							schoolCid, gradeCid, activityName, ActivityStatus.Reviewed, startDate, endDate);
 			students = new HashSet<StudentResponse>();
 			for (ActivityPerformed act : activitiesPerformed) {
 				if (!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())))
@@ -1156,7 +1210,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		return students;
 	}
 
-	private Set<StudentResponse> getAllStudentsAndItsActivitiesByFocusArea(String focusArea, String gradeCid,
+	private Set<StudentResponse> getAllStudentsAndItsActivitiesByFocusArea(String teacherCid ,String focusArea, String gradeCid,
 			String schoolCid, Date startDate, Date endDate) {
 		if (focusArea == null)
 			throw new ValidationException("focusArea cannot be null.");
@@ -1168,9 +1222,9 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		Set<String> activityTypes, psdAreas, fourS;
 		if (gradeCid == null) {
 			activitiesPerformed = new HashSet<ActivityPerformed>();
-			activitiesPerformed = activityPerformedRepository
-					.findAllByStudentSchoolCidAndActivityFocusAreasNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
-							schoolCid, focusArea, ActivityStatus.Reviewed, startDate, endDate);
+			activitiesPerformed = activityPerformedRepository.findAllByTeacherCidAndStudentSchoolCidAndActivityFocusAreasNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(teacherCid,schoolCid, focusArea, ActivityStatus.Reviewed, startDate, endDate);
+//					.findAllByStudentSchoolCidAndActivityFocusAreasNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
+//							schoolCid, focusArea, ActivityStatus.Reviewed, startDate, endDate);
 			students = new HashSet<StudentResponse>();
 			for (ActivityPerformed act : activitiesPerformed) {
 				if (!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())))
@@ -1239,9 +1293,9 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 						.format("Grade with id (%s) does not exist in school having id (%s).", gradeCid, schoolCid));
 
 			activitiesPerformed = new HashSet<ActivityPerformed>();
-			activitiesPerformed = activityPerformedRepository
-					.findAllByStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
-							schoolCid, gradeCid, focusArea, ActivityStatus.Reviewed, startDate, endDate);
+			activitiesPerformed = activityPerformedRepository.findAllByTeacherCidAndStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(teacherCid, schoolCid, gradeCid, focusArea, ActivityStatus.Reviewed, startDate, endDate);
+//					.findAllByStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
+//							schoolCid, gradeCid, focusArea, ActivityStatus.Reviewed, startDate, endDate);
 			students = new HashSet<StudentResponse>();
 			for (ActivityPerformed act : activitiesPerformed) {
 				if (!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())))
@@ -1306,7 +1360,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		return students;
 	}
 
-	private Set<StudentResponse> getAllStudentsAndItsActivitiesByFourS(String fourS, String gradeCid, String schoolCid,
+	private Set<StudentResponse> getAllStudentsAndItsActivitiesByFourS(String teacherCid ,String fourS, String gradeCid, String schoolCid,
 			Date startDate, Date endDate) {
 		if (fourS == null)
 			throw new ValidationException("fourS cannot be null.");
@@ -1320,9 +1374,9 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		Set<String> focusAreas, activityTypes, psdAreas;
 		if (gradeCid == null) {
 			activitiesPerformed = new HashSet<ActivityPerformed>();
-			activitiesPerformed = activityPerformedRepository
-					.findAllByStudentSchoolCidAndActivityFourSAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
-							schoolCid, FourS.valueOf(fourS), ActivityStatus.Reviewed, startDate, endDate);
+			activitiesPerformed = activityPerformedRepository.findAllByTeacherCidAndStudentSchoolCidAndActivityFourSAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(teacherCid, schoolCid, FourS.valueOf(fourS), ActivityStatus.Reviewed, startDate, endDate);
+//					.findAllByStudentSchoolCidAndActivityFourSAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
+//							schoolCid, FourS.valueOf(fourS), ActivityStatus.Reviewed, startDate, endDate);
 			students = new HashSet<StudentResponse>();
 			for (ActivityPerformed act : activitiesPerformed) {
 				if (!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())))
@@ -1388,9 +1442,9 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 						.format("Grade with id (%s) does not exist in school having id (%s).", gradeCid, schoolCid));
 
 			activitiesPerformed = new HashSet<ActivityPerformed>();
-			activitiesPerformed = activityPerformedRepository
-					.findAllByStudentSchoolCidAndStudentGradeCidAndActivityFourSAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
-							schoolCid, gradeCid, FourS.valueOf(fourS), ActivityStatus.Reviewed, startDate, endDate);
+			activitiesPerformed = activityPerformedRepository.findAllByTeacherCidAndStudentSchoolCidAndStudentGradeCidAndActivityFourSAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(teacherCid, schoolCid, gradeCid, FourS.valueOf(fourS), ActivityStatus.Reviewed, startDate, endDate);
+//					.findAllByStudentSchoolCidAndStudentGradeCidAndActivityFourSAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
+//							schoolCid, gradeCid, FourS.valueOf(fourS), ActivityStatus.Reviewed, startDate, endDate);
 			students = new HashSet<StudentResponse>();
 
 			for (ActivityPerformed act : activitiesPerformed) {
@@ -1456,7 +1510,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		return students;
 	}
 
-	private Set<StudentResponse> getAllStudentsAndItsActivitiesByPsdArea(String psdArea, String gradeCid,
+	private Set<StudentResponse> getAllStudentsAndItsActivitiesByPsdArea(String teacherCid ,String psdArea, String gradeCid,
 			String schoolCid, Date startDate, Date endDate) {
 		if (psdArea == null)
 			throw new ValidationException("Psd Area cannot be null.");
@@ -1470,9 +1524,9 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		Set<String> focusAreas, activityTypes, fourS;
 		if (gradeCid == null) {
 			activitiesPerformed = new HashSet<ActivityPerformed>();
-			activitiesPerformed = activityPerformedRepository
-					.findAllByStudentSchoolCidAndActivityFocusAreasPsdAreaAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
-							schoolCid, PSDArea.fromString(psdArea), ActivityStatus.Reviewed, startDate, endDate);
+			activitiesPerformed = activityPerformedRepository.findAllByTeacherCidAndStudentSchoolCidAndActivityFocusAreasPsdAreaAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(teacherCid,schoolCid, PSDArea.fromString(psdArea), ActivityStatus.Reviewed, startDate, endDate);
+//					.findAllByStudentSchoolCidAndActivityFocusAreasPsdAreaAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
+//							schoolCid, PSDArea.fromString(psdArea), ActivityStatus.Reviewed, startDate, endDate);
 			students = new HashSet<StudentResponse>();
 			for (ActivityPerformed act : activitiesPerformed) {
 				if (!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())))
@@ -1539,10 +1593,11 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 						.format("Grade with id (%s) does not exist in school having id (%s).", gradeCid, schoolCid));
 
 			activitiesPerformed = new HashSet<ActivityPerformed>();
-			activitiesPerformed = activityPerformedRepository
-					.findAllByStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasPsdAreaAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
-							schoolCid, gradeCid, PSDArea.fromString(psdArea), ActivityStatus.Reviewed, startDate,
-							endDate);
+			activitiesPerformed = activityPerformedRepository.findAllByTeacherCidAndStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasPsdAreaAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(teacherCid ,schoolCid, gradeCid, PSDArea.fromString(psdArea), ActivityStatus.Reviewed, startDate,
+					endDate);
+//					.findAllByStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasPsdAreaAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
+//							schoolCid, gradeCid, PSDArea.fromString(psdArea), ActivityStatus.Reviewed, startDate,
+//							endDate);
 			students = new HashSet<StudentResponse>();
 			for (ActivityPerformed act : activitiesPerformed) {
 				if (!students.stream().anyMatch(st -> st.getId().equals(act.getStudent().getCid())))
@@ -1609,11 +1664,11 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_STUDENT_FETCH)
-	public List<StudentResponse> getAllStudentsOfSchoolForParticularActivity(String schoolCid ,String activityCid, String teacherId,
-			String gradeId, String approvalStatus) {
-		schoolCid = !getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))  ? getUser().getSchool().getCid() : schoolCid ; 
-		if(schoolCid == null)
-			throw new ValidationException("School id cannot be null.");
+	public List<StudentResponse> getAllStudentsOfSchoolForParticularActivity(String schoolCid ,String activityCid, String teacherCid,
+			 String approvalStatus) {
+//		schoolCid = !getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))  ? getUser().getSchool().getCid() : schoolCid ; 
+//		if(schoolCid == null)
+//			throw new ValidationException("School id cannot be null.");
 		
 		if (activityCid == null)
 			throw new ValidationException("activity id cannot be null.");
@@ -1622,33 +1677,80 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		if (!activityRepository.existsByCidAndSchoolsCidAndActiveTrue(activityCid, schoolCid))
 			throw new ValidationException(String.format("Activity with id (%s) not offered in school", activityCid));
 		List<Student> students = new ArrayList<Student>();
-		if (teacherId != null) {
-			if (!teacherRepository.existsByCidAndActiveTrue(teacherId))
-				throw new ValidationException(String.format("Teacher with id (%s) does not exist.", teacherId));
-			if (gradeId != null) {
-				if (!gradeRepository.existsByCidAndActiveTrue(gradeId))
-					throw new ValidationException(String.format("Grade with id (%s) does not exist.", gradeId));
-				students = studentClubRepository
-						.findAllStudentByActivityCidAndStudentSchoolCidAndGradeCidAndTeacherCidAndMembershipStatusAndActiveTrue(
-								activityCid, schoolCid, gradeId, teacherId, ApprovalStatus.valueOf(approvalStatus));
-			} else {
-				students = studentClubRepository
-						.findAllStudentByActivityCidAndStudentSchoolCidAndTeacherCidAndMembershipStatusAndActiveTrue(
-								activityCid, schoolCid, teacherId, ApprovalStatus.valueOf(approvalStatus));
+//		if (teacherId != null) {
+//			if (!teacherRepository.existsByCidAndActiveTrue(teacherId))
+//				throw new ValidationException(String.format("Teacher with id (%s) does not exist.", teacherId));
+//			if (gradeId != null) {
+//				if (!gradeRepository.existsByCidAndActiveTrue(gradeId))
+//					throw new ValidationException(String.format("Grade with id (%s) does not exist.", gradeId));
+//				students = studentClubRepository
+//						.findAllStudentByActivityCidAndStudentSchoolCidAndGradeCidAndTeacherCidAndMembershipStatusAndActiveTrue(
+//								activityCid, schoolCid, gradeId, teacherId, ApprovalStatus.valueOf(approvalStatus));
+//			} else {
+//				students = studentClubRepository
+//						.findAllStudentByActivityCidAndStudentSchoolCidAndTeacherCidAndMembershipStatusAndActiveTrue(
+//								activityCid, schoolCid, teacherId, ApprovalStatus.valueOf(approvalStatus));
+//			}
+//		} else {
+//			if (gradeId != null) {
+//				if (!gradeRepository.existsByCidAndActiveTrue(gradeId))
+//					throw new ValidationException(String.format("Grade with id (%s) does not exist.", gradeId));
+//				students = studentClubRepository
+//						.findAllStudentByActivityCidAndStudentSchoolCidAndGradeCidAndMembershipStatusAndActiveTrue(
+//								activityCid, schoolCid, gradeId, ApprovalStatus.valueOf(approvalStatus));
+//			} else {
+//				students = studentClubRepository
+//						.findAllStudentByActivityCidAndStudentSchoolCidAndMembershipStatusAndActiveTrue(activityCid,
+//								schoolCid, ApprovalStatus.valueOf(approvalStatus));
+//			}
+//		}
+		Long teacherId = null;
+		List<String> gradeIds = null;
+		if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor"))) {
+			students = studentClubRepository.getAllStudentsOfSupervisorOfparticularClubGrade(teacherRepository.findCidByUserIdAndActiveTrue(getUserId()), activityCid, ApprovalStatus.valueOf(approvalStatus));
+		}else {
+			if(teacherCid == null)
+				throw new ValidationException("TeacherId cannot be null.");
+			teacherId = teacherRepository.findIdByCidAndActiveTrue(teacherCid);
+			
+			if (teacherId == null)
+				throw new ValidationException("Teacher id is null or user id not set for teacher");
+			if (!teacherActivityGradeRepository.existsByTeacherIdAndActiveTrue(teacherId))
+				throw new ValidationException("Teacher not running any clubs or societies.");
+			
+			if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))) {
+				schoolCid = getUser().getSchool().getCid();
+				if(schoolCid == null)
+					throw new ValidationException("School id not assigned to user logged in.");
+				
+	        if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("SchoolAdmin"))) {
+					
+					if(!teacherRepository.existsByUserIdAndActiveTrue(getUserId()))
+						gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue( schoolCid);
+					else
+						gradeIds = gradeRepository.findAllCidBySchoolsCidAndTeacherIdActiveTrue( schoolCid, teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
+				}else {
+					if(!teacherRepository.existsByUserIdAndActiveTrue(getUserId())) {
+						if(!studentRepository.existsByUserIdAndActiveTrue(getUserId()))
+							throw new ValidationException("Not Authorized to see details.");
+						gradeIds = Arrays.asList(studentRepository.findGradeCidByCidAndActiveTrue(studentRepository.findCidByUserIdAndActiveTrue(getUserId())));
+					}else {
+						gradeIds = gradeRepository.findAllCidBySchoolsCidAndTeacherIdActiveTrue( schoolCid,teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
+					}
+				}
+				
+			}else {	
+				
+				if(schoolCid == null)
+					throw new ValidationException("School id cannot be null.");
+				gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue( schoolCid);
 			}
-		} else {
-			if (gradeId != null) {
-				if (!gradeRepository.existsByCidAndActiveTrue(gradeId))
-					throw new ValidationException(String.format("Grade with id (%s) does not exist.", gradeId));
-				students = studentClubRepository
-						.findAllStudentByActivityCidAndStudentSchoolCidAndGradeCidAndMembershipStatusAndActiveTrue(
-								activityCid, schoolCid, gradeId, ApprovalStatus.valueOf(approvalStatus));
-			} else {
-				students = studentClubRepository
-						.findAllStudentByActivityCidAndStudentSchoolCidAndMembershipStatusAndActiveTrue(activityCid,
-								schoolCid, ApprovalStatus.valueOf(approvalStatus));
-			}
+			
+			students = studentClubRepository
+					.findAllStudentByActivityCidAndStudentSchoolCidAndGradeCidsInAndMembershipStatusAndActiveTrue(
+							activityCid, schoolCid, gradeIds, ApprovalStatus.valueOf(approvalStatus));
 		}
+		
 		if (students == null || students.isEmpty())
 			throw new ValidationException(String.format(
 					"No student in the school found in club/society  having id (%s) or membership might not have been %s.",

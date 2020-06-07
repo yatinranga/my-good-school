@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.nxtlife.mgs.service.ActivityService;
 import com.nxtlife.mgs.view.ActivityRequestResponse;
@@ -50,8 +51,8 @@ public class ActivityController {
 	}
 
 	@DeleteMapping("api/activitiesOffered/{cid}")
-	public SuccessResponse deleteActivityByCid(@PathVariable("cid") String cid) {
-		return activityService.deleteActivityByCid(cid);
+	public SuccessResponse deleteActivityByCid(@PathVariable("cid") String cid ,@RequestParam(value = "schoolId" ,required = false) String schoolCid ,@RequestParam(value = "forAll" ,defaultValue = "false") Boolean forAll) {
+		return activityService.deleteActivityByCid(cid,schoolCid,forAll);
 	}
 
 //	@GetMapping(value = "/coaches")

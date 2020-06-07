@@ -9,20 +9,20 @@ import com.nxtlife.mgs.entity.user.Guardian;
 
 @Repository
 public interface GuardianRepository extends JpaRepository<Guardian, Long> {
-	Guardian getOneByCid(String cid);
+	public Guardian getOneByCid(String cid);
 	
-	Guardian getOneByEmail(String email);
+	public Guardian getOneByEmail(String email);
 	
-	Guardian findByEmailOrMobileNumber(String email, String mobileNumber);
+	public Guardian findByEmailOrMobileNumber(String email, String mobileNumber);
 	
-	Guardian getOneByMobileNumber(String mobileNumber);
+	public Guardian getOneByMobileNumber(String mobileNumber);
 
-	Guardian findByMobileNumberAndActiveTrue(String mobileNumber);
+	public Guardian findByMobileNumberAndActiveTrue(String mobileNumber);
 
-	Guardian findByEmailAndActiveTrue(String email);
+	public Guardian findByEmailAndActiveTrue(String email);
 
-	boolean existsByCidAndActiveTrue(String cid);
+	public boolean existsByCidAndActiveTrue(String cid);
 
-	Guardian findByCidAndActiveTrue(String id);
+	public Guardian findByCidAndActiveTrue(String id);
 
 }

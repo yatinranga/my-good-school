@@ -80,7 +80,7 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 	public List<RoleResponse> getAllRoles() {
 		Long schoolId = getUser().gettSchoolId();
 		if (schoolRepository.findResponseById(schoolId) == null) {
-			throw new ValidationException("Organization not found");
+			throw new ValidationException("School not found");
 		}
 		List<RoleResponse> roles = roleDao.findBySchoolId(schoolId);
 		roles.stream().map(role -> {
@@ -122,7 +122,12 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 	@Secured(AuthorityUtils.ROLE_CREATE)
 	@Override
 	public RoleResponse save(RoleRequest request) {
-		Long schoolId = getUser().gettSchoolId();
+		Long schoolId = null;
+		if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin")))
+			schoolId = schoolRepository.findIdByCid(request.getSchoolId());
+		else
+			schoolId = getUser().gettSchoolId();
+		
 		validateRequest(request, schoolId);
 		Role role = request.toEntity();
 		School school = new School();

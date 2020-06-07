@@ -78,7 +78,7 @@ public class StudentController {
 		return studentService.findByCId(cId);
 	}
 
-	@GetMapping("/api/school/{id}/students")
+	@GetMapping("/api/school/{id}/students")//doneGrade
 	public List<StudentResponse> getAllBySchoolId(@PathVariable(value = "id" , required = false) String schoolCid) {
 		return studentService.getAllBySchoolCid(schoolCid);
 	}
@@ -91,9 +91,9 @@ public class StudentController {
 				activityCid, ApprovalStatus.VERIFIED.toString(), teacherCid);
 	}
 	
-	@GetMapping(value = "api/students/activity")
-	public List<StudentResponse> getAllStudentsOfSchoolForParticularActivity(@RequestParam(value = "schoolId" ,required = false) String schoolCid , @RequestParam("activityId") String activityCid ,@RequestParam(value = "teacherId" , required = false) String teacherId , @RequestParam(value = "gradeId" , required = false) String gradeId){
-		return studentService.getAllStudentsOfSchoolForParticularActivity(schoolCid ,activityCid,teacherId ,gradeId ,ApprovalStatus.VERIFIED.toString());
+	@GetMapping(value = "api/students/activity")//doneGrade
+	public List<StudentResponse> getAllStudentsOfSchoolForParticularActivity(@RequestParam(value = "schoolId" ,required = false) String schoolCid , @RequestParam("activityId") String activityCid ,@RequestParam(value = "teacherId" , required = false) String teacherId ){
+		return studentService.getAllStudentsOfSchoolForParticularActivity(schoolCid ,activityCid,teacherId ,ApprovalStatus.VERIFIED.toString());
 	}
 
 	@DeleteMapping("api/student/{cid}")
@@ -116,7 +116,7 @@ public class StudentController {
 		return studentService.getAllCertificatesOfStudent(studentId);
 	}
 	
-	@GetMapping(value = "api/award/students")
+	@GetMapping(value = "api/award/students") //doneGrade
 	public Set<StudentResponse> getAllStudentsAndItsActivitiesByAwardCriterion(@RequestParam(value = "schoolId" ,required = false) String schoolCid ,@RequestParam(name = "awardCriterion") String awardCriterion ,@RequestParam(name = "criterionValue") String criterionValue, @RequestParam(name = "gradeId" , required = false) String gradeId,@RequestParam(name = "startDate" , required = false) String startDate ,@RequestParam(name = "endDate" , required = false) String endDate){
 		return studentService.getAllStudentsAndItsActivitiesByAwardCriterion(schoolCid,awardCriterion, criterionValue, gradeId,startDate ,endDate);
 	}

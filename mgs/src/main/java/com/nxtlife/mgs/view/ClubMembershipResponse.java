@@ -83,9 +83,9 @@ public class ClubMembershipResponse {
 		this.student = new StudentResponse(studentClub.getStudent());
 		this.club = new ActivityRequestResponse(studentClub.getActivity());
 		if(studentClub.getAppliedOn() != null)
-			this.appliedOn = DateUtil.formatDate(studentClub.getAppliedOn());
+			this.appliedOn = studentClub.getAppliedOn().toString(); // DateUtil.formatDate(studentClub.getAppliedOn());
 		if(studentClub.getConsideredOn() != null)
-			this.consideredOn = DateUtil.formatDate(studentClub.getConsideredOn());
+			this.consideredOn = studentClub.getConsideredOn().toString(); // DateUtil.formatDate(studentClub.getConsideredOn());
 		if(studentClub.getMembershipStatus() != null)
 			this.membershipStatus = studentClub.getMembershipStatus().toString();
 		if(studentClub.getTeacher() != null)

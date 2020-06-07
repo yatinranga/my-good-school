@@ -19,70 +19,72 @@ import com.nxtlife.mgs.entity.user.Teacher;
 @Repository
 public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 
-	Teacher getOneByCidAndActiveTrue(String cid);
+	public Teacher getOneByCidAndActiveTrue(String cid);
 	
-	Teacher getByUserId(Long userId);
+	public Teacher getByUserId(Long userId);
 
-	int countByEmailAndActiveTrue(String email);
+	public int countByEmailAndActiveTrue(String email);
 
-	int countByUsernameAndActiveTrue(String username);
+	public int countByUsernameAndActiveTrue(String username);
 
-	Teacher findByNameAndActiveTrue(String name);
+	public Teacher findByNameAndActiveTrue(String name);
 
-	Teacher findByCidAndActiveTrue(String cid);
+	public Teacher findByCidAndActiveTrue(String cid);
 
-	Teacher findByCidAndIsCoachTrueAndActiveTrue(String cid);
+	public Teacher findByCidAndIsCoachTrueAndActiveTrue(String cid);
 
-	Teacher findByCidAndIsClassTeacherTrueAndActiveTrue(String cid);
+	public Teacher findByCidAndIsClassTeacherTrueAndActiveTrue(String cid);
 
-	Teacher findByIdAndIsCoachTrueAndActiveTrue(Long id);
+	public Teacher findByIdAndIsCoachTrueAndActiveTrue(Long id);
 
-	Teacher findByIdAndIsClassTeacherTrueAndActiveTrue(Long id);
+	public Teacher findByIdAndIsClassTeacherTrueAndActiveTrue(Long id);
 
-	Teacher findByMobileNumberAndActiveTrue(String mobileNumber);
+	public Teacher findByMobileNumberAndActiveTrue(String mobileNumber);
 
-	Teacher findByUsernameAndActiveTrue(String username);
+	public Teacher findByUsernameAndActiveTrue(String username);
 
-	List<Teacher> findAllBySchoolCidAndActivitiesNameAndIsCoachTrueAndActiveTrue(String schoolCid, String activityName);
+	public List<Teacher> findAllBySchoolCidAndActivitiesNameAndIsCoachTrueAndActiveTrue(String schoolCid, String activityName);
 
-	List<Teacher> findAllBySchoolCidAndActivitiesCidAndIsCoachTrueAndActiveTrue(String schoolCid, String activityCid);
+	public List<Teacher> findAllBySchoolCidAndActivitiesCidAndIsCoachTrueAndActiveTrue(String schoolCid, String activityCid);
 
-	List<Teacher> findAllBySchoolCidAndIsCoachTrueAndActiveTrue(String schoolCid);
+	public List<Teacher> findAllBySchoolCidAndIsCoachTrueAndActiveTrue(String schoolCid);
 
-	List<Teacher> findAllBySchoolCidAndIsClassTeacherTrueAndActiveTrue(String schoolCid);
+	public List<Teacher> findAllBySchoolCidAndIsClassTeacherTrueAndActiveTrue(String schoolCid);
 
-	List<Teacher> findAllBySchoolCidAndActiveTrue(String schoolCid);
+	public List<Teacher> findAllBySchoolCidAndActiveTrue(String schoolCid);
 
-	List<Teacher> findAllByIsCoachTrueAndActiveTrue();
+	public List<Teacher> findAllByIsCoachTrueAndActiveTrue();
 
-	List<Teacher> findAllByIsClassTeacherTrueAndActiveTrue();
+	public List<Teacher> findAllByIsClassTeacherTrueAndActiveTrue();
 
-	Teacher findByIdAndActiveTrue(Long id);
+	public Teacher findByIdAndActiveTrue(Long id);
 
-	Page<Teacher> findAllByActiveTrue(Pageable paging);
+	public Page<Teacher> findAllByActiveTrue(Pageable paging);
 
-	Boolean existsByCidAndActiveTrue(String teacherId);
+	public Boolean existsByCidAndActiveTrue(String teacherId);
 
-	List<Teacher> findAllBySchoolCidAndIsManagmentMemberTrueAndSchoolActiveTrueAndActiveTrue(String schoolCid);
+	public List<Teacher> findAllBySchoolCidAndIsManagmentMemberTrueAndSchoolActiveTrueAndActiveTrue(String schoolCid);
 
-	String findNameByCidAndActiveTrue(String assignerCid);
+	public String findNameByCidAndActiveTrue(String assignerCid);
 
-	boolean existsByUserIdAndIsManagmentMemberTrueAndActiveTrue(Long userId);
+	public boolean existsByUserIdAndIsManagmentMemberTrueAndActiveTrue(Long userId);
+	
+	public boolean existsByUserIdAndActiveTrue(Long userId);
 
 	@Query(value = "select t.id from Teacher t where t.cid = :cid and t.active = true")
-	Long findIdByCidAndActiveTrue(@Param("cid") String cid);
+	public Long findIdByCidAndActiveTrue(@Param("cid") String cid);
 
 	@Query(value = "select t.id from Teacher t where t.user.id = :userId and t.active = true")
-	Long getIdByUserIdAndActiveTrue(@Param("userId") Long userId);
+	public Long getIdByUserIdAndActiveTrue(@Param("userId") Long userId);
 
-	Teacher findByUserIdAndActiveTrue(Long userId);
+	public Teacher findByUserIdAndActiveTrue(Long userId);
 
 	@Query(value = "select s.cid from Teacher s where s.user.id = :userId and s.active = true")
-	String findCidByUserIdAndActiveTrue(@Param("userId") Long userId);
+	public String findCidByUserIdAndActiveTrue(@Param("userId") Long userId);
 
 	@Modifying
 	@Query(value = "update Teacher s set s.active = ?2 where s.cid = ?1 and s.active = true")
-	int deleteByCidAndActiveTrue(String cid ,Boolean active);
+	public int deleteByCidAndActiveTrue(String cid ,Boolean active);
 
 	@Query(value = "select s.id as id , s.cid as cid from Teacher s where s.user.id = :userId and s.active = true")
 	public Map<String, Object> findIdAndCidByUserIdAndActiveTrue(@Param("userId") Long userId);
@@ -94,8 +96,10 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 	public Long findSchoolIdbyTeacherCid(String teacherCid);
 	
 	@Query(value = "select  s.teacherActivityGrades as clubs from Teacher s where s.cid = ?1 and s.active = true")
-	Map<String,Collection<TeacherActivityGrade>> findClubsByCidAndActiveTrue(String cid);
+	public Map<String,Collection<TeacherActivityGrade>> findClubsByCidAndActiveTrue(String cid);
 
+	@Query("Select t from Teacher t join t.grades g join t.teacherActivityGrades tag where t.school.cid = ?1 and (g.cid in ?2 or tag.grade.cid in ?2 ) and t.active = true")
+	public List<Teacher> findAllBySchoolCidAndGradesCidOrTeacherActivityGradesGradeCidInAndActiveTrue(String schoolCid,Collection<String> gradesIds);
 	
 //	List<Teacher> findAllByActivitiesCid(String cid);
 

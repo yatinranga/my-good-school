@@ -262,6 +262,8 @@ public class TeacherResponse {
 		this.isClassTeacher = teacher.getIsClassTeacher();
 		this.imagePath = teacher.getImageUrl();
 		this.profileBrief = teacher.getProfileBrief();
+		if (teacher.getDob() != null)
+			this.dob = teacher.getDob().toString();
 		if (teacher.getCreatedDate().get() != null)
 			this.yearOfEnrolment = Integer.toString(teacher.getCreatedDate().get().getYear());
 
@@ -351,7 +353,7 @@ public class TeacherResponse {
 			this.yearOfEnrolment = Integer.toString(teacher.getCreatedDate().get().getYear());
 
 		if (teacher.getDob() != null)
-			this.dob = DateUtil.formatDate(teacher.getDob());
+			this.dob = teacher.getDob().toString();//DateUtil.formatDate(teacher.getDob());
 
 		this.qualification = teacher.getQualification();
 		this.active = teacher.getActive();

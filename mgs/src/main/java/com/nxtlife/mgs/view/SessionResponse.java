@@ -175,9 +175,9 @@ public class SessionResponse {
 		this.title = session.getTitle();
 		this.number = session.getNumber();
 		if (session.getStartDate() != null)
-			this.startDate = DateUtil.formatDate(session.getStartDate());
+			this.startDate = session.getStartDate().toString();//DateUtil.formatDate(session.getStartDate());
 		if (session.getEndDate() != null)
-			this.endDate = DateUtil.formatDate(session.getEndDate());
+			this.endDate = session.getEndDate().toString();//DateUtil.formatDate(session.getEndDate());
 		Date now = LocalDateTime.now(DateTimeZone.forTimeZone(DateUtil.defaultTimeZone)).toDate();
 		if (session.getStartDate() != null && session.getEndDate() != null) {
 

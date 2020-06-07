@@ -75,6 +75,7 @@ public class Student  extends BaseEntity {
 	@ManyToOne
 	private School school;
 
+	@NotNull
 	@ManyToOne
 	private Grade grade;
 

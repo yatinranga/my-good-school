@@ -69,7 +69,7 @@ public interface SessionRepository extends JpaRepository<Event, Long>, QuerydslP
 	
 	@Modifying
 	@Query(value = "update Event s set s.active = ?2 where s.cid = ?1 and s.active = true")
-	int deleteByCidAndActiveTrue(String cid ,Boolean active);
+	public int deleteByCidAndActiveTrue(String cid ,Boolean active);
 
 	public boolean existsByCidAndActiveTrue(String sessionId);
 }

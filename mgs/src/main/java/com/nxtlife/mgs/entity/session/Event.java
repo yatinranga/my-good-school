@@ -3,6 +3,7 @@ package com.nxtlife.mgs.entity.session;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -142,8 +143,9 @@ public class Event extends BaseEntity{
 		this.teacher = teacher;
 	}
 	
-	public LocalDate getStartLocalDate() {
-		return DateUtil.convertToLocalDate(this.startDate);
+	public LocalDate getStartLocalDate(TimeZone zone) {
+		zone = zone == null ? DateUtil.defaultTimeZone : zone;
+		return DateUtil.convertToLocalDate(this.startDate ,zone);
 	}
 
 	public List<File> getFiles() {

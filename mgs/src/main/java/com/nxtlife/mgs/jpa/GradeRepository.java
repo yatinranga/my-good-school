@@ -13,40 +13,47 @@ import com.nxtlife.mgs.entity.school.Grade;
 @Repository
 public interface GradeRepository extends JpaRepository<Grade, Long>{
 
-	Grade getOneByCid(String cid);
+	public Grade getOneByCid(String cid);
 	
-	Grade findByNameAndSchoolsIdAndSection(String name, Long schoolId , String section);
+	public Grade findByNameAndSchoolsIdAndSection(String name, Long schoolId , String section);
 	
-	Grade findByNameAndSchoolsId(String name, Long schoolId);
+	public Grade findByNameAndSchoolsId(String name, Long schoolId);
 	
-	Grade findByNameAndSchoolsCid(String name , String schoolCid);
+	public Grade findByNameAndSchoolsCid(String name , String schoolCid);
 
-	List<Grade> findAllBySchoolsCidAndActiveTrue(String schoolCid);
+	public List<Grade> findAllBySchoolsCidAndActiveTrue(String schoolCid);
 
-	Grade findByCidAndActiveTrue(String gradeCid);
+	public Grade findByCidAndActiveTrue(String gradeCid);
 
-	Grade findByNameAndSectionAndActiveTrue(String grade, String section);
+	public Grade findByNameAndSectionAndActiveTrue(String grade, String section);
 
-	Grade findByNameAndSchoolsCidAndSection(String string, String schoolCid, String section);
+	public Grade findByNameAndSchoolsCidAndSection(String string, String schoolCid, String section);
 
-	boolean existsByCidAndSchoolsCidAndSchoolsActiveTrueAndActiveTrue(String gradeId, String cid);
+	public boolean existsByCidAndSchoolsCidAndSchoolsActiveTrueAndActiveTrue(String gradeId, String cid);
 	
-	Grade findByCidAndSchoolsCidAndSchoolsActiveTrueAndActiveTrue(String gradeId, String cid);
+	public Grade findByCidAndSchoolsCidAndSchoolsActiveTrueAndActiveTrue(String gradeId, String cid);
 
-	boolean existsByCidAndActiveTrue(String gradeCid);
+	public boolean existsByCidAndActiveTrue(String gradeCid);
 
 //	@Query("SELECT CASE WHEN count(g) > 0 THEN true ELSE false END FROM Grade g where g.cid = :gradeCid AND g.schools.cid =:schoolCid AND g.active = true")
-	boolean existsBySchoolsCidAndCidAndActiveTrue(String schoolCid, String gradeCid);
+	public boolean existsBySchoolsCidAndCidAndActiveTrue(String schoolCid, String gradeCid);
 	
 	@Query(value = "select a.id from Grade a where a.cid = :cid and a.active = true")
-	Long findIdByCidAndActiveTrue(@Param("cid") String cid);
+	public Long findIdByCidAndActiveTrue(@Param("cid") String cid);
 	
 	@Query(value = "select g.cid from Grade g join g.students ts where ts.cid = ?1 and g.active = true")
-	String findIdByStudentCidAndActiveTrue(String cid);
+	public String findIdByStudentCidAndActiveTrue(String cid);
 	
-	@Query("Select distinct g.id from Grade g join g.teachers ts where ts.cid = ?1")
+	@Query("Select distinct g.id from Grade g join g.teachers ts where ts.cid = ?1 and g.active = true")
 	public List<Long> findGradeIdsOfTeacher(String teacherCid);
 	
-	@Query("Select distinct g.id from Grade g join g.teachers ts where ts.id = ?1")
+	@Query("Select distinct g.id from Grade g join g.teachers ts where ts.id = ?1 and g.active = true")
 	public List<Long> findGradeIdsOfTeacher(Long teacherId);
+
+	@Query("Select distinct g.cid from Grade g join g.schools s where s.cid = ?1 and g.active = true")
+	public List<String> findAllCidBySchoolsCidAndActiveTrue(String schoolCid);
+
+	@Query("Select distinct g.cid from Grade g join g.schools s join g.teachers ts where s.cid = ?1 and ts.id = ?2 and g.active = true")
+	public List<String> findAllCidBySchoolsCidAndTeacherIdActiveTrue(String schoolCid, Long teacherId);
+	
 }
