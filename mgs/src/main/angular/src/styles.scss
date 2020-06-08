@@ -291,11 +291,13 @@ app-home{
     width: 100%;
     vertical-align: top;
 }
-.content_main_com{
-    width: 82%;
+.content_main_com {
+    width: calc(100% - 250px);
     display: inline-block;
     padding: 0;
+    float: right;
 }
+
 .content_main img {
     width: 100%;
     vertical-align: top;
@@ -306,9 +308,13 @@ app-home{
 .header {
     width: 100%;
     display: inline-block;
-    background: #868686;
+    background: #fff;
     height: auto;
-    vertical-align: bottom;
+    vertical-align: top;
+    position: sticky;
+    top: 0;
+    box-shadow: 0 0 5px #ddd;
+    z-index: 222;
 }
 .profile_right{
     float: right;
@@ -316,7 +322,7 @@ app-home{
 a.logout.menu_link {
     margin: 0;
     padding: 15px;
-    color: black;
+    color: #159487;
 }
 .banner {
     width: 100%;
@@ -519,34 +525,35 @@ ul.student_list li {
     background: #fff;
     color: #555;
     display: inline-block;
-    width: 18%;
+    width: 250px;
     padding: 0;
     position: -webkit-sticky;
-    position: sticky;
-    height: 100vh;
+    position: fixed;
+    min-height: 100vh;
     z-index: 22;
-    box-shadow: 0 0 10px #333;
+    box-shadow: 0 0 5px #ddd;
     float: left;
+    height: 100%;
 }
 .logo {
     padding: 0;
     float: left;
-    margin: 15px auto;
+    margin: 25px 0;
     width: 100%;
     text-align: center;
-    position: relative;
+    
 }
-ul.logo:after {
-    position: absolute;
-    content: "";
-    width: 60%;
-    height: 2px;
-    background: #cecece;
-    left: 0;
-    right: 0;
-    margin: 0 auto;
-    top: 125px;
-}
+// ul.logo:after {
+//     position: absolute;
+//     content: "";
+//     width: 60%;
+//     height: 2px;
+//     background: #cecece;
+//     left: 0;
+//     right: 0;
+//     margin: 0 auto;
+//     top: 125px;
+// }
 .logo img{
     width: 100px;
     cursor: pointer;
@@ -557,7 +564,8 @@ ul.logo:after {
     margin: 0px auto;
     float: left;
     width: 100%;
-    margin-top: 45px;
+    margin-top: 0;
+    border-top: solid 1px #ddd;
 }
 .menu ul {
     padding: 0;
@@ -577,9 +585,7 @@ a.menu_link{
     color: #555;
     padding: 25px 0;
 }
-a.logout.menu_link:hover {
-    text-decoration: underline;
-}
+
 i.fa {
     margin: 0 10px;
 }
@@ -633,18 +639,20 @@ cursor: pointer;}
     font-size: 30px !important;
 }
 */
-
+.menu ul li{
+    border-bottom: solid 1px #ddd;
+}
 li.cb{
- border-bottom: 3px solid #4bafa5;
+ border-left: 8px solid #4bafa5;
 }
 li.pink {
-    border-bottom: 3px solid #e04090;
+    border-left: 8px solid #e04090;
 }
 li.blue{
-    border-bottom: 3px solid #1f69ad;
+    border-left: 8px solid #1f69ad;
 }
 li.green{
-    border-bottom: 3px solid #8dc33a;
+    border-left: 8px solid #8dc33a;
 }
 a.menu_link:hover{
     text-decoration: none;
@@ -711,3 +719,30 @@ p#attachment_name {
     text-decoration: underline;
 }
 
+/*--------Css by Pramod---*/
+
+
+.header .menu_toggle i.fa.fa-bars {
+    padding: 0;
+    margin-top: 15px;
+    margin-left: 15px;
+    font-size: 25px !important;
+    color: #159487;
+    cursor: pointer;
+}
+
+.header .menu_toggle {
+    display: inline-block;
+    line-height: normal;
+    width: auto;
+}
+.main-card {
+    box-shadow: 0 0 5px #ddd;
+    margin: 15px 0;
+    border-radius: 0;
+    width: 100%;
+    display: inline-block;
+    position: relative;
+    min-height: calc(100vh - 90px);
+    max-height: 100%;
+}
