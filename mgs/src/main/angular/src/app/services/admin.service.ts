@@ -30,11 +30,22 @@ export class AdminService {
     return this.http.get(url);
   }
 
+  /** Get List of all the Users */
   getUsers(){
     return this.http.get("/api/users");
   }
 
+  /** Create New Role */
+  createRole(RequestBody){
+    return this.http.post("/api/role",RequestBody)
+  }
+
+  /** Get List of all the Roles */
   getRoles(){
     return this.http.get("/api/roles");
+  }
+  /** Get List of all the Authorities */
+  getAuthorities(){
+    return this.http.get("/api/authorities");
   }
 }

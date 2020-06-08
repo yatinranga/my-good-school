@@ -1,0 +1,25 @@
+<h2>Create New Role</h2>
+<form [formGroup]="createRoleForm" (ngSubmit)="createNewRole()">
+    <div class="form-group">
+        <label for="Name">Role Name : </label>
+        <input type="text" class="form-control" placeholder="Enter Role Name" formControlName="name">
+    </div>
+    <div class="form-group">
+        <label for="Authorities"> Authorities</label>
+        <select class="form-control" name="authoritiyIds" formControlName="authorityIds" multiple>
+            <!-- <option value="" disabled selected>Select Grade </option> -->
+            <option *ngFor="let a of authoritiesArr;" value={{a.id}}>
+                {{a.name}}</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="School">Select School</label>
+        <select class="form-control" name="authoritiyIds" formControlName="schoolId">
+            <option [ngValue]=null disabled selected> School </option>
+            <option *ngFor="let s of schoolsArr; let i = index;" value={{s.id}}>
+                {{s.name}}</option>
+        </select>
+    </div>
+    <button type="reset" class="btn btn-danger">Reset</button>
+    <button type="submit" class="btn btn-primary" [disabled]="this.createRoleForm.invalid">Create New Role</button>
+</form>

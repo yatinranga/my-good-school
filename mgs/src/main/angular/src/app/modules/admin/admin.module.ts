@@ -9,6 +9,7 @@ import { TeacherUploadComponent } from './teacher-upload/teacher-upload.componen
 import { SchoolUploadComponent } from './school-upload/school-upload.component';
 import { UsersComponent } from './users/users.component';
 import { AddUserComponent } from './add-user/add-user.component';
+import { CreateRoleComponent } from './create-role/create-role.component';
 
 const routes: Routes = [
   {
@@ -20,6 +21,7 @@ const routes: Routes = [
       { path: 'school-upload', component: SchoolUploadComponent },
       { path: 'users', component: UsersComponent },
       { path: 'add-user', component: AddUserComponent },
+      { path: 'create-role', component: CreateRoleComponent},
 
       { path: '', redirectTo : 'student-upload' }
     ]
@@ -27,7 +29,7 @@ const routes: Routes = [
 ]
 
 @NgModule({
-  declarations: [AdminComponent, StudentUploadComponent, TeacherUploadComponent, SchoolUploadComponent, UsersComponent, AddUserComponent],
+  declarations: [AdminComponent, StudentUploadComponent, TeacherUploadComponent, SchoolUploadComponent, UsersComponent, AddUserComponent, CreateRoleComponent],
   imports: [
     CommonModule,
     FormsModule,

@@ -7,6 +7,10 @@ import { SchoolComponent } from './school.component';
 import { SchoolProfileComponent } from './school-profile/school-profile.component';
 import { SchoolAwardsComponent } from './school-awards/school-awards.component';
 import { SchoolHomeComponent } from './school-home/school-home.component';
+import { AddUserComponent } from './add-user/add-user.component';
+import { StudentBulkUploadComponent } from './student-bulk-upload/student-bulk-upload.component';
+import { SupervisorBulkUploadComponent } from './supervisor-bulk-upload/supervisor-bulk-upload.component';
+import { UsersListComponent } from './users-list/users-list.component';
 
 const routes: Routes = [
   {
@@ -22,6 +26,22 @@ const routes: Routes = [
         component: SchoolProfileComponent
       },
       {
+        path: 'student-upload',
+        component: StudentBulkUploadComponent
+      },
+      {
+        path: 'supervisor-upload',
+        component: SupervisorBulkUploadComponent
+      },
+      {
+        path: 'users',
+        component: UsersListComponent
+      },
+      {
+        path: 'add-user',
+        component: AddUserComponent
+      },
+      {
         path: '',
         redirectTo: 'home'
       }
@@ -32,10 +52,14 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    SchoolComponent, 
-    SchoolProfileComponent, 
-    SchoolAwardsComponent, 
-    SchoolHomeComponent
+    SchoolComponent,
+    SchoolProfileComponent,
+    SchoolAwardsComponent,
+    SchoolHomeComponent, 
+    AddUserComponent, 
+    StudentBulkUploadComponent, 
+    SupervisorBulkUploadComponent, 
+    UsersListComponent
   ],
   imports: [
     CommonModule,

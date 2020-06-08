@@ -1,18 +1,40 @@
 <div class="main">
-    <div class="navbar">
-      <ul class="logo">
-        <li routerLinkActive='active'>
-          <a routerLink='./home'>
-            <img src="assets/images/logo.jpg"> </a>
+  <div class="navbar">
+    <ul class="logo">
+      <li routerLinkActive='active'>
+        <a routerLink='./home'>
+          <img src="assets/images/logo.jpg"> </a>
+      </li>
+    </ul>
+    <div class="menu">
+      <ul>
+        <li class="cb" routerLinkActive='active'>
+          <a routerLink='./profile' class="pink menu_link">
+            <i class="fa fa-id-badge"> </i> Profile </a>
         </li>
-      </ul>
-      <div class="menu">
-        <ul>
-          <li class="cb" routerLinkActive='active'>
-            <a routerLink='./profile' class="pink menu_link">
-              <i class="fa fa-id-badge"> </i> Profile </a>
-          </li>
-          <!-- <li class="pink" routerLinkActive='active'>
+        <li class="pink" routerLinkActive='active'>
+          <a class="menu_link" data-toggle="collapse" data-target="#demo">
+            <i class="fa fa-address-card-o"> </i> Users </a>
+          <div id="demo" class="collapse">
+        <li class="" routerLinkActive='active'>
+          <a routerLink='./student-upload' class=" menu_link">
+            <i class="fa fa-child"> </i> Student Upload </a>
+        </li>
+        <li class="" routerLinkActive='active'>
+          <a routerLink='./supervisor-upload' class=" menu_link">
+            <i class="fa fa-users"> </i> Supervisor Upload </a>
+        </li>
+        <li class="" routerLinkActive='active'>
+          <a routerLink='./users' class=" menu_link">
+            <i class="fa fa-address-card"> </i> View Users </a>
+        </li>
+        <li class="" routerLinkActive='active'>
+          <a routerLink='./add-user' class=" menu_link">
+            <i class="fa fa-address-book-o"> </i> Add Users </a>
+        </li>
+    </div>
+    </li>
+    <!-- <li class="pink" routerLinkActive='active'>
             <a routerLink='./activity' class="blue menu_link">
               <i class="fa fa-bar-chart"> </i> Activities</a>
           </li>
@@ -24,16 +46,16 @@
             <a routerLink='./certificates' class="green menu_link">
               <i class="fa fa-trophy"> </i> Certificates </a>
           </li>-->
-        </ul>  
-        <ul style="float: right">
-          <li>
-            <a routerLink='login' class="logout menu_link" (click)="authService.logoutUser();">
-              <i class="fa fa-sign-out-alt"> </i> Logout </a>
-          </li>
-        </ul>
-      </div>
-  
-      <!--
+    </ul>
+    <ul style="float: right">
+      <li>
+        <a routerLink='login' class="logout menu_link" (click)="authService.logoutUser();">
+          <i class="fa fa-sign-out-alt"> </i> Logout </a>
+      </li>
+    </ul>
+  </div>
+
+  <!--
       <div class="right">
           <div class="dropdown">
           <i class="fa fa-user-circle"></i>
@@ -51,11 +73,11 @@
           </div>
         </div>
         -->
-    </div>
-  
-    <div class="content_main">
-      <router-outlet></router-outlet>
-    </div>
-  
-  
-  </div>
+</div>
+
+<div class="content_main">
+  <router-outlet></router-outlet>
+</div>
+
+
+</div>
