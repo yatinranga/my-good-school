@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AdminComponent } from './admin.component';
 import { RouterModule, Routes } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+
+import { AdminComponent } from './admin.component';
 import { StudentUploadComponent } from './student-upload/student-upload.component';
 import { TeacherUploadComponent } from './teacher-upload/teacher-upload.component';
 import { SchoolUploadComponent } from './school-upload/school-upload.component';
@@ -29,6 +30,7 @@ const routes: Routes = [
   declarations: [AdminComponent, StudentUploadComponent, TeacherUploadComponent, SchoolUploadComponent, UsersComponent, AddUserComponent],
   imports: [
     CommonModule,
+    FormsModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes)
   ]

@@ -1,6 +1,6 @@
 
 .teacher-awards.content {
-    width: 50%;
+    width: 100%;
     color: white;
     display: inline-block;
     float: left;
@@ -108,6 +108,7 @@ li.active {
     width: 100%;
     display: inline-block;
     margin-top: 20px;
+    padding: 10px;
 }
 .assign_form {
     margin: 10px;
@@ -140,6 +141,7 @@ button.award.btn.btn-success, button.award.btn.btn-primary {
     background: #8dc33a !important;
     padding: 10px;
     border-radius: 2px;
+    margin: 10px 0;
 }
 button.reset.btn.btn-secondary {
     padding: 10px;
