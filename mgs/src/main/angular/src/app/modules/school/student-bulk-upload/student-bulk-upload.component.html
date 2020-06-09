@@ -1,0 +1,29 @@
+<div class="student_upload">
+    <h2>Data Upload Form For Students</h2>
+    <div class="card bg-light">
+        <div class="card-body text-center">
+            <form [formGroup]="studentBulkForm" (ngSubmit)="uploadStudents()">
+                <div class="choosefield input-field">
+                    <input class="choosefile" type="file" name="selectedFile" (change)="onFileSelect($event)" />
+                    <span class="choosefile choosefile-custom"> <i class="fa fa-file"></i> </span>
+                </div>
+
+                <button class="upload btn" type="submit"> Upload </button>
+
+                <div *ngFor="let sf of files; let i = index;">
+                    <p>{{sf.name}}
+                        <button type="button" name="removeFile" (click)="removeFile()" class="reviewed icon_button">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </p>
+                </div>
+            </form>
+            <div>
+                <button class="download btn" type="button" name="downloadStudent" (click)="downloadStudent()">Download
+                    Student
+                    Template</button>
+                <a style="display: none;" download #dwnld></a>
+            </div>
+        </div>
+    </div>
+</div>

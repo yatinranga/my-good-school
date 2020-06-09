@@ -14,6 +14,26 @@ export class SchoolService {
     return this.http.post(url, data);
   }
 
+  // Bulk Upload of data
+  UploadExcel(url, formData: FormData) {
+    return this.http.post(url, formData)
+  }
+
+  /** Create new user */ 
+  createUser(formData: FormData) {
+    return this.http.post("/api/user", formData);
+  }
+
+  /** To get All Users of a School */
+  getUsers(){
+    return this.http.get("/api/users");
+  }
+
+  /** To get All  */
+  getRoles(){
+    return this.http.get("/api/roles");
+  }
+
   // get GENERAL Activities
   getGeneralActivities() {
     return this.http.get("/generalActivities");
