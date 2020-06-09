@@ -24,7 +24,8 @@
               </li>
               <li class="green" routerLinkActive='active'>
                 <a routerLink='./certificates' class="green menu_link">
-                  <i class="fa fa-trophy"> </i> Certificates </a>
+                  <i class="fa fa-certificate" aria-hidden="true"></i>
+Certificates </a>
               </li>
             </ul>
           </div>
@@ -32,10 +33,12 @@
       <div class="content_main_com">
         <div class="header">
           <div class="menu_toggle">
+              <i class="fa fa-bars"></i>
           </div>
           <div class="profile_right">
               <a routerLink='login' class="logout menu_link" (click)="authService.logoutUser();">
-                  <i class="fa fa-sign-out-alt"> </i> Logout </a>
+                <i class="fa fa-sign-out" aria-hidden="true"></i>
+                Logout </a>
               <!--
                 <div class="dropdown">
                   <i class="fa fa-user-circle"></i>
@@ -54,8 +57,11 @@
               -->
           </div>
         </div>
-  
-      <router-outlet></router-outlet>
+        <div class="container-fluid">
+          <div class="main-card">
+            <router-outlet></router-outlet>
+          </div>
+        </div>
       </div>
   </div>
 </div>
