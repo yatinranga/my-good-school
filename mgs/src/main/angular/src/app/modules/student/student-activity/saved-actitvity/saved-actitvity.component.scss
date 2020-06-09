@@ -65,11 +65,16 @@ button.icon_button {
     font-size: 19px;
     position: relative;
 }
-.attachment a{
-    color: #333 !important;
-}
+
+
 .table_main h5{
-    color: #e04090;
+    color: #333;
+    background: rgba(0, 0, 0, 0.05);
+    padding: 10px;
+    margin-top: -15px;
+    margin-left: -15px;
+    margin-right: -15px;
+
 }
 
 
@@ -326,4 +331,29 @@ button.btn.saved.btnSubmit.btn-success {
 }
 button.close span {
     color: #dd343d;
+}
+
+
+/*------------Start-By-Pramod---*/
+
+.table-card {
+    background: white;
+    padding: 15px;
+    box-shadow: 0 0 5px #ddd;
+    width: 100%;
+    display: inline-block;
+}
+.table-card .sortby:last-child select{
+    margin-right: 0;
+}
+.table-card .sortby:last-child{
+    margin-right: 0;
+}
+.table td, .table th {
+    border-color: #ddd !important;
+    border-width: 1px !important;
+    // font-weight: normal !important;
+}
+tr[aria-expanded=true] {
+    background: rgba(0,0,0,0.03);
 }
