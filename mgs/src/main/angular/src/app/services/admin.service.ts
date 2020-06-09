@@ -35,6 +35,10 @@ export class AdminService {
     return this.http.get("/api/users");
   }
 
+  updateUser(id,requestBody){
+    return this.http.post("/api/user/"+id,requestBody);
+  }
+
   /** Create New Role */
   createRole(RequestBody){
     return this.http.post("/api/role",RequestBody)
