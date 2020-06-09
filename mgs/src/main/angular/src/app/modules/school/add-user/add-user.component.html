@@ -10,14 +10,9 @@
                         formControlName="name">
                 </div>
                 <div class="form-group">
-                    <label for="recipient-name" class="col-form-label">Username : </label>
-                    <input type="text" class="form-control add" name="username"
-                        placeholder="Add Username Here" formControlName="username">
-                </div>
-                <div class="form-group">
                     <label for="recipient-name" class="col-form-label">Email : </label>
-                    <input type="email" class="form-control add" name="email"
-                        placeholder="Add Email Here" formControlName="email">
+                    <input type="email" class="form-control add" name="email" placeholder="Add Email Here"
+                        formControlName="email">
                 </div>
                 <div class="form-group">
                     <label for="recipient-name" class="col-form-label">Contact No. : </label>
@@ -28,36 +23,32 @@
 
             <div class="col-6">
                 <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Username : </label>
+                    <input type="text" class="form-control add" name="username" placeholder="Add Username Here"
+                        formControlName="username">
+                </div>
+                <div class="form-group">
                     <label for="recipient-name" class="col-form-label">Role : </label>
-                    <select class="form-control" name="role">
-                        <option [ngValue]=null selected disabled>Select One</option>
-                        <option *ngFor="let role of rolesArr" value={{role.name}}>
+                    <select class="form-control" name="role" formControlName="roleIds">
+                        <option [ngValue]='null' selected disabled>Select One</option>
+                        <option *ngFor="let role of rolesArr" value={{role.id}}>
                             {{role.name}}
                         </option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label for="recipient-name" class="col-form-label">Authorities : </label>
-                    <select class="form-control" name="authorities">
-                        <option [ngValue]=null selected disabled>Select One</option>
-                        <!-- <option *ngFor="let acti of allAssignedActi" value={{acti.id}}>
-                            {{acti.name}}
-                        </option> -->
-                    </select>
-                </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="recipient-name" class="col-form-label">School : </label>
                     <select class="form-control" name="schoolId">
                         <option [ngValue]=null selected disabled>Select One</option>
-
                     </select>
-                </div>
+                </div> -->
             </div>
 
             <div>
-                <button type="button" class="btn btn-danger" (click)="resetForm()">Reset</button>
-                <button type="submit" class="btn btn-success">Create </button>
+
             </div>
         </div>
     </div>
+    <button type="button" class="btn btn-danger" (click)="resetForm()">Reset</button>
+    <button type="submit" class="btn btn-success" [disabled]="this.createUserForm.invalid">Create </button>
 </form>

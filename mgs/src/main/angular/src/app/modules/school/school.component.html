@@ -9,46 +9,77 @@
       </ul>
       <div class="menu">
         <ul>
+          <!-- List for Users -->
           <li class="cb" routerLinkActive='active'>
-            <a routerLink='./profile' class="pink menu_link">
-              <i class="fa fa-id-badge"> </i> Profile </a>
-          </li>
-          <li class="pink" routerLinkActive='active'>
-            <a class="menu_link" data-toggle="collapse" data-target="#demo">
+            <a class="menu_link" data-toggle="collapse" data-target="#usersList">
               <i class="fa fa-address-card-o"> </i> Users </a>
-            <div id="demo" class="collapse">
-          <li class="" routerLinkActive='active'>
-            <a routerLink='./student-upload' class=" menu_link">
-              <i class="fa fa-child"> </i> Student Upload </a>
+            <div id="usersList" class="collapse">
+              <li class="" routerLinkActive='active'>
+                <a routerLink='./student-list' class=" menu_link">
+                  <i class="fa fa-child"> </i> Students </a>
+              </li>
+              <li class="" routerLinkActive='active'>
+                <a routerLink='./staff-list' class=" menu_link">
+                  <i class="fa fa-users"> </i> Staff </a>
+              </li>
+              <li class="" routerLinkActive='active'>
+                <a routerLink='./add-user' class=" menu_link">
+                  <i class="fa fa-address-book-o"> </i> Add Users </a>
+              </li>
+            </div>
           </li>
-          <li class="" routerLinkActive='active'>
-            <a routerLink='./supervisor-upload' class=" menu_link">
-              <i class="fa fa-users"> </i> Supervisor Upload </a>
-          </li>
-          <li class="" routerLinkActive='active'>
-            <a routerLink='./users' class=" menu_link">
-              <i class="fa fa-address-card"> </i> View Users </a>
-          </li>
-          <li class="" routerLinkActive='active'>
-            <a routerLink='./add-user' class=" menu_link">
-              <i class="fa fa-address-book-o"> </i> Add Users </a>
-          </li>
-      </div>
-      </li>
 
-      </ul>
+          <!-- List of Uploads -->
+          <li class="pink" routerLinkActive='active'>
+            <a class="menu_link" data-toggle="collapse" data-target="#uploadList">
+              <i class="fa fa-upload"> </i> Upload </a>
+            <div id="uploadList" class="collapse">
+              <li class="" routerLinkActive='active'>
+                <a routerLink='./student-upload' class=" menu_link">
+                  <i class="fa fa-child"> </i> Student Upload </a>
+              </li>
+              <li class="" routerLinkActive='active'>
+                <a routerLink='./supervisor-upload' class=" menu_link">
+                  <i class="fa fa-users"> </i> Staff Upload </a>
+              </li>
+            </div>
+          </li>
+
+          <!-- List of Clubs/Societies -->
+          <li class="blue" routerLinkActive='active'>
+            <a class="menu_link" data-toggle="collapse" data-target="#clubList">
+              <i class="fa fa-tasks"> </i> Clubs/Societies </a>
+            <div id="clubList" class="collapse">
+              <!-- <li class="" routerLinkActive='active'>
+                <a routerLink='./student-upload' class=" menu_link">
+                  <i class="fa fa-child"> </i> Student Upload </a>
+              </li> -->
+              <!-- <li class="" routerLinkActive='active'>
+                <a routerLink='./supervisor-upload' class=" menu_link">
+                  <i class="fa fa-users"> </i> Staff Upload </a>
+              </li> -->
+            </div>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+    <div class="content_main_com">
+      <div class="header">
+        <div class="menu_toggle">
+          <i class="fa fa-bars"></i>
+        </div>
+        <div class="profile_right">
+          <a routerLink='login' class="logout menu_link" (click)="authService.logoutUser();">
+            <i class="fa fa-sign-out" aria-hidden="true"></i> Logout </a>
+        </div>
+      </div>
+      <router-outlet></router-outlet>
     </div>
   </div>
-  <div class="content_main_com">
-    <div class="header">
-      <div class="menu_toggle">
-        <i class="fa fa-bars"></i>
-      </div>
-      <div class="profile_right">
-        <a routerLink='login' class="logout menu_link" (click)="authService.logoutUser();">
-          <i class="fa fa-sign-out" aria-hidden="true"></i>
-          Logout </a>
-        <!--
+</div>
+
+<!--
               <div class="dropdown">
                 <i class="fa fa-user-circle"></i>
                 <div class="dropdown-content">
@@ -64,9 +95,3 @@
                 </div>
             </div>
             -->
-      </div>
-    </div>
-    <router-outlet></router-outlet>
-  </div>
-</div>
-</div>

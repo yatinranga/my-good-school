@@ -20,8 +20,8 @@ export class SchoolService {
   }
 
   /** Create new user */ 
-  createUser(formData: FormData) {
-    return this.http.post("/api/user", formData);
+  createUser(requestBody) {
+    return this.http.post("/api/user", requestBody);
   }
 
   /** To get All Users of a School */
@@ -47,5 +47,15 @@ export class SchoolService {
   // Update Profile Details
   updateProfile(schoolId, form) {
     return this.http.put("/api/school/update/" + schoolId, form);
+  }
+
+  /** Get List of All Students */
+  getStudents(){
+    return this.http.get("/api/students");
+  }
+
+  /** Get List of All Staff (Supervisor and Coordinator) */
+  getStaff(){
+    return this.http.get("/api/teachers");                      
   }
 }

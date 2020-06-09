@@ -1,0 +1,44 @@
+<div class="row">
+    <div [ngClass]="col">
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Grade</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Gender</th>
+                    <th scope="col">Enrollment Year</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let s of studentsArr ; let i = index;">
+                    <th>{{i+1}}</th>
+                    <td>{{s.name}}</td>
+                    <td>{{s.grade}} - {{s.section}}</td>
+                    <td>{{s.email}}</td>
+                    <td>{{s.gender | titlecase}}</td>
+                    <td>{{s.yearOfEnrolment}}</td>
+                    <td><button class="btn btn-info" (click)="setShowDetails(true)">
+                            <i class="fa fa-edit" title="Edit"></i>
+                        </button></td>
+                </tr>
+            </tbody>
+            <tfoot *ngIf="studentsArr.length == 0">
+                <tr>
+                    <td colspan="10">
+                        <div *ngIf="student_loader" class="spinner-border text-dark" role="status">
+                        </div>{{student_loader ? 'Loading...' : 'No Students Found'}}
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="col-6" *ngIf="showDetails">
+        <h1>Student Details <button class="btn btn-danger" (click)="setShowDetails(false)"> Close </button></h1>
+        <div>
+            <app-student-details></app-student-details>
+        </div>
+    </div>
+</div>

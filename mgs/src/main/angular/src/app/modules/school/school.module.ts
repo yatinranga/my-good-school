@@ -11,6 +11,10 @@ import { AddUserComponent } from './add-user/add-user.component';
 import { StudentBulkUploadComponent } from './student-bulk-upload/student-bulk-upload.component';
 import { SupervisorBulkUploadComponent } from './supervisor-bulk-upload/supervisor-bulk-upload.component';
 import { UsersListComponent } from './users-list/users-list.component';
+import { StudentListComponent } from './student-list/student-list.component';
+import { StaffListComponent } from './staff-list/staff-list.component';
+import { StudentDetailsComponent } from './student-list/student-details/student-details.component';
+import { StaffDetailsComponent } from './staff-list/staff-details/staff-details.component';
 
 const routes: Routes = [
   {
@@ -22,8 +26,16 @@ const routes: Routes = [
         component: SchoolHomeComponent
       },
       {
-        path: 'profile',
-        component: SchoolProfileComponent
+        path: 'student-list',
+        component: StudentListComponent
+      },
+      {
+        path: 'staff-list',
+        component: StaffListComponent
+      },
+      {
+        path: 'add-user',
+        component: AddUserComponent
       },
       {
         path: 'student-upload',
@@ -32,14 +44,6 @@ const routes: Routes = [
       {
         path: 'supervisor-upload',
         component: SupervisorBulkUploadComponent
-      },
-      {
-        path: 'users',
-        component: UsersListComponent
-      },
-      {
-        path: 'add-user',
-        component: AddUserComponent
       },
       {
         path: '',
@@ -59,7 +63,7 @@ const routes: Routes = [
     AddUserComponent, 
     StudentBulkUploadComponent, 
     SupervisorBulkUploadComponent, 
-    UsersListComponent
+    UsersListComponent, StudentListComponent, StaffListComponent, StudentDetailsComponent, StaffDetailsComponent
   ],
   imports: [
     CommonModule,
