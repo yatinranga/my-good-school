@@ -4,17 +4,15 @@
     width: 100%;
     display: inline-block;
     vertical-align: top;
-    margin-top: 20px;
+    padding: 0;
+    margin-top: 0;
 }
 .student_main {
-    width: 33%;
-    float: left;
+    width: 100%;
     display: inline-block;
-    text-align: center;
-    padding: 0;
-    height: 100vh;
-    border-right: 2px solid #999;
-    margin-right: 30px;
+    background: white;
+    box-shadow: 0 0 5px #ddd;
+    padding: 15px;
 }
 button.edit_profile {
     color: #555;
@@ -26,9 +24,9 @@ button.edit_profile {
 }
 
 .student_image {
-    width: 80%;
-    text-align: center;
-    margin: 0 auto;
+    width: auto;
+    display: inline-block;
+    float: left;
 }
 .student_image img {
     width: 150px;
@@ -43,11 +41,7 @@ button.edit_profile {
 }
 .student_content{
     display: inline-block;
-    margin: 0;
-    text-align: left;
-    border-top: 2px solid #999;
-    padding: 20px 0 0 0;
-    line-height: 30px;
+    float: right;
 }
 .student_content p {
     margin: 5px 0;
@@ -73,13 +67,10 @@ button.edit_profile {
     color: #555;
 }
 .guardian_main {
-    margin: 0 10px;
-    width: 60%;
-    padding: 0;
-    display: contents;
-    padding: 0;
-    text-align: left;
-    padding: 0 20px;
+    display: inline-block;
+    width: calc(100% - 300px);
+    vertical-align: top;
+    
 }
 .guardian_profile_card {
     width: 45%;

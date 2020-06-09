@@ -9,6 +9,7 @@
 }
 body{
     font-family: 'Baloo Paaji 2' !important;
+    background: #fafafa;
 }
 .card.bg-light {
     margin: 15px 0;
@@ -737,7 +738,7 @@ p#attachment_name {
     width: auto;
 }
 .main-card {
-    box-shadow: 0 0 5px #ddd;
+    // box-shadow: 0 0 5px #ddd;
     margin: 15px 0;
     border-radius: 0;
     width: 100%;
