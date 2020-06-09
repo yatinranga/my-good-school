@@ -1,13 +1,16 @@
 <div class="profile_main">
     <div class="student_main">
         <div class="student_image">
-            <img [src]="path">
-            <button class="edit_profile" (click)="photoInput.click()"> <i class="fa fa-edit" title="Edit">
-                </i> Edit Profile Photo </button>
-            <p> <label> {{studentDetails['name']}}</label> </p>
+             <div class="photo"><img [src]="path"><button class="edit_profile" (click)="photoInput.click()"> <i class="fa fa-edit" title="Edit">
+            </i> Change Profile </button></div> 
+            
+            <div class="student_name"> 
+                <h3> {{studentDetails['name']}}</h3>
+                <p *ngIf="studentDetails['schoolName']">{{studentDetails['schoolName']}}</p>
+            </div>
         </div>
         <div class="student_content">
-            <h3> Basic Info </h3>
+            <!-- <h3> Basic Info </h3> -->
             <p *ngIf="studentDetails['gender']"> <i class="fa fa-user" aria-hidden="true"></i>
                 <label>
                     {{studentDetails['gender']}}</label> </p>
@@ -15,9 +18,9 @@
                 <label>
                     {{studentDetails['grade']}}
                     {{studentDetails['section']}}</label> </p>
-            <p *ngIf="studentDetails['schoolName']"> <i class="fa fa-university" aria-hidden="true"></i>
+            <!-- <p *ngIf="studentDetails['schoolName']"> <i class="fa fa-university" aria-hidden="true"></i>
                 <label>
-                    {{studentDetails['schoolName']}}</label> </p>
+                    {{studentDetails['schoolName']}}</label> </p> -->
             <p *ngIf="studentDetails['dob']"> <i class="fa fa-calendar" aria-hidden="true"></i><label>
                     {{studentDetails['dob'] | date}}
                 </label> </p>
@@ -31,8 +34,9 @@
     </div>
 
     <div class="guardian_main">
-        <div *ngFor="let sd of studentDetails['guardianResponseList']; let i = index">
-            <div class="guardian_profile_card">
+        <h3> Guardian Details </h3>
+        <div class="guardian_profile_card" *ngFor="let sd of studentDetails['guardianResponseList']; let i = index">
+           
                 <h3> {{sd['relationship']}}</h3>
                 <p> <label> <i class="fa fa-user"></i>
                         {{sd['name']}}</label> </p>
@@ -40,7 +44,7 @@
                         {{sd['email']}}</label> </p>
                 <p> <label> <i class="fa fa-calendar" aria-hidden="true"></i>
                         {{sd['mobileNumber']}}</label> </p>
-            </div>
+          
         </div>
     </div>
 </div>

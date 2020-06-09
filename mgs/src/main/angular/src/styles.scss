@@ -8,7 +8,9 @@
     border-radius: 0; 
 }
 body{
-    font-family: 'Baloo Paaji 2' !important;
+    // font-family: 'Baloo Paaji 2' !important;
+    font-family: 'Hind', sans-serif !important;
+    background: #fafafa;
 }
 .card.bg-light {
     margin: 15px 0;
@@ -130,26 +132,22 @@ span.choosefile.choosefile-custom:before {
 .form-content .form-control {
     margin-top: 5px;
 }
-.sortby{
+.sortby {
     display: inline-block;
-    margin: 20px 15px;
-    padding: 0px;
-    font-size: 16px;
-    font-weight: 600;
-    color: #e04090;
+    width: auto;
+    margin-right: 15px;
 }
 .sortby select {
-    border: none !important;
-    height: 30px;
-    border-radius: 0 !important;
-    text-align: center;
-    width: 150px;
-    font-weight: 600;
     font-size: 15px;
-    background: #ddd;
-    color: #444;
+    border: solid 1px #ddd;
+    padding: 2px 10px;
+    margin: 0 10px;
+    max-width: 200px;
+    min-width: 150px;
 }
-
+.sortby label {
+    margin: 0;
+}
 button.btn.btnSubmit.btn-success {
     box-shadow: none;
     border-radius: 0px;
@@ -190,7 +188,8 @@ border: 1px solid #777 !important;
 .table_main{
     display: inline-block;
     width: 100%;
-    padding: 5px;
+    padding: 0;
+    margin-top: 15px;
 }
 .table td, th{
     text-align: center;
@@ -206,10 +205,12 @@ border: 1px solid #777 !important;
     color: #fafafa;
 }
 .main .table_main table thead tr th {
-    background: #ddd;
-    color: #e04090;
+    background: rgba(0, 0, 0, 0.05);
+    color: #333;
     font-size: 15px;
-    word-spacing: 5px;
+    font-weight: bold;
+    padding: 10px;
+    vertical-align: middle;
 }
 .main .awards .table_main table thead tr th, .main .teacher_activity_main .table_main table thead tr th {
     color: #0d5ea9;
@@ -228,12 +229,13 @@ tbody tr{
     }
 .description, .attachment {
     text-align: left;
-    padding: 10px;
+    padding: 15px;
     display: inline-block;
     width: 100%;
-    vertical-align: bottom;
-    position: relative;
-    height: 100%;
+    vertical-align: top;
+    box-shadow: 0 0 2px #ddd;
+    min-height: 320px;
+    background: #fff;
 }
 .buttons{
     margin-top: 78px;
@@ -251,7 +253,7 @@ tbody#accordionExample > tr[aria-expanded="true"] {
     color: #333;
 }
 .description {
-    border-right: 1px solid #333;
+    // border-right: 1px solid #333;
 }
 .description:after, .attachment:before{
     display: none !important;
@@ -583,7 +585,7 @@ a.menu_link{
     width: 100%;
     display: inline-block;
     color: #555;
-    padding: 25px 0;
+    padding: 20px 0;
 }
 
 i.fa {
@@ -737,7 +739,7 @@ p#attachment_name {
     width: auto;
 }
 .main-card {
-    box-shadow: 0 0 5px #ddd;
+    // box-shadow: 0 0 5px #ddd;
     margin: 15px 0;
     border-radius: 0;
     width: 100%;
@@ -745,4 +747,28 @@ p#attachment_name {
     position: relative;
     min-height: calc(100vh - 90px);
     max-height: 100%;
+}
+
+td.collapse-td .collapse, td.collapse-td .collapsing {
+    padding: 15px 0;
+    cursor: auto;
+}
+.collapse-card {
+    background: #fafafa;
+    // box-shadow: 0 0 2px #ddd;
+}
+.description p {
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #333;
+}
+.attachment ul, .attachment ol {
+    padding: 0 0 0 15px;
+ }
+.attachment ul li, .attachment ol li {
+    list-style-type: inherit;
+}
+.attachment ul li, .attachment ol li a {
+    color: #1f69ad !important;
+    padding-left: 5px;
 }
