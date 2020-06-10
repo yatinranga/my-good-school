@@ -21,6 +21,10 @@ export class StaffListComponent implements OnInit {
     this.getAllStaff();
   }
 
+  rowChange($event) {
+    this.col = $event;
+  }
+
   /** Get List of All Staff Members  */
   getAllStaff() {
     this.staff_loader = true;
@@ -41,11 +45,11 @@ export class StaffListComponent implements OnInit {
   }
 
   /** Set Show Details */
-  setShowDetails(val:boolean, staff_obj?){
+  setShowDetails(val: boolean, staff_obj?) {
     this.staff_obj = staff_obj;
     console.log(staff_obj);
     this.showDetails = val;
-    this.showDetails ? (this.col = "col-6") : (this.col="col-12");
+    this.showDetails ? (this.col = "col-6") : (this.col = "col-12");
   }
 
 }

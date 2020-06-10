@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { SchoolService } from 'src/app/services/school.service';
 
 @Component({
   selector: 'app-staff-details',
@@ -7,12 +8,47 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class StaffDetailsComponent implements OnInit {
 
+  col = "col-12";
   @Input() staffDetails: any;
-  imagePath  = "assets/images/childprofile.jpg";
+  @Output() rowChangeForClub = new EventEmitter<string>(); // When Clubs window is open
+  showClub: boolean = false;
+  assignedClubsArr = [];
+  assignedSocietyArr = [];
+  imagePath = "assets/images/childprofile.jpg";
 
-  constructor() { }
+  constructor(private schoolService: SchoolService) { }
 
   ngOnInit() {
+  }
+
+  ngOnChanges(staffDetails: any) {
+    this.showClub = false;
+  }
+
+  setShowClub(val: boolean) {
+    this.showClub = val;
+    this.showClub ? (this.col = "col-6") : (this.col = "col-12");
+
+    if (val) {
+      const col = "col-4";
+      this.rowChangeForClub.emit(col);
+      // this.getEnrolledClubs();
+      this.sortClubs();
+    }
+    else {
+      const col = "col-6";
+      this.rowChangeForClub.emit(col);
+    }
+  }
+
+  sortClubs() {
+    this.assignedClubsArr = [];
+    this.assignedSocietyArr = [];
+    if (this.staffDetails['activityAndGrades']) {
+      this.assignedClubsArr = this.staffDetails['activityAndGrades'].filter((e) => (e.clubOrSociety == 'Club'));
+      this.assignedSocietyArr = this.staffDetails['activityAndGrades'].filter((e) => (e.clubOrSociety == 'Society'));
+
+    }
   }
 
 }

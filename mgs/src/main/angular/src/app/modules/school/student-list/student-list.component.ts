@@ -20,7 +20,11 @@ export class StudentListComponent implements OnInit {
 
   ngOnInit() {
     this.getAllStudents();
+  }
 
+  /** When Enrolled Clubs of particukar of student are shown */
+  rowChange($event){
+    this.col=$event;
   }
 
   /** Set Show Details */

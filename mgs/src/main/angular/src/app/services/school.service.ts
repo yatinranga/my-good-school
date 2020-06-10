@@ -58,4 +58,9 @@ export class SchoolService {
   getStaff(){
     return this.http.get("/api/teachers");                      
   }
+
+  /** Get Enrolled Clubs/Societies of particular student */
+  getStudentClubs(studentId){
+    return this.http.get("/api/student/clubs?studentId=" + studentId);
+  }
 }

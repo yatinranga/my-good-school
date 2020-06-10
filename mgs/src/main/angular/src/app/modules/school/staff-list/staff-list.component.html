@@ -28,8 +28,8 @@
                     </td>
                     <td>{{s.yearOfEnrolment}}</td>
                     <td><button class="btn btn-info" (click)="setShowDetails(true,s)">
-                        <i class="fa fa-edit" title="Edit"></i>
-                    </button></td>
+                            <i class="fa fa-edit" title="Edit"></i>
+                        </button></td>
                 </tr>
             <tfoot *ngIf="staffArr.length == 0">
                 <tr>
@@ -41,10 +41,10 @@
             </tfoot>
         </table>
     </div>
-    <div class="col-6" *ngIf="showDetails">
+    <div [ngClass]="{'col-8':col=='col-4'}" class="col-6" *ngIf="showDetails">
         <h1><button class="btn btn-danger" (click)="setShowDetails(false)"> Close </button></h1>
         <div>
-            <app-staff-details [staffDetails]="staff_obj"></app-staff-details>
+            <app-staff-details [staffDetails]="staff_obj" (rowChangeForClub)="rowChange($event)"></app-staff-details>
         </div>
     </div>
 </div>

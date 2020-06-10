@@ -1,27 +1,61 @@
 <h1>{{studentDetails.name}}</h1>
-<div class="student_image">
-    <div class="photo">
-        <img [src]="imagePath" >
-    </div>
-</div>
-<div>
-    <p>DOB : {{studentDetails.dob? (studentDetails.dob | date) : ' - ' }} </p>
-    <p>Email : {{studentDetails.email ? studentDetails.email : ' - '}}</p>
-    <p>Gender : {{studentDetails.gender ?( studentDetails.gender | titlecase) : ' - '}}</p>
-    <p>School : {{studentDetails.schoolName ? studentDetails.schoolName : ' - '}}</p>
-    <p>Grade : {{studentDetails.grade ? studentDetails.grade : ' - '}} - {{studentDetails.section ? studentDetails.section : ' - '}}</p>
-    <p>Enrollment Year : {{studentDetails.yearOfEnrolment ? studentDetails.yearOfEnrolment : ' - '}}</p>
-</div>
 
-<h3>Guardians : </h3>
-<div  *ngFor="let sd of studentDetails['guardianResponseList']">
-    <div class="card w-50">
-        <div class="card-body">
-          <h5 class="card-title">{{sd.relationship}}</h5>
-          <p class="card-text">{{sd.name}}</p>
-          <p class="card-text">{{sd.mobileNumber}}</p>
-          <p class="card-text">{{sd.email}}</p>
+<div class="row">
+    <div [ngClass]="col">
+        <div class="student_image">
+            <div class="photo">
+                <img [src]="imagePath">
+            </div>
         </div>
-      </div>
-</div>
+        <div>
+            <p>DOB : {{studentDetails.dob? (studentDetails.dob | date) : ' - ' }} </p>
+            <p>Email : {{studentDetails.email ? studentDetails.email : ' - '}}</p>
+            <p>Gender : {{studentDetails.gender ?( studentDetails.gender | titlecase) : ' - '}}</p>
+            <p>School : {{studentDetails.schoolName ? studentDetails.schoolName : ' - '}}</p>
+            <p>Grade : {{studentDetails.grade ? studentDetails.grade : ' - '}} -
+                {{studentDetails.section ? studentDetails.section : ' - '}}</p>
+            <p>Enrollment Year : {{studentDetails.yearOfEnrolment ? studentDetails.yearOfEnrolment : ' - '}}</p>
+        </div>
+        <button class="btn btn-dark" (click)="setShowClub(true)">Show Clubs/Socities</button>
 
+        <h3>Guardians : </h3>
+        <div *ngFor="let sd of studentDetails['guardianResponseList']">
+            <div class="card w-50">
+                <div class="card-body">
+                    <h5 class="card-title">{{sd.relationship}}</h5>
+                    <p class="card-text">{{sd.name}}</p>
+                    <p class="card-text">{{sd.mobileNumber}}</p>
+                    <p class="card-text">{{sd.email}}</p>
+                    <button class="btn btn-primary">Edit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6" *ngIf="showClub">
+        <h3>List of Enrolled Club/Society <button class="btn btn-danger" (click)="setShowClub(false)">Close</button>
+        </h3>
+        <div *ngIf="studentEnrolledClubArr.length">
+            <h4><b>Clubs : </b></h4>
+            <div *ngFor="let club of studentEnrolledClubArr; let i = index">
+                <div class="card w-50">
+                    <div class="card-body">
+                        <h5 class="card-title">{{i+1}}. {{club.name}}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="studentEnrolledSociArr.length">
+            <h4><b>Society :</b></h4>
+            <div *ngFor="let club of studentEnrolledSociArr; let i = index">
+                <div class="card w-50">
+                    <div class="card-body">
+                        <h5 class="card-title">{{i+1}}. {{club.name}}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="!(studentEnrolledSociArr.length && studentEnrolledClubArr.length)">
+            <br><br>
+            <h5><b>No Enrolled Club/Society</b></h5>
+        </div>
+    </div>

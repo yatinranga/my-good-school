@@ -1,25 +1,64 @@
 <h1>{{staffDetails.name}}</h1>
-<div class="student_image">
-    <div class="photo">
-        <img [src]="imagePath">
-    </div>
-</div>
-
-<div>
-    <p>DOB - {{staffDetails.dob ? (staffDetails.dob | date) : "-"}} </p>
-    <p>Gender - {{staffDetails.gender ? (staffDetails.gender | titlecase) : "-"}} </p>
-    <p>Mobile Number- {{staffDetails.mobileNumber ? staffDetails.mobileNumber : "-"}} </p>
-    <p>Email - {{staffDetails.email ? staffDetails.email : "-"}} </p>
-    <p>School - {{staffDetails.schoolName ? staffDetails.schoolName : "-"}} </p>
-    <p>Qualification - {{staffDetails.qualification ? staffDetails.qualification : "-"}} </p>
-    <p>Enrollment Year - {{staffDetails.yearOfEnrolment ?  staffDetails.yearOfEnrolment : "-"}}</p>
-</div>
-
-<h3>Activities : </h3>
-<div  *ngFor="let sd of staffDetails['activities']; let i = index;">
-    <div class="card w-50">
-        <div class="card-body">
-          <h6 class="card-title">{{i+1}}. {{sd}}</h6>
+<div class="row">
+    <div [ngClass]="col">
+        <div class="photo">
+            <img [src]="imagePath">
         </div>
-      </div>
+
+        <div>
+            <p>DOB - {{staffDetails.dob ? (staffDetails.dob | date) : "-"}} </p>
+            <p>Gender - {{staffDetails.gender ? (staffDetails.gender | titlecase) : "-"}} </p>
+            <p>Mobile Number- {{staffDetails.mobileNumber ? staffDetails.mobileNumber : "-"}} </p>
+            <p>Email - {{staffDetails.email ? staffDetails.email : "-"}} </p>
+            <p>School - {{staffDetails.schoolName ? staffDetails.schoolName : "-"}} </p>
+            <p>Qualification - {{staffDetails.qualification ? staffDetails.qualification : "-"}} </p>
+            <p>Enrollment Year - {{staffDetails.yearOfEnrolment ?  staffDetails.yearOfEnrolment : "-"}}</p>
+        </div>
+        <button class="btn btn-dark" (click)="setShowClub(true)">Show Clubs/Socities</button>
+    </div>
+    
+    <div class="col-6" *ngIf="showClub">
+        <h3>List of Club/Society <button class="btn btn-danger" (click)="setShowClub(false)">Close</button>
+            <button class="btn btn-primary">Assign CLub/Society</button>
+        </h3>
+
+        <div *ngIf="assignedClubsArr.length"> Clubs :
+            <h4><b> Clubs : </b></h4>
+            <div *ngFor="let club of assignedClubsArr; let i = index;">
+                <div class="card w-50">
+                    <div class="card-body">
+                        <h5 class="card-title">{{i+1}}. {{club.name}}</h5>
+                        <p><b>Grades :</b></p>
+                        <div>
+                            <span *ngFor="let grade of club.gradeResponses; let i = index">
+                                {{ (i === club.gradeResponses.length-1) ? grade.grade + "-" + grade.section : grade.grade + "-" + grade.section  + "," + ' '}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="assignedSocietyArr.length">
+            <h4><b> Socities :</b></h4>
+            <div *ngFor="let soc of assignedSocietyArr; let i = index;">
+                <div class="card w-50">
+                    <div class="card-body">
+                        <h5 class="card-title">{{i+1}}. {{soc.name}}</h5>
+                        <p><b>Grades :</b></p>
+                        <div>
+                            <span *ngFor="let grade of soc.gradeResponses; let i = index">
+                                {{ (i === soc.gradeResponses.length-1) ? grade.grade + "-" + grade.section : grade.grade + "-" + grade.section  + "," + ' '}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="!(assignedSocietyArr.length && assignedClubsArr.length)">
+            <br><br>
+            <h5><b>No Club/Society Assigned</b></h5>
+        </div>
+    </div>
 </div>
