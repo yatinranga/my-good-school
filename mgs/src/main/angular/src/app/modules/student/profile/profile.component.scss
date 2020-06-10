@@ -8,12 +8,11 @@
     margin-top: 0;
 }
 .student_main {
-    width: 350px;
+    width: 100%;
     display: inline-block;
     background: white;
     box-shadow: 0 0 5px #ddd;
     padding: 15px 25px;
-    min-height: calc(100vh - 90px);
 }
 .photo {
     position: relative;
@@ -23,6 +22,7 @@
     height: 150px;
     overflow: hidden;
     margin: auto;
+    float: left;
 }
 button.edit_profile {
     color: #fff;
@@ -47,8 +47,8 @@ button.edit_profile {
     width: auto;
     display: inline-block;
     float: left;
-    margin-top: 12px;
     text-align: center;
+    margin-top: 4px;
 }
 .student_image h3{
     font-size: 25px;
@@ -63,22 +63,24 @@ button.edit_profile {
 }
 .student_content{
     display: inline-block;
-    margin-top: 25px;
-    padding-left: 0;
-    border-top: solid 1px #ddd;
-    width: 100%;
-    padding-top: 20px;
+    width: auto;
+    float: right;
+    padding-left: 30px;
+    border-left: solid 1px #ddd;
 }
 .student_name {
     display: inline-block;
     vertical-align: top;
-
-    margin-top: 10px;
+    margin-top: 50px;
+    margin-left: 20px;
+    float: left;
+    text-align: left
 }
 .student_content p {
     margin: 5px 0;
-    font-size: 18px;
+    font-size: 16px;
     color: #555;
+   ;
 }
 .student_content p label{
     margin: 0;
@@ -104,15 +106,12 @@ button.edit_profile {
 }
 .guardian_main {
     display: inline-block;
-    width: calc(100% - 365px);
+    width: 100%;
     box-shadow: 0 0 5px #ddd;
     background: white;
-    margin-top: 0;
+    margin-top: 15px;
     padding: 15px;
     float: right;
-    min-height: calc(100vh - 90px);
-    max-height: calc(100vh - 90px);
-    height: 100%;
     position: relative;
 
     
