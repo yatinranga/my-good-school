@@ -1,5 +1,5 @@
 <div class="main">
-  <div class="content_main">
+  <div [ngClass]="{'sidebar_close': showSidebar}" class="content_main">
     <div class="navbar">
       <ul class="logo">
         <li routerLinkActive='active'>
@@ -67,7 +67,7 @@
     <div class="content_main_com">
       <div class="header">
         <div class="menu_toggle">
-          <i class="fa fa-bars"></i>
+          <i class="fa fa-bars" (click)="setShowSidebar()"></i>
         </div>
         <div class="profile_right">
           <a routerLink='login' class="logout menu_link" (click)="authService.logoutUser();">

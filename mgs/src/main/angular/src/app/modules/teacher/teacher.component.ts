@@ -8,9 +8,15 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class TeacherComponent implements OnInit {
 
+  showSidebar: boolean = false;
+
   constructor(public authService: AuthService) { }
 
   ngOnInit() {
+  }
+
+  setShowSidebar(){
+    this.showSidebar = !this.showSidebar;
   }
 
 }

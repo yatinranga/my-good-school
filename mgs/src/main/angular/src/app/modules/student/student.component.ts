@@ -9,6 +9,8 @@ declare let $;
 })
 export class StudentComponent implements OnInit{
 
+  showSidebar: boolean = false;
+
   constructor(public authService: AuthService) { }
 
   ngOnInit(): void {
@@ -16,6 +18,10 @@ export class StudentComponent implements OnInit{
       $('p:first').addClass('intro');
     });
 
+  }
+
+  setShowSidebar(){
+    this.showSidebar = !this.showSidebar;
   }
 
 }
