@@ -13,6 +13,7 @@ export class StaffListComponent implements OnInit {
   showDetails: boolean = false;
   staffArr: any = []
   staff_loader = false;
+  staff_obj: any //Used to transfer object to Staff Details Component
 
   constructor(private schoolService: SchoolService, private alertService: AlertService) { }
 
@@ -40,7 +41,9 @@ export class StaffListComponent implements OnInit {
   }
 
   /** Set Show Details */
-  setShowDetails(val:boolean){
+  setShowDetails(val:boolean, staff_obj?){
+    this.staff_obj = staff_obj;
+    console.log(staff_obj);
     this.showDetails = val;
     this.showDetails ? (this.col = "col-6") : (this.col="col-12");
   }

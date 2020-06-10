@@ -1,1 +1,25 @@
-<p>staff-details works!</p>
+<h1>{{staffDetails.name}}</h1>
+<div class="student_image">
+    <div class="photo">
+        <img [src]="imagePath">
+    </div>
+</div>
+
+<div>
+    <p>DOB - {{staffDetails.dob ? (staffDetails.dob | date) : "-"}} </p>
+    <p>Gender - {{staffDetails.gender ? (staffDetails.gender | titlecase) : "-"}} </p>
+    <p>Mobile Number- {{staffDetails.mobileNumber ? staffDetails.mobileNumber : "-"}} </p>
+    <p>Email - {{staffDetails.email ? staffDetails.email : "-"}} </p>
+    <p>School - {{staffDetails.schoolName ? staffDetails.schoolName : "-"}} </p>
+    <p>Qualification - {{staffDetails.qualification ? staffDetails.qualification : "-"}} </p>
+    <p>Enrollment Year - {{staffDetails.yearOfEnrolment ?  staffDetails.yearOfEnrolment : "-"}}</p>
+</div>
+
+<h3>Activities : </h3>
+<div  *ngFor="let sd of staffDetails['activities']; let i = index;">
+    <div class="card w-50">
+        <div class="card-body">
+          <h6 class="card-title">{{i+1}}. {{sd}}</h6>
+        </div>
+      </div>
+</div>

@@ -16,6 +16,7 @@ export class StudentListComponent implements OnInit {
   showDetails:boolean = false
   studentsArr: any = [];
   student_loader = false;
+  student_obj: any; // Used to transfer object to Student Details Component
 
   ngOnInit() {
     this.getAllStudents();
@@ -23,7 +24,9 @@ export class StudentListComponent implements OnInit {
   }
 
   /** Set Show Details */
-  setShowDetails(val: boolean){
+  setShowDetails(val: boolean, student_obj?){
+    this.student_obj = student_obj;
+    console.log(student_obj);
     this.showDetails = val;
     this.showDetails ? (this.col = "col-6") : (this.col="col-12");
   }

@@ -20,7 +20,7 @@
                     <td>{{s.email}}</td>
                     <td>{{s.gender | titlecase}}</td>
                     <td>{{s.yearOfEnrolment}}</td>
-                    <td><button class="btn btn-info" (click)="setShowDetails(true)">
+                    <td><button class="btn btn-info" (click)="setShowDetails(true,s)">
                             <i class="fa fa-edit" title="Edit"></i>
                         </button></td>
                 </tr>
@@ -36,9 +36,10 @@
         </table>
     </div>
     <div class="col-6" *ngIf="showDetails">
-        <h1>Student Details <button class="btn btn-danger" (click)="setShowDetails(false)"> Close </button></h1>
+        <h1><button class="btn btn-danger" (click)="setShowDetails(false)"> Close </button>
+            <button class="btn btn-success">Add Guardian</button> </h1>
         <div>
-            <app-student-details></app-student-details>
+            <app-student-details [studentDetails]="student_obj"></app-student-details>
         </div>
     </div>
 </div>
