@@ -213,9 +213,9 @@ border: 1px solid #777 !important;
     vertical-align: middle;
 }
 .main .awards .table_main table thead tr th, .main .teacher_activity_main .table_main table thead tr th {
-    color: #0d5ea9;
+    color: #333;
     font-size: 15px;
-    word-spacing: 5px;
+    // word-spacing: 5px;
 }
 .main .teacher_awards_main .table_main table thead tr th, .teacher_awards_main i.fa.fa-sort {
     color: #8dc33a;
@@ -297,6 +297,7 @@ app-home{
     width: calc(100% - 250px);
     display: inline-block;
     padding: 0;
+    transition: 0.5s;
     float: right;
 }
 
@@ -317,6 +318,14 @@ app-home{
     top: 0;
     box-shadow: 0 0 5px #ddd;
     z-index: 1;
+}
+.content_main.sidebar_close .navbar {
+    width: 0;
+    visibility: hidden;
+    opacity: 0;
+}
+.content_main.sidebar_close .content_main_com {
+    width: 100%;
 }
 .profile_right{
     float: right;
@@ -536,6 +545,7 @@ ul.student_list li {
     box-shadow: 0 0 5px #ddd;
     float: left;
     height: 100%;
+    transition: 0.5s;
 }
 .logo {
     padding: 0;
