@@ -15,6 +15,8 @@ import { StudentListComponent } from './student-list/student-list.component';
 import { StaffListComponent } from './staff-list/staff-list.component';
 import { StudentDetailsComponent } from './student-list/student-details/student-details.component';
 import { StaffDetailsComponent } from './staff-list/staff-details/staff-details.component';
+import { SchoolClubComponent } from './school-club/school-club.component';
+import { ClubDetailsComponent } from './school-club/club-details/club-details.component';
 
 const routes: Routes = [
   {
@@ -46,6 +48,10 @@ const routes: Routes = [
         component: SupervisorBulkUploadComponent
       },
       {
+        path: 'club-society',
+        component: SchoolClubComponent
+      },
+      {
         path: '',
         redirectTo: 'home'
       }
@@ -63,7 +69,7 @@ const routes: Routes = [
     AddUserComponent, 
     StudentBulkUploadComponent, 
     SupervisorBulkUploadComponent, 
-    UsersListComponent, StudentListComponent, StaffListComponent, StudentDetailsComponent, StaffDetailsComponent
+    UsersListComponent, StudentListComponent, StaffListComponent, StudentDetailsComponent, StaffDetailsComponent, SchoolClubComponent, ClubDetailsComponent
   ],
   imports: [
     CommonModule,

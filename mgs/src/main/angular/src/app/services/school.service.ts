@@ -71,11 +71,17 @@ export class SchoolService {
 
   /** Get All Activities Offered in a School  */
   getAllClubs(schoolId) {
-    return this.http.get("/activitiesOffered/" + schoolId);
+    return this.http.get("/activities");
   }
 
   /** Get All Grades of a Achool */
   getAllGrades(schoolId) {
     return this.http.get("/grades?schoolId=" + schoolId);
   }
+
+  /** Get List of Supervisor for particular Club/Society */
+  getClubSupervisor(schoolId,actiId){
+    return this.http.get("/api/coaches/"+schoolId+"/"+actiId);
+  }
+
 }
