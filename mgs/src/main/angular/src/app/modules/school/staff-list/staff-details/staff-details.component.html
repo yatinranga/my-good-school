@@ -16,13 +16,13 @@
         </div>
         <button class="btn btn-dark" (click)="setShowClub(true)">Show Clubs/Socities</button>
     </div>
-    
+
     <div class="col-6" *ngIf="showClub">
         <h3>List of Club/Society <button class="btn btn-danger" (click)="setShowClub(false)">Close</button>
-            <button class="btn btn-primary">Assign CLub/Society</button>
+            <button class="btn btn-primary" (click)="showAssignModal()">Assign CLub/Society</button>
         </h3>
 
-        <div *ngIf="assignedClubsArr.length"> Clubs :
+        <div *ngIf="assignedClubsArr.length">
             <h4><b> Clubs : </b></h4>
             <div *ngFor="let club of assignedClubsArr; let i = index;">
                 <div class="card w-50">
@@ -34,6 +34,7 @@
                                 {{ (i === club.gradeResponses.length-1) ? grade.grade + "-" + grade.section : grade.grade + "-" + grade.section  + "," + ' '}}
                             </span>
                         </div>
+                        <button class="btn btn-primary" (click)="showGradeEditModal(club)">Edit Grades</button>
                     </div>
                 </div>
             </div>
@@ -51,6 +52,7 @@
                                 {{ (i === soc.gradeResponses.length-1) ? grade.grade + "-" + grade.section : grade.grade + "-" + grade.section  + "," + ' '}}
                             </span>
                         </div>
+                        <button class="btn btn-primary" (click)="showGradeEditModal(soc)">Edit Grades</button>
                     </div>
                 </div>
             </div>
@@ -59,6 +61,74 @@
         <div *ngIf="!(assignedSocietyArr.length && assignedClubsArr.length)">
             <br><br>
             <h5><b>No Club/Society Assigned</b></h5>
+        </div>
+    </div>
+</div>
+
+<!-- Modal to Assign Club To a Supervisor/Coordinator -->
+<div class="modal fade bd-example-modal-lg" id="assignClubModal" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel"> Assign Club/Society : </h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetForm()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="assignClubForm">
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Name of Teacher : {{staffDetails.name}}</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Clubs / Socities : </label>
+                        <select class="form-control" name="activityId" formControlName="activitiesIds" multiple>
+                            <option [ngValue]=null selected disabled>Select One</option>
+                            <option *ngFor="let c of allSchoolClubsArr" value={{c.id}}>{{c.name}}</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" (click)="resetForm()">Reset</button>
+                <button class="btn btn-primary" [disabled]="assignClubForm.invalid" (click)="assignClub()">Assign</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal To Edit Grades For a Club/Society -->
+<div class="modal fade bd-example-modal-lg" id="assignGradeModal" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel"> Assign Grade : </h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetForm()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="assignGradeForm">
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Club/Society : {{clubName}}</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Grades :</label>
+                        <select class="form-control" name="gradeIds" formControlName="gradeIds" multiple>
+                            <option [ngValue]=null selected disabled>Select One</option>
+                            <option *ngFor="let grade of schoolGrades; let i = index;" value={{grade.id}}>
+                                {{grade.grade}} {{grade.section}}</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" (click)="resetForm()">Reset</button>
+                <button class="btn btn-success" [disabled]="assignGradeForm.invalid" (click)="assignGrade()">Assign</button>
+
+            </div>
         </div>
     </div>
 </div>

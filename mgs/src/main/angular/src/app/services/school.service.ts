@@ -63,4 +63,19 @@ export class SchoolService {
   getStudentClubs(studentId){
     return this.http.get("/api/student/clubs?studentId=" + studentId);
   }
+
+  /** Assign Club/Society to Supervisor */
+  assignClub(reqBody){
+    return this.http.put("/api/teacher/assignActivity",reqBody);
+  }
+
+  /** Get All Activities Offered in a School  */
+  getAllClubs(schoolId) {
+    return this.http.get("/activitiesOffered/" + schoolId);
+  }
+
+  /** Get All Grades of a Achool */
+  getAllGrades(schoolId) {
+    return this.http.get("/grades?schoolId=" + schoolId);
+  }
 }
