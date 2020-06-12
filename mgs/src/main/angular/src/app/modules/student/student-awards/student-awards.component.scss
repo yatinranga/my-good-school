@@ -2,10 +2,11 @@
   padding: 0;
 }
 .awards .sortby select{
-  color: #1f69ad;
+  color: #333;
+  margin: 0;
 }
 table.innertable h5{
-  color: #1f69ad;
+  color: #333;
   text-decoration: underline;
 }
 table.innertable {
@@ -18,4 +19,15 @@ td.last.collapsed-td {
 td#actname {
   font-size: 21px;
   color: #1f69ad;
+}
+
+.award-main {
+  background: white;
+  box-shadow: 0 0 5px #ddd;
+  padding: 15px;
+  width: 100%;
+  display: inline-block;
+}
+.table-hover tbody tr:hover{
+  background-color: inherit;
 }
