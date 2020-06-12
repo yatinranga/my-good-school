@@ -21,14 +21,17 @@ export class ClubDetailsComponent implements OnInit {
   }
 
   ngOnChanges(clubObj: any) {
+    this.adminInfo = JSON.parse(localStorage.getItem('user_info'));
+    console.log("ON Changes called");
+    this.getSupervisor();
     // this.getSupervisor();
   }
 
   getSupervisor() {
+    this.clubSupervisor = [];
     this.sup_loader = true;
     this.schoolService.getClubSupervisor(this.adminInfo.schoolId, this.clubObj.id).subscribe((res) => {
       this.sup_loader = false;
-
       this.clubSupervisor = res;
       console.log(res);
     }, (err) => {
