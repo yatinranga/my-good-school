@@ -613,6 +613,45 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 	}
 
 	@Override
+	public List<ActivityRequestResponse> getAllOfferedActivitiesBySchoolAsPerGrade(String schoolCid) {
+		List<Activity> activities;
+		List<String> gradeIds = null;
+		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))) {
+			schoolCid = getUser().getSchool().getCid();
+			if(schoolCid == null)
+				throw new ValidationException("School id not assigned to user logged in.");
+
+			if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("SchoolAdmin"))) {
+
+				if(!teacherRepository.existsByUserIdAndActiveTrue(getUserId()))
+					gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue( schoolCid);
+				else
+					gradeIds = gradeRepository.findAllCidBySchoolsCidAndTeacherIdActiveTrue( schoolCid, teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
+			}else {
+				if(!teacherRepository.existsByUserIdAndActiveTrue(getUserId())) {
+					if(!studentRepository.existsByUserIdAndActiveTrue(getUserId()))
+						throw new ValidationException("Not Authorized to see details.");
+					gradeIds = Arrays.asList(studentRepository.findGradeCidByCidAndActiveTrue(studentRepository.findCidByUserIdAndActiveTrue(getUserId())));
+				}else {
+					gradeIds = gradeRepository.findAllCidBySchoolsCidAndTeacherIdActiveTrue( schoolCid,teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
+				}
+			}
+
+		}else {	
+			if(schoolCid == null)
+				throw new ValidationException("School id cannot be null.");
+			gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue( schoolCid);
+		}
+
+			activities = teacherActivityGradeRepository.findAllActivityBySchoolCidAndGradeCidsInActiveTrue(schoolCid ,gradeIds);
+
+		if (activities == null || activities.isEmpty())
+			throw new ValidationException(String.format("No activities found in school for grades (%s)", gradeIds));
+
+		return activities.stream().map(ActivityRequestResponse::new).collect(Collectors.toList());
+	}
+	
+	@Override
 	@Secured(AuthorityUtils.SCHOOL_CLUB_MEMBERSHIP_FETCH)
 	public List<ActivityRequestResponse> getAllClubsOfStudent(String studentCid) {
 		List<Activity> activities;

@@ -237,4 +237,14 @@ public final class AuthorityUtils {
 	 * AUTHORITY TO REVIEW(APPROVE / REJECT) SCHOOL AWARD
 	 */
 	public static final String SCHOOL_AWARD_APPROVE = "ROLE_SCHOOL_AWARD_APPROVE";
+	
+	/**
+	 * AUTHORITY TO CREATE GUARDIAN
+	 */
+	public static final String SCHOOL_GUARDIAN_CREATE = "ROLE_SCHOOL_GUARDIAN_CREATE";
+	
+	/**
+	 * AUTHORITY TO UPDATE GUARDIAN
+	 */
+	public static final String SCHOOL_GUARDIAN_UPDATE = "ROLE_SCHOOL_GUARDIAN_UPDATE";
 }

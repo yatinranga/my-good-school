@@ -35,8 +35,14 @@ public class ActivityController {
 //	}
 
 	@GetMapping(value = { "activitiesOffered/{schoolCid}", "activitiesOffered" })
-	public List<ActivityRequestResponse> getAllActivitiesOfSchool(
+	public List<ActivityRequestResponse> getAllActivitiesOfSchoolAsPerGrade(
 			@PathVariable(name = "schoolCid", required = false) String schoolCid) {
+		return activityService.getAllOfferedActivitiesBySchoolAsPerGrade(schoolCid);
+//		return activityService.getAllOfferedActivitiesBySchool(schoolCid);
+	}
+	
+	@GetMapping("activities")
+	public List<ActivityRequestResponse> getAllActivitiesOfSchool(@RequestParam(value = "schoolId" ,required = false) String schoolCid){
 		return activityService.getAllOfferedActivitiesBySchool(schoolCid);
 	}
 

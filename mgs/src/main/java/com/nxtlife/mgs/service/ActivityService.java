@@ -31,4 +31,6 @@ public interface ActivityService {
 
 	List<ActivityRequestResponse> getAllClubsOfTeacher(String teacherCid, String schoolCid);
 
+	List<ActivityRequestResponse> getAllOfferedActivitiesBySchoolAsPerGrade(String schoolCid);
+
 }

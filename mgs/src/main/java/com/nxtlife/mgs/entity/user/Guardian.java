@@ -58,7 +58,7 @@ public class Guardian extends BaseEntity {
 
 	private String relationship;
 
-	@OneToOne(cascade = CascadeType.ALL ,fetch = FetchType.EAGER)
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
 	User user;
 

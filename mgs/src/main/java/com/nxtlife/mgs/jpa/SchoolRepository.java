@@ -36,9 +36,9 @@ public interface SchoolRepository extends JpaRepository<School, Long> {
 
 	public boolean existsByNameAndActiveTrue(String string);
 
-	public School getByUserId(Long userId);
+//	public School getByUserId(Long userId);
 
-	public boolean existsByUserIdAndActiveTrue(Long userId);
+//	public boolean existsByUserIdAndActiveTrue(Long userId);
 
 	public boolean existsByNameAndCidNotAndActiveTrue(String name, String id);
 
@@ -58,5 +58,11 @@ public interface SchoolRepository extends JpaRepository<School, Long> {
 	@Modifying
 	@Query(value = "update School s set s.active = ?2 where s.cid = ?1 and s.active = true")
 	public int deleteByCidAndActiveTrue(String cid,Boolean active);
+
+	public boolean existsByCidAndActive(String cid ,boolean active);
+
+	public boolean existsByContactNumberAndCidNot(String contactNumber, String cid);
+
+	public boolean existsByEmailAndCidNot(String email, String cid);
 
 }

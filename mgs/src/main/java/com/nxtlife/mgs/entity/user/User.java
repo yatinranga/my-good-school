@@ -280,7 +280,7 @@ public class User extends BaseEntity implements UserDetails, Serializable {
 	
 
 	public Collection<Role> getRoles() {
-		return roles = roles == null || roles.isEmpty() ? this.getUserRoles().stream().map(ur -> ur.getRole()).collect(Collectors.toSet()) : this.roles;
+		return roles = roles == null || roles.isEmpty() ? this.getUserRoles() == null ? null : this.getUserRoles().stream().map(ur -> ur.getRole()).collect(Collectors.toSet()) : this.roles;
 	}
 
 	public void setRoles(Collection<Role> roles) {

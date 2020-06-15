@@ -75,15 +75,15 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
 	public Set<Long> findIdsBySchoolCidAandActive(String schoolId, Boolean active);
 
 	@Modifying
-	@Query(value = "update Role r set r.name = ?1, r.lastModifiedBy =?3, r.lastModifiedDate =?4 where r.id = ?2")
+	@Query(value = "update Role r set r.name = ?1, r.lastModifiedBy.id =?3, r.lastModifiedDate =?4 where r.id = ?2")
 	public int updateName(String name, Long id, Long userId, Date date);
 
 	@Modifying
-	@Query(value = "update Role r set r.active = true, r.lastModifiedBy =?2, r.lastModifiedDate =?3 where r.id =?1")
+	@Query(value = "update Role r set r.active = true, r.lastModifiedBy.id =?2, r.lastModifiedDate =?3 where r.id =?1")
 	public int activate(Long id, Long userId, Date date);
 
 	@Modifying
-	@Query(value = "update Role r set r.active = false, r.lastModifiedBy =?2, r.lastModifiedDate =?3 where r.id =?1")
+	@Query(value = "update Role r set r.active = false, r.lastModifiedBy.id =?2, r.lastModifiedDate =?3 where r.id =?1")
 	public int delete(Long id, Long userId, Date date);
 
 	@Query(value = "select r from Role r where r.school.id=?1 and r.name in ?2")

@@ -845,6 +845,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		validate(request, schoolId);
 		User user = request.toEntity();
 		user.settSchoolId(schoolId);
+		user.setCid(Utils.generateRandomAlphaNumString(8));
 		user.setPassword(userPasswordEncoder.encode("12345"));
 		user = userRepository.save(user);
 		for (Long roleId : request.getRoleIds()) {
@@ -862,6 +863,25 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		Map<Long, List<AuthorityResponse>> roleAuthoritiesMap = new HashMap<>();
 		for (Long roleId : roleIds) {
 			roleAuthoritiesMap.put(roleId, authorityRepository.findByAuthorityRolesRoleId(roleId));
+		}
+		for (UserResponse user : userResponseList) {
+			user.setRoles(roleRepository.findByRoleUsersUserCid(user.getId()));
+			for (RoleResponse role : user.getRoles()) {
+				role.setAuthorities(roleAuthoritiesMap.get(role.getId()));
+			}
+		}
+		return userResponseList;
+	}
+	
+//	@Override
+	@Secured(AuthorityUtils.USER_FETCH)
+	public List<UserResponse> findAllByRoleId(Long roleId) {
+		Long schoolId = getUser().gettSchoolId();
+		List<UserResponse> userResponseList = userRepository.findBySchoolIdAndIdIn(schoolId , userRoleRepository.findUserIdsByRoleId(roleId));
+		Set<Long> roleIds = roleRepository.findIdsBySchoolIdAandActive(schoolId, true);
+		Map<Long, List<AuthorityResponse>> roleAuthoritiesMap = new HashMap<>();
+		for (Long rId : roleIds) {
+			roleAuthoritiesMap.put(rId, authorityRepository.findByAuthorityRolesRoleId(rId));
 		}
 		for (UserResponse user : userResponseList) {
 			user.setRoles(roleRepository.findByRoleUsersUserCid(user.getId()));
@@ -977,7 +997,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			}
 			roleIds.removeAll(requestedRoleIds);
 			for (Long roleId : roleIds) {
-				userRoleRepository.delete(userId, roleId);
+				userRoleRepository.delete(userRepository.findIdByCid(userId), roleId);
 			}
 		}
 		return fetch(user, request.getRoleIds() == null ? roleIds : request.getRoleIds());

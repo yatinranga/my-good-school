@@ -351,9 +351,9 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 		if (award == null) {
 			throw new ValidationException(String.format("This award not exist", awardId));
 		}
-		Boolean head = getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Head"));
+		Boolean headOrAdmin = getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Head") || r.getName().equalsIgnoreCase("SchoolAdmin") );
 		if (award.getStatus().equals(ApprovalStatus.PENDING)) {
-			if(head)
+			if(headOrAdmin)
 				award.setStatus(isVerified ? ApprovalStatus.VERIFIED : ApprovalStatus.REJECTED);
 			else
 				award.setStatus(isVerified ? ApprovalStatus.FORWARDED : ApprovalStatus.REJECTED);
@@ -364,7 +364,7 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 			award.setStatusModifiedBy(getUser());
 			award.setStatusModifiedAt(new Date());
 		} else if(award.getStatus().equals(ApprovalStatus.FORWARDED)){
-			if(!head)
+			if(!headOrAdmin)
 				throw new ValidationException("You have already sent this award for review by Head.");
 			award.setStatus(isVerified ? ApprovalStatus.VERIFIED : ApprovalStatus.REJECTED);
 			award.setDateOfReceipt( award.getStatus().equals(ApprovalStatus.VERIFIED) ? new Date() : null);

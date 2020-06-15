@@ -434,9 +434,9 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 	public List<ActivityPerformedResponse> getAllActivitiesOfStudentByStatus(String status, String studentCid,
 			Integer page, Integer pageSize) {
 		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student") )) {
-			if (studentCid == null || !studentRepository.existsByCidAndActiveTrue(studentCid)) {
+			if (studentCid == null || !studentRepository.existsByCidAndActiveTrue(studentCid)) 
 				throw new ValidationException("studentId cannot be null or invalid.");
-			}
+			
 			}else {
 				 studentCid = studentRepository.findCidByUserIdAndActiveTrue(getUserId());
 				if (studentCid == null) 
@@ -468,14 +468,14 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_PERFORMED_ACTIVITY_FETCH)
 	public List<ActivityPerformedResponse> getAllActivitiesAssignedToCoachforReview(String teacherCid, String status) {
-		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor") || r.getName().equalsIgnoreCase("Coordinator") || r.getName().equalsIgnoreCase("Head") )) {
+		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor"))) {
 			if (teacherCid == null || !teacherRepository.existsByCidAndActiveTrue(teacherCid)) {
 				throw new ValidationException("teacherId cannot be null or invalid.");
 			}
 		}else {
 			teacherCid = teacherRepository.findCidByUserIdAndActiveTrue(getUserId());
 			if (teacherCid == null) 
-				throw new ValidationException("Teacher not found probably userId is not set for student.");
+				throw new ValidationException("Teacher not found probably userId is not set for teacher.");
 		}
 
 		List<ActivityPerformed> submittedActivities = null;

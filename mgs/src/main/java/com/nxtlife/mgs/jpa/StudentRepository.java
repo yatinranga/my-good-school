@@ -89,6 +89,9 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 	public List<StudentClub> findGradeCidAndClubsByCidAndActiveTrue(String cid);
 
 	public boolean existsByUserIdAndActiveTrue(Long userId);
+	
+	@Query(value = "select distinct s.cid from Student s join s.guardians g where g.cid = ?1 and s.active = true")
+	public List<String> findCidByGuardianCid(String guardianCid);
 
 	/*
 	 * List<Student>

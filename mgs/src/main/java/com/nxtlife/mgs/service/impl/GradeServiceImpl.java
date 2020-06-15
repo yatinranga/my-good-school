@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -97,26 +98,27 @@ public class GradeServiceImpl extends BaseService implements GradeService {
 	
 	@Override
 	public List<GradeResponse> getAllGradesOfSchool(String schoolCid) {
-
+		
+		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")))
+			schoolCid = getUser().getSchool().getCid();
+		
 		if (schoolCid == null)
 			throw new ValidationException("School Id cannot be null.");
 
-		School school = schoolRepository.findByCidAndActiveTrue(schoolCid);
-
-		if (school == null)
+		if (!schoolRepository.existsByCidAndActive(schoolCid ,true))
 			throw new ValidationException("School not found.");
 
 		List<Grade> gradeList = gradeRepository.findAllBySchoolsCidAndActiveTrue(schoolCid);
-		List<GradeResponse> gradeResponseList = new ArrayList<GradeResponse>();
+//		List<GradeResponse> gradeResponseList = new ArrayList<GradeResponse>();
 
 		if (gradeList == null)
 			throw new ValidationException("No Grades found in this school.");
+//
+//		gradeList.forEach(g -> {
+//			gradeResponseList.add(new GradeResponse(g));
+//		});
 
-		gradeList.forEach(g -> {
-			gradeResponseList.add(new GradeResponse(g));
-		});
-
-		return gradeResponseList;
+		return gradeList.stream().map(GradeResponse :: new).collect(Collectors.toList());
 	}
 
 	@Override

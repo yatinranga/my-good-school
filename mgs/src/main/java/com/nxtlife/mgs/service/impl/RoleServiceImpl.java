@@ -2,6 +2,7 @@ package com.nxtlife.mgs.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,6 +29,7 @@ import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.RoleService;
 import com.nxtlife.mgs.util.AuthorityUtils;
 import com.nxtlife.mgs.view.SuccessResponse;
+import com.nxtlife.mgs.view.user.security.AuthorityResponse;
 import com.nxtlife.mgs.view.user.security.RoleRequest;
 import com.nxtlife.mgs.view.user.security.RoleResponse;
 
@@ -68,7 +70,7 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 	 * @param schoolId
 	 */
 	private void validateRequest(RoleRequest request, Long schoolId) {
-		validateAuthorityIds(request.getAuthorityIds());
+		validateAuthorityIds(new HashSet<Long>(request.getAuthorityIds()));
 		if (roleDao.existsRoleByNameAndSchoolId(request.getName(), schoolId)) {
 			throw new ValidationException(
 					String.format("This role (%s) is already exists for this organization", request.getName()));
@@ -136,6 +138,7 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 		roleDao.save(role);
 		List<RoleAuthority> roleAuthorities = new ArrayList<>();
 		for (Long authorityId : request.getAuthorityIds()) {
+			AuthorityResponse response = authorityDao.findResponseById(authorityId);
 			if (authorityDao.findResponseById(authorityId) != null) {
 				roleAuthorities.add(new RoleAuthority(role.getId(), authorityId));
 			}

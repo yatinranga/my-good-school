@@ -141,7 +141,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			user.setEmail(school.getEmail());
 			if(school.getId()!=null)
 				userRepository.save(user);
-			school.setUser(user);
+//			school.setUser(user);
 		}
 
 		schoolRepository.save(school);
@@ -174,19 +174,20 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 
 		// User user = userService.createSchoolUser(school);
 		// User user = userService.createUserForEntity(school);
-		Long roleId = roleRepository.findIdByName("School");
-		if (roleId == null)
-			throw new ValidationException("Role School not created yet.");
-		User user = userService.createUser(school.getName(), school.getContactNumber(), school.getEmail(),
-				school.getId());
-		user.setUserRoles(
-				Arrays.asList(new UserRole(new UserRoleKey(roleId, user.getId()), new Role(roleId, "School"), user)));
-
-		if (StringUtils.isEmpty(user))
-			throw new ValidationException("User not created successfully");
-		school.setUser(user);
-		school.setUsername(school.getUser().getUsername());
-		user.setSchool(school);
+//		Long roleId = roleRepository.findIdByName("School");
+//		if (roleId == null)
+//			throw new ValidationException("Role School not created yet.");
+//		User user = userService.createUser(school.getName(), school.getContactNumber(), school.getEmail(),
+//				school.getId());
+//		user.setUserRoles(
+//				Arrays.asList(new UserRole(new UserRoleKey(roleId, user.getId()), new Role(roleId, "School"), user)));
+//
+//		if (StringUtils.isEmpty(user))
+//			throw new ValidationException("User not created successfully");
+//		school.setUser(user);
+		school.setUsername(String.format("%s%s", school.getName().substring(0, 3), Utils.generateRandomNumString(8)));
+//				school.getUser().getUsername());
+//		user.setSchool(school);
 
 		school = schoolRepository.save(school);
 
@@ -256,8 +257,8 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			String logoUrl = fileStorageService.storeFile(request.getLogo(), request.getLogo().getOriginalFilename(),
 					"/school-image/", false, true);
 			school.setLogo(logoUrl);
-			if (school.getUser() != null)
-				school.getUser().setPicUrl(logoUrl);
+//			if (school.getUser() != null)
+//				school.getUser().setPicUrl(logoUrl);
 		}
 
 		school = schoolRepository.save(school);
@@ -267,22 +268,22 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 
 		// sending login credentials
 
-		Boolean emailFlag = false;
+//		Boolean emailFlag = false;
 
-		if (user.getEmail() != null)
-			try {
-				emailFlag = userService.sendLoginCredentialsBySMTP(userService.usernamePasswordSendContentBuilder(
-						user.getUsername(), user.getRawPassword(), emailUsername, user.getEmail()));
-			} catch (SMTPSendFailedException e) {
-				emailFlag = false;
-				}
-
-		Map<String, Object> response = new HashMap<String, Object>();
-		response.put("Teacher", new SchoolResponse(school));
-		String emailMessage = emailFlag ? String.format("Email sent successfully to (%s)", user.getEmail())
-				: String.format("Email not sent successfully to (%s) , email address might be wrong.", user.getEmail());
-		int emailStatusCode = emailFlag ? 200 : 400;
-		response.put("MailResponse", new SuccessResponse(emailStatusCode, emailMessage));
+//		if (user.getEmail() != null)
+//			try {
+//				emailFlag = userService.sendLoginCredentialsBySMTP(userService.usernamePasswordSendContentBuilder(
+//						user.getUsername(), user.getRawPassword(), emailUsername, user.getEmail()));
+//			} catch (SMTPSendFailedException e) {
+//				emailFlag = false;
+//				}
+//
+//		Map<String, Object> response = new HashMap<String, Object>();
+//		response.put("Teacher", new SchoolResponse(school));
+//		String emailMessage = emailFlag ? String.format("Email sent successfully to (%s)", user.getEmail())
+//				: String.format("Email not sent successfully to (%s) , email address might be wrong.", user.getEmail());
+//		int emailStatusCode = emailFlag ? 200 : 400;
+//		response.put("MailResponse", new SuccessResponse(emailStatusCode, emailMessage));
 		// return new ResponseEntity<Map<String, Object>>(response,
 		// HttpStatus.OK);
 
@@ -312,28 +313,39 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			if (schoolRepository.existsByAddressAndCidNotAndActiveTrue(request.getAddress(), request.getId()))
 				throw new ValidationException(String.format("Address (%s) already belongs to some other school."));
 		}
+		
+		if (request.getContactNumber() != null && schoolRepository.existsByContactNumberAndCidNot(request.getContactNumber(),school.getCid())) {
+			throw new ValidationException(String.format("Contact Number (%s) already belongs to some other school.",
+					request.getContactNumber()));
+		}
+		
+		if (request.getEmail() != null && schoolRepository.existsByEmailAndCidNot(request.getEmail(),school.getCid())) {
+			throw new ValidationException(
+					String.format("Email (%s) already belongs to some other school.", request.getEmail()));
+		}
 
 		school = request.toEntity(school);
+		
 
-		if (request.getContactNumber() != null) {
-			if (!userRepository.existsByContactNumberAndCidNot(request.getContactNumber(), school.getUser().getCid())) {
-				school.setContactNumber(request.getContactNumber());
-				school.getUser().setContactNumber(request.getContactNumber());
-			} else {
-				throw new ValidationException(String.format("Contact Number (%s) already belongs to some other user.",
-						request.getContactNumber()));
-			}
-		}
+//		if (request.getContactNumber() != null) {
+//			if (!userRepository.existsByContactNumberAndCidNot(request.getContactNumber(), school.getUser().getCid())) {
+//				school.setContactNumber(request.getContactNumber());
+//				school.getUser().setContactNumber(request.getContactNumber());
+//			} else {
+//				throw new ValidationException(String.format("Contact Number (%s) already belongs to some other user.",
+//						request.getContactNumber()));
+//			}
+//		}
 
-		if (request.getEmail() != null) {
-			if (!userRepository.existsByEmailAndCidNot(request.getEmail(), school.getUser().getCid())) {
-				school.setEmail(request.getEmail());
-				school.getUser().setEmail(request.getEmail());
-			} else {
-				throw new ValidationException(
-						String.format("Email (%s) already belongs to some other user.", request.getEmail()));
-			}
-		}
+//		if (request.getEmail() != null) {
+//			if (!userRepository.existsByEmailAndCidNot(request.getEmail(), school.getUser().getCid())) {
+//				school.setEmail(request.getEmail());
+//				school.getUser().setEmail(request.getEmail());
+//			} else {
+//				throw new ValidationException(
+//						String.format("Email (%s) already belongs to some other user.", request.getEmail()));
+//			}
+//		}
 
 		if (request.getGradeRequests() != null && !request.getGradeRequests().isEmpty()) {
 			List<GradeRequest> gradeRequests = request.getGradeRequests();
@@ -374,8 +386,8 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			String logoUrl = fileStorageService.storeFile(request.getLogo(), request.getLogo().getOriginalFilename(),
 					"/school-image/", true, true);
 			school.setLogo(logoUrl);
-			if (school.getUser() != null)
-				school.getUser().setPicUrl(logoUrl);
+//			if (school.getUser() != null)
+//				school.getUser().setPicUrl(logoUrl);
 		}
 
 		if (request.getActivities() != null && !request.getActivities().isEmpty()) {

@@ -1,5 +1,8 @@
 package com.nxtlife.mgs.view;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.nxtlife.mgs.entity.user.Guardian;
@@ -15,6 +18,8 @@ public class GuardianResponse {
 	private String gender;
 	private String relationship;
 	private String id;
+	private List<String> studentIds;
+	private String imageUrl;
 
 	public String getName() {
 		return name;
@@ -79,7 +84,19 @@ public class GuardianResponse {
 	public void setId(String id) {
 		this.id = id;
 	}
+
+	public List<String> getStudentIds() {
+		return studentIds;
+	}
+
+	public void setStudentIds(List<String> studentIds) {
+		this.studentIds = studentIds;
+	}
 	
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
 	public GuardianResponse() {
 	}
 
@@ -90,6 +107,10 @@ public class GuardianResponse {
 		this.mobileNumber = guardian.getMobileNumber();
 		this.relationship = guardian.getRelationship();
 		this.id = guardian.getCid();
+		if(guardian.getStudents() !=null) {
+			this.studentIds = guardian.getStudents().stream().distinct().map(s-> s.getCid()).collect(Collectors.toList());
+		}
+		this.imageUrl = guardian.getImageUrl();
 	}
 
 }

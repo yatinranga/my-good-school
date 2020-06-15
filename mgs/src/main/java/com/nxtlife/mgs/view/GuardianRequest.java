@@ -1,18 +1,39 @@
 package com.nxtlife.mgs.view;
 
+import java.util.List;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.nxtlife.mgs.entity.user.Guardian;
 import com.nxtlife.mgs.ex.ValidationException;
 
 public class GuardianRequest extends Request {
 
 	private String id;
+	
+	@NotNull(message = "Guardian's name can't be null")
 	private String name;
+	
+	@NotEmpty(message = "Guardian's email can't be empty")
+	@Email(message = "Email pattern isn't correct")
 	private String email;
+	
 	private String gender;
+	
+	@Size(min = 10, max = 10)
+	@Pattern(regexp = "^[0-9]*$", message = "Mobile no should contain only digit")
 	private String mobileNumber;
+	
+	@NotNull(message = "Relationship can't be null")
 	private String relationship;
-	private String studentId;
-	private String username;
+	
+	@NotEmpty(message = "Student Ids can't be empty.")
+	private List<String> studentIds;
 
 	public String getName() {
 		return name;
@@ -37,13 +58,14 @@ public class GuardianRequest extends Request {
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
 	}
+	
 
-	public String getStudentId() {
-		return studentId;
+	public List<String> getStudentIds() {
+		return studentIds;
 	}
 
-	public void setStudentId(String studentId) {
-		this.studentId = studentId;
+	public void setStudentIds(List<String> studentIds) {
+		this.studentIds = studentIds;
 	}
 
 	public String getGender() {
@@ -70,13 +92,6 @@ public class GuardianRequest extends Request {
 		this.relationship = relationship;
 	}
 
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
 
 	public Guardian toEntity(Guardian guardian) {
 		guardian = guardian == null ? new Guardian() : guardian;
@@ -94,7 +109,6 @@ public class GuardianRequest extends Request {
 			guardian.setMobileNumber(this.mobileNumber);
 		}
 		guardian.setRelationship(this.relationship);
-		guardian.setUsername(this.username);
 		guardian.setGender(gender);
 		return guardian;
 	}

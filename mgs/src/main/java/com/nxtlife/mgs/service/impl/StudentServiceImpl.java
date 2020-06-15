@@ -1674,8 +1674,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			throw new ValidationException("activity id cannot be null.");
 		if (!activityRepository.existsByCidAndActiveTrue(activityCid))
 			throw new ValidationException(String.format("Activity with id (%s) not found", activityCid));
-		if (!activityRepository.existsByCidAndSchoolsCidAndActiveTrue(activityCid, schoolCid))
-			throw new ValidationException(String.format("Activity with id (%s) not offered in school", activityCid));
+		
 		List<Student> students = new ArrayList<Student>();
 //		if (teacherId != null) {
 //			if (!teacherRepository.existsByCidAndActiveTrue(teacherId))
@@ -1723,6 +1722,9 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				if(schoolCid == null)
 					throw new ValidationException("School id not assigned to user logged in.");
 				
+				if (!activityRepository.existsByCidAndSchoolsCidAndActiveTrue(activityCid, schoolCid))
+					throw new ValidationException(String.format("Activity with id (%s) not offered in school (%s) ", activityCid,schoolCid));
+				
 	        if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("SchoolAdmin"))) {
 					
 					if(!teacherRepository.existsByUserIdAndActiveTrue(getUserId()))
@@ -1743,6 +1745,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 				
 				if(schoolCid == null)
 					throw new ValidationException("School id cannot be null.");
+				if (!activityRepository.existsByCidAndSchoolsCidAndActiveTrue(activityCid, schoolCid))
+					throw new ValidationException(String.format("Activity with id (%s) not offered in school (%s) ", activityCid,schoolCid));
 				gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue( schoolCid);
 			}
 			

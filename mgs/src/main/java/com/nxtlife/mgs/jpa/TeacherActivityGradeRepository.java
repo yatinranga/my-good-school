@@ -54,4 +54,7 @@ public interface TeacherActivityGradeRepository extends JpaRepository<TeacherAct
 
 	public List<TeacherActivityGrade> findAllByTeacherIdAndGradeCidInAndActiveTrue(Long teacherId,
 			List<String> gradeIds);
+	
+	@Query(value = "select distinct tag.activity from TeacherActivityGrade tag where tag.teacher.school.cid = ?1 and  tag.grade.cid in ?2 and tag.active = true")
+	public List<Activity> findAllActivityBySchoolCidAndGradeCidsInActiveTrue(String schoolCId , Collection<String> gradeIds);
 }
