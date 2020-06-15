@@ -96,6 +96,10 @@ public class GuardianResponse {
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
+	
+	public String getImageUrl() {
+		return imageUrl;
+	}
 
 	public GuardianResponse() {
 	}

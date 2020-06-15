@@ -93,6 +93,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 	@Query(value = "select distinct s.cid from Student s join s.guardians g where g.cid = ?1 and s.active = true")
 	public List<String> findCidByGuardianCid(String guardianCid);
 
+	public List<Student> findAllDistinctByGuardiansCidAndActive(String cid, boolean active);
+
 	/*
 	 * List<Student>
 	 * findAllBySchoolCidAndGradeCidAndActivitiesActivityCidAndActivitiesActivityStatusAndActivitiesActivityActivityTrueAndGradeActiveTrueAndSchoolActiveTrueAndActiveTrue(

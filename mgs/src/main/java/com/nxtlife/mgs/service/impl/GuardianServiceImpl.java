@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -101,6 +102,10 @@ public class GuardianServiceImpl extends BaseService implements GuardianService 
 		int rows = guardianRepository.setImageUrlByCid(guardianCid, imageUrl);
 		if(rows == 0)
 			throw new RuntimeException("Profile image not set, some error occured.");
+		String userCid = guardianRepository.findUserCidByCidAndActiveTrue(guardianCid);
+		rows = userRepository.setImageUrlByCid(userCid, imageUrl);
+		if(rows == 0)
+			throw new RuntimeException(String.format("Profile image not set for user with id (%s), some error occured.", userCid));
 		GuardianResponse guardian = new GuardianResponse();
 		guardian.setId(guardianCid);
 		guardian.setImageUrl(imageUrl);
@@ -143,21 +148,23 @@ public class GuardianServiceImpl extends BaseService implements GuardianService 
 		}
 		
 		
-		if(request.getStudentIds() != null && !request.getStudentIds().isEmpty()) {
-			List<String> studentIds = studentRepository.findCidByGuardianCid(cid);
+		if(request.getStudentIds() != null ) {
+			List<Student> students = studentRepository.findAllDistinctByGuardiansCidAndActive(cid,true);
+			students = students == null ? new ArrayList<>() : students;
+			List<String> studentIds = students.stream().distinct().map(s -> s.getCid()).collect(Collectors.toList());
 			List<String> requestedStudentIds = new ArrayList<>(request.getStudentIds());
 			List<String> newStudents = request.getStudentIds();
 			newStudents.removeAll(studentIds);
 			
-			List<Student> students = new ArrayList<Student>();
+			
 			setStudentsOfGuardian(guardian, students, newStudents);
 			
 			studentIds.removeAll(requestedStudentIds);
 			for (String studentId : studentIds) {
-				guardian.getStudents().removeIf(s -> s.getCid().equals(studentId));
+				students.removeIf(s -> s.getCid().equals(studentId));
 			}
 			
-			guardian.getStudents().addAll(students);	
+			guardian.setStudents(students);	
 		}
 		return new GuardianResponse(guardian = guardianRepository.save(guardian));
 	}
@@ -173,5 +180,15 @@ public class GuardianServiceImpl extends BaseService implements GuardianService 
 				student.setGuardians(new ArrayList<Guardian>(Arrays.asList(guardian)));
 			students.add(student);
 		}
+	}
+	
+	@Override
+	@Secured(AuthorityUtils.SCHOOL_GUARDIAN_FETCH)
+	public GuardianResponse getById(String id) {
+		if(id == null || !guardianRepository.existsByCidAndActiveTrue(id))
+			throw new ValidationException(String.format("No guardian found with id (%s)." , id));
+		GuardianResponse guardian = new GuardianResponse(guardianRepository.findByCidAndActiveTrue(id));
+		guardian.setStudentIds(studentRepository.findCidByGuardianCid(id));
+		return guardian;
 	}
 }

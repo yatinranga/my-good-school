@@ -873,24 +873,6 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		return userResponseList;
 	}
 	
-//	@Override
-	@Secured(AuthorityUtils.USER_FETCH)
-	public List<UserResponse> findAllByRoleId(Long roleId) {
-		Long schoolId = getUser().gettSchoolId();
-		List<UserResponse> userResponseList = userRepository.findBySchoolIdAndIdIn(schoolId , userRoleRepository.findUserIdsByRoleId(roleId));
-		Set<Long> roleIds = roleRepository.findIdsBySchoolIdAandActive(schoolId, true);
-		Map<Long, List<AuthorityResponse>> roleAuthoritiesMap = new HashMap<>();
-		for (Long rId : roleIds) {
-			roleAuthoritiesMap.put(rId, authorityRepository.findByAuthorityRolesRoleId(rId));
-		}
-		for (UserResponse user : userResponseList) {
-			user.setRoles(roleRepository.findByRoleUsersUserCid(user.getId()));
-			for (RoleResponse role : user.getRoles()) {
-				role.setAuthorities(roleAuthoritiesMap.get(role.getId()));
-			}
-		}
-		return userResponseList;
-	}
 
 	@Override
 	@Secured(AuthorityUtils.USER_FETCH)
@@ -1119,5 +1101,24 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			logger.info("User {} deleted successfully", id);
 		}
 		return new SuccessResponse(HttpStatus.OK.value(), "User deleted successfully");
+	}
+	
+	@Override
+	@Secured(AuthorityUtils.USER_FETCH)
+	public List<UserResponse> findAllByRoleId(Long roleId) {
+		Long schoolId = getUser().gettSchoolId();
+		List<UserResponse> userResponseList = userRepository.findBySchoolIdAndIdIn(schoolId , userRoleRepository.findUserIdsByRoleId(roleId));
+		Set<Long> roleIds = roleRepository.findIdsBySchoolIdAandActive(schoolId, true);
+		Map<Long, List<AuthorityResponse>> roleAuthoritiesMap = new HashMap<>();
+		for (Long rId : roleIds) {
+			roleAuthoritiesMap.put(rId, authorityRepository.findByAuthorityRolesRoleId(rId));
+		}
+		for (UserResponse user : userResponseList) {
+			user.setRoles(roleRepository.findByRoleUsersUserCid(user.getId()));
+			for (RoleResponse role : user.getRoles()) {
+				role.setAuthorities(roleAuthoritiesMap.get(role.getId()));
+			}
+		}
+		return userResponseList;
 	}
 }

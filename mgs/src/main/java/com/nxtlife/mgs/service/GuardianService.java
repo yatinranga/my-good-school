@@ -13,4 +13,6 @@ public interface GuardianService {
 
 	GuardianResponse update(String cid, GuardianRequest request);
 
+	GuardianResponse getById(String id);
+
 }

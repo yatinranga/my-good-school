@@ -59,5 +59,7 @@ public interface UserService {
 	SuccessResponse activate(String id);
 
 	SuccessResponse delete(String id);
+
+	List<UserResponse> findAllByRoleId(Long roleId);
 	
 }

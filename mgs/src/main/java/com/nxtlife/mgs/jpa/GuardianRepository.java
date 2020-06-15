@@ -37,7 +37,10 @@ public interface GuardianRepository extends JpaRepository<Guardian, Long> {
 	
 	@Transactional
 	@Modifying(clearAutomatically = true)
-	@Query(value = "update Guardian g set g.imageUrl = ?2 , g.user.picUrl = ?2 where g.cid = ?1")
+	@Query(value = "update Guardian g set g.imageUrl = ?2 where g.cid = ?1")
 	public int setImageUrlByCid(String cid ,String imageUrl);
+	
+	@Query(value = "select s.user.cid from Guardian s where s.cid = ?1 and s.active = true")
+	public String findUserCidByCidAndActiveTrue(String cid);
 
 }

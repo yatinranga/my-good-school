@@ -247,4 +247,9 @@ public final class AuthorityUtils {
 	 * AUTHORITY TO UPDATE GUARDIAN
 	 */
 	public static final String SCHOOL_GUARDIAN_UPDATE = "ROLE_SCHOOL_GUARDIAN_UPDATE";
+	
+	/**
+	 * AUTHORITY TO FETCH GUARDIAN
+	 */
+	public static final String SCHOOL_GUARDIAN_FETCH = "ROLE_SCHOOL_GUARDIAN_FETCH";
 }

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -163,6 +165,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	public Long findIdByCid(String cid);
 
 	List<UserResponse> findBySchoolIdAndIdIn(Long schoolId, Set<Long> findUserIdsByRoleId);
+	
+	
+	@Transactional
+	@Modifying(clearAutomatically = true)
+	@Query(value = "update User g set g.picUrl = ?2 where g.cid = ?1")
+	public int setImageUrlByCid(String cid ,String picUrl);
 	
 	
 

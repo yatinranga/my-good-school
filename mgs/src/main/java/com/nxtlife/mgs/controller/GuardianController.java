@@ -3,6 +3,7 @@ package com.nxtlife.mgs.controller;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,7 +30,7 @@ public class GuardianController {
 		return guardianService.save(request);
 	}
 	
-	@PutMapping("api/guardian/{id}/profilePic")
+	@PutMapping("api/guardian/profilePic")
 	public GuardianResponse setProfilePic(@RequestParam("profilePic") MultipartFile file,@RequestParam(value = "id" ,required = false) String id) {
 		return guardianService.setProfilePic(file,id);
 	}
@@ -37,5 +38,10 @@ public class GuardianController {
 	@PutMapping("api/guardian/{id}")
 	public GuardianResponse update(@PathVariable("id") String id , @RequestBody(required = true) GuardianRequest request) {
 		return guardianService.update(id, request);
+	}
+	
+	@GetMapping("api/guardian/{id}")
+	public GuardianResponse getById(@PathVariable("id") String id) {
+		return guardianService.getById(id);
 	}
 }
