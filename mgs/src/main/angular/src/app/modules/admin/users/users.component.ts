@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminService } from 'src/app/services/admin.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { AlertService } from 'src/app/services/alert.service';
 declare let $: any;
 
 @Component({
@@ -11,18 +12,17 @@ declare let $: any;
 export class UsersComponent implements OnInit {
   usersArr: any = [];
   rolesArr: any = [];
-  roleName: string = "";
-  authoritiesArr: any = [];
+  schoolArr: any = [];
   editUserForm: FormGroup;
   user_loader: boolean = false;
+  userId = "";
 
-  constructor(private adminService: AdminService, private formBuilder: FormBuilder) { }
+  constructor(private adminService: AdminService, private formBuilder: FormBuilder, private alertService: AlertService) { }
 
   ngOnInit() {
     this.getUsers();
 
     this.editUserForm = this.formBuilder.group({
-      id: [null],
       name: [null],
       username: [null],
       email: [null],
@@ -47,22 +47,23 @@ export class UsersComponent implements OnInit {
 
   editUser(user) {
     console.log(user);
+    this.userId = user.id;
     $('#editUserModal').modal('show');
     $('#editUserModal').modal({
       backdrop: 'static',
       keyboard: false
     });
     this.editUserForm.patchValue({
-      id: user.id,
       name: user.name,
       username: user.username,
       email: user.email,
       contactNumber: user.contactNumber,
-      // roleIds:user.
+      roleIds:user.roles[0].id,
       schoolId: user.schoolId
     })
 
     this.getRoles();
+    this.getSchools();
   }
 
   getRoles() {
@@ -72,11 +73,29 @@ export class UsersComponent implements OnInit {
     }, (err) => { console.log(err); })
   }
 
-  getAuthorities(roleName) {
-    console.log("this is called");
-    console.log(roleName);
-
+  getSchools() {
+    this.adminService.getSchools("/schools").subscribe((res) => {
+      this.schoolArr = res;
+      console.log(res);
+    }, (err) => { console.log(err); })
   }
+
+  updateUser() {
+    this.editUserForm.value.roleIds = [436];
+    console.log(this.editUserForm.value);
+    this.adminService.updateUser(this.userId, this.editUserForm.value).subscribe((res) => {
+      console.log(res);
+    }, (err) => {
+      console.log(err);
+      if (err.status == 400) {
+        this.alertService.showMessageWithSym(err.msg, "", "info");
+      }
+      else {
+        this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");
+      }
+    })
+  }
+
 
   // stop toogle of table
   stopCollapse(e) {

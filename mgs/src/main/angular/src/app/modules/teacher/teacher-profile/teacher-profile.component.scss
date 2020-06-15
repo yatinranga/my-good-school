@@ -1,94 +1,126 @@
 .teacher_profile_main{
     width: 100%;
     display: inline-block;
-    padding: 20px 10px;
+    padding: 15px;
 }
 
 .leftprofile{
-    width: 22%;
+    width: 100%;
     display: inline-block;
     float: left;
     position: relative;
-    z-index: 1;
-    padding: 10px;
-    border-right: 1px solid #ddd;
+    box-shadow: 0 0 5px #ddd;
+    background: white;
+    padding: 15px;
 }
 .teacher_image {
-    width: 100%;
+    width: 160px;
     display: inline-block;
+    height: 160px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: auto;
+    position: relative;
+}
+.name input {
     text-align: center;
+    border: solid 1px #ddd;
+    padding: 3px 5px;
 }
 .teacher_image img {
     opacity: 1;
-    width: 180px;
-    height: 180px;
+    width: 270px;
     z-index: 2;
+    margin-left: -30px;
 }
 .leftprofiletext{
     width: 100%;
     display: inline-block;
+    vertical-align: top;
 }
 .teacher_image h4 {
     font-weight: 600;
     font-size: 30px;
     margin-top: 10px;
+    color: #e04090;
 }
 .number {
-    width: fit-content;
-    margin: 10px auto;
-    text-align: center;
+    margin-bottom: 5px;
+    display: inline-block;
+    width: 100%;
+}
+.name {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 10px;
+}
+.teacher_about{
+    display: inline-block;
+    width: calc(100% - 400px);
+    float: right;
+
+}
+.teacher_activities_main ol {
+    padding-left: 15px;
+}
+.teacher_activities_main ol li {
+    list-style: inherit;
+    padding-left: 10px;
+}
+.teacher_about textarea{
+    padding: 15px;
+    text-align: left;
+    width: 100%;
 }
 .number input{
-    background: none;
-    color: black;
-    border: none;
-    padding: 5px 10px;
-    font-size: 17px;
-    border-radius: 3px;
+    color: #333;
+    border: solid 1px #ddd;
+    font-size: 16px;
+    text-align: center;
+    padding: 3px 5px;
 }
 .leftprofiletext textarea {
-    max-width: 280px;
-    padding: 7px;
-    overflow: hidden;
-    min-height: 250px;
     font-size: 16px;
-    line-height: 32px;
-    background: none;
-    color: black;
     border: none;
+    width: 100%;
+    color: #333;
+    padding: 15px;
+    height: 100px;
 }
 .rightprofile{
-    width: 75%;
-    display: grid;
-    float: right;
-}
-.edit_buttons{
     width: 100%;
     display: inline-block;
-    margin: 10px 0;
+    box-shadow: 0 0 5px #ddd;
+    margin-top: 20px;
+    padding: 0;
+    background: white;
+}
+.edit_buttons{
+    width: auto;
+    display: inline-block;
+    margin-top: 5px;
 }
 button:hover {
-    background: #c191b3 !important;
+    background:rgba(224, 64, 144, 0.59) !important;
     color: #fafafa;
 }
 button.update {
     float: right;
-    background: #cfc1cb;
+    background: #e6dce3;
     padding: 3px 7px;
     border: none;
 }
 .edit_buttons button  {
-    margin: 5px 0;
-    background: #cfc1cb;
+    margin: 0;
+    background: #e04090;
     border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 2px;
 }
 .rightprofile .heading{
     width: 100%;
-    height: auto;
-    background: #c191b3;
-    padding: 0px 10px;
-    color: #fafafa;
-    margin-top: 10px;
+    color: #333;
 }
 .rightprofiletext{
     width: 100%;
@@ -98,19 +130,49 @@ button.update {
     padding: 0;
 }
 .basic-info, .teacher_activities_main {
-    background: #cfc1cb;
-    padding: 5px 10px;
+    padding: 10px;
     width: 33.33%;
-    border-right: 1px solid;
+    border-right: 1px solid #ddd;
 }
 .rightprofiletext h3 {
-    margin-bottom: 25px;
-    border-bottom: 1px solid;
-    width: 40%;
+    border-bottom: 1px solid #ddd;
+    margin-top: -10px;
+    padding: 10px;
+    margin-left: -10px;
+    margin-right: -10px;
+    background: rgba(0,0,0,0.03);
+    font-size: 18px;
+    color: #333;
+}
+.rightprofiletext ol li, .rightprofiletext ul li {
+    margin-bottom: 5px;
+}
+.rightprofiletext ol li label, .rightprofiletext ul li label{
+    margin: 0;
 }
 textarea.ng-untouched.ng-pristine.ng-valid {
-    background: #c191b3;
+    background: #e6dce3;
 }
 input.ng-untouched.ng-pristine.ng-valid {
-    background: #c191b3;
+    background: #e6dce3;
+}
+
+.profile_details {
+    display: inline-block;
+    width: 350px;
+    text-align: center;
+    padding-right: 40px;
+    border-right: solid 1px #ddd;
+}
+.teacher_image button.edit_profile {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border: none;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    width: 100%;
+    padding-bottom: 25px;
+    padding-top: 10px;
 }

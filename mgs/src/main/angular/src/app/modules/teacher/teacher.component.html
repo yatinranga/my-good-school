@@ -1,4 +1,5 @@
 <div class="main">
+  <div [ngClass]="{'sidebar_close': showSidebar}" class="content_main">
     <div class="navbar">
       <ul class="logo">
         <li routerLinkActive='active'>
@@ -11,46 +12,23 @@
           <li class="cb" routerLinkActive='active'> <a routerLink='./home' class="cb menu_link"> <i class="fa fa-home"> </i> Home </a> </li>
           <li class="pink" routerLinkActive='active'> <a routerLink='./profile' class="pink menu_link"> <i class="fa fa-id-badge"> </i> Profile </a> </li>
           <li class="blue" routerLinkActive='active'> <a routerLink='./activities' class="blue menu_link"> <i class="fa fa-bar-chart"> </i> Activities</a></li>
-          <!--
-                <li>
-                  <a class="menu_link" (click)="onActivityClick()"> <i class="fa fa-bar-chart" aria-hidden="true"> </i>
-                      Activity </a>
-                  <ul *ngIf="showActivityList">
-                      <li routerLink='./activity/saved-activity' class="sub_menu">Saved Activity</li>
-                      <li routerLink='./activity/reviewed-activity' class="sub_menu">Reviewed Activity</li>
-                  </ul>
-              </li>
-              -->
+         
           <li class="green" routerLinkActive='active'>
             <a routerLink='./awards' class="green menu_link"> <i class="fa fa-trophy"> </i> Awards </a>
           </li>
         </ul>
-        <ul style="float: right"> 
-            <li>
-                <a routerLink='login' class="logout menu_link" (click)="authService.logoutUser();">
-                  <i class="fa fa-sign-out-alt"> </i> Logout </a>
-              </li>
-        </ul>
       </div>
-  
-      <!--
-        <div class="right">
-        <div class="dropdown">
-          <i class="fa fa-user-circle"></i>
-          <div class="dropdown-content">
-            <a href=""> <i class="fa fa-user"></i> My Profile </a>
-            <a href=""> <i class="fa fa-tasks"></i> My Activities </a>
-            <a href=""> <i class="fa fa-trophy"> </i> My Achievements </a>
-            <div class="divider"></div>
-            <a routerLink='login' class="logout" (click)="authService.logoutUser();">
-              <i class="fa fa-sign-out-alt"></i>Logout </a>
-          </div>
-        </div>
-      </div>
-      -->
     </div>
-  
-    <div class="content_main">
+    <div class="content_main_com">
+        <div class="header">
+            <div class="menu_toggle">
+            </div>
+            <div class="profile_right">
+                <a routerLink='login' class="logout menu_link" (click)="authService.logoutUser();">
+                    <i class="fa fa-sign-out-alt"> </i> Logout </a>
+                
+            </div>
+    </div>
       <router-outlet></router-outlet>
     </div>
   

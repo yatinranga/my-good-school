@@ -76,7 +76,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form [formGroup]="editUserForm">
+                <form [formGroup]="editUserForm" >
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-6">
@@ -105,26 +105,20 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">Role : </label>
-                                    <select class="form-control" name="role" (ngModelChange)="getAuthorities($event)">
+                                    <select class="form-control" name="role" formControlName="roleIds">
                                         <option [ngValue]=null selected disabled>Select One</option>
-                                        <option *ngFor="let role of rolesArr" value={{role.name}}>
+                                        <option *ngFor="let role of rolesArr" value={{role.id}}>
                                             {{role.name}}
                                         </option>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Authorities : </label>
-                                    <select class="form-control" name="authorities">
-                                        <option [ngValue]=null selected disabled>Select One</option>
-                                        <!-- <option *ngFor="let acti of allAssignedActi" value={{acti.id}}>
-                                            {{acti.name}}
-                                        </option> -->
-                                    </select>
-                                </div>
-                                <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">School : </label>
-                                    <select class="form-control" name="schoolId">
+                                    <select class="form-control" name="schoolId" formControlName="schoolId">
                                         <option [ngValue]=null selected disabled>Select One</option>
+                                        <option *ngFor="let s of schoolArr" value={{s.id}}>
+                                            {{s.name}}
+                                        </option>
 
                                     </select>
                                 </div>
@@ -135,7 +129,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-danger" (click)="resetForm()">Reset</button>
-                <button class="btn btn-success">Update</button>
+                <button class="btn btn-success" (click)="updateUser()">Update</button>
             </div>
         </div>
     </div>

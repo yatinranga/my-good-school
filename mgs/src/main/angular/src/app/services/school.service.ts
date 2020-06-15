@@ -14,6 +14,26 @@ export class SchoolService {
     return this.http.post(url, data);
   }
 
+  // Bulk Upload of data
+  UploadExcel(url, formData: FormData) {
+    return this.http.post(url, formData)
+  }
+
+  /** Create new user */ 
+  createUser(requestBody) {
+    return this.http.post("/api/user", requestBody);
+  }
+
+  /** To get All Users of a School */
+  getUsers(){
+    return this.http.get("/api/users");
+  }
+
+  /** To get All  */
+  getRoles(){
+    return this.http.get("/api/roles");
+  }
+
   // get GENERAL Activities
   getGeneralActivities() {
     return this.http.get("/generalActivities");
@@ -28,4 +48,40 @@ export class SchoolService {
   updateProfile(schoolId, form) {
     return this.http.put("/api/school/update/" + schoolId, form);
   }
+
+  /** Get List of All Students */
+  getStudents(){
+    return this.http.get("/api/students");
+  }
+
+  /** Get List of All Staff (Supervisor and Coordinator) */
+  getStaff(){
+    return this.http.get("/api/teachers");                      
+  }
+
+  /** Get Enrolled Clubs/Societies of particular student */
+  getStudentClubs(studentId){
+    return this.http.get("/api/student/clubs?studentId=" + studentId);
+  }
+
+  /** Assign Club/Society to Supervisor */
+  assignClub(reqBody){
+    return this.http.put("/api/teacher/assignActivity",reqBody);
+  }
+
+  /** Get All Activities Offered in a School  */
+  getAllClubs(schoolId) {
+    return this.http.get("/activities");
+  }
+
+  /** Get All Grades of a Achool */
+  getAllGrades(schoolId) {
+    return this.http.get("/grades?schoolId=" + schoolId);
+  }
+
+  /** Get List of Supervisor for particular Club/Society */
+  getClubSupervisor(schoolId,actiId){
+    return this.http.get("/api/coaches/"+schoolId+"/"+actiId);
+  }
+
 }

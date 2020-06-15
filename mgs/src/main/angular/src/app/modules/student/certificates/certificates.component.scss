@@ -22,18 +22,20 @@
 }
 .certi_box {
     width: 100%;
-    display: inline-flex;
-    margin: 0 auto;
+    margin: 0;
     position: relative;
+    display: inline-block;
+    box-shadow: 0 0 5px #ddd;
+    transition: 0.5s;
+    cursor: pointer;
+}
+.certi_box:hover{
+    transform: scale(1.02);
 }
 .card_box {
-    background: #d0c5ae;
     text-align: center;
-    opacity: 0.8;
-    margin: 10px;
+    margin: 0;
     width: 100%;
-    min-height: 385px;
-    max-width: 500px;
 }
 .card_box img{
     width: 100%;
@@ -41,17 +43,16 @@
 .card_box h2{
     font-size: 24px;
     text-align: center;
+    color: #8dc33a;
+    margin: 10px 0;
 }
 .card_box p{
-    font-size: 17px;
+    font-size: 15px;
+    color: #333;
+    margin-bottom: 8px;
+
 }
-.card_box:hover{
-    opacity: 1.0;
-    box-shadow: 0 0 5px #ddd;
-    transition: 0.5s;
-    transform: scale(1.02);
-    cursor: pointer;
-}
+
 .certi_text {
     padding: 10px;
 }

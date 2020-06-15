@@ -1,0 +1,17 @@
+.photo {
+    position: relative;
+    display: inline-block;
+    width: 150px;
+    border-radius: 50%;
+    height: 150px;
+    overflow: hidden;
+    margin: auto;
+}
+
+.student_image {
+    width: auto;
+    display: inline-block;
+    float: left;
+    margin-top: 12px;
+    text-align: center;
+}

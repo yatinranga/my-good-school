@@ -1,0 +1,43 @@
+<div class="row">
+    <div [ngClass]="col">
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Club/Society</th>
+                    <th scope="col">fourS</th>
+                    <th scope="col">Focus Area</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let s of schoolClubs ; let i = index;">
+                    <th>{{i+1}}</th>
+                    <td>{{s.name}}</td>
+                    <td>{{s.clubOrSociety}}</td>
+                    <td>{{s.fourS}}</td>
+                    <td><span *ngFor="let fs of s.focusAreaResponses; let i = index">
+                            {{ (i === s.focusAreaResponses.length-1) ? fs.name  : fs.name + "," + ' '}}
+                        </span>
+                        <span *ngIf="!s.focusAreaResponses.length"> - </span></td>
+                    <td><button class="btn btn-info" (click)="setShowSupervisor(true,s)">
+                            <i class="fa fa-edit" title="Edit"></i>
+                        </button></td>
+                </tr>
+            </tbody>
+            <tfoot *ngIf="schoolClubs.length == 0">
+                <tr>
+                    <td colspan="10">
+                        <div *ngIf="club_loader" class="spinner-border text-dark" role="status">
+                        </div>{{club_loader ? 'Loading...' : 'No Club/Society Found'}}
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="col-6" *ngIf="showSupervisor">
+        <button class="btn btn-danger" (click)="setShowSupervisor(false)">Close</button>
+        <app-club-details [clubObj]="club_obj"></app-club-details>
+    </div>
+</div>

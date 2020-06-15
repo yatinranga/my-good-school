@@ -10,16 +10,17 @@ declare let $: any;
   styleUrls: ['./certificates.component.scss']
 })
 export class CertificatesComponent implements OnInit {
-  
+
 
   certificateForm: FormGroup;
   certificatesArr = [];
   fourSArr: any = [];
   files: any[];
   path: any;
-  add_loader = false; 
+  add_loader = false;
+  certificate_loader = false; // Loader during get certificates
 
-  constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService) {}
+  constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService) { }
 
   ngOnInit() {
     this.viewCertificate();
@@ -35,10 +36,15 @@ export class CertificatesComponent implements OnInit {
   }
 
   viewCertificate() {
+    this.certificate_loader = true;
     this.studentService.getCertificates().subscribe((res) => {
       console.log(res);
       this.certificatesArr = res;
-    }, (err) => { console.log(err) });
+      this.certificate_loader = false;
+    }, (err) => {
+      console.log(err);
+      this.certificate_loader = false;
+    });
   }
 
   // get 4s Area
