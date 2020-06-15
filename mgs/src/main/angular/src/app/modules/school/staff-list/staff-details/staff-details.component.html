@@ -1,4 +1,6 @@
 <h1>{{staffDetails.name}}</h1>
+<h3><button class="btn btn-primary">Edit Profile</button></h3>
+
 <div class="row">
     <div [ngClass]="col">
         <div class="photo">
@@ -10,7 +12,6 @@
             <p>Gender - {{staffDetails.gender ? (staffDetails.gender | titlecase) : "-"}} </p>
             <p>Mobile Number- {{staffDetails.mobileNumber ? staffDetails.mobileNumber : "-"}} </p>
             <p>Email - {{staffDetails.email ? staffDetails.email : "-"}} </p>
-            <p>School - {{staffDetails.schoolName ? staffDetails.schoolName : "-"}} </p>
             <p>Qualification - {{staffDetails.qualification ? staffDetails.qualification : "-"}} </p>
             <p>Enrollment Year - {{staffDetails.yearOfEnrolment ?  staffDetails.yearOfEnrolment : "-"}}</p>
         </div>
@@ -19,7 +20,7 @@
 
     <div class="col-6" *ngIf="showClub">
         <h3>List of Club/Society <button class="btn btn-danger" (click)="setShowClub(false)">Close</button>
-            <button class="btn btn-primary" (click)="showAssignModal()">Assign Club/Society</button>
+            <button class="btn btn-primary" (click)="showAssignModal()">Update-Assign Club/Society</button>
         </h3>
 
         <div *ngIf="assignedClubsArr.length">
@@ -34,7 +35,7 @@
                                 {{ (i === club.gradeResponses.length-1) ? grade.grade + "-" + grade.section : grade.grade + "-" + grade.section  + "," + ' '}}
                             </span>
                         </div>
-                        <button class="btn btn-primary" (click)="showGradeEditModal(club)">Edit Grades</button>
+                        <button class="btn btn-primary" (click)="showGradeEditModal(club)">Update/Assign Grades</button>
                     </div>
                 </div>
             </div>
@@ -52,7 +53,7 @@
                                 {{ (i === soc.gradeResponses.length-1) ? grade.grade + "-" + grade.section : grade.grade + "-" + grade.section  + "," + ' '}}
                             </span>
                         </div>
-                        <button class="btn btn-primary" (click)="showGradeEditModal(soc)">Edit Grades</button>
+                        <button class="btn btn-primary" (click)="showGradeEditModal(soc)">Update/Assign Grades</button>
                     </div>
                 </div>
             </div>

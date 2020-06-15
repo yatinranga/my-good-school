@@ -21,7 +21,8 @@ export class StaffDetailsComponent implements OnInit {
   allSchoolClubsArr = [];
   schoolGrades = [];
   clubName = ""; // used to show Club name during assign grade in assignGradeModal
-  imagePath = "assets/images/childprofile.jpg";
+  imagePath = "assets/images/teacherprofile1.jpg";
+
   clubIds = {}; // used to assign Club to Supervisor through modal
   gradesIds = {} // used to assign Grades to Supervisor through modal
 

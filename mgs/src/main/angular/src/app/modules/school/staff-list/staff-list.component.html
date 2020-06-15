@@ -7,19 +7,19 @@
                     <th scope="col">Name</th>
                     <th scope="col">Email</th>
                     <th scope="col">Contact No.</th>
-                    <!-- <th scope="col">Gender</th> -->
+                    <th scope="col">Gender</th>
                     <th scope="col">Roles</th>
                     <th scope="col">Enrollment Year</th>
-                    <th scope="col">Action</th>
+                    <!-- <th scope="col">Action</th> -->
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let s of staffArr ; let i = index;">
+                <tr *ngFor="let s of staffArr ; let i = index;" (click)="setShowDetails(true,s)">
                     <th>{{i+1}}</th>
                     <td>{{s.name}}</td>
                     <td>{{s.email}}</td>
                     <td>{{s.mobileNumber}}</td>
-                    <!-- <td>{{s.gender | titlecase}}</td> -->
+                    <td>{{s.gender | titlecase}}</td>
                     <td>
                         <div *ngFor="let role of s.roles">
                             <h5><span class="badge badge-secondary" *ngIf="role == 'Coordinator'">{{role}}</span></h5>
@@ -27,9 +27,9 @@
                         </div>
                     </td>
                     <td>{{s.yearOfEnrolment}}</td>
-                    <td><button class="btn btn-info" (click)="setShowDetails(true,s)">
+                    <!-- <td><button class="btn btn-info" (click)="setShowDetails(true,s)">
                             <i class="fa fa-edit" title="Edit"></i>
-                        </button></td>
+                        </button></td> -->
                 </tr>
             <tfoot *ngIf="staffArr.length == 0">
                 <tr>
