@@ -50,7 +50,7 @@ export class StudentService {
 
   // to get all activities in particular school
   getActivity(schoolId) {
-    return this.http.get("/activitiesOffered/" + schoolId);
+    return this.http.get("/activities");
   }
 
   // to get SAVED activities of student

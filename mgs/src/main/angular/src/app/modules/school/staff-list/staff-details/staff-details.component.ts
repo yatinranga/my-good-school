@@ -22,28 +22,19 @@ export class StaffDetailsComponent implements OnInit {
   schoolGrades = [];
   clubName = ""; // used to show Club name during assign grade in assignGradeModal
   imagePath = "assets/images/childprofile.jpg";
+  clubIds = {}; // used to assign Club to Supervisor through modal
+  gradesIds = {} // used to assign Grades to Supervisor through modal
 
-  assignClubForm: FormGroup;
-  assignGradeForm: FormGroup;
   constructor(private schoolService: SchoolService, private formBuilder: FormBuilder, private alertService: AlertService) { }
 
   ngOnInit() {
-
-    this.assignClubForm = this.formBuilder.group({
-      id: [this.staffDetails.id],
-      activitiesIds: [, [Validators.required]]
-    });
-
-    this.assignGradeForm = this.formBuilder.group({
-      gradeIds:[,[Validators.required]]
-    })
-
     this.getSchoolClubs();
     this.getSchoolGrades();
   }
 
   ngOnChanges(staffDetails: any) {
     this.showClub = false;
+    this.clubIds = {};
   }
 
   /** Show List of Assigned Clubs/Socities */
@@ -70,21 +61,18 @@ export class StaffDetailsComponent implements OnInit {
     if (this.staffDetails['activityAndGrades']) {
       this.assignedClubsArr = this.staffDetails['activityAndGrades'].filter((e) => (e.clubOrSociety == 'Club'));
       this.assignedSocietyArr = this.staffDetails['activityAndGrades'].filter((e) => (e.clubOrSociety == 'Society'));
-
     }
   }
 
   /** Show assign Club/Society Modal */
   showAssignModal() {
-    const arr = [];
     $('#assignClubModal').modal('show');
     if (this.staffDetails['activityAndGrades']) {
       this.staffDetails['activityAndGrades'].forEach((e) => {
-        arr.push(e.id);
-        this.assignClubForm.controls.activitiesIds.setValue(arr);
-        // console.log(this.assignClubForm.value.activitiesIds);
-      })
+        this.clubIds[e.id] = true;
+      });
     }
+    console.log(this.clubIds);
   }
 
   /** Get List of All Clubs/Socities of School */
@@ -97,20 +85,41 @@ export class StaffDetailsComponent implements OnInit {
   }
 
   /** Get List of All Grades of School */
-  getSchoolGrades(){
+  getSchoolGrades() {
     this.schoolService.getAllGrades(this.staffDetails.schoolId).subscribe((res) => {
       this.schoolGrades = res;
     },
-    (err) => console.log(err));
+      (err) => console.log(err));
   }
 
   /** Assign Club/Society to Teacher */
   assignClub() {
-    this.assignClubForm.value.id = this.staffDetails.id;
-    console.log(this.assignClubForm.value);
+
+    // Response Body
+    const reqBody = {
+      teachers: [{
+        id: this.staffDetails.id,
+        activities: []
+      }]
+    };
+
+    Object.keys(this.clubIds).forEach((key) => {
+      if (this.clubIds[key]) {
+        const clubId = {
+          id: key,
+          grades: []
+        }
+        reqBody.teachers[0].activities.push(clubId);
+      }
+    });
+
+    console.log(reqBody);
     this.alertService.showLoader("");
-    this.schoolService.assignClub(this.assignClubForm.value).subscribe((res) => {
+    this.schoolService.assignClub(reqBody).subscribe((res) => {
       console.log(res);
+      this.sortClubs(); // Reload to see the New Assigned Club/Society
+      this.clubIds = {};
+      $('#assignClubModal').modal('hide');
       this.alertService.showMessageWithSym("Club/Society Assigned !", "Success", "success");
     }, (err) => {
       if (err.status === 500) {
@@ -122,26 +131,30 @@ export class StaffDetailsComponent implements OnInit {
   }
 
   /** Show Edit Grades Modal */
-  showGradeEditModal(club_obj){
+  showGradeEditModal(club_obj) {
+    this.gradesIds = {};
     $('#assignGradeModal').modal('show');
     this.clubName = club_obj.name;
-    const arr = [];
     club_obj.gradeResponses.forEach(element => {
-      console.log("element.id - ",element.id);
-      arr.push(element.id);
-      this.assignGradeForm.controls.gradeIds.setValue(arr);
+      this.gradesIds[element.id] = true;
     });
   }
 
   /** Assign Grade for a CLub/Society to Supervisor/Coordinator*/
-  assignGrade(){
+  assignGrade() {
 
   }
 
+  /** Selected Club Ids */
+  // selectedClubIds(){
+  //   console.log(this.clubIds);
+  // }
+
   /** Reset Form */
   resetForm() {
-    this.assignClubForm.reset()
-    this.assignGradeForm.reset();
+    this.clubIds = {};
+    this.gradesIds = {};
+
   }
 
 }

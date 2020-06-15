@@ -1,21 +1,13 @@
-<h1>{{clubObj.name}}</h1>
-<br><br>
-<h3><b> Supervisor : </b></h3>
-<button class="btn btn-dark">Assign Supervisor</button>
+<h1>{{clubObj.name}} Details</h1>
 <br>
-<div>
-    <div *ngFor="let sup of clubSupervisor; let i = index;">
-        <div class="card w-50">
-            <div class="card-body">
-                <h5 class="card-title">{{i+1}}. {{sup.name}}</h5>
-                <!-- <p><b>Grades :</b></p> -->
-                <!-- <div>                   
-                </div> -->
-                <button class="btn btn-primary">Edit</button> 
-            </div>
-        </div>
-    </div>
-    <div *ngIf="!clubSupervisor.length && !sup_loader">
-        <h5>No Supervisor Assigned</h5>
-    </div>
-</div>
+<button class="btn btn-primary">Edit Details</button><br>
+<br>
+<h3>
+    <p><b>Club/Society :</b> {{clubObj.clubOrSociety}}</p>
+    <p><b>Description : </b>{{clubObj.description}}</p>
+    <p><b>Focus Areas : </b><span *ngFor="let fs of clubObj.focusAreaResponses; let i = index">
+            {{ (i === clubObj.focusAreaResponses.length-1) ? fs.name  : fs.name + "," + ' '}}
+        </span></p>
+    <p><b>Four S : </b>{{clubObj.fourS}}</p>
+
+</h3>
