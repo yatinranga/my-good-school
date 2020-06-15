@@ -9,20 +9,19 @@
                     <th scope="col">Email</th>
                     <th scope="col">Gender</th>
                     <th scope="col">Enrollment Year</th>
-                    <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let s of studentsArr ; let i = index;">
+                <tr *ngFor="let s of studentsArr ; let i = index;" (click)="setShowDetails(true,s)">
                     <th>{{i+1}}</th>
                     <td>{{s.name}}</td>
                     <td>{{s.grade}} - {{s.section}}</td>
                     <td>{{s.email}}</td>
                     <td>{{s.gender | titlecase}}</td>
                     <td>{{s.yearOfEnrolment}}</td>
-                    <td><button class="btn btn-info" (click)="setShowDetails(true,s)">
+                    <!-- <td><button class="btn btn-info" (click)="setShowDetails(true,s)">
                             <i class="fa fa-edit" title="Edit"></i>
-                        </button></td>
+                        </button></td> -->
                 </tr>
             </tbody>
             <tfoot *ngIf="studentsArr.length == 0">

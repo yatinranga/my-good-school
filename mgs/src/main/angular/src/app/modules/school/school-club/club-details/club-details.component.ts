@@ -8,33 +8,34 @@ import { SchoolService } from 'src/app/services/school.service';
 })
 export class ClubDetailsComponent implements OnInit {
 
-  adminInfo: any;
+  // adminInfo: any;
   @Input() clubObj: any;
-  clubSupervisor = [];
-  sup_loader: boolean = false;
+  // clubSupervisor = [];
+  // sup_loader: boolean = false;
 
   constructor(private schoolService: SchoolService) { }
 
   ngOnInit() {
-    this.adminInfo = JSON.parse(localStorage.getItem('user_info'));
-    this.getSupervisor();
-  }
-
-  ngOnChanges(clubObj: any) {
+    // this.adminInfo = JSON.parse(localStorage.getItem('user_info'));
     // this.getSupervisor();
   }
 
-  getSupervisor() {
-    this.sup_loader = true;
-    this.schoolService.getClubSupervisor(this.adminInfo.schoolId, this.clubObj.id).subscribe((res) => {
-      this.sup_loader = false;
+  // ngOnChanges(clubObj: any) {
+  //   this.adminInfo = JSON.parse(localStorage.getItem('user_info'));
+  //   this.getSupervisor();
+  // }
 
-      this.clubSupervisor = res;
-      console.log(res);
-    }, (err) => {
-      console.log(err);
-      this.sup_loader = false;
-    });
-  }
+  // getSupervisor() {
+  //   this.clubSupervisor = [];
+  //   this.sup_loader = true;
+  //   this.schoolService.getClubSupervisor(this.adminInfo.schoolId, this.clubObj.id).subscribe((res) => {
+  //     this.sup_loader = false;
+  //     this.clubSupervisor = res;
+  //     console.log(res);
+  //   }, (err) => {
+  //     console.log(err);
+  //     this.sup_loader = false;
+  //   });
+  // }
 
 }

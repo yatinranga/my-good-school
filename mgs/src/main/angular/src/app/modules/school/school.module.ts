@@ -17,6 +17,7 @@ import { StudentDetailsComponent } from './student-list/student-details/student-
 import { StaffDetailsComponent } from './staff-list/staff-details/staff-details.component';
 import { SchoolClubComponent } from './school-club/school-club.component';
 import { ClubDetailsComponent } from './school-club/club-details/club-details.component';
+import { SupervisorDetailsComponent } from './school-club/supervisor-details/supervisor-details.component';
 
 const routes: Routes = [
   {
@@ -69,7 +70,7 @@ const routes: Routes = [
     AddUserComponent, 
     StudentBulkUploadComponent, 
     SupervisorBulkUploadComponent, 
-    UsersListComponent, StudentListComponent, StaffListComponent, StudentDetailsComponent, StaffDetailsComponent, SchoolClubComponent, ClubDetailsComponent
+    UsersListComponent, StudentListComponent, StaffListComponent, StudentDetailsComponent, StaffDetailsComponent, SchoolClubComponent, ClubDetailsComponent, SupervisorDetailsComponent
   ],
   imports: [
     CommonModule,

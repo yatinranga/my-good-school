@@ -1,4 +1,5 @@
 <h1>{{studentDetails.name}}</h1>
+<h3><button class="btn btn-primary">Edit Student</button></h3>
 
 <div class="row">
     <div [ngClass]="col">
@@ -11,14 +12,12 @@
             <p>DOB : {{studentDetails.dob? (studentDetails.dob | date) : ' - ' }} </p>
             <p>Email : {{studentDetails.email ? studentDetails.email : ' - '}}</p>
             <p>Gender : {{studentDetails.gender ?( studentDetails.gender | titlecase) : ' - '}}</p>
-            <p>School : {{studentDetails.schoolName ? studentDetails.schoolName : ' - '}}</p>
-            <p>Grade : {{studentDetails.grade ? studentDetails.grade : ' - '}} -
-                {{studentDetails.section ? studentDetails.section : ' - '}}</p>
+            <p>Grade : {{studentDetails.grade ? studentDetails.grade : '  '}} -
+                {{studentDetails.section ? studentDetails.section : '  '}}</p>
             <p>Enrollment Year : {{studentDetails.yearOfEnrolment ? studentDetails.yearOfEnrolment : ' - '}}</p>
         </div>
         <button class="btn btn-dark" (click)="setShowClub(true)">Show Clubs/Socities</button>
-
-        <h3>Guardians : </h3>
+        <h3>Guardians : <button class="btn btn-primary">Add Guardian</button></h3>        
         <div *ngFor="let sd of studentDetails['guardianResponseList']">
             <div class="card w-50">
                 <div class="card-body">

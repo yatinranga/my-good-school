@@ -51,7 +51,7 @@ export class TeacherService {
 
   // get all activities in particular school
   getActivity(schoolId) {
-    return this.http.get("/activitiesOffered/" + schoolId);
+    return this.http.get("/activities");
   }
 
   // get GRADES of school

@@ -21,9 +21,14 @@
                             {{ (i === s.focusAreaResponses.length-1) ? fs.name  : fs.name + "," + ' '}}
                         </span>
                         <span *ngIf="!s.focusAreaResponses.length"> - </span></td>
-                    <td><button class="btn btn-info" (click)="setShowSupervisor(true,s)">
-                            <i class="fa fa-edit" title="Edit"></i>
-                        </button></td>
+                    <td>
+                        <button class="btn btn-info" (click)="setShowWindow('club',s)">
+                            <i class="fa fa-info" title="Edit"></i>
+                        </button>
+                        <button class="btn btn-dark" (click)="setShowWindow('supervisor',s)">
+                            <i class="fa fa-users" title="Supervisor"></i>
+                        </button>
+                    </td>
                 </tr>
             </tbody>
             <tfoot *ngIf="schoolClubs.length == 0">
@@ -37,7 +42,11 @@
         </table>
     </div>
     <div class="col-6" *ngIf="showSupervisor">
-        <button class="btn btn-danger" (click)="setShowSupervisor(false)">Close</button>
+        <button class="btn btn-danger" (click)="setShowWindow('No Window')">Close</button>
+        <app-supervisor-details [clubObj]="club_obj"></app-supervisor-details>
+    </div>
+    <div class="col-6" *ngIf="showClubDetails">
+        <button class="btn btn-danger" (click)="setShowWindow('No Window')">Close</button>
         <app-club-details [clubObj]="club_obj"></app-club-details>
     </div>
 </div>
