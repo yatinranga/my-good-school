@@ -84,4 +84,9 @@ export class SchoolService {
     return this.http.get("/api/coaches/"+schoolId+"/"+actiId);
   }
 
+  /** Add/Edit Guardians of a Student */
+  editGuardian(reqBody){
+    return this.http.post("/api/guardian",reqBody);
+  }
+
 }

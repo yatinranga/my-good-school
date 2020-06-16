@@ -17,7 +17,7 @@
             <p>Enrollment Year : {{studentDetails.yearOfEnrolment ? studentDetails.yearOfEnrolment : ' - '}}</p>
         </div>
         <button class="btn btn-dark" (click)="setShowClub(true)">Show Clubs/Socities</button>
-        <h3>Guardians : <button class="btn btn-primary">Add Guardian</button></h3>        
+        <h3>Guardians : <button class="btn btn-primary" (click)="showGuardianModal('Add')">Add Guardian</button></h3>
         <div *ngFor="let sd of studentDetails['guardianResponseList']">
             <div class="card w-50">
                 <div class="card-body">
@@ -25,7 +25,7 @@
                     <p class="card-text">{{sd.name}}</p>
                     <p class="card-text">{{sd.mobileNumber}}</p>
                     <p class="card-text">{{sd.email}}</p>
-                    <button class="btn btn-primary">Edit</button>
+                    <button class="btn btn-primary" (click)="showGuardianModal('Edit',sd)">Edit</button>
                 </div>
             </div>
         </div>
@@ -58,3 +58,69 @@
             <h5><b>No Enrolled Club/Society</b></h5>
         </div>
     </div>
+</div>
+
+<div class="modal fade bd-example-modal-lg" id="editGuardianModal" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel"> {{guardianModalType}} Guardians : </h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetForm()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form [formGroup]="guardianForm" (ngSubmit)="submitGuardian()">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Name : </label>
+                                    <input type="text" class="form-control add" name="name" placeholder="Add Name Here"
+                                        formControlName="name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Email : </label>
+                                    <input type="email" class="form-control add" name="name" placeholder="Add Name Here"
+                                        formControlName="email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Contact No. : </label>
+                                    <input type="text" class="form-control add" name="name" placeholder="Add Name Here"
+                                        formControlName="mobileNumber">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Gender : </label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="gender"
+                                            formControlName="gender" value="Male">Male<br>
+                                        <input class="form-check-input" type="radio" name="gender"
+                                            formControlName="gender" id="exampleRadios1" value="Female">Female
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Relationship : </label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="relationship"
+                                            formControlName="relationship" value="Father">Father<br>
+                                        <input class="form-check-input" type="radio" name="relationship"
+                                            formControlName="relationship" value="Mother">Mother<br>
+                                        <input class="form-check-input" type="radio" name="relationship"
+                                            formControlName="relationship" value="Local Guardian">Local Guardian
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" (click)="resetForm()">Reset</button>
+                    <button type="submit" class="btn btn-success" [disabled]="guardianForm.invalid">{{guardianModalType}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -36,7 +36,7 @@
     </div>
     <div [ngClass]="{'col-8':col=='col-4'}" class="col-6" *ngIf="showDetails">
         <h1><button class="btn btn-danger" (click)="setShowDetails(false)"> Close </button>
-            <button class="btn btn-success">Add Guardian</button> </h1>
+            </h1>
         <div>
             <app-student-details [studentDetails]="student_obj" (rowChangeForClub)="rowChange($event)">
             </app-student-details>
