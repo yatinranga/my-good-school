@@ -32,7 +32,7 @@ export class StudentListComponent implements OnInit {
     this.student_obj = student_obj;
     console.log(student_obj);
     this.showDetails = val;
-    this.showDetails ? (this.col = "col-6") : (this.col="col-12");
+    this.showDetails ? (this.col = "col-7") : (this.col="col-12");
   }
 
   /** Get List of All Students */

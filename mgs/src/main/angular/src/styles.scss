@@ -177,7 +177,7 @@ table.table {
 }
 thead.thead-light {
     font-size: 18px;
-    font-family: serif;
+    // font-family: serif;
 }
 table.table, tr, th, td{
     border: 1px solid #777 !important;
@@ -194,6 +194,10 @@ border: 1px solid #777 !important;
 .table td, th{
     text-align: center;
 }
+table tbody tr th {
+    font-weight: normal;
+}
+
 .table button {
     padding: 5px 15px;
     border-radius: 0;

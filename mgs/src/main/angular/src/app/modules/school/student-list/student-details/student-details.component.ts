@@ -29,16 +29,16 @@ export class StudentDetailsComponent implements OnInit {
 
   setShowClub(val:boolean){
     this.showClub = val;
-    this.showClub? (this.col="col-6"):(this.col="col-12");
+    this.showClub? (this.col="col-12"):(this.col="col-12");
     
     if(val){
-      const col="col-4"
-      this.rowChangeForClub.emit(col);
+      // const col="col-4"
+      // this.rowChangeForClub.emit(col);
       this.getEnrolledClubs();
     }
     else{
-      const col="col-6"
-      this.rowChangeForClub.emit(col);
+      // const col="col-6"
+      // this.rowChangeForClub.emit(col);
     }
   }
 

@@ -1,45 +1,56 @@
-<div class="row">
-    <div [ngClass]="col">
-        <table class="table table-striped">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Grade</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Gender</th>
-                    <th scope="col">Enrollment Year</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let s of studentsArr ; let i = index;" (click)="setShowDetails(true,s)">
-                    <th>{{i+1}}</th>
-                    <td>{{s.name}}</td>
-                    <td>{{s.grade}} - {{s.section}}</td>
-                    <td>{{s.email}}</td>
-                    <td>{{s.gender | titlecase}}</td>
-                    <td>{{s.yearOfEnrolment}}</td>
-                    <!-- <td><button class="btn btn-info" (click)="setShowDetails(true,s)">
-                            <i class="fa fa-edit" title="Edit"></i>
-                        </button></td> -->
-                </tr>
-            </tbody>
-            <tfoot *ngIf="studentsArr.length == 0">
-                <tr>
-                    <td colspan="10">
-                        <div *ngIf="student_loader" class="spinner-border text-dark" role="status">
-                        </div>{{student_loader ? 'Loading...' : 'No Students Found'}}
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
-    <div [ngClass]="{'col-8':col=='col-4'}" class="col-6" *ngIf="showDetails">
-        <h1><button class="btn btn-danger" (click)="setShowDetails(false)"> Close </button>
-            <button class="btn btn-success">Add Guardian</button> </h1>
-        <div>
-            <app-student-details [studentDetails]="student_obj" (rowChangeForClub)="rowChange($event)">
-            </app-student-details>
+<div class="student-list-card-main">
+    <div class="container-fluid">
+        <div class="row">
+            <div [ngClass]="col">
+                <div class="student-list">
+                    <table class="table table-striped">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Grade</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Gender</th>
+                                <th scope="col">Enrollment Year</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let s of studentsArr ; let i = index;" (click)="setShowDetails(true,s)">
+                                <th>{{i+1}}</th>
+                                <td>{{s.name}}</td>
+                                <td>{{s.grade}} - {{s.section}}</td>
+                                <td>{{s.email}}</td>
+                                <td>{{s.gender | titlecase}}</td>
+                                <td>{{s.yearOfEnrolment}}</td>
+                                <!-- <td><button class="btn btn-info" (click)="setShowDetails(true,s)">
+                                        <i class="fa fa-edit" title="Edit"></i>
+                                    </button></td> -->
+                            </tr>
+                        </tbody>
+                        <tfoot *ngIf="studentsArr.length == 0">
+                            <tr>
+                                <td colspan="10">
+                                    <div *ngIf="student_loader" class="spinner-border text-dark" role="status">
+                                    </div>{{student_loader ? 'Loading...' : 'No Students Found'}}
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                
+            </div>
+            <div [ngClass]="{'col-7':col=='col-5'}" class="col-5" *ngIf="showDetails">
+            <!-- <div class="col-12 student-details" *ngIf="showDetails"> -->
+               
+                <button class="btn btn-close btn-danger" (click)="setShowDetails(false)"> <i class="fa fa-times" aria-hidden="true"></i>
+                </button>
+                <div class="popup-box">
+                    <app-student-details [studentDetails]="student_obj" (rowChangeForClub)="rowChange($event)">
+                    </app-student-details>
+                </div>
+            </div>
         </div>
     </div>
+    
 </div>
+
