@@ -43,38 +43,35 @@
         </div>
         <div class="btns">
             
-            <button class="btn btn-dark" (click)="setShowClub(true)">Show Clubs/Socities</button>
+            <button class="btn clubs-socities-btn btn-dark" (click)="setShowClub(true)">Show Clubs/Socities</button>
         </div>
 
           
     </div>
     <div class="col-12" *ngIf="showClub">
-        <h3>List of Enrolled Club/Society <button class="btn btn-danger" (click)="setShowClub(false)">Close</button>
+    <div class="clubs-socity-main">
+        <h3>List of Enrolled Club/Society <button class="btn btn-danger" (click)="setShowClub(false)"> <i class="fa fa-close"></i> </button>
         </h3>
-        <div *ngIf="studentEnrolledClubArr.length">
-            <h4><b>Clubs : </b></h4>
-            <div *ngFor="let club of studentEnrolledClubArr; let i = index">
-                <div class="card w-50">
-                    <div class="card-body">
-                        <h5 class="card-title">{{i+1}}. {{club.name}}</h5>
-                    </div>
-                </div>
-            </div>
+        <div class="clubs" *ngIf="studentEnrolledClubArr.length">
+            <h4>Clubs</h4>
+            <ul>
+                <li *ngFor="let club of studentEnrolledClubArr; let i = index">{{i+1}}. {{club.name}}</li>
+            </ul>
+            
+           
         </div>
-        <div *ngIf="studentEnrolledSociArr.length">
-            <h4><b>Society :</b></h4>
-            <div *ngFor="let club of studentEnrolledSociArr; let i = index">
-                <div class="card w-50">
-                    <div class="card-body">
-                        <h5 class="card-title">{{i+1}}. {{club.name}}</h5>
-                    </div>
-                </div>
-            </div>
+        <div class="society" *ngIf="studentEnrolledSociArr.length">
+            <h4>Society</h4>
+            <ul>
+                <li *ngFor="let club of studentEnrolledSociArr; let i = index">{{i+1}}. {{club.name}}</li>
+            </ul>
+
         </div>
         <div *ngIf="!(studentEnrolledSociArr.length && studentEnrolledClubArr.length)">
             <br><br>
             <h5><b>No Enrolled Club/Society</b></h5>
         </div>
+    </div>
     </div>
 </div>
 
