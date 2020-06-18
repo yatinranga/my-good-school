@@ -20,6 +20,7 @@ export class StudentDetailsComponent implements OnInit {
   studentEnrolledClubArr = [];
   studentEnrolledSociArr = [];
   guardianModalType: string = ""; // used to show title in add/edit guardian modal 
+  club_loader = false;
 
   guardianForm: FormGroup;
   constructor(private schoolService: SchoolService, private formBuilder: FormBuilder, private alertService: AlertService) {
@@ -42,6 +43,7 @@ export class StudentDetailsComponent implements OnInit {
     this.showClub = false;
   }
 
+  /** To show the Club/Society List */
   setShowClub(val: boolean) {
     this.showClub = val;
     this.showClub? (this.col="col-12"):(this.col="col-12");
@@ -57,18 +59,23 @@ export class StudentDetailsComponent implements OnInit {
     }
   }
 
+  /** Get List of Enrolled clubs and Socities */
   getEnrolledClubs() {
+    this.club_loader = true;
     this.studentEnrolledClubArr = [];
     this.studentEnrolledSociArr = [];
     this.schoolService.getStudentClubs(this.studentDetails.id).subscribe((res) => {
       this.studentEnrolledClubArr = res.filter((e) => (e.clubOrSociety == 'Club'));
       this.studentEnrolledSociArr = res.filter((e) => (e.clubOrSociety == 'Society'));
+      this.club_loader = false;
     }, (err) => {
       console.log(err);
+      this.club_loader = false;
     });
 
   }
 
+  /** Show guardian Add/Edit Modal  */
   showGuardianModal(val: string, guardianObj?) {
     if (val == "Add") {
       this.guardianModalType = val;
@@ -91,6 +98,7 @@ export class StudentDetailsComponent implements OnInit {
     }
   }
 
+  /** Submit the Guardian */
   submitGuardian() {
     console.log(this.guardianForm.value);
     this.alertService.showLoader("");
@@ -102,6 +110,7 @@ export class StudentDetailsComponent implements OnInit {
     })
   }
 
+  /** Reset Form */
   resetForm() {
     this.guardianForm.reset();
   }

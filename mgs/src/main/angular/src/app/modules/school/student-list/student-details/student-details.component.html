@@ -28,7 +28,7 @@
         
        
         <div class="guardian-information">
-        <h3>Guardians : <button class="btn btn-primary">Edit Guardian</button></h3>        
+        <h3>Guardians : <button class="btn btn-primary" (click)="showGuardianModal('Add')">Add Guardian</button></h3>        
         
             <div class="card" *ngFor="let sd of studentDetails['guardianResponseList']">
                 <div class="card-body">
@@ -36,7 +36,7 @@
                     <p class="card-text">{{sd.name}}</p>
                     <p class="card-text">{{sd.mobileNumber}}</p>
                     <p class="card-text">{{sd.email}}</p>
-                    <!-- <button class="btn btn-primary">Edit</button> -->
+                    <button class="btn btn-primary" (click)="showGuardianModal('Edit',sd)">Edit</button>
                 </div>
             </div>
         
@@ -52,6 +52,11 @@
     <div class="clubs-socity-main">
         <h3>List of Enrolled Club/Society <button class="btn btn-danger" (click)="setShowClub(false)"> <i class="fa fa-close"></i> </button>
         </h3>
+        <div *ngIf="club_loader">
+            <div class="spinner-border text-secondary" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+        </div>
         <div class="clubs" *ngIf="studentEnrolledClubArr.length">
             <h4>Clubs</h4>
             <ul>
@@ -67,8 +72,8 @@
             </ul>
 
         </div>
-        <div *ngIf="!(studentEnrolledSociArr.length && studentEnrolledClubArr.length)">
-            <br><br>
+        <div *ngIf="!club_loader && !(studentEnrolledSociArr.length && studentEnrolledClubArr.length)">
+            <br>
             <h5><b>No Enrolled Club/Society</b></h5>
         </div>
     </div>
@@ -77,7 +82,7 @@
 
 <div class="modal fade bd-example-modal-lg" id="editGuardianModal" tabindex="-1" role="dialog"
     aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="exampleModalLabel"> {{guardianModalType}} Guardians : </h3>
