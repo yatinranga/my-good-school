@@ -89,4 +89,14 @@ export class SchoolService {
     return this.http.post("/api/guardian",reqBody);
   }
 
+  /** Update Profile Details of Sudent */
+  updateStudentProfile(studentId, form) {
+    return this.http.put("/api/student/update/" + studentId, form);
+  }
+
+  /** Update Profile Details of Supervisor */
+  updateSupervisorProfile(teacherId, form) {
+    return this.http.put("/api/teacher/update/" + teacherId, form);
+  }
+
 }

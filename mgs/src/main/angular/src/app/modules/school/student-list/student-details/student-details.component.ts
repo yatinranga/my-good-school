@@ -19,10 +19,13 @@ export class StudentDetailsComponent implements OnInit {
   // showClub:boolean = false;
   studentEnrolledClubArr = [];
   studentEnrolledSociArr = [];
+  schoolGrades = [];
+  files = []; // used to update profile photo
   guardianModalType: string = ""; // used to show title in add/edit guardian modal 
   club_loader = false;
 
   guardianForm: FormGroup;
+  updateStudentForm: FormGroup;
   constructor(private schoolService: SchoolService, private formBuilder: FormBuilder, private alertService: AlertService) {
     this.showClub = false
   }
@@ -36,6 +39,16 @@ export class StudentDetailsComponent implements OnInit {
       mobileNumber: [],
       relationship: [, [Validators.required]],
       studentIds: [[this.studentDetails.id]]
+    });
+
+    this.updateStudentForm = this.formBuilder.group({
+      id: [],
+      name: [, [Validators.required]],
+      dob: [, [Validators.required]],
+      email: [],
+      gender: [],
+      gradeId: [],
+      yearOfEnrolment: []
     })
   }
 
@@ -46,14 +59,14 @@ export class StudentDetailsComponent implements OnInit {
   /** To show the Club/Society List */
   setShowClub(val: boolean) {
     this.showClub = val;
-    this.showClub? (this.col="col-12"):(this.col="col-12");
-    
-    if(val){
+    this.showClub ? (this.col = "col-12") : (this.col = "col-12");
+
+    if (val) {
       // const col="col-4"
       // this.rowChangeForClub.emit(col);
       this.getEnrolledClubs();
     }
-    else{
+    else {
       // const col="col-6"
       // this.rowChangeForClub.emit(col);
     }
@@ -109,6 +122,53 @@ export class StudentDetailsComponent implements OnInit {
       this.errorMessage(err);
     })
   }
+
+  /** Show Edit Student Profile Modal */
+  showStudentModal() {
+    $('#editStudentModal').modal('show');
+    this.updateStudentForm.patchValue({
+      id: this.studentDetails.id,
+      name: this.studentDetails.name,
+      dob: this.studentDetails.dob,
+      gender: this.studentDetails.gender,
+      gradeId: this.studentDetails.gradeId,
+      yearOfEnrolment: this.studentDetails.yearOfEnrolment
+    });
+
+    this.schoolService.getAllGrades(this.studentDetails.schoolId).subscribe((res) => {
+      this.schoolGrades = res;
+    }, (err) => { console.log(err); })
+  }
+
+  updateStudentProfile() {
+    console.log(this.updateStudentForm.value);
+    this.schoolService.updateStudentProfile(this.studentDetails.id, this.updateStudentForm.value).subscribe((res) => {
+      console.log(res);
+      this.alertService.showMessageWithSym("Profile Updated !","Success","success");
+    },(err) => {
+      console.log(err);
+      this.errorMessage(err);
+    })
+  }
+
+  /** Update Student Profile Photo */
+  onFileSelect(event) {
+    if (event.target.files.length > 0) {
+      // this.files = [...event.target.files];
+
+      const file = this.files[0];
+      // this.profilePhotoForm.value['profilePic'] = file;
+
+      var reader = new FileReader();
+      reader.readAsDataURL(event.target.files[0]);
+
+      reader.onload = (event: any) => { this.imagePath = event.target.result; }
+    } else {
+      this.imagePath = null;
+    }
+    // this.editProfilePhoto();
+  }
+
 
   /** Reset Form */
   resetForm() {
