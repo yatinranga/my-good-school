@@ -47,6 +47,7 @@ export class TeacherHomeComponent implements OnInit {
   clubSch_loader = false;
   stu_loader = false;
   clubReqLoader = false;
+  assignedClubLoader = false;
   gradeId = "";
 
   // files = []; // Array to store the attachment during create session
@@ -83,12 +84,17 @@ export class TeacherHomeComponent implements OnInit {
 
   //get list of assigned/supervised Clubs and Society
   getAllClubs() {
+    this.assignedClubLoader = true;
     this.teacherService.getAssignedClubs().subscribe(res => {
       this.assignedClubsArr = res.filter((e) => (e.clubOrSociety == "Club"));
       this.assignedSocietyArr = res.filter((e) => (e.clubOrSociety == "Society"));
       this.allAssignedActi = res;
+    this.assignedClubLoader = false;
+
       console.log(this.allAssignedActi);
-    }, (err) => { console.log(err); });
+    }, (err) => { console.log(err); 
+      this.assignedClubLoader = false;
+    });
   }
 
   // get all the Request of Clubs and Society

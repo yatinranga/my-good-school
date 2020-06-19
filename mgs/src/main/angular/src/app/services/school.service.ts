@@ -99,4 +99,9 @@ export class SchoolService {
     return this.http.put("/api/teacher/update/" + teacherId, form);
   }
 
+  /** get PSD , Focus Area and 4S */
+  getActivityAreas() {
+    return this.http.get("/filters");
+  }
+
 }

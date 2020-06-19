@@ -1,3 +1,18 @@
+<div class="sortby">
+    <label>Role :</label>
+    <select (click)="filterStaff()" [(ngModel)]="role">
+        <option value="" selected>All</option>
+        <option *ngFor="let role of rolesArr" value={{role.name}}>
+            {{role.name}}
+        </option>
+    </select>
+
+    <label>Search : </label>
+    <input type="text" name="search" [(ngModel)]="search" autocomplete="off" placeholder="Start searching for a name or contact no">
+    
+</div>
+<br>
+<br>
 <div class="row">
     <div [ngClass]="col">
         <table class="table table-striped">
@@ -14,7 +29,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let s of staffArr ; let i = index;" (click)="setShowDetails(true,s)">
+                <tr *ngFor="let s of staffArr | filter:search ; let i = index; " (click)="setShowDetails(true,s)">
                     <th>{{i+1}}</th>
                     <td>{{s.name}}</td>
                     <td>{{s.email}}</td>
@@ -37,7 +52,7 @@
                 <tr>
                     <td colspan="10">
                         <div *ngIf="staff_loader" class="spinner-border text-dark" role="status">
-                        </div>{{staff_loader ? 'Loading...' : 'No Students Found'}}
+                        </div>{{staff_loader ? 'Loading...' : 'No Staff Found'}}
                     </td>
                 </tr>
             </tfoot>

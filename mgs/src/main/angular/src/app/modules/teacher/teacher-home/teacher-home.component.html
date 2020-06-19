@@ -32,17 +32,18 @@
 
     <div class="cands">
         <div class="club_main">
-            <h2> Clubs </h2>
+            <h2> Clubs/Socities </h2>
             <div class="teacher_club_list">
-                <ul *ngFor="let c of assignedClubsArr">
-                    <li (click)="clubDetails(c)">
-                        <a target="_blank" [routerLink]="['../club',c.name]">{{c.name}}</a></li>
+                <div *ngIf="assignedClubLoader" class="spinner-border text-dark" role="status"></div>
+                <ul *ngFor="let a of allAssignedActi">
+                    <li (click)="clubDetails(a)">
+                        <a target="_blank" [routerLink]="['../club',a.name]">{{a.name}} ({{a.clubOrSociety}})</a></li>
                 </ul>
-                <p *ngIf="!(assignedClubsArr.length)">No Club Assigned</p>
+                <p *ngIf="!(assignedClubsArr.length) && !assignedClubLoader">No Club Assigned</p>
             </div>
         </div>
 
-        <div class="club_main">
+        <!-- <div class="club_main">
             <h2> Societies </h2>
             <div class="teacher_club_list">
                 <ul *ngFor="let s of assignedSocietyArr">
@@ -52,7 +53,7 @@
                 <p *ngIf="!(assignedSocietyArr.length)">No Society Assigned</p>
 
             </div>
-        </div>
+        </div> -->
     </div>
 
 </div>

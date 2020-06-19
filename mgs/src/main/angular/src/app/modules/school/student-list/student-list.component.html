@@ -1,3 +1,16 @@
+<div class="sortby">
+    <label>Grade :</label>
+    <select (change)="filterStudents()" [(ngModel)]="gradeId">
+        <option value="" selected>All</option>
+        <option *ngFor="let grade of schoolGrades" value={{grade.id}}>
+            {{grade.grade}} {{grade.section}}
+        </option>
+    </select>
+
+    <label>Search : </label>
+    <input type="text" name="search" [(ngModel)]="search" autocomplete="off" placeholder="Start searching for a name or contact no">
+</div>
+
 <div class="student-list-card-main">
     <div class="container-fluid">
         <div class="row">
@@ -15,7 +28,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let s of studentsArr ; let i = index;" (click)="setShowDetails(true,s)">
+                            <tr *ngFor="let s of studentsArr| filter:search ; let i = index;" (click)="setShowDetails(true,s)">
                                 <th>{{i+1}}</th>
                                 <td>{{s.name}}</td>
                                 <td>{{s.grade}} - {{s.section}}</td>

@@ -12,17 +12,46 @@ export class StaffListComponent implements OnInit {
   col = "col-12";
   showDetails: boolean = false;
   staffArr: any = []
+  copyStaffArr: any = [];
   staff_loader = false;
   staff_obj: any //Used to transfer object to Staff Details Component
+  rolesArr = [];
+  role = ""; // Used to filter Staff by role
+  search = "";
 
   constructor(private schoolService: SchoolService, private alertService: AlertService) { }
 
   ngOnInit() {
     this.getAllStaff();
+    this.getAllRoles();
   }
 
   rowChange($event) {
     this.col = $event;
+  }
+
+  /** get all the Roles */
+  getAllRoles() {
+    this.schoolService.getRoles().subscribe((res) => {
+      this.rolesArr = res;
+    }, (err) => { console.log(err); })
+  }
+
+  /** Filter Staff on the basis of Roles */
+  filterStaff() {
+    this.staffArr = this.filter(Object.assign([], this.copyStaffArr));
+  }
+
+  /** Actual Filtering by Role */
+  filter(array: any[]) {
+    let filterStaffArr = [];
+    if (this.role) {
+      filterStaffArr = array.filter(e => e.roles && e.roles.includes(this.role));
+    }
+    else {
+      filterStaffArr = array;
+    }
+    return filterStaffArr;
   }
 
   /** Get List of All Staff Members  */
@@ -30,6 +59,7 @@ export class StaffListComponent implements OnInit {
     this.staff_loader = true;
     this.schoolService.getStaff().subscribe((res) => {
       this.staffArr = res;
+      this.copyStaffArr = Object.assign([], res);
       console.log(res);
       this.staff_loader = false;
     }, (err) => {

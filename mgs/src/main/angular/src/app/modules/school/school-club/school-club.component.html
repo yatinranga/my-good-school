@@ -1,3 +1,26 @@
+<div class="sortby">
+    <label>Club/Society :</label>
+    <select (change)="filterClubs()" name="club" [(ngModel)]="clubType">
+        <option value="" selected> All </option>
+        <option value="Club" > Club </option>
+        <option value="Society" > Society </option>
+    </select>
+
+    <label>4S :</label>
+    <select (change)="filterClubs()" name="fourS" [(ngModel)]="fourS">
+        <option value="" selected> All </option>
+        <option *ngFor="let ps of fourSArr" value={{ps}}>{{ps}}</option>
+    </select>
+
+    <label>Focus Area :</label>
+    <select (change)="filterClubs()" [(ngModel)]="focusAreas">
+        <option value="" selected> All </option>
+        <option *ngFor="let ps of focusAreaArr" value={{ps}}>{{ps}}</option>
+    </select>
+
+</div>
+<br>
+<br>
 <div class="row">
     <div [ngClass]="col">
         <table class="table table-striped">
@@ -23,7 +46,7 @@
                         <span *ngIf="!s.focusAreaResponses.length"> - </span></td>
                     <td>
                         <button class="btn btn-info" (click)="setShowWindow('club',s)">
-                            <i class="fa fa-info" title="Edit"></i>
+                            <i class="fa fa-edit" title="Edit"></i>
                         </button>
                         <button class="btn btn-dark" (click)="setShowWindow('supervisor',s)">
                             <i class="fa fa-users" title="Supervisor"></i>

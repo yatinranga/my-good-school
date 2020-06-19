@@ -10,7 +10,7 @@
                         <img [src]="imagePath">
                     </div> -->
                     <div class="photo">
-                        <img [src]="imagePath"><button class="edit_profile" (click)="photoInput.click()"> 
+                        <img [src]="imagePath"><button class="edit_profile" (click)="photoInput.click()">
                             <i class="fa fa-edit" title="Edit"></i> Change Profile </button></div>
 
                 </div>
@@ -108,20 +108,16 @@
                                     <label for="recipient-name" class="col-form-label">Name : </label>
                                     <input type="text" class="form-control add" name="name" placeholder="Add Name Here"
                                         formControlName="name">
-                                </div>
-                                <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Email : </label>
-                                    <input type="email" class="form-control add" name="email" placeholder="Add Email Here"
-                                        formControlName="email">
-                                </div>
+                                </div>                           
                                 <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">Contact No. : </label>
-                                    <input type="text" class="form-control add" name="mobileNumber" type="tel" maxlength="10"
-                                        pattern="[0-9]{10}" placeholder="Add Contact Here" formControlName="mobileNumber">
+                                    <input type="text" class="form-control add" name="mobileNumber" type="tel"
+                                        maxlength="10" pattern="[0-9]{10}" placeholder="Add Contact Here"
+                                        formControlName="mobileNumber">
                                 </div>
                             </div>
                             <div class="col-6">
-                                <div class="form-group">
+                                <!-- <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">Gender : </label>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="gender"
@@ -129,6 +125,11 @@
                                         <input class="form-check-input" type="radio" name="gender"
                                             formControlName="gender" id="exampleRadios1" value="female">Female
                                     </div>
+                                </div> -->
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Email : </label>
+                                    <input type="email" class="form-control add" name="email"
+                                        placeholder="Add Email Here" formControlName="email">
                                 </div>
                                 <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">Relationship : </label>
@@ -137,8 +138,8 @@
                                             formControlName="relationship" value="Father">Father<br>
                                         <input class="form-check-input" type="radio" name="relationship"
                                             formControlName="relationship" value="Mother">Mother<br>
-                                        <input class="form-check-input" type="radio" name="relationship"
-                                            formControlName="relationship" value="Local Guardian">Local Guardian
+                                        <!-- <input class="form-check-input" type="radio" name="relationship"
+                                            formControlName="relationship" value="Local Guardian">Local Guardian -->
                                     </div>
                                 </div>
                             </div>
@@ -199,7 +200,8 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">Grade : </label>
-                                    <select class="form-control" name="gradeId" formControlName="gradeId" [disabled]="!schoolGrades.length">
+                                    <select class="form-control" name="gradeId" formControlName="gradeId"
+                                        [disabled]="!schoolGrades.length">
                                         <option [ngValue]=null selected>Select Grades</option>
                                         <option *ngFor="let grade of schoolGrades" value={{grade.id}}>
                                             {{grade.grade}} {{grade.section}}
@@ -209,8 +211,8 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">Year of Enrollment : </label>
-                                    <input type="number" class="form-control add" name="name" placeholder="Add Name Here"
-                                        formControlName="yearOfEnrolment">
+                                    <input type="number" class="form-control add" name="name"
+                                        placeholder="Add Name Here" formControlName="yearOfEnrolment">
                                 </div>
                             </div>
                         </div>
@@ -218,8 +220,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" (click)="resetForm()">Reset</button>
-                    <button type="submit" class="btn btn-success"
-                        [disabled]="updateStudentForm.invalid">Update</button>
+                    <button type="submit" class="btn btn-success" [disabled]="updateStudentForm.invalid">Update</button>
                 </div>
             </form>
         </div>

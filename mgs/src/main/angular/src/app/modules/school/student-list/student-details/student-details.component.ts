@@ -23,7 +23,7 @@ export class StudentDetailsComponent implements OnInit {
   files = []; // used to update profile photo
   guardianModalType: string = ""; // used to show title in add/edit guardian modal 
   club_loader = false;
-  guardianId:string = "";
+  guardianId: string = "";
 
   guardianForm: FormGroup;
   updateStudentForm: FormGroup;
@@ -36,7 +36,7 @@ export class StudentDetailsComponent implements OnInit {
       // id: [null],
       name: [, [Validators.required]],
       email: [],
-      gender: [, [Validators.required]],
+      gender: [,],
       mobileNumber: [],
       relationship: [, [Validators.required]],
       studentIds: [[this.studentDetails.id]]
@@ -106,7 +106,7 @@ export class StudentDetailsComponent implements OnInit {
         // id: guardianObj.id,
         name: guardianObj.name,
         mobileNumber: guardianObj.mobileNumber,
-        gender: guardianObj.gender,
+        // gender: guardianObj.gender,
         email: guardianObj.email,
         relationship: guardianObj.relationship
       });
@@ -115,9 +115,13 @@ export class StudentDetailsComponent implements OnInit {
 
   /** Submit the Guardian */
   submitGuardian() {
-    console.log(this.guardianForm.value);
     this.alertService.showLoader("");
-    this.schoolService.editGuardian(this.guardianId,this.guardianForm.value).subscribe((res) => {
+    switch (this.guardianForm.value.relationship) {
+      case "Father": this.guardianForm.value.gender = "male"; break;
+      case "Mother": this.guardianForm.value.gender = "female"; break;
+    }
+    console.log(this.guardianForm.value);
+    this.schoolService.editGuardian(this.guardianId, this.guardianForm.value).subscribe((res) => {
       console.log(res);
       this.alertService.showMessageWithSym("Guardian Added !", "Successful", "success");
       $('#editGuardianModal').modal('hide');
