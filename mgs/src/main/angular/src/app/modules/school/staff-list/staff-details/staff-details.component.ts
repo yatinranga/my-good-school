@@ -41,17 +41,17 @@ export class StaffDetailsComponent implements OnInit {
   /** Show List of Assigned Clubs/Socities */
   setShowClub(val: boolean) {
     this.showClub = val;
-    this.showClub ? (this.col = "col-6") : (this.col = "col-12");
+    this.showClub ? (this.col = "col-12") : (this.col = "col-12");
 
     if (val) {
-      const col = "col-4";
-      this.rowChangeForClub.emit(col);
+      // const col = "col-4";
+      // this.rowChangeForClub.emit(col);
       // this.getEnrolledClubs();
       this.sortClubs();
     }
     else {
-      const col = "col-6";
-      this.rowChangeForClub.emit(col);
+      // const col = "col-6";
+      // this.rowChangeForClub.emit(col);
     }
   }
 

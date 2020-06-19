@@ -1,32 +1,46 @@
-<h1>{{staffDetails.name}}</h1>
-<h3><button class="btn btn-primary">Edit Profile</button></h3>
+
+
+<div class="student-dtls">
+
 
 <div class="row">
     <div [ngClass]="col">
-        <div class="photo">
-            <img [src]="imagePath">
+        <div class="student-information-mian">
+        <h1>{{staffDetails.name}}</h1>
+        
+        <div class="student_image">
+            <div class="photo">
+                <img [src]="imagePath">
+            </div>
         </div>
 
-        <div>
-            <p>DOB - {{staffDetails.dob ? (staffDetails.dob | date) : "-"}} </p>
-            <p>Gender - {{staffDetails.gender ? (staffDetails.gender | titlecase) : "-"}} </p>
-            <p>Mobile Number- {{staffDetails.mobileNumber ? staffDetails.mobileNumber : "-"}} </p>
-            <p>Email - {{staffDetails.email ? staffDetails.email : "-"}} </p>
-            <p>Qualification - {{staffDetails.qualification ? staffDetails.qualification : "-"}} </p>
-            <p>Enrollment Year - {{staffDetails.yearOfEnrolment ?  staffDetails.yearOfEnrolment : "-"}}</p>
+        <div class="information">
+            <ul>
+                <li> <strong>DOB : </strong> {{staffDetails.dob ? (staffDetails.dob | date) : "-"}} </li>
+                <li> <strong>Gender : </strong> {{staffDetails.gender ? (staffDetails.gender | titlecase) : "-"}} </li>
+                <li> <strong>Mobile Number : </strong> {{staffDetails.mobileNumber ? staffDetails.mobileNumber : "-"}} </li>
+                <li> <strong>Email : </strong> {{staffDetails.email ? staffDetails.email : "-"}} </li>
+                <li> <strong>Qualification : </strong> {{staffDetails.qualification ? staffDetails.qualification : "-"}} </li>
+                <li> <strong>Enrollment Year : </strong> {{staffDetails.yearOfEnrolment ?  staffDetails.yearOfEnrolment : "-"}}</li>
+                <button class="btn btn-primary">Edit Profile</button>
+            </ul>
         </div>
-        <button class="btn btn-dark" (click)="setShowClub(true)">Show Clubs/Socities</button>
     </div>
+</div>
+<div class="btns">
+    <button class="btn clubs-socities-btn btn-dark" (click)="setShowClub(true)">Show Clubs/Socities</button>
+</div>
 
-    <div class="col-6" *ngIf="showClub">
+    <div class="col-12" *ngIf="showClub">
+        <div class="clubs-socity-main">
         <h3>List of Club/Society <button class="btn btn-danger" (click)="setShowClub(false)">Close</button>
             <button class="btn btn-primary" (click)="showAssignModal()">Update-Assign Club/Society</button>
         </h3>
 
-        <div *ngIf="assignedClubsArr.length">
+        <div class="clubs" *ngIf="assignedClubsArr.length">
             <h4><b> Clubs : </b></h4>
             <div *ngFor="let club of assignedClubsArr; let i = index;">
-                <div class="card w-50">
+                <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">{{i+1}}. {{club.name}}</h5>
                         <p><b>Grades :</b></p>
@@ -41,10 +55,10 @@
             </div>
         </div>
 
-        <div *ngIf="assignedSocietyArr.length">
+        <div class="society" *ngIf="assignedSocietyArr.length">
             <h4><b> Socities :</b></h4>
             <div *ngFor="let soc of assignedSocietyArr; let i = index;">
-                <div class="card w-50">
+                <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">{{i+1}}. {{soc.name}}</h5>
                         <p><b>Grades :</b></p>
@@ -63,6 +77,7 @@
             <br><br>
             <h5><b>No Club/Society Assigned</b></h5>
         </div>
+    </div>
     </div>
 </div>
 
@@ -131,4 +146,5 @@
             </div>
         </div>
     </div>
+</div>
 </div>
