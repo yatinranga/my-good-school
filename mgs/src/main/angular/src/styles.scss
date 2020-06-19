@@ -209,7 +209,7 @@ table tbody tr th {
     color: #fafafa;
 }
 .main .table_main table thead tr th {
-    background: rgba(0, 0, 0, 0.05);
+    background: rgba(0, 0, 0, 0.07);
     color: #333;
     font-size: 15px;
     font-weight: bold;
@@ -222,7 +222,7 @@ table tbody tr th {
     // word-spacing: 5px;
 }
 .main .teacher_awards_main .table_main table thead tr th, .teacher_awards_main i.fa.fa-sort {
-    color: #8dc33a;
+    color: #333;
 }
 div#assignAwardModal .modal-content {
     border: 5px solid #b4d673;
@@ -238,7 +238,7 @@ tbody tr{
     width: 100%;
     vertical-align: top;
     box-shadow: 0 0 2px #ddd;
-    min-height: 320px;
+    min-height: 100%;
     background: #fff;
 }
 .buttons{
@@ -253,8 +253,8 @@ i.fa.fa-user-circle, i.fa.fa-bars{
     font-size: 21px !important;
 }
 tbody#accordionExample > tr[aria-expanded="true"] {
-    background: #ddd;
-    color: #333;
+    background: rgba(0,0,0,0.03);
+    color: #555;
 }
 .description {
     // border-right: 1px solid #333;
