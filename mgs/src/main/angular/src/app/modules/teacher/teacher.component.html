@@ -22,10 +22,11 @@
     <div class="content_main_com">
         <div class="header">
             <div class="menu_toggle">
+              <i class="fa fa-bars" (click)="setShowSidebar()"></i>
             </div>
             <div class="profile_right">
                 <a routerLink='login' class="logout menu_link" (click)="authService.logoutUser();">
-                    <i class="fa fa-sign-out-alt"> </i> Logout </a>
+                  <i class="fa fa-sign-out" aria-hidden="true"></i> Logout </a>
                 
             </div>
     </div>

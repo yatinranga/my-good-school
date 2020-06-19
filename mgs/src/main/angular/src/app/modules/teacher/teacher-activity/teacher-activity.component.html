@@ -123,7 +123,7 @@
                             <tr>
                                 <td class="collapse-td" colspan="10">
                                     <div [attr.id]="'collapse' + i " class="collapse" data-parent="#accordionExample">
-                                        <div class="container-fluid" *ngIf="(activity.activityStatus != 'SubmittedByStudent')">
+                                        <div class="container-fluid mb-3" *ngIf="(activity.activityStatus != 'SubmittedByStudent')">
                                             <div class="row">
                                                 <div class="col-3">
                                                     <div class="description">
@@ -160,8 +160,9 @@
                                                     <div class="attachment">
                                                         <h5> Attachments : </h5>
                                                         {{activity.fileResponses.length ? "" : "NA"}}
-                                                        <div *ngFor="let file of activity.fileResponses">
-                                                            <div>
+                                                        <ul>
+                                                            <li *ngFor="let file of activity.fileResponses">
+                                                            
                                                                 <a [attr.href]="file.url" >
                                                                     <i class="fa fa-file-audio"
                                                                         *ngIf="file.extension == 'mp3'"></i>
@@ -171,13 +172,15 @@
                                                                         *ngIf="file.extension=='video'"></i>
                                                                     {{file.name}}
                                                                 </a>
-                                                            </div>
-                                                        </div>
+                                                            
+                                                        </li>
+                                                        </ul>
+                                                        
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="container-fluid" *ngIf="(activity.activityStatus === 'SubmittedByStudent')">
+                                        <div class="container-fluid mb-3" *ngIf="(activity.activityStatus === 'SubmittedByStudent')">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="description">
@@ -190,8 +193,9 @@
                                                     <div class="attachment">
                                                         <h5> Attachments : </h5>
                                                         {{activity.fileResponses.length ? "" : "NA"}}
-                                                        <div *ngFor="let file of activity.fileResponses">
-                                                            <div>
+                                                        <ul>
+                                                            <li *ngFor="let file of activity.fileResponses">
+                                                            
                                                                 <a [attr.href]="file.url">
                                                                     <i class="fa fa-file-audio"
                                                                         *ngIf="file.extension == 'mp3'"></i>
@@ -201,8 +205,10 @@
                                                                         *ngIf="file.extension=='video'"></i>
                                                                     {{file.name}}
                                                                 </a>
-                                                            </div>
-                                                        </div>
+                                                           
+                                                        </li>
+                                                        </ul>
+                                                        
                                                     </div>
                                                 </div>
 

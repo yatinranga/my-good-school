@@ -79,7 +79,7 @@ export class StaffListComponent implements OnInit {
     this.staff_obj = staff_obj;
     console.log(staff_obj);
     this.showDetails = val;
-    this.showDetails ? (this.col = "col-6") : (this.col = "col-12");
+    this.showDetails ? (this.col = "col-8") : (this.col = "col-12");
   }
 
 }
