@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SchoolService } from 'src/app/services/school.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertService } from 'src/app/services/alert.service';
 declare let $: any;
 
@@ -37,7 +37,7 @@ export class StaffDetailsComponent implements OnInit {
       id: [],
       name: [],
       email: [],
-      dob: [],
+      dob: [,[Validators.required]],
       mobileNumber: [],
       gender: [],
       qualification: [],
@@ -161,15 +161,17 @@ export class StaffDetailsComponent implements OnInit {
   /** Show Supervisor Edit/Update Profile Modal */
   showSupervisorModal() {
     $('#editSupervisorModal').modal('show');
-    this.updateSupervisorForm.controls.dob.patchValue(this.staffDetails.dob.split(' ')[0]);
-    this.updateSupervisorForm.patchValue({
+    if (this.staffDetails.dob)
+      this.updateSupervisorForm.controls.dob.patchValue(this.staffDetails.dob.split(' ')[0]);
+    
+      this.updateSupervisorForm.patchValue({
       id: this.staffDetails.id,
       name: this.staffDetails.name,
       email: this.staffDetails.email,
       mobileNumber: this.staffDetails.mobileNumber,
       gender: this.staffDetails.gender,
       qualification: this.staffDetails.qualification,
-      yearOfEnrolment: this.staffDetails.yearOfEnrolment
+      yearOfEnrolment: this.staffDetails.yearOfEnrolment,
     })
   }
 

@@ -22,8 +22,10 @@
                     <td>{{s.gender | titlecase}}</td>
                     <td>
                         <div *ngFor="let role of s.roles">
-                            <h5><span class="badge badge-secondary" *ngIf="role == 'Coordinator'">{{role}}</span></h5>
-                            <h5><span class="badge badge-dark" *ngIf="role == 'Supervisor'">{{role}}</span></h5>
+                            <h4><span class="badge badge-secondary" *ngIf="role == 'Coordinator'">{{role}}</span></h4>
+                            <h4><span class="badge badge-dark" *ngIf="role == 'Supervisor'">{{role}}</span></h4>
+                            <h4><span class="badge badge-primary" *ngIf="role == 'Head'">{{role}}</span></h4>
+                            <h4><span class="badge badge-warning" *ngIf="role == 'SchoolAdmin'">{{role}}</span></h4>
                         </div>
                     </td>
                     <td>{{s.yearOfEnrolment}}</td>

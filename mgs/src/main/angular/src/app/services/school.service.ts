@@ -85,13 +85,13 @@ export class SchoolService {
   }
 
   /** Add/Edit Guardians of a Student */
-  editGuardian(reqBody){
-    return this.http.post("/api/guardian",reqBody);
+  editGuardian(id,reqBody){
+    return this.http.put("/api/guardian?id="+id,reqBody);
   }
 
   /** Update Profile Details of Sudent */
   updateStudentProfile(studentId, form) {
-    return this.http.put("/api/student/update/" + studentId, form);
+    return this.http.put("/api/student/" + studentId, form);
   }
 
   /** Update Profile Details of Supervisor */

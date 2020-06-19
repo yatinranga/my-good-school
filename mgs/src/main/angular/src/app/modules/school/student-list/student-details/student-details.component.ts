@@ -23,6 +23,7 @@ export class StudentDetailsComponent implements OnInit {
   files = []; // used to update profile photo
   guardianModalType: string = ""; // used to show title in add/edit guardian modal 
   club_loader = false;
+  guardianId:string = "";
 
   guardianForm: FormGroup;
   updateStudentForm: FormGroup;
@@ -32,7 +33,7 @@ export class StudentDetailsComponent implements OnInit {
 
   ngOnInit() {
     this.guardianForm = this.formBuilder.group({
-      id: [null],
+      // id: [null],
       name: [, [Validators.required]],
       email: [],
       gender: [, [Validators.required]],
@@ -99,9 +100,10 @@ export class StudentDetailsComponent implements OnInit {
       this.guardianModalType = val;
       $('#editGuardianModal').modal('show');
       console.log(guardianObj);
+      this.guardianId = guardianObj.id;
 
       this.guardianForm.patchValue({
-        id: guardianObj.id,
+        // id: guardianObj.id,
         name: guardianObj.name,
         mobileNumber: guardianObj.mobileNumber,
         gender: guardianObj.gender,
@@ -115,9 +117,11 @@ export class StudentDetailsComponent implements OnInit {
   submitGuardian() {
     console.log(this.guardianForm.value);
     this.alertService.showLoader("");
-    this.schoolService.editGuardian(this.guardianForm.value).subscribe((res) => {
+    this.schoolService.editGuardian(this.guardianId,this.guardianForm.value).subscribe((res) => {
       console.log(res);
       this.alertService.showMessageWithSym("Guardian Added !", "Successful", "success");
+      $('#editGuardianModal').modal('hide');
+      this.resetForm()
     }, (err) => {
       this.errorMessage(err);
     })
@@ -141,11 +145,14 @@ export class StudentDetailsComponent implements OnInit {
   }
 
   updateStudentProfile() {
+    this.updateStudentForm.value.dob = this.updateStudentForm.value.dob + " 00:00:00";
     console.log(this.updateStudentForm.value);
+    this.alertService.showLoader("");
     this.schoolService.updateStudentProfile(this.studentDetails.id, this.updateStudentForm.value).subscribe((res) => {
       console.log(res);
-      this.alertService.showMessageWithSym("Profile Updated !","Success","success");
-    },(err) => {
+      this.alertService.showMessageWithSym("Profile Updated !", "Success", "success");
+      $('#editStudentModal').modal('hide');
+    }, (err) => {
       console.log(err);
       this.errorMessage(err);
     })

@@ -12,6 +12,7 @@ export class CreateRoleComponent implements OnInit {
 
   authoritiesArr = [];
   schoolsArr = [];
+  authoritiesIds = [];
   createRoleForm: FormGroup;
   constructor(private adminService: AdminService, private formBuilder: FormBuilder, private alertService: AlertService) { }
 
@@ -40,8 +41,30 @@ export class CreateRoleComponent implements OnInit {
     }, (err) => { console.log(err); })
   }
 
+  /** Select All or Clear of Checkbox of Authorities */
+  selectAuthorities(val: string) {
+    if (val == "All") {
+      Object.keys(this.authoritiesIds).forEach((key) => {
+        this.authoritiesIds[key] = true;
+      });
+    }
+    if (val == "Clear") {
+      Object.keys(this.authoritiesIds).forEach((key) => {
+        this.authoritiesIds[key] = false;
+      });
+    }
+  }
+
   /** Create new Role */
   createNewRole() {
+    const arr = [];
+    Object.keys(this.authoritiesIds).forEach((key) => {
+      if (this.authoritiesIds[key]) {
+        arr.push(key);
+      }
+    });
+    this.createRoleForm.value.authorityIds = arr;
+
     console.log(this.createRoleForm.value);
     this.adminService.createRole(this.createRoleForm.value).subscribe((res) => {
       console.log(res);
