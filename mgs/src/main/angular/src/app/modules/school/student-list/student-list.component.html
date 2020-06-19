@@ -8,7 +8,8 @@
     </select>
 
     <label>Search : </label>
-    <input type="text" name="search" [(ngModel)]="search" autocomplete="off" placeholder="Start searching for a name or contact no">
+    <input type="text" name="search" [(ngModel)]="search" autocomplete="off"
+        placeholder="Start searching for a name or contact no">
 </div>
 
 <div class="student-list-card-main">
@@ -28,7 +29,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let s of studentsArr| filter:search ; let i = index;" (click)="setShowDetails(true,s)">
+                            <tr *ngFor="let s of studentsArr| filter:search ; let i = index;"
+                                (click)="setShowDetails(true,s)">
                                 <th>{{i+1}}</th>
                                 <td>{{s.name}}</td>
                                 <td>{{s.grade}} - {{s.section}}</td>
@@ -50,12 +52,13 @@
                         </tfoot>
                     </table>
                 </div>
-                
+
             </div>
             <div [ngClass]="{'col-7':col=='col-5'}" class="col-5" *ngIf="showDetails">
-            <!-- <div class="col-12 student-details" *ngIf="showDetails"> -->
-               
-                <button class="btn btn-close btn-danger" (click)="setShowDetails(false)"> <i class="fa fa-times" aria-hidden="true"></i>
+                <!-- <div class="col-12 student-details" *ngIf="showDetails"> -->
+
+                <button class="btn btn-close btn-danger" (click)="setShowDetails(false)"> <i class="fa fa-times"
+                        aria-hidden="true"></i>
                 </button>
                 <div class="popup-box">
                     <app-student-details [studentDetails]="student_obj" (rowChangeForClub)="rowChange($event)">
@@ -64,6 +67,5 @@
             </div>
         </div>
     </div>
-    
-</div>
 
+</div>
