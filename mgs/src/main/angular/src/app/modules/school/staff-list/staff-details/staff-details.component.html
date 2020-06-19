@@ -1,4 +1,4 @@
-
+<h3><button class="btn btn-primary" (click)="showSupervisorModal()">Edit Profile</button></h3>
 
 <div class="student-dtls">
 
@@ -34,7 +34,7 @@
     <div class="col-12" *ngIf="showClub">
         <div class="clubs-socity-main">
         <h3>List of Club/Society <button class="btn btn-danger" (click)="setShowClub(false)">Close</button>
-            <button class="btn btn-primary" (click)="showAssignModal()">Update-Assign Club/Society</button>
+            <button class="btn btn-primary" (click)="showAssignModal()">Edit Club/Society</button>
         </h3>
 
         <div class="clubs" *ngIf="assignedClubsArr.length">
@@ -84,7 +84,7 @@
 <!-- Modal to Assign Club To a Supervisor/Coordinator -->
 <div class="modal fade bd-example-modal-lg" id="assignClubModal" tabindex="-1" role="dialog"
     aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="exampleModalLabel"> Assign Club/Society : </h3>
@@ -117,7 +117,7 @@
 <!-- Modal To Edit Grades For a Club/Society -->
 <div class="modal fade bd-example-modal-lg" id="assignGradeModal" tabindex="-1" role="dialog"
     aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="exampleModalLabel"> Assign Grade : </h3>
@@ -147,4 +147,76 @@
         </div>
     </div>
 </div>
+</div>
+
+<!-- Modal for EDIT Supervisor Profile -->
+<div class="modal fade bd-example-modal-lg" id="editSupervisorModal" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel"> Update Profile : </h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetForm()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form [formGroup]="updateSupervisorForm" (ngSubmit)="updateSupervisorProfile()">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Name : </label>
+                                    <input type="text" class="form-control add" name="name" placeholder="Add Name Here"
+                                        formControlName="name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Email : </label>
+                                    <input type="email" class="form-control add" name="email"
+                                        placeholder="Add Name Here" formControlName="email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">DOB : </label>
+                                    <input type="date" class="form-control add" name="dob" placeholder="Add DOB Here"
+                                        formControlName="dob">
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Mobile No : </label>
+                                    <input type="tel" class="form-control add" maxlength="10" pattern="[0-9]{10}"
+                                        name="mobileNumber" placeholder="Add Mobile Number Here"
+                                        formControlName="mobileNumber">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Gender : </label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="gender"
+                                            formControlName="gender" value="male">Male<br>
+                                        <input class="form-check-input" type="radio" name="gender"
+                                            formControlName="gender" id="exampleRadios1" value="female">Female
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Qualification : </label>
+                                    <textarea class="form-control" name="qualification" rows="3"
+                                        formControlName="qualification"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Year of Enrollment : </label>
+                                    <input type="number" class="form-control add" name="yearOfEnrolment"
+                                        placeholder="Add Year of Enrollment Here" formControlName="yearOfEnrolment">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" (click)="resetForm()">Reset</button>
+                    <button type="submit" class="btn btn-success"
+                        [disabled]="updateSupervisorForm.invalid">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>

@@ -1,83 +1,97 @@
 <div class="student-dtls">
 
 
-<div class="row">
-    <div [ngClass]="col">
-        <div class="student-information-mian">
-            <h1>{{studentDetails.name}}</h1>
-            <div class="student_image">
-                <div class="photo">
-                    <img [src]="imagePath">
-                </div>
-                
-            </div>
-            <div class="information">
-                <ul>
-                    <li> <strong>DOB :</strong> {{studentDetails.dob? (studentDetails.dob | date) : ' - ' }} </li>
-                    <li> <strong>Email :</strong> {{studentDetails.email ? studentDetails.email : ' - '}}</li>
-                    <li> <strong>Gender :</strong> {{studentDetails.gender ?( studentDetails.gender | titlecase) : ' - '}}</li>
-                    <li> <strong>Grade :</strong> {{studentDetails.grade ? studentDetails.grade : '  '}} -
-                        {{studentDetails.section ? studentDetails.section : '  '}}</li>
-                    <li> <strong>Enrollment Year :</strong> {{studentDetails.yearOfEnrolment ? studentDetails.yearOfEnrolment : ' - '}}</li>
-                    <button class="btn btn-primary">Edit Student</button>
-                </ul>
-                
-            </div>
-    
-        </div>
-        
-       
-        <div class="guardian-information">
-        <h3>Guardians : <button class="btn btn-primary">Edit Guardian</button></h3>        
-        
-            <div class="card" *ngFor="let sd of studentDetails['guardianResponseList']">
-                <div class="card-body">
-                    <h5 class="card-title">{{sd.relationship}}</h5>
-                    <p class="card-text">{{sd.name}}</p>
-                    <p class="card-text">{{sd.mobileNumber}}</p>
-                    <p class="card-text">{{sd.email}}</p>
-                    <!-- <button class="btn btn-primary">Edit</button> -->
-                </div>
-            </div>
-        
-        </div>
-        <div class="btns">
-            
-            <button class="btn clubs-socities-btn btn-dark" (click)="setShowClub(true)">Show Clubs/Socities</button>
-        </div>
+    <div class="row">
+        <div [ngClass]="col">
+            <div class="student-information-mian">
+                <h1>{{studentDetails.name}}</h1>
+                <div class="student_image">
+                    <!-- <div class="photo">
+                        <img [src]="imagePath">
+                    </div> -->
+                    <div class="photo">
+                        <img [src]="imagePath"><button class="edit_profile" (click)="photoInput.click()"> 
+                            <i class="fa fa-edit" title="Edit"></i> Change Profile </button></div>
 
-          
-    </div>
-    <div class="col-12" *ngIf="showClub">
-    <div class="clubs-socity-main">
-        <h3>List of Enrolled Club/Society <button class="btn btn-danger" (click)="setShowClub(false)"> <i class="fa fa-close"></i> </button>
-        </h3>
-        <div class="clubs" *ngIf="studentEnrolledClubArr.length">
-            <h4>Clubs</h4>
-            <ul>
-                <li *ngFor="let club of studentEnrolledClubArr; let i = index">{{i+1}}. {{club.name}}</li>
-            </ul>
-            
-           
-        </div>
-        <div class="society" *ngIf="studentEnrolledSociArr.length">
-            <h4>Society</h4>
-            <ul>
-                <li *ngFor="let club of studentEnrolledSociArr; let i = index">{{i+1}}. {{club.name}}</li>
-            </ul>
+                </div>
+                <div class="information">
+                    <ul>
+                        <li> <strong>DOB :</strong> {{studentDetails.dob? (studentDetails.dob | date) : ' - ' }} </li>
+                        <li> <strong>Email :</strong> {{studentDetails.email ? studentDetails.email : ' - '}}</li>
+                        <li> <strong>Gender :</strong>
+                            {{studentDetails.gender ?( studentDetails.gender | titlecase) : ' - '}}</li>
+                        <li> <strong>Grade :</strong> {{studentDetails.grade ? studentDetails.grade : '  '}} -
+                            {{studentDetails.section ? studentDetails.section : '  '}}</li>
+                        <li> <strong>Enrollment Year :</strong>
+                            {{studentDetails.yearOfEnrolment ? studentDetails.yearOfEnrolment : ' - '}}</li>
+                        <button class="btn btn-primary" (click)="showStudentModal()">Edit Student</button>
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <div class="guardian-information">
+                <h3>Guardians : <button class="btn btn-primary" (click)="showGuardianModal('Add')">Add Guardian</button>
+                </h3>
+
+                <div class="card" *ngFor="let sd of studentDetails['guardianResponseList']">
+                    <div class="card-body">
+                        <h5 class="card-title">{{sd.relationship}}</h5>
+                        <p class="card-text">{{sd.name}}</p>
+                        <p class="card-text">{{sd.mobileNumber}}</p>
+                        <p class="card-text">{{sd.email}}</p>
+                        <button class="btn btn-primary" (click)="showGuardianModal('Edit',sd)">Edit</button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="btns">
+
+                <button class="btn clubs-socities-btn btn-dark" (click)="setShowClub(true)">Show Clubs/Socities</button>
+            </div>
+
 
         </div>
-        <div *ngIf="!(studentEnrolledSociArr.length && studentEnrolledClubArr.length)">
-            <br><br>
-            <h5><b>No Enrolled Club/Society</b></h5>
+        <div class="col-12" *ngIf="showClub">
+            <div class="clubs-socity-main">
+                <h3>List of Enrolled Club/Society <button class="btn btn-danger" (click)="setShowClub(false)"> <i
+                            class="fa fa-close"></i> </button>
+                </h3>
+                <div *ngIf="club_loader">
+                    <div class="spinner-border text-secondary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+                <div class="clubs" *ngIf="studentEnrolledClubArr.length">
+                    <h4>Clubs</h4>
+                    <ul>
+                        <li *ngFor="let club of studentEnrolledClubArr; let i = index">{{i+1}}. {{club.name}}</li>
+                    </ul>
+
+
+                </div>
+                <div class="society" *ngIf="studentEnrolledSociArr.length">
+                    <h4>Society</h4>
+                    <ul>
+                        <li *ngFor="let club of studentEnrolledSociArr; let i = index">{{i+1}}. {{club.name}}</li>
+                    </ul>
+
+                </div>
+                <div *ngIf="!club_loader && !(studentEnrolledSociArr.length && studentEnrolledClubArr.length)">
+                    <br>
+                    <h5><b>No Enrolled Club/Society</b></h5>
+                </div>
+            </div>
         </div>
-    </div>
     </div>
 </div>
 
+<!-- Modal for ADD/EDIT guardian -->
 <div class="modal fade bd-example-modal-lg" id="editGuardianModal" tabindex="-1" role="dialog"
     aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="exampleModalLabel"> {{guardianModalType}} Guardians : </h3>
@@ -97,13 +111,13 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">Email : </label>
-                                    <input type="email" class="form-control add" name="name" placeholder="Add Name Here"
+                                    <input type="email" class="form-control add" name="email" placeholder="Add Email Here"
                                         formControlName="email">
                                 </div>
                                 <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">Contact No. : </label>
-                                    <input type="text" class="form-control add" name="name" placeholder="Add Name Here"
-                                        formControlName="mobileNumber">
+                                    <input type="text" class="form-control add" name="mobileNumber" type="tel" maxlength="10"
+                                        pattern="[0-9]{10}" placeholder="Add Contact Here" formControlName="mobileNumber">
                                 </div>
                             </div>
                             <div class="col-6">
@@ -111,9 +125,9 @@
                                     <label for="recipient-name" class="col-form-label">Gender : </label>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="gender"
-                                            formControlName="gender" value="Male">Male<br>
+                                            formControlName="gender" value="male">Male<br>
                                         <input class="form-check-input" type="radio" name="gender"
-                                            formControlName="gender" id="exampleRadios1" value="Female">Female
+                                            formControlName="gender" id="exampleRadios1" value="female">Female
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -133,10 +147,84 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" (click)="resetForm()">Reset</button>
-                    <button type="submit" class="btn btn-success" [disabled]="guardianForm.invalid">{{guardianModalType}}</button>
+                    <button type="submit" class="btn btn-success"
+                        [disabled]="guardianForm.invalid">{{guardianModalType}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for EDIT Student Profile -->
+<div class="modal fade bd-example-modal-lg" id="editStudentModal" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel"> Update Profile : </h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetForm()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form [formGroup]="updateStudentForm" (ngSubmit)="updateStudentProfile()">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Name : </label>
+                                    <input type="text" class="form-control add" name="name" placeholder="Add Name Here"
+                                        formControlName="name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Email : </label>
+                                    <input type="email" class="form-control add" name="name" placeholder="Add Name Here"
+                                        formControlName="email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">DOB : </label>
+                                    <input type="date" class="form-control add" name="name" placeholder="Add Name Here"
+                                        formControlName="dob">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Gender : </label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="gender"
+                                            formControlName="gender" value="male">Male<br>
+                                        <input class="form-check-input" type="radio" name="gender"
+                                            formControlName="gender" id="exampleRadios1" value="female">Female
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Grade : </label>
+                                    <select class="form-control" name="gradeId" formControlName="gradeId" [disabled]="!schoolGrades.length">
+                                        <option [ngValue]=null selected>Select Grades</option>
+                                        <option *ngFor="let grade of schoolGrades" value={{grade.id}}>
+                                            {{grade.grade}} {{grade.section}}
+                                        </option>
+                                    </select>
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Year of Enrollment : </label>
+                                    <input type="number" class="form-control add" name="name" placeholder="Add Name Here"
+                                        formControlName="yearOfEnrolment">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" (click)="resetForm()">Reset</button>
+                    <button type="submit" class="btn btn-success"
+                        [disabled]="updateStudentForm.invalid">Update</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 </div>
+<input style="display : none" name="profilePhoto" type="file" accept=".png, .jpg, .jpeg" #photoInput
+    (change)="onFileSelect($event)">
