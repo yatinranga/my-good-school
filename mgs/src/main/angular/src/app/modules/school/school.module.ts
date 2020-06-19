@@ -51,10 +51,10 @@ const routes: Routes = [
         path: 'supervisor-upload',
         component: SupervisorBulkUploadComponent
       },
-      // {
-      //   path: 'club-society',
-      //   component: SchoolClubComponent
-      // },
+      {
+        path: 'club-society',
+        component: SchoolClubComponent
+      },
       {
         path: '',
         redirectTo: 'home'
