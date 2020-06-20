@@ -1,5 +1,3 @@
-<h3><button class="btn btn-primary" (click)="showSupervisorModal()">Edit Profile</button></h3>
-
 <div class="student-dtls">
 
 
@@ -22,7 +20,7 @@
                 <li> <strong>Email : </strong> {{staffDetails.email ? staffDetails.email : "-"}} </li>
                 <li> <strong>Qualification : </strong> {{staffDetails.qualification ? staffDetails.qualification : "-"}} </li>
                 <li> <strong>Enrollment Year : </strong> {{staffDetails.yearOfEnrolment ?  staffDetails.yearOfEnrolment : "-"}}</li>
-                <button class="btn btn-primary">Edit Profile</button>
+                <button class="btn btn-primary" (click)="showSupervisorModal()">Edit Profile</button>
             </ul>
         </div>
     </div>

@@ -8,12 +8,12 @@ export class TeacherService {
 
   constructor(private http: CustomHttpService) { }
 
-    // Single teacher signup
+  // Single teacher signup
   uploadTeacherDetails(data) {
     const url = "/teacher/signUp"
     return this.http.post(url, data);
   }
-  
+
   // to get the list of all schools
   getSchools(url) {
     return this.http.get(url);
@@ -186,8 +186,15 @@ export class TeacherService {
     return this.http.get("/api/students/activity?activityId=" + activityId + "&teacherId=" + teacherId);
   }
 
-  getSupervisorClubReq(clubId){
-    return this.http.get("/api/teacher/club/"+clubId+"/members")
+  getSupervisorClubReq(clubId) {
+    return this.http.get("/api/teacher/club/" + clubId + "/members")
+  }
+
+  /** Coordinator APIs */
+
+  // Get Student of Coordinator
+  getCoordinatorStudents(id) {
+    return this.http.get("/api/school/" + id + "/students");
   }
 
 }
