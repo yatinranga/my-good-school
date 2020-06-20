@@ -41,8 +41,8 @@
             </select>
           </div>
           <ul class="student_list">
-            <li *ngFor="let s of students; let i = index"> {{i+1}}. {{s.name}} - {{s.grade}} {{s.section}}</li>
-            <li *ngIf="students.length==0" id="null">
+            <li *ngFor="let s of studentsArr; let i = index"> {{i+1}}. {{s.name}} - {{s.grade}} {{s.section}}</li>
+            <li *ngIf="studentsArr.length==0" id="null">
               <div class="spinner-border text-secondary" role="status" *ngIf="stu_loader">
               </div> {{stu_loader ? ' Loading...' : 'No Students'}}
             </li>

@@ -16,6 +16,7 @@ export class SchoolClubComponent implements OnInit {
   showClubDetails:boolean = false
   club_loader:boolean = false;
   club_obj: any; // Used to send Club Obj to Club-details Component
+  search:any = ""; //Used for Search in table
 
   psdAreaArr = [];
   focusAreaArr = [];
