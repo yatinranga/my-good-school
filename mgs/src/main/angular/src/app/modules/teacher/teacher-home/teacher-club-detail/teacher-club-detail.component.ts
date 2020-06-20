@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -12,7 +12,8 @@ declare let $: any;
   styleUrls: ['./teacher-club-detail.component.scss']
 })
 export class TeacherClubDetailComponent implements OnInit {
-  clubObject: any;
+
+  @Input() clubObject: any;
   teacherInfo: any;
 
   clubReqArr = [];
@@ -27,13 +28,13 @@ export class TeacherClubDetailComponent implements OnInit {
   clubSch_loader = false;
   clubReqLoader = false;
 
+  createSessionForm: FormGroup;
   createSessionView = false; // Create Session View
   editSessionView = false; // Edit Session View
 
   filterReqVal = "";
   gradeId = "";
   filterVal = "";
-  createSessionForm: FormGroup;
 
   startTime = "";
   endTime = "";
@@ -46,26 +47,10 @@ export class TeacherClubDetailComponent implements OnInit {
   constructor(private teacherService: TeacherService, private alertService: AlertService, private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-
-    /**If Object is present in localStorage, move it to sessionStorage and clear object from localStorage */
-    if (localStorage.getItem('club')) {
-      sessionStorage.setItem('club', JSON.stringify(JSON.parse(localStorage.getItem('club'))));
-      localStorage.removeItem('club');
-      this.clubObject = JSON.parse(sessionStorage.getItem('club'));
-    } else {
-      this.clubObject = JSON.parse(sessionStorage.getItem('club'));
-    }
-
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
     this.teacherService.getProfile(this.teacherInfo.id).subscribe((res) => {
       this.teacherId = res.id;
-      this.getClubStudents(this.clubObject.id, res.id);
     })
-
-
-    // this.getSchoolGrades(this.teacherInfo.schoolId);
-    this.getClubRequests(this.clubObject.id);
-    this.getClubSession(this.clubObject.id);
 
     this.createSessionForm = this.formBuilder.group({
       id: [null],
@@ -78,21 +63,22 @@ export class TeacherClubDetailComponent implements OnInit {
       gradeIds: [, [Validators.required]],
       fileRequests: []
     });
-
-    this.schoolGrades = this.clubObject.gradeResponses;
-
   }
 
-  // // get List of School Grades 
-  // getSchoolGrades(schoolId) {
-  //   this.teacherService.getGrades(schoolId).subscribe((res) => {
-  //     this.schoolGrades = res;
-  //   },
-  //     (err) => console.log(err));
-  // }
+  ngOnChanges(clubObject:any){
+    this.schoolGrades = this.clubObject.gradeResponses;
+    this.filterVal = "";
+    this.filterReqVal = "";
+    this.gradeId = "";
+
+    this.getClubRequests(this.clubObject.id);
+    this.getClubSession(this.clubObject.id);
+    this.getClubStudents(this.clubObject.id, this.teacherId);
+  }
 
   // Requests of a particular club/society
   getClubRequests(clubId) {
+    this.clubReqArr = [];
     this.clubReqLoader = true;
     this.teacherService.getSupervisorClubReq(clubId).subscribe((res) => {
       console.log(res);
@@ -157,6 +143,7 @@ export class TeacherClubDetailComponent implements OnInit {
 
   // List of Students of the particular Club
   getClubStudents(clubId, teacherId) {
+    this.studentsArr = [];
     this.stu_loader = true;
     this.teacherService.getSupervisorClubStudents(clubId, teacherId).subscribe((res) => {
       this.studentsArr = res;
@@ -171,6 +158,7 @@ export class TeacherClubDetailComponent implements OnInit {
 
   // get Session of a particualr Club/Society
   getClubSession(clubId) {
+    this.clubSchedule = [];
     this.clubSch_loader = true;
     this.teacherService.getSupervisedClubSession(clubId).subscribe((res) => {
       this.clubSchedule = res.sessions;
