@@ -18,6 +18,7 @@ export class StaffDetailsComponent implements OnInit {
   showClub: boolean = false;
   assignedClubsArr = [];
   assignedSocietyArr = [];
+  allAssignedActivity = [];
   allSchoolClubsArr = [];
   schoolGrades = [];
   clubName = ""; // used to show Club name during assign grade in assignGradeModal
@@ -25,6 +26,7 @@ export class StaffDetailsComponent implements OnInit {
 
   clubIds = {}; // used to assign Club to Supervisor through modal
   gradesIds = {} // used to assign Grades to Supervisor through modal
+  clubId = ""; // used to assign single club/society
 
   updateSupervisorForm: FormGroup;
 
@@ -37,7 +39,7 @@ export class StaffDetailsComponent implements OnInit {
       id: [],
       name: [],
       email: [],
-      dob: [,[Validators.required]],
+      dob: [, [Validators.required]],
       mobileNumber: [],
       gender: [],
       qualification: [],
@@ -72,6 +74,7 @@ export class StaffDetailsComponent implements OnInit {
     this.assignedClubsArr = [];
     this.assignedSocietyArr = [];
     if (this.staffDetails['activityAndGrades']) {
+      this.allAssignedActivity = this.staffDetails['activityAndGrades'];
       this.assignedClubsArr = this.staffDetails['activityAndGrades'].filter((e) => (e.clubOrSociety == 'Club'));
       this.assignedSocietyArr = this.staffDetails['activityAndGrades'].filter((e) => (e.clubOrSociety == 'Society'));
     }
@@ -80,12 +83,14 @@ export class StaffDetailsComponent implements OnInit {
   /** Show assign Club/Society Modal */
   showAssignModal() {
     $('#assignClubModal').modal('show');
-    if (this.staffDetails['activityAndGrades']) {
-      this.staffDetails['activityAndGrades'].forEach((e) => {
-        this.clubIds[e.id] = true;
-      });
-    }
-    console.log(this.clubIds);
+    this.clubId = "";
+    this.gradesIds = {};
+    // if (this.staffDetails['activityAndGrades']) {
+    //   this.staffDetails['activityAndGrades'].forEach((e) => {
+    //     this.clubIds[e.id] = true;
+    //   });
+    // }
+    // console.log(this.clubIds);
   }
 
   /** Get List of All Clubs/Socities of School */
@@ -107,7 +112,6 @@ export class StaffDetailsComponent implements OnInit {
 
   /** Assign Club/Society to Teacher */
   assignClub() {
-
     // Response Body
     const reqBody = {
       teachers: [{
@@ -116,19 +120,52 @@ export class StaffDetailsComponent implements OnInit {
       }]
     };
 
-    Object.keys(this.clubIds).forEach((key) => {
-      if (this.clubIds[key]) {
-        const clubId = {
-          id: key,
-          grades: []
-        }
-        reqBody.teachers[0].activities.push(clubId);
+    // Response Format to assign new Club/Society
+    const clubId = {
+      id: this.clubId,
+      grades: []
+    }
+    Object.keys(this.gradesIds).forEach((key) => {
+      if (this.gradesIds[key]) {
+        clubId.grades.push(key);
       }
     });
+    reqBody.teachers[0].activities.push(clubId);
+
+
+    // To add previous assigned Club/Society in Response
+    if (this.allAssignedActivity) {
+      this.allAssignedActivity.forEach(e => {
+        const cid = e.id;
+        const gradesArr = [];
+
+        e.gradeResponses.forEach(ele => {
+          gradesArr.push(ele.id);
+        });
+
+        const res = {
+          id: cid,
+          grades: gradesArr
+        }
+        reqBody.teachers[0].activities.push(res);
+      })
+    }
+
+
+    // Object.keys(this.clubIds).forEach((key) => {
+    //   if (this.clubIds[key]) {
+    //     const clubId = {
+    //       id: key,
+    //       grades: []
+    //     }
+    //     reqBody.teachers[0].activities.push(clubId);
+    //   }
+    // });
 
     console.log(reqBody);
     this.alertService.showLoader("");
     this.schoolService.assignClub(reqBody).subscribe((res) => {
+      this.staffDetails = res.teachers[0];
       console.log(res);
       this.sortClubs(); // Reload to see the New Assigned Club/Society
       this.clubIds = {};
@@ -145,9 +182,11 @@ export class StaffDetailsComponent implements OnInit {
 
   /** Show Edit Grades Modal */
   showGradeEditModal(club_obj) {
+    console.log(club_obj);
     this.gradesIds = {};
     $('#assignGradeModal').modal('show');
     this.clubName = club_obj.name;
+    this.clubId = club_obj.id;
     club_obj.gradeResponses.forEach(element => {
       this.gradesIds[element.id] = true;
     });
@@ -155,6 +194,63 @@ export class StaffDetailsComponent implements OnInit {
 
   /** Assign Grade for a CLub/Society to Supervisor/Coordinator*/
   assignGrade() {
+    // Response Body
+    const reqBody = {
+      teachers: [{
+        id: this.staffDetails.id,
+        activities: []
+      }]
+    };
+
+    // Response Format to assign edit grades
+    const clubId = {
+      id: this.clubId,
+      grades: []
+    }
+    Object.keys(this.gradesIds).forEach((key) => {
+      if (this.gradesIds[key]) {
+        clubId.grades.push(key);
+      }
+    });
+    reqBody.teachers[0].activities.push(clubId);
+
+
+    // To add previous assigned Club/Society in Response
+    if (this.allAssignedActivity) {
+      this.allAssignedActivity.forEach(e => {
+        if (!(this.clubId == e.id)) {
+          const cid = e.id;
+          const gradesArr = [];
+
+          e.gradeResponses.forEach(ele => {
+            gradesArr.push(ele.id);
+          });
+
+          const res = {
+            id: cid,
+            grades: gradesArr
+          }
+          reqBody.teachers[0].activities.push(res);
+        }
+      })
+    }
+
+    console.log(reqBody);
+    this.alertService.showLoader("");
+    this.schoolService.assignClub(reqBody).subscribe((res) => {
+      this.staffDetails = res.teachers[0];
+      console.log(res);
+      this.sortClubs(); // Reload to see the New Assigned Club/Society
+      this.clubIds = {};
+      $('#assignGradeModal').modal('hide');
+      this.alertService.showMessageWithSym("Grade Assigned !", "Success", "success");
+    }, (err) => {
+      if (err.status === 500) {
+        this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");
+      } else {
+        this.alertService.showMessageWithSym("", "Error", "error");
+      }
+    })
 
   }
 
@@ -163,8 +259,8 @@ export class StaffDetailsComponent implements OnInit {
     $('#editSupervisorModal').modal('show');
     if (this.staffDetails.dob)
       this.updateSupervisorForm.controls.dob.patchValue(this.staffDetails.dob.split(' ')[0]);
-    
-      this.updateSupervisorForm.patchValue({
+
+    this.updateSupervisorForm.patchValue({
       id: this.staffDetails.id,
       name: this.staffDetails.name,
       email: this.staffDetails.email,
@@ -201,6 +297,7 @@ export class StaffDetailsComponent implements OnInit {
     this.clubIds = {};
     this.gradesIds = {};
     this.updateSupervisorForm.reset();
+    this.clubId = "";
   }
 
   /** Handling Error */
