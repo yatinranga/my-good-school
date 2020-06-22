@@ -224,8 +224,8 @@ public class TeacherRequest extends Request {
 			teacher.setName(this.name);
 		}
 
-		if (this.username != null)
-			teacher.setUsername(this.username);
+//		if (this.username != null)
+//			teacher.setUsername(this.username);
 
 		if (this.dob != null)
 			teacher.setDob(DateUtil.convertStringToDate(this.dob));
@@ -261,5 +261,19 @@ public class TeacherRequest extends Request {
 
 		return teacher;
 	}
+	
+	public TeacherRequest() {
+		
+	}
+
+	public TeacherRequest(String name, String username, String email, String mobileNumber, String gender) {
+		this.name = name;
+		this.username = username;
+		this.email = email;
+		this.mobileNumber = mobileNumber;
+		this.gender = gender;
+	}
+	
+	
 
 }

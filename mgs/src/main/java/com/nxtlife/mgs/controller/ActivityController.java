@@ -61,6 +61,10 @@ public class ActivityController {
 		return activityService.deleteActivityByCid(cid,schoolCid,forAll);
 	}
 
+	@GetMapping(value = "api/activitiesOffered/{cid}")
+	public ActivityRequestResponse getById(@PathVariable("cid") String cid) {
+		return activityService.getById(cid);
+	}
 //	@GetMapping(value = "/coaches")
 //	public List<TeacherResponse> getCoachesBySchoolAndActivityCid(@RequestParam("schoolId") String schoolCid ,@RequestParam("activityId") String activityCid){
 //		return teacherService.findCoachesBySchoolCidAndActivityCid(schoolCid, activityCid);

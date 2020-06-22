@@ -33,4 +33,6 @@ public interface ActivityService {
 
 	List<ActivityRequestResponse> getAllOfferedActivitiesBySchoolAsPerGrade(String schoolCid);
 
+	ActivityRequestResponse getById(String cid);
+
 }

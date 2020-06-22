@@ -37,6 +37,12 @@ public class UserResponse {
 	private Set<RoleResponse> roles;
 	
 	private Set<AuthorityResponse> authorities;
+	
+	private String studentId;
+	
+	private String guardianId;
+	
+	private String teacherId;
 
 	public UserResponse(String cid, String name, Boolean active, String username, String email, String contactNumber,
 			String picUrl, String schoolCid) {
@@ -163,4 +169,29 @@ public class UserResponse {
 	public void setAuthorities(Set<AuthorityResponse> authorities) {
 		this.authorities = authorities;
 	}
+
+	public String getStudentId() {
+		return studentId;
+	}
+
+	public void setStudentId(String studentId) {
+		this.studentId = studentId;
+	}
+
+	public String getGuardianId() {
+		return guardianId;
+	}
+
+	public void setGuardianId(String guardianId) {
+		this.guardianId = guardianId;
+	}
+
+	public String getTeacherId() {
+		return teacherId;
+	}
+
+	public void setTeacherId(String teacherId) {
+		this.teacherId = teacherId;
+	}
+	
 }

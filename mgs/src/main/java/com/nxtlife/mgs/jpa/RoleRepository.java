@@ -90,4 +90,7 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
 	List<Role> findAllBySchoolIdAndNameIn(Long id, Collection<String> existingRoles);
 
 	boolean existsById(Long roleId);
+	
+	@Query(value = "select distinct r.name from Role r where r.id in ?1")
+	public Set<String> findAllNameByIdIn(Collection<Long> ids);
 }

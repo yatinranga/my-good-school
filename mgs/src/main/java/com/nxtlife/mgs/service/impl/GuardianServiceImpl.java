@@ -20,6 +20,7 @@ import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.entity.user.User;
 import com.nxtlife.mgs.entity.user.UserRole;
+import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.GuardianRepository;
 import com.nxtlife.mgs.jpa.RoleRepository;
@@ -33,6 +34,7 @@ import com.nxtlife.mgs.util.AuthorityUtils;
 import com.nxtlife.mgs.util.Utils;
 import com.nxtlife.mgs.view.GuardianRequest;
 import com.nxtlife.mgs.view.GuardianResponse;
+import com.nxtlife.mgs.view.StudentResponse;
 import com.nxtlife.mgs.view.TeacherResponse;
 
 @Service
@@ -190,5 +192,20 @@ public class GuardianServiceImpl extends BaseService implements GuardianService 
 		GuardianResponse guardian = new GuardianResponse(guardianRepository.findByCidAndActiveTrue(id));
 		guardian.setStudentIds(studentRepository.findCidByGuardianCid(id));
 		return guardian;
+	}
+
+	@Override
+	@Secured(AuthorityUtils.SCHOOL_STUDENT_FETCH)
+	public List<StudentResponse> getAllChildrenOfGuardian(String guardianId) {
+		if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Guardian"))) 
+			guardianId = guardianRepository.findCidByUserIdAndActiveTrue(getUserId());
+		if(guardianId == null || !guardianRepository.existsByCidAndActiveTrue(guardianId))
+			throw new ValidationException(String.format("Invalid id (%s) for the guardian" ,guardianId));
+		
+		List<Student> students = studentRepository.findAllDistinctByGuardiansCidAndActive(guardianId ,true);
+		
+		if(students == null || students.isEmpty())
+			throw new NotFoundException(String.format("No children found for the guardian (%s).", guardianId));
+		return students.stream().distinct().map(StudentResponse :: new).collect(Collectors.toList());
 	}
 }

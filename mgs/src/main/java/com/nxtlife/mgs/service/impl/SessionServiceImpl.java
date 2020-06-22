@@ -407,7 +407,8 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 				}
 				break;
 			case week:
-				end = DateUtil.getlastWorkingDayOfWeek(DateUtil.getLastDayOfWeek(DateUtil.convertToLocalDate(start, zone),zone),zone);
+//				end = DateUtil.getlastWorkingDayOfWeek(DateUtil.getLastDayOfWeek(DateUtil.convertToLocalDate(start, zone),zone),zone);
+				end = DateTime.now(DateTimeZone.forTimeZone(zone)).plusDays(10).toDate();
 				if (teacherId != null) {
 					if (!teacherRepository.existsByCidAndActiveTrue(teacherId))
 						throw new ValidationException(String.format("Teacher with id (%s) not found.", teacherId));
@@ -537,7 +538,8 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 				}
 				break;
 			case week:
-				end = DateUtil.getlastWorkingDayOfWeek(DateUtil.getLastDayOfWeek(DateUtil.convertToLocalDate(start, zone),zone),zone);
+//				end = DateUtil.getlastWorkingDayOfWeek(DateUtil.getLastDayOfWeek(DateUtil.convertToLocalDate(start, zone),zone),zone);
+				end = DateTime.now(DateTimeZone.forTimeZone(zone)).plusDays(10).toDate();
 				if (teacherId != null) {
 					if (!teacherRepository.existsByCidAndActiveTrue(teacherId))
 						throw new ValidationException(String.format("Teacher with id (%s) not found.", teacherId));
@@ -650,7 +652,8 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 								teacherCid, clubId, start, end, Sort.by(Direction.ASC, "startDate"));
 				break;
 			case week:
-				end = DateUtil.getlastWorkingDayOfWeek(DateUtil.getLastDayOfWeek(DateUtil.convertToLocalDate(start, zone),zone),zone);
+//				end = DateUtil.getlastWorkingDayOfWeek(DateUtil.getLastDayOfWeek(DateUtil.convertToLocalDate(start, zone),zone),zone);
+				end = DateTime.now(DateTimeZone.forTimeZone(zone)).plusDays(10).toDate();
 				sessions = sessionRepository
 						.findAllByTeacherCidAndClubCidAndStartDateGreaterThanAndStartDateLessThanAndActiveTrue(
 								teacherCid, clubId, start, end, Sort.by(Direction.ASC, "startDate"));
@@ -731,7 +734,8 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 								teacherCid, clubs, start, end, Sort.by(Direction.ASC, "startDate"));
 				break;
 			case week:
-				end = DateUtil.getlastWorkingDayOfWeek(DateUtil.getLastDayOfWeek(DateUtil.convertToLocalDate(start, zone),zone),zone);
+//				end = DateUtil.getlastWorkingDayOfWeek(DateUtil.getLastDayOfWeek(DateUtil.convertToLocalDate(start, zone),zone),zone);
+				end = DateTime.now(DateTimeZone.forTimeZone(zone)).plusDays(10).toDate();
 				sessions = sessionRepository
 						.findAllByTeacherCidAndClubInAndStartDateGreaterThanAndStartDateLessThanAndActiveTrueGroupByClubId(
 								teacherCid, clubs, start, end, Sort.by(Direction.ASC, "startDate"));

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -250,7 +251,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 
 				act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
 				break;
-			case "Art & Craft":
+			case "Art And Craft":
 				fAs = new ArrayList<String>();
 				fAs.add("Identity");
 				fAs.add("Spiritual & Aesthetic Awareness");
@@ -258,7 +259,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 
 				act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
 				break;
-			case "Music & Dance":
+			case "Music And Dance":
 				fAs = new ArrayList<String>();
 				fAs.add("Identity");
 				fAs.add("Spiritual & Aesthetic Awareness");
@@ -367,7 +368,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 
 				act = activityFocusAreaMappingUtility(act, fAs, focusAreaList);
 				break;
-			case "Scouts & Guides":
+			case "Scouts And Guides":
 				fAs = new ArrayList<String>();
 				fAs.add("Environmental Awareness");
 				fAs.add("Community Skills");
@@ -461,9 +462,11 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 				activity.setSchools(new ArrayList<School>());
 			}
 			activityPresent = true;
-			request.getSchoolIds().removeAll(activity.getSchools().stream().map(s -> s.getCid()).collect(Collectors.toList()));
-			if(request.getSchoolIds().isEmpty())
+			List<String> reqSchoolIds = new ArrayList<>(request.getSchoolIds());
+			reqSchoolIds.removeAll(activity.getSchools().stream().map(s -> s.getCid()).collect(Collectors.toList()));
+			if(reqSchoolIds.isEmpty())
 				throw new ValidationException(String.format("Activity already exists in schools (%s).",request.getSchoolIds()));
+//			activity.getSchools().removeIf(s -> !request.getSchoolIds().contains(s.getCid()));
 		}
 			
 		// List<FocusArea> focusAreaList = focusAreaRepository.findAll();
@@ -499,14 +502,21 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 		if (!request.getSchoolIds().isEmpty()) {
 			List<School> schools = new ArrayList<School>();
 
-			for (String schoolId : request.getSchoolIds()) {
+			for (int i =0 ; i< request.getSchoolIds().size() ; i++) {
+				String schoolId = request.getSchoolIds().get(i);
 				if (!schoolRepository.existsByCidAndActiveTrue(schoolId))
 					throw new ValidationException(String.format("School with id (%s) not found", schoolId));
-				School school = schoolRepository.findByCidAndActiveTrue(schoolId);
-				List<Activity> activities = school.getActivities();
-				activities.add(activity);
-				school.setActivities(activities);
-				schools.add(school);
+				Optional<School> preExist = activity.getSchools().stream().distinct().filter(s -> s.getCid().equals(schoolId)).findAny();
+				if(preExist.isPresent()) {
+					schools.add(preExist.get());
+					request.getSchoolIds().remove(i--);
+				}else {
+					School school = schoolRepository.findByCidAndActiveTrue(schoolId);
+					List<Activity> activities = school.getActivities();
+					activities.add(activity);
+					school.setActivities(activities);
+					schools.add(school);
+				}
 			}
 
 			activity.setSchools(schools);
@@ -978,6 +988,14 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 		Map<String, CellType> columnTypes = ExcelUtil.sheetColumns(sheetName);
 		return fetchRowValues(columnTypes, sheet, errors, sheetName);
 
+	}
+
+	@Override
+	public ActivityRequestResponse getById(String cid) {
+		Activity activity = activityRepository.getOneByCidAndActiveTrue(cid);
+		if (activity == null)
+			throw new ValidationException(String.format("No activity found with id : %s ", cid));
+		return new ActivityRequestResponse(activity);
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.nxtlife.mgs.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.nxtlife.mgs.service.GuardianService;
 import com.nxtlife.mgs.view.GuardianRequest;
 import com.nxtlife.mgs.view.GuardianResponse;
+import com.nxtlife.mgs.view.StudentResponse;
 import com.nxtlife.mgs.view.TeacherResponse;
 
 @RestController
@@ -35,13 +38,18 @@ public class GuardianController {
 		return guardianService.setProfilePic(file,id);
 	}
 	
-	@PutMapping("api/guardian/{id}")
-	public GuardianResponse update(@PathVariable("id") String id , @RequestBody(required = true) GuardianRequest request) {
+	@PutMapping("api/guardian")
+	public GuardianResponse update(@RequestParam(value = "id" ,required = false) String id , @RequestBody(required = true) GuardianRequest request) {
 		return guardianService.update(id, request);
 	}
 	
 	@GetMapping("api/guardian/{id}")
 	public GuardianResponse getById(@PathVariable("id") String id) {
 		return guardianService.getById(id);
+	}
+	
+	@GetMapping(value = "api/guardian/children")
+	public List<StudentResponse> getAllChildrenOfGuardian(@RequestParam(value = "id" ,required = false) String guardianId){
+		return guardianService.getAllChildrenOfGuardian(guardianId);
 	}
 }

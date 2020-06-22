@@ -89,6 +89,9 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 			role.setAuthorities(authorityDao.findByAuthorityRolesRoleId(role.getId()));
 			return role;
 		}).collect(Collectors.toList());
+		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin"))) {
+			roles.removeIf(r-> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Guardian"));
+		}
 		return roles;
 
 	}
@@ -160,13 +163,13 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 		if (role.getName().equalsIgnoreCase("MainAdmin")) {
 			throw new ValidationException("MainAdmin role can't be updated");
 		}
-		List<Long> requestAuthorityIds = new ArrayList<>(request.getAuthorityIds());
-		validateAuthorityIds(request.getAuthorityIds());
+		
+		validateAuthorityIds(new HashSet<Long>(request.getAuthorityIds()));
 		Long existRoleId = roleDao.findIdByNameAndSchoolId(request.getName(), schoolId);
 		if (existRoleId != null && !existRoleId.equals(id)) {
 			throw new ValidationException("This role already exists for this School");
 		}
-		
+		List<Long> requestAuthorityIds = new ArrayList<>(request.getAuthorityIds());
 		List<Long> roleAuthorityIds = roleAuthorityJpaDao.getAllAuthorityIdsByRoleId(id);
 		List<RoleAuthority> roleAuthorities = new ArrayList<>();
 		if (request.getName() != null && !role.getName().equals(request.getName())) {
@@ -186,7 +189,7 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 		RoleResponse roleResponse = roleDao.findResponseById(id);
 		roleResponse.setAuthorities(authorityDao.findByAuthorityRolesRoleId(id));
 		return roleResponse;
-
+		
 	}
 
 	@Override

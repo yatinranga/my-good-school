@@ -69,13 +69,13 @@ public class Student  extends BaseEntity {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
-	User user;
+	private User user;
 
 //	@NotNull
 	@ManyToOne
 	private School school;
 
-	@NotNull
+//	@NotNull
 	@ManyToOne
 	private Grade grade;
 

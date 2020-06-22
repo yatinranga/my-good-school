@@ -188,6 +188,9 @@ public class ActivityRequestResponse {
 		 */
 		// focusAreaIds =
 		// focusAreaIds.stream().distinct().collect(Collectors.toList());
+		if(activity.getSchools()!=null) {
+			activity.getSchools().stream().distinct().map(s -> s.getCid()).collect(Collectors.toList());
+		}
 
 	}
 

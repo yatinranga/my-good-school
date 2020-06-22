@@ -34,6 +34,8 @@ public class GuardianRequest extends Request {
 	
 	@NotEmpty(message = "Student Ids can't be empty.")
 	private List<String> studentIds;
+	
+	private String username;
 
 	public String getName() {
 		return name;
@@ -92,6 +94,13 @@ public class GuardianRequest extends Request {
 		this.relationship = relationship;
 	}
 
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
 	public Guardian toEntity(Guardian guardian) {
 		guardian = guardian == null ? new Guardian() : guardian;
@@ -109,7 +118,9 @@ public class GuardianRequest extends Request {
 			guardian.setMobileNumber(this.mobileNumber);
 		}
 		guardian.setRelationship(this.relationship);
-		guardian.setGender(gender);
+		guardian.setGender(this.gender);
+//		if(this.username != null)
+//			guardian.setUsername(this.username);
 		return guardian;
 	}
 
@@ -117,12 +128,20 @@ public class GuardianRequest extends Request {
 		return toEntity(null);
 	}
 
-	public GuardianRequest(String name, String email, String gender, String mobileNumber, String relationship) {
+	public GuardianRequest(String name, String email, String gender, String mobileNumber, String relationship ,String username) {
 		this.name = name;
 		this.email = email;
 		this.gender = gender;
 		this.mobileNumber = mobileNumber;
 		this.relationship = relationship;
+		this.username = username == null ? this.username : username;
+	}
+	
+	public GuardianRequest(String name, String email, String mobileNumber , String username, String gender) {
+		this.name = name;
+		this.email = email;
+		this.gender = gender;
+		this.mobileNumber = mobileNumber;
 	}
 
 	public GuardianRequest() {
