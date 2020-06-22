@@ -16,7 +16,7 @@ import com.nxtlife.mgs.view.user.security.RoleResponse;
 @JsonInclude(value = Include.NON_ABSENT)
 public class UserResponse {
 
-	private Long id;
+	private String id;
 	
 	private String name;
 
@@ -37,11 +37,17 @@ public class UserResponse {
 	private Set<RoleResponse> roles;
 	
 	private Set<AuthorityResponse> authorities;
+	
+	private String studentId;
+	
+	private String guardianId;
+	
+	private String teacherId;
 
-	public UserResponse(Long id, String name, Boolean active, String username, String email, String contactNumber,
+	public UserResponse(String cid, String name, Boolean active, String username, String email, String contactNumber,
 			String picUrl, String schoolCid) {
 		super();
-		this.id = id;
+		this.id = cid;
 		this.active = active;
 		this.name = name;
 		this.username = username;
@@ -53,7 +59,7 @@ public class UserResponse {
 
 	public static UserResponse get(User user) {
 		if (user != null) {
-			UserResponse response = new UserResponse(user.getId() == null ? user.getUserId() : user.getId(),
+			UserResponse response = new UserResponse(user.getCid(),
 					user.getName(), user.getActive(), user.getUsername(), user.getEmail(), user.getContactNumber(),
 					user.getPicUrl(), null);
 			if (user.getAuthorities() != null) {
@@ -68,6 +74,8 @@ public class UserResponse {
 					response.roles.add(RoleResponse.get(role));
 				}
 			}
+			if(user.getSchool() != null)
+				response.setSchoolId(user.getSchool().getCid());
 			return response;
 		}
 		return null;
@@ -114,11 +122,11 @@ public class UserResponse {
 	}
 
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -161,4 +169,29 @@ public class UserResponse {
 	public void setAuthorities(Set<AuthorityResponse> authorities) {
 		this.authorities = authorities;
 	}
+
+	public String getStudentId() {
+		return studentId;
+	}
+
+	public void setStudentId(String studentId) {
+		this.studentId = studentId;
+	}
+
+	public String getGuardianId() {
+		return guardianId;
+	}
+
+	public void setGuardianId(String guardianId) {
+		this.guardianId = guardianId;
+	}
+
+	public String getTeacherId() {
+		return teacherId;
+	}
+
+	public void setTeacherId(String teacherId) {
+		this.teacherId = teacherId;
+	}
+	
 }

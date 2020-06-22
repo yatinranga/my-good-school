@@ -2,13 +2,16 @@ package com.nxtlife.mgs;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 import com.nxtlife.mgs.config.FileStorageProperties;
 
 @SpringBootApplication
+@EntityScan("com.nxtlife.mgs.entity")
 @EnableConfigurationProperties({ FileStorageProperties.class })
 public class MgsApplication extends SpringBootServletInitializer {
 

@@ -1,9 +1,11 @@
 package com.nxtlife.mgs.controller;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +20,7 @@ import com.nxtlife.mgs.service.AwardService;
 import com.nxtlife.mgs.view.AwardRequest;
 import com.nxtlife.mgs.view.AwardResponse;
 import com.nxtlife.mgs.view.PropertyCount;
+import com.nxtlife.mgs.view.SuccessResponse;
 
 @RestController
 @RequestMapping("/")
@@ -36,17 +39,17 @@ public class AwardController {
 		return awardService.createAward(request);
 	}
 	
-	@GetMapping("api/student/awards")
+	@GetMapping("api/student/awards") //doneGrade 
 	public List<AwardResponse> getAwardsByStudent(@RequestParam(value = "studentId" , required = false) String studentCid){
 		return awardService.findAllByStudent(studentCid);
 	}
 	
-	@GetMapping("api/teacher/awards")
-	public List<AwardResponse> getAwardsByManagement(@RequestParam(value = "teacherId" , required = false) String teacherCid){
-		return awardService.findAllByManagement(teacherCid);
+	@GetMapping("api/teacher/awards") //doneGrade 
+	public List<AwardResponse> getAwardsByManagement(@RequestParam(value = "schoolId" , required = false) String schoolCid ,@RequestParam(value = "teacherId" , required = false) String teacherCid){
+		return awardService.findAllByManagement(schoolCid ,teacherCid);
 	}
 
-	@PutMapping("api/teacher/award/{awardId}")
+	@PutMapping("api/teacher/award/{awardId}") //done //toSend //Coordinator Head
 	public AwardResponse updateStatus(@PathVariable String awardId, @RequestParam(name="verified",defaultValue="true") Boolean verified){
 		return awardService.updateStatus(awardId, verified);
 	}
@@ -70,6 +73,20 @@ public class AwardController {
 	public Set<String> getAllAwardTypes(){
 		return awardService.getAllAwardTypes();
 	}
+	
+	@DeleteMapping(value = "api/awardType")
+	public SuccessResponse deleteAwardType(@RequestParam("name") String name) {
+		return awardService.deleteAwardType(name);
+	}
+	
+	@PostMapping("api/awardType")
+	public SuccessResponse createAwardType(@RequestParam("name") String name) {
+		return awardService.createAwardType(name);
+	}
 
+	@GetMapping("api/awards")
+	public Collection<AwardResponse> getAllAwardsForGradesUnderMe(@RequestParam(value = "schoolId" ,required = false) String schoolCid){
+		return awardService.getAllAwardsForGradesUnderMe(schoolCid);
+	}
 
 }

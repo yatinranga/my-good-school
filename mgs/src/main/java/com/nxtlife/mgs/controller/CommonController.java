@@ -3,6 +3,7 @@ package com.nxtlife.mgs.controller;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +21,7 @@ public class CommonController {
 	private CommonService commonService;
 	
 	@RequestMapping(value = "/file/download", method = RequestMethod.GET)
-	public ResponseEntity<?> downloadFile(@RequestParam("filePath") String filePath) {
+	public ResponseEntity<Resource> downloadFile(@RequestParam("filePath") String filePath) {
 		return commonService.downloadFile(filePath);
 	}
 }

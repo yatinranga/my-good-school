@@ -2,27 +2,45 @@ package com.nxtlife.mgs.jpa;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.nxtlife.mgs.entity.user.Guardian;
 
 @Repository
 public interface GuardianRepository extends JpaRepository<Guardian, Long> {
-	Guardian getOneByCid(String cid);
+	public Guardian getOneByCid(String cid);
 	
-	Guardian getOneByEmail(String email);
+	public Guardian getOneByEmail(String email);
 	
-	Guardian findByEmailOrMobileNumber(String email, String mobileNumber);
+	public Guardian findByEmailOrMobileNumber(String email, String mobileNumber);
 	
-	Guardian getOneByMobileNumber(String mobileNumber);
+	public Guardian getOneByMobileNumber(String mobileNumber);
 
-	Guardian findByMobileNumberAndActiveTrue(String mobileNumber);
+	public Guardian findByMobileNumberAndActiveTrue(String mobileNumber);
 
-	Guardian findByEmailAndActiveTrue(String email);
+	public Guardian findByEmailAndActiveTrue(String email);
 
-	boolean existsByCidAndActiveTrue(String cid);
+	public boolean existsByCidAndActiveTrue(String cid);
 
-	Guardian findByCidAndActiveTrue(String id);
+	public Guardian findByCidAndActiveTrue(String id);
+
+	@Query(value = "select s.cid from Guardian s where s.user.id = ?1 and s.active = true")
+	public String findCidByUserIdAndActiveTrue(Long userId);
+	
+	@Query(value = "select s.imageUrl from Guardian s where s.cid = ?1 ")
+	public String findImageUrlByCid(String cid);
+	
+	@Transactional
+	@Modifying(clearAutomatically = true)
+	@Query(value = "update Guardian g set g.imageUrl = ?2 where g.cid = ?1")
+	public int setImageUrlByCid(String cid ,String imageUrl);
+	
+	@Query(value = "select s.user.cid from Guardian s where s.cid = ?1 and s.active = true")
+	public String findUserCidByCidAndActiveTrue(String cid);
 
 }

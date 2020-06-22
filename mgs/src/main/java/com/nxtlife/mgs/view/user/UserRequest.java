@@ -11,6 +11,7 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import com.nxtlife.mgs.entity.user.User;
 import com.nxtlife.mgs.view.Request;
+import com.nxtlife.mgs.view.StudentRequest;
 
 public class UserRequest extends Request {
 
@@ -35,6 +36,10 @@ public class UserRequest extends Request {
 	private Set<Long> roleIds;
 	
 	private String schoolId;
+	
+	private String gender;
+	
+//	private StudentRequest student;
 
 	public String getName() {
 		return name;
@@ -62,6 +67,10 @@ public class UserRequest extends Request {
 
 	public String getSchoolId() {
 		return schoolId;
+	}
+
+	public String getGender() {
+		return gender;
 	}
 
 	public User toEntity() {

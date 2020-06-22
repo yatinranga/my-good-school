@@ -3,6 +3,9 @@ package com.nxtlife.mgs.jpa;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -147,16 +150,27 @@ public interface UserRepository extends JpaRepository<User, Long> {
 			@Param("password") String password);
 
 	@Modifying
-	@Query(value = "update User u set u.active=true, u.lastModifiedBy =?2, u.lastModifiedDate =?3 where u.id =?1")
+	@Query(value = "update User u set u.active=true, u.lastModifiedBy.id =?2, u.lastModifiedDate =?3 where u.id =?1")
 	public int activate(Long id, Long userId, Date date);
 
 	@Modifying
-	@Query(value = "update User u set u.active=false, u.lastModifiedBy =?2, u.lastModifiedDate =?3 where u.id =?1")
+	@Query(value = "update User u set u.active=false, u.lastModifiedBy.id =?2, u.lastModifiedDate =?3 where u.id =?1")
 	public int delete(Long id, Long userId, Date date);
 
 	User findByCid(String userId);
 
 	boolean existsByCid(String id);
+	
+	@Query(value = "select u.id from User u where u.cid = ?1 and u.active = true")
+	public Long findIdByCid(String cid);
+
+	List<UserResponse> findBySchoolIdAndIdIn(Long schoolId, Set<Long> findUserIdsByRoleId);
+	
+	
+	@Transactional
+	@Modifying(clearAutomatically = true)
+	@Query(value = "update User g set g.picUrl = ?2 where g.cid = ?1")
+	public int setImageUrlByCid(String cid ,String picUrl);
 	
 	
 

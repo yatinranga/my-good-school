@@ -9,6 +9,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,8 +29,6 @@ public class StudentRequest extends Request {
 
 	@NotEmpty(message = "schoolId can't be null/empty")
 	private String schoolId;
-
-	private String username;
 
 	private String dob;
 
@@ -54,10 +53,10 @@ public class StudentRequest extends Request {
 
 //	private List<String> guardianIds;
 
-	private Boolean active;
-
 	@NotEmpty(message = "grade id can't be null or empty")
 	private String gradeId;
+	
+	private String username;
 
 	public String getName() {
 		return name;
@@ -89,14 +88,6 @@ public class StudentRequest extends Request {
 
 	public void setSchoolId(String schoolId) {
 		this.schoolId = schoolId;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
 	}
 
 	public String getDob() {
@@ -155,14 +146,6 @@ public class StudentRequest extends Request {
 		this.gradeId = gradeId;
 	}
 
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
-
 	public Date getSessionStartDate() {
 		return sessionStartDate;
 	}
@@ -187,6 +170,14 @@ public class StudentRequest extends Request {
 //		this.guardianIds = guardianIds;
 //	}
 
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
 	public Student toEntity(Student student) {
 		student = student == null ? new Student() : student;
 		if (this.name != null) {
@@ -194,8 +185,6 @@ public class StudentRequest extends Request {
 				throw new ValidationException(String.format("Name (%s) is in invalid format, it should contain only alphabets.",this.name));
 			student.setName(this.name);
 		}
-		if (this.username != null)
-			student.setUsername(this.username);
 		if (this.email != null) {
 			validateEmail(this.email);
 			student.setEmail(this.email);
@@ -204,7 +193,7 @@ public class StudentRequest extends Request {
 			student.setGender(this.gender);
 		if (this.dob != null) {
 			Date dateOfBirth = DateUtil.convertStringToDate(this.dob);
-			if(dateOfBirth.before(LocalDateTime.now().minusYears(21).toDate()))
+			if(dateOfBirth.before(LocalDateTime.now(DateTimeZone.forTimeZone(DateUtil.defaultTimeZone)).minusYears(21).toDate()))
 				throw new ValidationException("Dob should be within 21 years from todays date.");
 			student.setDob(dateOfBirth);
 			
@@ -219,6 +208,8 @@ public class StudentRequest extends Request {
 			student.setSubscriptionEndDate(this.subscriptionEndDate);
 		if (this.sessionStartDate != null)
 			student.setSessionStartDate(this.sessionStartDate);
+//		if(this.username != null)
+//		    student.setUsername(this.username);
 
 		return student;
 	}
@@ -226,5 +217,22 @@ public class StudentRequest extends Request {
 	public Student toEntity() {
 		return this.toEntity(null);
 	}
+	
+	public StudentRequest() {
+		
+	}
+
+	public StudentRequest(@NotEmpty(message = "name can't be null/empty") String name,
+			@NotEmpty @Email(message = "email pattern not vaild") String email,
+			@Size(min = 10, max = 10) @Pattern(regexp = "^[0-9]*$", message = "Mobile no should contain only digit") String mobileNumber,
+			String username ,String gender) {
+		this.name = name;
+		this.email = email;
+		this.mobileNumber = mobileNumber;
+		this.username = username;
+		this.gender = gender;
+	}
+	
+    
 
 }

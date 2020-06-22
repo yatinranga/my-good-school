@@ -35,7 +35,7 @@ import com.nxtlife.mgs.jpa.RoleRepository;
 import com.nxtlife.mgs.jpa.UserRepository;
 import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.LFINService;
-import com.nxtlife.mgs.service.SequenceGeneratorService;
+//import com.nxtlife.mgs.service.SequenceGeneratorService;
 import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.util.DateUtil;
 import com.nxtlife.mgs.util.ExcelUtil;
@@ -54,8 +54,8 @@ public class LFINServiceImpl extends BaseService implements LFINService {
 	@Autowired
 	private UserRepository userRepository;
 
-	@Autowired
-	private SequenceGeneratorService sequenceGeneratorService;
+//	@Autowired
+//	private SequenceGeneratorService sequenceGeneratorService;
 
 	@Autowired
 	private RoleRepository roleRepository;
@@ -93,7 +93,7 @@ public class LFINServiceImpl extends BaseService implements LFINService {
 
 		if (StringUtils.isEmpty(user))
 			throw new ValidationException("User not created successfully");
-		lfin.setUser(user = userRepository.save(user));
+		lfin.setUser(user);
 		lfin.setUsername(lfin.getUser().getUsername());
 
 		if (StringUtils.isEmpty(user)) {

@@ -2,6 +2,7 @@ package com.nxtlife.mgs.config.security;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
@@ -27,8 +28,10 @@ public class CustomTokenEnhancer implements TokenEnhancer {
 				throw new ValidationException("No user found.");
 
 			final Map<String, Object> additionalInfo = new HashMap<>();
-			additionalInfo.put("user_role",
-					user.getRoles().stream().map(RoleResponse::get).collect(Collectors.toSet()));
+			Set<RoleResponse> roles = user.getRoles().stream().map(RoleResponse::get).collect(Collectors.toSet());
+			roles = roles == null || roles.isEmpty() ? user.getUserRoles().stream().map(ur -> RoleResponse.get(ur.getRole())).collect(Collectors.toSet()) : roles;
+			additionalInfo.put("user_role",roles
+					);
 			((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo); // User
 																								// info
 																								// added

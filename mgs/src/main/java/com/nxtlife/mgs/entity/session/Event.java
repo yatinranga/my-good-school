@@ -1,8 +1,10 @@
 package com.nxtlife.mgs.entity.session;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,6 +25,7 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
+import com.google.api.client.util.DateTime;
 import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.activity.File;
@@ -142,8 +145,17 @@ public class Event extends BaseEntity{
 		this.teacher = teacher;
 	}
 	
-	public LocalDate getStartLocalDate() {
-		return DateUtil.convertToLocalDate(this.startDate);
+	public LocalDate getStartLocalDate(TimeZone zone) {
+		zone = zone == null ? DateUtil.defaultTimeZone : zone;
+		Date start =  new Date();
+			start.setHours(0);
+			start.setMinutes(0);
+			start.setSeconds(0);
+			start.setDate(this.startDate.getDate());
+			start.setMonth(this.startDate.getMonth());
+			start.setYear(this.startDate.getYear());
+		
+		return DateUtil.convertToLocalDate(start ,zone);
 	}
 
 	public List<File> getFiles() {

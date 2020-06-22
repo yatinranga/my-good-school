@@ -14,35 +14,35 @@ import com.nxtlife.mgs.view.SchoolResponse;
 @Repository
 public interface SchoolRepository extends JpaRepository<School, Long> {
 
-	School getOneByCidAndActiveTrue(String cid);
+	public School getOneByCidAndActiveTrue(String cid);
 
-	School findByNameOrEmail(String name, String email);
+	public School findByNameOrEmail(String name, String email);
 
-	School findByNameAndActiveTrue(String name);
+	public School findByNameAndActiveTrue(String name);
 
-	School findByEmail(String email);
+	public School findByEmail(String email);
 
-	int countByEmailAndActiveTrue(String email);
+	public int countByEmailAndActiveTrue(String email);
 
-	int countByUsername(String username);
+	public int countByUsername(String username);
 
-	School findByCidAndActiveTrue(String cid);
+	public School findByCidAndActiveTrue(String cid);
 
-	List<School> findAllByActiveTrue();
+	public List<School> findAllByActiveTrue();
 
-	Boolean existsByCidAndActiveTrue(String schoolId);
+	public Boolean existsByCidAndActiveTrue(String schoolId);
 
-	School getOneByCid(String schoolRequest);
+	public School getOneByCid(String schoolRequest);
 
-	boolean existsByNameAndActiveTrue(String string);
+	public boolean existsByNameAndActiveTrue(String string);
 
-	School getByUserId(Long userId);
+//	public School getByUserId(Long userId);
 
-	boolean existsByUserIdAndActiveTrue(Long userId);
+//	public boolean existsByUserIdAndActiveTrue(Long userId);
 
-	boolean existsByNameAndCidNotAndActiveTrue(String name, String id);
+	public boolean existsByNameAndCidNotAndActiveTrue(String name, String id);
 
-	boolean existsByAddressAndCidNotAndActiveTrue(String address, String id);
+	public boolean existsByAddressAndCidNotAndActiveTrue(String address, String id);
 
 	public SchoolResponse findResponseById(Long schoolId);
 
@@ -57,6 +57,12 @@ public interface SchoolRepository extends JpaRepository<School, Long> {
 
 	@Modifying
 	@Query(value = "update School s set s.active = ?2 where s.cid = ?1 and s.active = true")
-	int deleteByCidAndActiveTrue(String cid,Boolean active);
+	public int deleteByCidAndActiveTrue(String cid,Boolean active);
+
+	public boolean existsByCidAndActive(String cid ,boolean active);
+
+	public boolean existsByContactNumberAndCidNot(String contactNumber, String cid);
+
+	public boolean existsByEmailAndCidNot(String email, String cid);
 
 }

@@ -25,8 +25,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 	public void configure(HttpSecurity http) throws Exception {
 		http.requestMatchers().antMatchers("/actuator/*").antMatchers("/v3/api-docs").antMatchers("/clients")
 				.antMatchers("/swagger-ui.html").antMatchers("/swagger-ui/*").antMatchers(FORGOT_PASSWORD_PATTERN)
-				.antMatchers(FORGOT_PASSWORD_PATTERN + "/*").antMatchers(SECURED_PATTERN).antMatchers("/*").and()
-				.authorizeRequests().antMatchers(FORGOT_PASSWORD_PATTERN).permitAll().antMatchers("/v3/api-docs")
+				.antMatchers(FORGOT_PASSWORD_PATTERN + "/*").antMatchers(SECURED_PATTERN).antMatchers("/**").and()
+				.authorizeRequests().antMatchers(FORGOT_PASSWORD_PATTERN).permitAll().antMatchers("/**").permitAll().antMatchers("/v3/api-docs")
 				.permitAll().antMatchers("/clients").permitAll().antMatchers("/actuator/*").permitAll()
 				.antMatchers("/swagger-ui/*").permitAll().antMatchers("/swagger-ui.html").permitAll()
 				.antMatchers(FORGOT_PASSWORD_PATTERN + "/*").permitAll().antMatchers(HttpMethod.POST, SECURED_PATTERN)

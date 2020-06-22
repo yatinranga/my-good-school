@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
 
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -47,7 +48,7 @@ import com.nxtlife.mgs.service.BaseService;
 //import com.nxtlife.mgs.service.FileService;
 import com.nxtlife.mgs.service.FileStorageService;
 import com.nxtlife.mgs.service.SchoolService;
-import com.nxtlife.mgs.service.SequenceGeneratorService;
+//import com.nxtlife.mgs.service.SequenceGeneratorService;
 import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.util.AuthorityUtils;
 import com.nxtlife.mgs.util.ExcelUtil;
@@ -57,6 +58,7 @@ import com.nxtlife.mgs.view.GradeRequest;
 import com.nxtlife.mgs.view.SchoolRequest;
 import com.nxtlife.mgs.view.SchoolResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
+import com.sun.mail.smtp.SMTPSendFailedException;
 
 @Service
 public class SchoolServiceImpl extends BaseService implements SchoolService {
@@ -70,8 +72,8 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 	@Autowired
 	private FileStorageService<MultipartFile> fileStorageService;
 
-	@Autowired
-	private SequenceGeneratorService sequenceGeneratorService;
+//	@Autowired
+//	private SequenceGeneratorService sequenceGeneratorService;
 
 	@Autowired
 	private RoleRepository roleRepository;
@@ -139,7 +141,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			user.setEmail(school.getEmail());
 			if(school.getId()!=null)
 				userRepository.save(user);
-			school.setUser(user);
+//			school.setUser(user);
 		}
 
 		schoolRepository.save(school);
@@ -172,19 +174,20 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 
 		// User user = userService.createSchoolUser(school);
 		// User user = userService.createUserForEntity(school);
-		Long roleId = roleRepository.findIdByName("School");
-		if (roleId == null)
-			throw new ValidationException("Role School not created yet.");
-		User user = userService.createUser(school.getName(), school.getContactNumber(), school.getEmail(),
-				school.getId());
-		user.setUserRoles(
-				Arrays.asList(new UserRole(new UserRoleKey(roleId, user.getId()), new Role(roleId, "School"), user)));
-
-		if (StringUtils.isEmpty(user))
-			throw new ValidationException("User not created successfully");
-		school.setUser(user = userRepository.save(user));
-		school.setUsername(school.getUser().getUsername());
-		user.setSchool(school);
+//		Long roleId = roleRepository.findIdByName("School");
+//		if (roleId == null)
+//			throw new ValidationException("Role School not created yet.");
+//		User user = userService.createUser(school.getName(), school.getContactNumber(), school.getEmail(),
+//				school.getId());
+//		user.setUserRoles(
+//				Arrays.asList(new UserRole(new UserRoleKey(roleId, user.getId()), new Role(roleId, "School"), user)));
+//
+//		if (StringUtils.isEmpty(user))
+//			throw new ValidationException("User not created successfully");
+//		school.setUser(user);
+		school.setUsername(String.format("%s%s", school.getName().substring(0, 3), Utils.generateRandomNumString(8)));
+//				school.getUser().getUsername());
+//		user.setSchool(school);
 
 		school = schoolRepository.save(school);
 
@@ -254,8 +257,8 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			String logoUrl = fileStorageService.storeFile(request.getLogo(), request.getLogo().getOriginalFilename(),
 					"/school-image/", false, true);
 			school.setLogo(logoUrl);
-			if (school.getUser() != null)
-				school.getUser().setPicUrl(logoUrl);
+//			if (school.getUser() != null)
+//				school.getUser().setPicUrl(logoUrl);
 		}
 
 		school = schoolRepository.save(school);
@@ -265,18 +268,22 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 
 		// sending login credentials
 
-		Boolean emailFlag = false;
+//		Boolean emailFlag = false;
 
-		if (user.getEmail() != null)
-			emailFlag = userService.sendLoginCredentialsBySMTP(userService.usernamePasswordSendContentBuilder(
-					user.getUsername(), user.getRawPassword(), emailUsername, user.getEmail()));
-
-		Map<String, Object> response = new HashMap<String, Object>();
-		response.put("Teacher", new SchoolResponse(school));
-		String emailMessage = emailFlag ? String.format("Email sent successfully to (%s)", user.getEmail())
-				: String.format("Email not sent successfully to (%s) , email address might be wrong.", user.getEmail());
-		int emailStatusCode = emailFlag ? 200 : 400;
-		response.put("MailResponse", new SuccessResponse(emailStatusCode, emailMessage));
+//		if (user.getEmail() != null)
+//			try {
+//				emailFlag = userService.sendLoginCredentialsBySMTP(userService.usernamePasswordSendContentBuilder(
+//						user.getUsername(), user.getRawPassword(), emailUsername, user.getEmail()));
+//			} catch (SMTPSendFailedException e) {
+//				emailFlag = false;
+//				}
+//
+//		Map<String, Object> response = new HashMap<String, Object>();
+//		response.put("Teacher", new SchoolResponse(school));
+//		String emailMessage = emailFlag ? String.format("Email sent successfully to (%s)", user.getEmail())
+//				: String.format("Email not sent successfully to (%s) , email address might be wrong.", user.getEmail());
+//		int emailStatusCode = emailFlag ? 200 : 400;
+//		response.put("MailResponse", new SuccessResponse(emailStatusCode, emailMessage));
 		// return new ResponseEntity<Map<String, Object>>(response,
 		// HttpStatus.OK);
 
@@ -306,28 +313,39 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			if (schoolRepository.existsByAddressAndCidNotAndActiveTrue(request.getAddress(), request.getId()))
 				throw new ValidationException(String.format("Address (%s) already belongs to some other school."));
 		}
+		
+		if (request.getContactNumber() != null && schoolRepository.existsByContactNumberAndCidNot(request.getContactNumber(),school.getCid())) {
+			throw new ValidationException(String.format("Contact Number (%s) already belongs to some other school.",
+					request.getContactNumber()));
+		}
+		
+		if (request.getEmail() != null && schoolRepository.existsByEmailAndCidNot(request.getEmail(),school.getCid())) {
+			throw new ValidationException(
+					String.format("Email (%s) already belongs to some other school.", request.getEmail()));
+		}
 
 		school = request.toEntity(school);
+		
 
-		if (request.getContactNumber() != null) {
-			if (!userRepository.existsByContactNumberAndCidNot(request.getContactNumber(), school.getUser().getCid())) {
-				school.setContactNumber(request.getContactNumber());
-				school.getUser().setContactNumber(request.getContactNumber());
-			} else {
-				throw new ValidationException(String.format("Contact Number (%s) already belongs to some other user.",
-						request.getContactNumber()));
-			}
-		}
+//		if (request.getContactNumber() != null) {
+//			if (!userRepository.existsByContactNumberAndCidNot(request.getContactNumber(), school.getUser().getCid())) {
+//				school.setContactNumber(request.getContactNumber());
+//				school.getUser().setContactNumber(request.getContactNumber());
+//			} else {
+//				throw new ValidationException(String.format("Contact Number (%s) already belongs to some other user.",
+//						request.getContactNumber()));
+//			}
+//		}
 
-		if (request.getEmail() != null) {
-			if (!userRepository.existsByEmailAndCidNot(request.getEmail(), school.getUser().getCid())) {
-				school.setEmail(request.getEmail());
-				school.getUser().setEmail(request.getEmail());
-			} else {
-				throw new ValidationException(
-						String.format("Email (%s) already belongs to some other user.", request.getEmail()));
-			}
-		}
+//		if (request.getEmail() != null) {
+//			if (!userRepository.existsByEmailAndCidNot(request.getEmail(), school.getUser().getCid())) {
+//				school.setEmail(request.getEmail());
+//				school.getUser().setEmail(request.getEmail());
+//			} else {
+//				throw new ValidationException(
+//						String.format("Email (%s) already belongs to some other user.", request.getEmail()));
+//			}
+//		}
 
 		if (request.getGradeRequests() != null && !request.getGradeRequests().isEmpty()) {
 			List<GradeRequest> gradeRequests = request.getGradeRequests();
@@ -368,8 +386,8 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			String logoUrl = fileStorageService.storeFile(request.getLogo(), request.getLogo().getOriginalFilename(),
 					"/school-image/", true, true);
 			school.setLogo(logoUrl);
-			if (school.getUser() != null)
-				school.getUser().setPicUrl(logoUrl);
+//			if (school.getUser() != null)
+//				school.getUser().setPicUrl(logoUrl);
 		}
 
 		if (request.getActivities() != null && !request.getActivities().isEmpty()) {
@@ -428,11 +446,11 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 				previousActivities.add(activity);
 
 			} else {
-				List<String> schoolCids = actReq.getSchoolIds();
-				if (schoolCids == null)
-					schoolCids = new ArrayList<String>();
-				schoolCids.add(school.getCid());
-				actReq.setSchoolIds(schoolCids);
+//				List<String> schoolCids = actReq.getSchoolIds();
+//				if (schoolCids == null)
+//					schoolCids = new ArrayList<String>();
+//				schoolCids.add(school.getCid());
+				actReq.setSchoolIds(Arrays.asList(school.getCid()));
 				ActivityRequestResponse actResponse = activityService.saveActivity(actReq);
 				if (actResponse == null)
 					throw new RuntimeException(String
@@ -479,7 +497,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 	}
 
 	@Override
-	@Secured(AuthorityUtils.SCHOOL_VIEW)
+	@Secured(AuthorityUtils.SCHOOL_FETCH)
 	public SchoolResponse findByCid(String schoolCid) {
 		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")))
 			schoolCid = getUser().getSchool().getCid();
@@ -494,8 +512,8 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 	}
 
 	@Override
-	@PreAuthorize("hasRole('ROLE_MainAdmin') or hasRole('ROLE_Lfin')")
-	@Secured(AuthorityUtils.SCHOOL_VIEW)
+//	@PreAuthorize("hasRole('ROLE_MainAdmin') or hasRole('ROLE_Lfin')")
+	@Secured(AuthorityUtils.SCHOOL_FETCH)
 	public List<SchoolResponse> getAllSchools() {
 		List<School> schoolList = schoolRepository.findAll();
 		List<SchoolResponse> schoolResponses = new ArrayList<SchoolResponse>();
@@ -508,6 +526,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 	}
 
 	@Override
+	@Transactional
 	@Secured(AuthorityUtils.SCHOOL_DELETE)
 	public SuccessResponse delete(String cid) {
 		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")))

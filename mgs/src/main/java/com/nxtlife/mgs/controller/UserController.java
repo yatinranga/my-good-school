@@ -39,7 +39,7 @@ public class UserController {
 
 	@GetMapping(value = "api/info")
 	public UserResponse getLoggedInUser() {
-		return userService.getLoggedInUser();
+		return userService.getLoggedInUserResponse();
 	}
 
 //	@PutMapping("api/change-password")
@@ -153,5 +153,11 @@ public class UserController {
 	public SuccessResponse delete(
 			/* @Parameter(description = "User id", required = true) */ @PathVariable String userId) {
 		return userService.delete(userId);
+	}
+	
+	@GetMapping(produces = { "application/json" }, value = "api/user/role/{roleId}")
+	public List<UserResponse> findByRoleId(
+			/* @Parameter(description = "User id", required = true) */ @PathVariable("roleId") Long roleId) {
+		return userService.findAllByRoleId(roleId);
 	}
 }

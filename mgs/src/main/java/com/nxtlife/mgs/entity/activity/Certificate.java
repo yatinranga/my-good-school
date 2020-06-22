@@ -15,7 +15,7 @@ import com.nxtlife.mgs.enums.FourS;
 
 @SuppressWarnings("serial")
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"title","description","student_id"}))
+//@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"title","description","student_id"}))
 public class Certificate extends BaseEntity{
 
 	@NotNull

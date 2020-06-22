@@ -19,10 +19,6 @@ public class RoleResponse implements Serializable {
 
 	public List<AuthorityResponse> authorities;
 
-	public RoleResponse() {
-
-	}
-
 	public RoleResponse(Long id, String name, Boolean active) {
 		this.id = id;
 		this.name = name;

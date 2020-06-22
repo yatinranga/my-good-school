@@ -12,27 +12,37 @@ import com.nxtlife.mgs.entity.activity.File;
 
 public interface FileRepository extends JpaRepository<File, Long>{
 
-	File findByCidAndActiveTrue(String cid);
+	public File findByCidAndActiveTrue(String cid);
 	
 	@Query(value="select f.url from File f where f.active = true")
-	List<String> findAllUrls();
+	public List<String> findAllUrls();
 	
 	@Transactional
 	@Modifying( clearAutomatically = true)
 	@Query(value="update File f set f.active = :active where f.cid = :cid")
-	int updateFileSetActiveByCid(@Param("active") Boolean active,@Param("cid") String cid);
+	public int updateFileSetActiveByCid(@Param("active") Boolean active,@Param("cid") String cid);
 	
 	@Transactional
 	@Modifying(clearAutomatically = true)
 	@Query(value="update File f set f.active = :active where f.url = :url")
-	int updateFileSetActiveByUrl(@Param("active") Boolean active,@Param("url") String url);
+	public int updateFileSetActiveByUrl(@Param("active") Boolean active,@Param("url") String url);
 	
 //	int updateFileSetActiveBy
 	
-	List<File> findAllByActivityPerformedCidAndActiveTrue(String activityPerformedCid);
+	public List<File> findAllByActivityPerformedCidAndActiveTrue(String activityPerformedCid);
 	
-	File findByUrlAndActiveTrue(String url);
+	public File findByUrlAndActiveTrue(String url);
 
-	List<File> findAllByEventCidAndActiveTrue(String eventCid);
+	public List<File> findAllByEventCidAndActiveTrue(String eventCid);
 	
+	@Query(value = "select f.cid from File f where f.event.cid = ?1 and f.active = true")
+	public List<String> findAllCidByEventCidAndActiveTrue(String eventCid);
+	
+	@Query(value = "select f.cid from File f where f.activityPerformed.cid = ?1 and f.active = true")
+	public List<String> findAllCidByActivityPerformedCidAndActiveTrue(String eventCid);
+	
+	@Transactional
+	@Modifying(clearAutomatically = true)
+	@Query(value="update File f set f.active = ?2 where f.cid in ?1")
+	public int updateFileSetActiveByCidIn(List<String> cid ,Boolean active);
 }

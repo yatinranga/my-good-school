@@ -2,6 +2,6 @@ package com.nxtlife.mgs.enums;
 
 public enum ApprovalStatus {
 	
-	PENDING, VERIFIED, REJECTED;
+	PENDING, VERIFIED, REJECTED ,FORWARDED;
 
 }

@@ -53,7 +53,7 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
 	@Query(value = "select r.id from Role r where r.name=?1 and r.school.id=?2")
 	public Long findIdByNameAndSchoolId(String name, Long schoolId);
 
-	@Query(value = "select r.name from Role r where r.school.id=?2")
+	@Query(value = "select r.name from Role r where r.school.id=?1")
 	public Set<String> findNameBySchoolId(Long schoolId);
 
 	@Query(value = "select r.id from Role r where r.name=?1 and r.school.cid=?2")
@@ -75,19 +75,22 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
 	public Set<Long> findIdsBySchoolCidAandActive(String schoolId, Boolean active);
 
 	@Modifying
-	@Query(value = "update Role r set r.name = ?1, r.lastModifiedBy =?3, r.lastModifiedDate =?4 where r.id = ?2")
+	@Query(value = "update Role r set r.name = ?1, r.lastModifiedBy.id =?3, r.lastModifiedDate =?4 where r.id = ?2")
 	public int updateName(String name, Long id, Long userId, Date date);
 
 	@Modifying
-	@Query(value = "update Role r set r.active = true, r.lastModifiedBy =?2, r.lastModifiedDate =?3 where r.id =?1")
+	@Query(value = "update Role r set r.active = true, r.lastModifiedBy.id =?2, r.lastModifiedDate =?3 where r.id =?1")
 	public int activate(Long id, Long userId, Date date);
 
 	@Modifying
-	@Query(value = "update Role r set r.active = false, r.lastModifiedBy =?2, r.lastModifiedDate =?3 where r.id =?1")
+	@Query(value = "update Role r set r.active = false, r.lastModifiedBy.id =?2, r.lastModifiedDate =?3 where r.id =?1")
 	public int delete(Long id, Long userId, Date date);
 
 	@Query(value = "select r from Role r where r.school.id=?1 and r.name in ?2")
 	List<Role> findAllBySchoolIdAndNameIn(Long id, Collection<String> existingRoles);
 
 	boolean existsById(Long roleId);
+	
+	@Query(value = "select distinct r.name from Role r where r.id in ?1")
+	public Set<String> findAllNameByIdIn(Collection<Long> ids);
 }

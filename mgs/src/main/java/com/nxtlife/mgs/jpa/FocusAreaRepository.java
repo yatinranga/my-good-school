@@ -11,23 +11,23 @@ import com.nxtlife.mgs.enums.PSDArea;
 @Repository
 public interface FocusAreaRepository extends JpaRepository<FocusArea, Long> {
 
-	FocusArea getOneByCidAndActiveTrue(String cid);
+	public FocusArea getOneByCidAndActiveTrue(String cid);
 	
-	FocusArea findByNameAndActiveTrue(String name);
+	public FocusArea findByNameAndActiveTrue(String name);
 
-	FocusArea findByCidAndActiveTrue(String cid);
+	public FocusArea findByCidAndActiveTrue(String cid);
 	
-	List<FocusArea> findAllByActivitiesSchoolsCidAndActiveTrue(String schoolCid);
+	public List<FocusArea> findAllByActivitiesSchoolsCidAndActiveTrue(String schoolCid);
 
-	List<FocusArea> findAllByActiveTrue();
+	public List<FocusArea> findAllByActiveTrue();
 	
-	boolean existsByCidAndActiveTrue(String cid);
+	public boolean existsByCidAndActiveTrue(String cid);
 
-	FocusArea findByNameAndPsdAreaAndActiveTrue(String name, PSDArea psdArea);
+	public FocusArea findByNameAndPsdAreaAndActiveTrue(String name, PSDArea psdArea);
 
-	FocusArea findByCid(String id);
+	public FocusArea findByCid(String id);
 
-	FocusArea findByNameAndPsdArea(String name, PSDArea psdArea);
+	public FocusArea findByNameAndPsdArea(String name, PSDArea psdArea);
 
-	boolean existsByNameAndActiveTrue(String focusArea);
+	public boolean existsByNameAndActiveTrue(String focusArea);
 	}

@@ -27,4 +27,6 @@ public interface SessionService {
 	SessionResponse getTeacherSessionsOfClubBy(String clubId, String sessionFetch,String teacherCid , Integer page,
 			Integer pageSize);
 
+	SessionResponse getSession(String sessionId);
+
 }

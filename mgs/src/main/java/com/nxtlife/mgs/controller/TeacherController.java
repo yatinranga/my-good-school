@@ -95,22 +95,22 @@ public class TeacherController {
 //		return teacherService.getAllManagmentBySchool(schoolCid);
 //	}
 	
-	@GetMapping(value = "api/teacher/club/members")
-	public List<ClubMembershipResponse> getMembershipDetails(@RequestParam(value = "teacherId" , required = false) String teacherId){
-		return teacherService.getMembershipDetails(teacherId);
+	@GetMapping(value = "api/teacher/club/members") //doneGrade //toSend
+	public List<ClubMembershipResponse> getMembershipDetails(@RequestParam(value = "teacherId" , required = false) String teacherId ,@RequestParam(value = "schoolId" , required = false) String schoolCid){
+		return teacherService.getMembershipDetails(teacherId ,schoolCid);
 	}
 	
-	@GetMapping(value = "api/teacher/club/{clubId}/members")
-	public List<ClubMembershipResponse> getMembershipDetailsbyClub(@PathVariable("clubId") String clubId ,@RequestParam(value = "teacherId" , required = false) String teacherId){
-		return teacherService.getMembershipDetailsbyClub(clubId,teacherId);
+	@GetMapping(value = "api/teacher/club/{clubId}/members") //doneGrade //toSend
+	public List<ClubMembershipResponse> getMembershipDetailsbyClub(@PathVariable("clubId") String clubId ,@RequestParam(value = "teacherId" , required = false) String teacherId ,@RequestParam(value = "schoolId" , required = false) String schoolCid){
+		return teacherService.getMembershipDetailsbyClub(clubId,teacherId,schoolCid);
 	}
 	
-	@GetMapping(value = "api/teacher/clubs")
-	public List<ActivityRequestResponse> getAllClubsOfTeacher(@RequestParam(value = "teacherId" , required = false) String teacherId){
-		return activityService.getAllClubsOfTeacher(teacherId);
+	@GetMapping(value = "api/teacher/clubs")//doneGrade 
+	public List<ActivityRequestResponse> getAllClubsOfTeacher(@RequestParam(value = "teacherId" , required = false) String teacherId ,@RequestParam(value = "schoolId" , required = false) String schoolId){
+		return activityService.getAllClubsOfTeacher(teacherId,schoolId);
 	}
 	
-	@PutMapping(value = "api/teacher/club")
+	@PutMapping(value = "api/teacher/club") //doneGrade //toSend
 	public ClubMembershipResponse updateStatus(@RequestParam(name = "studentId")  String studentId,@RequestParam(name = "activityId") String activityId , @RequestParam(name="verified",defaultValue="true") Boolean verified ,@RequestParam(value = "teacherId" , required = false) String teacherId) {
 		return teacherService.updateStatus(studentId, activityId, verified ,teacherId);
 	}

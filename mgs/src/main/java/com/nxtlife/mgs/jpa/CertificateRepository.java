@@ -9,9 +9,9 @@ import com.nxtlife.mgs.view.CertificateResponse;
 
 public interface CertificateRepository extends JpaRepository<Certificate, Long>{
 
-	boolean existsByStudentCidAndTitleAndDescriptionAndActiveTrue(String studentCid , String title , String description);
+	public boolean existsByStudentCidAndTitleAndDescriptionAndActiveTrue(String studentCid , String title , String description);
 	
-	boolean existsByCidAndActiveTrue(String cid);
+	public 	boolean existsByCidAndActiveTrue(String cid);
 	
-	List<CertificateResponse> findAllByStudentCidAndActiveTrue(String studentCid);
+	public List<CertificateResponse> findAllByStudentCidAndActiveTrue(String studentCid);
 }

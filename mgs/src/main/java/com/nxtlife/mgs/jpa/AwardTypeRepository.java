@@ -8,9 +8,13 @@ import com.nxtlife.mgs.entity.school.AwardType;
 
 public interface AwardTypeRepository extends JpaRepository<AwardType, Long>{
 
-	AwardType getByNameAndActiveTrue(String name);
+	public AwardType getByNameAndActiveTrue(String name);
 	
-	@Query(value = "select aw.name from AwardType aw where aw.active = true")
-	List<String> findAllNameByActiveTrue();
+	@Query(value = "select aw.name from AwardType aw where aw.school.id = ?1 and aw.active = true")
+	public List<String> findAllNameBySchoolIdAndActiveTrue(Long schoolId);
+
+	public boolean existsByNameAndSchoolId(String name, Long gettSchoolId);
+
+	public int deleteByNameAndSchoolId(String name, Long schoolId);
 	
 }

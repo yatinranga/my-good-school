@@ -3,6 +3,7 @@ package com.nxtlife.mgs.service.impl;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -38,16 +39,22 @@ import com.nxtlife.mgs.entity.common.RoleAuthorityKey;
 import com.nxtlife.mgs.entity.common.UserRoleKey;
 import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.user.Authority;
+import com.nxtlife.mgs.entity.user.Guardian;
 import com.nxtlife.mgs.entity.user.Role;
 import com.nxtlife.mgs.entity.user.RoleAuthority;
+import com.nxtlife.mgs.entity.user.Student;
+import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.entity.user.User;
 import com.nxtlife.mgs.entity.user.UserRole;
 import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.AuthorityRepository;
+import com.nxtlife.mgs.jpa.GuardianRepository;
 import com.nxtlife.mgs.jpa.RoleAuthorityRepository;
 import com.nxtlife.mgs.jpa.RoleRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
+import com.nxtlife.mgs.jpa.StudentRepository;
+import com.nxtlife.mgs.jpa.TeacherRepository;
 import com.nxtlife.mgs.jpa.UserRepository;
 import com.nxtlife.mgs.jpa.UserRoleRepository;
 import com.nxtlife.mgs.service.BaseService;
@@ -55,16 +62,21 @@ import com.nxtlife.mgs.service.MailService;
 import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.util.AuthorityUtils;
 import com.nxtlife.mgs.util.Utils;
+import com.nxtlife.mgs.view.GuardianRequest;
 import com.nxtlife.mgs.view.Mail;
 import com.nxtlife.mgs.view.MailRequest;
 import com.nxtlife.mgs.view.PasswordRequest;
+import com.nxtlife.mgs.view.StudentRequest;
 import com.nxtlife.mgs.view.SuccessResponse;
+import com.nxtlife.mgs.view.TeacherRequest;
 import com.nxtlife.mgs.view.user.UserRequest;
 import com.nxtlife.mgs.view.user.UserResponse;
 import com.nxtlife.mgs.view.user.security.AuthorityResponse;
 import com.nxtlife.mgs.view.user.security.RoleResponse;
+import com.sun.mail.smtp.SMTPSendFailedException;
 
 @Service("userService")
+@Transactional
 public class UserServiceImpl extends BaseService implements UserService, UserDetailsService {
 
 	@Autowired
@@ -96,6 +108,15 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Autowired
 	private HttpServletRequest httpServletRequest;
+	
+	@Autowired
+	private StudentRepository studentRepository;
+	
+	@Autowired
+	GuardianRepository guardianRepository;
+	
+	@Autowired
+	TeacherRepository teacherRepository;
 
 	private static PasswordEncoder userPasswordEncoder = new BCryptPasswordEncoder();
 
@@ -633,7 +654,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Override
 	@Async
-	public Boolean sendLoginCredentialsBySMTP(Mail request) {
+	public Boolean sendLoginCredentialsBySMTP(Mail request) throws SMTPSendFailedException{
 		if (request.getMailTo() == null || request.getMailFrom() == null || request.getMailSubject() == null)
 			throw new ValidationException("Please provide to , from and subject if not provided already.");
 		if (request.getMailContent() == null)
@@ -742,7 +763,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Override
 	@Transactional
-	public UserResponse getLoggedInUser() {
+	public UserResponse getLoggedInUserResponse() {
 		User user = getUser();
 		if (user == null)
 			throw new ValidationException("No user found.");
@@ -835,7 +856,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@Secured(AuthorityUtils.USER_CREATE)
 	public UserResponse save(UserRequest request) {
 		Long schoolId = null;
-		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin")))
+		if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin")))
 			schoolId = schoolRepository.findIdByCid(request.getSchoolId());
 		else
 			schoolId = getUser().gettSchoolId();
@@ -843,12 +864,46 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		validate(request, schoolId);
 		User user = request.toEntity();
 		user.settSchoolId(schoolId);
+		user.setCid(Utils.generateRandomAlphaNumString(8));
 		user.setPassword(userPasswordEncoder.encode("12345"));
 		user = userRepository.save(user);
 		for (Long roleId : request.getRoleIds()) {
 			userRoleRepository.save(user.getId(), roleId);
 		}
-		return fetch(user, request.getRoleIds());
+		UserResponse response = fetch(user, request.getRoleIds());
+		
+		Set<String> roles = roleRepository.findAllNameByIdIn(request.getRoleIds());
+		if(roles != null && !roles.isEmpty()) {
+			School school = new School();
+			school.setId(schoolId);
+			
+			if(roles.contains("Student")) {
+				Student student = new StudentRequest(user.getName(), user.getEmail(), user.getContactNumber(), user.getUsername(),request.getGender()).toEntity();
+				student.setCid(Utils.generateRandomAlphaNumString(8));
+				student.setUser(user);
+				student.setSchool(school);
+				student = studentRepository.save(student);
+				response.setStudentId(student.getCid());
+			}
+			
+			if(roles.contains("Guardian")) {
+				Guardian guardian = new GuardianRequest(user.getName(), user.getEmail(), user.getContactNumber(), user.getUsername(),request.getGender()).toEntity();
+				guardian.setCid(Utils.generateRandomAlphaNumString(8));
+				guardian.setUser(user);
+				guardian = guardianRepository.save(guardian);
+				response.setGuardianId(guardian.getCid());
+			}
+			
+			if(roles.stream().anyMatch(r -> r.equalsIgnoreCase("Supervisor") || r.equalsIgnoreCase("Coordinator") || r.equalsIgnoreCase("Head") || r.equalsIgnoreCase("SchoolAdmin"))) {
+				Teacher teacher = new TeacherRequest(user.getName(), user.getUsername(), user.getEmail(), user.getContactNumber(), request.getGender()).toEntity();
+				teacher.setCid(Utils.generateRandomAlphaNumString(8));
+				teacher.setUser(user);
+				teacher = teacherRepository.save(teacher);
+				response.setTeacherId(teacher.getCid());	
+			}
+		}
+		
+		return response;
 	}
 
 	@Override
@@ -862,13 +917,14 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			roleAuthoritiesMap.put(roleId, authorityRepository.findByAuthorityRolesRoleId(roleId));
 		}
 		for (UserResponse user : userResponseList) {
-			user.setRoles(roleRepository.findByRoleUsersUserId(user.getId()));
+			user.setRoles(roleRepository.findByRoleUsersUserCid(user.getId()));
 			for (RoleResponse role : user.getRoles()) {
 				role.setAuthorities(roleAuthoritiesMap.get(role.getId()));
 			}
 		}
 		return userResponseList;
 	}
+	
 
 	@Override
 	@Secured(AuthorityUtils.USER_FETCH)
@@ -881,7 +937,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		if (!user.getSchoolId().equals(schoolId)) {
 			throw new AccessDeniedException("You aren't login with correct user to fetch this details");
 		}
-		user.setRoles(roleRepository.findByRoleUsersUserId(user.getId()));
+		user.setRoles(roleRepository.findByRoleUsersUserCid(user.getId()));
 		for (RoleResponse role : user.getRoles()) {
 			role.setAuthorities(authorityRepository.findByAuthorityRolesRoleId(role.getId()));
 		}
@@ -931,7 +987,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		Long schoolId = getUser().gettSchoolId();
 		Boolean requestBody = false;
 		if (request.getRoleIds() != null && !request.getRoleIds().isEmpty()) {
-			validateRoleIds(request.getRoleIds(), schoolId);
+			validateRoleIds(new HashSet<Long>(request.getRoleIds()), schoolId);
 			requestBody = true;
 		}
 		if (request.getContactNumber() == null && request.getEmail() == null && request.getName() == null
@@ -975,7 +1031,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			}
 			roleIds.removeAll(requestedRoleIds);
 			for (Long roleId : roleIds) {
-				userRoleRepository.delete(userId, roleId);
+				userRoleRepository.delete(userRepository.findIdByCid(userId), roleId);
 			}
 		}
 		return fetch(user, request.getRoleIds() == null ? roleIds : request.getRoleIds());
@@ -1097,5 +1153,24 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			logger.info("User {} deleted successfully", id);
 		}
 		return new SuccessResponse(HttpStatus.OK.value(), "User deleted successfully");
+	}
+	
+	@Override
+	@Secured(AuthorityUtils.USER_FETCH)
+	public List<UserResponse> findAllByRoleId(Long roleId) {
+		Long schoolId = getUser().gettSchoolId();
+		List<UserResponse> userResponseList = userRepository.findBySchoolIdAndIdIn(schoolId , userRoleRepository.findUserIdsByRoleId(roleId));
+		Set<Long> roleIds = roleRepository.findIdsBySchoolIdAandActive(schoolId, true);
+		Map<Long, List<AuthorityResponse>> roleAuthoritiesMap = new HashMap<>();
+		for (Long rId : roleIds) {
+			roleAuthoritiesMap.put(rId, authorityRepository.findByAuthorityRolesRoleId(rId));
+		}
+		for (UserResponse user : userResponseList) {
+			user.setRoles(roleRepository.findByRoleUsersUserCid(user.getId()));
+			for (RoleResponse role : user.getRoles()) {
+				role.setAuthorities(roleAuthoritiesMap.get(role.getId()));
+			}
+		}
+		return userResponseList;
 	}
 }

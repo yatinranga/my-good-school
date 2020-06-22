@@ -58,9 +58,9 @@ public class School extends BaseEntity {
 
 	private String logo;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "user_id")
-	User user;
+//	@OneToOne(cascade = CascadeType.ALL)
+//	@JoinColumn(name = "user_id")
+//	User user;
 
 	@ManyToMany(mappedBy = "schools")
 	private List<Grade> grades;
@@ -172,13 +172,13 @@ public class School extends BaseEntity {
 	// this.id = id;
 	// }
 
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
+//	public User getUser() {
+//		return user;
+//	}
+//
+//	public void setUser(User user) {
+//		this.user = user;
+//	}
 
 	public String getUsername() {
 		return username;
@@ -213,7 +213,7 @@ public class School extends BaseEntity {
 	}
 
 	public School(@NotNull String name, @NotNull String username, @NotNull String cid, String address,
-			@NotNull String email, String contactNumber, String logo, Boolean active, User user, List<Grade> grades,
+			@NotNull String email, String contactNumber, String logo, Boolean active, List<Grade> grades,
 			List<Teacher> teachers, List<Student> students, List<SchoolManagementMember> schoolManagementMembers,
 			List<StudentSchoolGrade> studentSchoolGrades, List<Activity> activities) {
 		this.name = name;
@@ -224,7 +224,7 @@ public class School extends BaseEntity {
 		this.contactNumber = contactNumber;
 		this.logo = logo;
 		this.setActive(active);
-		this.user = user;
+//		this.user = user;
 		this.grades = grades;
 		this.teachers = teachers;
 		this.students = students;

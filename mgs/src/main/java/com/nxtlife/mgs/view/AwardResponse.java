@@ -275,16 +275,19 @@ public class AwardResponse {
 					GroupResponseByActivityName<ActivityPerformedResponse> partialList = new GroupResponseByActivityName<ActivityPerformedResponse>();
 					partialList.setCriterion("activityName");
 					partialList.setCriterionValue(type);
+					double avgStars[] = {0d};
 					Long[] count = {0l};
 					List<ActivityPerformedResponse> activityList = new ArrayList<ActivityPerformedResponse>();
 					award.getAwardActivityPerformed().stream().forEach(act -> {
 						if(act.getActivityPerformed().getActivity().getName().equalsIgnoreCase(type)) {
 							activityList.add(new ActivityPerformedResponse(act.getActivityPerformed()));
+							avgStars[0]+=act.getActivityPerformed().getStar();
 							count[0]++;
 							}
 						});
 					partialList.setResponses(activityList);
 					partialList.setCount(count[0]);
+					partialList.setAverageStars(avgStars[0] / count[0]);
 					this.activityPerformedResponses.add(partialList);
 					}
 					
@@ -309,8 +312,8 @@ public class AwardResponse {
 			this.statusModifiedBy=award.getStatusModifiedBy().getName();
 			this.statusModifierId=award.getStatusModifiedBy().getCid();
 		}
-		this.validFrom = DateUtil.formatDate(award.getValidFrom());
-		this.validUntil = DateUtil.formatDate(award.getValidUntil());
+		this.validFrom = award.getValidFrom().toString() ;//DateUtil.formatDate(award.getValidFrom());
+		this.validUntil = award.getValidUntil().toString() ; //DateUtil.formatDate(award.getValidUntil());
 		if(award.getAwardCriterion() != null)
 		   this.awardCriterion = award.getAwardCriterion().toString();
 		this.criterionValue = award.getCriterionValue();

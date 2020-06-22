@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -325,21 +326,20 @@ public class ActivityPerformedResponse {
 		}
 		this.coachRemark = activityPerformed.getCoachRemark();
 		if (activityPerformed.getCoachRemarkDate() != null)
-			this.coachRemarkDate = DateUtil.formatDate(activityPerformed.getCoachRemarkDate());
+			this.coachRemarkDate = activityPerformed.getCoachRemarkDate().toString(); //DateUtil.formatDate(activityPerformed.getCoachRemarkDate());
 		this.participationScore = activityPerformed.getParticipationScore()== null? 0 : activityPerformed.getParticipationScore() ;
 		this.initiativeScore = activityPerformed.getInitiativeScore() == null ? 0 : activityPerformed.getInitiativeScore();
 		this.achievementScore = activityPerformed.getAchievementScore() == null ? 0 : activityPerformed.getAchievementScore();
 		this.star = activityPerformed.getStar();
-		this.fileResponses = new ArrayList<FileResponse>();
-		if (activityPerformed.getFiles() != null)
-			for (File file : activityPerformed.getFiles())
-				this.fileResponses.add(new FileResponse(file));
+		if (activityPerformed.getFiles() != null) {
+			this.fileResponses = activityPerformed.getFiles().stream().filter(f -> f.getActive()).distinct().map(FileResponse :: new).collect(Collectors.toList());
+		}
 		this.totalMarks = this.initiativeScore + this.achievementScore + this.participationScore;
 		
 		if (activityPerformed.getSubmittedOn() != null)
-			this.dateOfActivity = DateUtil.formatDate(activityPerformed.getSubmittedOn());
+			this.dateOfActivity = activityPerformed.getSubmittedOn().toString() ;//DateUtil.formatDate(activityPerformed.getSubmittedOn());
 		if (activityPerformed.getReviewedOn() != null)
-			this.dateOfActivity = DateUtil.formatDate(activityPerformed.getReviewedOn());
+			this.dateOfActivity = activityPerformed.getReviewedOn().toString() ; //DateUtil.formatDate(activityPerformed.getReviewedOn());
 		this.title = activityPerformed.getTitle();
 
 	}

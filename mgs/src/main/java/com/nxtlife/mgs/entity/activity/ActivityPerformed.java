@@ -1,5 +1,6 @@
 package com.nxtlife.mgs.entity.activity;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -12,12 +13,15 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 
 import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.school.AwardActivityPerformed;
@@ -27,8 +31,9 @@ import com.nxtlife.mgs.enums.ActivityStatus;
 
 @SuppressWarnings("serial")
 @Entity
+@Table(name = "activity_performed")
 @DynamicUpdate(true)
-public class ActivityPerformed extends BaseEntity {
+public class ActivityPerformed extends BaseEntity implements Serializable{
 
 	@NotNull
 	private Date dateOfActivity;
@@ -54,27 +59,27 @@ public class ActivityPerformed extends BaseEntity {
 
 	@Min(value = 0,message = "Minimum permissible value is 0.")
 	@Max(value = 10,message = "Maximum permissible value is 10.")
-	@Column(columnDefinition = " Default INT 0 ")
+	@Column(columnDefinition = "INT default 0")
 	private Integer participationScore;
 
 	@Min(value = 0,message = "Minimum permissible value is 0.")
 	@Max(value = 10,message = "Maximum permissible value is 10.")
-	@Column(columnDefinition = " Default INT 0 ")
+	@Column(columnDefinition = "INT default 0")
 	private Integer initiativeScore;
 
 	@Min(value = 0,message = "Minimum permissible value is 0.")
 	@Max(value = 5,message = "Maximum permissible value is 5.")
-	@Column(columnDefinition = " Default INT 0 ")
+	@Column(columnDefinition = "INT default 0")
 	private Integer achievementScore;
 
 	@Min(value = 0,message = "Minimum permissible value is 0.")
 	@Max(value = 5,message = "Maximum permissible value is 5.")
-	@Column(columnDefinition = " Default INT 0 ")
+	@Column(columnDefinition = " DECIMAL(4,2) default '0.0' ")
 	private Double star= 0d;
 
 	@NotNull
 	@Enumerated(EnumType.STRING)
-	private ActivityStatus activityStatus;
+	private ActivityStatus activityStatus = ActivityStatus.InProgressAtStudent;
 
 //	@OneToOne
 //	private ActivityOfferedFocusArea activityOffered;
@@ -249,7 +254,7 @@ public class ActivityPerformed extends BaseEntity {
 	}
 
 	public ActivityPerformed(Date dateOfActivity, String cid, String description, String coachRemark,
-			Date coachRemarkDate, Boolean active, Integer participationScore, Integer initiativeScore,
+			Date coachRemarkDate, Integer participationScore, Integer initiativeScore,
 			Integer achievementScore, Double star, ActivityStatus activityStatus, Activity activity, List<File> files,
 			Student student, Teacher teacher) {
 		this.dateOfActivity = dateOfActivity;
@@ -257,7 +262,6 @@ public class ActivityPerformed extends BaseEntity {
 		this.description = description;
 		this.coachRemark = coachRemark;
 		this.coachRemarkDate = coachRemarkDate;
-		this.setActive(active);
 		this.participationScore = participationScore;
 		this.initiativeScore = initiativeScore;
 		this.achievementScore = achievementScore;

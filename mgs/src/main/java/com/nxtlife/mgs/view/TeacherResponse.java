@@ -244,7 +244,7 @@ public class TeacherResponse {
 
 		if (teacher.getUser() != null) {
 			this.userId = teacher.getUser().getCid();
-			roles = teacher.getUser().getRoles().stream().map(r -> r.getName()).collect(Collectors.toSet());
+			roles = teacher.getUser().getUserRoles().stream().map(r -> r.getRole().getName()).distinct().collect(Collectors.toSet());
 		}
 
 		this.username = teacher.getUsername();
@@ -262,7 +262,9 @@ public class TeacherResponse {
 		this.isClassTeacher = teacher.getIsClassTeacher();
 		this.imagePath = teacher.getImageUrl();
 		this.profileBrief = teacher.getProfileBrief();
-		if (teacher.getCreatedDate() != null)
+		if (teacher.getDob() != null)
+			this.dob = teacher.getDob().toString();
+		if (teacher.getCreatedDate().get() != null)
 			this.yearOfEnrolment = Integer.toString(teacher.getCreatedDate().get().getYear());
 
 		if (teacher.getSchool() != null) {
@@ -338,7 +340,7 @@ public class TeacherResponse {
 
 		if (teacher.getUser() != null) {
 			this.userId = teacher.getUser().getCid();
-			roles = teacher.getUser().getRoles().stream().map(r -> r.getName()).collect(Collectors.toSet());
+			roles = teacher.getUser().getUserRoles().stream().map(r -> r.getRole().getName()).distinct().collect(Collectors.toSet());
 		}
 
 		this.username = teacher.getUsername();
@@ -351,7 +353,7 @@ public class TeacherResponse {
 			this.yearOfEnrolment = Integer.toString(teacher.getCreatedDate().get().getYear());
 
 		if (teacher.getDob() != null)
-			this.dob = DateUtil.formatDate(teacher.getDob());
+			this.dob = teacher.getDob().toString();//DateUtil.formatDate(teacher.getDob());
 
 		this.qualification = teacher.getQualification();
 		this.active = teacher.getActive();

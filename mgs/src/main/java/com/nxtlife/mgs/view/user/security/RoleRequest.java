@@ -18,6 +18,8 @@ public class RoleRequest extends Request {
 	@NotEmpty(message = "Authority ids can't be null or empty")
 	private Set<Long> authorityIds;
 
+	private String schoolId;
+	
 	public Role toEntity() {
 		Role role = new Role();
 		role.setName(name);
@@ -31,4 +33,10 @@ public class RoleRequest extends Request {
 	public Set<Long> getAuthorityIds() {
 		return authorityIds;
 	}
+
+	public String getSchoolId() {
+		return schoolId;
+	}
+	
+	
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.nxtlife.mgs.service.ActivityService;
 import com.nxtlife.mgs.view.ActivityRequestResponse;
@@ -34,8 +35,14 @@ public class ActivityController {
 //	}
 
 	@GetMapping(value = { "activitiesOffered/{schoolCid}", "activitiesOffered" })
-	public List<ActivityRequestResponse> getAllActivitiesOfSchool(
+	public List<ActivityRequestResponse> getAllActivitiesOfSchoolAsPerGrade(
 			@PathVariable(name = "schoolCid", required = false) String schoolCid) {
+		return activityService.getAllOfferedActivitiesBySchoolAsPerGrade(schoolCid);
+//		return activityService.getAllOfferedActivitiesBySchool(schoolCid);
+	}
+	
+	@GetMapping("activities")
+	public List<ActivityRequestResponse> getAllActivitiesOfSchool(@RequestParam(value = "schoolId" ,required = false) String schoolCid){
 		return activityService.getAllOfferedActivitiesBySchool(schoolCid);
 	}
 
@@ -50,10 +57,14 @@ public class ActivityController {
 	}
 
 	@DeleteMapping("api/activitiesOffered/{cid}")
-	public SuccessResponse deleteActivityByCid(@PathVariable("cid") String cid) {
-		return activityService.deleteActivityByCid(cid);
+	public SuccessResponse deleteActivityByCid(@PathVariable("cid") String cid ,@RequestParam(value = "schoolId" ,required = false) String schoolCid ,@RequestParam(value = "forAll" ,defaultValue = "false") Boolean forAll) {
+		return activityService.deleteActivityByCid(cid,schoolCid,forAll);
 	}
 
+	@GetMapping(value = "api/activitiesOffered/{cid}")
+	public ActivityRequestResponse getById(@PathVariable("cid") String cid) {
+		return activityService.getById(cid);
+	}
 //	@GetMapping(value = "/coaches")
 //	public List<TeacherResponse> getCoachesBySchoolAndActivityCid(@RequestParam("schoolId") String schoolCid ,@RequestParam("activityId") String activityCid){
 //		return teacherService.findCoachesBySchoolCidAndActivityCid(schoolCid, activityCid);

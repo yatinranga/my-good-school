@@ -3,12 +3,15 @@ package com.nxtlife.mgs.entity.user;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
@@ -19,6 +22,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.school.School;
 
@@ -75,6 +79,9 @@ public class User extends BaseEntity implements UserDetails, Serializable {
 
 	@Transient
 	private Long tschoolId;
+	
+	@Transient
+	private String tschoolCid;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	private List<UserRole> userRoles;
@@ -87,6 +94,9 @@ public class User extends BaseEntity implements UserDetails, Serializable {
 
 	@Transient
 	private Long userId;
+	
+//	@OneToOne(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
+//	private Student student;
 
 	public User() {
 
@@ -254,14 +264,28 @@ public class User extends BaseEntity implements UserDetails, Serializable {
 
 	public void settSchoolId(Long schoolId) {
 		if (schoolId != null) {
-			this.school = new School();
+			this.school = this.school == null ? new School() : this.school;
 			this.school.setId(schoolId);
 		}
 		this.tschoolId = schoolId;
 	}
+	
+	public String gettSchoolCid() {
+		return tschoolCid;
+	}
+	
+	public void settSchoolCid(String schoolCid) {
+		if (schoolCid != null) {
+			this.school = this.school == null ? new School() : this.school;
+			this.school.setId(this.gettSchoolId());
+			this.school.setCid(schoolCid);
+		}
+		this.tschoolCid = schoolCid;
+	}
+	
 
 	public Collection<Role> getRoles() {
-		return roles;
+		return roles = roles == null || roles.isEmpty() ? this.getUserRoles() == null ? null : this.getUserRoles().stream().map(ur -> ur.getRole()).collect(Collectors.toSet()) : this.roles;
 	}
 
 	public void setRoles(Collection<Role> roles) {
@@ -284,4 +308,12 @@ public class User extends BaseEntity implements UserDetails, Serializable {
 		this.cid = cid;
 	}
 
+//	public Student getStudent() {
+//		return student;
+//	}
+//
+//	public void setStudent(Student student) {
+//		this.student = student;
+//	}
+	
 }

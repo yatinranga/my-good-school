@@ -7,6 +7,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 
 import com.nxtlife.mgs.entity.activity.ActivityPerformed;
@@ -180,9 +181,9 @@ public class ActivityPerformedRequest extends Request{
 		if (this.id != null)
 			activityPerformed.setCid(this.id);
 		if (this.dateOfActivity != null) {
-			if (LocalDateTime.now().toDate().before(DateUtil.convertStringToDate(this.dateOfActivity)))
+			if (LocalDateTime.now(DateTimeZone.forTimeZone(DateUtil.defaultTimeZone)).toDate().before(DateUtil.convertStringToDate(this.dateOfActivity)))
 				throw new ValidationException("Date of activity cannot be a future date.");
-			Date thresholdDate = LocalDateTime.now().minusDays(30).toDate();
+			Date thresholdDate = LocalDateTime.now(DateTimeZone.forTimeZone(DateUtil.defaultTimeZone)).minusDays(30).toDate();
 			if(DateUtil.convertStringToDate(this.dateOfActivity).before(thresholdDate))
 			    throw new ValidationException("Activity performed date cannot be earlier than 30 days from today.");
 			    

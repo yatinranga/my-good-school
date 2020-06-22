@@ -2,6 +2,7 @@ package com.nxtlife.mgs.jpa;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -33,21 +34,27 @@ public interface AwardRepository extends JpaRepository<Award, Long>, QuerydslPre
 			+ "   Award aw JOIN aw.awardActivityPerformed awap JOIN awap.activityPerformed a "
 			+ "WHERE a.student.cid =:cid AND a.activityStatus =:status AND aw.status =:awardStatus AND a.active = TRUE AND aw.active = TRUE "
 			+ "GROUP BY " + "   a.activity.fourS")
-	List<PropertyCount> findFourSCount(@Param("cid") String cid, @Param("status") ActivityStatus status,
+	public List<PropertyCount> findFourSCount(@Param("cid") String cid, @Param("status") ActivityStatus status,
 			@Param("awardStatus") ApprovalStatus awardStatus);
 
 	@Query("SELECT  " + "new com.nxtlife.mgs.view.PropertyCount(f.name, COUNT(DISTINCT aw.id)) " + "FROM "
 			+ "    Award aw JOIN aw.awardActivityPerformed awap JOIN awap.activityPerformed ap JOIN ap.activity a JOIN a.focusAreas f  "
 			+ "WHERE ap.student.cid =:cid AND ap.activityStatus =:status AND aw.status =:awardStatus AND ap.active = TRUE AND aw.active = TRUE  "
 			+ "GROUP BY " + "   f.name")
-	List<PropertyCount> findFocusAreaCount(@Param("cid") String cid, @Param("status") ActivityStatus status,
+	public List<PropertyCount> findFocusAreaCount(@Param("cid") String cid, @Param("status") ActivityStatus status,
 			@Param("awardStatus") ApprovalStatus awardStatus);
 
 	@Query("SELECT " + "new com.nxtlife.mgs.view.PropertyCount(f.psdArea, COUNT(DISTINCT aw.id)) " + "FROM "
 			+ "    Award aw JOIN aw.awardActivityPerformed awap JOIN awap.activityPerformed ap JOIN ap.activity a JOIN a.focusAreas f  "
 			+ "WHERE ap.student.cid =:cid AND ap.activityStatus =:status AND aw.status =:awardStatus AND ap.active = TRUE AND aw.active = TRUE  "
 			+ "GROUP BY " + "   f.psdArea")
-	List<PropertyCount> findPsdAreaCount(@Param("cid") String cid, @Param("status") ActivityStatus status,
+	public List<PropertyCount> findPsdAreaCount(@Param("cid") String cid, @Param("status") ActivityStatus status,
 			@Param("awardStatus") ApprovalStatus awardStatus);
 
+	public List<Award> findByTeacherCidAndStudentGradeCidInAndActiveTrue(String teacherCid, Collection<String> gradeIds);
+
+	public List<Award> findByTeacherCidAndActiveTrue(String teacherCid);
+
+	public Set<Award> findAllByStudentSchoolCidAndStudentGradeCidInAndActiveTrue(String schoolCid,
+			List<String> gradeIds);
 }

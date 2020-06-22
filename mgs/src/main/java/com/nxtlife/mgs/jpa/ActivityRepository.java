@@ -18,58 +18,62 @@ import com.nxtlife.mgs.enums.PSDArea;
 @Repository
 public interface ActivityRepository extends JpaRepository<Activity, Long> {
 
-	Activity getOneByNameAndActiveTrue(String name);
+	public Activity getOneByNameAndActiveTrue(String name);
 	
 	@Query("select a.cid from Activity a where a.cid = :cid and a.active = true")
-	String findCidByNameAndActiveTrue(@Param("cid") String cid);
+	public String findCidByNameAndActiveTrue(@Param("cid") String cid);
 
-	Activity getOneByCidAndActiveTrue(String cid);
+	public 	Activity getOneByCidAndActiveTrue(String cid);
 
-	List<Activity> findAllBySchoolsCidAndActiveTrue(String schoolCid);
+	public 	List<Activity> findAllBySchoolsCidAndActiveTrue(String schoolCid);
 
-	List<Activity> findAllByTeachersIdAndActiveTrue(Long teacherId);
+	public List<Activity> findAllByTeachersIdAndActiveTrue(Long teacherId);
 
-	List<Activity> findAllByTeachersCidAndActiveTrue(String teacherCid);
+	public 	List<Activity> findAllByTeachersCidAndActiveTrue(String teacherCid);
 
-	List<Activity> findAllBySchoolsCidAndTeachersIdAndActiveTrue(String schoolCid, Long teacherId);
+	public 	List<Activity> findAllBySchoolsCidAndTeachersIdAndActiveTrue(String schoolCid, Long teacherId);
 
-	List<Activity> findAllBySchoolsCidAndTeachersCidAndActiveTrue(String schoolCid, String teacherCid);
+	public List<Activity> findAllBySchoolsCidAndTeachersCidAndActiveTrue(String schoolCid, String teacherCid);
 
-	Activity findByNameAndActiveTrue(String name);
+	public Activity findByNameAndActiveTrue(String name);
+	
+	public Activity findByName(String name);
 
 	@Transactional
 	@Modifying(clearAutomatically = true)
 	@Query(value = "update Activity a set a.active = :active where a.cid = :cid")
-	int updateActivitySetActiveByCid(@Param("active") Boolean active, @Param("cid") String cid);
+	public int updateActivitySetActiveByCid(@Param("active") Boolean active, @Param("cid") String cid);
 
-	List<Activity> findAllByActiveTrue();
+	public 	List<Activity> findAllByActiveTrue();
 
-	List<Activity> findAllBySchoolsCidAndFourSAndAndActiveTrue(String schoolCid, FourS fourS);
+	public 	List<Activity> findAllBySchoolsCidAndFourSAndAndActiveTrue(String schoolCid, FourS fourS);
 
-	List<Activity> findAllBySchoolsCidAndFocusAreasCidAndActiveTrue(String schoolCid, String focusAreaCid);
+	public 	List<Activity> findAllBySchoolsCidAndFocusAreasCidAndActiveTrue(String schoolCid, String focusAreaCid);
 
-	List<Activity> findAllBySchoolsCidAndFocusAreasPsdAreaAndActiveTrue(String schoolCid, PSDArea psdArea);
+	public 	List<Activity> findAllBySchoolsCidAndFocusAreasPsdAreaAndActiveTrue(String schoolCid, PSDArea psdArea);
 
-	Activity findByCidAndActiveTrue(String activityCid);
+	public 	Activity findByCidAndActiveTrue(String activityCid);
 
-	Page<Activity> findAllByActiveTrue(Pageable paging);
+	public 	Page<Activity> findAllByActiveTrue(Pageable paging);
 
-	Activity getOneByCid(String activity);
+	public 	Activity getOneByCid(String activity);
 
-	List<Activity> findAllByIsGeneralTrueAndActiveTrue();
+	public 	List<Activity> findAllByIsGeneralTrueAndActiveTrue();
+	
+	public 	List<Activity> findAllBySchoolsIdNotAndActiveTrue(Long schoolId);
 
-	boolean existsByCidAndActiveTrue(String activityCid);
+	public 	boolean existsByCidAndActiveTrue(String activityCid);
 
-	boolean existsByNameAndActiveTrue(String activityName);
+	public 	boolean existsByNameAndActiveTrue(String activityName);
 	
 //	@Query("select a.id from Activity a where a.cid = :activityCid and a.school.id =:schoolId and a.active = true")
 //	Long findCidByNameAndActiveTrue( @Param("activityCid") String activityCid , @Param("schoolId") Long schoolId);
 	
-	boolean existsByCidAndSchoolsCidAndActiveTrue(String cid , String schoolCid);
+	public 	boolean existsByCidAndSchoolsCidAndActiveTrue(String cid , String schoolCid);
 	
 	@Query(value = "select a.id from Activity a where a.cid = :cid and a.active = true")
-	Long findIdByCidAndActiveTrue(@Param("cid") String cid);
+	public Long findIdByCidAndActiveTrue(@Param("cid") String cid);
 
-	boolean existsByTeachersIdAndActiveTrue(Long teacherId);
+	public boolean existsByTeachersIdAndActiveTrue(Long teacherId);
 
 }
