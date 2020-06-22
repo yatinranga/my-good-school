@@ -1,0 +1,24 @@
+
+
+.menu ul li.pk > a {
+    border-left: 8px solid #4bafa5;
+}
+.menu ul li a.menu_link[aria-expanded="true"] {
+    background: rgb(75, 175, 165);
+    color: white;
+}
+.menu ul li .collapse li.active a, .menu ul li .collapsing li.active a {
+    background: rgba(75, 175, 165, 0.88);
+}
+.menu ul li .collapse li a{
+    border-left: none !important;
+}
+.menu ul li .collapse, .menu ul li .collapsing {
+    background: rgba(0,0,0,0.05);
+}
+.menu ul li.pk > a .fa-angle-down{
+    float: right;
+    margin-top: 5px;
+    font-size: 20px;
+    margin-right: 15px;
+}

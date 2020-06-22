@@ -15,11 +15,18 @@ export class StudentListComponent implements OnInit {
   col = "col-12";
   showDetails:boolean = false
   studentsArr: any = [];
+  copyStudentArr = [];
   student_loader = false;
   student_obj: any; // Used to transfer object to Student Details Component
+  schoolGrades = [];
+  adminInfo: any;
+  gradeId:string = "";
+  search="" // USed for Search
 
   ngOnInit() {
+    this.adminInfo = JSON.parse(localStorage.getItem('user_info'));
     this.getAllStudents();
+    this.getSchoolGrades();
   }
 
   /** When Enrolled Clubs of particukar of student are shown */
@@ -27,12 +34,34 @@ export class StudentListComponent implements OnInit {
     this.col=$event;
   }
 
+  /** Get all Grades of the School */
+  getSchoolGrades(){
+    this.schoolService.getAllGrades(this.adminInfo.schoolId).subscribe((res) => {
+      this.schoolGrades = res;
+    }, (err) => { console.log(err); })
+  }
+
+  filterStudents(){
+    this.studentsArr = this.filter(Object.assign([], this.copyStudentArr));
+  }
+
+  filter(array: any[]){
+    let filterStuArr = []
+    if(this.gradeId){
+        filterStuArr = array.filter(e => e.gradeId && e.gradeId == this.gradeId);
+    }
+    else{
+      filterStuArr = array;
+    }
+    return filterStuArr;
+  }
+
   /** Set Show Details */
   setShowDetails(val: boolean, student_obj?){
     this.student_obj = student_obj;
     console.log(student_obj);
     this.showDetails = val;
-    this.showDetails ? (this.col = "col-6") : (this.col="col-12");
+    this.showDetails ? (this.col = "col-7") : (this.col="col-12");
   }
 
   /** Get List of All Students */
@@ -40,6 +69,7 @@ export class StudentListComponent implements OnInit {
     this.student_loader = true;
     this.schoolService.getStudents().subscribe((res) => {
       this.studentsArr = res;
+      this.copyStudentArr = Object.assign([], res);
       console.log(res);
       this.student_loader = false;
 

@@ -57,8 +57,12 @@ export class HomeComponent implements OnInit {
 
   highlightClubArr = [];
   highlightSocietyArr = [];
-  clubObject = {};
+  club_Object = {};
   filterVal = ""; // filter the activity by ALL, UPCOMING and ENDED
+
+  // Variables for Split Window Activity Details
+  showClubDetails: boolean = false;
+  col = "col-12";
 
   constructor(private studentService: StudentService, public alertService: AlertService, private router: Router) { }
 
@@ -170,27 +174,35 @@ export class HomeComponent implements OnInit {
   }
 
   // Details of All Clubs and Societies
-  clubDetails(clubObj, type) {
-    // Changing color on the basis of 
-    this.clubName = clubObj.name;
-    //  this.router.navigate(['Student/details/'+clubObj.name],{ state: clubObj });
-    this.clubObject = clubObj;
-    localStorage.setItem('club', JSON.stringify(clubObj));
-
-    switch (type) {
-      case 'sport': this.modalClass = "sportmodal"; break;
-      case 'skill': this.modalClass = "skillmodal"; break;
-      case 'service': this.modalClass = "servicemodal"; break;
-      case 'study': this.modalClass = "studymodal"; break;
+  setClubDetails(val: boolean, clubObj?) {
+    if (val) {
+      this.showClubDetails = true;
+    } else {
+      this.showClubDetails = false;
     }
-    // $('#clubDetailsModal').modal('show');
-    this.clubId = clubObj.id;
-    this.supervisorId = "";
-    this.sessionView = false;
-    this.supervisor_loader
-      = true;
-    this.getCoaches(clubObj.id);
-    console.log(clubObj);
+
+    val?(this.col="col-6"):(this.col="col-12");
+
+    if (clubObj) {
+      // Changing color on the basis of 
+      this.clubName = clubObj.name;
+      this.club_Object = clubObj;
+      // localStorage.setItem('club', JSON.stringify(clubObj));
+
+      // switch (type) {
+      //   case 'sport': this.modalClass = "sportmodal"; break;
+      //   case 'skill': this.modalClass = "skillmodal"; break;
+      //   case 'service': this.modalClass = "servicemodal"; break;
+      //   case 'study': this.modalClass = "studymodal"; break;
+      // }
+      // $('#clubDetailsModal').modal('show');
+      this.clubId = clubObj.id;
+      this.supervisorId = "";
+      this.sessionView = false;
+      this.supervisor_loader = true;
+      // this.getCoaches(clubObj.id);
+      console.log(clubObj);
+    }
   }
 
   // List of Supervisor of Selected Club/Society
@@ -198,13 +210,11 @@ export class HomeComponent implements OnInit {
     this.coaches = [];
     this.students = [];
     this.gradeId = "";
-    this.supervisor_loader
-      = true;
+    this.supervisor_loader = true;
     this.studentService.getCoach(this.schoolId, actiId).subscribe((res) => {
       this.coaches = res;
       console.log(res);
-      this.supervisor_loader
-        = false;
+      this.supervisor_loader = false;
     }, (err) => {
       console.log(err);
       this.supervisor_loader

@@ -1,6 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
-import { Router } from '@angular/router';
+import { Component, OnInit, Input } from '@angular/core';
 import { StudentService } from 'src/app/services/student.service';
 import { AlertService } from 'src/app/services/alert.service';
 
@@ -11,8 +9,7 @@ import { AlertService } from 'src/app/services/alert.service';
 })
 export class StudentClubDetailsComponent implements OnInit {
 
-
-  clubObject: any;
+  @Input() clubObject: any;
   studentInfo: any;
   modalClass = "";
   schoolId = "";
@@ -23,7 +20,7 @@ export class StudentClubDetailsComponent implements OnInit {
   supervisorName = "";
 
   coaches = [];
-  students = [];
+  studentsArr = [];
   copyStuArr = [];
   clubSchedule = [];
   copySchedule = [];
@@ -35,23 +32,30 @@ export class StudentClubDetailsComponent implements OnInit {
   ngOnInit() {
 
     /**If Object is present in localStorage, move it to sessionStorage and clear object from localStorage */
-    if (localStorage.getItem('club')) {
-      sessionStorage.setItem('club', JSON.stringify(JSON.parse(localStorage.getItem('club'))));
-      localStorage.removeItem('club');
-      this.clubObject = JSON.parse(sessionStorage.getItem('club'));
-    } else {
-      this.clubObject = JSON.parse(sessionStorage.getItem('club'));
-    }
-
-    this.setClass(this.clubObject.fourS);
+    // if (localStorage.getItem('club')) {
+    //   sessionStorage.setItem('club', JSON.stringify(JSON.parse(localStorage.getItem('club'))));
+    //   localStorage.removeItem('club');
+    //   this.clubObject = JSON.parse(sessionStorage.getItem('club'));
+    // } else {
+    //   this.clubObject = JSON.parse(sessionStorage.getItem('club'));
+    // }
     this.studentInfo = JSON.parse(localStorage.getItem('user_info'));
     this.schoolId = this.studentInfo.schoolId;
-    this.getCoaches(this.clubObject.id);
     this.getGrades(this.schoolId);
-
   }
+
+  ngOnChanges(clubObject: any) {
+    this.setClass(this.clubObject.fourS);
+    this.getCoaches(this.clubObject.id);
+    console.log(this.clubObject);
+    this.studentsArr = [];
+    this.clubSchedule = [];
+    this.supervisorId = "";
+    this.gradeId = "";
+    this.filterVal = "";
+  }
+
   setClass(club_type) {
-    console.log(club_type);
     switch (club_type) {
       case 'Sport': this.modalClass = "sportmodal"; break;
       case 'Skill': this.modalClass = "skillmodal"; break;
@@ -61,6 +65,7 @@ export class StudentClubDetailsComponent implements OnInit {
   }
 
   getCoaches(actiId) {
+    this.coaches = [];
     this.sup_loader = true;
     this.studentService.getCoach(this.schoolId, actiId).subscribe((res) => {
       this.coaches = res;
@@ -86,6 +91,7 @@ export class StudentClubDetailsComponent implements OnInit {
     this.supervisorName = supervisor_obj.name;
     this.getStudents(supervisor_obj.id);
 
+    this.clubSchedule = [];
     this.studentService.getSupervisorSchedule(this.clubObject.id, supervisor_obj.id).subscribe((res) => {
       console.log(res.sessions);
       this.clubSchedule = res.sessions;
@@ -100,9 +106,10 @@ export class StudentClubDetailsComponent implements OnInit {
 
   // List of Student of selected Club/Society under specific Supervisor
   getStudents(supervisorId) {
+    this.studentsArr = [];
     this.stu_loader = true; // Student loader
     this.studentService.getSupervisorStudent(this.clubObject.id, supervisorId).subscribe((res) => {
-      this.students = res;
+      this.studentsArr = res;
       this.copyStuArr = Object.assign([], res);
       console.log(res);
       this.stu_loader = false;
@@ -113,7 +120,7 @@ export class StudentClubDetailsComponent implements OnInit {
   }
 
   filterStudent(val) {
-    this.students = this.filter(Object.assign([], this.copyStuArr), val, "Student");
+    this.studentsArr = this.filter(Object.assign([], this.copyStuArr), val, "Student");
   }
 
   // Filter session on the bases of ALL, UPCOMING and ENDED

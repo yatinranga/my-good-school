@@ -9,7 +9,7 @@ import { TeacherHomeComponent } from './teacher-home/teacher-home.component';
 import { TeacherProfileComponent } from './teacher-profile/teacher-profile.component';
 import { TeacherActivityComponent } from './teacher-activity/teacher-activity.component';
 import { TeacherAwardsComponent } from './teacher-awards/teacher-awards.component';
-import { TeacherClubDetailComponent } from './teacher-club-detail/teacher-club-detail.component';
+import { TeacherClubDetailComponent } from './teacher-home/teacher-club-detail/teacher-club-detail.component';
 
 const routes: Routes = [
   {

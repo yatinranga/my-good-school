@@ -46,65 +46,92 @@
 
   </div>
 
-  <div class="cands">
-    <div class="club_main">
-      <h2> Clubs </h2>
-      <div class="fourskill_main">
-        <div class="sport fourskill">
-          <img src="assets/images/23.png">
-          <h3> Sport </h3>
-          <ul *ngFor="let sport of sportArr">
-            <li [ngClass]="{'sport reference':highlightClubArr.includes(sport.name)}"
-              (click)="clubDetails(sport,'sport')">
-              <a target="_blank" [routerLink]="['../club',sport.name]" [state]="sport">
-                {{sport.name}}</a></li>
-          </ul>
-        </div>
-        <div class="skill fourskill">
-          <img src="assets/images/21.png">
-          <h3> Skill </h3>
-          <ul *ngFor="let skill of skillArr;let i = index">
-            <li [ngClass]="{'skill reference':highlightClubArr.includes(skill.name)}"
-              (click)="clubDetails(skill,'skill')">
-              <a target="_blank" [routerLink]="['../club',skill.name]" [state]="skill">
-                {{skill.name}}</a>
-            </li>
-          </ul>
 
-          <!-- For Reference -->
-          <!-- <ul> 
-            <li class="reference"> Literary Society English </li>
-          </ul> -->
-          <!-- For Reference -->
+  <div class="row">
+    <div [ngClass]="col">
+      <div class="cands">
+        <div class="club_main">
+          <h2> Clubs </h2>
+          <div class="fourskill_main">
+
+            <div class="sport fourskill">
+              <img src="assets/images/23.png">
+              <h3> Sport </h3>
+              <ul *ngFor="let sport of sportArr">
+                <li [ngClass]="{'sport reference':highlightClubArr.includes(sport.name)}"
+                  (click)="setClubDetails(true,sport)">
+                    {{sport.name}}</li>
+              </ul>
+            </div>
+
+            <div class="skill fourskill">
+              <img src="assets/images/21.png">
+              <h3> Skill </h3>
+              <ul *ngFor="let skill of skillArr;let i = index">
+                <li [ngClass]="{'skill reference':highlightClubArr.includes(skill.name)}"
+                  (click)="setClubDetails(true,skill)">
+                    {{skill.name}}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="society_main">
+          <h2> Societies </h2>
+          <div class="fourskill_main">
+
+            <div class="service fourskill">
+              <img src="assets/images/24.png">
+              <h3> Service </h3>
+              <ul *ngFor="let service of serviceArr">
+                <li [ngClass]="{'service reference':highlightSocietyArr.includes(service.name)}"
+                  (click)="setClubDetails(true,service)">
+                  {{service.name}}</li>
+              </ul>
+            </div>
+
+            <div class="study fourskill">
+              <img src="assets/images/16.png">
+              <h3> Study </h3>
+              <ul *ngFor="let study of studyArr">
+                <li [ngClass]="{'study reference':highlightSocietyArr.includes(study.name)}"
+                  (click)="setClubDetails(true,study)">
+                  {{study.name}}</li>
+              </ul>
+            </div>
+
+          </div>
         </div>
       </div>
     </div>
-    <div class="society_main">
-      <h2> Societies </h2>
-      <div class="fourskill_main">
-        <div class="service fourskill">
-          <img src="assets/images/24.png">
-          <h3> Service </h3>
-          <ul *ngFor="let service of serviceArr">
-            <li [ngClass]="{'service reference':highlightSocietyArr.includes(service.name)}"
-              (click)="clubDetails(service,'service')">
-              <a target="_blank" [routerLink]="['../club',service.name]" [state]="service">{{service.name}}</a></li>
-          </ul>
-        </div>
-        <div class="study fourskill">
-          <img src="assets/images/16.png">
-          <h3> Study </h3>
-          <ul *ngFor="let study of studyArr">
-            <li [ngClass]="{'study reference':highlightSocietyArr.includes(study.name)}"
-              (click)="clubDetails(study,'study')">
-              <a target="_blank" [routerLink]="['../club',study.name]" [state]="study">{{study.name}}</a></li>
-          </ul>
-        </div>
-
-      </div>
+    <div class="col-6" *ngIf="showClubDetails">
+      <button class="btn btn-close btn-danger" (click)="setClubDetails(false)"> <i class="fa fa-times"
+        aria-hidden="true"></i></button>
+      <app-activity-details [clubObject]="club_Object"></app-activity-details>
     </div>
   </div>
+
 </div>
+
+<!-- <div class="container">
+  <div class="row">
+    <div class="col-12">
+      <h3> Sport </h3>
+      <ul *ngFor="let sport of sportArr">
+        <li [ngClass]="{'sport reference':highlightClubArr.includes(sport.name)}" (click)="clubDetails(sport,'sport')">
+          <a target="_blank" [routerLink]="['../club',sport.name]" [state]="sport">
+            {{sport.name}}</a></li>
+      </ul>
+      <h3> Skill </h3>
+      <ul *ngFor="let skill of skillArr;let i = index">
+        <li [ngClass]="{'skill reference':highlightClubArr.includes(skill.name)}" (click)="clubDetails(skill,'skill')">
+          <a target="_blank" [routerLink]="['../club',skill.name]" [state]="skill">
+            {{skill.name}}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div> -->
 
 <!-- Registration Form -->
 <div class="modal fade" id="registrationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"

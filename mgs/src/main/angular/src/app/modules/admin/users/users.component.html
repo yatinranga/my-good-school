@@ -22,18 +22,7 @@
                 <td>{{user.email}}</td>
                 <td>{{user.schoolId}}</td>
                 <td>
-                    <h5><span class="badge badge-success"
-                            *ngIf="user.roles[0].name == 'MainAdmin'">{{user.roles[0].name}}</span></h5>
-                    <h5><span class="badge badge-warning"
-                            *ngIf="user.roles[0].name == 'School'">{{user.roles[0].name}}</span></h5>
-                    <h5><span class="badge badge-primary"
-                            *ngIf="user.roles[0].name == 'Student'">{{user.roles[0].name}}</span></h5>
-                    <h5><span class="badge badge-danger"
-                            *ngIf="user.roles[0].name == 'Guardian'">{{user.roles[0].name}}</span></h5>
-                    <h5><span class="badge badge-secondary"
-                            *ngIf="user.roles[0].name == 'Coordinator'">{{user.roles[0].name}}</span></h5>
-                    <h5><span class="badge badge-secondary"
-                            *ngIf="user.roles[0].name == 'Supervisor'">{{user.roles[0].name}}</span></h5>
+                    <h5><span class="badge badge-secondary">{{user.roles[0].name}}</span></h5>
                 </td>
                 <td (click)="stopCollapse($event)">
                     <button class="btn btn-secondary" (click)="editUser(user)">Edit</button>

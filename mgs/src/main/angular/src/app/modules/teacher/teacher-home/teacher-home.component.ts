@@ -13,58 +13,39 @@ declare let $: any;
 })
 export class TeacherHomeComponent implements OnInit {
 
-  assignedClubsArr = [];
-  assignedSocietyArr = [];
   allAssignedActi = []; // All assigned activities
 
   createSessionForm: FormGroup; // create session form
   teacherInfo: any;
-  schoolId: any;
-  teacherId: any;
 
   schoolGrades = [];
   startTime: any;
   endTime: any;
 
   sessionsArr = []; // Get Session of a week
-  createSessionShow = false;
-  teacherName: any;
 
   createSessionView = true;
   editSessionView = false;
 
   // Club details variable
-  clubId: any;
-  clubName = "";
-  filterVal = "";
-  filterReqVal = "";
-  clubSchedule = [];
-  copySchedule = [];
-  studentsArr = [];
-  copyStudentArr = [];
-  clubReqArr = [];
-  copyClubReqArr = [];
-  clubSch_loader = false;
-  stu_loader = false;
-  clubReqLoader = false;
-  gradeId = "";
+  // clubId: any;
+  assignedClubLoader = false;
 
   // files = []; // Array to store the attachment during create session
   path = "" // to Display the selected photos
   minDate = "" // Min Date to create session
   name = "" // Name of the File attached in Session
 
+  // Variables to be used in Club Details
+  showClubDetails:boolean = false;
+  club_Obj: any;
+
   constructor(private teacherService: TeacherService, private formBuilder: FormBuilder, private alertService: AlertService) { }
 
   ngOnInit() {
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
-    this.schoolId = this.teacherInfo.schoolId;
-    this.teacherName = this.teacherInfo.name;
-    this.teacherId = this.teacherInfo.id;
-    this.clubReqLoader = true;
     this.getAllClubs();
     this.getSessionDetails();
-    // this.getAllClubReq();
 
     this.createSessionForm = this.formBuilder.group({
       id: [null],
@@ -78,73 +59,20 @@ export class TeacherHomeComponent implements OnInit {
       fileRequests: [null]
     });
 
-    // this.getSchoolGrades(this.schoolId);
   }
 
   //get list of assigned/supervised Clubs and Society
   getAllClubs() {
+    this.assignedClubLoader = true;
     this.teacherService.getAssignedClubs().subscribe(res => {
-      this.assignedClubsArr = res.filter((e) => (e.clubOrSociety == "Club"));
-      this.assignedSocietyArr = res.filter((e) => (e.clubOrSociety == "Society"));
       this.allAssignedActi = res;
+      this.assignedClubLoader = false;
       console.log(this.allAssignedActi);
-    }, (err) => { console.log(err); });
+    }, (err) => {
+      console.log(err);
+      this.assignedClubLoader = false;
+    });
   }
-
-  // get all the Request of Clubs and Society
-  // getAllClubReq() {
-  //   this.teacherService.getClubReq().subscribe(res => {
-  //     this.clubReqArr = res;
-  //     this.clubReqLoader = false;
-  //   }, (err) => {
-  //     console.log(err);
-  //     this.clubReqLoader = false;
-  //   });
-  // }
-
-  setClubReq(obj, index, verify) {
-
-    // To Verify/Approve the Club/Society Request
-    if (verify == 'true') {
-      this.alertService.confirmWithoutLoader('question', 'Sure you want to Approve ?', '', 'Yes').then(result => {
-        if (result.value) {
-          this.alertService.showLoader("");
-          this.teacherService.approveClubReq(obj.student.id, obj.club.id, verify).subscribe(res => {
-            this.alertService.showSuccessAlert("Request Approved!");
-            this.clubReqArr.splice(index, 1);
-            // this.clubReqArr.unshift(res);
-            this.getClubRequests(this.clubId);
-            this.getClubStudents(this.clubId, this.teacherId);
-          }, (err) => { console.log(err); })
-        }
-      })
-    }
-
-    // To Reject the Club/Society Request
-    if (verify == 'false') {
-      this.alertService.confirmWithoutLoader('question', 'Sure you want to Reject ?', '', 'Yes').then(result => {
-        if (result.value) {
-          this.alertService.showLoader("");
-          this.teacherService.approveClubReq(obj.student.id, obj.club.id, verify).subscribe(res => {
-            this.alertService.showSuccessAlert("Request Rejected!");
-            this.clubReqArr.splice(index, 1);
-            // this.clubReqArr.unshift(res);
-            this.getClubRequests(this.clubId);
-
-          }, (err) => { console.log(err) })
-        }
-      })
-    }
-
-  }
-
-  // // get List of School Grades 
-  // getSchoolGrades(schoolId) {
-  //   this.teacherService.getGrades(schoolId).subscribe((res) => {
-  //     this.schoolGrades = res;
-  //   },
-  //     (err) => console.log(err));
-  // }
 
   // Grades of Supervisor for particular Club/Society
   clubGrades() {
@@ -340,106 +268,19 @@ export class TeacherHomeComponent implements OnInit {
     });
   }
 
-  // Details of All Clubs and Societies
-  clubDetails(clubObj) {
-    // $('#clubDetailsModal').modal('show');
-    localStorage.setItem('club', JSON.stringify(clubObj));
-    this.clubSchedule = [];
-    this.studentsArr = [];
-    this.clubReqArr = [];
-    this.filterVal = ""; // Reset Filter value
-    this.filterReqVal = "";
-    this.gradeId = "";
-    this.clubSch_loader = true;
-    this.stu_loader = true;
-    this.clubReqLoader = true;
-    this.clubName = clubObj.name;
-    this.clubId = clubObj.id;
-    this.getClubRequests(clubObj.id);
-    this.getClubStudents(clubObj.id, this.teacherId);
-    this.getClubSession(clubObj.id);
-    this.createSessionForm.controls.clubId.patchValue(this.clubId);
-  }
-
-  // get Session of a particualr Club/Society
-  getClubSession(clubId) {
-    this.teacherService.getSupervisedClubSession(clubId).subscribe((res) => {
-      this.clubSchedule = res.sessions;
-      this.copySchedule = Object.assign([], res.sessions);
-      this.clubSch_loader = false;
-    }, (err) => {
-      console.log(err);
-      this.clubSch_loader = false;
-    });
-  }
-
-  // Filter session on the bases of ALL, UPCOMING and ENDED
-  filterSession(val) {
-    this.clubSchedule = this.filter(Object.assign([], this.copySchedule), val, "Session");
-  }
-
-  // List of Students of the particular Club
-  getClubStudents(clubId, teacherId) {
-    this.teacherService.getSupervisorClubStudents(clubId, teacherId).subscribe((res) => {
-      this.studentsArr = res;
-      this.copyStudentArr = Object.assign([], res);
-      this.stu_loader = false;
-    }, (err) => {
-      console.log(err);
-      this.stu_loader = false;
-    });
-
-  }
-
-  // Filter student on the bases of grade
-  filterStudent(val) {
-    this.studentsArr = this.filter(Object.assign([], this.copyStudentArr), val, "Student");
-  }
-
-  // Requests of a particular club/society
-  getClubRequests(clubId) {
-    this.teacherService.getSupervisorClubReq(clubId).subscribe((res) => {
-      console.log(res);
-      this.clubReqArr = res;
-      this.copyClubReqArr = Object.assign([], res);
-      this.clubReqLoader = false;
-    }, (err) => {
-      console.log(err);
-      this.clubReqLoader = false;
-    });
-  }
-
-  filterRequests(val) {
-    this.clubReqArr = this.filter(Object.assign([], this.copyClubReqArr), val, "Request");
-  }
-
-  newSessionBtn() {
-
-  }
-
-  // Actual Filtering of Sessions on the basis of type
-  filter(array: any[], value: string, type: string) {
-    let filterSessionArr = [];
-    if (type == "Session") {
-      if (value)
-        filterSessionArr = array.filter(e => e.responses[0].status == value);
-      else
-        filterSessionArr = array;
-    }
-    if (type == "Student") {
-      if (value)
-        filterSessionArr = array.filter(e => e.gradeId == value);
-      else
-        filterSessionArr = array;
-    }
-    if (type == "Request") {
-      if (value)
-        filterSessionArr = array.filter(e => e.membershipStatus == value);
-      else
-        filterSessionArr = array;
+  // Details of All Clubs and Societies in split window
+  setClubDetails(val:boolean,clubObj?) {
+    if(val){
+      this.showClubDetails = true;
+    } else {
+      this.showClubDetails = false;
     }
 
-    return filterSessionArr;
+    if (clubObj) {
+      this.club_Obj = clubObj;
+      // this.clubId = clubObj.id;
+      // this.createSessionForm.controls.clubId.patchValue(this.clubId);
+    }
   }
 
   // Adding Attachment at the time of create session

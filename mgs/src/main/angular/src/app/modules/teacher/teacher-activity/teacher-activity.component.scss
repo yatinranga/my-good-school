@@ -62,7 +62,7 @@ button.submit {
 }
 button.icon_button {
     padding: 5px;
-    margin: 0 5px;
+    margin: 0px;
     border: none !important;
     background: none !important;
     cursor: pointer;
@@ -119,4 +119,8 @@ button.reset.btn.btn-secondary {
     padding: 15px;
     display: inline-block;
     width: 100%;
+}
+.attachment ul li a {
+    text-decoration: underline;
+    color: #1f69ad;
 }

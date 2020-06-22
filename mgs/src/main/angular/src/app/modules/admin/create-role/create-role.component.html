@@ -5,17 +5,26 @@
         <input type="text" class="form-control" placeholder="Enter Role Name" formControlName="name">
     </div>
     <div class="form-group">
-        <label for="Authorities"> Authorities</label>
-        <select class="form-control" name="authoritiyIds" formControlName="authorityIds" multiple>
-            <!-- <option value="" disabled selected>Select Grade </option> -->
+        <label for="Authorities"> Authorities </label>
+        <button type="button" class="btn btn-success" (click)="selectAuthorities('All')">Select All</button>
+        <button type="button"   class="btn btn-danger" (click)="selectAuthorities('Clear')">Clear</button>
+        
+
+        <!-- <select class="form-control" name="authoritiyIds" formControlName="authorityIds" multiple>
             <option *ngFor="let a of authoritiesArr;" value={{a.id}}>
                 {{a.name}}</option>
-        </select>
+        </select> -->
+
+        <div class="form-check" *ngFor="let a of authoritiesArr">
+            <label class="form-check-label" for="exampleCheck1">
+                <input type="checkbox" class="form-check-input" [(ngModel)]="authoritiesIds[a.id]" formControlName="authorityIds">
+                {{a.name}}</label>
+        </div>
     </div>
     <div class="form-group">
         <label for="School">Select School</label>
         <select class="form-control" name="authoritiyIds" formControlName="schoolId">
-            <option [ngValue]=null disabled selected> School </option>
+            <option [ngValue]=null selected> School </option>
             <option *ngFor="let s of schoolsArr; let i = index;" value={{s.id}}>
                 {{s.name}}</option>
         </select>

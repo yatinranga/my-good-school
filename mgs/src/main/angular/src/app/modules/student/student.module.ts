@@ -12,8 +12,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { SavedActitvityComponent } from './student-activity/saved-actitvity/saved-actitvity.component';
 import { StudentActivityComponent } from './student-activity/student-activity.component';
 import { CertificatesComponent } from './certificates/certificates.component';
-import {  StudentClubDetailsComponent } from './student-club-details/student-club-details.component';
-
+import { StudentClubDetailsComponent } from './home/student-club-details/student-club-details.component';
 
 const routes: Routes = [
   {

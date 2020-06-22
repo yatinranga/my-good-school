@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SchoolService } from 'src/app/services/school.service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertService } from 'src/app/services/alert.service';
 declare let $: any;
 
@@ -26,11 +26,23 @@ export class StaffDetailsComponent implements OnInit {
   clubIds = {}; // used to assign Club to Supervisor through modal
   gradesIds = {} // used to assign Grades to Supervisor through modal
 
+  updateSupervisorForm: FormGroup;
+
   constructor(private schoolService: SchoolService, private formBuilder: FormBuilder, private alertService: AlertService) { }
 
   ngOnInit() {
     this.getSchoolClubs();
     this.getSchoolGrades();
+    this.updateSupervisorForm = this.formBuilder.group({
+      id: [],
+      name: [],
+      email: [],
+      dob: [,[Validators.required]],
+      mobileNumber: [],
+      gender: [],
+      qualification: [],
+      yearOfEnrolment: [],
+    })
   }
 
   ngOnChanges(staffDetails: any) {
@@ -41,17 +53,17 @@ export class StaffDetailsComponent implements OnInit {
   /** Show List of Assigned Clubs/Socities */
   setShowClub(val: boolean) {
     this.showClub = val;
-    this.showClub ? (this.col = "col-6") : (this.col = "col-12");
+    this.showClub ? (this.col = "col-12") : (this.col = "col-12");
 
     if (val) {
-      const col = "col-4";
-      this.rowChangeForClub.emit(col);
+      // const col = "col-4";
+      // this.rowChangeForClub.emit(col);
       // this.getEnrolledClubs();
       this.sortClubs();
     }
     else {
-      const col = "col-6";
-      this.rowChangeForClub.emit(col);
+      // const col = "col-6";
+      // this.rowChangeForClub.emit(col);
     }
   }
 
@@ -146,6 +158,39 @@ export class StaffDetailsComponent implements OnInit {
 
   }
 
+  /** Show Supervisor Edit/Update Profile Modal */
+  showSupervisorModal() {
+    $('#editSupervisorModal').modal('show');
+    if (this.staffDetails.dob)
+      this.updateSupervisorForm.controls.dob.patchValue(this.staffDetails.dob.split(' ')[0]);
+    
+      this.updateSupervisorForm.patchValue({
+      id: this.staffDetails.id,
+      name: this.staffDetails.name,
+      email: this.staffDetails.email,
+      mobileNumber: this.staffDetails.mobileNumber,
+      gender: this.staffDetails.gender,
+      qualification: this.staffDetails.qualification,
+      yearOfEnrolment: this.staffDetails.yearOfEnrolment,
+    })
+  }
+
+  /** Update Supervisor Profile */
+  updateSupervisorProfile() {
+    console.log(this.updateSupervisorForm.value);
+    this.updateSupervisorForm.value.dob = this.updateSupervisorForm.value.dob + " 00:00:00";
+    this.alertService.showLoader("");
+    this.schoolService.updateSupervisorProfile(this.staffDetails.id, this.updateSupervisorForm.value).subscribe((res) => {
+      console.log(res);
+      this.staffDetails = res;
+      $('#editSupervisorModal').modal('hide');
+      this.alertService.showMessageWithSym("Profile Updated !", "Success", "success");
+    }, (err) => {
+      console.log(err);
+      this.errorMessage(err);
+    });
+  }
+
   /** Selected Club Ids */
   // selectedClubIds(){
   //   console.log(this.clubIds);
@@ -155,7 +200,17 @@ export class StaffDetailsComponent implements OnInit {
   resetForm() {
     this.clubIds = {};
     this.gradesIds = {};
+    this.updateSupervisorForm.reset();
+  }
 
+  /** Handling Error */
+  errorMessage(err) {
+    if (err.status == 400) {
+      this.alertService.showMessageWithSym(err.msg, "", "info");
+    }
+    else {
+      this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");
+    }
   }
 
 }

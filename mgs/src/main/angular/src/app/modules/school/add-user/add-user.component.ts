@@ -40,6 +40,7 @@ export class AddUserComponent implements OnInit {
 
   /** Create New User */
   addUser() {
+    this.alertService.showLoader("");
     this.createUserForm.value.roleIds = [this.createUserForm.value.roleIds];
     console.log(this.createUserForm.value);
     this.schoolService.createUser(this.createUserForm.value).subscribe((res) => {

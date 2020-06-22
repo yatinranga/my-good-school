@@ -1,3 +1,49 @@
 .active{
     column-span: 6;
 }
+.student-list-card-main {
+    padding: 15px 0;
+    display: inline-block;
+    width: 100%;
+}
+.student-list {
+    padding: 15px;
+    box-shadow: 0 0 5px #ddd;
+    background: white;
+    width: 100%;
+    display: inline-block;
+}
+.student-list .table tbody tr:nth-child(odd) {
+    background-color: transparent;
+}
+.student-list .table tbody tr:nth-child(even) {
+    background: rgba(0,0,0,.03);
+}
+
+.student-details {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 222;
+    background: rgba(0,0,0,0.2);
+}
+.popup-box {
+    box-shadow: 0 0 5px #ddd;
+    background: white;
+    padding: 10px 15px;
+    position: relative;
+    min-height: 100%;
+}
+ button.btn.btn-close {
+    position: absolute;
+    right: 15px;
+    top: 0;
+    z-index: 333;
+    // background: rgba(0,0,0,0.8);
+    padding: 5px;
+}
+.popup-box h1 {
+    font-size: 24px;
+}
+

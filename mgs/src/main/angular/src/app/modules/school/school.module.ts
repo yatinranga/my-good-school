@@ -19,6 +19,9 @@ import { SchoolClubComponent } from './school-club/school-club.component';
 import { ClubDetailsComponent } from './school-club/club-details/club-details.component';
 import { SupervisorDetailsComponent } from './school-club/supervisor-details/supervisor-details.component';
 
+// search module
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+
 const routes: Routes = [
   {
     path: '',
@@ -26,7 +29,7 @@ const routes: Routes = [
     children: [
       {
         path: 'home',
-        component: SchoolHomeComponent
+        component: SchoolClubComponent
       },
       {
         path: 'student-list',
@@ -77,6 +80,7 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
+    Ng2SearchPipeModule
   ],
 })
 export class SchoolModule { }

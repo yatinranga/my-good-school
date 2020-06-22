@@ -17,7 +17,6 @@ export class SupervisorDetailsComponent implements OnInit {
 
   ngOnInit() {
     this.adminInfo = JSON.parse(localStorage.getItem('user_info'));
-    this.getSupervisor();
   }
 
   ngOnChanges(clubObj: any) {

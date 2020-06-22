@@ -1,12 +1,16 @@
-
-.cands{
-    width: 75%;
-    display: inline-flex;
-    border: none;
-    padding: 0;
+.teacher-home-card {
+    padding: 15px;
+    width: 100%;
+    display: inline-block;
 }
+
 .club_main {
-    margin: 0 10px;
+    margin-top: 60px;
+    box-shadow: 0 0 2px #ddd;
+    padding: 15px;
+    display: inline-block;
+    width: 100%;
+    position: relative;
 }
 .club_main ul li {
     font-size: 17px;
@@ -19,12 +23,7 @@
     padding: 0;
     margin: 0;
 }
-.teacher_club_list{
-    width: 100%;
-    background: gainsboro;
-    display: inline-block;
-    min-height: 200px;
-}
+
 button.btn.register.btn-primary{
     background: #8dc33a;
 }
@@ -45,4 +44,175 @@ button.btn.register.btn-primary{
 .choosemedia.form-group {
     display: grid;
     margin-top: 20px;
+}
+
+.teacher_home {
+    box-shadow: 0 0 4px #ddd;
+    background: white;
+    padding: 15px;
+    min-height: calc(100vh - 90px);
+    height: 100%;
+    position: relative;
+}
+.welcome button.enrollment_button {
+    float: right;
+    background: #555;
+    border: none;
+    outline: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    color: white;
+    box-shadow: 0 0 5px #ddd;
+    font-size: 16px;
+}
+.welcome h2 {
+    display: inline-block;
+    margin-top: 6px;
+    margin-bottom: 0;
+    font-size: 20px;
+    color: #fff;
+}
+.welcome {
+    font-size: 18px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding: 10px;
+    background: #4bafa5;
+}
+.club_main h2 {
+    font-size: 18px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    padding: 10px;
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+}
+.teacher_club_list {
+    margin-top: 40px;
+    display: inline-block;
+    width: 100%;
+    padding: 10px 0;
+}
+.teacher_club_list li {
+    display: inline-block;
+    width: auto;
+}
+.teacher_club_list li a {
+    padding: 5px 10px;
+    background: rgba(85, 85, 85, 0.46);
+    margin: 0 5px;
+    border-radius: 5px;
+    color: white;
+    text-decoration: none;
+ 
+    font-size: 14px;
+}
+
+
+.schedule {
+    margin-top: 20px;
+    box-shadow: 0 0 2px #ddd;
+    padding: 15px;
+    background: white;
+    display: inline-block;
+    width: 100%;
+    position: relative;
+}
+.schedule h2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background: rgba(0,0,0,0.5);
+    padding: 10px 10px;
+    font-size: 18px;
+    color: white;
+    font-weight: bold;
+}
+
+.days-main .day {
+    box-shadow: 0 0 2px #ddd;
+    /* max-width: 100%; */
+    display: inline-block;
+    background: white;
+    margin: 0 0 15px 0;
+    vertical-align: top;
+    padding: 0;
+    /* min-width: 48%; */
+    width: 100%;
+    position: relative;
+}
+.days-main {
+    margin-top: 40px;
+    display: inline-block;
+    width: 100%;
+}
+
+.days-main .day ul {
+    padding: 15px;
+    box-shadow: 0 0 2px #ddd;
+    width: 100%;
+    display: inline-block;
+    min-height: 100%;
+    // list-style: inside;
+    position: relative;
+}
+
+.day h3 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.02);
+    font-size: 18px;
+    box-shadow: 0 0 2px #ddd;
+    font-weight: bold;
+}
+.schedule-date-main {
+    margin-top: 40px;
+    display: flex;
+    width: 100%;
+}
+
+.schedule-date-card {
+    display: inline-block;
+    width: 50%;
+    padding: 15px;
+    vertical-align: top;
+}
+div#session_title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    position: relative;
+    margin-bottom: 20px;
+    margin-top: -15px;
+    margin-left: -15px;
+    margin-right: -15px;
+    padding: 10px;
+    box-shadow: 0 0 2px #ddd;
+ }
+ .schedule-date-card li {
+    line-height: normal;
+    margin-bottom: 5px;
+    list-style: inherit;
+    margin-left: 15px;
+}
+
+.schedule-date-card button.btn {
+    border: none;
+    margin-right: 5px;
+    border-radius: 3px !important;
+    display: inline-block;
+    margin-top: 10px;
 }
