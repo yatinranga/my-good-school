@@ -197,4 +197,9 @@ export class TeacherService {
     return this.http.get("/api/school/" + id + "/students");
   }
 
+  // // Get Performed Activity by student of Coordinator
+  // getCoordinatorPerfActi(){
+  //   return this.http.get("api/student/activities");
+  // }
+
 }
