@@ -172,11 +172,8 @@ export class StaffDetailsComponent implements OnInit {
       $('#assignClubModal').modal('hide');
       this.alertService.showMessageWithSym("Club/Society Assigned !", "Success", "success");
     }, (err) => {
-      if (err.status === 500) {
-        this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");
-      } else {
-        this.alertService.showMessageWithSym("", "Error", "error");
-      }
+     console.log(err);
+     this.errorMessage(err);
     })
   }
 
@@ -245,11 +242,8 @@ export class StaffDetailsComponent implements OnInit {
       $('#assignGradeModal').modal('hide');
       this.alertService.showMessageWithSym("Grade Assigned !", "Success", "success");
     }, (err) => {
-      if (err.status === 500) {
-        this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");
-      } else {
-        this.alertService.showMessageWithSym("", "Error", "error");
-      }
+      console.log(err);
+      this.errorMessage(err);
     })
 
   }

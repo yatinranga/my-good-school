@@ -1,21 +1,73 @@
 <h1>{{clubObj.name}}</h1>
 <br><br>
 <h3><b> Supervisor : </b></h3>
-<button class="btn btn-dark">Assign Supervisor</button>
+<button class="btn btn-dark" (click)="showAssignModal()">Assign Supervisor</button>
 <br>
 <div>
+    
+
     <div *ngFor="let sup of clubSupervisor; let i = index;">
         <div class="card w-50">
             <div class="card-body">
                 <h5 class="card-title">{{i+1}}. {{sup.name}}</h5>
-                <!-- <p><b>Grades :</b></p> -->
-                <!-- <div>                   
-                </div> -->
-                <button class="btn btn-primary">Edit</button> 
+                <p><b>Grades :</b></p>
+                <div *ngFor="let a of sup.activityAndGrades">
+                    <div *ngIf="a.id==clubObj.id">                        
+                            <span *ngFor="let grade of a.gradeResponses; let i = index">
+                                {{ (i === a.gradeResponses.length-1) ? grade.grade + "-" + grade.section : grade.grade + "-" + grade.section  + "," + ' '}}
+                            </span>                        
+                    </div>                
+                </div>
+                <!-- <button class="btn btn-primary">Edit</button>  -->
             </div>
         </div>
     </div>
-    <div *ngIf="!clubSupervisor.length && !sup_loader">
-        <h5>No Supervisor Assigned</h5>
+    <div *ngIf="!clubSupervisor.length">
+        <div *ngIf="sup_loader" class="spinner-border text-dark" role="status">
+        </div>{{sup_loader ? 'Loading...' : 'No Supervisor Assigned'}}
     </div>
 </div>
+
+<div class="modal fade bd-example-modal-lg" id="assignSupervisorModal" tabindex="-1" role="dialog"
+        aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="exampleModalLabel"> Assign {{clubObj.name}} : </h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetForm()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Supervisor/Coordinator :</label>
+                        <select class="form-control" name="club" [(ngModel)]="supervisorId">
+                            <option value="" selected disabled>Select One</option>
+                            <option *ngFor="let sup of supervisorArr" value={{sup.id}}>{{sup.name}}</option>
+                        </select>
+                    </div>                    
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Grades :</label>
+                        <div class="form-check" *ngFor="let grade of schoolGrades;">
+                            <label class="form-check-label" for="exampleCheck1">
+                                <input type="checkbox" class="form-check-input" [(ngModel)]="gradesIds[grade.id]">
+                                {{grade.grade}} {{grade.section}}
+                            </label>
+                        </div>
+                    </div>
+                    <!-- <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Club/Society :</label>
+                    <div class="form-check" *ngFor="let c of allSchoolClubsArr">
+                        <label class="form-check-label" for="exampleCheck1">
+                            <input type="checkbox" class="form-check-input" [(ngModel)]="clubIds[c.id]">
+                            {{c.name}}</label>
+                    </div>
+                </div>         -->
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" (click)="resetForm()">Reset</button>
+                    <button class="btn btn-primary" (click)="assignClub()">Assign</button>
+                </div>
+            </div>
+        </div>
+    </div>
