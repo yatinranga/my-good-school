@@ -28,6 +28,9 @@
     box-shadow: 0 0 5px #ddd;
     transition: 0.5s;
     cursor: pointer;
+    min-height: 100%;
+    background: #fff;
+    vertical-align: top;
 }
 .certi_box:hover{
     transform: scale(1.02);
@@ -61,10 +64,10 @@ button#add_certi{
     position: absolute;
     bottom: 0;
     right: 0;
-    border-radius: 50% !important;
-    padding: 10px;
+    border-radius: 3% !important;
+    padding: 8px 10px;
     margin: 20px;
-    font-size: 20px;
+    font-size: 16px;
 }
 .form-group h2 {
     color: crimson;
@@ -76,17 +79,18 @@ button#add_certi{
 .form-group{
     margin-bottom: 10px !important;
 }
-.modal-footer{
-    padding: 5px 0 0 0 !important;
-}
+// .modal-footer{
+//     padding: 5px 0 0 0 !important;
+// }
 .modal-header{
     padding: 10px 20px;
 }
 .modal-content{
     position: relative;
-    top: 50px;
+    top: 0;
     outline: none !important;
-    border: 5px solid #808080;
+    // border: 5px solid #808080;
+    border-radius: 0;
 }
 
 .add-act.choosefile_box {
@@ -94,7 +98,7 @@ button#add_certi{
     display: inline-block;
     text-align: center;
     position: relative;
-    padding: 10px;
+    padding: 0;
     margin-top: 20px;
 }
 .add-act.choosefile_box span.choosefile.choosefile-custom {
@@ -103,13 +107,13 @@ button#add_certi{
     background: none;
     z-index: 1;
     opacity: 1;
-    width: 75%;
-    height: 44px;
+    width: 100%;
+    height: 45px;
     left: 0;
     top: 0;
-    box-shadow: 0 0 10px white;
+    // box-shadow: 0 0 10px white;
     border-radius: 0px;
-    border: 1px solid gainsboro;
+    border: 1px solid #ddd;
 }
 .add-act.choosefile_box span.choosefile.choosefile-custom:after {
     content: "Choose file...";
@@ -120,6 +124,10 @@ button#add_certi{
     color: #333;
     z-index: 1;
 }
+.modal-footer button.btn {
+    border-radius: 3px !important;
+}
+
 span.choosefile.choosefile-custom:before {
     content: "Browse";
     position: absolute;
@@ -138,9 +146,9 @@ span.choosefile.choosefile-custom:before {
     top: 15px;
     font-size: 15px;
 }
-.btn-success.disabled, .btn-success:disabled{
-    background: #8dc33a !important;
-}
+// .btn-success.disabled, .btn-success:disabled{
+//     background: #8dc33a !important;
+// }
 .reviewed{
     color: firebrick;
 }
@@ -176,4 +184,29 @@ button.icon_button {
     font-size: 27px;
     font-family: initial !important;
     margin-top: 20px;
+}
+.certificate-img {
+    width: 120px;
+    margin-top: 0;
+    float: left;
+}
+.certificate-img img{
+    width: 100%;
+}
+.certificate-img-main {
+    display: inline-block;
+    width: 100%;
+    border: solid 1px #ddd;
+    margin-top: 30px;
+    padding: 0;
+}
+.certificate-img-main > p {
+    display: inline-block;
+    width: auto;
+    float: right;
+    margin-top: 15px;
+    margin-bottom: 0;
+}
+.stu_certi .row{
+    display: flex;
 }

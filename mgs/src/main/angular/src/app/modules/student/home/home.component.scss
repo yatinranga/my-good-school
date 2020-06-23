@@ -1,4 +1,10 @@
-
+.student-home-card{
+    padding: 0;
+    width: 100%;
+    display: inline-block;
+    background: white;
+    box-shadow: 0 0 3px #ddd;
+}
 .cands {
     width: 75%;
     padding: 0;
@@ -78,6 +84,38 @@ li.reference {
     border-bottom: 1px solid #444 !important; 
 }
 
+.welcome button.enrollment_button {
+    float: right;
+    background: #555;
+    border: none;
+    outline: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    color: white;
+    box-shadow: 0 0 5px #ddd;
+    font-size: 16px;
+}
+.welcome h2 {
+    display: inline-block;
+    margin-top: 6px;
+    margin-bottom: 0;
+    font-size: 20px;
+    color: #fff;
+}
+.welcome {
+    font-size: 18px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding: 10px;
+    background: #4bafa5;
+}
+.student_home{
+    position: relative;
+    padding: 15px;
+}
 
 /*--------------------------------------MODAL------------------------------*/
 
@@ -172,4 +210,103 @@ button.close span {
 }
 .studymodal h3, .studymodal h5 {
     color: #1f69ad;
+}
+
+.schedule {
+    margin-top: 60px;
+    display: inline-block;
+    width: 100%;
+    // padding-left: 15px;
+    // padding-right: 15px;
+    box-shadow: 0 0 2px #ddd;
+    padding: 15px;
+    position: relative;
+
+}
+.days-main {
+    // box-shadow: 0 0 2px #ddd;
+    // padding: 15px;
+    display: inline-block;
+    width: 100%;
+    margin-top: 40px;
+    // position: relative;
+}
+
+.days-main h2{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px 10px;
+    font-size: 18px;
+    color: white;
+    font-weight: bold;
+}
+
+.days-main .day-card {
+    // padding: 15px;
+    // width: 33.333%;
+    // display: inline-block;
+    // vertical-align: top;
+    margin-bottom: 20px;
+}
+.days-main .day-card .day{
+    box-shadow: 0 0 3px #ddd;
+    width: 100%;
+    padding: 15px;
+    display: inline-block;
+    min-height: 100%;
+}
+.days-main .day-card .day h3{
+    margin-left: -15px;
+    margin-right: -15px;
+    margin-top: -15px;
+    font-size: 17px;
+    color: #555;
+    padding: 10px;
+    box-shadow:0 0 2px #ddd;
+    font-weight: bold;
+    background: rgba(0, 0, 0, 0.02);
+}
+.days-main .day-card .day ul{
+    padding: 0 0 0 15px;
+    margin: 0;
+
+}
+.days-main .day-card .day ul li{
+    margin-bottom: 5px;
+    font-size: 15px;
+    list-style: inherit;
+    color: #555;
+}
+.schedule .days-main .day-card .day ul li.reference{
+    color:white;
+    padding:3px 5px;
+}
+.days-main .day-card .day ul #session_title{
+    font-weight: bold;
+    color: #555;
+    margin-left: -15px;
+    margin-top: 8px;
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 8px;
+}
+#registrationModal .modal-content .modal-header {
+    padding: 12px 15px;
+}
+#registrationModal .modal-content .modal-header .modal-title{
+    font-size: 20px;
+    color: #555;
+    margin: 0;
+}
+#registrationModal .modal-body .input-group .custom-select, #registrationModal .modal-body .input-group-text {
+    border: solid 1px #ddd;
+    border-radius: 0;
+}
+
+#registrationModal .modal-footer .btn{
+    border-radius: 3px !important;
 }

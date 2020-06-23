@@ -34,7 +34,7 @@
         </div>
     </div>
     <button id="add_certi" type="button" class="btn btn-primary" data-toggle="modal" data-target="#certificateModal">
-        <i class="fa fa-plus"></i>
+        <i class="fa fa-plus"></i> Certificate
     </button>
 
     <!--------------------------------- Modal ------------------------------------->
@@ -52,8 +52,8 @@
                 <div class="modal-body">
                     <form [formGroup]="certificateForm" (ngSubmit)="addCertificate()">
                         <div class="form-group">
-                            <h2> Note : All Fields Are Mandatory </h2>
-                            <label for="recipient-name" class="col-form-label">Title : </label>
+                            <!-- <h2> Note : All Fields Are Mandatory </h2> -->
+                            <label for="recipient-name" class="col-form-label">Title <span>*</span> </label>
                             <input type="text" class="form-control" name="name" id="recipient-name"
                                 formControlName="title">
                             <small class="text-danger"
@@ -63,7 +63,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">Description : </label>
+                            <label for="recipient-name" class="col-form-label">Description <span>*</span> </label>
                             <textarea class="form-control add" name="description" formControlName="description"
                                 rows="3"></textarea>
                             <small class="text-danger"
@@ -73,7 +73,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">4S : </label>
+                            <label for="recipient-name" class="col-form-label">4S <span>*</span>  </label>
                             <select class="form-control" name="fourS" formControlName="fourS">
                                 <option value="" Selected Disabled>Choose One</option>
                                 <option *ngFor="let fourS of fourSArr" value={{fourS}}>{{fourS}}
@@ -85,7 +85,7 @@
                             </small>
                         </div>
                         <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">Authority : </label>
+                            <label for="recipient-name" class="col-form-label">Authority <span>*</span>  </label>
                             <input type="text" name="certificationAuthority" class="form-control" id="recipient-name"
                                 formControlName="certificationAuthority">
                             <small class="text-danger"
@@ -102,16 +102,19 @@
                                     (change)="onFileSelect($event)">
 
                                 <span class="choosefile choosefile-custom"> <i class="fa fa-file"> </i> </span>
-                                <img *ngIf="path" [src]="path" height="200">
+                                <!-- <img class="certificate-img" *ngIf="path" [src]="path"> -->
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="recipient-name" class="col-form-label"> </label>
+                            <!-- <label for="recipient-name" class="col-form-label"> </label>
                             <small class="text-danger"
                                 *ngIf="!certificateForm.get('image').valid && certificateForm.get('image').touched">
                                 Image Required
-                            </small>
-                            <div *ngFor="let sf of files; let i = index;">
+                            </small> -->
+                            <div class="certificate-img-main" *ngFor="let sf of files; let i = index;">
+                                <div class="certificate-img">
+                                    <img *ngIf="path" [src]="path">
+                                </div>
                                 <p>{{sf.name}}
                                     <button type="button" name="removeFile" (click)="removeFile()"
                                         class="reviewed icon_button">
@@ -121,15 +124,17 @@
                             </div>
                         </div>
 
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" (click)="resetForm()">Reset</button>
-                            <button type="submit" class="btn btn-success" [disabled]="certificateForm.invalid">
-                                <div *ngIf="add_loader" class="spinner-border text-dark" role="status">
-                                </div>{{add_loader ? 'Loading...' : 'Add'}}
-                            </button>
-                        </div>
+                        
                     </form>
                 </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success" [disabled]="certificateForm.invalid">
+                        <div *ngIf="add_loader" class="spinner-border text-dark" role="status">
+                        </div>{{add_loader ? 'Loading...' : 'Add'}}
+                    </button>
+                    <button type="button" class="btn btn-danger" (click)="resetForm()">Reset</button>
+                </div>
+
             </div>
         </div>
     </div>

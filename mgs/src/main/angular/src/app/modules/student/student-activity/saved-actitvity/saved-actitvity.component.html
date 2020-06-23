@@ -300,12 +300,12 @@
                 <div class="modal-body">
                     <form [formGroup]="savedActivityForm" (ngSubmit)="updateActivity()">
                        
-                            <div class="container-fluid">
+                            <div class="">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <h2> Note : All Fields Are Mandatory </h2>
-                                            <label for="recipient-name" class="col-form-label"> Activity Type : </label>
+                                            <!-- <h2> Note : All Fields Are Mandatory </h2> -->
+                                            <label for="recipient-name" class="col-form-label"> Activity Type <span>*</span> </label>
                                             <select class="form-control" name="activityName" formControlName="activityId"
                                                 (ngModelChange)="getStudentCoach($event)">
                                                 <!-- <option v
@@ -322,25 +322,25 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="recipient-name" class="col-form-label"> Title : </label>
+                                            <label for="recipient-name" class="col-form-label"> Title <span>*</span> </label>
                                             <input type="text" class="form-control add" name="title"
                                                 formControlName="title">
                                         </div>
                                         <div class="form-group">
-                                            <label for="recipient-name" class="col-form-label"> Description : </label>
+                                            <label for="recipient-name" class="col-form-label"> Description <span>*</span> </label>
                                             <textarea class="form-control add" name="description"
                                                 formControlName="description" rows="5"
                                                 (ngModelChange)="wordCount($event)"></textarea>
-                                            <span class="text-muted">Word count - {{count}}</span><br>
+                                            <!-- <span class="text-muted">Word count - {{count}}</span><br> -->
                                             <small class="text-danger"
                                                 *ngIf="!savedActivityForm.get('description').valid && savedActivityForm.get('description').touched">
                                                 Length between 25-250 words.
                                             </small>
                                         </div>
                                     </div>
-                                    <div class="col-md-6" style="margin-top: 25px;">
+                                    <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="message-text" class="col-form-label"> Supervisor : </label>
+                                            <label for="message-text" class="col-form-label"> Supervisor <span>*</span> </label>
                                             <select class="form-control" name="coachId" formControlName="coachId">
                                                 <option *ngFor="let coach of coaches; let i = index;" value={{coach.id}}>
                                                     {{coach.name}}
@@ -352,7 +352,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="recipient-name" class="col-form-label"> Date of Activity Performed :
+                                            <label for="recipient-name" class="col-form-label"> Date of Activity Performed <span>*</span>
                                             </label>
                                             <input type="date" class="form-control" name="dateOfActivity"
                                                 formControlName="dateOfActivity" [attr.min]="minDate"
@@ -360,7 +360,7 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="message-text" class="col-form-label"> Add Attachment : </label>
+                                            <label for="message-text" class="col-form-label"> Add Attachment <span>*</span> </label>
                                             <div class="add-act choosefile_box">
                                                 <input class="choosefile" type="file" accept="image/*, audio/*, video/*, application/pdf,application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
                                                 text/plain" name="selectedFile" (change)="onFileSelect($event)" multiple />
@@ -370,35 +370,43 @@
                                         </div>
                                         <div class="form-group">
                                             <h2> Note : You can only add upto 5 files. </h2>
-                                            <label for="recipient-name" class="col-form-label"> </label>
-                                            <div *ngFor="let sf of files; let i = index;">
-                                                <p id="attachment_name"> {{sf.name}}
-                                                    <button type="button" name="removeFile" (click)="removeFile(i)"
-                                                        class="reviewed icon_button">
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
-                                                </p>
+                                            <!-- <label for="recipient-name" class="col-form-label"> </label> -->
+                                            <div class="attached-file-main">
+                                                <div class="attached-file" *ngFor="let sf of files; let i = index;">
+                                                    <ul>
+                                                        <li id="attachment_name"> {{sf.name}}
+                                                            <button type="button" name="removeFile" (click)="removeFile(i)"
+                                                                class="reviewed icon_button">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
+                                            
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         
-                        <div class="modal-footer">
-                            <button class="btn cancel" type="button" name="resetForm"
-                                (click)="resetForm()">Reset</button>
-                            <button class="btn saved btnSubmit btn-success" type="submit" name="submitSavedActivity"
-                                *ngIf="editActivityShow" [disabled]="savedActivityForm.invalid">
-                                <div *ngIf="submit_loader" class="spinner-border text-dark" role="status"></div>
-                                {{submit_loader ? 'Updating...' : 'Update'}}
-                            </button>
-                            <button class="btn saved btnSubmit btn-success" type="submit" name="submitNewActivity"
-                                *ngIf="addActivityShow" [disabled]="savedActivityForm.invalid">
-                                <div *ngIf="submit_loader" class="spinner-border text-dark" role="status">
-                                </div>{{submit_loader ? 'Submitting...' : 'Submit'}}
-                            </button>
-                        </div>
+                        
                     </form>
+                </div>
+                <div class="modal-footer">
+                            
+                    <button class="btn btn-success" type="submit" name="submitSavedActivity"
+                        *ngIf="editActivityShow" [disabled]="savedActivityForm.invalid">
+                        <div *ngIf="submit_loader" class="spinner-border text-dark" role="status"></div>
+                        {{submit_loader ? 'Updating...' : 'Update'}}
+                    </button>
+                    <button class="btn btn-success" type="submit" name="submitNewActivity"
+                        *ngIf="addActivityShow" [disabled]="savedActivityForm.invalid">
+                        <div *ngIf="submit_loader" class="spinner-border text-dark" role="status">
+                        </div>{{submit_loader ? 'Submitting...' : 'Submit'}}
+                    </button>
+                    <button class="btn cancel btn-danger" type="button" name="resetForm"
+                        (click)="resetForm()">Reset</button>
+
                 </div>
             </div>
         </div>
@@ -408,7 +416,7 @@
 </div>
 <button class="add_activity" type="button" name="addActivity" data-toggle="modal" data-backdrop="static"
     data-keyboard="false" data-target="#addActivityModal" (click)="addActivity()">
-    <i class="fa fa-plus"></i>
+    <i class="fa fa-plus"></i> Activity
 </button>
 
 

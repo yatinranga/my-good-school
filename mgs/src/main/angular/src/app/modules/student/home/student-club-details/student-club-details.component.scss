@@ -1,124 +1,87 @@
 .student_act_details_main{
     width: 100%;
-    display: inline-flex;
+    display: inline-block;
+    box-shadow: 0 0 3px #ddd;
 }
 .sidenav {
     float: left;
-    width: 25%;
-    background: #656565;
-    padding: 10px;
-    height: 100%;
+    width: 250px;
+    display: inline-block;
+    box-shadow: 0 0 3px #ddd;
+    background: #fafafa;
+   
 }
 .sidenav h2{
-    font-size: 28px;
+    font-size: 25px;
     font-weight: 500;
-    color: #bbb !important;
-    margin: 12px 0 0 0;
-    padding-left: 50px;
-}
-.supervisor_profile{
-    width: 100%;
-    display: inline-block;
-    text-align: center;
-    padding: 10px;
-    margin-top: 25px;
-    text-align: center;
-}
-.supervisor_profile img{
-    width: 100%;
-}
-.supervisor_list {
-    width: 100%;
-    display: inline-block;
-    margin-top: 20px;
-}
-.sidenav ul {
-    padding: 0;
+    color: #555 !important;
     margin: 0;
-}
-.sidenav ul li {
-    font-size: 22px;
-    font-weight: 600;
-    margin: 20px 0;
-    line-height: 40px;
-    color: #bbb;
-}
-.sidenav ul li:hover{
-    color: #fafafa;
-}
-.sidenav p{
-    font-size: 15px;
-    color: #555;
-    line-height: 24px;
-}
-.title{
-    width: 100%;
-    display: inline-block;
-    margin: 0;
-    padding: 15px 0 0 0;
-}
-h1 {
-    color: #fafafa;
-    font-size: 29px;
+    padding: 20px 15px;
     text-align: center;
+    width: 100%;
+    border-bottom: solid 1px #ddd;
+}
+
+.supervisor-header .title {
+    display: inline-block;
     float: left;
-    font-weight: 300;
-    word-spacing: 5px;
-    padding: 0 10px;
-}
-button.register_act.btn.btn-primary.btn-sm {
-    background: #fff;
-    color: black;
-    z-index: 1;
-    opacity: 1;
-    font-size: 16px;
+    width: 100%;
     padding: 5px 15px;
-    margin-right: 10px;
+}
+
+button.register_act.btn.btn-primary.btn-sm {
     float: right;
+    background: #555;
+    border: none;
+    outline: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    color: white;
+    box-shadow: 0 0 5px #ddd;
+    font-size: 16px;
     border-radius: 3px !important;
 }
 .content_container{
-    width: 100%;
+    width: calc(100% - 250px);
     display: inline-block;
+    float: right;
+    vertical-align: top;
 }
 
 .content{
-    float: right;
     width: 100%;
-    display: inline-flex;
-    margin: 55px 0;
-    padding: 0 20px;
+    display: inline-block;
 }
 .content_box {
     width: 100%;
-    padding: 10px;
-    margin: 0 20px;
+    padding: 10px 15px;
+    margin: 0;
     background: #ffffff;
-    box-shadow: 0 0 10px #ccc;
-    border-radius: 5px;
+    box-shadow: 0 0 3px #ddd;
+    border-radius: 3px;
+    position: relative;
+    min-height: 150px;
 }
 .content_title{
     width: 100%;
     display: inline-block;
-    margin: 10px 0 30px 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    background: rgba(0,0,0,0.02);
+    box-shadow: 0 0 2px #ddd;
 }
-h2{
-    float: left;
-    color: #9fbb73;
+.content_title h2 {
+    font-size: 18px;
+    padding: 10px 15px;
+    margin: 0;
+    display: inline-block;
+    width: auto;
+    color: #555 !important;
+
 }
-select {
-    float: right;
-    width: 104px;
-    height: 30px;
-    border: none;
-    font-size: 13px;
-    background: #9fbb73;
-    color: #fafafa;
-}
-li {
-    font-size: 17px;
-    line-height: 35px;
-}
+
 .schedule {
     width: 100%;
     display: inline-block;
@@ -127,22 +90,17 @@ li {
     box-shadow: 0 0 10px #aaa;
     padding: 10px;
 }
-h4 {
-    font-size: 18px;
-    color: #156e96;
+.day_post .day h3{
     margin: 10px 0;
     font-weight: 500;
-}
-h3 {
-    font-size: 20px;
-    margin: 10px 0;
-    font-weight: 500;
-    color: #333;
-}
-p {
-    font-size: 17px;
-    padding: 0 23px;
-    line-height: 30px;
+    color: #555;
+    margin-top: -15px;
+    margin-right: -15px;
+    margin-left: -15px;
+    padding: 8px 15px;
+    box-shadow: 0 0 2px #ddd;
+    font-size: 16px;
+    background: rgba(0,0,0,0.02);
 }
 .request_box {
     width: 100%;
@@ -208,4 +166,122 @@ h5 {
 }
 .studymodal h2 {
     color: #1f69ad;
+}
+
+.supervisor-header .title h1 {
+    font-size: 18px;
+    color: white;
+    display: inline-block;
+    margin-top: 8px;
+    margin-bottom: 0;
+}
+.supervisor_profile ul{
+    margin: 0;
+    padding: 0;
+}
+.supervisor_profile {
+    display: inline-block;
+    width: 100%;
+}
+
+.supervisor_profile li {
+    text-align: center;
+    margin: 0;
+    padding: 15px;
+    border-top: solid 1px #ddd;
+
+    &:first-child{
+        border-top: none;
+    }
+}
+.supervisor_profile .supervisor_photo {
+    width: 100px;
+    height: 100px;
+    margin: auto;
+    overflow: hidden;
+    position: relative;
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+.supervisor_profile li .teachername {
+    font-size: 18px;
+}
+.supervisor_profile .supervisor_photo img {
+    width: 180px;
+    margin-left: -40px;
+}
+.supervisor_profile li.active {
+    background: rgba(0,0,0,0.05);
+}
+
+.student-card {
+    display: inline-block;
+    width: 40%;
+    padding: 15px;
+    vertical-align: top;
+}
+.sessions-card {
+    display: inline-block;
+    width: 60%;
+    padding: 15px;
+    vertical-align: top;
+
+}
+
+.content_box ul.student_list {
+    margin-top: 50px;
+    position: relative;
+}
+.content_box .day_post {
+    margin-top: 40px;
+    position: relative;
+}
+.content_title select {
+    float: right;
+    margin-top: 6px;
+    margin-right: 6px;
+    background: white !important;
+    border: solid 1px #ddd;
+    color: #555;
+    padding: 1px 10px;
+    border-radius: 2px;
+}
+.day_post .day {
+    box-shadow: 0 0 2px #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+.day_post .day ul{
+    padding: 0;
+}
+.day_post ul li{
+    padding: 0;
+    font-size: 14px;
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 5px;
+    color: #555;
+ }
+ .blank {
+    text-align: center;
+    // margin-top: 25px;
+    // float: left;
+    // width: 100%;
+}   
+
+// .spinner-border{
+//     margin: auto;
+//     position: absolute;
+//     top: 50px;
+//     right: 0;
+//     left: 0;
+//     // width: auto;
+// }
+div#null {
+    text-align: center;
+    padding: 10px 0;
+    background: white;
 }
