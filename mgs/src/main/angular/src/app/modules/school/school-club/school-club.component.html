@@ -34,7 +34,7 @@
         <div class="row">
             <div [ngClass]="col">
                 <table class="table table-striped">
-                    <thead class="thead-dark">
+                    <thead class="thead-light">
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Name</th>
@@ -54,13 +54,12 @@
                                     {{ (i === s.focusAreaResponses.length-1) ? fs.name  : fs.name + "," + ' '}}
                                 </span>
                                 <span *ngIf="!s.focusAreaResponses.length"> - </span></td>
-                            <td>
-                                <button class="btn btn-info" (click)="setShowWindow('club',s)">
-                                    <i class="fa fa-edit" title="Edit"></i>
-                                </button>
-                                <button class="btn btn-dark" (click)="setShowWindow('supervisor',s)">
-                                    <i class="fa fa-users" title="Supervisor"></i>
-                                </button>
+                                <td>
+                                    <div class="action-btns">
+                                        <i class="fa fa-edit" title="Edit" (click)="setShowWindow('club',s)"></i>   
+                                        <i class="fa fa-user-plus" title="Supervisor" (click)="setShowWindow('supervisor',s)"></i>
+                                    </div>
+                               
                             </td>
                         </tr>
                     </tbody>
