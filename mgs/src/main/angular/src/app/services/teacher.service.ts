@@ -222,6 +222,11 @@ export class TeacherService {
     return this.http.get("/api/students/activity?activityId="+activityId);
   }
 
+    // Get Enrolled Clubs/Societies of particular student 
+    getStudentClubs(studentId) {
+      return this.http.get("/api/student/clubs?studentId=" + studentId);
+    }
+
   // // Get Performed Activity by student of Coordinator
   // getCoordinatorPerfActi(){
   //   return this.http.get("api/student/activities");

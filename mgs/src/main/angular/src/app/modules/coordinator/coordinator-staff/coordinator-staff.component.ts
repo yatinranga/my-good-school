@@ -8,6 +8,7 @@ import { TeacherService } from 'src/app/services/teacher.service';
 })
 export class CoordinatorStaffComponent implements OnInit {
 
+  col = "col-12";
   coordinatorInfo: any;
   supervisorArr = [];
   copySupervisorArr = [];
@@ -15,6 +16,8 @@ export class CoordinatorStaffComponent implements OnInit {
   search:any // used for search
   clubName="" //used for Filter by clubs and
   allClubsArr = [];
+  staff_obj:any;
+  showDetails:boolean = false;
   constructor(private teacherService: TeacherService) { }
 
   ngOnInit() {
@@ -59,5 +62,13 @@ export class CoordinatorStaffComponent implements OnInit {
     }
     return filterArr;
   }
+
+    /** Set Show Details */
+    setShowDetails(val: boolean, staff_obj?) {
+      this.staff_obj = staff_obj;
+      console.log(staff_obj);
+      this.showDetails = val;
+      this.showDetails ? (this.col = "col-8") : (this.col = "col-12");
+    }
 
 }
