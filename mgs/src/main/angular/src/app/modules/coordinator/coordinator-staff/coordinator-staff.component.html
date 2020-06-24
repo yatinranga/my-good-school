@@ -1,3 +1,17 @@
+<div class="sortby">
+    <label>Club/Society :</label>
+    <select (change)="filterStaff()" [(ngModel)]="clubName">
+        <option value="" selected>All</option>
+        <option *ngFor="let c of allClubsArr" value={{c.name}}>
+            {{c.name}} ({{c.clubOrSociety}})
+        </option>
+    </select>
+
+    <label>Search : </label>
+    <input type="text" name="search" [(ngModel)]="search" autocomplete="off"
+        placeholder="Start searching for a name or contact no">
+</div>
+<br><br>
 <table class="table table-striped">
     <thead class="thead-light">
         <tr>
@@ -6,18 +20,37 @@
             <th scope="col">Email</th>
             <th scope="col">Contact No.</th>
             <th scope="col">Gender</th>
+            <!-- <th scope="col">Club</th>
+            <th scope="col">Society</th> -->
             <th scope="col">Roles</th>
             <th scope="col">Enrollment Year</th>
             <!-- <th scope="col">Action</th> -->
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let s of supervisorArr ; let i = index;">
+        <tr *ngFor="let s of supervisorArr|filter:search ; let i = index;">
             <th>{{i+1}}</th>
             <td>{{s.name}}</td>
             <td>{{s.email}}</td>
             <td>{{s.mobileNumber}}</td>
             <td>{{s.gender | titlecase}}</td>
+            <!-- <td>
+                <div>
+                    <p *ngFor="let a of s.activityAndGrades let i = index">
+                        <span id="fa"  *ngIf="s.clubOrSociety=='Club'">
+                            {{ (i === s.activityAndGrades.length-1) ? a.name : a.name + "," + ' '}}
+                        </span>
+                    </p>
+                </div>
+            </td><td>
+                <div>
+                    <p *ngFor="let a of s.activityAndGrades let i = index">
+                        <span id="fa"  *ngIf="s.clubOrSociety=='Society'">
+                            {{ (i === s.activityAndGrades.length-1) ? a.name : a.name + "," + ' '}}
+                        </span>
+                    </p>
+                </div>
+            </td> -->
             <td>
                 <div *ngFor="let role of s.roles">
                     <h5><span class="badge badge-secondary"

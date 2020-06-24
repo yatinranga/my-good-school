@@ -207,8 +207,19 @@ export class TeacherService {
     return this.http.get("/api/coaches/" + schoolId);
   }
 
+  // get List of All Clubs and Society offered in School
   getSupervisedActivities(){
     return this.http.get("/api/students/activities");
+  }
+
+  // get List of Clubs/societies running in grades of Coordinator
+  getUserClubsInGrades(schoolId){
+    return this.http.get("/activitiesOffered/"+schoolId);
+  }
+
+  // get List of Students of a Club
+  getClubStudents(activityId){
+    return this.http.get("/api/students/activity?activityId="+activityId);
   }
 
   // // Get Performed Activity by student of Coordinator
