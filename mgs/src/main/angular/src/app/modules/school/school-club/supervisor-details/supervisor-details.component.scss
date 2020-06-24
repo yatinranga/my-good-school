@@ -1,0 +1,148 @@
+.card-club-details{
+
+    display: inline-block;
+    width: 100%;
+}
+
+.club-details{
+    background: white;
+    box-shadow: 0 0 3px #ddd;
+    display: inline-block;
+    width: 100%;
+    padding: 15px;
+}
+
+.header-club h2 {
+    font-size: 18px;
+    box-shadow: 0 0 3px #ddd;
+    margin-left: -15px;
+    margin-right: -15px;
+    padding: 10px;
+    margin-top: -15px;
+    font-weight: bold;
+    background: #fafafafa;
+    color: #555;
+    margin-bottom: 0;
+}
+.club-details ul {
+    margin: 15px 0 0 0;
+    padding: 0;
+}
+.club-details ul li {
+    margin-bottom: 5px;
+    font-size: 15px;
+    color: #555;
+}
+.club-details .btn{
+    border-radius: 3px !important;
+    margin-top: 10px;
+}
+.supervisor-card {
+    box-shadow: 0 0 3px #ddd;
+    display: inline-block;
+    width: 100%;
+}
+.supervisor-card .card-body{
+    padding: 15px;
+}
+.supervisor-card .card-body h5.card-title {
+    margin-bottom: 0;
+    margin-top: -15px;
+    margin-right: -15px;
+    margin-left: -15px;
+    padding: 10px;
+    font-size: 16px;
+    color: #555;
+    font-weight: bold;
+    box-shadow: 0 0 2px #ddd;
+}
+
+.middle-content {
+    margin-top: 10px;
+    font-size: 15px;
+    color: #555;
+}
+.middle-content strong{
+    // color: #555;
+    margin-top: 5px;
+
+}
+
+#assignSupervisorModal .modal-dialog {
+    max-width: 400px;
+}
+#assignSupervisorModal .modal-dialog .modal-header {
+    padding: 10px 15px;
+}
+#assignSupervisorModal .modal-dialog .modal-header .modal-title {
+    font-size: 20px;
+}
+.grade-main {
+    border: solid 1px #ddd;
+    padding: 0 0 10px 0;
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.grade-main h3 {
+    // margin-top: -10px;
+    font-size: 16px;
+    font-weight: bold;
+    // margin-left: -15px;
+    // margin-right: -15px;
+    margin-bottom: 0;
+    padding: 10px 15px;
+    border-bottom: solid 1px #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 22;
+    background: white;
+    color: #555;
+    margin-bottom: 10px;
+}
+.grade-main .form-check{
+    padding: 5px 35px;
+}
+#assignSupervisorModal .modal-dialog .form-group > label {
+    font-weight: bold;
+    color: #555;
+}
+.form-check .form-check-input {
+    width: 18px;
+    margin: 0;
+    height: 18px;
+    left: 15px;
+    top: 8px;
+    opacity: 0;
+    z-index: 22;
+    cursor: pointer;
+}
+.form-check .form-check-input + span:after {
+    content: "";
+    display: inline-block;
+    width: 18px;
+    border: solid 1.5px #999;
+    height: 18px;
+    position: absolute;
+    left: 15px;
+    top: 8px;
+    font-family: FontAwesome;
+    text-align: center;
+    line-height: 17px;
+    font-size: 11px;
+    color: #4bafa5;
+}
+.form-check .form-check-input:checked + span:after{
+    border-color: #4bafa5;
+    content: "\f00c";
+
+}
+.form-check label.form-check-label span {
+    padding-left: 10px;
+    line-height: normal;
+    margin-top: 1px;
+    display: inline-block;
+}

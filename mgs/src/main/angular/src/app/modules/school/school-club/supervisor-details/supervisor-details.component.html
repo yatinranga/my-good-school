@@ -1,27 +1,46 @@
-<h1>{{clubObj.name}}</h1>
+<div class="card-club-details">
+    <div class="club-details">
+        <div class="header-club">
+            <h2>{{clubObj.name}}</h2>
+        </div>
+        <div class="supervisor-main-card">
+            <button class="btn btn-success" (click)="showAssignModal()">Assign Supervisor</button>
+            <div class="supervisor-card mt-3" *ngFor="let sup of clubSupervisor; let i = index;">
+                <div class="card-body">
+                    <h5 class="card-title">{{i+1}}. {{sup.name}}</h5>
+                    <!-- <p><b>Grades :</b></p> -->
+                    <div class="middle-content">
+                        <strong>Grades - </strong>                        
+                    <div *ngFor="let a of sup.activityAndGrades">
+                        <div *ngIf="a.id==clubObj.id">
+                                <span *ngFor="let grade of a.gradeResponses; let i = index">
+                                     {{ (i === a.gradeResponses.length-1) ? grade.grade + "-" + grade.section : grade.grade + "-" + grade.section  + "," + ' '}}
+                                </span>                        
+                        </div>                
+                    </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+
+
+
+<!-- <h1>{{clubObj.name}}</h1>
 <br><br>
 <h3><b> Supervisor : </b></h3>
 <button class="btn btn-dark" (click)="showAssignModal()">Assign Supervisor</button>
-<br>
+<br> -->
+
+
 <div>
     
 
-    <div *ngFor="let sup of clubSupervisor; let i = index;">
-        <div class="card w-50">
-            <div class="card-body">
-                <h5 class="card-title">{{i+1}}. {{sup.name}}</h5>
-                <p><b>Grades :</b></p>
-                <div *ngFor="let a of sup.activityAndGrades">
-                    <div *ngIf="a.id==clubObj.id">                        
-                            <span *ngFor="let grade of a.gradeResponses; let i = index">
-                                {{ (i === a.gradeResponses.length-1) ? grade.grade + "-" + grade.section : grade.grade + "-" + grade.section  + "," + ' '}}
-                            </span>                        
-                    </div>                
-                </div>
-                <!-- <button class="btn btn-primary">Edit</button>  -->
-            </div>
-        </div>
-    </div>
+    
     <div *ngIf="!clubSupervisor.length">
         <div *ngIf="sup_loader" class="spinner-border text-dark" role="status">
         </div>{{sup_loader ? 'Loading...' : 'No Supervisor Assigned'}}
@@ -40,33 +59,27 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Supervisor/Coordinator :</label>
+                        <label for="recipient-name" class="col-form-label">Supervisor/Coordinator</label>
                         <select class="form-control" name="club" [(ngModel)]="supervisorId">
                             <option value="" selected disabled>Select One</option>
                             <option *ngFor="let sup of supervisorArr" value={{sup.id}}>{{sup.name}}</option>
                         </select>
                     </div>                    
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Grades :</label>
-                        <div class="form-check" *ngFor="let grade of schoolGrades;">
-                            <label class="form-check-label" for="exampleCheck1">
-                                <input type="checkbox" class="form-check-input" [(ngModel)]="gradesIds[grade.id]">
-                                {{grade.grade}} {{grade.section}}
-                            </label>
+                        <div class="grade-main">
+                            <h3 for="recipient-name" class="">Grades</h3>
+                            <div class="form-check" *ngFor="let grade of schoolGrades;">
+                                <label class="form-check-label" for="exampleCheck1">
+                                    <input id="grade" type="checkbox" class="form-check-input" [(ngModel)]="gradesIds[grade.id]">
+                                    <span for="grade" >{{grade.grade}} {{grade.section}}</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
-                    <!-- <div class="form-group">
-                    <label for="recipient-name" class="col-form-label">Club/Society :</label>
-                    <div class="form-check" *ngFor="let c of allSchoolClubsArr">
-                        <label class="form-check-label" for="exampleCheck1">
-                            <input type="checkbox" class="form-check-input" [(ngModel)]="clubIds[c.id]">
-                            {{c.name}}</label>
-                    </div>
-                </div>         -->
                 </div>
                 <div class="modal-footer">
+                    <button class="btn btn-success" (click)="assignClub()">Assign</button>
                     <button class="btn btn-danger" (click)="resetForm()">Reset</button>
-                    <button class="btn btn-primary" (click)="assignClub()">Assign</button>
                 </div>
             </div>
         </div>
