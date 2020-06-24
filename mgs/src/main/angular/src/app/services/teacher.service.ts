@@ -106,11 +106,6 @@ export class TeacherService {
     return this.http.get("/api/teacher/awards");
   }
 
-  // to verify the awards by teacher if is_management = TRUE;
-  verifyAwards(awardId) {
-    return this.http.put("/api/teacher/award/" + awardId + "?Verified=TRUE", {});
-  }
-
   // DOWNLOAD Attachmeents
   downloadAttachment(filePath) {
     return this.http.get("/file/download?filePath=" + filePath);
@@ -190,11 +185,30 @@ export class TeacherService {
     return this.http.get("/api/teacher/club/" + clubId + "/members")
   }
 
-  /** Coordinator APIs */
+  /** Coordinator and Head APIs */
 
   // Get Student of Coordinator
   getCoordinatorStudents(id) {
     return this.http.get("/api/school/" + id + "/students");
+  }
+
+  // Get Coordinator Awards
+  getCoordinatorAwards() {
+    return this.http.get("/api/awards");
+  }
+
+  // to verify the awards by teacher if is_management = TRUE;
+  verifyAwards(awardId, val?) {
+    return this.http.put("/api/teacher/award/" + awardId + "?Verified=" + val, {});
+  }
+
+  // get List of Supervisor under Coordinator
+  getSupervisor(schoolId) {
+    return this.http.get("/api/coaches/" + schoolId);
+  }
+
+  getSupervisedActivities(){
+    return this.http.get("/api/students/activities");
   }
 
   // // Get Performed Activity by student of Coordinator

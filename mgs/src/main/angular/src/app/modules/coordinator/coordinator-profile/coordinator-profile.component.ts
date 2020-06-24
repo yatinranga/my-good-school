@@ -38,6 +38,8 @@ export class CoordinatorProfileComponent implements OnInit {
       this.email = res.email;
       this.profileBrief = res.profileBrief;
       // this.path = res.imagePath;
+      if (res.imagePath)
+        this.path = res.imagePath;
       console.log(res);
       this.getAllClubs();
 

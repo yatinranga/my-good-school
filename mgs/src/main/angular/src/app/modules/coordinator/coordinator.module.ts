@@ -11,6 +11,9 @@ import { CoordinatorStaffComponent } from './coordinator-staff/coordinator-staff
 import { CoordinatorAwardsComponent } from './coordinator-awards/coordinator-awards.component';
 import { CoordinatorActivityComponent } from './coordinator-activity/coordinator-activity.component';
 
+// search module
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+
 const routes: Routes = [
   {
     path: '',
@@ -57,6 +60,8 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
+    Ng2SearchPipeModule
+
   ]
 })
 export class CoordinatorModule { }

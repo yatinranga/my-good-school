@@ -1,1 +1,131 @@
-<p>coordinator-awards works!</p>
+<div class="table_main">
+    <table class="table table-hover">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">AWARD</th>
+                <th scope="col">DESCRIPTION</th>
+                <th scope="col">STUDENT</th>
+                <th scope="col">AWARD CRITERIA</th>
+                <th scope="col">CRITERIA VALUE</th>
+                <th scope="col">VALID FROM</th>
+                <th scope="col">VALID TO</th>
+                <th scope="col">
+                    STATUS
+                    <button class="icon_button" name="sort" (click)="sortByStatus()">
+                        <i class="fa fa-sort"></i>
+                    </button>
+                </th>
+                <th scope="col">ACTION</th>
+            </tr>
+        </thead>
+        <tbody id="accordionExample">
+            <ng-container *ngFor="let al of awardsArr ; let i = index;">
+                <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
+                    <td>{{i+1}}</td>
+                    <td>{{al.awardType}}</td>
+                    <td class="des"> {{al.description}}</td>
+                    <td>{{al.studentName}} <br>{{al.studentGrade}}</td>
+                    <td>{{al.awardCriterion}}</td>
+                    <td>{{al.criterionValue}}</td>
+                    <td>{{al.validFrom | date }}</td>
+                    <td>{{al.validUntil | date}}</td>
+                    <td>
+                        <div *ngIf="al.status === 'PENDING'" class="pending"> {{al.status}}</div>
+                        <div *ngIf="al.status === 'VERIFIED'" class="verified">{{al.status}}</div>
+                        <div *ngIf="al.status === 'FORWARDED' && userType=='Coordinator'" class="forwarded"> {{al.status}}</div>
+                        <div *ngIf="al.status === 'FORWARDED' && userType=='Head'" class="pending">PENDING</div>
+                    </td>
+                    <td (click)="stopCollapse($event)">
+                    
+                        <button name="verifySelectedAward" *ngIf="al.status == 'PENDING'" (click)="verifySelectedAward($event,i,true)"
+                            class="verify">
+                            <i class="fa fa-thumbs-up"></i>Approve</button>
+                        <button name="verifySelectedAward" *ngIf="al.status == 'PENDING'" (click)="verifySelectedAward($event,i,false)"
+                            class="pending">
+                            <i class="fa fa-times"></i>Reject</button>
+                    
+                    
+                        <div *ngIf="userType=='Head' && al.status=='FORWARDED'">
+                            <button name="verifySelectedAward" (click)="verifySelectedAward($event,i,true)" class="verify">
+                                <i class="fa fa-thumbs-up"></i>Approve</button>
+                            <button name="verifySelectedAward" (click)="verifySelectedAward($event,i,false)" class="pending">
+                                <i class="fa fa-times"></i>Reject</button>
+                        </div>
+                    
+                        <button name="verifiedAward" *ngIf="al.status == 'VERIFIED'" [disabled]="(al.status == 'VERIFIED')" class="verify">
+                            <i class="fa fa-check" aria-hidden="true"></i> </button>
+                        <button *ngIf="al.status=='FORWARDED' && userType=='Coordinator'" class="forwarded"
+                            [disabled]="(al.status == 'FORWARDED')"><i class="fa fa-spinner" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="collapse-td" colspan="10">
+                        <div class="collapse-card">
+                            <div [attr.id]="'collapse' + i" class="collapse" data-parent="#accordionExample">
+                                <table class="innertable">
+                                    <tbody id="innerAccordionExample">
+                                        <ng-container *ngFor="let pa of al.activityPerformedResponses; let j = index;">
+                                            <tr data-toggle="collapse" [attr.data-target]="'#collapsed'+j">
+                                                <td>{{i+1}}.{{j+1}}</td>
+                                                <td id="actname">{{pa.criterionValue}}</td>
+                                                <td>Activity Count - {{pa.count}}</td>
+                                                <td>Average Stars - {{pa.averageStars}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="last collapsed-td" colspan="12">
+                                                    <div [attr.id]="'collapsed' + j" class="collapse"
+                                                        data-parent="#innerAccordionExample">
+                                                        <div class="container-fluid mb-3"
+                                                            *ngFor="let ac of pa.responses; let k = index;">
+                                                            <div class="row">
+                                                                <div class="col-6">
+                                                                    <div class="assign description">
+                                                                        <h5>{{i+1}}.{{j+1}}.{{k+1}}
+                                                                        </h5>
+                                                                        <p> <strong>Title -
+                                                                            </strong>{{ac.title}}
+                                                                        </p>
+                                                                        <p> <strong>Description
+                                                                                -
+                                                                            </strong>{{ac.description}}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <div class="assign description">
+                                                                        <h5> Scoring </h5>
+                                                                        <p> <strong>Total Score
+                                                                                -
+                                                                            </strong>{{ac.totalMarks}}
+                                                                        </p>
+                                                                        <p> <strong>Remarks -
+                                                                            </strong>{{ac.coachRemark}}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </ng-container>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </td>
+                </tr>
+            </ng-container>
+        </tbody>
+        <tfoot *ngIf="awardsArr.length == 0">
+            <tr>
+                <td colspan="10">
+                    <div *ngIf="award_loader" class="spinner-border text-dark" role="status">
+                    </div>{{award_loader ? 'Loading...' :  'No Awards'}}
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
