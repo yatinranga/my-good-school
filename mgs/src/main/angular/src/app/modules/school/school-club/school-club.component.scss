@@ -1,0 +1,55 @@
+.club_socities_card{
+    display: inline-block;
+    width: 100%;
+    padding: 15px;
+}
+.club_socities_main{
+    box-shadow: 0 0 2px #ddd;
+    padding: 15px;
+    display: inline-block;
+    background: #fff;
+    width: 100%;
+}
+ 
+.club_socities_main .select-field{
+    margin-right: 15px;
+}
+.club_socities_main .select-field input, .club_socities_main .select-field select{
+    font-size: 15px;
+    border: solid 1px #ddd;
+    padding: 3px 10px;
+    margin: 0 5px;
+    color: #555;
+    height: 35px;
+    
+}
+
+
+
+.select-field {
+    display: inline-block;
+    width: auto;
+}
+.sortby {
+    width: 100%;
+    margin: 0;
+    margin-bottom: 15px;
+}
+.club_socities_main table tbody tr:nth-child(odd) {
+    background: white;
+}
+.club_socities_main table tbody tr:nth-child(even) {
+    background: rgba(0,0,0,0.03);
+}
+
+.action-btns i.fa {
+    display: inline-block;
+    background: #159487;
+    padding: 5px;
+    font-size: 12px;
+    border-radius: 2px;
+    color: white;
+}
+.action-btns i.fa.fa-user-plus{
+    background:#1f69ad;
+}
