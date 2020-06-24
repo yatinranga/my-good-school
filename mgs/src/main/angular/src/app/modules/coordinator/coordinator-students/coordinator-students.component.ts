@@ -14,7 +14,10 @@ export class CoordinatorStudentsComponent implements OnInit {
   schoolGrades = [];
   student_loader: boolean = false;
   search: any; // Used for search
-  gradeId="" // used to filter by grade
+  gradeId = "" // used to filter by grade
+  col = "col-12";
+  showDetails: boolean = false;
+  student_obj: any;
   constructor(private teacherService: TeacherService) { }
 
   ngOnInit() {
@@ -57,6 +60,14 @@ export class CoordinatorStudentsComponent implements OnInit {
     }, (err => {
       console.log(err);
     }))
+  }
+
+  /** Set Show Details */
+  setShowDetails(val: boolean, student_obj?) {
+    this.student_obj = student_obj;
+    console.log(student_obj);
+    this.showDetails = val;
+    this.showDetails ? (this.col = "col-7") : (this.col = "col-12");
   }
 
 }

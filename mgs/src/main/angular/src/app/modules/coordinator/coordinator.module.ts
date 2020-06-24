@@ -13,6 +13,8 @@ import { CoordinatorActivityComponent } from './coordinator-activity/coordinator
 
 // search module
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { StudentsDetailsComponent } from './coordinator-students/students-details/students-details.component';
+import { StaffDetailsComponent } from './coordinator-staff/staff-details/staff-details.component';
 
 const routes: Routes = [
   {
@@ -54,7 +56,7 @@ const routes: Routes = [
 
 
 @NgModule({
-  declarations: [CoordinatorComponent, CoordinatorHomeComponent, CoordinatorProfileComponent, CoordinatorStudentsComponent, CoordinatorStaffComponent, CoordinatorAwardsComponent, CoordinatorActivityComponent],
+  declarations: [CoordinatorComponent, CoordinatorHomeComponent, CoordinatorProfileComponent, CoordinatorStudentsComponent, CoordinatorStaffComponent, StaffDetailsComponent, CoordinatorAwardsComponent, CoordinatorActivityComponent, StudentsDetailsComponent],
   imports: [
     CommonModule,
     FormsModule,

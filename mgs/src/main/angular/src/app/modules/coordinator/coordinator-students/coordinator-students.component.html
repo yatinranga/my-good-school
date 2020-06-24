@@ -11,37 +11,56 @@
     <input type="text" name="search" [(ngModel)]="search" autocomplete="off"
         placeholder="Start searching for a name or contact no">
 </div>
-
-<table class="table table-striped">
-    <thead class="thead-light">
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Grade</th>
-            <th scope="col">Email</th>
-            <th scope="col">Gender</th>
-            <th scope="col">Enrollment Year</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let s of studentsArr|filter:search ; let i = index;">
-            <th>{{i+1}}</th>
-            <td>{{s.name}}</td>
-            <td>{{s.grade}} - {{s.section}}</td>
-            <td>{{s.email}}</td>
-            <td>{{s.gender | titlecase}}</td>
-            <td>{{s.yearOfEnrolment}}</td>
-            <!-- <td><button class="btn btn-info" (click)="setShowDetails(true,s)">
+<br><br>
+<div class="student-list-card-main">
+    <div class="container-fluid">
+        <div class="row">
+            <div [ngClass]="col">
+                <div class="student-list">
+                    <table class="table table-striped">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Grade</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Gender</th>
+                                <th scope="col">Enrollment Year</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let s of studentsArr|filter:search ; let i = index;"
+                            (click)="setShowDetails(true,s)">
+                                <th>{{i+1}}</th>
+                                <td>{{s.name}}</td>
+                                <td>{{s.grade}} - {{s.section}}</td>
+                                <td>{{s.email}}</td>
+                                <td>{{s.gender | titlecase}}</td>
+                                <td>{{s.yearOfEnrolment}}</td>
+                                <!-- <td><button class="btn btn-info" (click)="setShowDetails(true,s)">
                     <i class="fa fa-edit" title="Edit"></i>
                 </button></td> -->
-        </tr>
-    </tbody>
-    <tfoot *ngIf="studentsArr.length == 0">
-        <tr>
-            <td colspan="10">
-                <div *ngIf="student_loader" class="spinner-border text-dark" role="status">
-                </div>{{student_loader ? 'Loading...' : 'No Students Found'}}
-            </td>
-        </tr>
-    </tfoot>
-</table>
+                            </tr>
+                        </tbody>
+                        <tfoot *ngIf="studentsArr.length == 0">
+                            <tr>
+                                <td colspan="10">
+                                    <div *ngIf="student_loader" class="spinner-border text-dark" role="status">
+                                    </div>{{student_loader ? 'Loading...' : 'No Students Found'}}
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div class="col-5" *ngIf="showDetails"> 
+                <button class="btn btn-close btn-danger" (click)="setShowDetails(false)"> <i class="fa fa-times"
+                    aria-hidden="true"></i></button>
+                <div class="popup-box">
+                    <app-students-details [studentDetails]="student_obj">
+                    </app-students-details>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

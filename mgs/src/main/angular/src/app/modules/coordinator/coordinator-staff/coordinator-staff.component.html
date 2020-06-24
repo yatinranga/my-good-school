@@ -1,46 +1,97 @@
-<table class="table table-striped">
-    <thead class="thead-light">
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Contact No.</th>
-            <th scope="col">Gender</th>
-            <th scope="col">Roles</th>
-            <th scope="col">Enrollment Year</th>
-            <!-- <th scope="col">Action</th> -->
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let s of supervisorArr ; let i = index;">
-            <th>{{i+1}}</th>
-            <td>{{s.name}}</td>
-            <td>{{s.email}}</td>
-            <td>{{s.mobileNumber}}</td>
-            <td>{{s.gender | titlecase}}</td>
-            <td>
-                <div *ngFor="let role of s.roles">
-                    <h5><span class="badge badge-secondary"
-                            *ngIf="role == 'Coordinator'">{{role}}</span></h5>
-                    <h5><span class="badge badge-dark" *ngIf="role == 'Supervisor'">{{role}}</span>
-                    </h5>
-                    <h4><span class="badge badge-primary" *ngIf="role == 'Head'">{{role}}</span>
-                    </h4>
-                    <h4><span class="badge badge-warning"
-                            *ngIf="role == 'SchoolAdmin'">{{role}}</span></h4>
+<div class="sortby">
+    <label>Club/Society :</label>
+    <select (change)="filterStaff()" [(ngModel)]="clubName">
+        <option value="" selected>All</option>
+        <option *ngFor="let c of allClubsArr" value={{c.name}}>
+            {{c.name}} ({{c.clubOrSociety}})
+        </option>
+    </select>
+
+    <label>Search : </label>
+    <input type="text" name="search" [(ngModel)]="search" autocomplete="off"
+        placeholder="Start searching for a name or contact no">
+</div>
+<br><br>
+<div class="staff-list-main">
+    <div class="container-fluid">
+        <div class="row">
+            <div [ngClass]="col">
+                <div class="student-list">
+                    <table class="table table-striped">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Contact No.</th>
+                                <th scope="col">Gender</th>
+                                <!-- <th scope="col">Club</th>
+            <th scope="col">Society</th> -->
+                                <th scope="col">Roles</th>
+                                <th scope="col">Enrollment Year</th>
+                                <!-- <th scope="col">Action</th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let s of supervisorArr|filter:search ; let i = index;"
+                            (click)="setShowDetails(true,s)">
+                                <th>{{i+1}}</th>
+                                <td>{{s.name}}</td>
+                                <td>{{s.email}}</td>
+                                <td>{{s.mobileNumber}}</td>
+                                <td>{{s.gender | titlecase}}</td>
+                                <!-- <td>
+                <div>
+                    <p *ngFor="let a of s.activityAndGrades let i = index">
+                        <span id="fa"  *ngIf="s.clubOrSociety=='Club'">
+                            {{ (i === s.activityAndGrades.length-1) ? a.name : a.name + "," + ' '}}
+                        </span>
+                    </p>
                 </div>
-            </td>
-            <td>{{s.yearOfEnrolment}}</td>
-            <!-- <td><button class="btn btn-info" (click)="setShowDetails(true,s)">
+            </td><td>
+                <div>
+                    <p *ngFor="let a of s.activityAndGrades let i = index">
+                        <span id="fa"  *ngIf="s.clubOrSociety=='Society'">
+                            {{ (i === s.activityAndGrades.length-1) ? a.name : a.name + "," + ' '}}
+                        </span>
+                    </p>
+                </div>
+            </td> -->
+                                <td>
+                                    <div *ngFor="let role of s.roles">
+                                        <h5><span class="badge badge-secondary"
+                                                *ngIf="role == 'Coordinator'">{{role}}</span></h5>
+                                        <h5><span class="badge badge-dark" *ngIf="role == 'Supervisor'">{{role}}</span>
+                                        </h5>
+                                        <h4><span class="badge badge-primary" *ngIf="role == 'Head'">{{role}}</span>
+                                        </h4>
+                                        <h4><span class="badge badge-warning"
+                                                *ngIf="role == 'SchoolAdmin'">{{role}}</span></h4>
+                                    </div>
+                                </td>
+                                <td>{{s.yearOfEnrolment}}</td>
+                                <!-- <td><button class="btn btn-info" (click)="setShowDetails(true,s)">
                     <i class="fa fa-edit" title="Edit"></i>
                 </button></td> -->
-        </tr>
-    <tfoot *ngIf="supervisorArr.length == 0">
-        <tr>
-            <td colspan="10">
-                <div *ngIf="sup_loader" class="spinner-border text-dark" role="status">
-                </div>{{sup_loader ? 'Loading...' : 'No Staff Found'}}
-            </td>
-        </tr>
-    </tfoot>
-</table>
+                            </tr>
+                        <tfoot *ngIf="supervisorArr.length == 0">
+                            <tr>
+                                <td colspan="10">
+                                    <div *ngIf="sup_loader" class="spinner-border text-dark" role="status">
+                                    </div>{{sup_loader ? 'Loading...' : 'No Staff Found'}}
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div class="col-4" *ngIf="showDetails">
+                <h1><button class="btn btn-danger" (click)="setShowDetails(false)"> Close </button></h1>
+                <div>            
+                    <app-staff-details [staffDetails]="staff_obj">
+                    </app-staff-details>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
