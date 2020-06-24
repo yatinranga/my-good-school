@@ -399,6 +399,7 @@ export class TeacherAwardsComponent implements OnInit {
   getPerformedIds(activity) {
     this.actiPerform = {};
     this.studentId = activity.id;
+    console.log(activity);
     activity.performedActivities.forEach((ele) => {
       ele.responses.forEach(element => {
         this.actiPerform[element.id] = true;

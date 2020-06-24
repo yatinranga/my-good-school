@@ -33,6 +33,10 @@ const routes: Routes = [
   {
     path: 'Coordinator',
     loadChildren: 'src/app/modules/coordinator/coordinator.module#CoordinatorModule'
+  },
+  {
+    path: 'Head',
+    loadChildren: 'src/app/modules/coordinator/coordinator.module#CoordinatorModule'
   }, 
   {
     path: '',

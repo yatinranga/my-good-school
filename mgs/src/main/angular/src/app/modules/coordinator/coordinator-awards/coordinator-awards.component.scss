@@ -1,0 +1,258 @@
+
+.teacher-awards.content {
+    width: 100%;
+    color: white;
+    display: inline-block;
+    float: left;
+}
+
+.teacher-awards.image {
+    width: 50%;
+    color: white;
+    display: inline-block;
+    float: right;
+}
+.tabs {
+    margin-top: -15px;
+    margin-left: -15px;
+    margin-right: -15px;
+    position: absolute;
+    width: 100%;
+    display: inline-block;
+    background: rgba(0,0,0,0.5);
+}
+.teacher-awards .popup-form {
+    width: 100%;
+    background: #fff;
+    padding: 15px;
+    text-align: left;
+    position: relative;
+    left: 50%;
+    top: 0;
+    color: #333;
+    margin: auto;
+    box-shadow: 0 0 10px #999;
+}
+.assign_main .assign-form label{
+    display: inline-block;
+    width: auto;
+    font-size: 16px;
+    color: #444444;
+}
+.assign_main .assign-form .select-field, .assign_main .assign-form .input-field {
+    border: solid 1px #ddd;
+    background: none;
+    height: 40px;
+    padding: 0 10px;
+    margin-left: 5px;
+    display: inline-block;
+    color: #444444;
+}
+button.assign-button {
+    background: green !important;
+    border: none;
+    color: #fafafa;
+    font-size: 18px;
+    padding: 5px 10px;
+    margin-top: 15px;
+}
+img{
+    width: 100%;
+    display: inline-block;
+    position: relative;
+    opacity: 0.8;
+}
+.teacher-awards {
+    width: 100%;
+    margin: 0;
+    display: inline-block;
+    text-align: center;
+}
+.award-button{
+    background: #46818d !important;
+}
+.tabs a {
+    padding: 10px;
+    margin: 10px;
+    font-size: 20px;
+    color: #fafafa !important;
+}
+.tabs ul{
+    margin: 0;
+    padding: 0;
+    display: inline-flex;
+}
+.collapse-td{
+    padding: 0;
+  }
+
+.tabs li {
+    padding: 10px 0;
+}
+li.active {
+    background: #8dc33a;
+}
+.verified{
+    color: #8dc33a;
+}
+.pending{
+    color: indianred;
+}
+.forwarded{
+    color: blue;
+}
+.table button.verify {
+    color: #8dc33a;
+    background: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+.table button.pending{
+    color: indianred;
+    background: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    font-size: 18px;
+}
+.table button.forwarded {
+    color: blue;
+    background: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+.teacher_awards_main .popup-form {
+    width: 100%;
+    display: inline-block;
+    margin-top: 0;
+    padding: 0;
+}
+.assign_form {
+    margin: 10px;
+}
+.assign_main{
+    display: inline-block;
+    width: 100%;
+    text-align: left;
+    margin-bottom: 10px;
+}
+.assign-form {
+    display: inline-block;
+    width: auto;
+    margin: 0 10px;
+}
+
+p#title_award {
+    font-size: 20px;
+    font-weight: 300;
+    color: #8dc33a;
+    margin: 5px 0 15px 0;
+}
+.description h5{
+    margin-bottom: 12px;
+    font-size: 18px;
+    text-decoration: underline;
+}
+button.icon_button {
+    padding: 5px;
+    margin: 0 5px;
+    border: none !important;
+    background: none !important;
+    cursor: pointer;
+    box-shadow: none !important;
+}
+button.award.btn.btn-success, button.award.btn.btn-primary {
+    background: #8dc33a !important;
+    padding: 10px;
+    border-radius: 2px;
+    margin: 10px 0;
+}
+button.reset.btn.btn-secondary {
+    padding: 10px;
+}
+
+p#title_award {
+    color: #8dc33a;
+    font-weight: 300;
+    margin-bottom: 15px;
+  }
+  .horz {
+    width: 100%;
+    text-align: left;
+    padding: 10px;
+    border-bottom: 1px solid;
+    border-top: 1px solid;
+  }
+  .horz h5 {
+    color: #8dc33a;
+    font-weight: 400;
+    font-size: 27px;
+    margin-bottom: 20px;
+  }
+.assign-form label {
+    font-size: 20px;
+    text-align: left;
+}
+.assign-form label {
+    margin-top: 10px;
+}
+.assign.description h5 {
+    color: #8dc33a;
+}
+td.des{
+    width: 350px;
+}
+
+/*-----------------------ASSIGN AWARDS--------------------*/
+
+.popup-form ol#collapselist li {
+    list-style: inherit;
+}
+.popup-form ol#collapselist {
+    padding-left: 15px;
+    margin: 0;
+    text-align: left;
+}
+table.innertable {
+    width: 100%;
+    background: white;
+}
+
+.assign.description label{
+    margin-right: 10px;
+}
+td.last.collapsed-td {
+    padding: 0;
+}
+
+.table_main{
+    margin-top: 0;
+}
+.teacher-activity-card{
+    display: inline-block;
+    width: 100%;
+    padding: 15px;
+}
+.teacher_awards_main {
+    background: white;
+    box-shadow: 0 0 4px #ddd;
+    padding: 15px;
+    display: inline-block;
+    width: 100%;
+    position: relative;
+}
+.table-hover tbody tr:hover{
+    background-color: transparent;
+}
+
+.collapse-card {
+    padding:0 15px;
+    // display: inline-block;
+    width: 100%;
+}
+.tab-details {
+    padding: 0;
+    margin-top: 50px;
+}
