@@ -40,6 +40,7 @@ export class TeacherHomeComponent implements OnInit {
   // Variables to be used in Club Details
   showClubDetails:boolean = false;
   club_Obj: any;
+  selectedClubId:any;
 
   constructor(private teacherService: TeacherService, private formBuilder: FormBuilder, private alertService: AlertService) {
     this.BASE_URL = BASE_URL + "/file/download?filePath=";
@@ -273,6 +274,7 @@ export class TeacherHomeComponent implements OnInit {
 
   // Details of All Clubs and Societies in split window
   setClubDetails(val:boolean,clubObj?) {
+    this.selectedClubId = clubObj.id;
     if(val){
       this.showClubDetails = true;
     } else {
