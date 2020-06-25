@@ -1,131 +1,144 @@
 <div class="student_act_details_main">
-    <div class="sidenav">
-        <h2> My Schedule </h2>
-        <div class="supervisor_profile">
-            <img src="assets/images/maleteacher.jpg">
-        </div>
-        <!---- List of Scheduled Sessions ---->
-        <div class="teacherschedule">
-            <select name="status" [disabled]="clubSch_loader" (ngModelChange)="filterSession($event)"
-                [(ngModel)]="filterVal"> Filter :
-                <option value="" selected>ALL</option>
-                <option value="upcoming">UPCOMIMG</option>
-                <option value="ended">ENDED</option>
-            </select>
-            <div class="day_post">
-                <div class="day" *ngFor="let club of clubSchedule; let i = index;">
-                    <h3>{{club.criterionValue | date}} - {{club.criterionValue | date:'EEEE'}} </h3>
-                    <ul *ngFor="let res of club.responses; let j = index;">
-                        <li id="session_title"> {{j+1}}. {{res.title}}
-                            <span *ngIf="res.status=='upcoming'" style="color: red">({{res.status | uppercase}})</span>
-                            <span *ngIf="res.status=='ended'" style="color: green">({{res.status | uppercase}})</span>
-                        </li>
-                        <li>Description - {{res.description}}</li>
-                        <li>{{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs
-                        </li>
-                        <li>Grades - <span *ngFor="let g of res.grades; let i = index">
-                                {{ (i === res.grades.length-1) ? g.grade+" "+g.section : g.grade+" "+g.section + "," + ' '}}</span>
-                        </li>
-                        <li><button [disabled]="res.status=='ended'" class="btn btn-info" (click)="editSessionBtn(res,i,j)">Edit</button>
-                            <button class="btn btn-danger" (click)="deleteSession(res,i,j)">Delete</button>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div *ngIf="clubSch_loader">
-                <div class="spinner-border text-secondary" role="status" *ngIf="clubSch_loader">
-                </div>{{clubSch_loader?'  Loading...':''}}
-            </div>{{clubSchedule.length==0&&!clubSch_loader?'No Session Available !': ''}}
-        </div>
-    </div>
-
-    <div class="content_container">
-        <div class="title">
+    <div class="content_dashboard">
+        <div class="schedule-main">
+        <!-- <div class="header-dashboard">
             <h1> {{clubObject.name}} Dashboard </h1>
             <button [disabled]="stu_loader && clubSch_loader" class="register_act btn btn-primary btn-sm"
                 data-toggle="modal" data-target="#createSessionModal" data-dismiss="modal" aria-label="Close"
                 (click)="createSessionBtn()">Create Session</button>
+        </div> -->
+        <div class="schedule-header">
+            <h2> {{clubObject.name}} Dashboard </h2>
+            <button [disabled]="stu_loader && clubSch_loader" class="register_act btn btn-sm btn-success"
+                data-toggle="modal" data-target="#createSessionModal" data-dismiss="modal" aria-label="Close"
+                (click)="createSessionBtn()">Create Session</button>
         </div>
-
-        <div class="content">
-            <!---- List of Requests ---->
-            <div class="content_box">
-                <div class="content_title">
-                    <h2> Requests </h2>
-                    <select name="status" [disabled]="clubReqLoader" (ngModelChange)="filterRequests($event)"
-                        [(ngModel)]="filterReqVal"> Filter :
-                        <option value="" selected>ALL</option>
-                        <option value="PENDING">PENDING</option>
-                        <option value="REJECTED">REJECTED</option>
-                    </select>
-                </div>
-                <ul>
-                    <li *ngFor="let req of clubReqArr; let i = index" id="requestbox">
-                        <ul id="studentname">
-                            <li> {{i+1}}. {{req.student.name}}
-                                <p> Grade - {{req.student.grade}} {{req.student.section}}</p>
-                                <!--
-                                                                    <div>
-                                    <span *ngIf="req.membershipStatus=='PENDING'"
-                                        style="color: blue">({{req.membershipStatus | uppercase}})</span>
-                                    <span *ngIf="req.membershipStatus=='VERIFIED'"
-                                        style="color: green">({{req.membershipStatus | uppercase}})</span>
-                                    <span *ngIf="req.membershipStatus=='REJECTED'"
-                                        style="color: red">({{req.membershipStatus | uppercase}})</span>
-                                </div>
-                                -->
+        <div class="middle-content">
+            <div class="row">
+                <div class="col-6">
+                    <div class="content_box">
+                        <div class="content_title">
+                            <h2> Requests </h2>
+                            <select name="status" [disabled]="clubReqLoader" (ngModelChange)="filterRequests($event)"
+                                [(ngModel)]="filterReqVal"> Filter :
+                                <option value="" selected>ALL</option>
+                                <option value="PENDING">PENDING</option>
+                                <option value="REJECTED">REJECTED</option>
+                            </select>
+                        </div>
+                        <ul>
+                            <li *ngFor="let req of clubReqArr; let i = index" id="requestbox">
+                                <ul id="studentname">
+                                    <li> {{i+1}}. {{req.student.name}}
+                                        <p> Grade - {{req.student.grade}} {{req.student.section}}</p>
+                                    </li>
+                                </ul>
+                                <ul id="actionbuttons">
+                                    <li> <button *ngIf="req.membershipStatus=='PENDING'" class="verifyreq btn btn-success"
+                                            (click)="setClubReq(req,i,'true')">Verify</button>
+                                        <button *ngIf="req.membershipStatus=='PENDING'" class="rejectreq btn btn-danger"
+                                            (click)="setClubReq(req,i,'false')">Reject</button></li>
+                                </ul>
+        
+                            </li>
+                            <li *ngIf="clubReqArr.length==0" id="null">
+                                <div class="spinner-border text-secondary" role="membershipStatus" *ngIf="stu_loader">
+                                </div> {{stu_loader ? ' Loading...' : 'No Requests'}}
                             </li>
                         </ul>
-                        <ul id="actionbuttons">
-                            <li> <button *ngIf="req.membershipStatus=='PENDING'" class="verifyreq btn btn-success"
-                                    (click)="setClubReq(req,i,'true')">Verify</button>
-                                <button *ngIf="req.membershipStatus=='PENDING'" class="rejectreq btn btn-danger"
-                                    (click)="setClubReq(req,i,'false')">Reject</button></li>
-                        </ul>
-
-                    </li>
-                    <li *ngIf="clubReqArr.length==0" id="null">
-                        <div class="spinner-border text-secondary" role="membershipStatus" *ngIf="stu_loader">
-                        </div> {{stu_loader ? ' Loading...' : 'No Requests'}}
-                    </li>
-                </ul>
-            </div>
-
-            <!-- <div>
-                            <span *ngIf="req.membershipStatus=='PENDING'"
-                                style="color: blue">({{req.membershipStatus | uppercase}})</span>
-                            <span *ngIf="req.membershipStatus=='VERIFIED'"
-                                style="color: green">({{req.membershipStatus | uppercase}})</span>
-                            <span *ngIf="req.membershipStatus=='REJECTED'"
-                                style="color: red">({{req.membershipStatus | uppercase}})</span>
-                        </div>
-                    -->
-
-
-            <!---- List of Students ---->
-            <div class="content_box">
-                <div class="content_title">
-                    <h2>List of Students </h2>
-                    <select name="grade" [disabled]="stu_loader" (ngModelChange)="filterStudent($event)"
-                        [(ngModel)]="gradeId">
-                        <option value="" selected>Select Grade</option>
-                        <option *ngFor="let g of schoolGrades" value={{g.id}}>{{g.grade}} {{g.section}}
-                        </option>
-                        <option disabled *ngIf="!schoolGrades.length">No Grades Available</option>
-                    </select>
+                    </div>
                 </div>
-                <ul id="student_list">
-                    <li *ngFor="let s of studentsArr; let i = index"> {{i+1}}. {{s.name}} - {{s.grade}}
-                        {{s.section}}</li>
-                    <li *ngIf="studentsArr.length==0" id="null">
-                        <div class="spinner-border text-secondary" role="status" *ngIf="stu_loader">
-                        </div> {{stu_loader ? ' Loading...' : 'No Students'}}
-                    </li>
-                </ul>
+                <div class="col-6">
+                    <div class="content_box">
+                        <div class="content_title">
+                            <h2>List of Students </h2>
+                            <select name="grade" [disabled]="stu_loader" (ngModelChange)="filterStudent($event)"
+                                [(ngModel)]="gradeId">
+                                <option value="" selected>Select Grade</option>
+                                <option *ngFor="let g of schoolGrades" value={{g.id}}>{{g.grade}} {{g.section}}
+                                </option>
+                                <option disabled *ngIf="!schoolGrades.length">No Grades Available</option>
+                            </select>
+                        </div>
+                        <ul id="student_list">
+                            <li *ngFor="let s of studentsArr; let i = index"> {{i+1}}. {{s.name}} - {{s.grade}}
+                                {{s.section}}</li>
+                            <li *ngIf="studentsArr.length==0" id="null">
+                                <div class="spinner-border text-secondary" role="status" *ngIf="stu_loader">
+                                </div> {{stu_loader ? ' Loading...' : 'No Students'}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
+        
+ 
+        <div class="schedule-main schedules">
+            <div class="schedule-header">
+                <h2> My Schedule </h2>
+                <select name="status" [disabled]="clubSch_loader" (ngModelChange)="filterSession($event)"
+                    [(ngModel)]="filterVal"> Filter :
+                    <option value="" selected>ALL</option>
+                    <option value="upcoming">UPCOMIMG</option>
+                    <option value="ended">ENDED</option>
+                </select>
+            </div>
+          
+            <div class="teacherschedule">
+               <div class="day_post">
+                   <div class="row">
+                       <div class="col-3 mb-3" *ngFor="let club of clubSchedule; let i = index;">
+                           <div class="day">
+                               <h3>{{club.criterionValue | date}} - {{club.criterionValue | date:'EEEE'}} </h3>
+                               <ul *ngFor="let res of club.responses; let j = index;">
+                                   <li id="session_title"> {{j+1}}. {{res.title}}
+                                       <span *ngIf="res.status=='upcoming'" style="color: #8dc33a; 
+                                       float: right;
+                                       padding: 2px 5px;
+                                       font-size: 12px;
+                                       position: absolute;
+                                       top: 10px;
+                                       right: 20px;
+                                   ">({{res.status | uppercase}})</span>
+                                       <span *ngIf="res.status=='ended'" style="color: #bd2130; 
+                                       float: right;
+                                       padding: 2px 5px;
+                                       font-size: 12px;
+                                       position: absolute;
+                                       top: 10px;
+                                       right: 20px;
+                                   ">({{res.status | uppercase}})</span>
+                                   </li>
+                                   <li> <strong>Description : </strong> {{res.description}}</li>
+                                   <li> <strong>Time : </strong> {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs
+                                   </li>
+                                   <li> <strong>Grades : </strong> <span *ngFor="let g of res.grades; let i = index">
+                                           {{ (i === res.grades.length-1) ? g.grade+" "+g.section : g.grade+" "+g.section + "," + ' '}}</span>
+                                   </li>
+                                   <div class="btns">
+                                       <button [disabled]="res.status=='ended'" class="btn btn-success" (click)="editSessionBtn(res,i,j)">Edit</button>
+                                       <button class="btn btn-danger" (click)="deleteSession(res,i,j)">Delete</button>
+                                   </div>
+                               </ul>
+                           </div>
+                       </div>
+                   </div>
+                </div>
+                <div *ngIf="clubSch_loader">
+                    <div class="spinner-border text-secondary" role="status" *ngIf="clubSch_loader">
+                    </div>{{clubSch_loader?'  Loading...':''}}
+                </div>{{clubSchedule.length==0&&!clubSch_loader?'No Session Available !': ''}}
+            </div>
+        </div>
+        
+    </div>
 
     </div>
+    
+   
+
+   
 
 </div>
 
@@ -134,52 +147,55 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Session Details</h5>
+                <!-- <h5 class="modal-title" id="exampleModalLabel">Session Details</h5> -->
+                
+                <h5 class="modal-title" id="exampleModalLabel">{{clubObject.name}}</h5>
+
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetForm()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <h5 style="color: red"> Note : All Fields Are Mandatory </h5>
+                <!-- <h5 style="color: red"> Note : All Fields Are Mandatory </h5> -->
                 <form [formGroup]="createSessionForm" (ngSubmit)="createSession()">
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Club/Society : </label>
+                                <!-- <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Club/Society <span>*</span> </label>
                                     <label for="recipient-name" class="col-form-label">&emsp;{{clubObject.name}}</label>
-                                </div>
+                                </div> -->
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Name of Session : </label>
+                                    <label for="recipient-name" class="col-form-label">Name of Session <span>*</span> </label>
                                     <input type="text" class="form-control add" name="title"
                                         placeholder="Add Title Here" formControlName="title">
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Sessionb Number : </label>
+                                    <label for="recipient-name" class="col-form-label">Sessionb Number <span>*</span> </label>
                                     <input type="number" class="form-control add" name="sessionNumber"
                                         placeholder="Enter Session Number Here" formControlName="number">
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Description : </label>
-                                    <textarea class="form-control add" name="description" formControlName="description"
+                                    <label for="recipient-name" class="col-form-label">Description <span>*</span> </label>
+                                    <textarea style="height: 120px;" class="form-control add" name="description" formControlName="description"
                                         placeholder="Enter Description Here" rows="3"></textarea>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Date : </label>
+                                    <label for="recipient-name" class="col-form-label">Date <span>*</span> </label>
                                     <input type="date" class="form-control" name="startDate" formControlName="startDate"
                                         [attr.min]="minDate">
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Timing : </label>
-                                    <input type="time" class="form-control" name="startTime" [(ngModel)]="startTime"
+                                    <label style="display: block;" for="recipient-name" class="col-form-label">Timing <span>*</span> </label>
+                                    <input type="time" class="form-control time-s" name="startTime" [(ngModel)]="startTime"
                                         [ngModelOptions]="{standalone: true}">
-                                    <input type="time" class="form-control" name="endTime" [(ngModel)]="endTime"
+                                    <input type="time" class="form-control time-e" name="endTime" [(ngModel)]="endTime"
                                         [ngModelOptions]="{standalone: true}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Grades : </label>
+                                    <label for="recipient-name" class="col-form-label">Grades <span>*</span> </label>
                                     <select class="form-control" name="gradeId" formControlName="gradeIds" multiple>
                                         <option value=null selected disabled>Select Grades</option>
                                         <option *ngFor="let grade of schoolGrades" value={{grade.id}}>
@@ -188,21 +204,31 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-12" style="text-align: center;">
+                            <div class="col-md-12" style="text-align: lef;">
+                                
                                 <div class="choosemedia form-group">
-                                    <input type="file" accept="image/*, audio/*, video/*, application/pdf,application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
+                                    <div class="choose-file">
+                                        <input type="file" accept="image/*, audio/*, video/*, application/pdf,application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
                                                 text/plain" name="selectedFile" (change)="onFileSelect($event)" />
+                                                <label for="choose">Choose File</label>
+                                    </div>
+                                    
                                     <!-- <span class="choosefile choosefile-custom"> <i class="fa fa-file"> </i> </span> -->
                                     <!-- <i class="fa fa-trash"></i> -->
                                 </div>
-                                <div class="form-group" *ngIf="path&&name">
-                                    <img *ngIf="path" [src]="path" height="200">
-                                    <p id="attachment_name"> {{name}}
-                                        <button type="button" name="removeFile" (click)="removeFile()"
-                                            class="reviewed icon_button">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    </p>
+                                <div class="form-group choosed-file" *ngIf="path&&name">
+                                    <div class="file-img">
+                                        <img *ngIf="path" [src]="path">
+                                    </div>
+                                    <div class="file-name">
+                                        <p id="attachment_name"> {{name}}
+                                            <button type="button" name="removeFile" (click)="removeFile()"
+                                                class="reviewed icon_button">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </p>
+                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -210,11 +236,11 @@
                 </form>
             </div>
             <div class="modal-footer">
+                <button type="submit" class="btn btn-success" [disabled]="createSessionForm.invalid"
+                *ngIf="createSessionView" (click)="createSession()">Create</button>
+                <button type="submit" class="btn btn-success" [disabled]="createSessionForm.invalid"
+                *ngIf="editSessionView" (click)="createSession()">Edit</button>
                 <button type="button" class="btn btn-secondary" (click)="resetForm()">Reset</button>
-                <button type="submit" class="btn btn-primary" [disabled]="createSessionForm.invalid"
-                    *ngIf="createSessionView" (click)="createSession()">Create</button>
-                <button type="submit" class="btn btn-primary" [disabled]="createSessionForm.invalid"
-                    *ngIf="editSessionView" (click)="createSession()">Edit</button>
             </div>
         </div>
     </div>

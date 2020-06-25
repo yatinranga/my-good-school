@@ -20,7 +20,7 @@
                         <a (click)="setClubDetails(true,a)">{{a.name}} ({{a.clubOrSociety}})</a>
                     </li>
                 <p *ngIf="!(allAssignedActi.length) && !assignedClubLoader">No Club/Society Assigned</p>
-                <div *ngIf="showClubDetails">
+                <div class="clubs-detail-main" *ngIf="showClubDetails">
                     <button class="btn btn-close btn-danger" (click)="setClubDetails(false)"> <i class="fa fa-times"
                         aria-hidden="true"></i></button>
                     <app-teacher-club-detail [clubObject]="club_Obj"></app-teacher-club-detail>

@@ -103,11 +103,12 @@ button.btn.register.btn-primary{
 .teacher_club_list li {
     display: inline-block;
     width: auto;
+    margin-right: 5px;
 }
 .teacher_club_list li a {
     padding: 5px 10px;
-    background: rgba(85, 85, 85, 0.46);
-    margin: 0 5px;
+    background: rgba(85, 85, 85, 0.8);
+    margin: 0;
     border-radius: 5px;
     color: white;
     text-decoration: none;
@@ -215,4 +216,26 @@ div#session_title {
     border-radius: 3px !important;
     display: inline-block;
     margin-top: 10px;
+}
+.clubs-detail-main {
+    display: inline-block;
+    width: 100%;
+    // padding: 15px;
+    // box-shadow: 0 0 3px #ddd;
+    margin-top: 25px;
+    position: relative;
+}
+.clubs-detail-main button.btn {
+    float: right;
+    padding: 5px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50% !important;
+    position: absolute;
+    right: -20px;
+    top: -20px;
+    z-index: 222;
+}
+.clubs-detail-main button.btn.btn-close i.fa {
+    margin: 0;
 }
