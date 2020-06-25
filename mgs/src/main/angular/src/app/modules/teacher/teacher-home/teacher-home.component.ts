@@ -274,7 +274,7 @@ export class TeacherHomeComponent implements OnInit {
 
   // Details of All Clubs and Societies in split window
   setClubDetails(val:boolean,clubObj?) {
-    this.selectedClubId = clubObj.id;
+    
     if(val){
       this.showClubDetails = true;
     } else {
@@ -283,6 +283,7 @@ export class TeacherHomeComponent implements OnInit {
 
     if (clubObj) {
       this.club_Obj = clubObj;
+      this.selectedClubId = clubObj.id;
       // this.clubId = clubObj.id;
       // this.createSessionForm.controls.clubId.patchValue(this.clubId);
     }
