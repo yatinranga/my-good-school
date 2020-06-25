@@ -33,14 +33,14 @@
                     <td>
                         <div *ngIf="al.status === 'PENDING'" class="pending"> {{al.status}}</div>
                         <div *ngIf="al.status === 'VERIFIED'" class="verified">{{al.status}}</div>
-                        <div *ngIf="al.status === 'FORWARDED' && userType=='Coordinator'" class="forwarded"> {{al.status}}</div>
-                        <div *ngIf="al.status === 'FORWARDED' && userType=='Head'" class="pending">PENDING</div>
+                        <div *ngIf="al.status === 'FORWARDED' && userType=='Coordinator'" class="forwarded">REVIEWED</div>
+                        <div *ngIf="al.status === 'FORWARDED' && userType=='Head'" class="pending">REVIEWED</div>
                     </td>
                     <td (click)="stopCollapse($event)">
                     
                         <button name="verifySelectedAward" *ngIf="al.status == 'PENDING'" (click)="verifySelectedAward($event,i,true)"
                             class="verify">
-                            <i class="fa fa-thumbs-up"></i>Approve</button>
+                            <i class="fa fa-thumbs-up"></i>Review</button>
                         <button name="verifySelectedAward" *ngIf="al.status == 'PENDING'" (click)="verifySelectedAward($event,i,false)"
                             class="pending">
                             <i class="fa fa-times"></i>Reject</button>

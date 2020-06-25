@@ -15,6 +15,7 @@ import { CoordinatorActivityComponent } from './coordinator-activity/coordinator
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { StudentsDetailsComponent } from './coordinator-students/students-details/students-details.component';
 import { StaffDetailsComponent } from './coordinator-staff/staff-details/staff-details.component';
+import { CoordinatorClubDetailsComponent } from './coordinator-home/coordinator-club-details/coordinator-club-details.component';
 
 const routes: Routes = [
   {
@@ -45,10 +46,10 @@ const routes: Routes = [
         path: 'supervisor',
         component: CoordinatorStaffComponent
       },
-      // {
-      //   path: '',
-      //   redirectTo: 'home'
-      // }
+      {
+        path: '',
+        redirectTo: 'home'
+      }
     ]
   }
 ]
@@ -56,7 +57,7 @@ const routes: Routes = [
 
 
 @NgModule({
-  declarations: [CoordinatorComponent, CoordinatorHomeComponent, CoordinatorProfileComponent, CoordinatorStudentsComponent, CoordinatorStaffComponent, StaffDetailsComponent, CoordinatorAwardsComponent, CoordinatorActivityComponent, StudentsDetailsComponent],
+  declarations: [CoordinatorComponent, CoordinatorHomeComponent, CoordinatorProfileComponent, CoordinatorStudentsComponent, CoordinatorStaffComponent, StaffDetailsComponent, CoordinatorAwardsComponent, CoordinatorActivityComponent, StudentsDetailsComponent, CoordinatorClubDetailsComponent],
   imports: [
     CommonModule,
     FormsModule,
