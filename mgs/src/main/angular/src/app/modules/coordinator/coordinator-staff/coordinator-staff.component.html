@@ -25,8 +25,8 @@
                                 <th scope="col">Email</th>
                                 <th scope="col">Contact No.</th>
                                 <th scope="col">Gender</th>
-                                <!-- <th scope="col">Club</th>
-            <th scope="col">Society</th> -->
+                                <th scope="col">Club</th>
+                                <th scope="col">Society</th>
                                 <th scope="col">Roles</th>
                                 <th scope="col">Enrollment Year</th>
                                 <!-- <th scope="col">Action</th> -->
@@ -40,23 +40,24 @@
                                 <td>{{s.email}}</td>
                                 <td>{{s.mobileNumber}}</td>
                                 <td>{{s.gender | titlecase}}</td>
-                                <!-- <td>
-                <div>
-                    <p *ngFor="let a of s.activityAndGrades let i = index">
-                        <span id="fa"  *ngIf="s.clubOrSociety=='Club'">
-                            {{ (i === s.activityAndGrades.length-1) ? a.name : a.name + "," + ' '}}
-                        </span>
-                    </p>
-                </div>
-            </td><td>
-                <div>
-                    <p *ngFor="let a of s.activityAndGrades let i = index">
-                        <span id="fa"  *ngIf="s.clubOrSociety=='Society'">
-                            {{ (i === s.activityAndGrades.length-1) ? a.name : a.name + "," + ' '}}
-                        </span>
-                    </p>
-                </div>
-            </td> -->
+                                <td>
+                                    <div>
+                                        <p *ngFor="let a of s.activityAndGrades let i = index">
+                                            <span id="fa" *ngIf="a.clubOrSociety=='Club'">
+                                                {{ (i === s.activityAndGrades.length-1) ? a.name : a.name + "," + ' '}}
+                                            </span>
+                                        </p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <p *ngFor="let a of s.activityAndGrades let i = index">
+                                            <span id="fa" *ngIf="a.clubOrSociety=='Society'">
+                                                {{ (i === s.activityAndGrades.length-1) ? a.name : a.name + "," + ' '}}
+                                            </span>
+                                        </p>
+                                    </div>
+                                </td>
                                 <td>
                                     <div *ngFor="let role of s.roles">
                                         <h5><span class="badge badge-secondary"

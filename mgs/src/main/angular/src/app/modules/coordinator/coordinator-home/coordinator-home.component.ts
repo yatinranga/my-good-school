@@ -8,7 +8,16 @@ import { TeacherService } from 'src/app/services/teacher.service';
 })
 export class CoordinatorHomeComponent implements OnInit {
 
-  userInfo:any;
+  userInfo: any;
+  allActivities: any;
+  sportArr = [];
+  serviceArr = [];
+  studyArr = [];
+  skillArr = [];
+  clubLoader: boolean = false;
+  showClubDetails: boolean = false;
+  club_Object:any;
+
   constructor(private teacherService: TeacherService) { }
 
   ngOnInit() {
@@ -16,12 +25,27 @@ export class CoordinatorHomeComponent implements OnInit {
     this.getClubsInGrades();
   }
 
-  getClubsInGrades(){
-    this.teacherService.getUserClubsInGrades(this.userInfo.schoolId).subscribe(res=>{
+  /** Get Clubs/Socities running in Coordinator grades */
+  getClubsInGrades() {
+    this.clubLoader = true;
+    this.teacherService.getUserClubsInGrades(this.userInfo.schoolId).subscribe(res => {
+      this.clubLoader = false;
       console.log(res);
-    },(err=>{
+      this.allActivities = res;
+      this.sportArr = res.filter((e) => (e.fourS == 'Sport'));
+      this.serviceArr = res.filter((e) => (e.fourS == 'Service'));
+      this.studyArr = res.filter((e) => (e.fourS == 'Study'));
+      this.skillArr = res.filter((e) => (e.fourS == 'Skill'));
+    }, (err => {
       console.log(err);
+      this.clubLoader = false;
     }))
+  }
+
+  /** Details of All Clubs and Societies */
+  setClubDetails(val: boolean, clubObj?) {
+    this.showClubDetails = val
+    this.club_Object = clubObj;
   }
 
 }

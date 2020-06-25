@@ -40,7 +40,7 @@ export class CoordinatorAwardsComponent implements OnInit {
     console.log(awardId);
 
     if (val) {
-      this.alertService.confirmWithoutLoader('question', "Verify Award", '', 'Yes').then(result => {
+      this.alertService.confirmWithoutLoader('question', "Approve Award", '', 'Yes').then(result => {
         if (result.value) {
           this.alertService.showLoader("");
           this.teacherService.verifyAwards(awardId,"true").subscribe((res) => {
