@@ -679,9 +679,13 @@ td.collapse-td .collapse, td.collapse-td .collapsing {
 }
 .modal-header .modal-title {
     margin-top: 5px;
+    font-size: 20px;
+    color: #555;
+    font-weight: bold;
 }
 .modal-header {
     background: rgba(0,0,0,0.03);
+    padding: 10px 15px;
 }
 
 button.close{
@@ -734,4 +738,7 @@ label.col-form-label span {
 
 button.btn.btn-success{
     background: #4bafa5 !important;
+}
+.modal-footer .btn{
+    border-radius: 3px !important;
 }

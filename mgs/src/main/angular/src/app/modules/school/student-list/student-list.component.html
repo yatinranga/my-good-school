@@ -1,15 +1,20 @@
 <div class="sortby">
-    <label>Grade :</label>
-    <select (change)="filterStudents()" [(ngModel)]="gradeId">
-        <option value="" selected>All</option>
-        <option *ngFor="let grade of schoolGrades" value={{grade.id}}>
-            {{grade.grade}} {{grade.section}}
-        </option>
-    </select>
-
-    <label>Search : </label>
+    <div class="select-field">
+        <label>Grade :</label>
+        <select (change)="filterStudents()" [(ngModel)]="gradeId">
+            <option value="" selected>All</option>
+            <option *ngFor="let grade of schoolGrades" value={{grade.id}}>
+                {{grade.grade}} {{grade.section}}
+            </option>
+        </select>
+    </div>
+    
+    <div class="select-field">
+        <label>Search : </label>
     <input type="text" name="search" [(ngModel)]="search" autocomplete="off"
-        placeholder="Start searching for a name or contact no">
+        placeholder="Name or Email..."> 
+    </div>
+    
 </div>
 
 <div class="student-list-card-main">

@@ -24,8 +24,9 @@
 .student-information-mian {
     display: inline-block;
     width: 100%;
-    box-shadow: 0 0 4px #ddd;
+    box-shadow: 0 0 3px #ddd;
     padding: 10px 0;
+    background: white;
 }
 .photo {
     width: 150px;
@@ -62,6 +63,13 @@
 }
 .btns{
     margin-top: 15px;
+    display: inline-block;
+    width: 100%;
+    padding: 0 15px;
+}
+.btns button.btn.clubs-socities-btn {
+    float: right;
+    border-radius: 3px !important;
 }
 .guardian-information .card .card-body {
     padding: 10px;
@@ -85,11 +93,11 @@
     margin-left: -10px;
     margin-right: -10px;
     padding: 8px 10px;
-    background: #fafafa;
-    border-bottom: solid 1px #dddddd6e;
-    font-size: 16px;
+    /* background: #fafafa; */
+    border-bottom: solid 1px #ddd;
+    font-size: 15px;
     font-weight: bold;
-    color: #777;
+    color: #555;
 }
 .information .btn {
     font-size: 12px;
@@ -104,19 +112,20 @@
     margin-bottom: 5px;
 }
 .clubs-socity-main {
-    box-shadow: 0 0 4px #ddd;
-    padding: 15px;
+    box-shadow: 0 0 3px #ddd;
+    padding: 0;
     margin-top: 15px;
     width: 100%;
     display: inline-block;
+    background: white;
     text-align: center;
 }
 .clubs-socity-main h3 {
     background: #fafafa;
     text-align: left;
-    margin-top: -15px;
-    margin-left: -15px;
-    margin-right: -15px;
+    // margin-top: -15px;
+    // margin-left: -15px;
+    // margin-right: -15px;
     padding: 10px 15px;
     font-size: 18px;
     box-shadow: 0 0 4px #ddd;
@@ -129,16 +138,21 @@
     top: 0;
     padding: 5px;
     font-size: 14px;
-    background: rgba(0,0,0,0.5);
+    // background: rgba(0,0,0,0.5);
 }
 .clubs, .society {
     padding: 10px;
-    width: 45%;
+    width: 100%;
     display: inline-block;
     vertical-align: top;
     box-shadow: 0 0 4px #ddd;
-    margin: 8px;
+    // margin: 8px;
     text-align: left;
+}
+.club-socity-card{
+    display: inline-block;
+    width: 50%;
+    padding: 10px;
 }
 .clubs h4, .society h4{
     font-size: 16px;
@@ -150,9 +164,20 @@
 }
 .clubs ul, .society ul {
     padding: 0;
-    min-height: 90px;
+    min-height: 120px;
     margin: 0;
+    max-height: 120px;
+    overflow-y: auto;
 }
+.club-socity-card .card{
+    margin-bottom: 10px;
+
+}
+.card-body strong {
+    font-size: 15px;
+    color: #555;
+}
+
 .clubs h4, .society h4 {
     background: #fafafa;
     margin-top: -10px;
@@ -161,8 +186,12 @@
     padding: 10px;
     box-shadow: 0 0 4px #ddd;
     font-weight: bold;
-    color: #777;
+    color: #555;
 }
+.card .card-body {
+    padding: 10px;
+}
+
 .clubs-socities-btn{
     background: #28a745 !important;
     border: none;
@@ -172,4 +201,121 @@
     border: none;
     outline: none;
     box-shadow: none;
+}
+
+.modal-body .form-group textarea{
+    height: 120px;
+}
+.modal-body .form-group .col-form-label{
+    font-weight: bold;
+    color: #555;
+}
+#editSupervisorModal .modal-dialog {
+    max-width: 580px;
+}
+.modal-body {
+    padding: 10px 0 0 0;
+}
+.clubs-socity-main h2 .btn {
+    font-size: 13px;
+    padding: 5px 10px;
+    border-radius: 3px !important;
+    margin-left: 10px;
+}
+.clubs-socity-main h2{
+    margin: 0;
+}
+.card .card-body p{
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+}
+.card-body button.btn {
+    font-size: 12px;
+    border-radius: 3px !important;
+}
+#assignClubModal .modal-body, #assignGradeModal .modal-body {
+    padding: 10px 15px 0;
+}
+#assignClubModal .modal-dialog, #assignGradeModal .modal-dialog {
+    max-width: 380px;
+}
+span.badge {
+    font-size: 12px;
+    padding: 2px 8px;
+    line-height: normal;
+    width: 100%;
+    letter-spacing: 1px;
+}
+
+/*----Grade-Check---*/
+
+.grade-main {
+    border: solid 1px #ddd;
+    padding: 0 0 10px 0;
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.grade-main h3 {
+    // margin-top: -10px;
+    font-size: 16px;
+    font-weight: bold;
+    // margin-left: -15px;
+    // margin-right: -15px;
+    margin-bottom: 0;
+    padding: 10px 15px;
+    border-bottom: solid 1px #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 22;
+    background: white;
+    color: #555;
+    margin-bottom: 10px;
+}
+.grade-main .form-check{
+    padding: 5px 35px;
+}
+#assignSupervisorModal .modal-dialog .form-group > label {
+    font-weight: bold;
+    color: #555;
+}
+.form-check .form-check-input {
+    width: 18px;
+    margin: 0;
+    height: 18px;
+    left: 15px;
+    top: 8px;
+    opacity: 0;
+    z-index: 22;
+    cursor: pointer;
+}
+.form-check .form-check-input + span:after {
+    content: "";
+    display: inline-block;
+    width: 18px;
+    border: solid 1.5px #999;
+    height: 18px;
+    position: absolute;
+    left: 15px;
+    top: 8px;
+    font-family: FontAwesome;
+    text-align: center;
+    line-height: 17px;
+    font-size: 11px;
+    color: #4bafa5;
+}
+.form-check .form-check-input:checked + span:after{
+    border-color: #4bafa5;
+    content: "\f00c";
+
+}
+.form-check label.form-check-label span {
+    padding-left: 10px;
+    line-height: normal;
+    margin-top: 1px;
+    display: inline-block;
 }
