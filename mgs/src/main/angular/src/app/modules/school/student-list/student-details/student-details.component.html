@@ -24,7 +24,7 @@
                             {{studentDetails.section ? studentDetails.section : '  '}}</li>
                         <li> <strong>Enrollment Year :</strong>
                             {{studentDetails.yearOfEnrolment ? studentDetails.yearOfEnrolment : ' - '}}</li>
-                        <button class="btn btn-primary" (click)="showStudentModal()">Edit Student</button>
+                        <button class="btn btn-success" (click)="showStudentModal()">Edit Student</button>
                     </ul>
 
                 </div>
@@ -33,7 +33,7 @@
 
 
             <div class="guardian-information">
-                <h3>Guardians : <button class="btn btn-primary" (click)="showGuardianModal('Add')">Add Guardian</button>
+                <h3>Guardians : <button class="btn btn-success" (click)="showGuardianModal('Add')">Add Guardian</button>
                 </h3>
 
                 <div class="card" *ngFor="let sd of studentDetails['guardianResponseList']">
@@ -42,14 +42,14 @@
                         <p class="card-text">{{sd.name}}</p>
                         <p class="card-text">{{sd.mobileNumber}}</p>
                         <p class="card-text">{{sd.email}}</p>
-                        <button class="btn btn-primary" (click)="showGuardianModal('Edit',sd)">Edit</button>
+                        <button class="btn btn-success" (click)="showGuardianModal('Edit',sd)">Edit</button>
                     </div>
                 </div>
 
             </div>
             <div class="btns">
 
-                <button class="btn clubs-socities-btn btn-dark" (click)="setShowClub(true)">Show Clubs/Socities</button>
+                <button class="btn clubs-socities-btn btn-success" (click)="setShowClub(true)">Show Clubs/Socities</button>
             </div>
 
 
@@ -64,21 +64,26 @@
                         <span class="sr-only">Loading...</span>
                     </div>
                 </div>
-                <div class="clubs" *ngIf="studentEnrolledClubArr.length">
-                    <h4>Clubs</h4>
-                    <ul>
-                        <li *ngFor="let club of studentEnrolledClubArr; let i = index">{{i+1}}. {{club.name}}</li>
-                    </ul>
 
-
+                <div class="club-socity-card">
+                    <div class="clubs" *ngIf="studentEnrolledClubArr.length">
+                        <h4>Clubs</h4>
+                        <ul>
+                            <li *ngFor="let club of studentEnrolledClubArr; let i = index">{{i+1}}. {{club.name}}</li>
+                        </ul>
+    
+                    </div>
                 </div>
-                <div class="society" *ngIf="studentEnrolledSociArr.length">
-                    <h4>Society</h4>
-                    <ul>
-                        <li *ngFor="let club of studentEnrolledSociArr; let i = index">{{i+1}}. {{club.name}}</li>
-                    </ul>
-
+                <div class="club-socity-card">
+                    <div class="society" *ngIf="studentEnrolledSociArr.length">
+                        <h4>Society</h4>
+                        <ul>
+                            <li *ngFor="let club of studentEnrolledSociArr; let i = index">{{i+1}}. {{club.name}}</li>
+                        </ul>
+    
+                    </div>
                 </div>
+                
                 <div *ngIf="!club_loader && !(studentEnrolledSociArr.length && studentEnrolledClubArr.length)">
                     <br>
                     <h5><b>No Enrolled Club/Society</b></h5>
@@ -147,9 +152,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" (click)="resetForm()">Reset</button>
                     <button type="submit" class="btn btn-success"
-                        [disabled]="guardianForm.invalid">{{guardianModalType}}</button>
+                    [disabled]="guardianForm.invalid">{{guardianModalType}}</button>
+                    <button type="button" class="btn btn-danger" (click)="resetForm()">Reset</button>
                 </div>
             </form>
         </div>
@@ -179,7 +184,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">Email : </label>
-                                    <input type="email" class="form-control add" name="name" placeholder="Add Name Here"
+                                    <input type="email" class="form-control add" name="name" placeholder="Add Email Here"
                                         formControlName="email">
                                 </div>
                                 <div class="form-group">
@@ -219,8 +224,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" (click)="resetForm()">Reset</button>
                     <button type="submit" class="btn btn-success" [disabled]="updateStudentForm.invalid">Update</button>
+                    <button type="button" class="btn btn-danger" (click)="resetForm()">Reset</button>
                 </div>
             </form>
         </div>

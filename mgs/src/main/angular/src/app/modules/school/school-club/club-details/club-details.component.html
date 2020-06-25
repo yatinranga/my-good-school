@@ -1,13 +1,17 @@
-<h1>{{clubObj.name}} Details</h1>
-<br>
-<button class="btn btn-primary">Edit Details</button><br>
-<br>
-<h3>
-    <p><b>Club/Society :</b> {{clubObj.clubOrSociety}}</p>
-    <p><b>Description : </b>{{clubObj.description}}</p>
-    <p><b>Focus Areas : </b><span *ngFor="let fs of clubObj.focusAreaResponses; let i = index">
-            {{ (i === clubObj.focusAreaResponses.length-1) ? fs.name  : fs.name + "," + ' '}}
-        </span></p>
-    <p><b>Four S : </b>{{clubObj.fourS}}</p>
+<div class="card-club-details">
+    <div class="club-details">
+        <div class="header-club">
+            <h2>{{clubObj.name}} Details</h2>
+        </div>
 
-</h3>
+        <ul>
+            <li><strong>Club/Society :</strong> {{clubObj.clubOrSociety}}</li>
+            <li><strong>Description : </strong>{{clubObj.description}}</li>
+            <li><strong>Focus Areas : </strong><span *ngFor="let fs of clubObj.focusAreaResponses; let i = index">
+                {{ (i === clubObj.focusAreaResponses.length-1) ? fs.name  : fs.name + "," + ' '}}
+            </span></li>
+            <li><b>Four S : </b>{{clubObj.fourS}}</li>
+        </ul>
+        <button class="btn btn-success">Edit Details</button>
+    </div>
+</div>

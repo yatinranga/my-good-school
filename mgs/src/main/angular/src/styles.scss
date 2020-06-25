@@ -321,7 +321,7 @@ app-home{
     position: sticky;
     top: 0;
     box-shadow: 0 0 5px #ddd;
-    z-index: 2222;
+    z-index: 222;
 }
 .content_main.sidebar_close .navbar {
     width: 0;
@@ -373,11 +373,11 @@ a.logout.menu_link {
     color: #333 !important;
     font-size: 18px;
 }
-.day_post ul li{
-   padding: 0 0 0 20px;
-   font-size: 17px;
-   color: #333;
-}
+// .day_post ul li{
+//    padding: 0 0 0 20px;
+//    font-size: 17px;
+//    color: #333;
+// }
 .act_details_section_two h5, .day_post .day h5{
     font-size: 20px;
     margin: 0;
@@ -661,4 +661,84 @@ td.collapse-td .collapse, td.collapse-td .collapsing {
 .attachment ul li, .attachment ol li a {
     color: #1f69ad !important;
     padding-left: 5px;
+}
+
+/*----MOdal----*/
+.modal-header button.close {
+    font-size: 35px;
+    margin: 0 !important;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 55px;
+    width: 50px;
+    line-height: 50px;
+    border-left: solid 1px #ddd;
+    background: rgba(0,0,0,0.05);
+}
+.modal-header .modal-title {
+    margin-top: 5px;
+    font-size: 20px;
+    color: #555;
+    font-weight: bold;
+}
+.modal-header {
+    background: rgba(0,0,0,0.03);
+    padding: 10px 15px;
+}
+
+button.close{
+    span{
+        color: #dd343d;
+        display: inline-block;
+        height: 40px;
+        margin-top: 5px;
+    }
+}
+// .modal-content .modal-body {
+//     padding-left: 5px;
+//     padding-right: 5px;
+// }
+.modal-content .modal-body .form-control {
+    border-color: #ddd !important;
+    border-radius: 2px;
+}
+label.col-form-label span {
+    color: #dc3545;
+}
+.modal-content .modal-body .form-control:focus{
+    box-shadow: none;
+}
+.form-group textarea.form-control {
+    padding: 15px;
+    color: #555;
+}
+.attached-file ul {
+    padding-left: 20px;
+    margin: 0;
+    border-bottom: solid 1px #ddd;
+}
+.modal-content .attached-file li {
+    list-style: inherit;
+    margin: 3px 0;
+    padding: 3px;
+    font-size: 13px;
+}
+.modal-content .attached-file li button {
+    padding: 0 !important;
+    margin: 0 !important;
+    float: right;
+}
+
+
+/*-----Modal End----*/
+
+
+
+button.btn.btn-success{
+    background: #4bafa5 !important;
+}
+.modal-footer .btn{
+    border-radius: 3px !important;
 }

@@ -141,12 +141,7 @@ span.choosefile.choosefile-custom {
 .input-field{
     position: relative;
 }
-textarea.form-control.add.ng-untouched.ng-pristine.ng-valid {
-    padding: 5px !important;
-    line-height: 15px !important;
-    font-size: 16px !important;
-    text-align: left !important;
-}
+
 .add-act.choosefile_box {
     width: 100%;
     display: inline-block;
@@ -160,13 +155,13 @@ textarea.form-control.add.ng-untouched.ng-pristine.ng-valid {
     background: none;
     z-index: 1;
     opacity: 1;
-    width: 75%;
+    width: 100%;
     height: 44px;
     left: 0;
     top: 0;
-    box-shadow: 0 0 10px white;
+    // box-shadow: 0 0 10px white;
     border-radius: 0px;
-    border: 1px solid gainsboro;
+    border: 1px solid #ddd;
 }
 .add-act.choosefile_box span.choosefile.choosefile-custom:after {
     content: "Choose file...";
@@ -212,12 +207,7 @@ form.add_activity_form{
     right: 0;
     background: rgba(0, 0, 0, 0.8);
 }
-button.btn.cancel {
-    margin: 0 10px;
-    padding: 10px; 
-    outline: none !important;
-    background: grey;
-}
+
 .action-buttons{
     display: inline-block;
     float: right;
@@ -240,22 +230,21 @@ cursor: pointer;
 
 .add_activity{
     background: #e04090;
-    padding: 10px;
-    text-align: center;
-    border-radius: 0px;
-    margin: 20px;
-    color: $light;
+    padding: 5px 10px;
+    border-radius: 3px;
+    color: white;
     border: none !important;
     box-shadow: 0 0 10px #ddd;
-    border-radius: 50%;
-    font-size: 19px;
+    font-size: 16px;
 }
 button.add_activity{
     position: fixed;
-    bottom: 0;
-    right: 0;
+    bottom: 10px;
+    right: 10px;
 }
-
+.add_activity i.fa.fa-plus {
+    margin-top: 5px;
+}
 span.tooltip_text{
     background-color: #888;
     color: #fafafa;
@@ -300,12 +289,12 @@ span.tooltip_text{
 .fourS{
     color: #8dc33a;
 }
-button.btn.saved.btnSubmit.btn-success {
-    margin: 0 10px;
-    color: #fafafa;
-    padding: 10px;
-    background: #8dc33a !important;
-}
+// button.btn.saved.btnSubmit.btn-success {
+//     margin: 0 10px;
+//     color: #fafafa;
+//     padding: 10px;
+//     background: #8dc33a !important;
+// }
 
 .form-group h2 {
     color: crimson;
@@ -317,9 +306,9 @@ button.btn.saved.btnSubmit.btn-success {
 .form-group{
     margin-bottom: 10px !important;
 }
-.modal-footer{
-    padding: 5px 0 0 0 !important;
-}
+// .modal-footer{
+//     padding: 5px 0 0 0 !important;
+// }
 .modal-header{
     padding: 10px 20px;
 }
@@ -357,3 +346,9 @@ button.close span {
 tr[aria-expanded=true] {
     background: rgba(0,0,0,0.03);
 }
+.modal-footer button.btn {
+    font-size: 16px;
+    border-radius: 2px !important;
+    display: inline-block;
+}
+

@@ -46,4 +46,19 @@
 .popup-box h1 {
     font-size: 24px;
 }
+.sortby {
+    padding: 15px 15px 0px 15px;
+}
 
+.sortby .select-field{
+    display: inline-block;
+    width: auto;
+}
+.select-field select, .select-field input{
+    font-size: 15px;
+    border: solid 1px #ddd;
+    padding: 3px 10px;
+    margin: 0 5px;
+    color: #555;
+    height: 35px;
+}

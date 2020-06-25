@@ -98,12 +98,12 @@ export class SchoolClubComponent implements OnInit {
     if(type == 'supervisor'){
       this.showClubDetails = false;
       this.showSupervisor = true;
-      this.showSupervisor? (this.col="col-6") : (this.col = "col-12");
+      this.showSupervisor? (this.col="col-8") : (this.col = "col-12");
     }
 
     if(type =='club'){
       this.showClubDetails = true;
-      this.showClubDetails? (this.col="col-6") : (this.col = "col-12");
+      this.showClubDetails? (this.col="col-8") : (this.col = "col-12");
       this.showSupervisor = false;      
     }
 

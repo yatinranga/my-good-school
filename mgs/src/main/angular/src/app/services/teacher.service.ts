@@ -106,11 +106,6 @@ export class TeacherService {
     return this.http.get("/api/teacher/awards");
   }
 
-  // to verify the awards by teacher if is_management = TRUE;
-  verifyAwards(awardId) {
-    return this.http.put("/api/teacher/award/" + awardId + "?Verified=TRUE", {});
-  }
-
   // DOWNLOAD Attachmeents
   downloadAttachment(filePath) {
     return this.http.get("/file/download?filePath=" + filePath);
@@ -190,11 +185,60 @@ export class TeacherService {
     return this.http.get("/api/teacher/club/" + clubId + "/members")
   }
 
-  /** Coordinator APIs */
+  /** Coordinator and Head APIs */
 
   // Get Student of Coordinator
   getCoordinatorStudents(id) {
     return this.http.get("/api/school/" + id + "/students");
   }
+
+  // Get Coordinator Awards
+  getCoordinatorAwards() {
+    return this.http.get("/api/awards");
+  }
+
+  // to verify the awards by teacher if is_management = TRUE;
+  verifyAwards(awardId, val?) {
+    return this.http.put("/api/teacher/award/" + awardId + "?Verified=" + val, {});
+  }
+
+  // get List of Supervisor under Coordinator
+  getSupervisor(schoolId) {
+    return this.http.get("/api/coaches/" + schoolId);
+  }
+
+  // get List of All Clubs and Society offered in School
+  getSupervisedActivities() {
+    return this.http.get("/api/students/activities");
+  }
+
+  // get List of Clubs/societies running in grades of Coordinator
+  getUserClubsInGrades(schoolId) {
+    return this.http.get("/activitiesOffered/" + schoolId);
+  }
+
+  // get List of Students of a Club
+  getClubStudents(activityId) {
+    return this.http.get("/api/students/activity?activityId=" + activityId);
+  }
+
+  getClubSupervisor(activityId) {
+    return this.http.get("/api/coaches/activity/" + activityId);
+  }
+
+  // Get Enrolled Clubs/Societies of particular student 
+  getStudentClubs(studentId) {
+    return this.http.get("/api/student/clubs?studentId=" + studentId);
+  }
+
+  // Get Session Schedule of a particular Supervisor for a Club/Society
+  getSupervisorSchedule(clubId, teacherId) {
+    return this.http.get("/api/student/sessions/club/" + clubId + "?teacherId=" + teacherId);
+  }
+
+  // // Get Performed Activity by student of Coordinator
+  // getCoordinatorPerfActi(){
+  //   return this.http.get("api/student/activities");
+  // }
 
 }

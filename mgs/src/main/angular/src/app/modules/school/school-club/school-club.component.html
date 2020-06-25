@@ -1,79 +1,87 @@
-<div class="sortby">
-    <label>Club/Society :</label>
-    <select (change)="filterClubs()" name="club" [(ngModel)]="clubType">
-        <option value="" selected> All </option>
-        <option value="Club" > Club </option>
-        <option value="Society" > Society </option>
-    </select>
 
-    <label>4S :</label>
-    <select (change)="filterClubs()" name="fourS" [(ngModel)]="fourS">
-        <option value="" selected> All </option>
-        <option *ngFor="let ps of fourSArr" value={{ps}}>{{ps}}</option>
-    </select>
-
-    <label>Focus Area :</label>
-    <select (change)="filterClubs()" [(ngModel)]="focusAreas">
-        <option value="" selected> All </option>
-        <option *ngFor="let ps of focusAreaArr" value={{ps}}>{{ps}}</option>
-    </select>
-
-    <label>Search : </label>
-    <input type="text" name="search" [(ngModel)]="search" autocomplete="off"
-    placeholder="Start searching for a name or contact no">
-
-</div>
-<br>
-<br>
-<div class="row">
-    <div [ngClass]="col">
-        <table class="table table-striped">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Club/Society</th>
-                    <th scope="col">fourS</th>
-                    <th scope="col">Focus Area</th>
-                    <th scope="col">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let s of schoolClubs | filter:search ; let i = index;">
-                    <th>{{i+1}}</th>
-                    <td>{{s.name}}</td>
-                    <td>{{s.clubOrSociety}}</td>
-                    <td>{{s.fourS}}</td>
-                    <td><span *ngFor="let fs of s.focusAreaResponses; let i = index">
-                            {{ (i === s.focusAreaResponses.length-1) ? fs.name  : fs.name + "," + ' '}}
-                        </span>
-                        <span *ngIf="!s.focusAreaResponses.length"> - </span></td>
-                    <td>
-                        <button class="btn btn-info" (click)="setShowWindow('club',s)">
-                            <i class="fa fa-edit" title="Edit"></i>
-                        </button>
-                        <button class="btn btn-dark" (click)="setShowWindow('supervisor',s)">
-                            <i class="fa fa-users" title="Supervisor"></i>
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-            <tfoot *ngIf="schoolClubs.length == 0">
-                <tr>
-                    <td colspan="10">
-                        <div *ngIf="club_loader" class="spinner-border text-dark" role="status">
-                        </div>{{club_loader ? 'Loading...' : 'No Club/Society Found'}}
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
+<div class="club_socities_card">
+    <div class="club_socities_main">
+        <div class="sortby">
+            <div class="select-field">
+                <label>Club/Society :</label>
+                <select (change)="filterClubs()" name="club" [(ngModel)]="clubType">
+                    <option value="" selected> All </option>
+                    <option value="Club" > Club </option>
+                    <option value="Society" > Society </option>
+                </select>
+            </div>
+            
+            <div class="select-field">
+                <label>4S :</label>
+                <select (change)="filterClubs()" name="fourS" [(ngModel)]="fourS">
+                    <option value="" selected> All </option>
+                    <option *ngFor="let ps of fourSArr" value={{ps}}>{{ps}}</option>
+                </select>
+            </div>
+            <div class="select-field">
+                <label>Focus Area :</label>
+                <select (change)="filterClubs()" [(ngModel)]="focusAreas">
+                    <option value="" selected> All </option>
+                    <option *ngFor="let ps of focusAreaArr" value={{ps}}>{{ps}}</option>
+                </select>
+            </div>
+            <div class="select-field">
+                <label>Search : </label>
+                <input type="text" name="search" [(ngModel)]="search" autocomplete="off"
+                placeholder="Search">
+            </div>
+        </div>
+        <div class="row">
+            <div [ngClass]="col">
+                <table class="table table-striped">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Club/Society</th>
+                            <th scope="col">fourS</th>
+                            <th scope="col">Focus Area</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let s of schoolClubs | filter:search ; let i = index;">
+                            <th>{{i+1}}</th>
+                            <td>{{s.name}}</td>
+                            <td>{{s.clubOrSociety}}</td>
+                            <td>{{s.fourS}}</td>
+                            <td><span *ngFor="let fs of s.focusAreaResponses; let i = index">
+                                    {{ (i === s.focusAreaResponses.length-1) ? fs.name  : fs.name + "," + ' '}}
+                                </span>
+                                <span *ngIf="!s.focusAreaResponses.length"> - </span></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <i class="fa fa-edit" title="Edit" (click)="setShowWindow('club',s)"></i>   
+                                        <i class="fa fa-user-plus" title="Supervisor" (click)="setShowWindow('supervisor',s)"></i>
+                                    </div>
+                               
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot *ngIf="schoolClubs.length == 0">
+                        <tr>
+                            <td colspan="10">
+                                <div *ngIf="club_loader" class="spinner-border text-dark" role="status">
+                                </div>{{club_loader ? 'Loading...' : 'No Club/Society Found'}}
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="col-4" *ngIf="showSupervisor">
+                <button class="btn btn-danger" (click)="setShowWindow('No Window')"> <i class="fa fa-close"></i> </button>
+                <app-supervisor-details [clubObj]="club_obj"></app-supervisor-details>
+            </div>
+            <div class="col-4" *ngIf="showClubDetails">
+                <button class="btn btn-danger" (click)="setShowWindow('No Window')"><i class="fa fa-close"></i></button>
+                <app-club-details [clubObj]="club_obj"></app-club-details>
+            </div>
+        </div>
     </div>
-    <div class="col-6" *ngIf="showSupervisor">
-        <button class="btn btn-danger" (click)="setShowWindow('No Window')">Close</button>
-        <app-supervisor-details [clubObj]="club_obj"></app-supervisor-details>
-    </div>
-    <div class="col-6" *ngIf="showClubDetails">
-        <button class="btn btn-danger" (click)="setShowWindow('No Window')">Close</button>
-        <app-club-details [clubObj]="club_obj"></app-club-details>
-    </div>
+    
 </div>

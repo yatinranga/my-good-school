@@ -29,6 +29,14 @@ const routes: Routes = [
   {
     path: 'School',
     loadChildren: 'src/app/modules/school/school.module#SchoolModule'
+  },
+  {
+    path: 'Coordinator',
+    loadChildren: 'src/app/modules/coordinator/coordinator.module#CoordinatorModule'
+  },
+  {
+    path: 'Head',
+    loadChildren: 'src/app/modules/coordinator/coordinator.module#CoordinatorModule'
   }, 
   {
     path: '',
