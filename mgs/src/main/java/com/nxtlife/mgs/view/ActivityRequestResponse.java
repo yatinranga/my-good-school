@@ -40,6 +40,8 @@ public class ActivityRequestResponse {
 	private List<GradeResponse> gradeResponses;
 	
 	private Boolean visited = false;
+	
+	private String supervisorName;
 
 	public String getName() {
 		return name;
@@ -155,6 +157,14 @@ public class ActivityRequestResponse {
 
 	public void setGradeResponses(List<GradeResponse> gradeResponses) {
 		this.gradeResponses = gradeResponses;
+	}
+
+	public String getSupervisorName() {
+		return supervisorName;
+	}
+
+	public void setSupervisorName(String supervisorName) {
+		this.supervisorName = supervisorName;
 	}
 
 	public Activity toEntity(Activity activity) {

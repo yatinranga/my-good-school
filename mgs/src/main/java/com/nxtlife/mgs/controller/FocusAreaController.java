@@ -30,8 +30,8 @@ public class FocusAreaController {
 		return focusAreaService.getAllFocusAreas();
 	}
 	
-	@GetMapping("focusAreas/school/{schoolCid}")
-	public List<FocusAreaRequestResponse> getAllFocusAreas(@PathVariable("schoolCid") String schoolCid){
+	@GetMapping("school/focusAreas")
+	public List<FocusAreaRequestResponse> getAllFocusAreas(@RequestParam(value = "schoolId" ,required = false) String schoolCid){
 		return focusAreaService.getAllFocusAreasBySchool(schoolCid);
 	}
 

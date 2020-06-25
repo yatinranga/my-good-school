@@ -24,7 +24,7 @@ public class CoachController {
 	@Autowired
 	private TeacherService teacherService;
 	
-	@GetMapping("coaches/{schoolId}/{activityId}") //doneGrade
+	@GetMapping(value = {"coaches/{schoolId}/{activityId}" , "coaches/activity/{activityId}"}) //doneGrade
 	public List<TeacherResponse> getAllCoachesBySchoolCidAndActivityCid(@PathVariable(value = "schoolId" , required = false) String schoolCid,@PathVariable("activityId") @NotNull(message = "Activity Id cannot be null.") String activityCid){
 		return teacherService.findCoachesBySchoolCidAndActivityCid(schoolCid, activityCid);
 	}
@@ -34,7 +34,7 @@ public class CoachController {
 //		return teacherService.getAllCoaches();
 //	} 
 	
-	@GetMapping(value = "coaches/{schoolId}") //doneGrade
+	@GetMapping(value = {"coaches/{schoolId}" ,"coaches"}) //doneGrade
 	public List<TeacherResponse> getAllCoachesBySchool(
 			@PathVariable(value = "schoolId", required = false) String schoolId /*
 																				 * , @RequestParam(value= "gradeId",

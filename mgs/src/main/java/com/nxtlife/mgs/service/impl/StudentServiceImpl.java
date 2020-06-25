@@ -1664,7 +1664,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_STUDENT_FETCH)
-	public List<StudentResponse> getAllStudentsOfSchoolForParticularActivity(String schoolCid ,String activityCid, String teacherCid,
+	public List<StudentResponse> getAllStudentsOfSchoolForParticularActivityAndSupervisor(String schoolCid ,String activityCid, String teacherCid,
 			 String approvalStatus) {
 //		schoolCid = !getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))  ? getUser().getSchool().getCid() : schoolCid ; 
 //		if(schoolCid == null)
@@ -1762,6 +1762,65 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		return students.stream().distinct().map(StudentResponse::new).collect(Collectors.toList());
 	}
 
+	@Override
+	@Secured(AuthorityUtils.SCHOOL_STUDENT_FETCH)
+	public List<StudentResponse> getAllStudentsOfSchoolForParticularActivity(String schoolCid ,String activityCid, String approvalStatus) {
+		if (activityCid == null)
+			throw new ValidationException("activity id cannot be null.");
+		if (!activityRepository.existsByCidAndActiveTrue(activityCid))
+			throw new ValidationException(String.format("Activity with id (%s) not found", activityCid));
+		
+		List<Student> students = new ArrayList<Student>();
+		
+		List<String> gradeIds = null;
+		if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor"))) {
+			students = studentClubRepository.getAllStudentsOfSupervisorOfparticularClubGrade(teacherRepository.findCidByUserIdAndActiveTrue(getUserId()), activityCid, ApprovalStatus.valueOf(approvalStatus));
+		}else {
+			if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))) {
+				schoolCid = getUser().getSchool().getCid();
+				if(schoolCid == null)
+					throw new ValidationException("School id not assigned to user logged in.");
+				
+				if (!activityRepository.existsByCidAndSchoolsCidAndActiveTrue(activityCid, schoolCid))
+					throw new ValidationException(String.format("Activity with id (%s) not offered in school (%s) ", activityCid,schoolCid));
+				
+	        if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("SchoolAdmin"))) {
+					
+					if(!teacherRepository.existsByUserIdAndActiveTrue(getUserId()))
+						gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue( schoolCid);
+					else
+						gradeIds = gradeRepository.findAllCidBySchoolsCidAndTeacherIdActiveTrue( schoolCid, teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
+				}else {
+					if(!teacherRepository.existsByUserIdAndActiveTrue(getUserId())) {
+						if(!studentRepository.existsByUserIdAndActiveTrue(getUserId()))
+							throw new ValidationException("Not Authorized to see details.");
+						gradeIds = Arrays.asList(studentRepository.findGradeCidByCidAndActiveTrue(studentRepository.findCidByUserIdAndActiveTrue(getUserId())));
+					}else {
+						gradeIds = gradeRepository.findAllCidBySchoolsCidAndTeacherIdActiveTrue( schoolCid,teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
+					}
+				}
+				
+			}else {	
+				
+				if(schoolCid == null)
+					throw new ValidationException("School id cannot be null.");
+				if (!activityRepository.existsByCidAndSchoolsCidAndActiveTrue(activityCid, schoolCid))
+					throw new ValidationException(String.format("Activity with id (%s) not offered in school (%s) ", activityCid,schoolCid));
+				gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue( schoolCid);
+			}
+			
+			students = studentClubRepository
+					.findAllStudentByActivityCidAndStudentSchoolCidAndGradeCidsInAndMembershipStatusAndActiveTrue(
+							activityCid, schoolCid, gradeIds, ApprovalStatus.valueOf(approvalStatus));
+		}
+		
+		if (students == null || students.isEmpty())
+			throw new ValidationException(String.format(
+					"No student in the school found in club/society  having id (%s) or membership might not have been %s.",
+					activityCid, approvalStatus));
+		return students.stream().distinct().map(StudentResponse::new).collect(Collectors.toList());
+	}
+	
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_CLUB_MEMBERSHIP_CREATE)
 	public ClubMembershipResponse applyForClubMembership(String studentCid ,String activityCid, String supervisorCid) {

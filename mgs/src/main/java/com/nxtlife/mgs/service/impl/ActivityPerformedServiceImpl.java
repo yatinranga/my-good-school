@@ -945,8 +945,10 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 					"invalid type : (%s) , type can have following values [psdArea , focusArea , fourS]", type));
 	}
 
-//	public Set<GroupResponseBy<ActivityPerformedResponse>> getAllActivityPerformedForCoordinator(String schoolCid ,String gradeId ,String clubId ,String status){
-//		
+	@Override
+	@Secured(AuthorityUtils.SCHOOL_ACTIVITY_FETCH)
+	public Set<ActivityPerformedResponse> getAllActivityPerformedForCoordinator(String schoolCid ,String gradeId ,String clubId ,String status){
+		
 //		if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")) ) {
 //			if(schoolCid == null || gradeId == null)
 //				throw new ValidationException("SchoolId and Grade id cannot be null.");
@@ -956,26 +958,58 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 //		if(gradeId != null) {
 //			grades = Arrays.asList(gradeRepository.findIdByCidAndActiveTrue(gradeId));
 //		}else {
+//			
 //			Long tId = teacherRepository.getIdByUserIdAndActiveTrue(getUserId());
 //			if(tId != null)
 //				grades = gradeRepository.findGradeIdsOfTeacher(tId);
 //		}
-//		List<ActivityStatus> statuses = null;
-//		if(status == null) {
-//			statuses = Arrays.asList(ActivityStatus.SubmittedByStudent, ActivityStatus.SavedByTeacher, ActivityStatus.Reviewed);
-//		}else {
-//			if(!ActivityStatus.matches(status))
-//				throw new ValidationException(String.format("Invalid value (%s) for field status", status));
-//			statuses = Arrays.asList(ActivityStatus.valueOf(status));
-//		}
+		List<Long> grades = null;
+		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))) {
+			schoolCid = getUser().getSchool().getCid();
+			if(schoolCid == null)
+				throw new ValidationException("School id not assigned to user logged in.");
+			
+        if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("SchoolAdmin"))) {
+				
+				if(!teacherRepository.existsByUserIdAndActiveTrue(getUserId()))
+					grades = gradeRepository.findAllIdBySchoolsCidAndActiveTrue( schoolCid);
+				else
+					grades = gradeRepository.findAllIdBySchoolsCidAndTeacherIdActiveTrue( schoolCid, teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
+			}else {
+				if(!teacherRepository.existsByUserIdAndActiveTrue(getUserId())) {
+						throw new ValidationException("Not Authorized to see details.");
+				}else {
+					grades = gradeRepository.findAllIdBySchoolsCidAndTeacherIdActiveTrue( schoolCid,teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
+				}
+			}
+			
+		}else {	
+			if(schoolCid == null)
+				throw new ValidationException("School id cannot be null.");
+			grades = gradeRepository.findAllIdBySchoolsCidAndActiveTrue( schoolCid);
+		}
+		
+		if(gradeId != null) {
+			grades = Arrays.asList(gradeRepository.findIdByCidAndActiveTrue(gradeId));
+		}
+		
+		List<ActivityStatus> statuses = null;
+		if(status == null) {
+			statuses = Arrays.asList(ActivityStatus.SubmittedByStudent, ActivityStatus.SavedByTeacher, ActivityStatus.Reviewed);
+		}else {
+			if(!ActivityStatus.matches(status))
+				throw new ValidationException(String.format("Invalid value (%s) for field status", status));
+			statuses = Arrays.asList(ActivityStatus.valueOf(status));
+		}
 //		Set<GroupResponseBy<ActivityPerformed>> response = null;
-//		
-//		if(clubId == null) {
-//			response = activityPerformedRepository.findAllBySchoolCidAndGradesIdInAndActivityStatusIn(schoolCid, grades, statuses);
-//		}else {
-//			response = activityPerformedRepository.findAllBySchoolCidAndGradesIdInAndActivityStatusInAndClubId(schoolCid, grades, statuses, clubId);
-//		}
-//		
+		Set<ActivityPerformed> response = null;
+		
+		if(clubId == null) {
+			response = activityPerformedRepository.findAllBySchoolCidAndGradesIdInAndActivityStatusIn(schoolCid, grades, statuses);
+		}else {
+			response = activityPerformedRepository.findAllBySchoolCidAndGradesIdInAndActivityStatusInAndClubId(schoolCid, grades, statuses, clubId);
+		}
+		
 //		Set<GroupResponseBy<ActivityPerformedResponse>> finalResponse = new HashSet<GroupResponseBy<ActivityPerformedResponse>>();
 //		response.stream().forEach(r -> {
 //			GroupResponseBy<ActivityPerformedResponse> member = new GroupResponseBy<>();
@@ -985,5 +1019,6 @@ public class ActivityPerformedServiceImpl extends BaseService implements Activit
 //			finalResponse.add(member);
 //		});
 //		return finalResponse;
-//	}
+		return response.stream().distinct().map(ActivityPerformedResponse :: new).collect(Collectors.toSet());
+	}
 }

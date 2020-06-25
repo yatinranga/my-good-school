@@ -36,6 +36,7 @@ import com.nxtlife.mgs.entity.activity.FocusArea;
 import com.nxtlife.mgs.entity.activity.TeacherActivityGrade;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
+import com.nxtlife.mgs.entity.school.StudentClub;
 import com.nxtlife.mgs.enums.ApprovalStatus;
 import com.nxtlife.mgs.enums.FourS;
 import com.nxtlife.mgs.enums.PSDArea;
@@ -92,7 +93,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 
 	@PostConstruct
 	public void init() {
-		List<FocusArea> focusAreaRepoList = focusAreaRepository.findAllByActiveTrue();
+		List<FocusArea> focusAreaRepoList = focusAreaRepository.findAllDistinctByActiveTrue();
 		List<FocusArea> focusAreaList = new ArrayList<FocusArea>();
 		String[] focusAreasPd = { "Identity", "Spiritual And Aesthetic Awareness", "Decision Making", "Health",
 				"Intellectual Growth" };
@@ -226,7 +227,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 		activityList = activityRepository.saveAll(activityList);
 
 		activityList = activityRepository.findAllByActiveTrue();
-		focusAreaList = focusAreaRepository.findAllByActiveTrue();
+		focusAreaList = focusAreaRepository.findAllDistinctByActiveTrue();
 		for (Activity act : activityList) {
 			List<String> fAs;
 			switch (act.getName()) {
@@ -664,7 +665,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_CLUB_MEMBERSHIP_FETCH)
 	public List<ActivityRequestResponse> getAllClubsOfStudent(String studentCid) {
-		List<Activity> activities;
+//		List<Activity> activities;
 		Long studentId = null;
 		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student"))) {
 			if(studentCid == null)
@@ -677,10 +678,20 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 				ApprovalStatus.VERIFIED))
 			throw new ValidationException("Student not member of any Clubs.");
 
-		activities = studentClubRepository.findActivityByStudentIdAndMembershipStatusAndActiveTrue(studentId,
-				ApprovalStatus.VERIFIED);
+//		activities = studentClubRepository.findActivityByStudentIdAndMembershipStatusAndActiveTrue(studentId,
+//				ApprovalStatus.VERIFIED);
+		Set<StudentClub> activitiyTeacherLookUp = studentClubRepository.findActivityAndTeacherByStudentIdAndMembershipStatusAndActiveTrue(studentId, ApprovalStatus.VERIFIED);
 
-		return activities.stream().map(ActivityRequestResponse::new).collect(Collectors.toList());
+		if(activitiyTeacherLookUp == null || activitiyTeacherLookUp.isEmpty())
+			throw new ValidationException("Student not member of any Clubs.");
+		List<ActivityRequestResponse> activities = new ArrayList<>();
+		activitiyTeacherLookUp.stream().forEach(entry -> {
+			ActivityRequestResponse act = new ActivityRequestResponse(entry.getActivity());
+			act.setSupervisorName(entry.getTeacher().getName());
+			activities.add(act);
+		});
+//		return activities.stream().map(ActivityRequestResponse::new).collect(Collectors.toList());
+		return activities;
 	}
 
 	@Override
