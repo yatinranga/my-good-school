@@ -16,7 +16,7 @@
                     <li (click)="clubDetails(a)">
                         <a target="_blank" [routerLink]="['../club',a.name]">{{a.name}} ({{a.clubOrSociety}})</a></li>
                 </ul> -->
-                <li *ngFor="let a of allAssignedActi">                    
+                <li *ngFor="let a of allAssignedActi" [ngClass]="{'active':selectedClubId==a.id}">                    
                         <a (click)="setClubDetails(true,a)">{{a.name}} ({{a.clubOrSociety}})</a>
                     </li>
                 <p *ngIf="!(allAssignedActi.length) && !assignedClubLoader">No Club/Society Assigned</p>
