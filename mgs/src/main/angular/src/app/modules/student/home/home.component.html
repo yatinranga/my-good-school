@@ -20,7 +20,13 @@
               <ul *ngFor="let sport of sportArr">
                 <li [ngClass]="{'sport reference':highlightClubArr.includes(sport.name)}"
                   (click)="setClubDetails(true,sport)">
-                    {{sport.name}}</li>
+                    {{sport.name}}
+                    <span *ngIf="highlightClubArr.includes(sport.name)">
+                      <div *ngFor="let c of enrolledClubsArr">
+                        <span *ngIf="c.name==sport.name">({{c.supervisorName}})</span>
+                      </div>
+                    </span>
+                  </li>
               </ul>
             </div>
           </div>
@@ -31,6 +37,11 @@
                 <li [ngClass]="{'skill reference':highlightClubArr.includes(skill.name)}"
                   (click)="setClubDetails(true,skill)">
                     {{skill.name}}
+                    <span *ngIf="highlightClubArr.includes(skill.name)">
+                      <div *ngFor="let c of enrolledClubsArr">
+                        <span *ngIf="c.name==skill.name">({{c.supervisorName}})</span>
+                      </div>
+                    </span>
                 </li>
               </ul>
             </div>
@@ -41,7 +52,12 @@
               <ul *ngFor="let service of serviceArr">
                 <li [ngClass]="{'service reference':highlightSocietyArr.includes(service.name)}"
                   (click)="setClubDetails(true,service)">
-                  {{service.name}}</li>
+                  {{service.name}}<span *ngIf="highlightSocietyArr.includes(service.name)">
+                    <div *ngFor="let c of enrolledSocietyArr">
+                      <span *ngIf="c.name==service.name">({{c.supervisorName}})</span>
+                    </div>
+                  </span>
+                </li>
               </ul>
             </div>
           </div>
@@ -51,7 +67,12 @@
               <ul *ngFor="let study of studyArr">
                 <li [ngClass]="{'study reference':highlightSocietyArr.includes(study.name)}"
                   (click)="setClubDetails(true,study)">
-                  {{study.name}}</li>
+                  {{study.name}}<span *ngIf="highlightSocietyArr.includes(study.name)">
+                    <div *ngFor="let c of enrolledSocietyArr">
+                      <span *ngIf="c.name==study.name">({{c.supervisorName}})</span>
+                    </div>
+                  </span>
+                </li>
               </ul>
             </div>
           </div>
@@ -87,6 +108,8 @@
                   <li> {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs </li>
                   <li> <strong>Supervisor : </strong> {{res.teacherName}}</li>
                   <li> <strong>Description : </strong> {{res.description}}</li>
+                  <li *ngIf="res.fileResponses.length"><strong>Attachment : </strong><a [attr.href]="BASE_URL + res.fileResponses[0].url">
+                    {{res.fileResponses[0].name}}</a></li>
                 </ul>
               </div>
             </div>

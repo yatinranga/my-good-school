@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { TeacherService } from 'src/app/services/teacher.service';
+import { BASE_URL } from 'src/app/services/app.constant';
+
 
 @Component({
   selector: 'app-coordinator-club-details',
@@ -7,6 +9,7 @@ import { TeacherService } from 'src/app/services/teacher.service';
   styleUrls: ['./coordinator-club-details.component.scss']
 })
 export class CoordinatorClubDetailsComponent implements OnInit {
+  BASE_URL: string;
 
   @Input() clubObject: any;
   userInfo:any;
@@ -22,7 +25,9 @@ export class CoordinatorClubDetailsComponent implements OnInit {
   sup_loader: boolean = false;
   stu_loader: boolean = false;
   session_loader: boolean = false;
-  constructor(private teacherService: TeacherService) { }
+  constructor(private teacherService: TeacherService) {
+    this.BASE_URL = BASE_URL + "/file/download?filePath=";
+   }
 
   ngOnInit() {
     this.userInfo = JSON.parse(localStorage.getItem('user_type'));
@@ -55,7 +60,7 @@ export class CoordinatorClubDetailsComponent implements OnInit {
     this.getStudents(supervisor_obj.id);
 
     this.clubSchedule = [];
-    this.teacherService.getSupervisedClubSession(this.clubObject.id, supervisor_obj.id).subscribe((res) => {
+    this.teacherService.getSupervisorSchedule(this.clubObject.id, supervisor_obj.id).subscribe((res) => {
       console.log(res.sessions);
       this.clubSchedule = res.sessions;
       this.copySchedule = Object.assign([], res.sessions);
