@@ -11,7 +11,7 @@ import { AlertService } from 'src/app/services/alert.service';
 export class CoordinatorProfileComponent implements OnInit {
   teacherInfo: any;
   teacherId: any;
-  teacherDetails: any;
+  teacherDetails:any = {};
 
   profilePhotoForm: FormGroup;
   profileUpdateForm: FormGroup;
@@ -24,6 +24,7 @@ export class CoordinatorProfileComponent implements OnInit {
   profileBrief: any;
   assignedClubsArr = [];
   assignedSocietyArr = [];
+  club_loader:boolean = true;
 
   constructor(private formBuilder: FormBuilder, private teacherService: TeacherService, private alertService: AlertService) { }
 
@@ -72,6 +73,7 @@ export class CoordinatorProfileComponent implements OnInit {
   getAllClubs() {
     this.assignedClubsArr = this.teacherDetails.activityAndGrades.filter((e) => (e.clubOrSociety == "Club"));
     this.assignedSocietyArr = this.teacherDetails.activityAndGrades.filter((e) => (e.clubOrSociety == "Society"));
+    this.club_loader = false;
   }
 
   // Select Profile Photo

@@ -16,27 +16,32 @@
                     <li class="green" routerLinkActive='active'>
                         <a routerLink='./awards' class="green menu_link"> <i class="fa fa-trophy"> </i> Awards </a>
                     </li>
+                    <li class="cb">
+                        <a class="menu_link" data-toggle="collapse" data-target="#usersList">
+                            <i class="fa fa-address-card-o"> </i> Users <i class="fa fa-angle-down"
+                                aria-hidden="true"></i>
+                        </a>
+                        <div id="usersList" class="collapse">
                     <li class="cb" routerLinkActive='active'> <a routerLink='./students' class="cb menu_link"> <i
                                 class="fa fa-home"> </i> Student </a> </li>
                     <li class="pink" routerLinkActive='active'> <a routerLink='./supervisor' class="pink menu_link"> <i
                                 class="fa fa-id-badge"> </i> Supervisor </a> </li>
-
-                </ul>
             </div>
+            </li>
+            </ul>
         </div>
-        <div class="content_main_com">
-            <div class="header">
-                <div class="menu_toggle">
-                    <i class="fa fa-bars" (click)="setShowSidebar()"></i>
-                </div>
-                <div class="profile_right">
-                    <a routerLink='login' class="logout menu_link" (click)="authService.logoutUser();">
-                        <i class="fa fa-sign-out" aria-hidden="true"></i> Logout </a>
-
-                </div>
-            </div>
-            <router-outlet></router-outlet>
-        </div>
-
-
     </div>
+</div>
+<div class="content_main_com">
+    <div class="header">
+        <div class="menu_toggle">
+            <i class="fa fa-bars" (click)="setShowSidebar()"></i>
+        </div>
+        <div class="profile_right">
+            <a routerLink='login' class="logout menu_link" (click)="authService.logoutUser();">
+                <i class="fa fa-sign-out" aria-hidden="true"></i> Logout </a>
+        </div>
+    </div>
+    <router-outlet></router-outlet>
+</div>
+</div>

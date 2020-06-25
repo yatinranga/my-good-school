@@ -59,7 +59,7 @@
                                 Qualifications - <label> {{teacherDetails['qualification']}}</label> </li>
                             <li>
                                 <!-- <i class="fa fa-running"></i> -->
-                                Role - <label> {{teacherDetails.roles[0]}} </label> </li>
+                                Role - <label> <span *ngIf="teacherDetails['roles']">{{teacherDetails.roles[0]}}</span> </label> </li>
                             <li>
                                 <!-- <i class="fa fa-chalkboard-teacher"></i> -->
                                 <!-- Class Teacher - <label> {{teacherDetails['isClassTeacher'] ? "Yes" : "No" }}</label> -->
@@ -68,18 +68,29 @@
                     </div>
                     <div class="teacher_activities_main">
                         <h3> Clubs </h3>
+                        <div *ngIf="club_loader" class="spinner-border text-secondary" role="status"></div>
                         <ol>
                             <li *ngFor="let c of assignedClubsArr">{{c.name}}</li>
                         </ol>
-                        <p *ngIf="!(assignedClubsArr.length)">No Society Assigned</p>
+                        <p *ngIf="!(assignedClubsArr.length)&& !club_loader">No Society Assigned</p>
 
                     </div>
                     <div class="teacher_activities_main">
                         <h3> Societies </h3>
+                        <div *ngIf="club_loader" class="spinner-border text-secondary" role="status"></div>
                         <ol>
                             <li *ngFor="let s of assignedSocietyArr">{{s.name}}</li>
                         </ol>
-                        <p *ngIf="!(assignedSocietyArr.length)">No Society Assigned</p>
+                        <p *ngIf="!(assignedSocietyArr.length) && !club_loader">No Society Assigned</p>
+
+                    </div>
+                    <div class="teacher_activities_main">
+                        <h3> Grades </h3>
+                        <div *ngIf="club_loader" class="spinner-border text-secondary" role="status"></div>
+                        <ol>
+                            <li *ngFor="let s of teacherDetails.grades">{{s.grade}} - {{s.section}}</li>
+                        </ol>
+                        <p *ngIf="!(teacherDetails.grades)&& !club_loader">No Grades Assigned</p>
 
                     </div>
                 </div>

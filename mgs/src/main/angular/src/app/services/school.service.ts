@@ -108,4 +108,12 @@ export class SchoolService {
   updateActivityOffered(reqBody) {
     return this.http.post("/api/activitiesOffered", reqBody);
   }
+
+  getFocusArea(){
+    return this.http.get("/focusAreas");
+  }
+
+  updateClub(reqBody){
+    return this.http.post("/api/activitiesOffered",reqBody);
+  }
 }
