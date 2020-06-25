@@ -35,7 +35,7 @@
                     <h3>{{s.criterionValue | date}} - {{s.criterionValue | date:'EEEE'}} </h3>
                     <div class="schedule-date-main">
                         <div class="schedule-date-card" *ngFor="let res of s.responses; let j = index;">
-                            <ul >
+                            <ul>
                                 <div id="session_title"> {{j+1}}. {{res.title}}</div>
                                 <li> ({{res.club.name}}) </li>
                                 <li> Session Number - {{res.number}} </li>
@@ -44,6 +44,8 @@
                                         {{ (i === res.grades.length-1) ? g.grade+" "+g.section : g.grade+" "+g.section + "," + ' '}}</span>
                                 </li>
                                 <li>Description - {{res.description}}</li>
+                                <li *ngIf="res.fileResponses.length">Attachment - <a [attr.href]="BASE_URL + res.fileResponses[0].url">
+                                        {{res.fileResponses[0].name}}</a></li>
                                 <div class="btns-action"><button class="btn btn-info" (click)="editSessionBtn(res)">Edit</button>
                                     <button class="btn btn-danger" (click)="deleteSession(res,i,j)">Delete</button>
                                 </div>

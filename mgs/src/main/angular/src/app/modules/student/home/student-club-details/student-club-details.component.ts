@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { StudentService } from 'src/app/services/student.service';
 import { AlertService } from 'src/app/services/alert.service';
+import { BASE_URL } from 'src/app/services/app.constant';
+
 
 @Component({
   selector: 'app-activity-details',
@@ -8,6 +10,8 @@ import { AlertService } from 'src/app/services/alert.service';
   styleUrls: ['./student-club-details.component.scss']
 })
 export class StudentClubDetailsComponent implements OnInit {
+
+  BASE_URL: string;
 
   @Input() clubObject: any;
   studentInfo: any;
@@ -27,7 +31,9 @@ export class StudentClubDetailsComponent implements OnInit {
   stu_loader = false;
   sup_loader = true;
   enrollSch_loader = false;
-  constructor(private studentService: StudentService, private alertService: AlertService) { }
+  constructor(private studentService: StudentService, private alertService: AlertService) {
+    this.BASE_URL = BASE_URL + "/file/download?filePath=";
+   }
 
   ngOnInit() {
 

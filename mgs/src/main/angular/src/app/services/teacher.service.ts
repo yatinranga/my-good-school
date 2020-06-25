@@ -233,7 +233,7 @@ export class TeacherService {
 
   // Get Session Schedule of a particular Supervisor for a Club/Society
   getSupervisorSchedule(clubId, teacherId) {
-    return this.http.get("/api/student/sessions/club/" + clubId + "?teacherId=" + teacherId);
+    return this.http.get("/api/teacher/sessions/club/" + clubId + "?teacherId=" + teacherId);
   }
 
   // // Get Performed Activity by student of Coordinator

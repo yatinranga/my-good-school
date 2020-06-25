@@ -163,7 +163,7 @@
                                                         <ul>
                                                             <li *ngFor="let file of activity.fileResponses">
                                                             
-                                                                <a [attr.href]="file.url" >
+                                                                <a [attr.href]="BASE_URL + file.url" >
                                                                     <i class="fa fa-file-audio"
                                                                         *ngIf="file.extension == 'mp3'"></i>
                                                                     <i class="fa fa-image"
@@ -196,7 +196,7 @@
                                                         <ul>
                                                             <li *ngFor="let file of activity.fileResponses">
                                                             
-                                                                <a [attr.href]="file.url">
+                                                                <a [attr.href]="BASE_URL + file.url">
                                                                     <i class="fa fa-file-audio"
                                                                         *ngIf="file.extension == 'mp3'"></i>
                                                                     <i class="fa fa-image"

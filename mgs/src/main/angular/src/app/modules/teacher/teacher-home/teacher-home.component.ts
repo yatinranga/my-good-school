@@ -13,6 +13,7 @@ declare let $: any;
 })
 export class TeacherHomeComponent implements OnInit {
 
+  BASE_URL: string;
   allAssignedActi = []; // All assigned activities
 
   createSessionForm: FormGroup; // create session form
@@ -40,7 +41,9 @@ export class TeacherHomeComponent implements OnInit {
   showClubDetails:boolean = false;
   club_Obj: any;
 
-  constructor(private teacherService: TeacherService, private formBuilder: FormBuilder, private alertService: AlertService) { }
+  constructor(private teacherService: TeacherService, private formBuilder: FormBuilder, private alertService: AlertService) {
+    this.BASE_URL = BASE_URL + "/file/download?filePath=";
+  }
 
   ngOnInit() {
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
