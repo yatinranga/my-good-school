@@ -202,6 +202,12 @@ export class TeacherActivityComponent implements OnInit {
       (err) => {
         console.log(err);
         this.save_loader = false;
+        if (err.status == 400) {
+          this.alertService.showMessageWithSym(err.msg, "", "info");
+        }
+        else {
+          this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");
+        }
       }
     );
   }
