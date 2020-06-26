@@ -66,7 +66,7 @@
                         aria-hidden="true"></i>
                 </button>
                 <div class="popup-box">
-                    <app-student-details [studentDetails]="student_obj" (rowChangeForClub)="rowChange($event)">
+                    <app-student-details [studentDetails]="student_obj" (updatedProfile)="updatedTable($event)">
                     </app-student-details>
                 </div>
             </div>
