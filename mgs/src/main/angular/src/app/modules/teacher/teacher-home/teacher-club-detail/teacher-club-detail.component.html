@@ -30,11 +30,11 @@
                             <li *ngFor="let req of clubReqArr; let i = index" id="requestbox">
                                 <ul id="studentname">
                                     <li> {{i+1}}. {{req.student.name}}
-                                        <p> Grade - {{req.student.grade}} {{req.student.section}}</p>
+                                        <span class="grade"> - {{req.student.grade}} {{req.student.section}}</span>
                                     </li>
                                 </ul>
                                 <ul id="actionbuttons">
-                                    <li> <button *ngIf="req.membershipStatus=='PENDING'" class="verifyreq btn btn-success"
+                                    <li> <button *ngIf="req.membershipStatus=='PENDING'" class="verifyreq btn btn-success mr-2"
                                             (click)="setClubReq(req,i,'true')">Verify</button>
                                         <button *ngIf="req.membershipStatus=='PENDING'" class="rejectreq btn btn-danger"
                                             (click)="setClubReq(req,i,'false')">Reject</button></li>
@@ -61,12 +61,12 @@
                             </select>
                         </div>
                         <ul id="student_list">
-                            <li *ngFor="let s of studentsArr; let i = index"> {{i+1}}. {{s.name}} - {{s.grade}}
-                                {{s.section}}</li>
-                            <li *ngIf="studentsArr.length==0" id="null">
+                            <li *ngFor="let s of studentsArr; let i = index"> {{i+1}}. {{s.name}} - <span>{{s.grade}} {{s.section}}</span>
+                                </li>
+                            <div *ngIf="studentsArr.length==0" id="null">
                                 <div class="spinner-border text-secondary" role="status" *ngIf="stu_loader">
                                 </div> {{stu_loader ? ' Loading...' : 'No Students'}}
-                            </li>
+                            </div>
                         </ul>
                     </div>
                 </div>
@@ -84,10 +84,12 @@
                     <option value="ended">ENDED</option>
                 </select>
             </div>
-          
+            
             <div class="teacherschedule">
                <div class="day_post">
                    <div class="row">
+                    
+
                        <div class="col-3 mb-3" *ngFor="let club of clubSchedule; let i = index;">
                            <div class="day">
                                <h3>{{club.criterionValue | date}} - {{club.criterionValue | date:'EEEE'}} </h3>
@@ -110,10 +112,10 @@
                                        right: 20px;
                                    ">({{res.status | uppercase}})</span>
                                    </li>
-                                   <li> <strong>Description : </strong> {{res.description}}</li>
+                                   <li class="des"> <strong>Description : </strong> {{res.description}}</li>
                                    <li> <strong>Time : </strong> {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs
                                    </li>
-                                   <li> <strong>Grades : </strong> <span *ngFor="let g of res.grades; let i = index">
+                                   <li class="grades"> <strong>Grades : </strong> <span *ngFor="let g of res.grades; let i = index">
                                            {{ (i === res.grades.length-1) ? g.grade+" "+g.section : g.grade+" "+g.section + "," + ' '}}</span>
                                    </li>
                                    <div class="btns">

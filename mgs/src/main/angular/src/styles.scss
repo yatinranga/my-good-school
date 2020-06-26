@@ -226,7 +226,9 @@ table tbody tr th {
 }
 div#assignAwardModal .modal-content {
     border: 5px solid #b4d673;
-    top: 100px;
+    max-width: 450px;
+    margin-left: auto;
+    margin-right: auto;
 }
 tbody tr{
     cursor: pointer;

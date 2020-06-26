@@ -11,7 +11,7 @@
             <div *ngSwitchCase="'assign'" class="popup-form">
                 <div class="assign_main">
                     <div class="assign-form">
-                        <label for="exampleFormControlSelect1">Select Criteria - </label>
+                        <label for="exampleFormControlSelect1">Criteria - </label>
                         <select class="select-field" name="criteria" [disabled]="awardcr_loader" id="exampleFormControlSelect1"
                             (ngModelChange)="getCriteriaValue($event)" [(ngModel)]="awardCriterion">
                             <option value="" disabled>Select Criteria</option>
@@ -24,7 +24,7 @@
                         </span>
                     </div>
                     <div class="assign-form" [hidden]="showCriteriaValues">
-                        <label for="exampleFormControlSelect1">Select {{awardCriterion}} - </label>
+                        <label for="exampleFormControlSelect1">{{awardCriterion}} - </label>
                         <select class="select-field" name="CriteriaValue" [disabled]="criteriaVal_loader" id="exampleFormControlSelect1"
                             (ngModelChange)="getPerformedActivities('value',$event)" [(ngModel)]="criterionValue">
                             <option ngValue="" disabled>Select Value</option>
@@ -38,7 +38,7 @@
                         </span>
                     </div>
                     <div class="assign-form" [hidden]="showCriteriaValues">
-                        <label for="exampleFormControlSelect1">Select Grade - </label>
+                        <label for="exampleFormControlSelect1">Grade - </label>
                         <select class="select-field" name="grade" [disabled]="awardCriterion.length==0" id="exampleFormControlSelect1"
                             (ngModelChange)="getPerformedActivities('grade',$event)" [(ngModel)]="gradeId">
                             <option value="" selected>Select Grade</option>
@@ -428,17 +428,20 @@
                         </small>
                     </div>
 
-                    <div class="modal-footer">
-                        <button type="button" name="resetForm" class="reset btn btn-secondary" (click)="resetForm()">
-                            Reset </button>
-                        <button type="submit" name="submit" class="award btn btn-primary"
-                            [disabled]="assignAwardForm.invalid">
-                            <div *ngIf="pa_loader" class="spinner-border text-dark" role="status">
-                            </div>{{pa_loader ? 'Loading...' :  'Done'}}
-                        </button>
-                    </div>
+                    
                 </form>
             </div>
+            <div class="modal-footer">
+                        
+                <button type="submit" name="submit" class="btn btn-success"
+                    [disabled]="assignAwardForm.invalid">
+                    <div *ngIf="pa_loader" class="spinner-border text-dark" role="status">
+                    </div>{{pa_loader ? 'Loading...' :  'Done'}}
+                </button>
+                <button type="button" name="resetForm" class="reset btn btn-danger" (click)="resetForm()">
+                    Reset </button>
+            </div>
+
         </div>
     </div>
 </div>
