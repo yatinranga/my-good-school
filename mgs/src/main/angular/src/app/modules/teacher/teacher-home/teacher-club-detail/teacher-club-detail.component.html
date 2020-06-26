@@ -4,13 +4,13 @@
         <!-- <div class="header-dashboard">
             <h1> {{clubObject.name}} Dashboard </h1>
             <button [disabled]="stu_loader && clubSch_loader" class="register_act btn btn-primary btn-sm"
-                data-toggle="modal" data-target="#createSessionModal" data-dismiss="modal" aria-label="Close"
+                data-toggle="modal" data-target="#createSessionModal1" data-dismiss="modal" aria-label="Close"
                 (click)="createSessionBtn()">Create Session</button>
         </div> -->
         <div class="schedule-header">
             <h2> {{clubObject.name}} Dashboard </h2>
             <button [disabled]="stu_loader && clubSch_loader" class="register_act btn btn-sm btn-success"
-                data-toggle="modal" data-target="#createSessionModal" data-dismiss="modal" aria-label="Close"
+                data-toggle="modal" data-target="#createSessionModal1" data-dismiss="modal" aria-label="Close"
                 (click)="createSessionBtn()">Create Session</button>
         </div>
         <div class="middle-content">
@@ -31,6 +31,7 @@
                                 <ul id="studentname">
                                     <li> {{i+1}}. {{req.student.name}}
                                         <span class="grade"> - {{req.student.grade}} {{req.student.section}}</span>
+                                        <p> {{req.membershipStatus}}</p>
                                     </li>
                                 </ul>
                                 <ul id="actionbuttons">
@@ -144,7 +145,7 @@
 
 </div>
 
-<div class="modal fade bd-example-modal-lg" id="createSessionModal" tabindex="-1" role="dialog"
+<div class="modal fade bd-example-modal-lg" id="createSessionModal1" tabindex="-1" role="dialog"
     aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">

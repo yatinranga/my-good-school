@@ -27,38 +27,15 @@ const routes: Routes = [
     path: '',
     component: SchoolComponent,
     children: [
-      {
-        path: 'home',
-        component: SchoolClubComponent
-      },
-      {
-        path: 'student-list',
-        component: StudentListComponent
-      },
-      {
-        path: 'staff-list',
-        component: StaffListComponent
-      },
-      {
-        path: 'add-user',
-        component: AddUserComponent
-      },
-      {
-        path: 'student-upload',
-        component: StudentBulkUploadComponent
-      },
-      {
-        path: 'supervisor-upload',
-        component: SupervisorBulkUploadComponent
-      },
-      {
-        path: 'club-society',
-        component: SchoolClubComponent
-      },
-      {
-        path: '',
-        redirectTo: 'home'
-      }
+      { path: 'home', component: SchoolClubComponent },
+      { path: 'student-list', component: StudentListComponent },
+      { path: 'staff-list', component: StaffListComponent },
+      { path: 'add-user', component: AddUserComponent },
+      { path: 'student-upload', component: StudentBulkUploadComponent },
+      { path: 'supervisor-upload', component: SupervisorBulkUploadComponent },
+      { path: 'club-society', component: SchoolClubComponent },
+
+      { path: '', redirectTo: 'club-society' }
     ]
   },
 ]
