@@ -380,6 +380,7 @@ ul#studentname li {
     font-size: 16px;
     color: #555;
     line-height: normal;
+    overflow: hidden;
 }
 ul#studentname li p {
     margin: 0;
@@ -417,4 +418,13 @@ ul#studentname li p {
     width: 100%;
     margin-bottom: 10px !important;
     margin-top: 5px !important;
+}
+
+span.member-statuss {
+    color: #555 !important;
+    margin-left: 10px !important;
+    border: solid 1px #ddd;
+    padding: 0 5px;
+    font-size: 12px;
+    background: #fafafa;
 }
