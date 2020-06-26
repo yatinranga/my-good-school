@@ -460,13 +460,17 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 		if (activity != null ) {
 			if(!activity.getActive()) {
 				activity.setActive(true);
-				activity.setSchools(new ArrayList<School>());
+//				activity.setSchools(new ArrayList<School>());
+				List<School> schools = activity.getSchools();
+				final Long id = activity.getId();
+				schools.stream().forEach(s-> s.getActivities().removeIf(a -> a.getId().equals(id)));
+				schools = schoolRepository.saveAll(schools);
 			}
 			activityPresent = true;
-			List<String> reqSchoolIds = new ArrayList<>(request.getSchoolIds());
-			reqSchoolIds.removeAll(activity.getSchools().stream().map(s -> s.getCid()).collect(Collectors.toList()));
-			if(reqSchoolIds.isEmpty())
-				throw new ValidationException(String.format("Activity already exists in schools (%s).",request.getSchoolIds()));
+//			List<String> reqSchoolIds = new ArrayList<>(request.getSchoolIds());
+//			reqSchoolIds.removeAll(activity.getSchools().stream().map(s -> s.getCid()).collect(Collectors.toList()));
+//			if(reqSchoolIds.isEmpty())
+//				throw new ValidationException(String.format("Activity already exists in schools (%s).",request.getSchoolIds()));
 //			activity.getSchools().removeIf(s -> !request.getSchoolIds().contains(s.getCid()));
 		}
 			
@@ -481,6 +485,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 		// focusAreas.add(focusAreaRepository.findByCidAndActiveTrue(request.getFocusAreaIds().get(i)));
 		// }
 
+		List<FocusArea> focusAreas = new ArrayList<>();
 		if(!activityPresent) {
 			if (request.getFourS() == null)
 				throw new ValidationException("Four S cannot be null.");
@@ -488,7 +493,6 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 			activity.setCid(Utils.generateRandomAlphaNumString(8));
 			activity.setActive(true);
 			
-			List<FocusArea> focusAreas = new ArrayList<>();
 			if (request.getFocusAreaRequests() != null && !request.getFocusAreaRequests().isEmpty()) {
 				addOrCreateFocusAreas(request.getFocusAreaRequests(), focusAreas, activity);
 			}
@@ -497,19 +501,32 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 
 		}else {
 			activity = request.toEntity(activity);
+			activity.setActive(true);
+			
+			if(request.getFocusAreaRequests() != null && !request.getFocusAreaRequests().isEmpty()) {
+				List<FocusArea> toDeleteList = activity.getFocusAreas();
+				Set<String> reqFocAreaIds = request.getFocusAreaRequests().stream().map(f -> f.getId()).collect(Collectors.toSet());
+				toDeleteList.stream().forEach(f -> f.getActivities().removeIf(a -> !reqFocAreaIds.contains(a.getCid())));
+				toDeleteList = focusAreaRepository.saveAll(toDeleteList);
+				
+				addOrCreateFocusAreas(request.getFocusAreaRequests(), focusAreas, activity);
+			}
+			activity.setFocusAreas(focusAreas);
 		}
 		
 
-		if (!request.getSchoolIds().isEmpty()) {
-			List<School> schools = new ArrayList<School>();
+		List<School> schools = new ArrayList<School>();
+		if (request.getSchoolIds() != null && !request.getSchoolIds().isEmpty()) {
+			List<School> toDeleteList = activity.getSchools();
 
 			for (int i =0 ; i< request.getSchoolIds().size() ; i++) {
 				String schoolId = request.getSchoolIds().get(i);
 				if (!schoolRepository.existsByCidAndActiveTrue(schoolId))
 					throw new ValidationException(String.format("School with id (%s) not found", schoolId));
-				Optional<School> preExist = activity.getSchools().stream().distinct().filter(s -> s.getCid().equals(schoolId)).findAny();
+				Optional<School> preExist = toDeleteList.stream().distinct().filter(s -> s.getCid().equals(schoolId)).findAny();
 				if(preExist.isPresent()) {
 					schools.add(preExist.get());
+					toDeleteList.remove(preExist.get());
 					request.getSchoolIds().remove(i--);
 				}else {
 					School school = schoolRepository.findByCidAndActiveTrue(schoolId);
@@ -519,10 +536,15 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 					schools.add(school);
 				}
 			}
-
-			activity.setSchools(schools);
+			
+			if(toDeleteList != null && !toDeleteList.isEmpty()) {
+				final Long id = activity.getId();
+				toDeleteList.stream().forEach(sc -> sc.getActivities().removeIf(a -> a.getId().equals(id)));
+				toDeleteList = schoolRepository.saveAll(toDeleteList);
+			}
 
 		} 
+		activity.setSchools(schools);
 		// activity = activityRepository.save(activity);
 
 		
@@ -562,9 +584,11 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 					List<Activity> activities = focusArea.getActivities();
 					if (activities == null)
 						activities = new ArrayList<Activity>();
-
-					activities.add(activity);
-					focusArea.setActivities(activities);
+					
+					if(!activities.stream().anyMatch(act -> act.getCid().equals(activity.getCid()))) {
+						activities.add(activity);
+						focusArea.setActivities(activities);
+					}
 					// focusArea = focusAreaRepository.save(focusArea);
 					focusAreas.add(focusArea);
 				}
@@ -583,8 +607,12 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 				List<Activity> activities = focusArea.getActivities();
 				if (activities == null)
 					activities = new ArrayList<Activity>();
-				activities.add(activity);
-				focusArea.setActivities(activities);
+				
+				if(!activities.stream().anyMatch(act -> act.getCid().equals(activity.getCid()))) {
+					activities.add(activity);
+					focusArea.setActivities(activities);
+				}
+				
 				// focusArea = focusAreaRepository.save(focusArea);
 				focusAreas.add(focusArea);
 

@@ -208,8 +208,8 @@ public class StudentRequest extends Request {
 			student.setSubscriptionEndDate(this.subscriptionEndDate);
 		if (this.sessionStartDate != null)
 			student.setSessionStartDate(this.sessionStartDate);
-//		if(this.username != null)
-//		    student.setUsername(this.username);
+		if(this.username != null)
+		    student.setUsername(this.username);
 
 		return student;
 	}

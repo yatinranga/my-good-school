@@ -53,10 +53,14 @@ public class FocusAreaServiceImpl extends BaseService implements FocusAreaServic
 			throw new ValidationException("PSD area cannot be null.");
 
 		FocusArea focusArea = focusAreaRepository.findByNameAndActiveTrue(request.getName());
-		if (focusArea != null)
-			throw new ValidationException("This focus Area already exists.");
-		focusArea = request.toEntity();
-		focusArea.setCid(Utils.generateRandomAlphaNumString(8));
+//		if (focusArea != null)
+//			throw new ValidationException("This focus Area already exists.");
+		if (focusArea != null) {
+			focusArea = request.toEntity(focusArea);
+		}else {
+			focusArea = request.toEntity();
+			focusArea.setCid(Utils.generateRandomAlphaNumString(8));
+		}
 		focusArea = focusAreaRepository.save(focusArea);
 		if (focusArea == null)
 			throw new RuntimeException("Something went wrong Focus Area not saved.");
