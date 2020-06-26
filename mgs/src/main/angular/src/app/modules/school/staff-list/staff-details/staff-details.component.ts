@@ -234,6 +234,7 @@ export class StaffDetailsComponent implements OnInit {
     console.log(reqBody);
     this.alertService.showLoader("");
     this.schoolService.assignClub(reqBody).subscribe((res) => {
+      this.profileUpdated.emit("Grade Assigned");
       this.staffDetails = res.teachers[0];
       console.log(res);
       this.sortClubs(); // Reload to see the New Assigned Club/Society
