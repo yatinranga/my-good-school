@@ -69,7 +69,7 @@
             <div [ngClass]="{'col-8':col=='col-4'}" class="col-4" *ngIf="showDetails">
                 <div class="staff-details-main">
                     <h1 class="text-right"><button class="btn btn-danger" (click)="setShowDetails(false)"> <i class="fa fa-close"></i> </button></h1>
-                    <app-staff-details [staffDetails]="staff_obj" (rowChangeForClub)="rowChange($event)">
+                    <app-staff-details [staffDetails]="staff_obj" (profileUpdated)="updatedTable($event)">
                     </app-staff-details>
                 </div>
             </div>

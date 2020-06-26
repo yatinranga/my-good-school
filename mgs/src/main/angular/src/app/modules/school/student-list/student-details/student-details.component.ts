@@ -13,7 +13,7 @@ export class StudentDetailsComponent implements OnInit {
 
   col = "col-12";
   @Input() studentDetails: any;
-  @Output() rowChangeForClub = new EventEmitter<string>() // When Enrolled Clubs are shown
+  @Output() updatedProfile = new EventEmitter<string>() // When Enrolled Clubs are shown
   showClub: boolean;
   imagePath = "assets/images/childprofile.jpg";
   // showClub:boolean = false;
@@ -64,7 +64,7 @@ export class StudentDetailsComponent implements OnInit {
 
     if (val) {
       // const col="col-4"
-      // this.rowChangeForClub.emit(col);
+      this.updatedProfile.emit("Update Profile");
       this.getEnrolledClubs();
     }
     else {
@@ -138,6 +138,7 @@ export class StudentDetailsComponent implements OnInit {
       id: this.studentDetails.id,
       name: this.studentDetails.name,
       dob: this.studentDetails.dob,
+      email: this.studentDetails.email,
       gender: this.studentDetails.gender,
       gradeId: this.studentDetails.gradeId,
       yearOfEnrolment: this.studentDetails.yearOfEnrolment
