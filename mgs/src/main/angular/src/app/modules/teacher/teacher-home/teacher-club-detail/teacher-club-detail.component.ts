@@ -224,7 +224,7 @@ export class TeacherClubDetailComponent implements OnInit {
 
       this.teacherService.createNewSession(formData).subscribe((res) => {
         console.log(res);
-        $('#createSessionModal').modal('hide');
+        $('#createSessionModal1').modal('hide');
         $('.modal-backdrop').remove();
         this.alertService.showMessageWithSym("Session Created !", "Success", "success");
         this.resetForm();
@@ -268,7 +268,7 @@ export class TeacherClubDetailComponent implements OnInit {
       });
       this.teacherService.updateSession(formData).subscribe((res) => {
         console.log(res);
-        $('#createSessionModal').modal('hide');
+        $('#createSessionModal1').modal('hide');
         $('.modal-backdrop').remove();
         this.alertService.showMessageWithSym("Session Edited !", "Success", "success");
         this.resetForm();
@@ -293,7 +293,7 @@ export class TeacherClubDetailComponent implements OnInit {
 
   // Edit Current Session
   editSessionBtn(session, i, j) {
-    $('#createSessionModal').modal('show');
+    $('#createSessionModal1').modal('show');
     this.createSessionView = false;
     this.editSessionView = true;
     console.log(session);

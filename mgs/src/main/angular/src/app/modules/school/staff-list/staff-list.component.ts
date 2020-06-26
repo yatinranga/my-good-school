@@ -26,8 +26,8 @@ export class StaffListComponent implements OnInit {
     this.getAllRoles();
   }
 
-  rowChange($event) {
-    this.col = $event;
+  updatedTable($event) {
+    this.getAllStaff();
   }
 
   /** get all the Roles */

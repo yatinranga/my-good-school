@@ -14,7 +14,7 @@ export class StaffDetailsComponent implements OnInit {
 
   col = "col-12";
   @Input() staffDetails: any;
-  @Output() rowChangeForClub = new EventEmitter<string>(); // When Clubs window is open
+  @Output() profileUpdated = new EventEmitter<string>(); // When Clubs window is open
   showClub: boolean = false;
   assignedClubsArr = [];
   assignedSocietyArr = [];
@@ -59,7 +59,6 @@ export class StaffDetailsComponent implements OnInit {
 
     if (val) {
       // const col = "col-4";
-      // this.rowChangeForClub.emit(col);
       // this.getEnrolledClubs();
       this.sortClubs();
     }
@@ -235,6 +234,7 @@ export class StaffDetailsComponent implements OnInit {
     console.log(reqBody);
     this.alertService.showLoader("");
     this.schoolService.assignClub(reqBody).subscribe((res) => {
+      this.profileUpdated.emit("Grade Assigned");
       this.staffDetails = res.teachers[0];
       console.log(res);
       this.sortClubs(); // Reload to see the New Assigned Club/Society
@@ -272,6 +272,7 @@ export class StaffDetailsComponent implements OnInit {
     this.alertService.showLoader("");
     this.schoolService.updateSupervisorProfile(this.staffDetails.id, this.updateSupervisorForm.value).subscribe((res) => {
       console.log(res);
+      this.profileUpdated.emit("Profile Updated");
       this.staffDetails = res;
       $('#editSupervisorModal').modal('hide');
       this.alertService.showMessageWithSym("Profile Updated !", "Success", "success");

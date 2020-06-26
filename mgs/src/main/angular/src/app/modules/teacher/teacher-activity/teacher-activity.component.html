@@ -163,7 +163,7 @@
                                                         <ul>
                                                             <li *ngFor="let file of activity.fileResponses">
                                                             
-                                                                <a [attr.href]="file.url" >
+                                                                <a [attr.href]="BASE_URL + file.url" >
                                                                     <i class="fa fa-file-audio"
                                                                         *ngIf="file.extension == 'mp3'"></i>
                                                                     <i class="fa fa-image"
@@ -196,7 +196,7 @@
                                                         <ul>
                                                             <li *ngFor="let file of activity.fileResponses">
                                                             
-                                                                <a [attr.href]="file.url">
+                                                                <a [attr.href]="BASE_URL + file.url">
                                                                     <i class="fa fa-file-audio"
                                                                         *ngIf="file.extension == 'mp3'"></i>
                                                                     <i class="fa fa-image"
@@ -333,7 +333,7 @@
                                 <div class="form-group">
                                     <label for="message-text" class="col-form-label">Remarks : (Min. 25
                                         words)</label>
-                                    <textarea class="form-control" name="coachRemark"  rows="5" formControlName="coachRemark"
+                                    <textarea style="height: 100px;" class="form-control" name="coachRemark"  rows="5" formControlName="coachRemark"
                                         (ngModelChange)="wordCount($event)"></textarea>
                                     <span class="text-muted">Word count - {{count}}</span><br>
                                     <small class="text-danger"
@@ -342,17 +342,19 @@
                                     </small>
 
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" name="resetForm" class="reset btn btn-secondary"
-                                        (click)="resetForm()">Reset</button>
-                                    <button class="award btn btn-primary" type="submit" name="submit"
-                                        [disabled]="reviewForm.invalid">
-                                        <div *ngIf="save_loader" class="spinner-border text-dark" role="status">
-                                        </div>{{save_loader ? 'Saving...' : 'Save Changes'}}
-                                    </button>
-                                </div>
+                                
                             </form>
                         </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-success" type="submit" name="submit"
+                                [disabled]="reviewForm.invalid">
+                                <div *ngIf="save_loader" class="spinner-border text-dark" role="status">
+                                </div>{{save_loader ? 'Saving...' : 'Save Changes'}}
+                            </button>
+                            <button type="button" name="resetForm" class="reset btn btn-danger"
+                                (click)="resetForm()">Reset</button>
+                        </div>
+
                     </div>
                 </div>
             </div>

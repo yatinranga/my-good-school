@@ -30,8 +30,8 @@ export class StudentListComponent implements OnInit {
   }
 
   /** When Enrolled Clubs of particukar of student are shown */
-  rowChange($event){
-    this.col=$event;
+  updatedTable($event){
+    this.getAllStudents();
   }
 
   /** Get all Grades of the School */

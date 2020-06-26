@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TeacherService } from 'src/app/services/teacher.service';
+import { BASE_URL } from 'src/app/services/app.constant';
 
 @Component({
   selector: 'app-coordinator-activity',
@@ -7,10 +8,13 @@ import { TeacherService } from 'src/app/services/teacher.service';
   styleUrls: ['./coordinator-activity.component.scss']
 })
 export class CoordinatorActivityComponent implements OnInit {
+  BASE_URL: string;
 
   performedActiArr = [];
   acti_loader: boolean = false;
-  constructor(private teacherService: TeacherService) { }
+  constructor(private teacherService: TeacherService) {
+    this.BASE_URL = BASE_URL + "/file/download?filePath=";
+   }
 
   ngOnInit() {
     this.getPerformedActivities();

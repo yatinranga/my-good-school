@@ -6,8 +6,8 @@
 
 .club_main {
     margin-top: 60px;
-    box-shadow: 0 0 2px #ddd;
-    padding: 15px;
+    box-shadow: 0 0 4px #ddd;
+    padding: 15px 10px;
     display: inline-block;
     width: 100%;
     position: relative;
@@ -29,10 +29,7 @@ button.btn.register.btn-primary{
 }
 .modal-content {
     border: 5px solid #b4d673;
-    top: 50px;
-}
-.modal-header {
-    padding: 5px 10px;
+    top: 10px;
 }
 .choosemedia.form-group img {
     width: 400px;
@@ -95,27 +92,34 @@ button.btn.register.btn-primary{
     font-weight: bold;
 }
 .teacher_club_list {
-    margin-top: 40px;
+    margin-top: 0;
     display: inline-block;
     width: 100%;
-    padding: 10px 0;
+    padding: 0;
 }
 .teacher_club_list li {
     display: inline-block;
     width: auto;
+    margin-right: 5px;
 }
 .teacher_club_list li a {
     padding: 5px 10px;
-    background: rgba(85, 85, 85, 0.46);
-    margin: 0 5px;
-    border-radius: 5px;
+    background: rgba(85, 85, 85, 0.8);
+    margin: 0;
+    border-radius: 3px;
     color: white;
     text-decoration: none;
- 
-    font-size: 14px;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    font-size: 16px;
+    padding: 5px 10px;
 }
-
-
+.teacher_club_list li a:hover{
+    background: #4bafa5;
+} 
+.teacher_club_list li.active a{
+    background: #4bafa5;
+} 
 .schedule {
     margin-top: 20px;
     box-shadow: 0 0 2px #ddd;
@@ -177,6 +181,7 @@ button.btn.register.btn-primary{
     font-size: 18px;
     box-shadow: 0 0 2px #ddd;
     font-weight: bold;
+    color: #4bafa5;
 }
 .schedule-date-main {
     margin-top: 40px;
@@ -216,3 +221,88 @@ div#session_title {
     display: inline-block;
     margin-top: 10px;
 }
+.clubs-detail-main {
+    display: inline-block;
+    width: 100%;
+    // padding: 15px;
+    // box-shadow: 0 0 3px #ddd;
+    margin-top: 25px;
+    position: relative;
+}
+.clubs-detail-main button.btn {
+    float: right;
+    padding: 5px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50% !important;
+    position: absolute;
+    right: -20px;
+    top: -20px;
+    z-index: 222;
+}
+.clubs-detail-main button.btn.btn-close i.fa {
+    margin: 0;
+}
+
+
+input.form-control.time-s, input.form-control.time-e {
+    margin-right:10px;
+    display: inline-block;
+    width: 35% !important;
+}
+
+.choose-file{
+    display: inline-block;
+    padding: 5px 10px;
+    border: solid 1px #ddd;
+    position: relative;
+    width: 300px;
+}
+
+.choose-file input + label:after {
+    content: "Browse";
+    position: absolute;
+    right: 0;
+    height: 100%;
+    background: rgba(0,0,0,0.08);
+    top: 0;
+    padding: 0 10px;
+    line-height: 36px;
+    border-left: solid 1px #ddd;
+}
+.choose-file input {
+    opacity: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+}
+
+.choose-file input + label {
+    float: left;
+    margin: 0;
+}
+.form-group.choosed-file {
+    border: solid 1px #ddd;
+    padding: 0;
+    display: inline-block;
+    width: 100%;
+}
+.file-img {
+    max-width: 170px;
+    display: inline-block;
+    width: auto;
+    float: left;
+}
+.file-name {
+    display: inline-block;
+    margin-top: 40px;
+    float: right;
+}
+.file-name button.reviewed.icon_button {
+    margin-left: 10px;
+    border: solid 1px #ddd;
+    padding: 0;
+    color: #dd343d;
+}
+

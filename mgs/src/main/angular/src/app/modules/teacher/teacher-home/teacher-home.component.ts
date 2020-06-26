@@ -13,6 +13,7 @@ declare let $: any;
 })
 export class TeacherHomeComponent implements OnInit {
 
+  BASE_URL: string;
   allAssignedActi = []; // All assigned activities
 
   createSessionForm: FormGroup; // create session form
@@ -39,8 +40,11 @@ export class TeacherHomeComponent implements OnInit {
   // Variables to be used in Club Details
   showClubDetails:boolean = false;
   club_Obj: any;
+  selectedClubId:any;
 
-  constructor(private teacherService: TeacherService, private formBuilder: FormBuilder, private alertService: AlertService) { }
+  constructor(private teacherService: TeacherService, private formBuilder: FormBuilder, private alertService: AlertService) {
+    this.BASE_URL = BASE_URL + "/file/download?filePath=";
+  }
 
   ngOnInit() {
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
@@ -270,6 +274,7 @@ export class TeacherHomeComponent implements OnInit {
 
   // Details of All Clubs and Societies in split window
   setClubDetails(val:boolean,clubObj?) {
+    
     if(val){
       this.showClubDetails = true;
     } else {
@@ -278,6 +283,7 @@ export class TeacherHomeComponent implements OnInit {
 
     if (clubObj) {
       this.club_Obj = clubObj;
+      this.selectedClubId = clubObj.id;
       // this.clubId = clubObj.id;
       // this.createSessionForm.controls.clubId.patchValue(this.clubId);
     }

@@ -55,7 +55,7 @@ export class LoginComponent implements OnInit {
       case "Supervisor": this.router.navigate(['Supervisor/' + '/home']); break;
       case "Coordinator": this.router.navigate(['Coordinator/' + '/home']); break;
       case "Head": this.router.navigate(['Head/' + '/home']); break;
-      case "SchoolAdmin": this.router.navigate(['School/' + '/home']); break;
+      case "SchoolAdmin": this.router.navigate(['School/' + '']); break;
     }
   }
 

@@ -80,7 +80,8 @@
                 <li>{{res.club.name}} - {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs
                 </li>
                 <li> <strong>Description : </strong> {{res.description}}</li>
-
+                <li *ngIf="res.fileResponses.length"><strong>Attachment : </strong><a [attr.href]="BASE_URL + res.fileResponses[0].url">
+                  {{res.fileResponses[0].name}}</a></li>
               </ul>
             </div>
           </div>

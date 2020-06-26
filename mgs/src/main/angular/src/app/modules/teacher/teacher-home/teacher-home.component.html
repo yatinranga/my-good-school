@@ -9,18 +9,18 @@
         
     
         <div class="club_main">
-            <h2> Clubs/Socities </h2>
+            <!-- <h2> Clubs/Socities </h2> -->
             <div class="teacher_club_list">
                 <div *ngIf="assignedClubLoader" class="spinner-border text-dark" role="status"></div>
                 <!-- <ul *ngFor="let a of allAssignedActi">
                     <li (click)="clubDetails(a)">
                         <a target="_blank" [routerLink]="['../club',a.name]">{{a.name}} ({{a.clubOrSociety}})</a></li>
                 </ul> -->
-                <li *ngFor="let a of allAssignedActi">                    
+                <li *ngFor="let a of allAssignedActi" [ngClass]="{'active':selectedClubId==a.id}">                    
                         <a (click)="setClubDetails(true,a)">{{a.name}} ({{a.clubOrSociety}})</a>
                     </li>
                 <p *ngIf="!(allAssignedActi.length) && !assignedClubLoader">No Club/Society Assigned</p>
-                <div *ngIf="showClubDetails">
+                <div class="clubs-detail-main" *ngIf="showClubDetails">
                     <button class="btn btn-close btn-danger" (click)="setClubDetails(false)"> <i class="fa fa-times"
                         aria-hidden="true"></i></button>
                     <app-teacher-club-detail [clubObject]="club_Obj"></app-teacher-club-detail>
@@ -35,7 +35,7 @@
                     <h3>{{s.criterionValue | date}} - {{s.criterionValue | date:'EEEE'}} </h3>
                     <div class="schedule-date-main">
                         <div class="schedule-date-card" *ngFor="let res of s.responses; let j = index;">
-                            <ul >
+                            <ul>
                                 <div id="session_title"> {{j+1}}. {{res.title}}</div>
                                 <li> ({{res.club.name}}) </li>
                                 <li> Session Number - {{res.number}} </li>
@@ -44,6 +44,8 @@
                                         {{ (i === res.grades.length-1) ? g.grade+" "+g.section : g.grade+" "+g.section + "," + ' '}}</span>
                                 </li>
                                 <li>Description - {{res.description}}</li>
+                                <li *ngIf="res.fileResponses.length">Attachment - <a [attr.href]="BASE_URL + res.fileResponses[0].url">
+                                        {{res.fileResponses[0].name}}</a></li>
                                 <div class="btns-action"><button class="btn btn-info" (click)="editSessionBtn(res)">Edit</button>
                                     <button class="btn btn-danger" (click)="deleteSession(res,i,j)">Delete</button>
                                 </div>
@@ -74,13 +76,13 @@
                 </button>
             </div>
             <div class="modal-body">
-                <h5 style="color: red"> Note : All Fields Are Mandatory </h5>
+                <!-- <h5 style="color: red"> Note : All Fields Are Mandatory </h5> -->
                 <form [formGroup]="createSessionForm" (ngSubmit)="createSession()">
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Club/Society : </label>
+                                    <label for="recipient-name" class="col-form-label">Club/Society <span>*</span> </label>
                                     <select class="form-control" name="activityId" formControlName="clubId" (change)="clubGrades()">
                                         <option [ngValue]=null selected disabled>Select One</option>
                                         <option *ngFor="let acti of allAssignedActi" value={{acti.id}}>
@@ -89,17 +91,17 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Name of Session : </label>
+                                    <label for="recipient-name" class="col-form-label">Name of Session <span>*</span> </label>
                                     <input type="text" class="form-control add" name="title"
                                         placeholder="Add Title Here" formControlName="title">
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Session Number : </label>
+                                    <label for="recipient-name" class="col-form-label">Session Number <span>*</span> </label>
                                     <input type="number" class="form-control add" name="sessionNumber"
                                         placeholder="Enter Session Number Here" formControlName="number">
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Description : </label>
+                                    <label for="recipient-name" class="col-form-label">Description <span>*</span> </label>
                                     <textarea class="form-control add" name="description" formControlName="description"
                                         placeholder="Enter Description Here" rows="3"></textarea>
                                 </div>
@@ -107,19 +109,19 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Date : </label>
+                                    <label for="recipient-name" class="col-form-label">Date <span>*</span> </label>
                                     <input type="date" class="form-control" name="startDate"
                                         formControlName="startDate" [attr.min]="minDate">
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Timing : </label>
-                                    <input type="time" class="form-control" name="startTime" [(ngModel)]="startTime"
+                                    <label for="recipient-name" class="col-form-label" style="display: block;">Timing <span>*</span> </label>
+                                    <input type="time" class="form-control time-s" name="startTime" [(ngModel)]="startTime"
                                         [ngModelOptions]="{standalone: true}">
-                                    <input type="time" class="form-control" name="endTime" [(ngModel)]="endTime"
+                                    <input type="time" class="form-control time-e" name="endTime" [(ngModel)]="endTime"
                                         [ngModelOptions]="{standalone: true}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Grades : </label>
+                                    <label for="recipient-name" class="col-form-label">Grades <span>*</span> </label>
                                     <select class="form-control" name="gradeId" formControlName="gradeIds" multiple>
                                         <option value=null selected disabled>Select Grades</option>
                                         <option *ngFor="let grade of schoolGrades" value={{grade.id}}>
@@ -132,19 +134,26 @@
                             </div>
                             <div class="col-md-12" style="text-align: center;">
                                 <div class="choosemedia form-group">
-                                    <input type="file" accept="image/*, audio/*, video/*, application/pdf,application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
-                                                text/plain" name="selectedFile" (change)="onFileSelect($event)" />
+                                    <div class="choose-file">
+                                        <input type="file" accept="image/*, audio/*, video/*, application/pdf,application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
+                                                    text/plain" name="selectedFile" (change)="onFileSelect($event)" />
+                                        <label for="">Choose File</label>
+                                    </div>
                                     <!-- <span class="choosefile choosefile-custom"> <i class="fa fa-file"> </i> </span> -->
                                     <!-- <i class="fa fa-trash"></i> -->                                    
                                 </div>
-                                <div class="form-group" *ngIf="path&&name">
-                                    <img *ngIf="path" [src]="path" height="200">
-                                    <p id="attachment_name"> {{name}}
-                                        <button type="button" name="removeFile" (click)="removeFile()"
-                                            class="reviewed icon_button">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    </p>
+                                <div class="form-group choosed-file" *ngIf="path&&name">
+                                    <div class="file-img">
+                                        <img *ngIf="path" [src]="path" height="200">
+                                    </div>
+                                    <div class="file-name">
+                                        <p id="attachment_name"> {{name}}
+                                            <button type="button" name="removeFile" (click)="removeFile()"
+                                                class="reviewed icon_button">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -152,11 +161,11 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="resetForm()">Reset</button>
-                <button type="submit" class="btn btn-primary" [disabled]="createSessionForm.invalid"
-                    *ngIf="createSessionView" (click)="createSession()">Create</button>
-                <button type="submit" class="btn btn-primary" [disabled]="createSessionForm.invalid"
-                    *ngIf="editSessionView" (click)="createSession()">Edit</button>
+                <button type="submit" class="btn btn-success" [disabled]="createSessionForm.invalid"
+                *ngIf="createSessionView" (click)="createSession()">Create</button>
+                <button type="submit" class="btn btn-success" [disabled]="createSessionForm.invalid"
+                *ngIf="editSessionView" (click)="createSession()">Edit</button>
+                <button type="button" class="btn btn-danger" (click)="resetForm()">Reset</button>
             </div>
         </div>
     </div>

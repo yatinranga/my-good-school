@@ -1,13 +1,18 @@
 .student_act_details_main{
     width: 100%;
-    display: inline-flex;
+    display: inline-block;
 }
-.sidenav {
-    float: left;
-    width: 25%;
-    background: #656565;
-    padding: 10px;
-    height: 100%;
+.schedule-main {
+    width: 100%;
+    display: inline-block;
+    position: relative;
+    padding: 15px;
+    box-shadow: 0 0 3px #ddd;
+    background: white;
+}
+.content_dashboard{
+    width: 100%;
+    display: inline-block;
 }
 .sidenav h2{
     font-size: 28px;
@@ -70,43 +75,42 @@ button.register_act.btn.btn-primary.btn-sm, .teacherschedule select {
 .teacherschedule select{
     background: #ccc !important;
 }
-.content_container{
+.middle-content {
+    display: inline-block;
+    width: 100%;
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+
+.content{
+    margin: 0;
+    box-shadow: 0 0 3px #ddd;
+    padding: 15px;
     width: 100%;
     display: inline-block;
 }
 
-.content{
-    float: right;
-    width: 100%;
-    display: inline-flex;
-    margin: 55px 0;
-    padding: 0 20px;
-}
-.content_box {
-    width: 100%;
-    padding: 10px;
-    margin: 0 20px;
-    background: #ffffff;
-    box-shadow: 0 0 10px #ccc;
-    border-radius: 5px;
-}
 .content_title{
     width: 100%;
     display: inline-block;
-    margin: 10px 0 30px 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    padding: 8px 15px;
+    background: #fafafa;
+    box-shadow: 0 0 3px #ddd;
 }
-h2{
-    float: left;
-    color: #9fbb73;
-}
+
 .content_box select {
     float: right;
-    width: 104px;
-    height: 30px;
-    border: none;
-    font-size: 13px;
-    background: #9fbb73;
-    color: #fafafa;
+    width: auto;
+    font-size: 14px;
+    background: white;
+    color: #555;
+    border: solid 1px #ddd;
+    padding: 5px 10px;
+    height: 31px;
 }
 li {
     font-size: 17px;
@@ -120,23 +124,7 @@ li {
     box-shadow: 0 0 10px #aaa;
     padding: 10px;
 }
-h4 {
-    font-size: 18px;
-    color: #156e96;
-    margin: 10px 0;
-    font-weight: 500;
-}
-h3 {
-    font-size: 20px;
-    margin: 10px 0;
-    font-weight: 500;
-    color: #333;
-}
-p {
-    font-size: 17px;
-    padding: 0 23px;
-    line-height: 30px;
-}
+
 .request_box {
     width: 100%;
     display: inline-block;
@@ -178,41 +166,29 @@ h5 {
 .content_box ul{
     width: 100%;
     display: inline-block;
-}
-li#requestbox{
-    width: 100%;
-    display: inline-block;
-    margin: 15px 0;
-}
-ul#actionbuttons {
-    float: right;
-    margin: 0 auto;
-    width: 50%;
-    display: contents;
-}
-ul#studentname {
-    float: left;
+    margin-top: 50px;
     padding: 0;
-    width: 50%;
+
 }
-ul#studentname p {
-    padding: 0 13px;
-    margin: 0;
-    font-size: 15px;
+li#requestbox, #student_list li{
+    border: solid 1px #ddd;
+    margin-bottom: 10px;
+    padding: 5px 10px;
+    font-size: 16px;
+    height: 45px;
 }
-button.verifyreq.btn.btn-success {
-    background: #9ebb72;
-    border-radius: 4px !important;
-    margin: 10px;
-    padding: 5px 15px;
-    font-size: 18px;
+li#requestbox ul#actionbuttons {
+    float: right;
+    margin-top: 0;
 }
-button.rejectreq.btn.btn-danger{
-    background: #cc2114;
-    border-radius: 4px !important;
-    margin: 10px;
-    padding: 5px 15px;
-    font-size: 18px;
+li#requestbox ul {
+    margin: 5px 0 0 0;
+    display: inline-block;
+    width: auto;
+}
+ul#studentname li span, #student_list li span {
+    color: #4bafa5;
+    margin-left: 5px;
 }
 
 /*          MODAL REFERENCE          */
@@ -240,4 +216,215 @@ button.rejectreq.btn.btn-danger{
 }
 .studymodal h3, .studymodal h5 {
     color: #1f69ad;
+}
+.schedule-header {
+    background: #fafafa;
+    padding:10px 15px;
+    box-shadow: 0 0 3px #ddd;
+    display: inline-block;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+.schedule-header select {
+    float: right;
+    border: solid 1px #ddd;
+    color: #555;
+    padding: 0 10px;
+    height: 30px;
+}
+.schedule-main .teacherschedule {
+    margin-top: 40px;
+}
+.schedule-header > h2 {
+    font-size: 20px;
+    margin: 5px 0 0 0;
+    color: #555;
+    display: inline-block;
+}
+.day {
+    box-shadow: 0 0 3px #ddd;
+    padding: 15px 15px 5px;
+    width: 100%;
+    min-height: 100%;
+    display: inline-block;
+}
+.day h3 {
+    margin-top: -15px;
+    margin-left: -15px;
+    margin-right: -15px;
+    background: #fafafa;
+    padding: 10px;
+    box-shadow: 0 0 3px #ddd;
+    font-size: 16px;
+    font-weight: bold;
+    color: #4bafa5;
+}
+.day ul li{
+    font-size: 14px;
+    line-height: normal;
+    margin-bottom: 5px;
+}
+.day .btns .btn {
+    margin-right: 5px;
+    border-radius: 3px !important;
+    font-size: 14px;
+    padding: 5px 10px;
+}
+.day_post li#session_title {
+    color: #555 !important;
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: -10px;
+    margin-left: -10px;
+    margin-right: -10px;
+    padding: 5px;
+    border-bottom: solid 1px rgba(221, 221, 221, 0.52);
+}
+.btns {
+    margin-top: 10px;
+    display: inline-block;
+    width: 100%;
+}
+.schedule-header .btn {
+    float: right;
+    border-radius: 3px !important;
+    margin-right: 20px;
+}
+.content_title h2{
+    font-size: 18px;
+    color: #555;
+    display: inline-block;
+    margin: 5px 0 0 0;
+}
+
+.middle-content .content_box {
+    width: 100%;
+    display: inline-block;
+    box-shadow: 0 0 3px #ddd;
+    padding: 15px;
+    min-height: 100%;
+    height: 100%;
+    position: relative;
+}
+.schedule-main.schedules .schedule-header h2 {
+    font-size: 18px;
+}
+.schedule-main.schedules .schedule-header {
+    padding: 8px 10px;
+}
+input.form-control.time-s, input.form-control.time-e {
+    margin-right:10px;
+    display: inline-block;
+    width: 35% !important;
+}
+
+.choose-file{
+    display: inline-block;
+    padding: 5px 10px;
+    border: solid 1px #ddd;
+    position: relative;
+    width: 300px;
+}
+
+.choose-file input + label:after {
+    content: "Browse";
+    position: absolute;
+    right: 0;
+    height: 100%;
+    background: rgba(0,0,0,0.08);
+    top: 0;
+    padding: 0 10px;
+    line-height: 36px;
+    border-left: solid 1px #ddd;
+}
+.choose-file input {
+    opacity: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+}
+
+.choose-file input + label {
+    float: left;
+    margin: 0;
+}
+.form-group.choosed-file {
+    border: solid 1px #ddd;
+    padding: 0;
+    display: inline-block;
+    width: 100%;
+}
+.file-img {
+    max-width: 170px;
+    display: inline-block;
+    width: auto;
+    float: left;
+}
+.file-name {
+    display: inline-block;
+    margin-top: 40px;
+    float: right;
+}
+.file-name button.reviewed.icon_button {
+    margin-left: 10px;
+    border: solid 1px #ddd;
+    padding: 0;
+    color: #dd343d;
+}
+
+ul#studentname li {
+    font-size: 16px;
+    color: #555;
+    line-height: normal;
+    overflow: hidden;
+}
+ul#studentname li p {
+    margin: 0;
+    font-size: 15px;
+    padding: 0 15px;
+    line-height: normal;
+}
+#actionbuttons button.btn {
+    padding: 4px 8px;
+    font-size: 14px;
+    border-radius: 3px !important;
+}
+.schedule-main .content_box ul {
+    max-height: 270px;
+    overflow-y: auto;
+}
+
+.day li.grades {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    position: relative;
+}
+.day li.des {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 45px;
+}
+.teacherschedule .day ul {
+    border: solid 1px rgba(221, 221, 221, 0.52);
+    padding: 10px !important;
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 10px !important;
+    margin-top: 5px !important;
+}
+
+span.member-statuss {
+    color: #555 !important;
+    margin-left: 10px !important;
+    border: solid 1px #ddd;
+    padding: 0 5px;
+    font-size: 12px;
+    background: #fafafa;
 }

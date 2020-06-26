@@ -2,6 +2,8 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { StudentService } from 'src/app/services/student.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { Router } from '@angular/router';
+import { BASE_URL } from 'src/app/services/app.constant';
+
 
 // import { ActivityDetailsComponent } from 'src/app/modules/student/activity-details/activity-details.component.ts';
 declare let $: any;
@@ -13,6 +15,7 @@ declare let $: any;
 })
 export class HomeComponent implements OnInit {
 
+  BASE_URL: string;
   studentInfo: any;
   studentId: any;
   schoolId: any;
@@ -64,7 +67,9 @@ export class HomeComponent implements OnInit {
   showClubDetails: boolean = false;
   col = "col-12";
 
-  constructor(private studentService: StudentService, public alertService: AlertService, private router: Router) { }
+  constructor(private studentService: StudentService, public alertService: AlertService, private router: Router) {
+    this.BASE_URL = BASE_URL + "/file/download?filePath=";
+   }
 
 
   ngOnInit() {

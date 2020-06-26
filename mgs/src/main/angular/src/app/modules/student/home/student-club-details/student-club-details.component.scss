@@ -5,7 +5,7 @@
 }
 .sidenav {
     float: left;
-    width: 250px;
+    width: 100%;
     display: inline-block;
     box-shadow: 0 0 3px #ddd;
     background: #fafafa;
@@ -42,9 +42,8 @@ button.register_act.btn.btn-primary.btn-sm {
     border-radius: 3px !important;
 }
 .content_container{
-    width: calc(100% - 250px);
+    width: 100%;
     display: inline-block;
-    float: right;
     vertical-align: top;
 }
 
@@ -188,15 +187,16 @@ h5 {
     text-align: center;
     margin: 0;
     padding: 15px;
-    border-top: solid 1px #ddd;
+    border: solid 1px #ddd;
+    width: auto;
+    max-width: 200px;
+    display: inline-block;
+    vertical-align: top;
 
-    &:first-child{
-        border-top: none;
-    }
 }
 .supervisor_profile .supervisor_photo {
-    width: 100px;
-    height: 100px;
+    width: 70px;
+    height: 70px;
     margin: auto;
     overflow: hidden;
     position: relative;
@@ -207,8 +207,9 @@ h5 {
     font-size: 18px;
 }
 .supervisor_profile .supervisor_photo img {
-    width: 180px;
-    margin-left: -40px;
+    width: 150px;
+    margin-left: -50px;
+    height: 80px;
 }
 .supervisor_profile li.active {
     background: rgba(0,0,0,0.05);

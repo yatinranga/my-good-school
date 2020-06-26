@@ -59,7 +59,7 @@
                                 Qualifications - <label> {{teacherDetails['qualification']}}</label> </li>
                             <li>
                                 <!-- <i class="fa fa-running"></i> -->
-                                Role - <label> {{teacherDetails['roles'][0]}} </label> </li>
+                                Role - <label><span *ngIf="teacherDetails['roles']">{{teacherDetails['roles'][0]}}</span></label> </li>
                             <li>
                                 <!-- <i class="fa fa-chalkboard-teacher"></i> -->
                                 <!-- Class Teacher - <label> {{teacherDetails['isClassTeacher'] ? "Yes" : "No" }}</label> -->

@@ -110,9 +110,12 @@ button.award.btn.btn-success, button.award.btn.btn-primary {
 button.reset.btn.btn-secondary {
     padding: 10px;
 }
-.modal-content{
-    top: 100px;
+#reviewModal .modal-content{
+    
     border: 5px solid #1e68a9;
+    max-width: 450px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .teacher-activity-card {
