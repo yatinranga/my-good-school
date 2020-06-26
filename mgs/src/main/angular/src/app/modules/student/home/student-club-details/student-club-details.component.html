@@ -35,7 +35,7 @@
       
 
       <!----------------------------------- List of Students----------------------->
-
+        <div *ngIf="supervisorId">
       <div class="content">
         <div class="student-card">
           <div class="content_box">
@@ -103,10 +103,10 @@
             {{clubSchedule.length==0&&!enrollSch_loader?'No Session Available !': ''}}
              
           </div>
-        </div>
-        
+        </div>        
 
       </div>
+    </div>
     </div>
   </div>
 
