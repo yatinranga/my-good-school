@@ -10,53 +10,70 @@
       
     </div>
 
-    <div class="schedule">
+    <div class="schedule clubs-socities-main">
       <div class="days-main">
-        <h2> Clubs & Societies </h2>
+        <!-- <h2> Clubs & Societies </h2> -->
+        <div class="cluibs-socity-heading">
+          <div class="row">
+            <div class="col-6">
+                <h3>Clubs</h3>
+            </div>
+            <div class="col-6">
+              <h3>Societies</h3>
+            </div>
+        </div>
+        </div>
         <div class="row">
           <div class="col-3 day-card">
             <div class="day">
               <h3>Sports </h3>
-              <ul *ngFor="let sport of sportArr">
-                <li [ngClass]="{'sport reference':highlightClubArr.includes(sport.name)}"
-                  (click)="setClubDetails(true,sport)">
-                    {{sport.name}}
-                    <span *ngIf="highlightClubArr.includes(sport.name)">
-                      <div *ngFor="let c of enrolledClubsArr">
-                        <span *ngIf="c.name==sport.name">({{c.supervisorName}})</span>
-                      </div>
-                    </span>
+              <ul>
+                <li *ngFor="let sport of sportArr">
+                  <a [ngClass]="{'sport reference':highlightClubArr.includes(sport.name)}"
+                    (click)="setClubDetails(true,sport)">
+                      {{sport.name}}
+                      <span class="supervisor_name" *ngIf="highlightClubArr.includes(sport.name)">
+                        <div *ngFor="let c of enrolledClubsArr">
+                          <span *ngIf="c.name==sport.name">({{c.supervisorName}})</span>
+                        </div>
+                      </span>
+                    </a>
+                  </li>
+              </ul>
+              
+            </div>
+          </div>
+          <div class="col-3 day-card">
+            <div class="day">
+              <h3>Skills </h3>
+              <ul>
+                <li *ngFor="let skill of skillArr;let i = index">
+                  <a [ngClass]="{'skill reference':highlightClubArr.includes(skill.name)}"
+                    (click)="setClubDetails(true,skill)">
+                      {{skill.name}}
+                      <span class="supervisor_name" *ngIf="highlightClubArr.includes(skill.name)">
+                        <div *ngFor="let c of enrolledClubsArr">
+                          <span *ngIf="c.name==skill.name">({{c.supervisorName}})</span>
+                        </div>
+                      </span>
+                    </a>
                   </li>
               </ul>
             </div>
           </div>
           <div class="col-3 day-card">
             <div class="day">
-              <h3>Skills </h3>
-              <ul *ngFor="let skill of skillArr;let i = index">
-                <li [ngClass]="{'skill reference':highlightClubArr.includes(skill.name)}"
-                  (click)="setClubDetails(true,skill)">
-                    {{skill.name}}
-                    <span *ngIf="highlightClubArr.includes(skill.name)">
-                      <div *ngFor="let c of enrolledClubsArr">
-                        <span *ngIf="c.name==skill.name">({{c.supervisorName}})</span>
+              <h3>Services </h3>
+              <ul>
+                <li *ngFor="let service of serviceArr">
+                  <a [ngClass]="{'service reference':highlightSocietyArr.includes(service.name)}"
+                    (click)="setClubDetails(true,service)">
+                    {{service.name}}<span class="supervisor_name" *ngIf="highlightSocietyArr.includes(service.name)">
+                      <div *ngFor="let c of enrolledSocietyArr">
+                        <span *ngIf="c.name==service.name">({{c.supervisorName}})</span>
                       </div>
                     </span>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-3 day-card">
-            <div class="day">
-              <h3>Services </h3>
-              <ul *ngFor="let service of serviceArr">
-                <li [ngClass]="{'service reference':highlightSocietyArr.includes(service.name)}"
-                  (click)="setClubDetails(true,service)">
-                  {{service.name}}<span *ngIf="highlightSocietyArr.includes(service.name)">
-                    <div *ngFor="let c of enrolledSocietyArr">
-                      <span *ngIf="c.name==service.name">({{c.supervisorName}})</span>
-                    </div>
-                  </span>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -64,14 +81,16 @@
           <div class="col-3 day-card">
             <div class="day">
               <h3>Study </h3>
-              <ul *ngFor="let study of studyArr">
-                <li [ngClass]="{'study reference':highlightSocietyArr.includes(study.name)}"
-                  (click)="setClubDetails(true,study)">
-                  {{study.name}}<span *ngIf="highlightSocietyArr.includes(study.name)">
-                    <div *ngFor="let c of enrolledSocietyArr">
-                      <span *ngIf="c.name==study.name">({{c.supervisorName}})</span>
-                    </div>
-                  </span>
+              <ul>
+                <li *ngFor="let study of studyArr">
+                  <a [ngClass]="{'study reference':highlightSocietyArr.includes(study.name)}"
+                    (click)="setClubDetails(true,study)">
+                    {{study.name}}<span class="supervisor_name" *ngIf="highlightSocietyArr.includes(study.name)">
+                      <div *ngFor="let c of enrolledSocietyArr">
+                        <span *ngIf="c.name==study.name">({{c.supervisorName}})</span>
+                      </div>
+                    </span>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -95,7 +114,7 @@
       
     </div>
   
-      <div class="schedule mt-4">
+      <div class="schedule my-schedule-main mt-4">
         <div class="days-main">
           <h2> My Schedule </h2>
           <div class="row">
@@ -104,11 +123,12 @@
                 <h3>{{s.criterionValue | date}} - {{s.criterionValue | date:'EEEE'}} </h3>
                 <ul *ngFor="let res of s.responses; let i = index;">
                   <div id="session_title"> {{i+1}}. {{res.title}} </div>
-                  <li> ({{res.club.name}}) </li>
-                  <li> {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs </li>
+                  <li> <strong>Club Name : </strong> ({{res.club.name}}) </li>
+                  <li> <strong>Time : </strong> {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs </li>
                   <li> <strong>Supervisor : </strong> {{res.teacherName}}</li>
                   <li> <strong>Description : </strong> {{res.description}}</li>
-                  <li *ngIf="res.fileResponses.length"><strong>Attachment : </strong><a [attr.href]="BASE_URL + res.fileResponses[0].url">
+                  <li *ngIf="res.fileResponses.length"><strong>Attachment : </strong>
+                    <a [attr.href]="BASE_URL + res.fileResponses[0].url">
                     {{res.fileResponses[0].name}}</a></li>
                 </ul>
               </div>

@@ -12,7 +12,7 @@
 
     <div class="content-main">
     <div class="sidenav">
-      <h2> Supervisors </h2>
+      <!-- <h2> Supervisors </h2> -->
       <div class="supervisor_profile">
         <ul>
           <li *ngFor="let c of coaches; let i = index" [ngClass]="{'active':supervisorId==c.id}" (click)="getSupervisorSession(c)">

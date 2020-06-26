@@ -242,7 +242,7 @@ button.close span {
     padding: 10px 10px;
     font-size: 18px;
     color: white;
-    font-weight: bold;
+    
 }
 
 .days-main .day-card {
@@ -271,15 +271,20 @@ button.close span {
     background: rgba(0, 0, 0, 0.02);
 }
 .days-main .day-card .day ul{
-    padding: 0 0 0 15px;
+    padding: 0;
     margin: 0;
 
 }
 .days-main .day-card .day ul li{
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     font-size: 15px;
     list-style: inherit;
     color: #555;
+    a{
+        display: inline-block;
+        width: 100%;
+        padding-left: 16px;
+    }
 }
 .schedule .days-main .day-card .day ul li.reference{
     color:white;
@@ -288,7 +293,7 @@ button.close span {
 .days-main .day-card .day ul #session_title{
     font-weight: bold;
     color: #555;
-    margin-left: -15px;
+    margin-left: 0;
     margin-top: 8px;
     display: inline-block;
     width: 100%;
@@ -309,4 +314,172 @@ button.close span {
 
 #registrationModal .modal-footer .btn{
     border-radius: 3px !important;
+}
+
+.clubs-socities-main{
+    display: inline-block;
+    width: 100%;
+    .days-main {
+        margin-top: 0;
+    }
+    .cluibs-socity-heading {
+        background: rgba(0,0,0,0.5);
+        margin-top: -15px;
+        margin-right: -15px;
+        margin-left: -15px;
+        padding: 0 15px;
+        margin-bottom: 10px;
+    }
+
+    .cluibs-socity-heading h3 {
+        font-size: 20px;
+        padding: 0;
+        margin-bottom: 0;
+        color: #fff;
+        // border-left: solid 1px #ddd;
+        padding: 10px 0;
+        text-align: center;
+    }
+    .cluibs-socity-heading .col-6:nth-child(2) h3:before {
+        content: "";
+        position: absolute;
+        width: 1px;
+        background: #ddd;
+        height: 100%;
+        left: 0;
+        top: 0;
+    }
+    .day{
+        ul{
+            li{
+                margin: 0 !important;
+                // padding: 5px 0 !important;
+                a{
+                    padding: 5px 0;
+                    transition: 0.5s;
+                    &:hover{
+                        background: #4bafa5;
+                        color: white;
+                        padding-left: 20px !important;
+                        &::before{
+                            color: white;
+                            left: 5px !important;
+                        }
+                    }
+                    &.sport.reference{
+                        background: #4bafa5;
+                        color: white;
+                        padding-left: 20px !important;
+                        &::before{
+                            color: white;
+                            left: 5px !important;
+                        }
+                    }
+                    &.skill.reference{
+                        background: #9fbb73;
+                        color: white;
+                        padding-left: 20px !important;
+                        &::before{
+                            color: white;
+                            left: 5px !important;
+                        }
+                    }
+                    &.service.reference{
+                        background: #d86ea3;
+                        color: white;
+                        padding-left: 20px !important;
+                        &::before{
+                            color: white;
+                            left: 5px !important;
+                        }
+                    }
+                    &.study.reference{
+                        background: #1f69ad;
+                        color: white;
+                        padding-left: 20px !important;
+                        &::before{
+                            color: white;
+                            left: 5px !important;
+                        }
+                    }
+
+
+                }
+
+            }
+        }
+    }
+
+}
+span.supervisor_name {
+    display: inline-block;
+    float: right;
+    color: white;
+    padding-right: 10px;
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+
+.day ul li a:before {
+    content: "\f005";
+    display: inline-block;
+    width: 5px;
+    position: absolute;
+    left: 0;
+    height: 5px;
+    font-family: FontAwesome;
+    font-size: 10px;
+    top: 8px;
+    transition: 0.5s;
+    color: #4bafa5;
+}
+.day ul li a:after {
+    content: "";
+    display: inline-block;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    height: 1px;
+    bottom: 0;
+    border-bottom: solid 1px #ddd;
+}
+.day ul li {
+    position: relative;
+    list-style: none !important;
+}
+
+.my-schedule-main {
+    .day{
+        ul{
+            li{
+                font-size: 14px !important;
+                padding-left: 15px;
+                &:before {
+                    content: "\f005";
+                    display: inline-block;
+                    width: 5px;
+                    position: absolute;
+                    left: 0;
+                    height: 5px;
+                    font-family: FontAwesome;
+                    font-size: 10px;
+                    top: 2px;
+                    transition: 0.5s;
+                    color: #4bafa5;
+                } 
+                a{
+                    text-decoration: underline;
+                    padding: 0 !important;
+                    color:#4bafa5;
+                    &::before{
+                        display: none !important;
+                    }
+                    &::after{
+                        display: none !important;
+                    }
+                } 
+            }
+        }
+    }
 }

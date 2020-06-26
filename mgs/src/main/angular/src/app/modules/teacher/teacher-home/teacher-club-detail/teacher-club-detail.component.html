@@ -91,7 +91,7 @@
                    <div class="row">
                     
 
-                       <div class="col-3 mb-3" *ngFor="let club of clubSchedule; let i = index;">
+                       <div class="col-4 mb-3" *ngFor="let club of clubSchedule; let i = index;">
                            <div class="day">
                                <h3>{{club.criterionValue | date}} - {{club.criterionValue | date:'EEEE'}} </h3>
                                <ul *ngFor="let res of club.responses; let j = index;">
@@ -99,19 +99,19 @@
                                        <span *ngIf="res.status=='upcoming'" style="color: #8dc33a; 
                                        float: right;
                                        padding: 2px 5px;
-                                       font-size: 12px;
+                                       font-size: 14px;
                                        position: absolute;
-                                       top: 10px;
+                                       top: 8px;
                                        right: 20px;
-                                   ">({{res.status | uppercase}})</span>
+                                   ">( {{res.status | uppercase}} )</span>
                                        <span *ngIf="res.status=='ended'" style="color: #bd2130; 
                                        float: right;
                                        padding: 2px 5px;
-                                       font-size: 12px;
+                                       font-size: 14px;
                                        position: absolute;
-                                       top: 10px;
+                                       top: 8px;
                                        right: 20px;
-                                   ">({{res.status | uppercase}})</span>
+                                   ">( {{res.status | uppercase}} )</span>
                                    </li>
                                    <li class="des"> <strong>Description : </strong> {{res.description}}</li>
                                    <li> <strong>Time : </strong> {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs
