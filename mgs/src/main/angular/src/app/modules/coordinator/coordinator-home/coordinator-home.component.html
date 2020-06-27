@@ -41,7 +41,7 @@
                     <li *ngFor="let skill of skillArr">
                         <a (click)="setClubDetails(true,skill)">{{skill.name}}</a>
                     </li>
-                    <p *ngIf="!clubLoader && sportArr.length==0">No Sport Avaliable</p>
+                    <p *ngIf="!clubLoader && skillArr.length==0">No Skill Avaliable</p>
                 </ul>
               </div>
             </div>
@@ -53,7 +53,7 @@
                     <li *ngFor="let service of serviceArr">
                         <a (click)="setClubDetails(true,service)">{{service.name}}</a>
                     </li>
-                    <p *ngIf="!clubLoader && sportArr.length==0">No Sport Avaliable</p>
+                    <p *ngIf="!clubLoader && serviceArr.length==0">No Service Avaliable</p>
                 </ul>
               </div>
             </div>
@@ -65,7 +65,7 @@
                     <li *ngFor="let study of studyArr">
                         <a (click)="setClubDetails(true,study)">{{study.name}}</a>
                     </li>
-                    <p *ngIf="!clubLoader && sportArr.length==0">No Sport Avaliable</p>
+                    <p *ngIf="!clubLoader && studyArr.length==0">No Study Avaliable</p>
                 </ul>
               </div>
             </div>
