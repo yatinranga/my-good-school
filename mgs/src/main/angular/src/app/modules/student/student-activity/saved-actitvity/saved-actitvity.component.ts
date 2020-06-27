@@ -264,7 +264,8 @@ export class SavedActitvityComponent implements OnInit {
     if (activityId != null) {
       this.modal_loader = true;
       this.studentService.getCoach(this.schoolId, activityId).subscribe((res) => {
-        this.coaches = res;
+        // this.coaches = res;
+        this.coaches = [{name:"Jatin Chawla",id:"CPfch1XJ"}]
         if (this.coaches.length) {
           this.savedActivityForm.get('coachId').enable();
           this.savedActivityForm.get('description').enable();
