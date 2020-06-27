@@ -44,9 +44,10 @@
     width: 100%;
 }
 .card_box h2{
-    font-size: 24px;
+    font-size: 22px;
     text-align: center;
     color: #8dc33a;
+    // min-height: 50px;
     margin: 10px 0;
 }
 .card_box p{
@@ -209,4 +210,29 @@ button.icon_button {
 }
 .stu_certi .row{
     display: flex;
+}
+.certi-img {
+    height: 150px;
+    overflow: hidden;
+    border-bottom: solid 1px #ddd;
+}
+
+p.des {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.btns-certifivates .btn {
+    margin: 0 5px;
+    border-radius: 3px !important;
+    padding: 5px 10px;
+}
+
+.btns-certifivates {
+    margin-top: 50px;
+    border-top: solid 1px #ddd;
+    padding-top: 10px;
+    margin-right: -10px;
+    margin-left: -10px;
 }
