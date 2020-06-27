@@ -256,8 +256,7 @@
                                                         <h5> Attachments : </h5>
                                                         <ol>
                                                             {{activity.fileResponses.length ? "" : "NA"}}
-                                                            <li *ngFor="let file of activity.fileResponses">
-
+                                                            <li *ngFor="let file of activity.fileResponses">                                                                
                                                                 <a [attr.href]="BASE_URL + file.url">
                                                                     <i class="fa fa-file-audio"
                                                                         *ngIf="file.extension == 'mp3'"></i>

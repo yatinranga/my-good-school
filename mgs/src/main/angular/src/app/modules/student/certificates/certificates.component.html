@@ -10,7 +10,7 @@
             <div *ngFor="let certi of certificatesArr" class="col-3">
                 <div class="certi_box">
                     <div class="card_box">
-                        <img src="assets/images/award.jpg">
+                        <img [attr.src]="BASE_URL + certi.imageUrl">
                         <div class="certi_text">
                             <h2>{{certi.title}}</h2>
                             <p>{{certi.description}}</p>
@@ -24,9 +24,14 @@
                                 </span>
                                 <span *ngIf="certi.fourS=='Service'" style="color: #8dc33a;">
                                     {{certi.fourS}}
-                                </span>
+                                </span>                                
                             </p>
                             <p>{{certi.certificationAuthority}}</p>
+                            <p><span>
+                                <button class="btn btn-primary">Edit</button>
+                                <button class="btn btn-danger">Delete</button>
+                                <button class="btn btn-success">Download</button>
+                            </span></p>
                         </div>
                     </div>
                 </div>
