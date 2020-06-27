@@ -7,13 +7,15 @@
                     <h5> You Have Not Added Any Certificate.</h5>
                 </div>
             </div>
-            <div *ngFor="let certi of certificatesArr" class="col-3">
+            <div *ngFor="let certi of certificatesArr" class="col-4 mb-4">
                 <div class="certi_box">
                     <div class="card_box">
-                        <img [attr.src]="BASE_URL + certi.imageUrl">
+                        <div class="certi-img">
+                            <img [attr.src]="BASE_URL + certi.imageUrl">
+                        </div>
                         <div class="certi_text">
                             <h2>{{certi.title}}</h2>
-                            <p>{{certi.description}}</p>
+                            <p class="des">  {{certi.description}}</p>
                             <p> <span *ngIf="certi.fourS=='Skill'" style="color: #4bafa5;"> {{certi.fourS}}
                                 </span>
                                 <span *ngIf="certi.fourS=='Sport'" style="color: #e04090;">
@@ -27,11 +29,11 @@
                                 </span>                                
                             </p>
                             <p>{{certi.certificationAuthority}}</p>
-                            <p><span>
+                            <div class="btns-certifivates">
                                 <button class="btn btn-primary">Edit</button>
-                                <button class="btn btn-danger">Delete</button>
                                 <button class="btn btn-success">Download</button>
-                            </span></p>
+                                <button class="btn btn-danger">Delete</button>
+                            </div>
                         </div>
                     </div>
                 </div>
