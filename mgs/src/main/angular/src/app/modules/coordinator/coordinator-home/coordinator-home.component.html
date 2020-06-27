@@ -4,59 +4,63 @@
     <div class="schedule">
         <div class="days-main">
             <h2> Clubs & Societies </h2>
-            <div class="row">
-                <div class="col-3 day-card">
-                    <div class="day">
-                        <h3>Sports </h3>
-                        <div *ngIf="clubLoader" class="spinner-border text-secondary" role="status"></div>
-                        <ul *ngFor="let sport of sportArr">
-                            <li (click)="setClubDetails(true,sport)">{{sport.name}}</li>
-                        </ul>
-                        <p *ngIf="!clubLoader && sportArr.length==0">No Sport Avaliable</p>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-3 day-card">
+                        <div class="day">
+                            <h3>Sports </h3>
+                            <div *ngIf="clubLoader" class="spinner-border text-secondary" role="status"></div>
+                            <ul *ngFor="let sport of sportArr">
+                                <li (click)="setClubDetails(true,sport)">{{sport.name}}</li>
+                            </ul>
+                            <p *ngIf="!clubLoader && sportArr.length==0">No Sport Avaliable</p>
+                        </div>
                     </div>
-                </div>
-                <div class="col-3 day-card">
-                    <div class="day">
-                        <h3>Skills </h3>
-                        <div *ngIf="clubLoader" class="spinner-border text-secondary" role="status"></div>
-                        <ul *ngFor="let skill of skillArr">
-                            <li (click)="setClubDetails(true,skill)">{{skill.name}}</li>
-                        </ul>
-                        <p *ngIf="!clubLoader && skillArr.length==0">No Skill Avaliable</p>
+                    <div class="col-3 day-card">
+                        <div class="day">
+                            <h3>Skills </h3>
+                            <div *ngIf="clubLoader" class="spinner-border text-secondary" role="status"></div>
+                            <ul *ngFor="let skill of skillArr">
+                                <li (click)="setClubDetails(true,skill)">{{skill.name}}</li>
+                            </ul>
+                            <p *ngIf="!clubLoader && skillArr.length==0">No Skill Avaliable</p>
+                        </div>
                     </div>
-                </div>
-                <div class="col-3 day-card">
-                    <div class="day">
-                        <h3>Services </h3>
-                        <div *ngIf="clubLoader" class="spinner-border text-secondary" role="status"></div>
-                        <ul *ngFor="let service of serviceArr">
-                            <li (click)="setClubDetails(true,service)">{{service.name}}</li>
-                        </ul>
-                        <p *ngIf="!clubLoader && serviceArr.length==0">No Service Avaliable</p>
+                    <div class="col-3 day-card">
+                        <div class="day">
+                            <h3>Services </h3>
+                            <div *ngIf="clubLoader" class="spinner-border text-secondary" role="status"></div>
+                            <ul *ngFor="let service of serviceArr">
+                                <li (click)="setClubDetails(true,service)">{{service.name}}</li>
+                            </ul>
+                            <p *ngIf="!clubLoader && serviceArr.length==0">No Service Avaliable</p>
+                        </div>
                     </div>
-                </div>
-                <div class="col-3 day-card">
-                    <div class="day">
-                        <h3>Study </h3>
-                        <div *ngIf="clubLoader" class="spinner-border text-secondary" role="status"></div>
-                        <ul *ngFor="let study of studyArr">
-                            <li (click)="setClubDetails(true,study)">{{study.name}}</li>
-                        </ul>
-                        <p *ngIf="!clubLoader && studyArr.length==0">No Study Avaliable</p>
+                    <div class="col-3 day-card">
+                        <div class="day">
+                            <h3>Study </h3>
+                            <div *ngIf="clubLoader" class="spinner-border text-secondary" role="status"></div>
+                            <ul *ngFor="let study of studyArr">
+                                <li (click)="setClubDetails(true,study)">{{study.name}}</li>
+                            </ul>
+                            <p *ngIf="!clubLoader && studyArr.length==0">No Study Avaliable</p>
+                        </div>
                     </div>
+    
                 </div>
-
             </div>
 
         </div>
 
         <div class="supervisor-main">
-          <div class="row">
-            <div class="col-12" *ngIf="showClubDetails">
-              <button class="btn btn-close btn-danger" (click)="setClubDetails(false)"> <i class="fa fa-times"
-                aria-hidden="true"></i></button>
-              <app-coordinator-club-details [clubObject]="club_Object"></app-coordinator-club-details>
-            </div>
+          <div class="container-fluid">
+            <div class="row">
+                <div class="col-12" *ngIf="showClubDetails">
+                  <button class="btn btn-close btn-danger" (click)="setClubDetails(false)"> <i class="fa fa-times"
+                    aria-hidden="true"></i></button>
+                  <app-coordinator-club-details [clubObject]="club_Object"></app-coordinator-club-details>
+                </div>
+              </div>
           </div>
         </div>
 
