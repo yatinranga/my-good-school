@@ -19,8 +19,8 @@
               <div class="col-3 mt-3" *ngFor="let c of coaches; let i = index" [ngClass]="{'active':supervisorId==c.id}" (click)="getSupervisorSession(c)">
                 <div class="supervisor-card">
                   <div class="supervisor_photo"> 
-                    <img *ngIf="c.pmagePath" [attr.src]="BASE_URL + c.imagePath">
-                    <img *ngIf="!c.pmagePath" src="assets/images/maleteacher.jpg"></div>
+                    <img *ngIf="c.imagePath" [attr.src]="BASE_URL + c.imagePath">
+                    <img *ngIf="!c.imagePath" src="assets/images/maleteacher.jpg"></div>
                   <div class="teachername" >
                     {{c.name}} </div>
                   <div class="brief">
