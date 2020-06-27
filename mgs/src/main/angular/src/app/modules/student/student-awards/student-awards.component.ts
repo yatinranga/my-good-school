@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { StudentService } from 'src/app/services/student.service';
+import { BASE_URL } from 'src/app/services/app.constant';
 
 @Component({
   selector: 'app-student-awards',
@@ -7,6 +8,7 @@ import { StudentService } from 'src/app/services/student.service';
   styleUrls: ['./student-awards.component.scss']
 })
 export class StudentAwardsComponent implements OnInit {
+  BASE_URL: string;
   studentInfo: any;
   schoolId: any;
   studentId: any;
@@ -22,7 +24,9 @@ export class StudentAwardsComponent implements OnInit {
   psdAreas: any = "";
   focusAreas: any = "";
 
-  constructor(private studentService: StudentService) { }
+  constructor(private studentService: StudentService) { 
+    this.BASE_URL = BASE_URL + "/file/download?filePath=";
+  }
 
   ngOnInit() {
     this.studentInfo = JSON.parse(localStorage.getItem('user_info'));
