@@ -22,6 +22,7 @@ export class StudentListComponent implements OnInit {
   adminInfo: any;
   gradeId:string = "";
   search="" // USed for Search
+  studentId:any;  
 
   ngOnInit() {
     this.adminInfo = JSON.parse(localStorage.getItem('user_info'));
@@ -59,6 +60,7 @@ export class StudentListComponent implements OnInit {
   /** Set Show Details */
   setShowDetails(val: boolean, student_obj?){
     this.student_obj = student_obj;
+    this.studentId = student_obj.id;
     console.log(student_obj);
     this.showDetails = val;
     this.showDetails ? (this.col = "col-7") : (this.col="col-12");

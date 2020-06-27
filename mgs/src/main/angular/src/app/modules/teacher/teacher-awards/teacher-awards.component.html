@@ -427,19 +427,19 @@
                             Min Length 10 words.
                         </small>
                     </div>
+                    <div class="modal-footer">
+                                
+                        <button type="submit" name="submit" class="btn btn-success"
+                            [disabled]="assignAwardForm.invalid">
+                            <div *ngIf="pa_loader" class="spinner-border text-dark" role="status">
+                            </div>{{pa_loader ? 'Loading...' :  'Done'}}
+                        </button>
+                        <button type="button" name="resetForm" class="reset btn btn-danger" (click)="resetForm()">
+                            Reset </button>
+                    </div>
 
                     
                 </form>
-            </div>
-            <div class="modal-footer">
-                        
-                <button type="submit" name="submit" class="btn btn-success"
-                    [disabled]="assignAwardForm.invalid">
-                    <div *ngIf="pa_loader" class="spinner-border text-dark" role="status">
-                    </div>{{pa_loader ? 'Loading...' :  'Done'}}
-                </button>
-                <button type="button" name="resetForm" class="reset btn btn-danger" (click)="resetForm()">
-                    Reset </button>
             </div>
 
         </div>

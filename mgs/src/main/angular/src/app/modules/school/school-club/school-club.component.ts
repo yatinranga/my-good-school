@@ -25,6 +25,7 @@ export class SchoolClubComponent implements OnInit {
   psdAreas: any = '';
   focusAreas: any = '';
   clubType: any = '';
+  clubId:any;
 
   constructor(private schoolService: SchoolService) { }
 
@@ -95,6 +96,7 @@ export class SchoolClubComponent implements OnInit {
   setShowWindow(type, club_obj? ){
     console.log(club_obj);
     this.club_obj = club_obj;
+    this.clubId = club_obj.id;
     if(type == 'supervisor'){
       this.showClubDetails = false;
       this.showSupervisor = true;

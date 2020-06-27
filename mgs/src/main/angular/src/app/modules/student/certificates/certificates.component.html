@@ -123,17 +123,16 @@
                                 </p>
                             </div>
                         </div>
-
-                        
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success" [disabled]="certificateForm.invalid">
+                                <div *ngIf="add_loader" class="spinner-border text-dark" role="status">
+                                </div>{{add_loader ? 'Loading...' : 'Add'}}
+                            </button>
+                            <button type="button" class="btn btn-danger" (click)="resetForm()">Reset</button>
+                        </div>                        
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success" [disabled]="certificateForm.invalid">
-                        <div *ngIf="add_loader" class="spinner-border text-dark" role="status">
-                        </div>{{add_loader ? 'Loading...' : 'Add'}}
-                    </button>
-                    <button type="button" class="btn btn-danger" (click)="resetForm()">Reset</button>
-                </div>
+                
 
             </div>
         </div>
