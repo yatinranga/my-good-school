@@ -1,17 +1,25 @@
-<div class="sortby">
-    <label>Club/Society :</label>
-    <select (change)="filterStaff()" [(ngModel)]="clubName">
-        <option value="" selected>All</option>
-        <option *ngFor="let c of allClubsArr" value={{c.name}}>
-            {{c.name}} ({{c.clubOrSociety}})
-        </option>
-    </select>
 
-    <label>Search : </label>
-    <input type="text" name="search" [(ngModel)]="search" autocomplete="off"
-        placeholder="Start searching for a name or contact no">
+<div class="container-fluid">
+    <div class="sortby">
+        <div class="selects-field">
+            <label>Club/Society :</label>
+        <select (change)="filterStaff()" [(ngModel)]="clubName">
+            <option value="" selected>All</option>
+            <option *ngFor="let c of allClubsArr" value={{c.name}}>
+                {{c.name}} ({{c.clubOrSociety}})
+            </option>
+        </select>
+        </div>
+        <div class="selects-field">
+            <label>Search : </label>
+        <input type="text" name="search" [(ngModel)]="search" autocomplete="off"
+            placeholder="Name or Contact...">
+        </div>
+        
+    </div>
 </div>
-<br><br>
+
+
 <div class="staff-list-main">
     <div class="container-fluid">
         <div class="row">
@@ -59,16 +67,12 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div *ngFor="let role of s.roles">
-                                        <h5><span class="badge badge-secondary"
-                                                *ngIf="role == 'Coordinator'">{{role}}</span></h5>
-                                        <h5><span class="badge badge-dark" *ngIf="role == 'Supervisor'">{{role}}</span>
-                                        </h5>
-                                        <h4><span class="badge badge-primary" *ngIf="role == 'Head'">{{role}}</span>
-                                        </h4>
-                                        <h4><span class="badge badge-warning"
-                                                *ngIf="role == 'SchoolAdmin'">{{role}}</span></h4>
-                                    </div>
+                                    <ul *ngFor="let role of s.roles" style="margin: 0; padding: 0; ">
+                                        <li class="coordinator" *ngIf="role == 'Coordinator'">{{role}}</li>
+                                        <li class="supervisor" *ngIf="role == 'Supervisor'">{{role}}</li>
+                                        <li class="head" *ngIf="role == 'Head'">{{role}}</li>
+                                        <li class="schooladmin" *ngIf="role == 'SchoolAdmin'">{{role}}</li>
+                                    </ul>
                                 </td>
                                 <td>{{s.yearOfEnrolment}}</td>
                                 <!-- <td><button class="btn btn-info" (click)="setShowDetails(true,s)">
@@ -87,7 +91,7 @@
                 </div>
             </div>
             <div class="col-4" *ngIf="showDetails">
-                <h1><button class="btn btn-danger" (click)="setShowDetails(false)"> Close </button></h1>
+                <h1><button class="btn btn-danger" (click)="setShowDetails(false)"> <i class="fa fa-close"></i> </button></h1>
                 <div>            
                     <app-staff-details [staffDetails]="staff_obj">
                     </app-staff-details>

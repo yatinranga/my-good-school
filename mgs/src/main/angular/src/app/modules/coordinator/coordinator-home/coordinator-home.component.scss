@@ -1,0 +1,501 @@
+.student-home-card{
+    padding: 0;
+    width: 100%;
+    display: inline-block;
+    background: white;
+    box-shadow: 0 0 3px #ddd;
+}
+.cands {
+    width: 75%;
+    padding: 0;
+}
+.fourskill_main {
+    width: 100%;
+    display: inline-flex;
+}
+.society_main {
+    width: 50%;
+    float: right;
+    text-align: center;
+    display: inline-block;
+}
+.fourskill{
+    width: 100%;
+    background: #cecece;
+    margin: 10px;
+    padding: 10px 0;
+    position: relative;
+    text-align: center;
+}
+.fourskill img{
+    width: 60px;
+    margin: 10px 0 20px 0;
+    opacity: 1;
+}
+.fourskill h3{
+    font-size: 27px;   
+    margin: 5px 0 20px 0;
+    text-align: center;
+}
+.fourskill ul{
+    padding: 0 10px;
+    margin: 0;
+}
+.fourskill li{
+    list-style-type: none;
+    border-bottom: 1px solid #999;
+    font-size: 17px;
+    line-height: 40px;
+}
+.sport.fourskill h3{
+    color: #4bafa5;
+}
+.skill.fourskill h3{
+    color: #8dc33a;
+}
+.service.fourskill h3{
+    color: #e04090;
+}
+.study.fourskill h3{
+    color: #1f69ad;
+}
+li.sport.reference {
+    background: #1db7a8;
+}
+li.skill.reference {
+    background: #9fbb73;
+}
+li.service.reference {
+    background: #d86ea3;
+}
+li.study.reference {
+    background: #5482ad;
+}
+.fourskill:hover{
+    background: gainsboro;
+}
+.fourskill:hover li{
+    border-bottom: 1px solid #333; 
+    color: #333;
+}
+li.reference {
+    color: #333;
+    padding: 0;
+    border-bottom: 1px solid #444 !important; 
+}
+
+.welcome button.enrollment_button {
+    float: right;
+    background: #555;
+    border: none;
+    outline: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    color: white;
+    box-shadow: 0 0 5px #ddd;
+    font-size: 16px;
+}
+.welcome h2 {
+    display: inline-block;
+    margin-top: 6px;
+    margin-bottom: 0;
+    font-size: 20px;
+    color: #fff;
+}
+.welcome {
+    font-size: 18px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding: 10px;
+    background: #4bafa5;
+}
+.student_home{
+    position: relative;
+    padding: 15px;
+}
+
+/*--------------------------------------MODAL------------------------------*/
+
+.modal-content {
+    border: 5px solid #b4d673;
+    top: 100px;
+    height: 600px;
+    overflow-y: scroll;
+}
+.reg.modal-content{
+    height: inherit;
+    overflow: inherit;
+}
+.enr_modal.modal-content .modal-body{
+    padding: 10px;
+    display: inline-block;
+}
+.enr_modal.modal-content .day_pre{
+    display: inline-block;
+    width: 100%;
+}
+.modal-title{
+    font-size: 26px;
+    color: black;
+}
+.skillmodal .modal-content {
+    top: 50px;
+}
+button.register_button.btn.btn-primary.btn-sm {
+    float: right;
+}
+button.btn.register.btn-primary{
+    background: #8dc33a;
+}
+li.active {
+    background: #d3d4d3;
+}
+li.teachername:hover {
+    background: #d3d4d3;
+}
+li.teachername {
+    color: red;
+}
+.modalstudentlist {
+    width: 100%;
+    display: inline-block;
+    height: 400px;
+    overflow-y: scroll;
+    margin-top: 30px;
+}
+.modalsessionschedule {
+    width: 100%;
+    display: inline-block;
+    margin-top: 30px;
+}
+button.register_act.btn.btn-primary.btn-sm {
+    background: darkgray;
+    color: #555;
+    font-size: 18px;
+    float: right;
+    border-radius: 3px !important;
+    margin: 0;
+    padding: 3px 10px;
+}
+button.close span {
+    color: #c10e0e;
+}
+
+
+/*          MODAL REFERENCE          */
+
+.sportmodal {
+    border: 5px solid #4bafa5;
+}
+.skillmodal {
+    border: 5px solid #b4d673;
+}
+.servicemodal {
+    border: 5px solid #d86ea3;
+}
+.studymodal {
+    border: 5px solid #1f69ad;
+}
+.sportmodal h3, .sportmodal h5 {
+    color: #4bafa5;
+}
+.skillmodal h3, .skillmodal h5 {
+    color: #b4d673;
+}
+.servicemodal h3, .servicemodal h5 {
+    color: #d86ea3;
+}
+.studymodal h3, .studymodal h5 {
+    color: #1f69ad;
+}
+
+.schedule {
+    margin-top: 60px;
+    display: inline-block;
+    width: 100%;
+    // padding-left: 15px;
+    // padding-right: 15px;
+    box-shadow: 0 0 2px #ddd;
+    padding: 15px;
+    position: relative;
+
+}
+.days-main {
+    // box-shadow: 0 0 2px #ddd;
+    // padding: 15px;
+    display: inline-block;
+    width: 100%;
+    margin-top: 40px;
+    // position: relative;
+}
+
+.days-main h2{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px 10px;
+    font-size: 18px;
+    color: white;
+    
+}
+
+.days-main .day-card {
+    // padding: 15px;
+    // width: 33.333%;
+    // display: inline-block;
+    // vertical-align: top;
+    margin-bottom: 20px;
+}
+.days-main .day-card .day{
+    box-shadow: 0 0 3px #ddd;
+    width: 100%;
+    padding: 15px;
+    display: inline-block;
+    min-height: 100%;
+}
+.days-main .day-card .day h3{
+    margin-left: -15px;
+    margin-right: -15px;
+    margin-top: -15px;
+    font-size: 17px;
+    color: #555;
+    padding: 10px;
+    box-shadow:0 0 2px #ddd;
+    font-weight: bold;
+    background: rgba(0, 0, 0, 0.02);
+}
+.days-main .day-card .day ul{
+    padding: 0;
+    margin: 0;
+
+}
+.days-main .day-card .day ul li{
+    margin-bottom: 10px;
+    font-size: 15px;
+    list-style: inherit;
+    color: #555;
+    a{
+        display: inline-block;
+        width: 100%;
+        padding-left: 16px;
+    }
+}
+.schedule .days-main .day-card .day ul li.reference{
+    color:white;
+    padding:3px 5px;
+}
+.days-main .day-card .day ul #session_title{
+    font-weight: bold;
+    color: #555;
+    margin-left: 0;
+    margin-top: 8px;
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 8px;
+}
+#registrationModal .modal-content .modal-header {
+    padding: 12px 15px;
+}
+#registrationModal .modal-content .modal-header .modal-title{
+    font-size: 20px;
+    color: #555;
+    margin: 0;
+}
+#registrationModal .modal-body .input-group .custom-select, #registrationModal .modal-body .input-group-text {
+    border: solid 1px #ddd;
+    border-radius: 0;
+}
+
+#registrationModal .modal-footer .btn{
+    border-radius: 3px !important;
+}
+
+.clubs-socities-main{
+    display: inline-block;
+    width: 100%;
+    .days-main {
+        margin-top: 0;
+    }
+    .cluibs-socity-heading {
+        background: rgba(0,0,0,0.5);
+        margin-top: -15px;
+        margin-right: -15px;
+        margin-left: -15px;
+        padding: 0 15px;
+        margin-bottom: 10px;
+    }
+
+    .cluibs-socity-heading h3 {
+        font-size: 20px;
+        padding: 0;
+        margin-bottom: 0;
+        color: #fff;
+        // border-left: solid 1px #ddd;
+        padding: 10px 0;
+        text-align: center;
+    }
+    .cluibs-socity-heading .col-6:nth-child(2) h3:before {
+        content: "";
+        position: absolute;
+        width: 1px;
+        background: #ddd;
+        height: 100%;
+        left: 0;
+        top: 0;
+    }
+    .day{
+        ul{
+            li{
+                margin: 0 !important;
+                // padding: 5px 0 !important;
+                a{
+                    padding: 5px 0;
+                    transition: 0.5s;
+                    &:hover{
+                        background: #4bafa5;
+                        color: white;
+                        padding-left: 20px !important;
+                        &::before{
+                            color: white;
+                            left: 5px !important;
+                        }
+                    }
+                    &.sport.reference{
+                        background: #4bafa5;
+                        color: white;
+                        padding-left: 20px !important;
+                        &::before{
+                            color: white;
+                            left: 5px !important;
+                        }
+                    }
+                    &.skill.reference{
+                        background: #9fbb73;
+                        color: white;
+                        padding-left: 20px !important;
+                        &::before{
+                            color: white;
+                            left: 5px !important;
+                        }
+                    }
+                    &.service.reference{
+                        background: #d86ea3;
+                        color: white;
+                        padding-left: 20px !important;
+                        &::before{
+                            color: white;
+                            left: 5px !important;
+                        }
+                    }
+                    &.study.reference{
+                        background: #1f69ad;
+                        color: white;
+                        padding-left: 20px !important;
+                        &::before{
+                            color: white;
+                            left: 5px !important;
+                        }
+                    }
+
+
+                }
+
+            }
+        }
+    }
+
+}
+span.supervisor_name {
+    display: inline-block;
+    float: right;
+    color: white;
+    padding-right: 10px;
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+
+.day ul li a:before {
+    content: "\f005";
+    display: inline-block;
+    width: 5px;
+    position: absolute;
+    left: 0;
+    height: 5px;
+    font-family: FontAwesome;
+    font-size: 10px;
+    top: 8px;
+    transition: 0.5s;
+    color: #4bafa5;
+}
+.day ul li a:after {
+    content: "";
+    display: inline-block;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    height: 1px;
+    bottom: 0;
+    border-bottom: solid 1px #ddd;
+}
+.day ul li {
+    position: relative;
+    list-style: none !important;
+}
+
+.my-schedule-main {
+    .day{
+        ul{
+            li{
+                font-size: 14px !important;
+                padding-left: 15px;
+                &:before {
+                    content: "\f005";
+                    display: inline-block;
+                    width: 5px;
+                    position: absolute;
+                    left: 0;
+                    height: 5px;
+                    font-family: FontAwesome;
+                    font-size: 10px;
+                    top: 2px;
+                    transition: 0.5s;
+                    color: #4bafa5;
+                } 
+                a{
+                    text-decoration: underline;
+                    padding: 0 !important;
+                    color:#4bafa5;
+                    &::before{
+                        display: none !important;
+                    }
+                    &::after{
+                        display: none !important;
+                    }
+                } 
+            }
+        }
+    }
+}
+.supervisor-main button.btn.btn-close {
+    position: absolute;
+    top: -20px;
+    right: 0px;
+    border-radius: 50% !important;
+    height: 40px;
+    width: 40px;
+    text-align: center;
+    padding: 0;
+    line-height: 45px;
+}
+.supervisor-main {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}

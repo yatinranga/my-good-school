@@ -124,3 +124,10 @@ button.reset.btn.btn-secondary {
     text-decoration: underline;
     color: #1f69ad;
 }
+.activity-card {
+    background: white;
+    padding: 15px;
+    box-shadow: 0 0 3px #ddd;
+    height: calc(100vh - 90px);
+    margin-top: 15px;
+}
