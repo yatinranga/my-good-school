@@ -3,7 +3,7 @@
     <!----------------------------------List of supervisor------------------------>
     <div class="supervisor-header">
       <div class="title">
-        <h1> {{clubObject['name']}} - List of Advisor </h1>
+        <h1> {{clubObject['name']}} - List of Supervisor </h1>
         <button [disabled]="!(supervisorId)" class="register_act btn btn-primary btn-sm" (click)="clubRegBtn()">
           Register
         </button>
@@ -20,7 +20,7 @@
                 <div class="supervisor-card">
                   <div class="supervisor_photo"> <img src="assets/images/maleteacher.jpg"></div>
                   <div class="teachername" >
-                    {{c.name}} - </div>
+                    {{c.name}} </div>
                   <div class="brief">
                     {{c.profileBrief}}
                   </div>

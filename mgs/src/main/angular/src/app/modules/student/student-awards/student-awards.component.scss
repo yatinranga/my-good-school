@@ -31,3 +31,14 @@ td#actname {
 .table-hover tbody tr:hover{
   background-color: inherit;
 }
+.award-main .table_main tbody#accordionExample tr td:nth-child(3) {
+  width: 280px;
+}
+.awards .filter {
+  display: inline-block;
+  width: auto;
+  margin-right: 10px;
+  i.fa{
+    margin: 0;
+  }
+}

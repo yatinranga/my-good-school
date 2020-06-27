@@ -43,7 +43,7 @@
                                 <td>{{s.mobileNumber}}</td>
                                 <td>{{s.gender | titlecase}}</td>
                                 <td>
-                                    <ul *ngFor="let role of s.roles" style="padding: 0;">
+                                    <ul *ngFor="let role of s.roles" style="padding: 0; margin: 0; ">
                                         <li class="coordinator" *ngIf="role == 'Coordinator'">{{role}}</li>
                                         <li class="supervisor" *ngIf="role == 'Supervisor'">{{role}}</li>
                                         <li class="head" *ngIf="role == 'Head'">{{role}}</li>
