@@ -90,8 +90,8 @@ export class SchoolService {
   }
 
   /** Add Guardians of a Student */
-  addGuardian(id, reqBody) {
-    return this.http.post("/api/guardian?id=" + id, reqBody);
+  addGuardian(reqBody) {
+    return this.http.post("/api/guardian", reqBody);
   }
 
   /** Update Profile Details of Sudent */
@@ -110,15 +110,12 @@ export class SchoolService {
   }
 
   /** Edit/Update Activity Offered details */
-  updateActivityOffered(reqBody) {
-    return this.http.post("/api/activitiesOffered", reqBody);
+  updateClub(reqBody){
+    return this.http.post("/api/activitiesOffered",reqBody);
   }
 
   getFocusArea(){
     return this.http.get("/focusAreas");
   }
 
-  updateClub(reqBody){
-    return this.http.post("/api/activitiesOffered",reqBody);
-  }
 }

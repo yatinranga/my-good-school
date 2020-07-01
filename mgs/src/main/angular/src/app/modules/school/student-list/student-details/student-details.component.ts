@@ -24,6 +24,7 @@ export class StudentDetailsComponent implements OnInit {
   guardianModalType: string = ""; // used to show title in add/edit guardian modal 
   club_loader = false;
   guardianId: string = "";
+  guardianArrIndex : any;
 
   guardianForm: FormGroup;
   updateStudentForm: FormGroup;
@@ -90,14 +91,14 @@ export class StudentDetailsComponent implements OnInit {
   }
 
   /** Show guardian Add/Edit Modal  */
-  showGuardianModal(val: string, guardianObj?) {
+  showGuardianModal(val: string, guardianObj?,index?) {
     if (val == "Add") {
-      this.guardianModalType = val;
       $('#editGuardianModal').modal('show');
     }
 
     if (val == "Edit") {
       this.guardianModalType = val;
+      this.guardianArrIndex = index;
       $('#editGuardianModal').modal('show');
       console.log(guardianObj);
       this.guardianId = guardianObj.id;
@@ -116,19 +117,42 @@ export class StudentDetailsComponent implements OnInit {
   /** Submit the Guardian */
   submitGuardian() {
     this.alertService.showLoader("");
-    switch (this.guardianForm.value.relationship) {
-      case "Father": this.guardianForm.value.gender = "male"; break;
-      case "Mother": this.guardianForm.value.gender = "female"; break;
+
+    if (this.guardianModalType == 'Edit') {
+      switch (this.guardianForm.value.relationship) {
+        case "Father": this.guardianForm.value.gender = "male"; break;
+        case "Mother": this.guardianForm.value.gender = "female"; break;
+      }
+      console.log(this.guardianForm.value);
+      this.schoolService.editGuardian(this.guardianId, this.guardianForm.value).subscribe((res) => {
+        console.log(res);
+        this.studentDetails['guardianResponseList'].splice(this.guardianArrIndex,1);
+        this.studentDetails['guardianResponseList'].splice(this.guardianArrIndex,0,res);
+        this.alertService.showMessageWithSym("Guardian Updated !", "Successful", "success");
+        $('#editGuardianModal').modal('hide');
+        this.resetForm()
+      }, (err) => {
+        this.errorMessage(err);
+      })  
     }
-    console.log(this.guardianForm.value);
-    this.schoolService.editGuardian(this.guardianId, this.guardianForm.value).subscribe((res) => {
-      console.log(res);
-      this.alertService.showMessageWithSym("Guardian Added !", "Successful", "success");
-      $('#editGuardianModal').modal('hide');
-      this.resetForm()
-    }, (err) => {
-      this.errorMessage(err);
-    })
+
+    if (this.guardianModalType == 'Add') {
+      switch (this.guardianForm.value.relationship) {
+        case "Father": this.guardianForm.value.gender = "male"; break;
+        case "Mother": this.guardianForm.value.gender = "female"; break;
+      }
+      console.log(this.guardianForm.value);
+      this.schoolService.addGuardian(this.guardianForm.value).subscribe((res) => {
+        console.log(res);
+        this.studentDetails['guardianResponseList'].push(res);
+        this.alertService.showMessageWithSym("Guardian Added !", "Successful", "success");
+        $('#editGuardianModal').modal('hide');
+        this.resetForm()
+      }, (err) => {
+        this.errorMessage(err);
+      })
+
+    }
   }
 
   /** Show Edit Student Profile Modal */
@@ -185,6 +209,7 @@ export class StudentDetailsComponent implements OnInit {
   /** Reset Form */
   resetForm() {
     this.guardianForm.reset();
+    this.updateStudentForm.reset();
   }
 
   /** Handling Error */
