@@ -1,6 +1,7 @@
 package com.nxtlife.mgs.service;
 
 import java.util.List;
+import java.util.Set;
 
 import com.nxtlife.mgs.entity.activity.ActivityPerformed;
 import com.nxtlife.mgs.entity.activity.File;
@@ -9,6 +10,7 @@ import com.nxtlife.mgs.view.ActivityPerformedRequest;
 import com.nxtlife.mgs.view.ActivityPerformedResponse;
 import com.nxtlife.mgs.view.FileRequest;
 import com.nxtlife.mgs.view.FileResponse;
+import com.nxtlife.mgs.view.GroupResponseBy;
 import com.nxtlife.mgs.view.PropertyCount;
 import com.nxtlife.mgs.view.SuccessResponse;
 
@@ -67,5 +69,8 @@ public interface ActivityPerformedService {
 	List<ActivityPerformedResponse> filter(ActivityPerformedFilter filterRequest);
 
 	List<PropertyCount> getCount(String studentCid , String status ,String type);
+
+	Set<ActivityPerformedResponse> getAllActivityPerformedForCoordinator(String schoolCid,
+			String gradeId, String clubId, String status);
 
 }

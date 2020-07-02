@@ -57,4 +57,7 @@ public interface AwardRepository extends JpaRepository<Award, Long>, QuerydslPre
 
 	public Set<Award> findAllByStudentSchoolCidAndStudentGradeCidInAndActiveTrue(String schoolCid,
 			List<String> gradeIds);
+	
+	public Set<Award> findAllByStudentSchoolCidAndStudentGradeCidInAndStatusInAndActiveTrue(String schoolCid,
+			List<String> gradeIds,List<ApprovalStatus> status);
 }

@@ -46,15 +46,16 @@ public class GroupResponseBy<T> {
 	}
 	
 	public GroupResponseBy(String criterion, String criterionValue, List<T> responses, Long count) {
-		super();
 		this.count = count;
 		this.criterion = criterion;
 		this.criterionValue = criterionValue;
 		this.responses = responses;
 	}
 	
+	public GroupResponseBy(String criterionValue, List<T> responses, Long count) {
+		this(null, criterionValue, responses, count);
+	}
 	public GroupResponseBy() {
-		super();
 	}
 	
 	

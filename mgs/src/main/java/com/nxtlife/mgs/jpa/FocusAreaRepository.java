@@ -17,9 +17,9 @@ public interface FocusAreaRepository extends JpaRepository<FocusArea, Long> {
 
 	public FocusArea findByCidAndActiveTrue(String cid);
 	
-	public List<FocusArea> findAllByActivitiesSchoolsCidAndActiveTrue(String schoolCid);
+	public List<FocusArea> findAllDistinctByActivitiesSchoolsCidAndActiveTrue(String schoolCid);
 
-	public List<FocusArea> findAllByActiveTrue();
+	public List<FocusArea> findAllDistinctByActiveTrue();
 	
 	public boolean existsByCidAndActiveTrue(String cid);
 

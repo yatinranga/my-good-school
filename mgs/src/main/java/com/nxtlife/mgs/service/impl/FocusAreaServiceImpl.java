@@ -53,10 +53,14 @@ public class FocusAreaServiceImpl extends BaseService implements FocusAreaServic
 			throw new ValidationException("PSD area cannot be null.");
 
 		FocusArea focusArea = focusAreaRepository.findByNameAndActiveTrue(request.getName());
-		if (focusArea != null)
-			throw new ValidationException("This focus Area already exists.");
-		focusArea = request.toEntity();
-		focusArea.setCid(Utils.generateRandomAlphaNumString(8));
+//		if (focusArea != null)
+//			throw new ValidationException("This focus Area already exists.");
+		if (focusArea != null) {
+			focusArea = request.toEntity(focusArea);
+		}else {
+			focusArea = request.toEntity();
+			focusArea.setCid(Utils.generateRandomAlphaNumString(8));
+		}
 		focusArea = focusAreaRepository.save(focusArea);
 		if (focusArea == null)
 			throw new RuntimeException("Something went wrong Focus Area not saved.");
@@ -67,7 +71,7 @@ public class FocusAreaServiceImpl extends BaseService implements FocusAreaServic
 
 	@Override
 	public List<FocusAreaRequestResponse> getAllFocusAreas() {
-		List<FocusArea> focusAreaList = focusAreaRepository.findAllByActiveTrue();
+		List<FocusArea> focusAreaList = focusAreaRepository.findAllDistinctByActiveTrue();
 		if (focusAreaList == null)
 			throw new ValidationException("No Focus Areas found.");
 		return focusAreaList.stream().map(FocusAreaRequestResponse::new).distinct().collect(Collectors.toList());
@@ -75,15 +79,16 @@ public class FocusAreaServiceImpl extends BaseService implements FocusAreaServic
 
 	@Override
 	public List<FocusAreaRequestResponse> getAllFocusAreasBySchool(String schoolCid) {
+		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")))
+			schoolCid = getUser().getSchool().getCid();
 		if (schoolCid == null)
 			throw new ValidationException("school id cannot be null.");
-		School school = schoolRepository.findByCidAndActiveTrue(schoolCid);
-		if (school == null)
+		if (!schoolRepository.existsByCidAndActive(schoolCid, true))
 			throw new ValidationException("School with id : " + schoolCid + " not found.");
-		List<FocusArea> focusAreaList = focusAreaRepository.findAllByActivitiesSchoolsCidAndActiveTrue(schoolCid);
+		List<FocusArea> focusAreaList = focusAreaRepository.findAllDistinctByActivitiesSchoolsCidAndActiveTrue(schoolCid);
 		if (focusAreaList == null)
 			throw new ValidationException("No Focus Areas found.");
-		return focusAreaList.stream().map(FocusAreaRequestResponse::new).distinct().collect(Collectors.toList());
+		return focusAreaList.stream().distinct().map(FocusAreaRequestResponse::new).collect(Collectors.toList());
 	}
 
 	@SuppressWarnings("unchecked")

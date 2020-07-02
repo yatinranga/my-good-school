@@ -53,6 +53,8 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
 	public 	List<Activity> findAllBySchoolsCidAndFocusAreasPsdAreaAndActiveTrue(String schoolCid, PSDArea psdArea);
 
 	public 	Activity findByCidAndActiveTrue(String activityCid);
+	
+	public 	Activity findByCid(String activityCid);
 
 	public 	Page<Activity> findAllByActiveTrue(Pageable paging);
 
@@ -75,5 +77,7 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
 	public Long findIdByCidAndActiveTrue(@Param("cid") String cid);
 
 	public boolean existsByTeachersIdAndActiveTrue(Long teacherId);
+
+	public boolean existsByNameAndCidNot(String name, String cid);
 
 }

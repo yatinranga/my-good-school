@@ -477,7 +477,11 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 			gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue( schoolCid);
 		}
 		
-		Collection<Award> awards = awardRepository.findAllByStudentSchoolCidAndStudentGradeCidInAndActiveTrue(schoolCid , gradeIds);
+		Collection<Award> awards ;
+		if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("SchoolAdmin") || r.getName().equalsIgnoreCase("Head")))
+			awards = awardRepository.findAllByStudentSchoolCidAndStudentGradeCidInAndStatusInAndActiveTrue(schoolCid , gradeIds,Arrays.asList(ApprovalStatus.FORWARDED,ApprovalStatus.VERIFIED,ApprovalStatus.REJECTED));
+		else
+		    awards = awardRepository.findAllByStudentSchoolCidAndStudentGradeCidInAndActiveTrue(schoolCid , gradeIds);
 		if(awards == null || awards.isEmpty())
 			throw new ValidationException("No awards found for grades assigned to you.");
 		

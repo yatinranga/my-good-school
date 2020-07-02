@@ -250,7 +250,7 @@ public class StudentResponse {
 			this.yearOfEnrolment = Integer.toString(student.getCreatedDate().get().getYear());
 
 		if (student.getSubscriptionEndDate() != null)
-			this.subscriptionEndDate = DateUtil.formatDate(student.getSubscriptionEndDate());
+			this.subscriptionEndDate = DateUtil.formatDate(student.getSubscriptionEndDate(), "yyyy-MM-dd");
 
 		if (student.getUser() != null) {
 			this.userId = student.getUser().getCid();

@@ -32,7 +32,7 @@ public class StudentRequest extends Request {
 
 	private String dob;
 
-	private Date sessionStartDate;
+	private String sessionStartDate;
 	
 	private MultipartFile profileImage;
 
@@ -47,7 +47,7 @@ public class StudentRequest extends Request {
 
 	private String gender;
 
-	private Date subscriptionEndDate;
+	private String subscriptionEndDate;
 
 	private List<GuardianRequest> guardians;
 
@@ -130,11 +130,11 @@ public class StudentRequest extends Request {
 		this.gender = gender;
 	}
 
-	public Date getSubscriptionEndDate() {
+	public String getSubscriptionEndDate() {
 		return subscriptionEndDate;
 	}
 
-	public void setSubscriptionEndDate(Date subscriptionEndDate) {
+	public void setSubscriptionEndDate(String subscriptionEndDate) {
 		this.subscriptionEndDate = subscriptionEndDate;
 	}
 
@@ -146,11 +146,11 @@ public class StudentRequest extends Request {
 		this.gradeId = gradeId;
 	}
 
-	public Date getSessionStartDate() {
+	public String getSessionStartDate() {
 		return sessionStartDate;
 	}
 
-	public void setSessionStartDate(Date sessionStartDate) {
+	public void setSessionStartDate(String sessionStartDate) {
 		this.sessionStartDate = sessionStartDate;
 	}
 
@@ -205,11 +205,11 @@ public class StudentRequest extends Request {
 			student.setMobileNumber(this.mobileNumber);
 		}
 		if (this.subscriptionEndDate != null)
-			student.setSubscriptionEndDate(this.subscriptionEndDate);
+			student.setSubscriptionEndDate( DateUtil.convertStringToDate(this.subscriptionEndDate));
 		if (this.sessionStartDate != null)
-			student.setSessionStartDate(this.sessionStartDate);
-//		if(this.username != null)
-//		    student.setUsername(this.username);
+			student.setSessionStartDate( DateUtil.convertStringToDate(this.sessionStartDate));
+		if(this.username != null)
+		    student.setUsername(this.username);
 
 		return student;
 	}

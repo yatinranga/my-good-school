@@ -92,8 +92,13 @@ public class StudentController {
 	}
 	
 	@GetMapping(value = "api/students/activity")//doneGrade
-	public List<StudentResponse> getAllStudentsOfSchoolForParticularActivity(@RequestParam(value = "schoolId" ,required = false) String schoolCid , @RequestParam("activityId") String activityCid ,@RequestParam(value = "teacherId" , required = false) String teacherId ){
-		return studentService.getAllStudentsOfSchoolForParticularActivity(schoolCid ,activityCid,teacherId ,ApprovalStatus.VERIFIED.toString());
+	public List<StudentResponse> getAllStudentsOfSchoolForParticularActivityAndSupervisor(@RequestParam(value = "schoolId" ,required = false) String schoolCid , @RequestParam("activityId") String activityCid ,@RequestParam(value = "teacherId" , required = false) String teacherId ){
+		return studentService.getAllStudentsOfSchoolForParticularActivityAndSupervisor(schoolCid ,activityCid,teacherId ,ApprovalStatus.VERIFIED.toString());
+	}
+	
+	@GetMapping(value = "api/students/club")//doneGrade
+	public List<StudentResponse> getAllStudentsOfSchoolForParticularActivity(@RequestParam(value = "schoolId" ,required = false) String schoolCid , @RequestParam("activityId") String activityCid ){
+		return studentService.getAllStudentsOfSchoolForParticularActivity(schoolCid ,activityCid ,ApprovalStatus.VERIFIED.toString());
 	}
 
 	@DeleteMapping("api/student/{cid}")

@@ -1,4 +1,3 @@
-
 <div class="club_socities_card">
     <div class="club_socities_main">
         <div class="sortby">
@@ -6,11 +5,11 @@
                 <label>Club/Society :</label>
                 <select (change)="filterClubs()" name="club" [(ngModel)]="clubType">
                     <option value="" selected> All </option>
-                    <option value="Club" > Club </option>
-                    <option value="Society" > Society </option>
+                    <option value="Club"> Club </option>
+                    <option value="Society"> Society </option>
                 </select>
             </div>
-            
+
             <div class="select-field">
                 <label>4S :</label>
                 <select (change)="filterClubs()" name="fourS" [(ngModel)]="fourS">
@@ -20,8 +19,7 @@
             </div>
             <div class="select-field">
                 <label>Search : </label>
-                <input type="text" name="search" [(ngModel)]="search" autocomplete="off"
-                placeholder="Search">
+                <input type="text" name="search" [(ngModel)]="search" autocomplete="off" placeholder="Search">
             </div>
         </div>
         <div class="row">
@@ -34,6 +32,7 @@
                             <th scope="col">Club/Society</th>
                             <th scope="col">4S</th>
                             <th scope="col">Focus Area</th>
+                            <th scope="col">PSD Area</th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>
@@ -48,12 +47,18 @@
                                     {{ (i === s.focusAreaResponses.length-1) ? fs.name  : fs.name + "," + ' '}}
                                 </span>
                                 <span *ngIf="!s.focusAreaResponses.length"> - </span></td>
-                                <td>
-                                    <div class="action-btns">
-                                        <i class="fa fa-edit" title="Edit" (click)="setShowWindow('club',s)"></i>   
-                                        <i class="fa fa-user-plus" title="Supervisor" (click)="setShowWindow('supervisor',s)"></i>
-                                    </div>
-                               
+                            <td>
+                                <span *ngFor="let psd of s.psdAreas; let i = index">
+                                    {{ (i === s.psdAreas.length-1) ? psd  : psd + "," + ' '}}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action-btns">
+                                    <i class="fa fa-edit" title="Edit" (click)="setShowWindow('club',s)"></i>
+                                    <i class="fa fa-user-plus" title="Supervisor"
+                                        (click)="setShowWindow('supervisor',s)"></i>
+                                </div>
+
                             </td>
                         </tr>
                     </tbody>
@@ -68,8 +73,10 @@
                 </table>
             </div>
             <div class="col-4" *ngIf="showSupervisor">
-                <button class="btn btn-danger" (click)="setShowWindow('No Window')"> <i class="fa fa-close"></i> </button>
-                <app-supervisor-details [clubObj]="club_obj" (updatedClub)="UpdatedTable($event)"></app-supervisor-details>
+                <button class="btn btn-danger" (click)="setShowWindow('No Window')"> <i class="fa fa-close"></i>
+                </button>
+                <app-supervisor-details [clubObj]="club_obj" (updatedClub)="UpdatedTable($event)">
+                </app-supervisor-details>
             </div>
             <div class="col-4" *ngIf="showClubDetails">
                 <button class="btn btn-danger" (click)="setShowWindow('No Window')"><i class="fa fa-close"></i></button>
@@ -77,11 +84,11 @@
             </div>
         </div>
     </div>
-    
+
 </div>
 
 <div>
-    <button class="btn btn-primary"  data-toggle="modal" data-target="#addClubModal">Add Club/Society</button>
+    <button class="btn btn-primary" data-toggle="modal" data-target="#addClubModal">Add Club/Society</button>
 </div>
 
 <!-- Add Club / Society Modal -->
@@ -148,7 +155,7 @@
                     </div>
                 </form>
             </div>
-            
+
         </div>
     </div>
 </div>

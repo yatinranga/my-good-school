@@ -263,7 +263,7 @@ public class TeacherResponse {
 		this.imagePath = teacher.getImageUrl();
 		this.profileBrief = teacher.getProfileBrief();
 		if (teacher.getDob() != null)
-			this.dob = teacher.getDob().toString();
+			this.dob = DateUtil.formatDate(teacher.getDob(), "yyyy-MM-dd");
 		if (teacher.getCreatedDate().get() != null)
 			this.yearOfEnrolment = Integer.toString(teacher.getCreatedDate().get().getYear());
 
@@ -353,7 +353,7 @@ public class TeacherResponse {
 			this.yearOfEnrolment = Integer.toString(teacher.getCreatedDate().get().getYear());
 
 		if (teacher.getDob() != null)
-			this.dob = teacher.getDob().toString();//DateUtil.formatDate(teacher.getDob());
+			this.dob = DateUtil.formatDate(teacher.getDob(), "yyyy-MM-dd");
 
 		this.qualification = teacher.getQualification();
 		this.active = teacher.getActive();
@@ -400,27 +400,7 @@ public class TeacherResponse {
 				}
 			}
 
-			// if(!activityIdGradesIdMap.isEmpty()) {
-			// for(String actId : activityIdGradesIdMap.keySet()) {
-			// ActivityRequestResponse activity = new ActivityRequestResponse();
-			// activity.setId(actId);
-			// activity.setGrades(new
-			// ArrayList<String>(activityIdGradesIdMap.get(actId)));
-			// activityAndGrades.add(activity);
-			// }
-			// }
-
 		}
-		// if (teacher.getActivities() != null &&
-		// !teacher.getActivities().isEmpty()) {
-		// if (activities == null)
-		// activities = new ArrayList<String>();
-		// if(activityIds == null)
-		// activityIds = new ArrayList<String>();
-		// teacher.getActivities().stream().distinct().forEach(act ->
-		// {activities.add(act.getName());
-		// activityIds.add(act.getCid());});
-		// }
 	}
 
 }

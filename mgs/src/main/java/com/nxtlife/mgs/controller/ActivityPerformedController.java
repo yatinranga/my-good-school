@@ -1,6 +1,7 @@
 package com.nxtlife.mgs.controller;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -21,6 +22,7 @@ import com.nxtlife.mgs.filtering.filter.ActivityPerformedFilter;
 import com.nxtlife.mgs.service.ActivityPerformedService;
 import com.nxtlife.mgs.view.ActivityPerformedRequest;
 import com.nxtlife.mgs.view.ActivityPerformedResponse;
+import com.nxtlife.mgs.view.GroupResponseBy;
 import com.nxtlife.mgs.view.PropertyCount;
 import com.nxtlife.mgs.view.SuccessResponse;
 
@@ -87,6 +89,11 @@ public class ActivityPerformedController {
 	@DeleteMapping(value = "api/student/activity/{activityPerformedId}")
 	public SuccessResponse deleteActivityOfStudent(@PathVariable("activityPerformedId") String activityPerformedCid) {
 		return activityPerformedService.deleteActivityOfStudent(activityPerformedCid);
+	}
+	
+	@GetMapping(value = "api/students/activities")
+	public Set<ActivityPerformedResponse> getAllActivityPerformedForCoordinator(@RequestParam(value = "schoolId" ,required = false) String schoolCid ,@RequestParam(value = "gradeId" ,required = false) String gradeId ,@RequestParam(value = "clubId" ,required = false) String clubId , @RequestParam(value = "status" ,required = false) String status){
+		return activityPerformedService.getAllActivityPerformedForCoordinator(schoolCid, gradeId, clubId, status);
 	}
 
 //	@GetMapping(value = "api/coach/activities/filterByClass")

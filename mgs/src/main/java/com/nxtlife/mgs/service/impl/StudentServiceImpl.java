@@ -411,7 +411,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		}
 		
 		if (request.getMobileNumber() != null) {
-			if (userRepository.existsByContactNumberAndCidNot(request.getMobileNumber(), student.getCid()))
+			if (userRepository.existsByContactNumberAndCidNot(request.getMobileNumber(), student.getUser().getCid()))
 				throw new ValidationException(String.format("Mobile Number (%s) already belongs to some other user.",
 						request.getMobileNumber()));
 			student.setMobileNumber(request.getMobileNumber());
@@ -419,7 +419,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		}
 
 		if (request.getEmail() != null) {
-			if (userRepository.existsByEmailAndCidNot(request.getEmail(), student.getCid()))
+			if (userRepository.existsByEmailAndCidNot(request.getEmail(), student.getUser().getCid()))
 				throw new ValidationException(
 						String.format("Email (%s) already belongs to some other user.", request.getEmail()));
 			student.setEmail(request.getEmail());
@@ -977,8 +977,9 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			studentRequest.setGradeId(grade.getCid());
 
 		if ((Date) studentDetails.get(0).get("SESSION START DATE") != null)
-			studentRequest.setSessionStartDate(DateUtil.convertStringToDate(
-					DateUtil.formatDate((Date) studentDetails.get(0).get("SESSION START DATE"), null, null)));
+			studentRequest.setSessionStartDate( DateUtil.formatDate((Date) studentDetails.get(0).get("SESSION START DATE"), "yyyy-MM-dd"));
+//			studentRequest.setSessionStartDate(DateUtil.convertStringToDate(
+//					DateUtil.formatDate((Date) studentDetails.get(0).get("SESSION START DATE"), null, null)));
 		studentRequest.setEmail((String) studentDetails.get(0).get("EMAIL"));
 		if (studentDetails.get(0).get("ACTIVE") != null)
 			// studentRequest.setActive(Boolean.valueOf((Boolean)
@@ -986,8 +987,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			studentRequest.setMobileNumber((String) studentDetails.get(0).get("MOBILE NUMBER"));
 		studentRequest.setGender((String) studentDetails.get(0).get("GENDER"));
 		if ((Date) studentDetails.get(0).get("SUBSCRIPTION END DATE") != null)
-			studentRequest.setSubscriptionEndDate(DateUtil.convertStringToDate(
-					DateUtil.formatDate((Date) studentDetails.get(0).get("SUBSCRIPTION END DATE"), null, null)));
+			studentRequest.setSessionStartDate( DateUtil.formatDate((Date) studentDetails.get(0).get("SUBSCRIPTION END DATE"), "yyyy-MM-dd"));
 		List<GuardianRequest> guardians = new ArrayList<GuardianRequest>();
 		guardians.add(new GuardianRequest((String) studentDetails.get(0).get("FATHERS NAME"),
 				(String) studentDetails.get(0).get("FATHERS EMAIL"), "male",
@@ -1664,7 +1664,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_STUDENT_FETCH)
-	public List<StudentResponse> getAllStudentsOfSchoolForParticularActivity(String schoolCid ,String activityCid, String teacherCid,
+	public List<StudentResponse> getAllStudentsOfSchoolForParticularActivityAndSupervisor(String schoolCid ,String activityCid, String teacherCid,
 			 String approvalStatus) {
 //		schoolCid = !getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))  ? getUser().getSchool().getCid() : schoolCid ; 
 //		if(schoolCid == null)
@@ -1762,6 +1762,65 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		return students.stream().distinct().map(StudentResponse::new).collect(Collectors.toList());
 	}
 
+	@Override
+	@Secured(AuthorityUtils.SCHOOL_STUDENT_FETCH)
+	public List<StudentResponse> getAllStudentsOfSchoolForParticularActivity(String schoolCid ,String activityCid, String approvalStatus) {
+		if (activityCid == null)
+			throw new ValidationException("activity id cannot be null.");
+		if (!activityRepository.existsByCidAndActiveTrue(activityCid))
+			throw new ValidationException(String.format("Activity with id (%s) not found", activityCid));
+		
+		List<Student> students = new ArrayList<Student>();
+		
+		List<String> gradeIds = null;
+		if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor"))) {
+			students = studentClubRepository.getAllStudentsOfSupervisorOfparticularClubGrade(teacherRepository.findCidByUserIdAndActiveTrue(getUserId()), activityCid, ApprovalStatus.valueOf(approvalStatus));
+		}else {
+			if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))) {
+				schoolCid = getUser().getSchool().getCid();
+				if(schoolCid == null)
+					throw new ValidationException("School id not assigned to user logged in.");
+				
+				if (!activityRepository.existsByCidAndSchoolsCidAndActiveTrue(activityCid, schoolCid))
+					throw new ValidationException(String.format("Activity with id (%s) not offered in school (%s) ", activityCid,schoolCid));
+				
+	        if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("SchoolAdmin"))) {
+					
+					if(!teacherRepository.existsByUserIdAndActiveTrue(getUserId()))
+						gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue( schoolCid);
+					else
+						gradeIds = gradeRepository.findAllCidBySchoolsCidAndTeacherIdActiveTrue( schoolCid, teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
+				}else {
+					if(!teacherRepository.existsByUserIdAndActiveTrue(getUserId())) {
+						if(!studentRepository.existsByUserIdAndActiveTrue(getUserId()))
+							throw new ValidationException("Not Authorized to see details.");
+						gradeIds = Arrays.asList(studentRepository.findGradeCidByCidAndActiveTrue(studentRepository.findCidByUserIdAndActiveTrue(getUserId())));
+					}else {
+						gradeIds = gradeRepository.findAllCidBySchoolsCidAndTeacherIdActiveTrue( schoolCid,teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
+					}
+				}
+				
+			}else {	
+				
+				if(schoolCid == null)
+					throw new ValidationException("School id cannot be null.");
+				if (!activityRepository.existsByCidAndSchoolsCidAndActiveTrue(activityCid, schoolCid))
+					throw new ValidationException(String.format("Activity with id (%s) not offered in school (%s) ", activityCid,schoolCid));
+				gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue( schoolCid);
+			}
+			
+			students = studentClubRepository
+					.findAllStudentByActivityCidAndStudentSchoolCidAndGradeCidsInAndMembershipStatusAndActiveTrue(
+							activityCid, schoolCid, gradeIds, ApprovalStatus.valueOf(approvalStatus));
+		}
+		
+		if (students == null || students.isEmpty())
+			throw new ValidationException(String.format(
+					"No student in the school found in club/society  having id (%s) or membership might not have been %s.",
+					activityCid, approvalStatus));
+		return students.stream().distinct().map(StudentResponse::new).collect(Collectors.toList());
+	}
+	
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_CLUB_MEMBERSHIP_CREATE)
 	public ClubMembershipResponse applyForClubMembership(String studentCid ,String activityCid, String supervisorCid) {

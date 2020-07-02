@@ -39,7 +39,6 @@ export class ClubDetailsComponent implements OnInit {
 
   getFocusArea() {
     this.schoolService.getFocusArea().subscribe(res => {
-      console.log(res);
       this.focusAreaArr = res;
     }, (err => {
       console.log(err);

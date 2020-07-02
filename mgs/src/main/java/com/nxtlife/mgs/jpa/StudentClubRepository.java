@@ -2,6 +2,9 @@ package com.nxtlife.mgs.jpa;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -60,4 +63,7 @@ public interface StudentClubRepository extends JpaRepository<StudentClub, Studen
 	
 	@Query(value = "select sc.student from StudentClub sc where sc.activity.cid = :activityCid and sc.student.school.cid = :schoolCid and sc.student.grade.cid in :gradeCids and sc.membershipStatus = :membershipStatus and sc.active = true")
 	public List<Student> findAllStudentByActivityCidAndStudentSchoolCidAndGradeCidsInAndMembershipStatusAndActiveTrue(@Param("activityCid") String activityCid ,@Param("schoolCid") String schoolCid , @Param("gradeCids") Collection<String> gradeCids,@Param("membershipStatus") ApprovalStatus membershipStatus);
+
+	@Query(value = "select sc from StudentClub sc where sc.student.id = :studentId and sc.membershipStatus = :membershipStatus and sc.active = true")
+	public Set<StudentClub> findActivityAndTeacherByStudentIdAndMembershipStatusAndActiveTrue(@Param("studentId") Long studentId , @Param("membershipStatus") ApprovalStatus membershipStatus );
 }

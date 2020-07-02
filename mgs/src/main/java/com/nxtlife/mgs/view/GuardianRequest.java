@@ -119,8 +119,8 @@ public class GuardianRequest extends Request {
 		}
 		guardian.setRelationship(this.relationship);
 		guardian.setGender(this.gender);
-//		if(this.username != null)
-//			guardian.setUsername(this.username);
+		if(this.username != null)
+			guardian.setUsername(this.username);
 		return guardian;
 	}
 
@@ -142,6 +142,7 @@ public class GuardianRequest extends Request {
 		this.email = email;
 		this.gender = gender;
 		this.mobileNumber = mobileNumber;
+		this.username = username;
 	}
 
 	public GuardianRequest() {

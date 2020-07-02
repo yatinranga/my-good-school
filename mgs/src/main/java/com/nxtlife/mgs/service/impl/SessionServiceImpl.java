@@ -618,7 +618,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 	@Secured(AuthorityUtils.SCHOOL_SESSION_FETCH)
 	public SessionResponse getTeacherSessionsOfClubBy(String clubId, String sessionFetch,String teacherCid , Integer page,
 			Integer pageSize) {
-		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor") || r.getName().equalsIgnoreCase("Coordinator") || r.getName().equalsIgnoreCase("Head"))) {
+		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor"))) {
 			if (teacherCid == null || !teacherRepository.existsByCidAndActiveTrue(teacherCid)) {
 				throw new ValidationException("teacherId cannot be null or invalid.");
 			}
@@ -705,7 +705,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_SESSION_FETCH)
 	public SessionResponse getTeacherSessionsOfClubsBy(String sessionFetch,String teacherCid , Integer page, Integer pageSize) {
-		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor") || r.getName().equalsIgnoreCase("Coordinator") || r.getName().equalsIgnoreCase("Head"))) {
+		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor"))) {
 			if (teacherCid == null || !teacherRepository.existsByCidAndActiveTrue(teacherCid)) {
 				throw new ValidationException("teacherId cannot be null or invalid.");
 			}

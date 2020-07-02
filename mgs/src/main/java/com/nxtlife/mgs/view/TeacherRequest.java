@@ -224,8 +224,8 @@ public class TeacherRequest extends Request {
 			teacher.setName(this.name);
 		}
 
-//		if (this.username != null)
-//			teacher.setUsername(this.username);
+		if (this.username != null)
+			teacher.setUsername(this.username);
 
 		if (this.dob != null)
 			teacher.setDob(DateUtil.convertStringToDate(this.dob));
