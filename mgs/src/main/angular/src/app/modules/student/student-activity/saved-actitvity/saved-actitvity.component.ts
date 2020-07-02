@@ -73,7 +73,7 @@ export class SavedActitvityComponent implements OnInit {
 
     this.savedActivityForm = this.formBuilder.group({
       activityId: [, [Validators.required]],
-      description: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(50)]],
+      description: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(25)]],
       dateOfActivity: [{ value: '', disabled: true }, [Validators.required]],
       coachId: [{ value: '', disabled: true }, [Validators.required]],
       title: [{ value: '', disabled: true }, [Validators.required]],
@@ -264,7 +264,8 @@ export class SavedActitvityComponent implements OnInit {
     if (activityId != null) {
       this.modal_loader = true;
       this.studentService.getCoach(this.schoolId, activityId).subscribe((res) => {
-        this.coaches = res;
+        // this.coaches = res;
+        this.coaches = [{name:"Jatin Chawla",id:"CPfch1XJ"}]
         if (this.coaches.length) {
           this.savedActivityForm.get('coachId').enable();
           this.savedActivityForm.get('description').enable();

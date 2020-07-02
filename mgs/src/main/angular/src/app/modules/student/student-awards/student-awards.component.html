@@ -1,5 +1,9 @@
 <div class="award-main">
     <div class="awards">
+        <div class="filter">
+            <label for=""><i class="fa fa-filter"></i> Filter</label>
+        </div>
+
         <div class="sortby">
             <select name="psdAreas" (change)="filterAwards()" [(ngModel)]="psdAreas">
                 <option value="" selected disabled> PSD </option>

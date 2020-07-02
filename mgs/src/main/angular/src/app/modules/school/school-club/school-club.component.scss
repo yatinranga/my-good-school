@@ -60,3 +60,10 @@
     position: absolute;
     right: 15px;
 }
+table.table tr.active {
+    background: rgba(75, 175, 165, 0.8) !important;
+
+    td{
+        color: white;
+    }
+}

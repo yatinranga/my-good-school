@@ -36,20 +36,20 @@
                 <h3>Guardians : <button class="btn btn-success" (click)="showGuardianModal('Add')">Add Guardian</button>
                 </h3>
 
-                <div class="card" *ngFor="let sd of studentDetails['guardianResponseList']">
+                <div class="card" *ngFor="let sd of studentDetails['guardianResponseList']; let i = index">
                     <div class="card-body">
                         <h5 class="card-title">{{sd.relationship}}</h5>
                         <p class="card-text">{{sd.name}}</p>
                         <p class="card-text">{{sd.mobileNumber}}</p>
                         <p class="card-text">{{sd.email}}</p>
-                        <button class="btn btn-success" (click)="showGuardianModal('Edit',sd)">Edit</button>
+                        <button class="btn btn-success" (click)="showGuardianModal('Edit',sd,i)">Edit</button>
                     </div>
                 </div>
 
             </div>
             <div class="btns">
 
-                <button class="btn clubs-socities-btn btn-success" (click)="setShowClub(true)">Show Clubs/Socities</button>
+                <button class="btn clubs-socities-btn btn-success" (click)="setShowClub(true)">Show Clubs/Societies</button>
             </div>
 
 

@@ -18,6 +18,7 @@ export class StaffListComponent implements OnInit {
   rolesArr = [];
   role = ""; // Used to filter Staff by role
   search = "";
+  supervisorId: any;
 
   constructor(private schoolService: SchoolService, private alertService: AlertService) { }
 
@@ -76,10 +77,13 @@ export class StaffListComponent implements OnInit {
 
   /** Set Show Details */
   setShowDetails(val: boolean, staff_obj?) {
-    this.staff_obj = staff_obj;
-    console.log(staff_obj);
     this.showDetails = val;
     this.showDetails ? (this.col = "col-8") : (this.col = "col-12");
+    if (staff_obj) {
+      this.staff_obj = staff_obj;
+      this.supervisorId = staff_obj.id;
+      console.log(staff_obj);
+    }
   }
 
 }

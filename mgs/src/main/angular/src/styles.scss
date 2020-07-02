@@ -406,8 +406,9 @@ ul.student_list {
 }
 ul.student_list li {
     padding: 0;
-    font-size: 17px;
-    word-spacing: 3px;
+    font-size: 16px;
+    word-spacing: 0;
+    margin-bottom: 5px;
 }
 
 
@@ -744,3 +745,19 @@ button.btn.btn-success{
 .modal-footer .btn{
     border-radius: 3px !important;
 }
+
+table tbody tr:nth-child(even) {
+    background: rgba(0, 0, 0, 0.03) !important;
+}
+
+
+.photo{
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: auto;
+    box-shadow: 0 0 2px #ddd;
+}
+
+

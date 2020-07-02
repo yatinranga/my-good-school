@@ -84,9 +84,14 @@ export class SchoolService {
     return this.http.get("/api/coaches/" + schoolId + "/" + actiId);
   }
 
-  /** Add/Edit Guardians of a Student */
+  /** Edit Guardians of a Student */
   editGuardian(id, reqBody) {
     return this.http.put("/api/guardian?id=" + id, reqBody);
+  }
+
+  /** Add Guardians of a Student */
+  addGuardian(reqBody) {
+    return this.http.post("/api/guardian", reqBody);
   }
 
   /** Update Profile Details of Sudent */
@@ -105,15 +110,12 @@ export class SchoolService {
   }
 
   /** Edit/Update Activity Offered details */
-  updateActivityOffered(reqBody) {
-    return this.http.post("/api/activitiesOffered", reqBody);
+  updateClub(reqBody){
+    return this.http.post("/api/activitiesOffered",reqBody);
   }
 
   getFocusArea(){
     return this.http.get("/focusAreas");
   }
 
-  updateClub(reqBody){
-    return this.http.post("/api/activitiesOffered",reqBody);
-  }
 }

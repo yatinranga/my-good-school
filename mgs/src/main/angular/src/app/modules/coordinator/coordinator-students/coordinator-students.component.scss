@@ -47,3 +47,22 @@
     font-size: 24px;
 }
 
+.sortby {
+    margin-top: 20px;
+    display: inline-block;
+    width: 100%;
+    margin-right: 0;
+}
+.selects-field{
+    display: inline-block;
+    width: auto;
+    margin-right: 15px;
+}
+
+.selects-field input, .selects-field select {
+    font-size: 15px;
+    border: solid 1px #ddd;
+    padding: 2px 10px;
+    margin: 0 10px;
+    height: 35px;
+}

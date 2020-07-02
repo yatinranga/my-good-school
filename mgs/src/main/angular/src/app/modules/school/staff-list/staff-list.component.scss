@@ -101,3 +101,28 @@ li.supervisor {
 li.schooladmin {
     color: #4bafa5;
 }
+.student-list tr td li {
+    background: rgba(0,0,0,0.08);
+    width: 100%;
+    padding: 2px 5px;
+    border-radius: 5px;
+    display: inline-block;
+    font-size: 13px;
+    font-weight: bold;
+    max-width: 90px;
+}
+
+table.table tr.active {
+    background: rgba(31, 105, 173, 0.8) !important;
+
+    td{
+        color: white;
+
+        ul{
+            li{
+                background: white;
+                color: #333;
+            }
+        }
+    }
+}

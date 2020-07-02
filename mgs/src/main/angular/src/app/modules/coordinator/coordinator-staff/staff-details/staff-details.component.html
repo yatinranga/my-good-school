@@ -27,13 +27,15 @@
                     </ul>
                 </div>
             </div>
+            <div class="btns">
+                <button class="btn btn-success" (click)="setShowClub(true)">Show Clubs/Socities</button>
+            </div>
+            
         </div>
-        <div class="btns">
-            <button class="btn clubs-socities-btn btn-dark" (click)="setShowClub(true)">Show Clubs/Socities</button>
-        </div>
+        
         <div class="col-12" *ngIf="showClub">
             <div class="clubs-socity-main">
-                <h3>List of Club/Society <button class="btn btn-danger" (click)="setShowClub(false)">Close</button>
+                <h3>List of Club/Society <button class="btn btn-danger" (click)="setShowClub(false)"> <i class="fa fa-close"></i> </button>
                 </h3>
 
                 <div class="clubs" *ngIf="assignedClubsArr.length">

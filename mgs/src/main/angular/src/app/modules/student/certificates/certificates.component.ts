@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StudentService } from 'src/app/services/student.service';
 import { AlertService } from 'src/app/services/alert.service';
+import { BASE_URL } from 'src/app/services/app.constant';
+
 declare let $: any;
 
 @Component({
@@ -11,6 +13,7 @@ declare let $: any;
 })
 export class CertificatesComponent implements OnInit {
 
+  BASE_URL: string;
 
   certificateForm: FormGroup;
   certificatesArr = [];
@@ -20,7 +23,9 @@ export class CertificatesComponent implements OnInit {
   add_loader = false;
   certificate_loader = false; // Loader during get certificates
 
-  constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService) { }
+  constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService) {
+    this.BASE_URL = BASE_URL + "/file/download?filePath=";
+   }
 
   ngOnInit() {
     this.viewCertificate();

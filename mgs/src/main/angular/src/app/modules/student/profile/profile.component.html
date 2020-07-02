@@ -14,7 +14,8 @@
             <p *ngIf="studentDetails['gender']"> <i class="fa fa-user" aria-hidden="true"></i>
                 <label>
                     {{studentDetails['gender']}}</label> </p>
-            <p *ngIf="studentDetails['grade']"><i class="fa fa-user" aria-hidden="true"></i>
+            <p *ngIf="studentDetails['grade']"><i class="fa fa-address-card" aria-hidden="true"></i>
+
                 <label>
                     {{studentDetails['grade']}}
                     {{studentDetails['section']}}</label> </p>
@@ -28,7 +29,8 @@
                     {{studentDetails['email']}}</label> </p>
             <p *ngIf="studentDetails['mobileNumber']"> <i class="fa fa-phone-alt"></i><label>
                     {{studentDetails['mobileNumber']}}</label> </p>
-            <p *ngIf="studentDetails['yearOfEnrolment']"><i class="fa fa-calendar" aria-hidden="true"></i><label> Enrollment Year -
+            <p *ngIf="studentDetails['yearOfEnrolment']"><i class="fa fa-calendar-o" aria-hidden="true"></i>
+                <label> Enrollment Year -
                     {{studentDetails['yearOfEnrolment']}} </label></p>
         </div>
     </div>

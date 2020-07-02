@@ -35,8 +35,8 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let s of studentsArr| filter:search ; let i = index;"
-                                (click)="setShowDetails(true,s)">
-                                <th>{{i+1}}</th>
+                                (click)="setShowDetails(true,s)" [ngClass]="{'active':studentId==s.id}">
+                                <td>{{i+1}}</td>
                                 <td>{{s.name}}</td>
                                 <td>{{s.grade}} - {{s.section}}</td>
                                 <td>{{s.email}}</td>

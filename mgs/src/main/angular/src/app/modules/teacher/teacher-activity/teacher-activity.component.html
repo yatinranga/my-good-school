@@ -70,7 +70,7 @@
                                 <td>{{activity.grade}}</td>
                                 <td>{{activity.activityName}}</td>
                                 <td>{{activity.title}}</td>
-                                <td>{{getDate(activity.dateOfActivity) | date}}</td>
+                                <td>{{activity.dateOfActivity | date}}</td>
                                 <td>
                                     <div *ngIf="activity.activityStatus === 'SubmittedByStudent'" class="pending">
                                         Pending</div>
@@ -82,7 +82,7 @@
                                     </div>
                                 </td>
                                 <td *ngIf="!(activityType === 'Reviewed')" (click)="stopCollapse($event)">
-                                    <div *ngIf="(activityType === 'All') && (activity.activityStatus !== 'Reviewed')">
+                                    <!-- <div *ngIf="(activityType === 'All') && (activity.activityStatus !== 'Reviewed')">
                                         <button name="submitSavedActivity"
                                             [disabled]="!(activity.activityStatus === 'SavedByTeacher')"
                                             (click)="submitSavedActivity(activity,i, $event)" class="submitted icon_button">
@@ -109,8 +109,18 @@
                                             <i class="fa fa-paper-plane" title="Submit"> </i> </button>
                                         <button name="editSavedActivity" (click)="editSavedActivity(activity,i, $event)"
                                             class="saved icon_button"> <i class="fa fa-edit" title="Edit">
-                                            </i> </button>
-                                    </div>
+                                            </i> </button> 
+                                    </div> -->
+
+                                    <button *ngIf="activity.activityStatus === 'SavedByTeacher'" name="reviewActivity" (click)="reviewActivity(activity,i, $event)" class="pending icon_button"> <i
+                                            class="fa fa-comments" title="Review"></i>
+                                    </button>
+                                    <button *ngIf="activity.activityStatus === 'SubmittedByStudent'" name="editSavedActivity" (click)="editSavedActivity(activity,i, $event)" class="saved icon_button"> <i
+                                            class="fa fa-edit" title="Edit">
+                                        </i> </button>
+                                    <button *ngIf="activity.activityStatus === 'SavedByTeacher'" name="submitSavedActivity" (click)="submitSavedActivity(activity,i, $event)" class="submitted icon_button">
+                                        <i class="fa fa-paper-plane" title="Submit"> </i> </button>
+
                                     <div *ngIf="(activityType === 'All') && (activity.activityStatus === 'Reviewed')">
                                         NA </div>
                                 </td>
@@ -343,18 +353,17 @@
 
                                 </div>
                                 
+                                <div class="modal-footer">
+                                    <button class="btn btn-success" type="submit" name="submit"
+                                        [disabled]="reviewForm.invalid">
+                                        <div *ngIf="save_loader" class="spinner-border text-dark" role="status">
+                                        </div>{{save_loader ? 'Saving...' : 'Save Changes'}}
+                                    </button>
+                                    <button type="button" name="resetForm" class="reset btn btn-danger"
+                                        (click)="resetForm()">Reset</button>
+                                </div>
                             </form>
                         </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-success" type="submit" name="submit"
-                                [disabled]="reviewForm.invalid">
-                                <div *ngIf="save_loader" class="spinner-border text-dark" role="status">
-                                </div>{{save_loader ? 'Saving...' : 'Save Changes'}}
-                            </button>
-                            <button type="button" name="resetForm" class="reset btn btn-danger"
-                                (click)="resetForm()">Reset</button>
-                        </div>
-
                     </div>
                 </div>
             </div>

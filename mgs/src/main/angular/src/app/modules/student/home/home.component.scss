@@ -483,3 +483,19 @@ span.supervisor_name {
         }
     }
 }
+.supervisor-main button.btn.btn-close {
+    position: absolute;
+    top: -20px;
+    right: 0px;
+    border-radius: 50% !important;
+    height: 40px;
+    width: 40px;
+    text-align: center;
+    padding: 0;
+    line-height: 45px;
+}
+.supervisor-main {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}

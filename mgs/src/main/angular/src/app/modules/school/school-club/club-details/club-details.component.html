@@ -11,6 +11,9 @@
                     {{ (i === clubObj.focusAreaResponses.length-1) ? fs.name  : fs.name + "," + ' '}}
                 </span></li>
             <li><b>Four S : </b>{{clubObj.fourS}}</li>
+            <li><strong>PSD Areas : </strong><span *ngFor="let psd of clubObj.psdAreas; let i = index">
+                    {{ (i === clubObj.psdAreas.length-1) ? psd  : psd + "," + ' '}}
+                </span></li>
         </ul>
         <button class="btn btn-success" (click)="showEditModal()">Edit Details</button>
     </div>
@@ -36,7 +39,7 @@
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Name :</label>
                         <input type="text" class="form-control add" name="name" placeholder="Add Name Here"
-                            formControlName="name">
+                            formControlName="name" disabled>
                     </div>
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">FourS : </label>
@@ -76,7 +79,7 @@
                     </div>
                 </form>
             </div>
-            
+
         </div>
     </div>
 </div>
