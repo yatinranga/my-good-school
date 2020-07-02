@@ -111,3 +111,18 @@ li.schooladmin {
     font-weight: bold;
     max-width: 90px;
 }
+
+table.table tr.active {
+    background: rgba(31, 105, 173, 0.8) !important;
+
+    td{
+        color: white;
+
+        ul{
+            li{
+                background: white;
+                color: #333;
+            }
+        }
+    }
+}

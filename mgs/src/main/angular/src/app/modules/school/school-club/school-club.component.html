@@ -47,7 +47,7 @@
                     <tbody>
                         <tr *ngFor="let s of schoolClubs | filter:search ; let i = index;" 
                         [ngClass]="{'active':clubId==s.id}">
-                            <th>{{i+1}}</th>
+                            <td>{{i+1}}</td>
                             <td>{{s.name}}</td>
                             <td>{{s.clubOrSociety}}</td>
                             <td>{{s.fourS}}</td>
