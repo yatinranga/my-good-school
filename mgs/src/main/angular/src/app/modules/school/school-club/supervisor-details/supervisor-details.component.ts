@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SchoolService } from 'src/app/services/school.service';
 import { AlertService } from 'src/app/services/alert.service';
 declare let $: any;
@@ -13,6 +13,8 @@ export class SupervisorDetailsComponent implements OnInit {
 
   adminInfo: any;
   @Input() clubObj: any;
+  @Output() updatedClub = new EventEmitter<string>()
+
   sup_loader: boolean = false;
   clubSupervisor = [];
   schoolGrades = [];
@@ -101,6 +103,7 @@ export class SupervisorDetailsComponent implements OnInit {
     this.alertService.showLoader("");
     this.schoolService.assignClub(reqBody).subscribe((res) => {
       this.clubSupervisor = res.teachers;
+      this.updatedClub.emit("Club-Supervisor Updated");
       console.log(res);
       // this.sortClubs(); // Reload to see the New Assigned Club/Society
       // this.clubIds = {};

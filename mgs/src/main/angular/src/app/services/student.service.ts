@@ -75,7 +75,7 @@ export class StudentService {
 
   // to get teacher/coaches who perform particular activity
   getCoach(schoolId, activityId) {
-    return this.http.get("/api/coaches/" + schoolId + "/" + activityId);
+    return this.http.get("/api/coaches/activity/" + activityId);
   }
 
   // to ADD new activity performed by student
