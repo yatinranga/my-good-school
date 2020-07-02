@@ -1,5 +1,6 @@
 package com.nxtlife.mgs.view;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,9 +27,9 @@ public class ActivityRequestResponse {
 	private String fourS;
 	
 	private Boolean isGeneral;
-	private List<String> focusAreaIds;
+	private Set<String> focusAreaIds;
 	private List<String> schoolIds;
-	private List<String> focusAreas;
+	private Set<String> focusAreas;
 	
 	private List<FocusAreaRequestResponse> focusAreaRequests;
 	private Set<FocusAreaRequestResponse> focusAreaResponses;
@@ -42,6 +43,8 @@ public class ActivityRequestResponse {
 	private Boolean visited = false;
 	
 	private String supervisorName;
+	
+	private Set<String> psdAreas;
 
 	public String getName() {
 		return name;
@@ -75,19 +78,19 @@ public class ActivityRequestResponse {
 		this.fourS = fourS;
 	}
 
-	public List<String> getFocusAreas() {
+	public Set<String> getFocusAreas() {
 		return focusAreas;
 	}
 
-	public void setFocusAreas(List<String> focusAreas) {
+	public void setFocusAreas(Set<String> focusAreas) {
 		this.focusAreas = focusAreas;
 	}
 
-	public List<String> getFocusAreaIds() {
+	public Set<String> getFocusAreaIds() {
 		return focusAreaIds;
 	}
 
-	public void setFocusAreaIds(List<String> focusAreaIds) {
+	public void setFocusAreaIds(Set<String> focusAreaIds) {
 		this.focusAreaIds = focusAreaIds;
 	}
 
@@ -167,6 +170,14 @@ public class ActivityRequestResponse {
 		this.supervisorName = supervisorName;
 	}
 
+	public Set<String> getPsdAreas() {
+		return psdAreas;
+	}
+
+	public void setPsdAreas(Set<String> psdAreas) {
+		this.psdAreas = psdAreas;
+	}
+
 	public Activity toEntity(Activity activity) {
 		activity = activity == null ? new Activity() : activity;
 		activity.setName(this.name);
@@ -174,7 +185,7 @@ public class ActivityRequestResponse {
 		if(!FourS.matches(this.fourS))
 			throw new ValidationException("Invalid value for field fourS , it should belong to list : [Skill ,Sport ,Study ,Service]");
 		activity.setFourS(FourS.valueOf(this.fourS));
-		activity.setIsGeneral(this.isGeneral);
+//		activity.setIsGeneral(this.isGeneral);
 		return activity;
 	}
 
@@ -189,17 +200,18 @@ public class ActivityRequestResponse {
 		if(activity.getClubOrSociety() != null)
 		      this.clubOrSociety = activity.getClubOrSociety().toString();
 		this.focusAreaResponses = activity.getFocusAreas().stream().map(FocusAreaRequestResponse :: new ).distinct().collect(Collectors.toSet());
-		// focusAreaIds = new ArrayList<String>();
-		/*
-		 * this.focusAreas = new ArrayList<String>(); for (FocusArea fa :
-		 * activity.getFocusAreas()) { // focusAreaIds.add(fa.getCid());
-		 * focusAreas.add(fa.getName()); } focusAreas =
-		 * focusAreas.stream().distinct().collect(Collectors.toList());
-		 */
-		// focusAreaIds =
-		// focusAreaIds.stream().distinct().collect(Collectors.toList());
+		if(this.focusAreaResponses != null) {
+			this.focusAreas = new HashSet<String>();
+			this.psdAreas = new HashSet<String>();
+			this.focusAreaIds = new HashSet<String>();
+			this.focusAreaResponses.stream().forEach(fa -> {
+				this.focusAreas.add(fa.getName());
+				this.psdAreas.add(fa.getPsdArea());
+				this.focusAreaIds.add(fa.getId());
+			});
+		}
 		if(activity.getSchools()!=null) {
-			activity.getSchools().stream().distinct().map(s -> s.getCid()).collect(Collectors.toList());
+			this.schoolIds = activity.getSchools().stream().distinct().map(s -> s.getCid()).collect(Collectors.toList());
 		}
 
 	}

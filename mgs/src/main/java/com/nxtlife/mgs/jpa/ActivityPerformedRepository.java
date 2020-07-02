@@ -187,8 +187,12 @@ public interface ActivityPerformedRepository
 //	Set<GroupResponseBy<ActivityPerformed>> findAllBySchoolCidAndGradesIdInAndActivityStatusInAndClubId(String schoolId , Collection<Long> gradeIds ,Collection<ActivityStatus> statuses ,String activityCid );
 	
 	@Query("select ap from ActivityPerformed ap  where ap.student.school.cid =?1 and ap.student.grade.id in ?2 and ap.activityStatus in ?3 and ap.active = true group by ap.student.id , ap.activity.name order by ap.student.name , ap.activity.name , ap.submittedOn ")
-	Set<ActivityPerformed> findAllBySchoolCidAndGradesIdInAndActivityStatusIn(String schoolId , Collection<Long> gradeIds ,Collection<ActivityStatus> statuses );
+	public Set<ActivityPerformed> findAllBySchoolCidAndGradesIdInAndActivityStatusIn(String schoolId , Collection<Long> gradeIds ,Collection<ActivityStatus> statuses );
 	
 	@Query("select ap from ActivityPerformed ap  where ap.student.school.cid =?1 and ap.student.grade.id in ?2 and ap.activityStatus in ?3 and ap.active = true group by ap.student.id , ap.activity.name having ap.activity.cid = ?4 order by ap.student.name , ap.activity.name , ap.submittedOn ")
-	Set<ActivityPerformed> findAllBySchoolCidAndGradesIdInAndActivityStatusInAndClubId(String schoolId , Collection<Long> gradeIds ,Collection<ActivityStatus> statuses ,String activityCid );
+	public Set<ActivityPerformed> findAllBySchoolCidAndGradesIdInAndActivityStatusInAndClubId(String schoolId , Collection<Long> gradeIds ,Collection<ActivityStatus> statuses ,String activityCid );
+	
+	public Boolean existsByActivityCidAndActive(String activityCid ,Boolean active);
+	
+	public Boolean existsByActivityCidAndStudentSchoolCidInAndActive(String activityCid ,Collection<String> schoolIds ,Boolean active);
 }

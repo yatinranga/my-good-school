@@ -411,7 +411,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		}
 		
 		if (request.getMobileNumber() != null) {
-			if (userRepository.existsByContactNumberAndCidNot(request.getMobileNumber(), student.getCid()))
+			if (userRepository.existsByContactNumberAndCidNot(request.getMobileNumber(), student.getUser().getCid()))
 				throw new ValidationException(String.format("Mobile Number (%s) already belongs to some other user.",
 						request.getMobileNumber()));
 			student.setMobileNumber(request.getMobileNumber());
@@ -419,7 +419,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		}
 
 		if (request.getEmail() != null) {
-			if (userRepository.existsByEmailAndCidNot(request.getEmail(), student.getCid()))
+			if (userRepository.existsByEmailAndCidNot(request.getEmail(), student.getUser().getCid()))
 				throw new ValidationException(
 						String.format("Email (%s) already belongs to some other user.", request.getEmail()));
 			student.setEmail(request.getEmail());
@@ -977,8 +977,9 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			studentRequest.setGradeId(grade.getCid());
 
 		if ((Date) studentDetails.get(0).get("SESSION START DATE") != null)
-			studentRequest.setSessionStartDate(DateUtil.convertStringToDate(
-					DateUtil.formatDate((Date) studentDetails.get(0).get("SESSION START DATE"), null, null)));
+			studentRequest.setSessionStartDate( DateUtil.formatDate((Date) studentDetails.get(0).get("SESSION START DATE"), "yyyy-MM-dd"));
+//			studentRequest.setSessionStartDate(DateUtil.convertStringToDate(
+//					DateUtil.formatDate((Date) studentDetails.get(0).get("SESSION START DATE"), null, null)));
 		studentRequest.setEmail((String) studentDetails.get(0).get("EMAIL"));
 		if (studentDetails.get(0).get("ACTIVE") != null)
 			// studentRequest.setActive(Boolean.valueOf((Boolean)
@@ -986,8 +987,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			studentRequest.setMobileNumber((String) studentDetails.get(0).get("MOBILE NUMBER"));
 		studentRequest.setGender((String) studentDetails.get(0).get("GENDER"));
 		if ((Date) studentDetails.get(0).get("SUBSCRIPTION END DATE") != null)
-			studentRequest.setSubscriptionEndDate(DateUtil.convertStringToDate(
-					DateUtil.formatDate((Date) studentDetails.get(0).get("SUBSCRIPTION END DATE"), null, null)));
+			studentRequest.setSessionStartDate( DateUtil.formatDate((Date) studentDetails.get(0).get("SUBSCRIPTION END DATE"), "yyyy-MM-dd"));
 		List<GuardianRequest> guardians = new ArrayList<GuardianRequest>();
 		guardians.add(new GuardianRequest((String) studentDetails.get(0).get("FATHERS NAME"),
 				(String) studentDetails.get(0).get("FATHERS EMAIL"), "male",

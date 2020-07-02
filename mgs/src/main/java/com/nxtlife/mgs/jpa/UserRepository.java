@@ -172,6 +172,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Query(value = "update User g set g.picUrl = ?2 where g.cid = ?1")
 	public int setImageUrlByCid(String cid ,String picUrl);
 	
-	
+	@Query(value = "select id from User  u where u.contactNumber = ?2 and active = ?3")
+	public Long findIdBySchoolIdAndContactNumberAndActive( String contactNumber, Boolean active);
+
+	@Query(value = "select id from User u where u.email = ?2 and active = ?3")
+	public Long findIdByEmailAndActive( String email, Boolean active);
+
 
 }

@@ -42,6 +42,7 @@ import com.nxtlife.mgs.enums.FourS;
 import com.nxtlife.mgs.enums.PSDArea;
 import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.ex.ValidationException;
+import com.nxtlife.mgs.jpa.ActivityPerformedRepository;
 import com.nxtlife.mgs.jpa.ActivityRepository;
 import com.nxtlife.mgs.jpa.FocusAreaRepository;
 import com.nxtlife.mgs.jpa.GradeRepository;
@@ -90,6 +91,9 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 	
 	@Autowired
 	GradeRepository gradeRepository;
+	
+	@Autowired
+	ActivityPerformedRepository activityPerformedRepository;
 
 	@PostConstruct
 	public void init() {
@@ -137,13 +141,13 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 
 		focusAreaList = focusAreaRepository.saveAll(focusAreaList);
 
-		String[] skillActivities = { "Yoga", "Literary Society Hindi", "Literary Society English", "Art And Craft",
+		String[] skillActivities = { "Yoga","Art And Craft",
 				"Music And Dance", "Band", "Computers", "Cooking" };
 		String[] sportActivities = { "Martial Arts", "Cricket", "Fencing", "Football", "Kho-Kho", "Badminton",
 				"Kabaddi" };
 		String[] serviceActivities = { "Social Service League", "NCC", "Scouts And Guides", "Rural Livelihood Maping",
 				"Green School Club", "Eco Club" };
-		String[] studyActivities = { "Reading" };
+		String[] studyActivities = {"Literary Society Hindi", "Literary Society English", "Reading" };
 
 		List<Activity> activityRepoList = activityRepository.findAllByActiveTrue();
 		List<Activity> activityList = new ArrayList<Activity>();
@@ -446,16 +450,21 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 	public ActivityRequestResponse saveActivity(ActivityRequestResponse request) {
 		if (request == null)
 			throw new ValidationException("Request cannot be null");
-		if (request.getName() == null)
-			throw new ValidationException("Activity name cannot be null");
+		if (request.getName() == null && request.getId() == null)
+			throw new ValidationException("Activity name and id cannot be null simultaneously , provide id when updating activity.");
 		
 		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")))
-			request.setSchoolIds(Arrays.asList(getUser().getSchool().getCid()));
+			request.setSchoolIds(new ArrayList<String>(Arrays.asList(getUser().getSchool().getCid())));
 		if(request.getSchoolIds() == null || request.getSchoolIds().isEmpty())
 			throw new ValidationException("school ids cannot be null or empty.");
 		// if (request.getFocusAreaIds() == null)
 		// throw new ValidationException("Focus area ids cannot be null.");
-		Activity activity = activityRepository.findByName(request.getName());
+		Activity activity ;
+		if(request.getId() != null) {
+			activity = activityRepository.findByCid(request.getId());
+		}else {
+			activity =	activityRepository.findByName(request.getName());
+		}
 		Boolean activityPresent = false;
 		if (activity != null ) {
 			if(!activity.getActive()) {
@@ -500,6 +509,15 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 			activity.setFocusAreas(focusAreas);
 
 		}else {
+			if(request.getName() != null) {
+				
+				if(activityPerformedRepository.existsByActivityCidAndActive(activity.getCid(), true))
+					throw new ValidationException(String.format("Activity with id (%s) has already been performed by some students , so it can't be renamed contact your service provider for that.",activity.getCid()));
+				
+				if(activityRepository.existsByNameAndCidNot(request.getName() , activity.getCid()))
+					throw new ValidationException(String.format("Another activity with this name (%s) already exists.",request.getName()));
+			}
+				
 			activity = request.toEntity(activity);
 			activity.setActive(true);
 			
@@ -523,11 +541,14 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 				String schoolId = request.getSchoolIds().get(i);
 				if (!schoolRepository.existsByCidAndActiveTrue(schoolId))
 					throw new ValidationException(String.format("School with id (%s) not found", schoolId));
-				Optional<School> preExist = toDeleteList.stream().distinct().filter(s -> s.getCid().equals(schoolId)).findAny();
-				if(preExist.isPresent()) {
-					schools.add(preExist.get());
-					toDeleteList.remove(preExist.get());
+				School preExist = null ;
+				if(toDeleteList != null)
+				    preExist = toDeleteList.stream().distinct().filter(s -> s.getCid().equals(schoolId)).findAny().orElse(null);
+				if(preExist != null) {
+					schools.add(preExist);
+					toDeleteList.remove(preExist);
 					request.getSchoolIds().remove(i--);
+//					i = i != 0 ?i-1 :i ;
 				}else {
 					School school = schoolRepository.findByCidAndActiveTrue(schoolId);
 					List<Activity> activities = school.getActivities();
@@ -852,6 +873,8 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 			schoolCid = getUser().getSchool().getCid();
 		else {
 			if(forAll) {
+				if(activityPerformedRepository.existsByActivityCidAndActive(cid, true))
+					throw new ValidationException(String.format("Activity with id (%s) has already been performed by some students , so it can't be deleted contact your service provider for that.",cid));
 				activityRepository.updateActivitySetActiveByCid(false, cid);
 				return new SuccessResponse(200, "Activity successfully deleted for all schools.");
 			}else {
@@ -859,7 +882,8 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 					throw new ValidationException("school id cannot be null.");
 			}
 		}
-		
+		if(activityPerformedRepository.existsByActivityCidAndStudentSchoolCidInAndActive(cid, Arrays.asList(schoolCid), true))
+			throw new ValidationException(String.format("Activity with id (%s) has already been performed by some students in school (id : %s) , so it can't be deleted contact your service provider for that.",cid,schoolCid));
 		Activity activity = activityRepository.getOneByCidAndActiveTrue(cid);
 		if (activity == null)
 			throw new ValidationException(String.format("No activity found with id : %s ", cid));
@@ -871,7 +895,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 //		int i = activityRepository.updateActivitySetActiveByCid(false, cid);
 //		if (i == 0)
 //			throw new RuntimeException("Something went wrong Activity not deleted.");
-		return new SuccessResponse(200, String.format("Activity successfuly deleted from school with id (%s).",schoolCid));
+		return new SuccessResponse(200, String.format("Activity successfuly deleted from school (id : %s).",schoolCid));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -919,7 +943,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 		activityRequest.setFourS((String) activityDetails.get(0).get("FOUR S"));
 		String focusAreas = (String) activityDetails.get(0).get("FOCUS AREAS");
 
-		List<String> focusAreaCIds = new ArrayList<String>();
+		Set<String> focusAreaCIds = new HashSet<String>();
 		String[] focusAreaNames = focusAreas.split(",");
 
 		if (focusAreaNames != null && focusAreaNames.length > 0) {
