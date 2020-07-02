@@ -128,6 +128,7 @@ export class SchoolClubComponent implements OnInit {
       this.showClubDetails = false;
       this.showSupervisor = false;
       this.col = "col-12";
+      this.clubId = "";
     }
   }
 
@@ -160,8 +161,25 @@ export class SchoolClubComponent implements OnInit {
   }
 
   /** Reload the Table when Club/Society Details are updated*/
-  UpdatedTable(event){
+  UpdatedTable(event) {
     this.getClubs();
+  }
+
+  deleteClub(clubObj, index) {
+    this.alertService.confirmWithoutLoader('question', 'Are you sure you want to delete ' + clubObj.name + ' ?', '', 'Yes').then(result => {
+      if (result.value) {
+        this.alertService.showLoader("");
+        this.schoolService.deleteClub(clubObj.id, this.adminInfo.schoolId).subscribe(res => {
+          this.showClubDetails = false;
+          this.showSupervisor = false;
+          this.col = "col-12";
+          this.schoolClubs.splice(index, 1);
+          this.alertService.showMessageWithSym("Delete Successful !", "Deleted", "success");
+        }, err => {
+          this.errorMessage(err);
+        });
+      }
+    });
   }
 
   resetForm() {

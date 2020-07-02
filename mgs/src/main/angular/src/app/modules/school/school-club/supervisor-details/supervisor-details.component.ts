@@ -22,6 +22,7 @@ export class SupervisorDetailsComponent implements OnInit {
   gradesIds: any = {};
   supervisorId = "";
   supervisorName = "";
+  supervisorClubArr = [];
 
   constructor(private schoolService: SchoolService, private alertService: AlertService) { }
 
@@ -36,6 +37,7 @@ export class SupervisorDetailsComponent implements OnInit {
     this.getSupervisor();
   }
 
+  /** Get List of Supervisor for the Selected Club/Society */
   getSupervisor() {
     this.clubSupervisor = [];
     this.sup_loader = true;
@@ -55,12 +57,14 @@ export class SupervisorDetailsComponent implements OnInit {
       (err) => console.log(err));
   }
 
+  /** List of All Supervisor of School */
   getSchoolStaff() {
     this.schoolService.getStaff().subscribe((res) => {
       this.supervisorArr = res;
     })
   }
 
+  /** Show Club/Society Assign Modal */
   showAssignModal() {
     $('#assignSupervisorModal').modal('show');
 
@@ -84,6 +88,17 @@ export class SupervisorDetailsComponent implements OnInit {
       reqBody.teachers[0].activities[0].grades.push(key);
     });
 
+    if (this.supervisorClubArr) {
+      this.supervisorClubArr.forEach(ele => {
+        const clubId = ele.id;
+        const grades = [];
+        ele.gradeResponses.forEach(element => {
+          grades.push(element.id);
+        });
+        reqBody.teachers[0].activities.push({ id: clubId, grades: grades });
+      })
+    }
+
     this.clubSupervisor.forEach(e => {
       const supId = e.id;
       const activities = []
@@ -98,6 +113,8 @@ export class SupervisorDetailsComponent implements OnInit {
       reqBody.teachers.push({ id: supId, activities: activities });
     });
 
+    console.log(reqBody);
+
     this.alertService.showLoader("");
     this.schoolService.assignClub(reqBody).subscribe((res) => {
       this.clubSupervisor = res.teachers;
@@ -110,6 +127,7 @@ export class SupervisorDetailsComponent implements OnInit {
     })
   }
 
+  /** Show Edit Grades Modal */
   editGradesButton(sup_obj) {
     this.supervisorName = sup_obj.name;
     this.supervisorId = sup_obj.id;
@@ -123,6 +141,7 @@ export class SupervisorDetailsComponent implements OnInit {
     });
   }
 
+  /** Update/Edit Grades */
   editGrades() {
     // Response Body
     const reqBody = {
@@ -177,6 +196,7 @@ export class SupervisorDetailsComponent implements OnInit {
     })
   }
 
+  /** Unassign Club/Society for a particular Supervisor */
   unassignClub(sup_obj) {
     // Response Body
     const reqBody = {
@@ -214,6 +234,17 @@ export class SupervisorDetailsComponent implements OnInit {
         });
       }
     });
+  }
+
+  /** Get All Clubs/Societies of a particular Supervisor (during Club assign) */
+  getSupervisorClubs(teacherId) {
+    this.supervisorClubArr = [];
+    this.schoolService.getSupervisorClubs(teacherId, this.adminInfo.schoolId).subscribe(res => {
+      console.log(res);
+      this.supervisorClubArr = res;
+    }, (err => {
+      console.log(err);
+    }))
   }
 
   /** Reset Form and Values */

@@ -247,6 +247,16 @@
                                     <input type="number" class="form-control add" name="yearOfEnrolment"
                                         placeholder="Add Year of Enrollment Here" formControlName="yearOfEnrolment">
                                 </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Role : </label>
+                                    <select class="form-control" name="role" [(ngModel)]="roleName"
+                                        [ngModelOptions]="{standalone: true}" (ngModelChange)="updateRole($event)">
+                                        <option value='' selected disabled>Select One</option>
+                                        <option *ngFor="let role of rolesArr" value={{role.name}}>
+                                            {{role.name}}
+                                        </option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -21,7 +21,7 @@
                     </div>
                 </div>
                 <button class="btn btn-primary" (click)="editGradesButton(sup)">Edit Grades</button>
-                <button class="btn btn-danger"(click)="unassignClub(sup)">Unassign</button>
+                <button class="btn btn-danger" (click)="unassignClub(sup)">Unassign</button>
             </div>
         </div>
 
@@ -39,9 +39,6 @@
 
 
 <div>
-
-
-
     <div *ngIf="!clubSupervisor.length">
         <div *ngIf="sup_loader" class="spinner-border text-dark" role="status">
         </div>{{sup_loader ? 'Loading...' : 'No Supervisor Assigned'}}
@@ -62,7 +59,7 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label for="recipient-name" class="col-form-label">Supervisor/Coordinator</label>
-                    <select class="form-control" name="club" [(ngModel)]="supervisorId">
+                    <select class="form-control" name="club" [(ngModel)]="supervisorId" (ngModelChange)="getSupervisorClubs($event)">
                         <option value="" selected disabled>Select One</option>
                         <option *ngFor="let sup of supervisorArr" value={{sup.id}}>{{sup.name}}</option>
                     </select>
