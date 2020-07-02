@@ -57,7 +57,6 @@ export class SchoolClubComponent implements OnInit {
     this.club_loader = true;
     this.schoolService.getAllClubs(this.adminInfo.schoolId).subscribe((res) => {
       this.club_loader = false;
-      console.log(res);
       this.schoolClubs = res;
       this.copySchoolClubs = Object.assign([], res);
     }, (err) => {
@@ -68,7 +67,6 @@ export class SchoolClubComponent implements OnInit {
 
   getFocusArea() {
     this.schoolService.getFocusArea().subscribe(res => {
-      console.log(res);
       this.focusAreaArr = res;
     }, (err => {
       console.log(err);
