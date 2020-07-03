@@ -67,6 +67,12 @@ public interface StudentService extends ExcelUtil {
 	List<StudentResponse> getAllStudentsOfSchoolForParticularActivity(String schoolCid, String activityCid,
 			String approvalStatus);
 
+	SuccessResponse deleteCertificate(String cid);
+
+	CertificateResponse updateCertificate(String cid, CertificateRequest request);
+
+	CertificateResponse getCertificateById(String cid);
+
 	// List<AwardResponse> getAllAwardsOfStudentByActivityId(String studentCid,
 	// String awardCid);
 

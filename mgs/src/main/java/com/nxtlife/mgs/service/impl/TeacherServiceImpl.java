@@ -512,7 +512,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		//
 		// }
 
-		if (request.getGradeIds() != null && !request.getGradeIds().isEmpty()) {
+		if (request.getGradeIds() != null /* && !request.getGradeIds().isEmpty() */) {
 			List<String> requestGradeIds = request.getGradeIds();
 			List<Grade> previousGrades = teacher.getGrades();
 

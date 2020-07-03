@@ -116,6 +116,21 @@ public class StudentController {
 		return studentService.uploadCertificate(certificateRequest , studentId);
 	}
 	
+	@DeleteMapping(value = "api/student/certificate/{id}" )
+	public SuccessResponse deleteCertificate(@PathVariable(value = "id") String cid) {
+		return studentService.deleteCertificate(cid);
+	}
+	
+	@PutMapping(value = "api/student/certificate/{id}")
+	public CertificateResponse updateCertificate(@PathVariable(value = "id") String cid ,@ModelAttribute CertificateRequest request) {
+		return studentService.updateCertificate(cid, request);
+	}
+	
+	@GetMapping(value = "api/student/certificate/{id}")
+	public CertificateResponse getCertificateById(@PathVariable(value = "id") String cid) {
+		return studentService.getCertificateById(cid);
+	}
+	
 	@GetMapping(value = "api/student/certificates" )
 	public List<CertificateResponse> getAllCertificatesOfStudent(@RequestParam(value = "studentId" ,required = false) String studentId){
 		return studentService.getAllCertificatesOfStudent(studentId);
