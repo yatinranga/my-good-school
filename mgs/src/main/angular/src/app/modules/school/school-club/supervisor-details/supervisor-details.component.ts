@@ -61,7 +61,7 @@ export class SupervisorDetailsComponent implements OnInit {
   /** List of All Supervisor of School */
   getSchoolStaff() {
     this.schoolService.getStaff().subscribe((res) => {
-      this.supervisorArr = res;
+      this.supervisorArr = res.filter(e=>e.roles.includes("Supervisor"));
     })
   }
 

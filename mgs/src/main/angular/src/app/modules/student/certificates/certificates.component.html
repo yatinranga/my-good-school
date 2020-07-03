@@ -15,7 +15,7 @@
                         </div>
                         <div class="certi_text">
                             <h2>{{certi.title}}</h2>
-                            <p class="des">  {{certi.description}}</p>
+                            <p class="des"> {{certi.description}}</p>
                             <p> <span *ngIf="certi.fourS=='Skill'" style="color: #4bafa5;"> {{certi.fourS}}
                                 </span>
                                 <span *ngIf="certi.fourS=='Sport'" style="color: #e04090;">
@@ -26,12 +26,13 @@
                                 </span>
                                 <span *ngIf="certi.fourS=='Service'" style="color: #8dc33a;">
                                     {{certi.fourS}}
-                                </span>                                
+                                </span>
                             </p>
                             <p>{{certi.certificationAuthority}}</p>
                             <div class="btns-certifivates">
-                                <button class="btn btn-primary" (click)="editCertificatebtn(certi)">Edit</button>
-                                <button class="btn btn-success" >Download</button>
+                                <button class="btn btn-primary" (click)="editCertificatebtn(certi,i)">Edit</button>
+                                <button class="btn btn-success"><a
+                                        [attr.href]="BASE_URL + certi.imageUrl">Download</a></button>
                                 <button class="btn btn-danger" (click)="deleteCertificate(certi,i)">Delete</button>
                             </div>
                         </div>
@@ -40,8 +41,9 @@
             </div>
         </div>
     </div>
-    <button id="add_certi" type="button" class="btn btn-primary" data-toggle="modal" data-target="#certificateModal" (click)="addCertificatebtn()">
-        <i class="fa fa-plus" ></i> Certificate
+    <button id="add_certi" type="button" class="btn btn-primary" data-toggle="modal" data-target="#certificateModal"
+        (click)="addCertificatebtn()">
+        <i class="fa fa-plus"></i> Certificate
     </button>
 
     <!--------------------------------- Modal ------------------------------------->
@@ -61,8 +63,7 @@
                         <div class="form-group">
                             <!-- <h2> Note : All Fields Are Mandatory </h2> -->
                             <label for="recipient-name" class="col-form-label">Title <span>*</span> </label>
-                            <input type="text" class="form-control" name="name" id="recipient-name"
-                                formControlName="title">
+                            <input type="text" class="form-control" name="name" formControlName="title">
                             <small class="text-danger"
                                 *ngIf="!certificateForm.get('title').valid && certificateForm.get('title').touched">
                                 Title Required
@@ -80,7 +81,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">4S <span>*</span>  </label>
+                            <label for="recipient-name" class="col-form-label">4S <span>*</span> </label>
                             <select class="form-control" name="fourS" formControlName="fourS">
                                 <option value="" Selected Disabled>Choose One</option>
                                 <option *ngFor="let fourS of fourSArr" value={{fourS}}>{{fourS}}
@@ -92,8 +93,8 @@
                             </small>
                         </div>
                         <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">Authority <span>*</span>  </label>
-                            <input type="text" name="certificationAuthority" class="form-control" id="recipient-name"
+                            <label for="recipient-name" class="col-form-label">Authority <span>*</span> </label>
+                            <input type="text" name="certificationAuthority" class="form-control"
                                 formControlName="certificationAuthority">
                             <small class="text-danger"
                                 *ngIf="!certificateForm.get('certificationAuthority').valid && certificateForm.get('certificationAuthority').touched">
@@ -105,11 +106,11 @@
                             <div class="add-act choosefile_box">
                                 <label for="recipient-name" class="col-form-label"></label>
                                 <input class="choosefile" type="file" accept="image/*,application/pdf"
-                                    name="selectedFile" formControlName="image" accept=".png, .jpg, .jpeg"
+                                    formControlName="image" name="selectedFile" accept=".png, .jpg, .jpeg"
                                     (change)="onFileSelect($event)">
 
                                 <span class="choosefile choosefile-custom"> <i class="fa fa-file"> </i> </span>
-                                <!-- <img class="certificate-img" *ngIf="path" [src]="path"> -->    
+                                <!-- <img class="certificate-img" *ngIf="path" [src]="path"> -->
                             </div>
                         </div>
                         <div class="form-group">
@@ -131,19 +132,21 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-success" *ngIf="certiModalType=='Add'" [disabled]="certificateForm.invalid">
+                            <button type="submit" class="btn btn-success" *ngIf="certiModalType=='Add'"
+                                [disabled]="certificateForm.invalid">
                                 <div *ngIf="add_loader" class="spinner-border text-dark" role="status">
                                 </div>{{add_loader ? 'Loading...' : 'Add'}}
                             </button>
-                            <button type="submit" class="btn btn-success" *ngIf="certiModalType=='Edit'" [disabled]="certificateForm.invalid">
+                            <button type="submit" class="btn btn-success" *ngIf="certiModalType=='Edit'"
+                                [disabled]="certificateForm.invalid">
                                 <div *ngIf="add_loader" class="spinner-border text-dark" role="status">
                                 </div>{{add_loader ? 'Loading...' : 'Update'}}
                             </button>
                             <button type="button" class="btn btn-danger" (click)="resetForm()">Reset</button>
-                        </div>                        
+                        </div>
                     </form>
                 </div>
-                
+
 
             </div>
         </div>
