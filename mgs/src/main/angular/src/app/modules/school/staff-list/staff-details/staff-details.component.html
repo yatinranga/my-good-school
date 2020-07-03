@@ -24,11 +24,12 @@
                             <span *ngFor="let g of staffDetails.grades; let i = index">
                                 {{ (i === staffDetails.grades.length-1)? g.grade +" "+g.section : g.grade+" "+g.section+ "," + ' '}}
                             </span></li>
-                        <li> <strong>Brief : </strong>
-                            {{staffDetails.profileBrief ? staffDetails.profileBrief : "-"}}</li>
+                        
                         <button class="btn btn-primary" (click)="showSupervisorModal()">Edit Profile</button>
                     </ul>
                 </div>
+                <div class="brief"> <strong>Brief : </strong>
+                    {{staffDetails.profileBrief ? staffDetails.profileBrief : "-"}}</div>
             </div>
         </div>
         <div class="btns">
