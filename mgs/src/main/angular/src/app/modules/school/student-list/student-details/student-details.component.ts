@@ -94,6 +94,7 @@ export class StudentDetailsComponent implements OnInit {
   showGuardianModal(val: string, guardianObj?,index?) {
     if (val == "Add") {
       $('#editGuardianModal').modal('show');
+      this.guardianModalType = val;
     }
 
     if (val == "Edit") {

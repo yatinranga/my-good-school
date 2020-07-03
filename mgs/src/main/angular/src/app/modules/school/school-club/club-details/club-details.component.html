@@ -6,7 +6,7 @@
 
         <ul>
             <li><strong>Club/Society :</strong> {{clubObj.clubOrSociety}}</li>
-            <!-- <li><strong>Description : </strong>{{clubObj.description}}</li> -->
+            <li><strong>Description : </strong>{{clubObj.description}}</li>
             <li><strong>Focus Areas : </strong><span *ngFor="let fs of clubObj.focusAreaResponses; let i = index">
                     {{ (i === clubObj.focusAreaResponses.length-1) ? fs.name  : fs.name + "," + ' '}}
                 </span></li>
@@ -40,6 +40,11 @@
                         <label for="recipient-name" class="col-form-label">Name :</label>
                         <input type="text" class="form-control add" name="name" placeholder="Add Name Here"
                             formControlName="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Description : </label>
+                        <textarea class="form-control" name="qualification" rows="3"
+                            formControlName="description"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">FourS : </label>

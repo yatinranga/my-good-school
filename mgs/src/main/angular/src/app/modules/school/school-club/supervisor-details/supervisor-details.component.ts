@@ -61,7 +61,7 @@ export class SupervisorDetailsComponent implements OnInit {
   /** List of All Supervisor of School */
   getSchoolStaff() {
     this.schoolService.getStaff().subscribe((res) => {
-      this.supervisorArr = res;
+      this.supervisorArr = res.filter(e=>e.roles.includes("Supervisor"));
     })
   }
 
@@ -269,6 +269,18 @@ export class SupervisorDetailsComponent implements OnInit {
     }
     else {
       this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");
+    }
+  }
+
+  /** Select and Deselect all grades */
+  selectGrades(val) {
+    if (val == "All") {
+      this.schoolGrades.forEach(e => {
+        this.gradesIds[e.id] = true;
+      });
+    }
+    if (val == "Reset") {
+      this.gradesIds = {};
     }
   }
 }

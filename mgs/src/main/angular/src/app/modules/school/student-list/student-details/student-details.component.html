@@ -33,7 +33,9 @@
 
 
             <div class="guardian-information">
-                <h3>Guardians : <button class="btn btn-success" (click)="showGuardianModal('Add')">Add Guardian</button>
+                <h3>Guardians : <button class="btn btn-success"
+                        [disabled]="studentDetails['guardianResponseList'].length==2"
+                        (click)="showGuardianModal('Add')">Add Guardian</button>
                 </h3>
 
                 <div class="card" *ngFor="let sd of studentDetails['guardianResponseList']; let i = index">
@@ -49,7 +51,8 @@
             </div>
             <div class="btns">
 
-                <button class="btn clubs-socities-btn btn-success" (click)="setShowClub(true)">Show Clubs/Societies</button>
+                <button class="btn clubs-socities-btn btn-success" (click)="setShowClub(true)">Show
+                    Clubs/Societies</button>
             </div>
 
 
@@ -71,7 +74,7 @@
                         <ul>
                             <li *ngFor="let club of studentEnrolledClubArr; let i = index">{{i+1}}. {{club.name}}</li>
                         </ul>
-    
+
                     </div>
                 </div>
                 <div class="club-socity-card">
@@ -80,10 +83,10 @@
                         <ul>
                             <li *ngFor="let club of studentEnrolledSociArr; let i = index">{{i+1}}. {{club.name}}</li>
                         </ul>
-    
+
                     </div>
                 </div>
-                
+
                 <div *ngIf="!club_loader && !(studentEnrolledSociArr.length && studentEnrolledClubArr.length)">
                     <br>
                     <h5><b>No Enrolled Club/Society</b></h5>
@@ -153,7 +156,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success"
-                    [disabled]="guardianForm.invalid">{{guardianModalType}}</button>
+                        [disabled]="guardianForm.invalid">{{guardianModalType}}</button>
                     <button type="button" class="btn btn-danger" (click)="resetForm()">Reset</button>
                 </div>
             </form>
@@ -184,8 +187,8 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">Email : </label>
-                                    <input type="email" class="form-control add" name="name" placeholder="Add Email Here"
-                                        formControlName="email">
+                                    <input type="email" class="form-control add" name="name"
+                                        placeholder="Add Email Here" formControlName="email">
                                 </div>
                                 <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">DOB : </label>
