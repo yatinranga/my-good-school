@@ -22,6 +22,7 @@ export class CertificatesComponent implements OnInit {
   path: any;
   add_loader = false;
   certificate_loader = false; // Loader during get certificates
+  certiModalType = "Add";
 
   constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService) {
     this.BASE_URL = BASE_URL + "/file/download?filePath=";
@@ -132,8 +133,10 @@ export class CertificatesComponent implements OnInit {
       title: certi_Obj.title,
       description: certi_Obj.description,
       fourS: certi_Obj.fourS,
-      certificationAuthority: certi_Obj.certificationAuthority
+      certificationAuthority: certi_Obj.certificationAuthority,
+      // image: "Image"
     })
+    this.certiModalType = "Edit";
   }
 
   // delete Certificate
@@ -162,6 +165,8 @@ export class CertificatesComponent implements OnInit {
   // reset add certificate form
   resetForm() {
     this.certificateForm.reset();
+    this.path = "";
+    this.certificateForm.value.image = "";
   }
 
   // error handling
@@ -172,6 +177,10 @@ export class CertificatesComponent implements OnInit {
     else {
       this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");
     }
+  }
+
+  addCertificatebtn(){
+    this.certiModalType = "Add";
   }
 
 }

@@ -31,6 +31,7 @@ export class ClubDetailsComponent implements OnInit {
     this.editClubForm = this.formBuilder.group({
       id: [],
       name: [],
+      description: [],
       fourS: [],
       clubOrSociety: [],
       focusAreaRequests: []
@@ -50,6 +51,7 @@ export class ClubDetailsComponent implements OnInit {
     this.focusareaIds = {};
     this.editClubForm.patchValue({
       id: this.clubObj.id,
+      description: this.clubObj.description,
       name: this.clubObj.name,
       fourS: this.clubObj.fourS,
       clubOrSociety: this.clubObj.clubOrSociety

@@ -40,8 +40,8 @@
             </div>
         </div>
     </div>
-    <button id="add_certi" type="button" class="btn btn-primary" data-toggle="modal" data-target="#certificateModal">
-        <i class="fa fa-plus"></i> Certificate
+    <button id="add_certi" type="button" class="btn btn-primary" data-toggle="modal" data-target="#certificateModal" (click)="addCertificatebtn()">
+        <i class="fa fa-plus" ></i> Certificate
     </button>
 
     <!--------------------------------- Modal ------------------------------------->
@@ -50,7 +50,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Add Certificate</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">{{certiModalType}} Certificate</h5>
                     <button type="button" name="close" class="close" data-dismiss="modal" aria-label="Close"
                         (click)="resetForm()">
                         <span aria-hidden="true">&times;</span>
@@ -131,9 +131,13 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-success" [disabled]="certificateForm.invalid">
+                            <button type="submit" class="btn btn-success" *ngIf="certiModalType=='Add'" [disabled]="certificateForm.invalid">
                                 <div *ngIf="add_loader" class="spinner-border text-dark" role="status">
                                 </div>{{add_loader ? 'Loading...' : 'Add'}}
+                            </button>
+                            <button type="submit" class="btn btn-success" *ngIf="certiModalType=='Edit'" [disabled]="certificateForm.invalid">
+                                <div *ngIf="add_loader" class="spinner-border text-dark" role="status">
+                                </div>{{add_loader ? 'Loading...' : 'Update'}}
                             </button>
                             <button type="button" class="btn btn-danger" (click)="resetForm()">Reset</button>
                         </div>                        

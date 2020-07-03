@@ -43,10 +43,12 @@ export class StaffDetailsComponent implements OnInit {
       name: [],
       email: [],
       dob: [, [Validators.required]],
+      profileBrief: [],
       mobileNumber: [],
       gender: [],
       qualification: [],
       yearOfEnrolment: [],
+      gradeIds : [null]
     });
     this.getRoles();
   }
@@ -252,12 +254,19 @@ export class StaffDetailsComponent implements OnInit {
     this.updateSupervisorForm.patchValue({
       id: this.staffDetails.id,
       name: this.staffDetails.name,
+      profileBrief: this.staffDetails.profileBrief,
       email: this.staffDetails.email,
       mobileNumber: this.staffDetails.mobileNumber,
       gender: this.staffDetails.gender,
       qualification: this.staffDetails.qualification,
       yearOfEnrolment: this.staffDetails.yearOfEnrolment,
     })
+
+    if(this.staffDetails.grades){
+      this.staffDetails.grades.forEach(element => {
+        this.gradesIds[element.id] = true;
+      });
+    }
   }
 
   /** Update Supervisor Profile */
@@ -275,6 +284,14 @@ export class StaffDetailsComponent implements OnInit {
       })
     }
 
+    const gradeIds = []
+    Object.keys(this.gradesIds).forEach((key) => {
+      if (this.gradesIds[key]) {
+        gradeIds.push(key);
+      }
+    });
+
+    this.updateSupervisorForm.value.gradeIds = gradeIds;
     console.log(this.updateSupervisorForm.value);
     this.updateSupervisorForm.value.dob = this.updateSupervisorForm.value.dob + " 00:00:00";
     this.alertService.showLoader("");
@@ -308,6 +325,7 @@ export class StaffDetailsComponent implements OnInit {
     this.gradesIds = {};
     this.updateSupervisorForm.reset();
     this.clubId = "";
+    this.roleName = "";
   }
 
   /** Handling Error */
@@ -317,6 +335,18 @@ export class StaffDetailsComponent implements OnInit {
     }
     else {
       this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");
+    }
+  }
+
+  /** Select and Deselect all grades */
+  selectGrades(val){
+    if(val=="All"){
+      this.schoolGrades.forEach(e=>{
+        this.gradesIds[e.id] = true;
+      });
+    }
+    if(val=="Reset"){
+      this.gradesIds = {};
     }
   }
 

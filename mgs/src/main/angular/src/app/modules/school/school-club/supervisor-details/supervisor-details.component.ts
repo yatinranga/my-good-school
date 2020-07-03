@@ -271,4 +271,16 @@ export class SupervisorDetailsComponent implements OnInit {
       this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");
     }
   }
+
+  /** Select and Deselect all grades */
+  selectGrades(val) {
+    if (val == "All") {
+      this.schoolGrades.forEach(e => {
+        this.gradesIds[e.id] = true;
+      });
+    }
+    if (val == "Reset") {
+      this.gradesIds = {};
+    }
+  }
 }
