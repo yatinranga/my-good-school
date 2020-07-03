@@ -30,7 +30,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.oauth2.common.exceptions.UnauthorizedUserException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,10 +41,8 @@ import com.nxtlife.mgs.entity.common.UserRoleKey;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.school.StudentClub;
-import com.nxtlife.mgs.entity.user.Authority;
 import com.nxtlife.mgs.entity.user.Guardian;
 import com.nxtlife.mgs.entity.user.Role;
-import com.nxtlife.mgs.entity.user.RoleAuthority;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.entity.user.User;
@@ -94,7 +91,6 @@ import com.nxtlife.mgs.view.GuardianRequest;
 import com.nxtlife.mgs.view.StudentRequest;
 import com.nxtlife.mgs.view.StudentResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
-import com.sun.mail.smtp.SMTPSendFailedException;
 
 @Service
 public class StudentServiceImpl extends BaseService implements StudentService {
@@ -769,6 +765,52 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		if (certificate == null)
 			throw new RuntimeException("Something went wrong certificate not uploaded.");
 		return new CertificateResponse(certificate);
+	}
+	
+	@Override
+	@Secured(AuthorityUtils.SCHOOL_STUDENT_CERTIFICATE_UPDATE)
+	public CertificateResponse updateCertificate(String cid , CertificateRequest request) {
+		if(cid == null || !certificateRepository.existsByCidAndActiveTrue(cid))
+			throw new ValidationException(String.format("Invalid certificate id (%s)" , cid));
+		if (request == null)
+			throw new ValidationException("Request cannot be null.");
+		if (request.getImage() != null &&  !request.getImage().isEmpty()) {
+			final List<String> contentTypes = Arrays.asList("image/png", "image/jpeg", "image/gif");
+			if (!contentTypes.contains(request.getImage().getContentType()))
+				throw new ValidationException("Please select image file only to upload not of any other type.");
+		}
+
+		Certificate certificate = certificateRepository.findByCidAndActive(cid ,true);
+		 certificate = request.toEntity(certificate);
+
+		if (request.getImage() != null && certificate.getImageUrl() != null)
+			fileStorageService.delete(certificate.getImageUrl());
+		String imageUrl = fileStorageService.storeFile(request.getImage(), request.getImage().getOriginalFilename(),
+				"/certificate/", true, true);
+		certificate.setImageUrl(imageUrl);
+		certificate = certificateRepository.save(certificate);
+		if (certificate == null)
+			throw new RuntimeException("Something went wrong certificate not updated.");
+		return new CertificateResponse(certificate);
+	}
+	
+	@Override
+	@Transactional
+	@Secured(AuthorityUtils.SCHOOL_STUDENT_CERTIFICATE_DELETE)
+	public SuccessResponse deleteCertificate(String cid) {
+		if(cid == null || !certificateRepository.existsByCidAndActiveTrue(cid))
+			throw new ValidationException(String.format("Invalid certificate id (%s)" , cid));
+		
+		String msg =  certificateRepository.deleteByCidAndActiveTrue(cid,false) == 0 ? new String("Certificate already deleted") : new String("Certificate deleted successfully");
+		return new SuccessResponse(org.springframework.http.HttpStatus.OK.value(), msg);
+	}
+	
+	@Override
+	@Secured(AuthorityUtils.SCHOOL_STUDENT_CERTIFICATE_FETCH)
+	public CertificateResponse getCertificateById(String cid) {
+		if(cid == null || !certificateRepository.existsByCidAndActiveTrue(cid))
+			throw new ValidationException(String.format("Invalid certificate id (%s)" , cid));
+		return new CertificateResponse(certificateRepository.findByCidAndActive(cid, true));
 	}
 
 	@Override
@@ -1872,4 +1914,5 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 		return membership.stream().map(ClubMembershipResponse::new).distinct().collect(Collectors.toList());
 	}
+
 }
