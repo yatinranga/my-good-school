@@ -114,8 +114,24 @@ export class SchoolService {
     return this.http.post("/api/activitiesOffered",reqBody);
   }
 
+  /** Get list of All Focus Areas */
   getFocusArea(){
     return this.http.get("/focusAreas");
+  }
+
+  /** Delete Club/Society */
+  deleteClub(id,schoolId){
+    return this.http.delete("/api/activitiesOffered/"+id+"?schoolId="+schoolId);
+  }
+
+  /** Get list of all Club/Society of Supervisor */
+  getSupervisorClubs(teacherId,schoolId){
+    return this.http.get("/api/teacher/clubs?teacherId="+teacherId+"&schoolId="+schoolId);
+  }
+
+  /** Update Role of Staff */
+  updateRole(id,reqBody){
+    return this.http.put("/api/user/"+id,reqBody);
   }
 
 }

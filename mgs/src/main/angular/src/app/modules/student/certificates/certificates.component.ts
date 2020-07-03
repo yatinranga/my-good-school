@@ -77,6 +77,21 @@ export class CertificatesComponent implements OnInit {
     } else {
       this.path = null;
     }
+
+    // this.name = ""; //reset the file name
+    // if (event.target.files.length > 0) {
+    //   const file = event.target.files[0];
+    //   console.log("File Uploaded", event.target.files[0]);
+    //   this.createSessionForm.value.fileRequests = file;
+    //   this.name = file.name;
+
+    //   var reader = new FileReader();
+    //   reader.readAsDataURL(event.target.files[0]);
+
+    //   reader.onload = (event: any) => { this.path = event.target.result; }
+    // } else {
+    //   this.path = null;
+    // }
   }
 
   // add new certificate
@@ -109,16 +124,54 @@ export class CertificatesComponent implements OnInit {
     })
   }
 
+  // edit Certificate
+  editCertificatebtn(certi_Obj){
+    $('#certificateModal').modal('show');
+    this.path = BASE_URL + "/file/download?filePath=" + certi_Obj.imageUrl;
+    this.certificateForm.patchValue({
+      title: certi_Obj.title,
+      description: certi_Obj.description,
+      fourS: certi_Obj.fourS,
+      certificationAuthority: certi_Obj.certificationAuthority
+    })
+  }
+
+  // delete Certificate
+  deleteCertificate(certi_Obj,index){
+    this.alertService.confirmWithoutLoader('question', 'Are you sure you want to delete ?', '', 'Yes').then(result => {
+      if (result.value) {
+        this.alertService.showLoader("");
+        this.studentService.deleteCertificate(certi_Obj.id).subscribe(res=>{
+          this.alertService.showMessageWithSym("Certificate Deleted !","Success","success");
+          this.certificatesArr.splice(index,1);
+        },(err => {
+          this.errorMessage(err);
+        }))
+      }
+    });
+  }
+
   // remove the selected file(certificate)
   removeFile() {
-    this.files.pop();
+    console.log("Delete Button called");
     this.files = [];
     this.path = "";
+    this.certificateForm.value.image = "";
   }
 
   // reset add certificate form
   resetForm() {
     this.certificateForm.reset();
+  }
+
+  // error handling
+  errorMessage(err){
+    if (err.status == 400) {
+      this.alertService.showMessageWithSym(err.msg, "", "info");
+    }
+    else {
+      this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");
+    }
   }
 
 }

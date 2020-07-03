@@ -27,6 +27,9 @@ export class StaffDetailsComponent implements OnInit {
   clubIds = {}; // used to assign Club to Supervisor through modal
   gradesIds = {} // used to assign Grades to Supervisor through modal
   clubId = ""; // used to assign single club/society
+  rolesArr = [];
+  roleName: any = "";
+  isRoleChanged:boolean = false;
 
   updateSupervisorForm: FormGroup;
 
@@ -44,12 +47,20 @@ export class StaffDetailsComponent implements OnInit {
       gender: [],
       qualification: [],
       yearOfEnrolment: [],
-    })
+    });
+    this.getRoles();
   }
 
   ngOnChanges(staffDetails: any) {
     this.showClub = false;
     this.clubIds = {};
+  }
+
+  /** get all the Roles */
+  getRoles() {
+    this.schoolService.getRoles().subscribe((res) => {
+      this.rolesArr = res;
+    }, (err) => { console.log(err); })
   }
 
   /** Show List of Assigned Clubs/Socities */
@@ -84,12 +95,6 @@ export class StaffDetailsComponent implements OnInit {
     $('#assignClubModal').modal('show');
     this.clubId = "";
     this.gradesIds = {};
-    // if (this.staffDetails['activityAndGrades']) {
-    //   this.staffDetails['activityAndGrades'].forEach((e) => {
-    //     this.clubIds[e.id] = true;
-    //   });
-    // }
-    // console.log(this.clubIds);
   }
 
   /** Get List of All Clubs/Socities of School */
@@ -150,17 +155,6 @@ export class StaffDetailsComponent implements OnInit {
       })
     }
 
-
-    // Object.keys(this.clubIds).forEach((key) => {
-    //   if (this.clubIds[key]) {
-    //     const clubId = {
-    //       id: key,
-    //       grades: []
-    //     }
-    //     reqBody.teachers[0].activities.push(clubId);
-    //   }
-    // });
-
     console.log(reqBody);
     this.alertService.showLoader("");
     this.schoolService.assignClub(reqBody).subscribe((res) => {
@@ -171,8 +165,8 @@ export class StaffDetailsComponent implements OnInit {
       $('#assignClubModal').modal('hide');
       this.alertService.showMessageWithSym("Club/Society Assigned !", "Success", "success");
     }, (err) => {
-     console.log(err);
-     this.errorMessage(err);
+      console.log(err);
+      this.errorMessage(err);
     })
   }
 
@@ -253,6 +247,7 @@ export class StaffDetailsComponent implements OnInit {
     $('#editSupervisorModal').modal('show');
     if (this.staffDetails.dob)
       this.updateSupervisorForm.controls.dob.patchValue(this.staffDetails.dob.split(' ')[0]);
+    this.roleName = this.staffDetails.roles[0];
 
     this.updateSupervisorForm.patchValue({
       id: this.staffDetails.id,
@@ -267,6 +262,19 @@ export class StaffDetailsComponent implements OnInit {
 
   /** Update Supervisor Profile */
   updateSupervisorProfile() {
+    //to Update the Role
+    if(this.isRoleChanged){ 
+      this.rolesArr.forEach(e=>{
+        if(e.name==this.roleName){
+          const reqBody = { roleIds : [e.id]};
+          this.schoolService.updateRole(this.staffDetails.userId,reqBody).subscribe(res=>{
+            console.log(res);
+            this.profileUpdated.emit("Profile Updated");
+          })
+        }
+      })
+    }
+
     console.log(this.updateSupervisorForm.value);
     this.updateSupervisorForm.value.dob = this.updateSupervisorForm.value.dob + " 00:00:00";
     this.alertService.showLoader("");
@@ -281,6 +289,13 @@ export class StaffDetailsComponent implements OnInit {
       this.errorMessage(err);
     });
   }
+
+  updateRole(event) {
+    console.log(event);
+    this.isRoleChanged = true;
+  }
+
+
 
   /** Selected Club Ids */
   // selectedClubIds(){

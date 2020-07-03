@@ -24,18 +24,10 @@ export class StaffListComponent implements OnInit {
 
   ngOnInit() {
     this.getAllStaff();
-    this.getAllRoles();
   }
 
   updatedTable($event) {
     this.getAllStaff();
-  }
-
-  /** get all the Roles */
-  getAllRoles() {
-    this.schoolService.getRoles().subscribe((res) => {
-      this.rolesArr = res;
-    }, (err) => { console.log(err); })
   }
 
   /** Filter Staff on the basis of Roles */
@@ -83,6 +75,10 @@ export class StaffListComponent implements OnInit {
       this.staff_obj = staff_obj;
       this.supervisorId = staff_obj.id;
       console.log(staff_obj);
+    }
+
+    if(!val){
+      this.supervisorId = "";
     }
   }
 
