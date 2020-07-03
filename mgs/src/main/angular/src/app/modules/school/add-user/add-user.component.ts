@@ -18,10 +18,10 @@ export class AddUserComponent implements OnInit {
   ngOnInit() {
     this.adminInfo = JSON.parse(localStorage.getItem('user_info'));
     this.createUserForm = this.formBuilder.group({
-      name: [null],
-      username: [null],
-      email: [null],
-      contactNumber: [null],
+      name: [null,[Validators.required]],
+      username: [null,[Validators.required]],
+      email: [null,[Validators.required]],
+      contactNumber: [null,[Validators.required,Validators.minLength(10),Validators.pattern("[0-9]*")]],
       schoolId: [this.adminInfo.schoolId],
       roleIds: [,[Validators.required]]
     });

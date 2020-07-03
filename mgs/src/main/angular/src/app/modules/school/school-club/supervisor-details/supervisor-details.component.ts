@@ -44,6 +44,7 @@ export class SupervisorDetailsComponent implements OnInit {
     this.schoolService.getClubSupervisor(this.adminInfo.schoolId, this.clubObj.id).subscribe((res) => {
       this.sup_loader = false;
       this.clubSupervisor = res;
+      console.log(res);
     }, (err) => {
       this.sup_loader = false;
     });
@@ -143,57 +144,65 @@ export class SupervisorDetailsComponent implements OnInit {
 
   /** Update/Edit Grades */
   editGrades() {
-    // Response Body
-    const reqBody = {
-      teachers: []
-    };
+    const arr = Object.values(this.gradesIds)
+    if (arr.includes(true)) {
+      console.log(this.gradesIds);
+      // Response Body
+      const reqBody = {
+        teachers: []
+      };
 
-    this.clubSupervisor.forEach(e => {
-      if (e.id == this.supervisorId) {
-        const supId = e.id;
-        const activities = []
-        e.activityAndGrades.forEach(ele => {
-          const clubid = ele.id
-          const grades = [];
-          if (ele.id == this.clubObj.id) {
-            Object.keys(this.gradesIds).forEach((key) => {
-              grades.push(key);
-            });
-          }
-          else {
+      this.clubSupervisor.forEach(e => {
+        if (e.id == this.supervisorId) {
+          const supId = e.id;
+          const activities = []
+          e.activityAndGrades.forEach(ele => {
+            const clubid = ele.id
+            const grades = [];
+            if (ele.id == this.clubObj.id) {
+              Object.keys(this.gradesIds).forEach((key) => {
+                if (this.gradesIds[key])
+                  grades.push(key);
+              });
+            }
+            else {
+              ele.gradeResponses.forEach(element => {
+                grades.push(element.id);
+              });
+            }
+            activities.push({ id: clubid, grades: grades });
+          });
+          reqBody.teachers.push({ id: supId, activities: activities });
+        }
+        else {
+          const supId = e.id;
+          const activities = []
+          e.activityAndGrades.forEach(ele => {
+            const clubid = ele.id
+            const grades = [];
             ele.gradeResponses.forEach(element => {
               grades.push(element.id);
             });
-          }
-          activities.push({ id: clubid, grades: grades });
-        });
-        reqBody.teachers.push({ id: supId, activities: activities });
-      }
-      else {
-        const supId = e.id;
-        const activities = []
-        e.activityAndGrades.forEach(ele => {
-          const clubid = ele.id
-          const grades = [];
-          ele.gradeResponses.forEach(element => {
-            grades.push(element.id);
+            activities.push({ id: clubid, grades: grades });
           });
-          activities.push({ id: clubid, grades: grades });
-        });
-        reqBody.teachers.push({ id: supId, activities: activities });
-      }
-    });
-    console.log(reqBody);
-    this.alertService.showLoader("");
-    this.schoolService.assignClub(reqBody).subscribe((res) => {
-      this.clubSupervisor = res.teachers;
-      this.updatedClub.emit("Club-Supervisor Updated");
-      $('#editGradesModal').modal('hide');
-      this.resetForm();
-      this.alertService.showMessageWithSym("Grades Edited !", "Success", "success");
-    }, (err) => {
-      this.errorMessage(err);
-    })
+          reqBody.teachers.push({ id: supId, activities: activities });
+        }
+      });
+      console.log(reqBody);
+      this.alertService.showLoader("");
+      this.schoolService.assignClub(reqBody).subscribe((res) => {
+        this.clubSupervisor = res.teachers;
+        this.updatedClub.emit("Club-Supervisor Updated");
+        $('#editGradesModal').modal('hide');
+        this.resetForm();
+        this.alertService.showMessageWithSym("Grades Edited !", "Success", "success");
+      }, (err) => {
+        this.errorMessage(err);
+      })
+    }
+    else {
+      this.alertService.showMessageWithSym("Please select atleast one grade", "", "info");
+    }
   }
 
   /** Unassign Club/Society for a particular Supervisor */

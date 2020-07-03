@@ -159,7 +159,18 @@ export class StudentService {
 
   // get status 
   getMembershipStatus() {
-    return this.http.get("api/student/club/membershipStatus");
+    return this.http.get("/api/student/club/membershipStatus");
+  }
+
+  // delete certificate
+  deleteCertificate(certiId){
+    return this.http.delete("/api/student/certificate/"+certiId);
+  }
+
+  // update certificate
+  updateCertificate(certiId,formDate){
+    return this.http.put("/api/student/certificate/"+certiId,formDate);
+
   }
 
 }
