@@ -16,27 +16,33 @@ const routes: Routes = [
   },
   {
     path: 'signup',
-    loadChildren: 'src/app/modules/signup/signup.module#SignupModule'
+    loadChildren: 'src/app/modules/signup/signup.module#SignupModule',
+    canActivate: [AuthGuard]
   },
   {
     path: 'Student',
-    loadChildren: 'src/app/modules/student/student.module#StudentModule'
+    loadChildren: 'src/app/modules/student/student.module#StudentModule',
+    canActivate: [AuthGuard]
   },
   {
     path: 'Supervisor',
-    loadChildren: 'src/app/modules/teacher/teacher.module#TeacherModule'
+    loadChildren: 'src/app/modules/teacher/teacher.module#TeacherModule',
+    canActivate: [AuthGuard]
   }, 
   {
     path: 'School',
-    loadChildren: 'src/app/modules/school/school.module#SchoolModule'
+    loadChildren: 'src/app/modules/school/school.module#SchoolModule',
+    canActivate: [AuthGuard]
   },
   {
     path: 'Coordinator',
-    loadChildren: 'src/app/modules/coordinator/coordinator.module#CoordinatorModule'
+    loadChildren: 'src/app/modules/coordinator/coordinator.module#CoordinatorModule',
+    canActivate: [AuthGuard]
   },
   {
     path: 'Head',
-    loadChildren: 'src/app/modules/coordinator/coordinator.module#CoordinatorModule'
+    loadChildren: 'src/app/modules/coordinator/coordinator.module#CoordinatorModule',
+    canActivate: [AuthGuard]
   }, 
   {
     path: '',

@@ -61,7 +61,7 @@ export class SupervisorDetailsComponent implements OnInit {
   /** List of All Supervisor of School */
   getSchoolStaff() {
     this.schoolService.getStaff().subscribe((res) => {
-      this.supervisorArr = res.filter(e=>e.roles.includes("Supervisor"));
+      this.supervisorArr = res.filter(e => e.roles.includes("Supervisor"));
     })
   }
 
@@ -73,59 +73,65 @@ export class SupervisorDetailsComponent implements OnInit {
 
   /** Assign Club/Society to Teacher */
   assignClub() {
-    const clubid = this.clubObj.id;
+    const arr = Object.values(this.gradesIds)
+    if (arr.includes(true)) {
+      const clubid = this.clubObj.id;
 
-    // Response Body
-    const reqBody = {
-      teachers: [{
-        id: this.supervisorId,
-        activities: [{
-          id: this.clubObj.id,
-          grades: []
+      // Response Body
+      const reqBody = {
+        teachers: [{
+          id: this.supervisorId,
+          activities: [{
+            id: this.clubObj.id,
+            grades: []
+          }]
         }]
-      }]
-    };
-    Object.keys(this.gradesIds).forEach((key) => {
-      reqBody.teachers[0].activities[0].grades.push(key);
-    });
+      };
+      Object.keys(this.gradesIds).forEach((key) => {
+        reqBody.teachers[0].activities[0].grades.push(key);
+      });
 
-    if (this.supervisorClubArr) {
-      this.supervisorClubArr.forEach(ele => {
-        const clubId = ele.id;
-        const grades = [];
-        ele.gradeResponses.forEach(element => {
-          grades.push(element.id);
+      if (this.supervisorClubArr) {
+        this.supervisorClubArr.forEach(ele => {
+          const clubId = ele.id;
+          const grades = [];
+          ele.gradeResponses.forEach(element => {
+            grades.push(element.id);
+          });
+          reqBody.teachers[0].activities.push({ id: clubId, grades: grades });
+        })
+      }
+
+      this.clubSupervisor.forEach(e => {
+        const supId = e.id;
+        const activities = []
+        e.activityAndGrades.forEach(ele => {
+          const clubid = ele.id
+          const grades = [];
+          ele.gradeResponses.forEach(element => {
+            grades.push(element.id);
+          });
+          activities.push({ id: clubid, grades: grades });
         });
-        reqBody.teachers[0].activities.push({ id: clubId, grades: grades });
+        reqBody.teachers.push({ id: supId, activities: activities });
+      });
+
+      console.log(reqBody);
+
+      this.alertService.showLoader("");
+      this.schoolService.assignClub(reqBody).subscribe((res) => {
+        this.clubSupervisor = res.teachers;
+        this.updatedClub.emit("Club-Supervisor Updated");
+        $('#assignSupervisorModal').modal('hide');
+        this.resetForm();
+        this.alertService.showMessageWithSym("Supervisor Assigned !", "Success", "success");
+      }, (err) => {
+        this.errorMessage(err);
       })
     }
-
-    this.clubSupervisor.forEach(e => {
-      const supId = e.id;
-      const activities = []
-      e.activityAndGrades.forEach(ele => {
-        const clubid = ele.id
-        const grades = [];
-        ele.gradeResponses.forEach(element => {
-          grades.push(element.id);
-        });
-        activities.push({ id: clubid, grades: grades });
-      });
-      reqBody.teachers.push({ id: supId, activities: activities });
-    });
-
-    console.log(reqBody);
-
-    this.alertService.showLoader("");
-    this.schoolService.assignClub(reqBody).subscribe((res) => {
-      this.clubSupervisor = res.teachers;
-      this.updatedClub.emit("Club-Supervisor Updated");
-      $('#assignSupervisorModal').modal('hide');
-      this.resetForm();
-      this.alertService.showMessageWithSym("Supervisor Assigned !", "Success", "success");
-    }, (err) => {
-      this.errorMessage(err);
-    })
+    else {
+      this.alertService.showMessageWithSym("Please select atleast one grade", "", "info");
+    }
   }
 
   /** Show Edit Grades Modal */
