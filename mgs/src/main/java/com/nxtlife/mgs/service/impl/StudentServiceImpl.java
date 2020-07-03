@@ -783,11 +783,14 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		Certificate certificate = certificateRepository.findByCidAndActive(cid ,true);
 		 certificate = request.toEntity(certificate);
 
-		if (request.getImage() != null && certificate.getImageUrl() != null)
-			fileStorageService.delete(certificate.getImageUrl());
-		String imageUrl = fileStorageService.storeFile(request.getImage(), request.getImage().getOriginalFilename(),
-				"/certificate/", true, true);
-		certificate.setImageUrl(imageUrl);
+		if (request.getImage() != null ) {
+			if(certificate.getImageUrl() != null)
+				fileStorageService.delete(certificate.getImageUrl());
+			
+			String imageUrl = fileStorageService.storeFile(request.getImage(), request.getImage().getOriginalFilename(),
+					"/certificate/", true, true);
+			certificate.setImageUrl(imageUrl);
+		}
 		certificate = certificateRepository.save(certificate);
 		if (certificate == null)
 			throw new RuntimeException("Something went wrong certificate not updated.");

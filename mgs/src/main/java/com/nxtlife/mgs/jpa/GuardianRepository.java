@@ -43,4 +43,8 @@ public interface GuardianRepository extends JpaRepository<Guardian, Long> {
 	@Query(value = "select s.user.cid from Guardian s where s.cid = ?1 and s.active = true")
 	public String findUserCidByCidAndActiveTrue(String cid);
 
+	public boolean existsByUserIdAndActiveTrue(Long id);
+
+	public void deleteByUserId(Long id);
+
 }

@@ -100,6 +100,8 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 
 	@Query("Select t from Teacher t join t.grades g join t.teacherActivityGrades tag where t.school.cid = ?1 and (g.cid in ?2 or tag.grade.cid in ?2 ) and t.active = true")
 	public List<Teacher> findAllBySchoolCidAndGradesCidOrTeacherActivityGradesGradeCidInAndActiveTrue(String schoolCid,Collection<String> gradesIds);
+
+	public int deleteByUserId(Long id);
 	
 //	List<Teacher> findAllByActivitiesCid(String cid);
 
