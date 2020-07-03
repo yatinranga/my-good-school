@@ -44,11 +44,11 @@ const routes: Routes = [
     loadChildren: 'src/app/modules/coordinator/coordinator.module#CoordinatorModule',
     canActivate: [AuthGuard]
   }, 
-  {
-    path: '',
-    redirectTo: ''+JSON.parse(localStorage.getItem('user_type')),
-    pathMatch: 'full'
-  },
+  // {
+  //   path: '',
+  //   redirectTo: ''+JSON.parse(localStorage.getItem('user_type')),
+  //   pathMatch: 'full'
+  // },
   // {
   //   path: '**',
   //   redirectTo: '/login'
