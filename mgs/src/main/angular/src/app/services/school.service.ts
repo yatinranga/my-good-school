@@ -56,7 +56,7 @@ export class SchoolService {
 
   /** Get List of All Staff (Supervisor and Coordinator) */
   getStaff() {
-    return this.http.get("/api/teachers");
+    return this.http.get("/api/teachers?pageSize=50");
   }
 
   /** Get Enrolled Clubs/Societies of particular student */
