@@ -3,8 +3,8 @@
         <div class="header-club">
             <h2>{{clubObj.name}}</h2>
         </div>
+        <button class="btn btn-success" (click)="showAssignModal()">Assign Supervisor</button>
         <div class="supervisor-main-card">
-            <button class="btn btn-success" (click)="showAssignModal()">Assign Supervisor</button>
             <div class="supervisor-card mt-3" *ngFor="let sup of clubSupervisor; let i = index;">
                 <div class="card-body">
                     <h5 class="card-title">{{i+1}}. {{sup.name}}</h5>
@@ -19,9 +19,9 @@
                             </div>
                         </div>
                     </div>
+                    <button class="btn btn-success" (click)="editGradesButton(sup)">Edit Grades</button>
+                    <button class="btn btn-danger" (click)="unassignClub(sup)">Unassign</button>
                 </div>
-                <button class="btn btn-primary" (click)="editGradesButton(sup)">Edit Grades</button>
-                <button class="btn btn-danger" (click)="unassignClub(sup)">Unassign</button>
             </div>
         </div>
 

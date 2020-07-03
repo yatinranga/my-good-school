@@ -293,6 +293,7 @@ span.badge {
     z-index: 22;
     cursor: pointer;
 }
+
 .form-check .form-check-input + span:after {
     content: "";
     display: inline-block;
@@ -307,6 +308,7 @@ span.badge {
     line-height: 17px;
     font-size: 11px;
     color: #4bafa5;
+    // opacity: 1;
 }
 .form-check .form-check-input:checked + span:after{
     border-color: #4bafa5;
@@ -319,3 +321,21 @@ span.badge {
     margin-top: 1px;
     display: inline-block;
 }
+.form-check{
+    padding-left: 0;
+    .check-field{
+        position: relative;
+        .form-check-input{
+            opacity: 1;
+            left: 0;
+            top: 2px;
+            width: 15px;
+        }
+        label{
+            padding-left: 25px;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+    }
+}
+

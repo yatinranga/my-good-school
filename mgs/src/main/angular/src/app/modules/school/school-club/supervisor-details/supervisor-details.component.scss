@@ -37,11 +37,7 @@
     border-radius: 3px !important;
     margin-top: 10px;
 }
-.supervisor-card {
-    box-shadow: 0 0 3px #ddd;
-    display: inline-block;
-    width: 100%;
-}
+
 .supervisor-card .card-body{
     padding: 15px;
 }
@@ -145,4 +141,21 @@
     line-height: normal;
     margin-top: 1px;
     display: inline-block;
+}
+.supervisor-main-card {
+    // box-shadow: 0 0 3px #ddd;
+    display: inline-block;
+    width: 100%;
+    .supervisor-card{
+        box-shadow: 0 0 3px #ddd;
+        display: inline-block;
+        width: 100%;
+            .btn{
+                border-radius: 3px !important;
+                font-size: 12px !important;
+                padding:5px 10px !important;
+                margin-right: 5px;
+            }
+       
+    }
 }
