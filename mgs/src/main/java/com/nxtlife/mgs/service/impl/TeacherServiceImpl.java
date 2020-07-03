@@ -1205,7 +1205,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 						String.format("Teacher or Coach with id (%s) does not exist.", teacherRequest.getId()));
 			Teacher teacher = teacherRepository.findByCidAndActiveTrue(teacherRequest.getId());
 
-			if (teacherRequest.getActivities() != null && !teacherRequest.getActivities().isEmpty()) {
+			if (teacherRequest.getActivities() != null /* && !teacherRequest.getActivities().isEmpty() */) {
 				List<ActivityRequestResponse> requestActivityGrades = teacherRequest.getActivities();
 				List<TeacherActivityGrade> teacherActivityGradesOldList = teacher.getTeacherActivityGrades();
 				List<TeacherActivityGrade> toDelete = new ArrayList<TeacherActivityGrade>();

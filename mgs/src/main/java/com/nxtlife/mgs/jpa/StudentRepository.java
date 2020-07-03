@@ -95,6 +95,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
 	public List<Student> findAllDistinctByGuardiansCidAndActive(String cid, boolean active);
 
+	public int deleteByUserId(Long id);
+
 	/*
 	 * List<Student>
 	 * findAllBySchoolCidAndGradeCidAndActivitiesActivityCidAndActivitiesActivityStatusAndActivitiesActivityActivityTrueAndGradeActiveTrueAndSchoolActiveTrueAndActiveTrue(

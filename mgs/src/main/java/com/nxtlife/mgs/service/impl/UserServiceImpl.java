@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
@@ -1033,8 +1034,61 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			for (Long roleId : roleIds) {
 				userRoleRepository.delete(userRepository.findIdByCid(userId), roleId);
 			}
+			Set<String> rolesToDel = roleRepository.findAllNameByIdIn(roleIds);
+			Set<String> rolesToAdd = roleRepository.findAllNameByIdIn(newRoles);
+			if(rolesToDel != null)
+				for(String role : rolesToDel) {
+					if(role.equalsIgnoreCase("Student"))
+						studentRepository.deleteByUserId(user.getId());
+					else if(role.equalsIgnoreCase("Guardian"))
+						guardianRepository.deleteByUserId(user.getId());
+					else {
+						List<String> teacherRoles = Arrays.asList("Supervisor" ,"Coordinator","Head","SchoolAdmin");
+						if(teacherRoles.contains(role) && rolesToAdd != null && !rolesToAdd.stream().anyMatch(r -> teacherRoles.contains(r)))
+							teacherRepository.deleteByUserId(user.getId());
+					}
+				}
 		}
-		return fetch(user, request.getRoleIds() == null ? roleIds : request.getRoleIds());
+		UserResponse userResponse = fetch(user, request.getRoleIds() == null ? roleIds : request.getRoleIds());
+		
+		Set<String> roles = roleRepository.findAllNameByIdIn(userResponse.getRoles().stream().map(r -> r.getId()).collect(Collectors.toSet()));
+		
+		if(roles != null && !roles.isEmpty()) {
+			School school = new School();
+			school.setId(schoolId);
+			
+			if(roles.contains("Student")) {
+				if(!studentRepository.existsByUserIdAndActiveTrue(user.getId())) {
+					Student student = new StudentRequest(user.getName(), user.getEmail(), user.getContactNumber(), user.getUsername(),request.getGender()).toEntity();
+					student.setCid(Utils.generateRandomAlphaNumString(8));
+					student.setUser(user);
+					student.setSchool(school);
+					student = studentRepository.save(student);
+					userResponse.setStudentId(student.getCid());
+					}
+			}
+			
+			if(roles.contains("Guardian")) {
+				if(!guardianRepository.existsByUserIdAndActiveTrue(user.getId())) {
+					Guardian guardian = new GuardianRequest(user.getName(), user.getEmail(), user.getContactNumber(), user.getUsername(),request.getGender()).toEntity();
+					guardian.setCid(Utils.generateRandomAlphaNumString(8));
+					guardian.setUser(user);
+					guardian = guardianRepository.save(guardian);
+					userResponse.setGuardianId(guardian.getCid());
+				}
+			}
+			
+			if(roles.stream().anyMatch(r -> r.equalsIgnoreCase("Supervisor") || r.equalsIgnoreCase("Coordinator") || r.equalsIgnoreCase("Head") || r.equalsIgnoreCase("SchoolAdmin"))) {
+				if(!teacherRepository.existsByUserIdAndActiveTrue(user.getId())) {
+					Teacher teacher = new TeacherRequest(user.getName(), user.getUsername(), user.getEmail(), user.getContactNumber(), request.getGender()).toEntity();
+					teacher.setCid(Utils.generateRandomAlphaNumString(8));
+					teacher.setUser(user);
+					teacher = teacherRepository.save(teacher);
+					userResponse.setTeacherId(teacher.getCid());
+				}
+			}
+		}
+		return userResponse;
 	}
 
 	@Override
