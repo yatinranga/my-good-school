@@ -37,7 +37,7 @@
                         <div class="schedule-date-card" *ngFor="let res of s.responses; let j = index;">
                             <ul>
                                 <div id="session_title"> {{j+1}}. {{res.title}}</div>
-                                <li> ({{res.club.name}}) </li>
+                                <li> <strong>{{res.club.name}}</strong> </li>
                                 <li> Session Number - {{res.number}} </li>
                                 <li> {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs </li>
                                 <li>Grade - <span *ngFor="let g of res.grades; let i = index">

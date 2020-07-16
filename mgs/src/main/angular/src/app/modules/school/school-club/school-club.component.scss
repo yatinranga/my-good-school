@@ -81,7 +81,7 @@ table.table tr.active {
         .action-btns{
             .fa{
                 cursor: pointer;
-                margin: 0 5px;
+                margin: 0 3px;
                 font-size: 12px;
 
                 &.fa-trash{
@@ -91,7 +91,7 @@ table.table tr.active {
         }
 
         &:last-child{
-            width: 120px;
+            width: 150px;
         }
     }
 }
