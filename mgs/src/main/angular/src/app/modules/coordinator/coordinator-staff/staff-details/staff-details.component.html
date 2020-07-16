@@ -8,7 +8,8 @@
 
                 <div class="student_image">
                     <div class="photo">
-                        <img [src]="imagePath">
+                        <img *ngIf="staffDetails.imagePath" [attr.src]="BASE_URL + staffDetails.imagePath">
+                        <img *ngIf="!staffDetails.imagePath" src="\assets\images\teacherprofile1.jpg">
                     </div>
                 </div>
 

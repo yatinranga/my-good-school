@@ -52,7 +52,7 @@
                                     <div>
                                         <p *ngFor="let a of s.activityAndGrades let i = index">
                                             <span id="fa" *ngIf="a.clubOrSociety=='Club'">
-                                                {{ (i === s.activityAndGrades.length-1) ? a.name : a.name + "," + ' '}}
+                                                {{ (i === s.activityAndGrades.length-1) ? a.name : a.name + "" + ' '}}
                                             </span>
                                         </p>
                                     </div>
@@ -61,7 +61,7 @@
                                     <div>
                                         <p *ngFor="let a of s.activityAndGrades let i = index">
                                             <span id="fa" *ngIf="a.clubOrSociety=='Society'">
-                                                {{ (i === s.activityAndGrades.length-1) ? a.name : a.name + "," + ' '}}
+                                                {{ (i === s.activityAndGrades.length-1) ? a.name : a.name + "" + ' '}}
                                             </span>
                                         </p>
                                     </div>

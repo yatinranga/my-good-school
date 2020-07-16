@@ -10,8 +10,11 @@
                         <img [src]="imagePath">
                     </div> -->
                     <div class="photo">
-                        <img [src]="imagePath"><button class="edit_profile" (click)="photoInput.click()">
-                            <i class="fa fa-edit" title="Edit"></i> Change Profile </button></div>
+                        <img *ngIf="studentDetails.profileImage" [attr.src]="BASE_URL + studentDetails.profileImage">
+                        <img *ngIf="!studentDetails.profileImage" src="\assets\images\childprofile.jpg">
+                        <!-- <button class="edit_profile" (click)="photoInput.click()">
+                            <i class="fa fa-edit" title="Edit"></i> Change Profile </button> -->
+                        </div>
 
                 </div>
                 <div class="information">

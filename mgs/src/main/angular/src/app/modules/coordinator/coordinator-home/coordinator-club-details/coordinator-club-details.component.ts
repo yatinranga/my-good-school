@@ -78,7 +78,6 @@ export class CoordinatorClubDetailsComponent implements OnInit {
     this.teacherService.getSupervisorClubStudents(this.clubObject.id, supervisorId).subscribe((res) => {
       this.studentsArr = res;
       this.copyStuArr = Object.assign([], res);
-      console.log(res);
       this.stu_loader = false;
     }, (err) => {
       console.log(err);

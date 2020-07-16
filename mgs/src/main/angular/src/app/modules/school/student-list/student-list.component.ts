@@ -76,8 +76,7 @@ export class StudentListComponent implements OnInit {
     this.student_loader = true;
     this.schoolService.getStudents().subscribe((res) => {
       this.studentsArr = res;
-      this.copyStudentArr = Object.assign([], res);
-      console.log(res);
+      this.copyStudentArr = Object.assign([], res);      
       this.student_loader = false;
 
     }, (err) => {

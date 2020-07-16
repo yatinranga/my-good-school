@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { StudentService } from 'src/app/services/student.service';
 import { AlertService } from 'src/app/services/alert.service';
+import { BASE_URL } from 'src/app/services/app.constant';
+
 
 @Component({
   selector: 'app-profile',
@@ -10,10 +12,12 @@ import { AlertService } from 'src/app/services/alert.service';
 })
 export class ProfileComponent implements OnInit {
 
+  BASE_URL: string;
+
   studentProfile: FormGroup;
   profilePhotoForm: FormGroup;
   editForm = 'Student Profile';
-  studentDetails = {};
+  studentDetails:any = {};
   studentInfo: any;
   studentId: any;
   tabs = 'guardian0';
@@ -22,7 +26,9 @@ export class ProfileComponent implements OnInit {
   path: any;
   enrolledClubsArr = [];
 
-  constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService) { }
+  constructor(private formBuilder: FormBuilder, private studentService: StudentService, private alertService: AlertService) {
+    this.BASE_URL = BASE_URL + "/file/download?filePath=";
+   }
 
   ngOnInit() {
 
@@ -35,16 +41,6 @@ export class ProfileComponent implements OnInit {
     this.studentService.getProfile(this.studentId).subscribe((res) => {
       this.studentDetails = res;
       console.log(this.studentDetails);
-
-      if (res.gender = "Female") {
-        this.path = "assets/images/childprofile.jpg";
-      } else {
-        this.path = "assets/images/boy.jpg";
-      }
-      // Profile Photo is there it will be added
-      // if(res.profileImage){
-      //   this.path  = this.studentDetails["profileImage"];
-      // }
     },
       (err) => console.log(err)
     );   
@@ -75,22 +71,26 @@ export class ProfileComponent implements OnInit {
 
   // Edit Profile Photo of Student
   editProfilePhoto() {
-    this.alertService.showSuccessAlert("Profile Photo Updated");
+    this.alertService.showLoader("");
     const formData = new FormData();
     formData.append('profilePic', this.profilePhotoForm.value.profilePic);
     this.studentService.putProfilePhoto(this.studentId, formData).subscribe((res) => {
+      this.alertService.showSuccessAlert("Profile Photo Updated");
+      this.studentDetails = res;
       console.log("Profile Photo Changed");
-      console.log(res);
     }, (err) => {
       console.log(err);
+      this.errorMessage(err);
     })
   }
 
-  // List of enrolled Clubs and Societies
-  // getEnrolledClub() {
-  //   this.studentService.getAllEnrolledClub().subscribe(res => {
-  //     console.log(res);
-  //     this.enrolledClubsArr = res;
-  //   }, (err) => { console.log(err) });
-  // }
+  /** Handling Error */
+  errorMessage(err) {
+    if (err.status == 400) {
+      this.alertService.showMessageWithSym(err.msg, "", "info");
+    }
+    else {
+      this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");
+    }
+  }
 }

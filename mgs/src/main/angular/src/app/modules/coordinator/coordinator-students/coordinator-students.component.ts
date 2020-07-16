@@ -29,7 +29,6 @@ export class CoordinatorStudentsComponent implements OnInit {
   getStudents() {
     this.student_loader = true;
     this.teacherService.getCoordinatorStudents(this.coordinatorInfo.id).subscribe(res => {
-      console.log(res);
       this.studentsArr = res;
       this.copyStuArr = Object.assign([], res);
       this.student_loader = false;

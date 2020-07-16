@@ -4,7 +4,8 @@
             <div class="leftprofile">
                 <div class="profile_details">
                     <div class="teacher_image">
-                        <img [src]="path">
+                        <img *ngIf="teacherDetails.imagePath" [attr.src]="BASE_URL + teacherDetails.imagePath">
+                        <img *ngIf="!teacherDetails.imagePath" src="\assets\images\teacherprofile1.jpg">
                         <button class="edit_profile" (click)="photoInput.click()">
                             <!-- <i class="fa fa-edit" title="Edit"> </i> -->
                             Edit Profile Photo </button>
@@ -16,29 +17,29 @@
                             <input type="tel" maxlength="10" pattern="[0-9]{10}" name="mobileNumbe"
                                 [(ngModel)]="mobileNumber" [disabled]="setDisabled" />
                         </div>
-                        
+
                         <div class="name">
                             <!-- <i class="fa fa-envelope"></i> -->
                             <input [(ngModel)]="email" [disabled]="setDisabled" [(ngModel)]="email" />
                         </div>
-                        
-                        
+
+
                     </div>
                 </div>
                 <div class="teacher_about">
                     <textarea name="profileBrief" rows="6" cols="50" [disabled]="setDisabled"
                         [(ngModel)]="profileBrief"></textarea>
 
-                        <div class="edit_buttons">
-                            
-                            <button (click)="updateProfile()" class="update">
-                                {{setDisabled ? 'Edit Profile' :'Update'}}</button>
-                        </div>
+                    <div class="edit_buttons">
+
+                        <button (click)="updateProfile()" class="update">
+                            {{setDisabled ? 'Edit Profile' :'Update'}}</button>
+                    </div>
                 </div>
 
             </div>
             <div class="rightprofile">
-              
+
                 <div class="rightprofiletext">
                     <div class="basic-info">
                         <h3> Basic Info </h3>
@@ -59,7 +60,8 @@
                                 Qualifications - <label> {{teacherDetails['qualification']}}</label> </li>
                             <li>
                                 <!-- <i class="fa fa-running"></i> -->
-                                Role - <label> <span *ngIf="teacherDetails['roles']">{{teacherDetails.roles[0]}}</span> </label> </li>
+                                Role - <label> <span *ngIf="teacherDetails['roles']">{{teacherDetails.roles[0]}}</span>
+                                </label> </li>
                             <li>
                                 <!-- <i class="fa fa-chalkboard-teacher"></i> -->
                                 <!-- Class Teacher - <label> {{teacherDetails['isClassTeacher'] ? "Yes" : "No" }}</label> -->
