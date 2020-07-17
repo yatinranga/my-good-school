@@ -28,19 +28,8 @@ export class ClubDetailsComponent implements OnInit {
 
 
   ngOnInit() {
-    // this.adminInfo = JSON.parse(localStorage.getItem('user_info'));
-    // this.getSupervisor();
     this.getFocusArea();
-    this.editClubForm = this.formBuilder.group({
-      id: [],
-      name: [],
-      description: [],
-      fourS: [],
-      clubOrSociety: [],
-      focusAreaRequests: []
-    });
-
-
+    this.createForm();
 
     // window.onscroll = function() {myFunction()};
 
@@ -55,9 +44,6 @@ export class ClubDetailsComponent implements OnInit {
     //   }
     // }
 
-
-
-
     // onscroll = function() {scrollFunction1()};
 
     // function scrollFunction1() {
@@ -71,8 +57,19 @@ export class ClubDetailsComponent implements OnInit {
 
   }
 
-  ngOnChanges(clubObj){
+  ngOnChanges(clubObj) {
     this.nameChanged = false;
+  }
+
+  createForm() {
+    this.editClubForm = this.formBuilder.group({
+      id: [],
+      name: [],
+      description: [],
+      fourS: [],
+      clubOrSociety: [],
+      focusAreaRequests: []
+    });
   }
 
   getFocusArea() {
@@ -111,28 +108,26 @@ export class ClubDetailsComponent implements OnInit {
     this.editClubForm.value.focusAreaRequests = arr;
 
     // If name is not changes, then remove the name field
-    console.log(this.nameChanged);
     const clubReq = {};
     Object.keys(this.editClubForm.value).forEach(key => {
       if (!this.nameChanged) {
         if (!(key == "name")) {
-        if(this.editClubForm.get(key).value !== null)
-          clubReq[key] = this.editClubForm.get(key).value;
+          if (this.editClubForm.get(key).value !== null)
+            clubReq[key] = this.editClubForm.get(key).value;
         }
-      } 
+      }
       else {
-        if(this.editClubForm.get(key).value !== null)
+        if (this.editClubForm.get(key).value !== null)
           clubReq[key] = this.editClubForm.get(key).value;
       }
     });
     clubReq['focusAreaRequests'] = arr;
     this.schoolService.updateClub(clubReq).subscribe(res => {
-      this.nameChanged = false;
-      console.log("name = ",this.nameChanged);
       this.updatedClub.emit("Update Table");
       this.clubObj = res;
       $('#editClubModal').modal('hide');
       this.alertService.showMessageWithSym('Club Updated !', 'Updated', 'success');
+      this.createForm();
     }, (err => {
       console.log(err);
       this.errorMessage(err);
@@ -142,12 +137,13 @@ export class ClubDetailsComponent implements OnInit {
   resetForm() {
     this.editClubForm.reset();
     this.focusareaIds = {};
+    this.nameChanged = false;
+    this.createForm();
   }
 
   onClubNameChanges() {
     this.editClubForm.get("name").valueChanges.subscribe(x => {
       this.nameChanged = true;
-      console.log(x)
     })
   }
 
