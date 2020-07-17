@@ -23,7 +23,6 @@ export class CoordinatorActivityComponent implements OnInit {
   getPerformedActivities() {
     this.acti_loader = true;
     this.teacherService.getSupervisedActivities().subscribe(res => {
-      console.log(res);
       this.performedActiArr = res;
       this.acti_loader = false;
     }, (err => {

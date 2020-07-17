@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { AlertService } from 'src/app/services/alert.service';
+import { BASE_URL } from 'src/app/services/app.constant';
 
 @Component({
   selector: 'app-teacher-profile',
@@ -9,6 +10,7 @@ import { AlertService } from 'src/app/services/alert.service';
   styleUrls: ['./teacher-profile.component.scss']
 })
 export class TeacherProfileComponent implements OnInit {
+  BASE_URL: string;
   teacherInfo: any;
   teacherId: any;
   teacherDetails: any = {};
@@ -25,7 +27,9 @@ export class TeacherProfileComponent implements OnInit {
   assignedClubsArr = [];
   assignedSocietyArr = [];
 
-  constructor(private formBuilder: FormBuilder, private teacherService: TeacherService, private alertService: AlertService) { }
+  constructor(private formBuilder: FormBuilder, private teacherService: TeacherService, private alertService: AlertService) {
+    this.BASE_URL = BASE_URL + "/file/download?filePath=";
+  }
 
   ngOnInit() {
     this.path = "assets/images/teacherprofile1.jpg";
@@ -38,7 +42,6 @@ export class TeacherProfileComponent implements OnInit {
       this.email = res.email;
       this.profileBrief = res.profileBrief;
       // this.path = res.imagePath;
-      console.log(res);
       this.getAllClubs();
 
     },
@@ -93,14 +96,16 @@ export class TeacherProfileComponent implements OnInit {
 
   // Edit Profile Photo of Student
   editProfilePhoto() {
-    this.alertService.showSuccessAlert("Profile Photo Updated");
+    this.alertService.showLoader("");
     const formData = new FormData();
     formData.append('profilePic', this.profilePhotoForm.value.profilePic);
     this.teacherService.putProfilePhoto(formData).subscribe((res) => {
+      this.teacherDetails = res;
+      this.alertService.showSuccessAlert("Profile Photo Updated");
       console.log("Profile Photo Changed");
-      console.log(res);
     }, (err) => {
       console.log(err);
+      this.errorMessage(err);
     })
   }
 
@@ -113,7 +118,6 @@ export class TeacherProfileComponent implements OnInit {
         this.profileUpdateForm.value.profileBrief = this.profileBrief;
         this.alertService.showLoader("");
         this.teacherService.updateProfile(this.teacherId, this.profileUpdateForm.value).subscribe((res) => {
-          console.log(res);
           this.alertService.showSuccessToast("Profile Updated");
           this.setDisabled = true;
         }, (err) => {
@@ -125,6 +129,16 @@ export class TeacherProfileComponent implements OnInit {
 
       // this.alertService.showErrorAlert("Fill the proper details");
       this.setDisabled = false;
+    }
+  }
+
+  /** Handling Error */
+  errorMessage(err){
+    if (err.status == 400) {
+      this.alertService.showMessageWithSym(err.msg, "", "info");
+    }
+    else {
+      this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");
     }
   }
 

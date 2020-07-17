@@ -44,7 +44,6 @@ export class SupervisorDetailsComponent implements OnInit {
     this.schoolService.getClubSupervisor(this.adminInfo.schoolId, this.clubObj.id).subscribe((res) => {
       this.sup_loader = false;
       this.clubSupervisor = res;
-      console.log(res);
     }, (err) => {
       this.sup_loader = false;
     });
@@ -254,8 +253,7 @@ export class SupervisorDetailsComponent implements OnInit {
   /** Get All Clubs/Societies of a particular Supervisor (during Club assign) */
   getSupervisorClubs(teacherId) {
     this.supervisorClubArr = [];
-    this.schoolService.getSupervisorClubs(teacherId, this.adminInfo.schoolId).subscribe(res => {
-      console.log(res);
+    this.schoolService.getSupervisorClubs(teacherId, this.adminInfo.schoolId).subscribe(res => {      
       this.supervisorClubArr = res;
     }, (err => {
       console.log(err);

@@ -24,7 +24,7 @@
                             <span *ngFor="let g of staffDetails.grades; let i = index">
                                 {{ (i === staffDetails.grades.length-1)? g.grade +" "+g.section : g.grade+" "+g.section+ "," + ' '}}
                             </span></li>
-                        
+
                         <button class="btn btn-primary" (click)="showSupervisorModal()">Edit Profile</button>
                     </ul>
                 </div>
@@ -33,7 +33,8 @@
             </div>
         </div>
         <div class="btns">
-            <button class="btn clubs-socities-btn btn-success" *ngIf="staffDetails.roles.includes('Supervisor')" (click)="setShowClub(true)">Show Clubs/Socities</button>
+            <button class="btn clubs-socities-btn btn-success" *ngIf="staffDetails.roles.includes('Supervisor')"
+                (click)="setShowClub(true)">Show Clubs/Socities</button>
         </div>
 
         <div class="col-12" *ngIf="showClub">
@@ -60,6 +61,8 @@
                                     </ul>
                                     <button class="btn btn-success" (click)="showGradeEditModal(club)">Update/Assign
                                     </button>
+                                    <button class="btn btn-danger" (click)="unassignClub(club)">Unassign</button>
+
                                 </div>
                             </div>
                         </div>
@@ -82,6 +85,8 @@
                                     </div>
                                     <button class="btn btn-success" (click)="showGradeEditModal(soc)">Update/Assign
                                     </button>
+                                    <button class="btn btn-danger" (click)="unassignClub(soc)">Unassign</button>
+
                                 </div>
                             </div>
                         </div>
@@ -282,7 +287,8 @@
                                 <div class="form-group">
                                     <div class="grade-main">
                                         <h3 for="recipient-name" class="">Grades :
-                                            <button type="button" class="btn btn-success" (click)="selectGrades('All')">Select
+                                            <button type="button" class="btn btn-success"
+                                                (click)="selectGrades('All')">Select
                                                 all</button>
                                             <button type="button" class="btn btn-danger"
                                                 (click)="selectGrades('Reset')">Reset</button>

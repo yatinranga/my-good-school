@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { AlertService } from 'src/app/services/alert.service';
+import { BASE_URL } from 'src/app/services/app.constant';
 
 @Component({
   selector: 'app-coordinator-profile',
@@ -9,9 +10,11 @@ import { AlertService } from 'src/app/services/alert.service';
   styleUrls: ['./coordinator-profile.component.scss']
 })
 export class CoordinatorProfileComponent implements OnInit {
+  BASE_URL: string;
+
   teacherInfo: any;
   teacherId: any;
-  teacherDetails:any = {};
+  teacherDetails: any = {};
 
   profilePhotoForm: FormGroup;
   profileUpdateForm: FormGroup;
@@ -24,12 +27,14 @@ export class CoordinatorProfileComponent implements OnInit {
   profileBrief: any;
   assignedClubsArr = [];
   assignedSocietyArr = [];
-  club_loader:boolean = true;
+  club_loader: boolean = true;
 
-  constructor(private formBuilder: FormBuilder, private teacherService: TeacherService, private alertService: AlertService) { }
+  constructor(private formBuilder: FormBuilder, private teacherService: TeacherService, private alertService: AlertService) {
+    this.BASE_URL = BASE_URL + "/file/download?filePath=";
+  }
 
   ngOnInit() {
-    this.path = "assets/images/teacherprofile1.jpg";
+    // this.path = "assets/images/teacherprofile1.jpg";
     this.teacherInfo = JSON.parse(localStorage.getItem('user_info'));
     // this.teacherId = this.teacherInfo['teacher'].id;
     this.teacherId = this.teacherInfo.id;
@@ -41,7 +46,6 @@ export class CoordinatorProfileComponent implements OnInit {
       // this.path = res.imagePath;
       if (res.imagePath)
         this.path = res.imagePath;
-      console.log(res);
       this.getAllClubs();
 
     },
@@ -71,9 +75,11 @@ export class CoordinatorProfileComponent implements OnInit {
   // }
 
   getAllClubs() {
-    this.assignedClubsArr = this.teacherDetails.activityAndGrades.filter((e) => (e.clubOrSociety == "Club"));
-    this.assignedSocietyArr = this.teacherDetails.activityAndGrades.filter((e) => (e.clubOrSociety == "Society"));
     this.club_loader = false;
+    if (this.teacherDetails.activityAndGrades) {
+      this.assignedClubsArr = this.teacherDetails.activityAndGrades.filter((e) => (e.clubOrSociety == "Club"));
+      this.assignedSocietyArr = this.teacherDetails.activityAndGrades.filter((e) => (e.clubOrSociety == "Society"));
+    }
   }
 
   // Select Profile Photo
@@ -97,12 +103,13 @@ export class CoordinatorProfileComponent implements OnInit {
 
   // Edit Profile Photo of Student
   editProfilePhoto() {
-    this.alertService.showSuccessAlert("Profile Photo Updated");
+    this.alertService.showLoader("");
     const formData = new FormData();
     formData.append('profilePic', this.profilePhotoForm.value.profilePic);
     this.teacherService.putProfilePhoto(formData).subscribe((res) => {
+      this.teacherDetails = res;
+      this.alertService.showSuccessAlert("Profile Photo Updated");
       console.log("Profile Photo Changed");
-      console.log(res);
     }, (err) => {
       console.log(err);
     })
@@ -117,7 +124,6 @@ export class CoordinatorProfileComponent implements OnInit {
         this.profileUpdateForm.value.profileBrief = this.profileBrief;
         this.alertService.showLoader("");
         this.teacherService.updateProfile(this.teacherId, this.profileUpdateForm.value).subscribe((res) => {
-          console.log(res);
           this.alertService.showSuccessToast("Profile Updated");
           this.setDisabled = true;
         }, (err) => {
