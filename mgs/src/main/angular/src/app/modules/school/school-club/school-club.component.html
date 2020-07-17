@@ -14,7 +14,11 @@
                 <label>4S :</label>
                 <select (change)="filterClubs()" name="fourS" [(ngModel)]="fourS">
                     <option value="" selected> All </option>
-                    <option *ngFor="let ps of fourSArr" value={{ps}}>{{ps}}</option>
+                    <!-- <option *ngFor="let ps of fourSArr" value={{ps}}>{{ps}}</option> -->
+                    <option value="Study" *ngIf="clubType=='' || clubType=='Society'">Study</option>
+                    <option value="Skill" *ngIf="clubType=='' || clubType=='Club'">Skill</option>
+                    <option value="Sport" *ngIf="clubType=='' || clubType=='Club'">Sport</option>
+                    <option value="Service" *ngIf="clubType=='' || clubType=='Society'">Service</option>
                 </select>
             </div>
             <div class="select-field">
