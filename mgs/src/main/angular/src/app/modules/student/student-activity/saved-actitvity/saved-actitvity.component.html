@@ -72,7 +72,8 @@
                             <td>{{activity.dateOfActivity | date}}</td>
                             <td>{{activity.coachName}}</td>
                             <td>
-                                <div *ngIf="activity.activityStatus === 'SubmittedByStudent'" class="submitted">
+                                <div *ngIf="activity.activityStatus === 'SubmittedByStudent' || activity.activityStatus === 'SavedByTeacher'"
+                                    class="submitted">
                                     Submitted
                                 </div>
                                 <div *ngIf="activity.activityStatus === 'SavedByStudent'" class="saved">Saved</div>
@@ -113,7 +114,7 @@
                                     data-parent="#accordionExample1">
                                     <div class="collapse-card">
                                         <div class="container-fluid"
-                                            *ngIf=" (activity.activityStatus === 'SavedByStudent') || (activity.activityStatus === 'SubmittedByStudent')">
+                                            *ngIf=" (activity.activityStatus === 'SavedByStudent') || (activity.activityStatus === 'SubmittedByStudent') || (activity.activityStatus === 'SavedByTeacher')">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="description">
@@ -133,7 +134,7 @@
                                                             {{ (i === activity.psdAreas.length-1) ? fa : fa + "," + ' '}}
                                                         </span><br>
                                                         <p id="fa"> <strong> 4's : </strong> {{activity.fourS}} -->
-                                                            <!--
+                                                        <!--
                                                             <span *ngIf="activity.fourS=='Skill'" style="color: #4bafa5;">
                                                             {{activity.fourS}}
                                                         </span>
@@ -147,7 +148,7 @@
                                                             {{activity.fourS}}
                                                         </span>
                                                         -->
-                                                        
+
                                                     </div>
                                                 </div>
                                                 <div class="col-6" *ngIf="activity.fileResponses">
@@ -185,37 +186,8 @@
                                                         <h5> Activity Details : </h5>
                                                         <p *ngIf="activity.description">
                                                             <strong> Description : </strong> {{activity.description}}
-                                                        </p>
-                                                        <!-- <p id="fa">
-                                                            <strong>Focus Area : </strong>
-                                                        </p>
-                                                        <span id="fa"
-                                                            *ngFor="let fa of activity.focusAreas; let i = index">
-                                                            {{ (i === activity.focusAreas.length-1) ? fa : fa + "," + ' '}}
-                                                        </span>
-                                                        <p *ngIf="activity.psdAreas">
-                                                            <strong>PSD Area : </strong></p>
-                                                        <span id="fa"
-                                                            *ngFor="let fa of activity.psdAreas let i = index">
-                                                            {{ (i === activity.psdAreas.length-1) ? fa : fa + "," + ' '}}
-                                                        </span>
-                                                        <p *ngIf="activity.fourS" id="fourSkills">
-                                                            <strong>4's: </strong> {{activity.fourS}} -->
-                                                            <!--
-                                                            <span *ngIf="activity.fourS=='Skill'" style="color: #4bafa5;">
-                                                            {{activity.fourS}}
-                                                        </span>
-                                                        <span *ngIf="activity.fourS=='Sport'" style="color: #e04090;">
-                                                            {{activity.fourS}}
-                                                        </span>
-                                                        <span *ngIf="activity.fourS=='Study'" style="color: #1f69ad;">
-                                                            {{activity.fourS}}
-                                                        </span>
-                                                        <span *ngIf="activity.fourS=='Service'" style="color: #8dc33a;">
-                                                            {{activity.fourS}}
-                                                        </span>
-                                                        -->
-                                                        
+                                                        </p>                                                   
+
                                                     </div>
 
                                                 </div>
@@ -256,7 +228,7 @@
                                                         <h5> Attachments : </h5>
                                                         <ol>
                                                             {{activity.fileResponses.length ? "" : "NA"}}
-                                                            <li *ngFor="let file of activity.fileResponses">                                                                
+                                                            <li *ngFor="let file of activity.fileResponses">
                                                                 <a [attr.href]="BASE_URL + file.url">
                                                                     <i class="fa fa-file-audio"
                                                                         *ngIf="file.extension == 'mp3'"></i>
@@ -317,7 +289,7 @@
                                             <label for="recipient-name" class="col-form-label"> Activity Type
                                                 <span>*</span> </label>
                                             <select class="form-control" name="activityName"
-                                                formControlName="activityId" (ngModelChange)="getStudentCoach($event)">                                        
+                                                formControlName="activityId" (ngModelChange)="getStudentCoach($event)">
                                                 <option [ngValue]="null" disabled selected>Select One</option>
                                                 <option *ngFor="let activity of enrolledActivities; let i = index"
                                                     value={{activity.id}}>

@@ -124,6 +124,7 @@
                 <ul *ngFor="let res of s.responses; let i = index;">
                   <div id="session_title"> {{i+1}}. {{res.title}} </div>
                   <li> <strong>Club Name : </strong> ({{res.club.name}}) </li>
+                  <li> <strong>4S : </strong> {{res.club.fourS}} </li>
                   <li> <strong>Time : </strong> {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs </li>
                   <li> <strong>Supervisor : </strong> {{res.teacherName}}</li>
                   <li> <strong>Description : </strong> {{res.description}}</li>
