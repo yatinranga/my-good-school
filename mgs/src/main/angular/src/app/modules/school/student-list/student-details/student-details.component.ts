@@ -179,9 +179,10 @@ export class StudentDetailsComponent implements OnInit {
 
   updateStudentProfile() {
     this.updateStudentForm.value.dob = this.updateStudentForm.value.dob + " 00:00:00";
-    console.log(this.updateStudentForm.value);
     this.alertService.showLoader("");
     this.schoolService.updateStudentProfile(this.studentDetails.id, this.updateStudentForm.value).subscribe((res) => {
+      this.updatedProfile.emit("Update Profile");
+      this.studentDetails = res;
       this.alertService.showMessageWithSym("Profile Updated !", "Success", "success");
       $('#editStudentModal').modal('hide');
     }, (err) => {

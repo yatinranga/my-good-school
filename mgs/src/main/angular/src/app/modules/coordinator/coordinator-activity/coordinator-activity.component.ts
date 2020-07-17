@@ -11,10 +11,13 @@ export class CoordinatorActivityComponent implements OnInit {
   BASE_URL: string;
 
   performedActiArr = [];
+  copyPerformedActiArr = [];
   acti_loader: boolean = false;
+  activityType = "All";
+
   constructor(private teacherService: TeacherService) {
     this.BASE_URL = BASE_URL + "/file/download?filePath=";
-   }
+  }
 
   ngOnInit() {
     this.getPerformedActivities();
@@ -24,12 +27,32 @@ export class CoordinatorActivityComponent implements OnInit {
     this.acti_loader = true;
     this.teacherService.getSupervisedActivities().subscribe(res => {
       this.performedActiArr = res;
+      this.copyPerformedActiArr = Object.assign([], res);
       this.acti_loader = false;
     }, (err => {
       console.log(err);
       this.acti_loader = false;
 
     }))
+  }
+  // Toggle Activity View
+  filterActivity() {
+    this.performedActiArr = this.filter(Object.assign([], this.copyPerformedActiArr));
+  }
+
+  // Actual Filtering on the basis of Activity Type
+  filter(array: any[]) {
+    let filterActivitiesArr = [];
+    if (this.activityType == "Reviewed") {
+      filterActivitiesArr = array.filter(e => e.activityStatus && e.activityStatus == "Reviewed");
+    }
+    else if (this.activityType == "Pending") {
+      filterActivitiesArr = array.filter(e => e.activityStatus && (e.activityStatus == "SavedByTeacher" || e.activityStatus == "SubmittedByStudent"));
+    }
+    else {
+      filterActivitiesArr = array;
+    }
+    return filterActivitiesArr;
   }
 
   order: boolean = false;
