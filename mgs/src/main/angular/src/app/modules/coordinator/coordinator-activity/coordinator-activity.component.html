@@ -20,7 +20,7 @@
                         <th scope="col">ACTIVITY TITLE</th>
                         <th scope="col">PERFORMED ACTIVITY DATE </th>
                         <th scope="col">STATUS
-                            <button name="sort" class="icon_button" (click)="sortByStatus()" ngIf="activityType=='All'">
+                            <button name="sort" class="icon_button" *ngIf="activityType=='All'" (click)="sortByStatus()">
                                 <i class="fa fa-sort"></i>
                             </button>
                         </th>
@@ -56,7 +56,7 @@
                         <tr>
                             <td class="collapse-td" colspan="10">
                                 <div [attr.id]="'collapse' + i " class="collapse" data-parent="#accordionExample">
-                                    <div class="container-fluid mb-3" *ngIf="(activity.activityStatus == 'Reviewed')">
+                                    <div class="container-fluid mb-3" *ngIf="(activity.activityStatus =='Reviewed')">
                                         <div class="row">
                                             <div class="col-3">
                                                 <div class="description">
@@ -113,8 +113,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="container-fluid mb-3"
-                                        *ngIf="(activity.activityStatus === 'SubmittedByStudent')">
+                                    <div class="container-fluid mb-3" *ngIf="(activity.activityStatus !== 'Reviewed')">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="description">
