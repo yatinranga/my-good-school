@@ -21,6 +21,7 @@ export class ClubDetailsComponent implements OnInit {
   // sup_loader: boolean = false;
   editClubForm: FormGroup;
   focusareaIds = {};
+  nameChanged:boolean = false; //When Club name is changed
 
   constructor(private schoolService: SchoolService, private formBuilder: FormBuilder, private alertService: AlertService) { }
 
@@ -35,7 +36,11 @@ export class ClubDetailsComponent implements OnInit {
       fourS: [],
       clubOrSociety: [],
       focusAreaRequests: []
-    })
+    });
+  }
+
+  ngOnChanged(clubObj){
+    console.log(this.nameChanged);
   }
 
   getFocusArea() {
@@ -59,21 +64,28 @@ export class ClubDetailsComponent implements OnInit {
     this.clubObj.focusAreaResponses.forEach(element => {
       this.focusareaIds[element.id] = true;
     });
+
+    this.onClubNameChanges();
   }
 
   updateClub() {
-    this.alertService.showLoader("");
+    // this.alertService.showLoader("");
     const arr = [];
     Object.keys(this.focusareaIds).forEach(key => {
       if (this.focusareaIds[key]) {
         arr.push({ id: key })
       }
     })
+    
+    // If name is not changes, then remove the name field
+    // if(!this.nameChanged){
+    //   this.editClubForm.removeControl('name');
+    // }
+    
     this.editClubForm.value.focusAreaRequests = arr;
     console.log(this.editClubForm.value);
 
     this.schoolService.updateClub(this.editClubForm.value).subscribe(res => {
-      console.log(res);
       this.updatedClub.emit("Update Table");
       this.clubObj = res;
       $('#editClubModal').modal('hide');
@@ -81,12 +93,19 @@ export class ClubDetailsComponent implements OnInit {
     }, (err => {
       console.log(err);
       this.errorMessage(err);
-    }))
+    }));
   }
 
   resetForm() {
     this.editClubForm.reset();
     this.focusareaIds = {};
+  }
+
+  onClubNameChanges(){
+    this.editClubForm.get("name").valueChanges.subscribe(x => {
+      this.nameChanged = true;
+      console.log(x)
+   })
   }
 
   /** Handling Error */

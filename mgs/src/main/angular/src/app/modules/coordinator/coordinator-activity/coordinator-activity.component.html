@@ -1,4 +1,13 @@
 <div class="container-fluid">
+    <div class="sortby"> Filter by:
+        <select style="border: 1px solid #ddd" name="activityType" (change)="filterActivity()"
+            [(ngModel)]="activityType">
+            <option value="" disabled hidden> Choose here </option>
+            <option value="All" selected> All</option>
+            <option value="Pending">Pending</option>
+            <option value="Reviewed">Reviewed</option>
+        </select>
+    </div>
     <div class="activity-card">
         <div class="table_main">
             <table class="table">
@@ -10,24 +19,11 @@
                         <th scope="col">PERFORMED ACTIVITY </th>
                         <th scope="col">ACTIVITY TITLE</th>
                         <th scope="col">PERFORMED ACTIVITY DATE </th>
-                        <th scope="col" >STATUS
-                            <button name="sort" class="icon_button" (click)="sortByStatus()">
+                        <th scope="col">STATUS
+                            <button name="sort" class="icon_button" (click)="sortByStatus()" ngIf="activityType=='All'">
                                 <i class="fa fa-sort"></i>
                             </button>
                         </th>
-                        <!-- <th scope="col" *ngIf="!(activityType === 'Reviewed')">STATUS
-                            <button *ngIf="activityType === 'All'" name="sort" class="icon_button"
-                                (click)="sortByStatus()">
-                                <i class="fa fa-sort"></i>
-                            </button>
-                        </th>
-                        <th scope="col" *ngIf="(activityType === 'Reviewed')">STATUS
-                            <button *ngIf="activityType === 'All'" name="sort" class="icon_button"
-                                (click)="sortByStatus()">
-                                <i class="fa fa-sort"></i>
-                            </button>
-                        </th>
-                        <th *ngIf="!(activityType === 'Reviewed')">ACTION</th> -->
                         <th scope="col"> <i class="fa fa-paperclip" title="Attachment" aria-hidden="true"></i> </th>
                     </tr>
                 </thead>
@@ -41,48 +37,16 @@
                             <td>{{activity.title}}</td>
                             <td>{{activity.dateOfActivity | date}}</td>
                             <td>
-                                <div *ngIf="activity.activityStatus === 'SubmittedByStudent'" class="pending">
+                                <div *ngIf="activity.activityStatus === 'SubmittedByStudent' || activity.activityStatus === 'SavedByTeacher'"
+                                    class="pending">
                                     Pending</div>
-                                <div *ngIf="activity.activityStatus === 'SavedByTeacher'" class="saved">
-                                    Saved
-                                </div>
+                                <!-- <div *ngIf="activity.activityStatus === 'SavedByTeacher'" class="pending">
+                                    Pending
+                                </div> -->
                                 <div *ngIf="activity.activityStatus === 'Reviewed'" class="reviewed">
                                     Reviewed
                                 </div>
                             </td>
-                            <!-- <td *ngIf="!(activityType === 'Reviewed')" (click)="stopCollapse($event)">
-                                <div *ngIf="(activityType === 'All') && (activity.activityStatus !== 'Reviewed')">
-                                    <button name="submitSavedActivity"
-                                        [disabled]="!(activity.activityStatus === 'SavedByTeacher')"
-                                        (click)="submitSavedActivity(activity,i, $event)" class="submitted icon_button">
-                                        <i class="fa fa-paper-plane" title="Submit"> </i> </button>
-                                    <button name="editSavedActivity"
-                                        [disabled]="!(activity.activityStatus === 'SavedByTeacher')"
-                                        (click)="editSavedActivity(activity,i, $event)" class="saved icon_button">
-                                        <i class="fa fa-edit" title="Edit"> </i> </button>
-                                    <button name="reviewActivity"
-                                        [disabled]="!(activity.activityStatus === 'SubmittedByStudent')"
-                                        (click)="reviewActivity(activity,i, $event)" class="pending icon_button">
-                                        <i class="fa fa-comments" title="Review"></i> </button>
-                                </div>
-        
-                                <div *ngIf="activityType === 'Pending'">
-                                    <button name="reviewActivity" (click)="reviewActivity(activity,i, $event)"
-                                        class="pending icon_button"> <i class="fa fa-comments" title="Review"></i>
-                                    </button>
-                                </div>
-        
-                                <div *ngIf="activityType === 'Saved'">
-                                    <button name="submitSavedActivity" (click)="submitSavedActivity(activity,i, $event)"
-                                        class="submitted icon_button">
-                                        <i class="fa fa-paper-plane" title="Submit"> </i> </button>
-                                    <button name="editSavedActivity" (click)="editSavedActivity(activity,i, $event)"
-                                        class="saved icon_button"> <i class="fa fa-edit" title="Edit">
-                                        </i> </button>
-                                </div>
-                                <div *ngIf="(activityType === 'All') && (activity.activityStatus === 'Reviewed')">
-                                    NA </div>
-                            </td> -->
                             <td>
                                 <span class="pull-right" *ngIf="activity.fileResponses.length">
                                     <i class="fa fa-paperclip" title="Attachment" aria-hidden="true"></i>
@@ -92,14 +56,14 @@
                         <tr>
                             <td class="collapse-td" colspan="10">
                                 <div [attr.id]="'collapse' + i " class="collapse" data-parent="#accordionExample">
-                                    <div class="container-fluid mb-3" *ngIf="(activity.activityStatus != 'SubmittedByStudent')">
+                                    <div class="container-fluid mb-3" *ngIf="(activity.activityStatus == 'Reviewed')">
                                         <div class="row">
                                             <div class="col-3">
                                                 <div class="description">
                                                     <h5> Activity Details : </h5>
                                                     <p> <strong> Description - </strong>
                                                         {{activity.description}} </p>
-        
+
                                                 </div>
                                             </div>
                                             <div class="col-3">
@@ -131,18 +95,20 @@
                                                     {{activity.fileResponses.length ? "" : "NA"}}
                                                     <ul>
                                                         <li *ngFor="let file of activity.fileResponses">
-        
+
                                                             <a [attr.href]="BASE_URL + file.url">
-                                                                <i class="fa fa-file-audio" *ngIf="file.extension == 'mp3'"></i>
-                                                                <i class="fa fa-image" *ngIf="file.extension=='jpg'"></i>
+                                                                <i class="fa fa-file-audio"
+                                                                    *ngIf="file.extension == 'mp3'"></i>
+                                                                <i class="fa fa-image"
+                                                                    *ngIf="file.extension=='jpg'"></i>
                                                                 <i class="fa fa-video-camera"
                                                                     *ngIf="file.extension=='video'"></i>
                                                                 {{file.name}}
                                                             </a>
-        
+
                                                         </li>
                                                     </ul>
-        
+
                                                 </div>
                                             </div>
                                         </div>
@@ -163,21 +129,23 @@
                                                     {{activity.fileResponses.length ? "" : "NA"}}
                                                     <ul>
                                                         <li *ngFor="let file of activity.fileResponses">
-        
+
                                                             <a [attr.href]="BASE_URL + file.url">
-                                                                <i class="fa fa-file-audio" *ngIf="file.extension == 'mp3'"></i>
-                                                                <i class="fa fa-image" *ngIf="file.extension=='jpg'"></i>
+                                                                <i class="fa fa-file-audio"
+                                                                    *ngIf="file.extension == 'mp3'"></i>
+                                                                <i class="fa fa-image"
+                                                                    *ngIf="file.extension=='jpg'"></i>
                                                                 <i class="fa fa-video-camera"
                                                                     *ngIf="file.extension=='video'"></i>
                                                                 {{file.name}}
                                                             </a>
-        
+
                                                         </li>
                                                     </ul>
-        
+
                                                 </div>
                                             </div>
-        
+
                                         </div>
                                     </div>
                                 </div>
