@@ -765,3 +765,20 @@ input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none; 
   margin: 0; 
 }
+
+
+.btn {
+    border-radius: 3px !important;
+}
+
+.sticky {
+    .clubs-details-main {
+        position: sticky;
+        top: 70px;
+
+        .btn{
+            right: 0 !important;
+        }
+    }
+    
+}

@@ -59,13 +59,16 @@
                     </table>
                 </div>
             </div>
-            <div class="col-5" *ngIf="showDetails"> 
-                <button class="btn btn-close btn-danger" (click)="setShowDetails(false)"> <i class="fa fa-times"
-                    aria-hidden="true"></i></button>
-                <div class="popup-box">
-                    <app-students-details [studentDetails]="student_obj">
-                    </app-students-details>
+            <div class="col-5" id="details-actions" *ngIf="showDetails"> 
+                <div class="clubs-details-main">
+                    <button class="btn btn-close btn-danger" (click)="setShowDetails(false)"> <i class="fa fa-times"
+                        aria-hidden="true"></i></button>
+                    <div class="popup-box">
+                        <app-students-details [studentDetails]="student_obj">
+                        </app-students-details>
+                    </div>
                 </div>
+                
             </div>
         </div>
     </div>
