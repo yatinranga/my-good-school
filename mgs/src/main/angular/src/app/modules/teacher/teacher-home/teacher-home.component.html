@@ -36,19 +36,29 @@
                     <div class="schedule-date-main">
                         <div class="schedule-date-card" *ngFor="let res of s.responses; let j = index;">
                             <ul>
-                                <div id="session_title"> {{j+1}}. {{res.title}}</div>
-                                <li> <strong>{{res.club.name}}</strong> </li>
-                                <li> Session Number - {{res.number}} </li>
-                                <li> {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs </li>
-                                <li>Grade - <span *ngFor="let g of res.grades; let i = index">
+                                <div id="session_title"> 
+                                    <label for="">{{j+1}}. {{res.title}}</label>
+                                    <div class="btns-action">
+                                        <button class="btn btn-info" (click)="editSessionBtn(res)">Edit</button>
+                                        <button class="btn btn-danger" (click)="deleteSession(res,i,j)">Delete</button>
+                                    </div>
+                                </div>
+                                <li> <i class="fa fa-trophy" aria-hidden="true"></i>
+                                     <strong>{{res.club.name}}</strong> </li>
+                                <li> <i class="fa fa-cube" aria-hidden="true"></i>
+                                     Session Number - {{res.number}} </li>
+                                <li><i class="fa fa-clock-o" aria-hidden="true"></i>
+                                     {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs </li>
+                                <li><i class="fa fa-graduation-cap" aria-hidden="true"></i>
+                                     Grade - <span *ngFor="let g of res.grades; let i = index">
                                         {{ (i === res.grades.length-1) ? g.grade+" "+g.section : g.grade+" "+g.section + "," + ' '}}</span>
                                 </li>
-                                <li>Description - {{res.description}}</li>
-                                <li *ngIf="res.fileResponses.length">Attachment - <a [attr.href]="BASE_URL + res.fileResponses[0].url">
+                                <li><i class="fa fa-audio-description" aria-hidden="true"></i>
+                                     Description - {{res.description}}</li>
+                                <li *ngIf="res.fileResponses.length"><i class="fa fa-paperclip" aria-hidden="true"></i>
+                                     Attachment - <a [attr.href]="BASE_URL + res.fileResponses[0].url">
                                         {{res.fileResponses[0].name}}</a></li>
-                                <div class="btns-action"><button class="btn btn-info" (click)="editSessionBtn(res)">Edit</button>
-                                    <button class="btn btn-danger" (click)="deleteSession(res,i,j)">Delete</button>
-                                </div>
+                                
                             </ul>
                         </div>
                         

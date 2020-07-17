@@ -293,6 +293,14 @@ button.close span {
     font-size: 15px;
     list-style: inherit;
     color: #555;
+    margin-left: 30px;
+    .fa {
+        margin-left: -25px;
+        padding-left: 0px !important;
+        width: 20px;
+        margin-right: 0;
+    }
+    
     a{
         display: inline-block;
         width: 100%;
@@ -472,6 +480,7 @@ span.supervisor_name {
                     top: 2px;
                     transition: 0.5s;
                     color: #4bafa5;
+                    display: none;
                 } 
                 a{
                     text-decoration: underline;
@@ -503,4 +512,14 @@ span.supervisor_name {
     position: relative;
     display: inline-block;
     width: 100%;
+}
+
+.my-schedule-main{
+    .day-card{
+        .day{
+            li{
+                margin-left: 15px !important;
+            }
+        }
+    }
 }

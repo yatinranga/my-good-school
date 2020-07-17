@@ -305,4 +305,27 @@ input.form-control.time-s, input.form-control.time-e {
     padding: 0;
     color: #dd343d;
 }
+.schedule-date-card div#session_title label {
+    margin: 0;
+}
+.schedule-date-card div#session_title .btns-action {
+    display: inline-block;
+    float: right;
+}
+.schedule-date-card div#session_title .btns-action button.btn {
+    margin: 0 5px;
+    padding: 3px 7px 2px 7px;
+    line-height: normal;
+    font-size: 12px;
+}
+.schedule-date-card li {
+    list-style: none !important;
+    font-size: 14px;
+    margin-left: 30px !important;
+    i.fa {
+        margin: 0 0 0 -30px;
+        width: 25px;
+        display: inline-block;
+    }
 
+}
