@@ -49,7 +49,21 @@ export class SchoolClubComponent implements OnInit {
       fourS: [, [Validators.required]],
       clubOrSociety: [, [Validators.required]],
       focusAreaRequests: []
-    })
+    });
+
+
+    window.onscroll = function() {scrollFunction()};
+
+    function scrollFunction() {
+      if (document.body.scrollTop > 70 || document.documentElement.scrollTop > 70) {
+        document.getElementById("details-actions").classList.add("sticky");
+      } else {
+        document.getElementById("details-actions").classList.remove("sticky");
+
+      }
+    }
+
+
   }
 
   /** List of All Clubs and Socities offered in School */

@@ -84,15 +84,20 @@
                     </tfoot>
                 </table>
             </div>
-            <div class="col-4" *ngIf="showSupervisor">
-                <button class="btn btn-danger" (click)="setShowWindow('No Window')"> <i class="fa fa-close"></i>
-                </button>
-                <app-supervisor-details [clubObj]="club_obj" (updatedClub)="UpdatedTable($event)">
-                </app-supervisor-details>
+            <div class="col-4" id="details-actions" *ngIf="showSupervisor">
+                <div class="clubs-details-main">
+                    <button class="btn btn-danger" (click)="setShowWindow('No Window')"> <i class="fa fa-close"></i>
+                    </button>
+                    <app-supervisor-details [clubObj]="club_obj" (updatedClub)="UpdatedTable($event)">
+                    </app-supervisor-details>
+                </div> 
+                
             </div>
-            <div class="col-4" *ngIf="showClubDetails">
+            <div class="col-4" id="details-actions" *ngIf="showClubDetails">
+               <div class="clubs-details-main">
                 <button class="btn btn-danger" (click)="setShowWindow('No Window')"><i class="fa fa-close"></i></button>
                 <app-club-details [clubObj]="club_obj" (updatedClub)="UpdatedTable($event)"></app-club-details>
+               </div>
             </div>
         </div>
     </div>

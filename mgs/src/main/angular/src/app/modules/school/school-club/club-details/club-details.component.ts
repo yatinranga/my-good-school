@@ -25,6 +25,7 @@ export class ClubDetailsComponent implements OnInit {
 
   constructor(private schoolService: SchoolService, private formBuilder: FormBuilder, private alertService: AlertService) { }
 
+ 
   ngOnInit() {
     // this.adminInfo = JSON.parse(localStorage.getItem('user_info'));
     // this.getSupervisor();
@@ -37,11 +38,38 @@ export class ClubDetailsComponent implements OnInit {
       clubOrSociety: [],
       focusAreaRequests: []
     });
+    
+
+    // window.onscroll = function() {myFunction()};
+
+    // var navbar = document.getElementById("card-club-details-card");
+    // var sticky = navbar.offsetTop;
+    
+    // function myFunction() {
+    //   if (window.pageYOffset >= sticky) {
+    //     navbar.classList.add("sticky")
+    //   } else {
+    //     navbar.classList.remove("sticky");
+    //   }
+    // }
+
+
+
+
+    // onscroll = function() {scrollFunction1()};
+
+    // function scrollFunction1() {
+    //   if (document.body.scrollTop > 70 || document.documentElement.scrollTop > 70) {
+    //     document.getElementById("card-club-details-card").classList.add("sticky");
+    //   } else {
+    //     document.getElementById("card-club-details-card").classList.remove("sticky");
+
+    //   }
+    // }
+    
   }
 
-  ngOnChanged(clubObj){
-    console.log(this.nameChanged);
-  }
+
 
   getFocusArea() {
     this.schoolService.getFocusArea().subscribe(res => {

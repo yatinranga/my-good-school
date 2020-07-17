@@ -34,7 +34,7 @@
         </div>
         <div class="btns">
             <button class="btn clubs-socities-btn btn-success" *ngIf="staffDetails.roles.includes('Supervisor')"
-                (click)="setShowClub(true)">Show Clubs/Socities</button>
+                (click)="setShowClub(true)">Show Clubs/Societies</button>
         </div>
 
         <div class="col-12" *ngIf="showClub">
@@ -70,7 +70,7 @@
                 </div>
                 <div class="club-socity-card">
                     <div class="society" *ngIf="assignedSocietyArr.length">
-                        <h4><b> Socities :</b></h4>
+                        <h4><b> Societies :</b></h4>
                         <div *ngFor="let soc of assignedSocietyArr; let i = index;">
                             <div class="card">
                                 <div class="card-body">
@@ -290,8 +290,8 @@
                                             <button type="button" class="btn btn-success"
                                                 (click)="selectGrades('All')">Select
                                                 all</button>
-                                            <button type="button" class="btn btn-danger"
-                                                (click)="selectGrades('Reset')">Reset</button>
+                                            <!-- <button type="button" class="btn btn-danger"
+                                                (click)="selectGrades('Reset')">Reset</button> -->
                                         </h3>
                                         <div class="form-check" *ngFor="let grade of schoolGrades;">
                                             <label class="form-check-label" for="exampleCheck1">

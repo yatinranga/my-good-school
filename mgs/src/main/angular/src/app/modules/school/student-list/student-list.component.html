@@ -59,16 +59,18 @@
                 </div>
 
             </div>
-            <div [ngClass]="{'col-7':col=='col-5'}" class="col-5" *ngIf="showDetails">
+            <div [ngClass]="{'col-7':col=='col-5'}" class="col-5" id="details-actions" *ngIf="showDetails">
                 <!-- <div class="col-12 student-details" *ngIf="showDetails"> -->
-
-                <button class="btn btn-close btn-danger" (click)="setShowDetails(false)"> <i class="fa fa-times"
-                        aria-hidden="true"></i>
-                </button>
-                <div class="popup-box">
-                    <app-student-details [studentDetails]="student_obj" (updatedProfile)="updatedTable($event)">
-                    </app-student-details>
-                </div>
+                    <div class="clubs-details-main">
+                        <button class="btn btn-close btn-danger" (click)="setShowDetails(false)"> <i class="fa fa-times"
+                            aria-hidden="true"></i>
+                    </button>
+                    <div class="popup-box">
+                        <app-student-details [studentDetails]="student_obj" (updatedProfile)="updatedTable($event)">
+                        </app-student-details>
+                    </div>
+                    </div>
+                
             </div>
         </div>
     </div>
