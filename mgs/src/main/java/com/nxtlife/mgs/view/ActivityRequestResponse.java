@@ -5,9 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -15,35 +13,35 @@ import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.enums.FourS;
 import com.nxtlife.mgs.ex.ValidationException;
 
-@JsonInclude(content = Include.NON_EMPTY )
+@JsonInclude(content = Include.NON_EMPTY)
 public class ActivityRequestResponse {
 
-	@NotEmpty(message = " activity name can't be null")
+//	@NotEmpty(message = " activity name can't be null")
 	private String name;
 	private String description;
 	private String id;
-	
+
 	@NotEmpty(message = "fourS cannot be empty or null.")
 	private String fourS;
-	
+
 	private Boolean isGeneral;
 	private Set<String> focusAreaIds;
 	private List<String> schoolIds;
 	private Set<String> focusAreas;
-	
+
 	private List<FocusAreaRequestResponse> focusAreaRequests;
 	private Set<FocusAreaRequestResponse> focusAreaResponses;
-	
+
 	private String clubOrSociety;
-	
+
 	private List<String> grades;
-	
+
 	private List<GradeResponse> gradeResponses;
-	
+
 	private Boolean visited = false;
-	
+
 	private String supervisorName;
-	
+
 	private Set<String> psdAreas;
 
 	public String getName() {
@@ -109,7 +107,7 @@ public class ActivityRequestResponse {
 	public void setSchoolIds(List<String> schoolIds) {
 		this.schoolIds = schoolIds;
 	}
-	
+
 	public List<FocusAreaRequestResponse> getFocusAreaRequests() {
 		return focusAreaRequests;
 	}
@@ -180,10 +178,11 @@ public class ActivityRequestResponse {
 
 	public Activity toEntity(Activity activity) {
 		activity = activity == null ? new Activity() : activity;
-		activity.setName(this.name);
+		activity.setName(this.name == null ? activity.getName():this.getName());
 		activity.setDescription(this.description);
-		if(!FourS.matches(this.fourS))
-			throw new ValidationException("Invalid value for field fourS , it should belong to list : [Skill ,Sport ,Study ,Service]");
+		if (!FourS.matches(this.fourS))
+			throw new ValidationException(
+					"Invalid value for field fourS , it should belong to list : [Skill ,Sport ,Study ,Service]");
 		activity.setFourS(FourS.valueOf(this.fourS));
 //		activity.setIsGeneral(this.isGeneral);
 		return activity;
@@ -197,10 +196,11 @@ public class ActivityRequestResponse {
 		this.name = activity.getName();
 		this.description = activity.getDescription();
 		this.isGeneral = activity.getIsGeneral();
-		if(activity.getClubOrSociety() != null)
-		      this.clubOrSociety = activity.getClubOrSociety().toString();
-		this.focusAreaResponses = activity.getFocusAreas().stream().map(FocusAreaRequestResponse :: new ).distinct().collect(Collectors.toSet());
-		if(this.focusAreaResponses != null) {
+		if (activity.getClubOrSociety() != null)
+			this.clubOrSociety = activity.getClubOrSociety().toString();
+		this.focusAreaResponses = activity.getFocusAreas().stream().map(FocusAreaRequestResponse::new).distinct()
+				.collect(Collectors.toSet());
+		if (this.focusAreaResponses != null) {
 			this.focusAreas = new HashSet<String>();
 			this.psdAreas = new HashSet<String>();
 			this.focusAreaIds = new HashSet<String>();
@@ -210,8 +210,9 @@ public class ActivityRequestResponse {
 				this.focusAreaIds.add(fa.getId());
 			});
 		}
-		if(activity.getSchools()!=null) {
-			this.schoolIds = activity.getSchools().stream().distinct().map(s -> s.getCid()).collect(Collectors.toList());
+		if (activity.getSchools() != null) {
+			this.schoolIds = activity.getSchools().stream().distinct().map(s -> s.getCid())
+					.collect(Collectors.toList());
 		}
 
 	}

@@ -40,7 +40,6 @@ import com.nxtlife.mgs.jpa.AwardRepository;
 import com.nxtlife.mgs.jpa.AwardTypeRepository;
 import com.nxtlife.mgs.jpa.FocusAreaRepository;
 import com.nxtlife.mgs.jpa.GradeRepository;
-import com.nxtlife.mgs.jpa.SchoolRepository;
 import com.nxtlife.mgs.jpa.StudentRepository;
 import com.nxtlife.mgs.jpa.TeacherActivityGradeRepository;
 import com.nxtlife.mgs.jpa.TeacherRepository;
@@ -59,9 +58,6 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 
 	@Autowired
 	private AwardRepository awardRepository;
-
-	@Autowired
-	private SchoolRepository schoolRepository;
 
 	@Autowired
 	private ActivityPerformedRepository activityPerformedRepository;
@@ -118,24 +114,23 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 		return awardCriterias;
 	}
 
-
-
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_AWARD_ASSIGN)
 	public AwardResponse createAward(AwardRequest request) {
 		if (request == null)
 			throw new ValidationException("Request cannot be null.");
-		//		if (request.getTeacherId() == null)
-		//			throw new ValidationException("Teacher id cannot be null.");
-		//		Teacher teacher = teacherRepository.findByCidAndActiveTrue(request.getTeacherId());
-		//		if (teacher == null)
-		//			throw new ValidationException(String.format("Teacher (%s) does not exist.", request.getTeacherId()));
+		// if (request.getTeacherId() == null)
+		// throw new ValidationException("Teacher id cannot be null.");
+		// Teacher teacher =
+		// teacherRepository.findByCidAndActiveTrue(request.getTeacherId());
+		// if (teacher == null)
+		// throw new ValidationException(String.format("Teacher (%s) does not exist.",
+		// request.getTeacherId()));
 		if (request.getAwardType() == null)
 			throw new ValidationException("Award Type cannot be null.");
 		if (request.getStudentId() == null
 				&& (request.getActivityPerformedIds() == null || request.getActivityPerformedIds().isEmpty()))
 			throw new ValidationException("Student and ActivityPerformedIds both cannot be empty/null simultaneously.");
-
 
 		AwardType awardType = awardTypeRepository.getByNameAndActiveTrue(request.getAwardType());
 		if (awardType == null)
@@ -236,33 +231,32 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_AWARD_FETCH)
 	public List<AwardResponse> findAllByStudent(String studentCid) {
-		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student") )) {
+		if (!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student"))) {
 			if (studentCid == null || !studentRepository.existsByCidAndActiveTrue(studentCid)) {
 				throw new ValidationException("studentId cannot be null or invalid.");
 			}
-		}else {
+		} else {
 			studentCid = studentRepository.findCidByUserIdAndActiveTrue(getUserId());
-			if (studentCid == null) 
+			if (studentCid == null)
 				throw new ValidationException("Student not found probably userId is not set for student.");
 		}
 		List<Award> awards = awardRepository.findByStudentCidAndStatus(studentCid, ApprovalStatus.VERIFIED);
 		if (awards == null || awards.isEmpty())
 			throw new NotFoundException(String.format("No Award given to student (%s) yet.", studentCid));
 
-
 		return awards.stream().map(AwardResponse::new).distinct().collect(Collectors.toList());
 	}
 
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_AWARD_FETCH)
-	public List<AwardResponse> findAllByStudent(AwardFilter awardFilter ,String studentCid) {
-		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student") )) {
+	public List<AwardResponse> findAllByStudent(AwardFilter awardFilter, String studentCid) {
+		if (!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student"))) {
 			if (studentCid == null || !studentRepository.existsByCidAndActiveTrue(studentCid)) {
 				throw new ValidationException("studentId cannot be null or invalid.");
 			}
-		}else {
+		} else {
 			studentCid = studentRepository.findCidByUserIdAndActiveTrue(getUserId());
-			if (studentCid == null) 
+			if (studentCid == null)
 				throw new ValidationException("Student not found probably userId is not set for student.");
 		}
 
@@ -277,15 +271,18 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_AWARD_FETCH)
-	public List<AwardResponse> findAllByManagement(String schoolCid ,String teacherCid) {
+	public List<AwardResponse> findAllByManagement(String schoolCid, String teacherCid) {
 		List<Award> awards;
 		Long teacherId = null;
 		List<String> gradeIds = null;
-		if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor"))) {
-			awards = awardRepository.findByTeacherCidAndActiveTrue(teacherRepository.findCidByUserIdAndActiveTrue(getUserId()));
-			//awards = awardRepository.findByActivityInOrActivityNullAndTeacherCid(teacherActivityGradeRepository.findAllActivityByTeacherCidAndActiveTrue(teacherCid) ,teacherCid);
-		}else {
-			if(teacherCid == null)
+		if (getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor"))) {
+			awards = awardRepository
+					.findByTeacherCidAndActiveTrue(teacherRepository.findCidByUserIdAndActiveTrue(getUserId()));
+			// awards =
+			// awardRepository.findByActivityInOrActivityNullAndTeacherCid(teacherActivityGradeRepository.findAllActivityByTeacherCidAndActiveTrue(teacherCid)
+			// ,teacherCid);
+		} else {
+			if (teacherCid == null)
 				throw new ValidationException("TeacherId cannot be null.");
 			teacherId = teacherRepository.findIdByCidAndActiveTrue(teacherCid);
 
@@ -294,55 +291,57 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 			if (!teacherActivityGradeRepository.existsByTeacherIdAndActiveTrue(teacherId))
 				throw new ValidationException("Teacher not running any clubs or societies.");
 
-			if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))) {
+			if (!getUser().getRoles().stream()
+					.anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))) {
 				schoolCid = getUser().getSchool().getCid();
-				if(schoolCid == null)
+				if (schoolCid == null)
 					throw new ValidationException("School id not assigned to user logged in.");
 
-				if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("SchoolAdmin"))) {
+				if (getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("SchoolAdmin"))) {
 
-					if(!teacherRepository.existsByUserIdAndActiveTrue(getUserId()))
-						gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue( schoolCid);
+					if (!teacherRepository.existsByUserIdAndActiveTrue(getUserId()))
+						gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue(schoolCid);
 					else
-						gradeIds = gradeRepository.findAllCidBySchoolsCidAndTeacherIdActiveTrue( schoolCid, teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
-				}else {
-					if(!teacherRepository.existsByUserIdAndActiveTrue(getUserId())) {
+						gradeIds = gradeRepository.findAllCidBySchoolsCidAndTeacherIdActiveTrue(schoolCid,
+								teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
+				} else {
+					if (!teacherRepository.existsByUserIdAndActiveTrue(getUserId())) {
 						throw new ValidationException("Not Authorized to see details.");
-					}else {
-						gradeIds = gradeRepository.findAllCidBySchoolsCidAndTeacherIdActiveTrue( schoolCid,teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
+					} else {
+						gradeIds = gradeRepository.findAllCidBySchoolsCidAndTeacherIdActiveTrue(schoolCid,
+								teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
 					}
 				}
 
-			}else {	
+			} else {
 
-				if(schoolCid == null)
+				if (schoolCid == null)
 					throw new ValidationException("School id cannot be null.");
-				gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue( schoolCid);
+				gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue(schoolCid);
 			}
 
-			awards = awardRepository.findByTeacherCidAndStudentGradeCidInAndActiveTrue(teacherCid ,gradeIds);
+			awards = awardRepository.findByTeacherCidAndStudentGradeCidInAndActiveTrue(teacherCid, gradeIds);
 		}
-
 
 		return awards.stream().map(AwardResponse::new).collect(Collectors.toList());
 	}
 
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_AWARD_FETCH)
-	public List<AwardResponse> findAllByManagement(AwardFilter awardFilter ,String teacherCid) {
-		if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor")))
+	public List<AwardResponse> findAllByManagement(AwardFilter awardFilter, String teacherCid) {
+		if (getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor")))
 			teacherCid = teacherRepository.findCidByUserIdAndActiveTrue(getUserId());
 		if (teacherCid == null) {
 			throw new ValidationException("Teacher id cannot be null.");
 		}
 
-		List<Award> awards = awardRepository
-				.findAll(new AwardFilterBuilder().build(awardFilter, teacherActivityGradeRepository.findAllActivityByTeacherCidAndActiveTrue(teacherCid)));
+		List<Award> awards = awardRepository.findAll(new AwardFilterBuilder().build(awardFilter,
+				teacherActivityGradeRepository.findAllActivityByTeacherCidAndActiveTrue(teacherCid)));
 
 		return awards.stream().map(AwardResponse::new).collect(Collectors.toList());
 	}
 
-	//change this method to be used by coordinator not for supervisor
+	// change this method to be used by coordinator not for supervisor
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_AWARD_REVIEW)
 	public AwardResponse updateStatus(String awardId, Boolean isVerified) {
@@ -351,9 +350,10 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 		if (award == null) {
 			throw new ValidationException(String.format("This award not exist", awardId));
 		}
-		Boolean headOrAdmin = getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Head") || r.getName().equalsIgnoreCase("SchoolAdmin") );
+		Boolean headOrAdmin = getUser().getRoles().stream()
+				.anyMatch(r -> r.getName().equalsIgnoreCase("Head") || r.getName().equalsIgnoreCase("SchoolAdmin"));
 		if (award.getStatus().equals(ApprovalStatus.PENDING)) {
-			if(headOrAdmin)
+			if (headOrAdmin)
 				award.setStatus(isVerified ? ApprovalStatus.VERIFIED : ApprovalStatus.REJECTED);
 			else
 				award.setStatus(isVerified ? ApprovalStatus.FORWARDED : ApprovalStatus.REJECTED);
@@ -363,14 +363,14 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 
 			award.setStatusModifiedBy(getUser());
 			award.setStatusModifiedAt(new Date());
-		} else if(award.getStatus().equals(ApprovalStatus.FORWARDED)){
-			if(!headOrAdmin)
+		} else if (award.getStatus().equals(ApprovalStatus.FORWARDED)) {
+			if (!headOrAdmin)
 				throw new ValidationException("You have already sent this award for review by Head.");
 			award.setStatus(isVerified ? ApprovalStatus.VERIFIED : ApprovalStatus.REJECTED);
-			award.setDateOfReceipt( award.getStatus().equals(ApprovalStatus.VERIFIED) ? new Date() : null);
+			award.setDateOfReceipt(award.getStatus().equals(ApprovalStatus.VERIFIED) ? new Date() : null);
 			award.setStatusModifiedBy(getUser());
 			award.setStatusModifiedAt(new Date());
-		} else{
+		} else {
 			throw new ValidationException("This award already rejected or verified");
 		}
 		awardRepository.save(award);
@@ -380,13 +380,13 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_AWARD_FETCH)
 	public List<PropertyCount> getCount(String studentCid, String status, String type) {
-		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student") )) {
+		if (!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student"))) {
 			if (studentCid == null || !studentRepository.existsByCidAndActiveTrue(studentCid)) {
 				throw new ValidationException("studentId cannot be null or invalid.");
 			}
-		}else {
+		} else {
 			studentCid = studentRepository.findCidByUserIdAndActiveTrue(getUserId());
-			if (studentCid == null) 
+			if (studentCid == null)
 				throw new ValidationException("Student not found probably userId is not set for student.");
 		}
 
@@ -417,75 +417,87 @@ public class AwardServiceImpl extends BaseService implements AwardService {
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_AWARD_CREATE)
 	public SuccessResponse createAwardType(String name) {
-		if(name == null)
+		if (name == null)
 			throw new ValidationException("Name cannot be null");
 		Long schoolId = getUser().gettSchoolId();
-		if(awardTypeRepository.existsByNameAndSchoolId(name ,schoolId))
-			throw new ValidationException(String.format("AwardType (%s) already exists in school having id (%d)", name,schoolId));
+		if (awardTypeRepository.existsByNameAndSchoolId(name, schoolId))
+			throw new ValidationException(
+					String.format("AwardType (%s) already exists in school having id (%d)", name, schoolId));
 		AwardType awardType = new AwardType();
 		awardType.setName(name);
-		School school =  new School();
+		School school = new School();
 		school.setId(schoolId);
 		awardType.setSchool(school);
 		awardType = awardTypeRepository.save(awardType);
 
-		return new SuccessResponse(200,String.format("AwardType (%s) successfully created in school having id (%d)", name,schoolId));
+		return new SuccessResponse(200,
+				String.format("AwardType (%s) successfully created in school having id (%d)", name, schoolId));
 	}
 
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_AWARD_DELETE)
 	public SuccessResponse deleteAwardType(String name) {
-		if(name == null)
+		if (name == null)
 			throw new ValidationException("Name cannot be null");
 		Long schoolId = getUser().gettSchoolId();
-		if(!awardTypeRepository.existsByNameAndSchoolId(name ,schoolId))
-			throw new ValidationException(String.format("AwardType (%s) does not exists in school having id (%d)", name,schoolId));
-		if(awardTypeRepository.deleteByNameAndSchoolId(name ,schoolId) < 1)
-			throw new RuntimeException(String.format("Something went wrong AwardType (%s) not deleted from school.",name));
+		if (!awardTypeRepository.existsByNameAndSchoolId(name, schoolId))
+			throw new ValidationException(
+					String.format("AwardType (%s) does not exists in school having id (%d)", name, schoolId));
+		if (awardTypeRepository.deleteByNameAndSchoolId(name, schoolId) < 1)
+			throw new RuntimeException(
+					String.format("Something went wrong AwardType (%s) not deleted from school.", name));
 
-		return new SuccessResponse(200,String.format("AwardType (%s) successfully deleted from school having id (%d)", name,schoolId));
+		return new SuccessResponse(200,
+				String.format("AwardType (%s) successfully deleted from school having id (%d)", name, schoolId));
 	}
-	
+
 	@Override
-	public Collection<AwardResponse> getAllAwardsForGradesUnderMe(String schoolCid){
-		
+	public Collection<AwardResponse> getAllAwardsForGradesUnderMe(String schoolCid) {
+
 		List<String> gradeIds = null;
-		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))) {
+		if (!getUser().getRoles().stream()
+				.anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))) {
 			schoolCid = getUser().getSchool().getCid();
-			if(schoolCid == null)
+			if (schoolCid == null)
 				throw new ValidationException("School id not assigned to user logged in.");
-			
-        if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("SchoolAdmin"))) {
-				
-				if(!teacherRepository.existsByUserIdAndActiveTrue(getUserId()))
-					gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue( schoolCid);
+
+			if (getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("SchoolAdmin"))) {
+
+				if (!teacherRepository.existsByUserIdAndActiveTrue(getUserId()))
+					gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue(schoolCid);
 				else
-					gradeIds = gradeRepository.findAllCidBySchoolsCidAndTeacherIdActiveTrue( schoolCid, teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
-			}else {
-				if(!teacherRepository.existsByUserIdAndActiveTrue(getUserId())) {
-					//if(!studentRepository.existsByUserIdAndActiveTrue(getUserId()))
-						throw new ValidationException("Not Authorized to see details.");
-					//gradeIds = Arrays.asList(studentRepository.findGradeCidByCidAndActiveTrue(studentRepository.findCidByUserIdAndActiveTrue(getUserId())));
-				}else {
-					gradeIds = gradeRepository.findAllCidBySchoolsCidAndTeacherIdActiveTrue( schoolCid,teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
+					gradeIds = gradeRepository.findAllCidBySchoolsCidAndTeacherIdActiveTrue(schoolCid,
+							teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
+			} else {
+				if (!teacherRepository.existsByUserIdAndActiveTrue(getUserId())) {
+					// if(!studentRepository.existsByUserIdAndActiveTrue(getUserId()))
+					throw new ValidationException("Not Authorized to see details.");
+					// gradeIds =
+					// Arrays.asList(studentRepository.findGradeCidByCidAndActiveTrue(studentRepository.findCidByUserIdAndActiveTrue(getUserId())));
+				} else {
+					gradeIds = gradeRepository.findAllCidBySchoolsCidAndTeacherIdActiveTrue(schoolCid,
+							teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
 				}
 			}
-			
-		}else {	
-			if(schoolCid == null)
+
+		} else {
+			if (schoolCid == null)
 				throw new ValidationException("School id cannot be null.");
-			gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue( schoolCid);
+			gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue(schoolCid);
 		}
-		
-		Collection<Award> awards ;
-		if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("SchoolAdmin") || r.getName().equalsIgnoreCase("Head")))
-			awards = awardRepository.findAllByStudentSchoolCidAndStudentGradeCidInAndStatusInAndActiveTrue(schoolCid , gradeIds,Arrays.asList(ApprovalStatus.FORWARDED,ApprovalStatus.VERIFIED,ApprovalStatus.REJECTED));
+
+		Collection<Award> awards;
+		if (getUser().getRoles().stream()
+				.anyMatch(r -> r.getName().equalsIgnoreCase("SchoolAdmin") || r.getName().equalsIgnoreCase("Head")))
+			awards = awardRepository.findAllByStudentSchoolCidAndStudentGradeCidInAndStatusInAndActiveTrue(schoolCid,
+					gradeIds,
+					Arrays.asList(ApprovalStatus.FORWARDED, ApprovalStatus.VERIFIED, ApprovalStatus.REJECTED));
 		else
-		    awards = awardRepository.findAllByStudentSchoolCidAndStudentGradeCidInAndActiveTrue(schoolCid , gradeIds);
-		if(awards == null || awards.isEmpty())
+			awards = awardRepository.findAllByStudentSchoolCidAndStudentGradeCidInAndActiveTrue(schoolCid, gradeIds);
+		if (awards == null || awards.isEmpty())
 			throw new ValidationException("No awards found for grades assigned to you.");
-		
-		return awards.stream().map(AwardResponse :: new).distinct().collect(Collectors.toSet());
+
+		return awards.stream().map(AwardResponse::new).distinct().collect(Collectors.toSet());
 	}
 
 }

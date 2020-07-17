@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
 
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
@@ -14,12 +13,12 @@ import com.nxtlife.mgs.entity.activity.ActivityPerformed;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.util.DateUtil;
 
-public class ActivityPerformedRequest extends Request{
+public class ActivityPerformedRequest extends Request {
 
 	private String dateOfActivity;
 
 	private String id;
-	
+
 	private String description;
 
 	private String coachRemark;
@@ -27,7 +26,7 @@ public class ActivityPerformedRequest extends Request{
 //	private String coachRemarkDate;
 
 	private Boolean active;
-	
+
 	private String title;
 
 	@Min(value = 0, message = "Minimum permissible value is 0.")
@@ -181,28 +180,29 @@ public class ActivityPerformedRequest extends Request{
 		if (this.id != null)
 			activityPerformed.setCid(this.id);
 		if (this.dateOfActivity != null) {
-			if (LocalDateTime.now(DateTimeZone.forTimeZone(DateUtil.defaultTimeZone)).toDate().before(DateUtil.convertStringToDate(this.dateOfActivity)))
+			if (LocalDateTime.now(DateTimeZone.forTimeZone(DateUtil.defaultTimeZone)).toDate()
+					.before(DateUtil.convertStringToDate(this.dateOfActivity)))
 				throw new ValidationException("Date of activity cannot be a future date.");
-			Date thresholdDate = LocalDateTime.now(DateTimeZone.forTimeZone(DateUtil.defaultTimeZone)).minusDays(30).toDate();
-			if(DateUtil.convertStringToDate(this.dateOfActivity).before(thresholdDate))
-			    throw new ValidationException("Activity performed date cannot be earlier than 30 days from today.");
-			    
+			Date thresholdDate = LocalDateTime.now(DateTimeZone.forTimeZone(DateUtil.defaultTimeZone)).minusDays(30)
+					.toDate();
+			if (DateUtil.convertStringToDate(this.dateOfActivity).before(thresholdDate))
+				throw new ValidationException("Activity performed date cannot be earlier than 30 days from today.");
+
 			activityPerformed.setDateOfActivity(DateUtil.convertStringToDate(this.dateOfActivity));
 		}
 //		activityPerformed.setActivityStatus(this.activityStatus);
-		if (this.description != null ) {
-			if(countWords(this.description) < 25 || countWords(this.description) >250)
+		if (this.description != null) {
+			if (countWords(this.description) < 25 || countWords(this.description) > 250)
 				throw new ValidationException("description can be between 25 to 250 words.");
 			activityPerformed.setDescription(this.description);
 		}
-		
-		if (this.coachRemark != null ) {
-			if(countWords(this.coachRemark) < 25 )
+
+		if (this.coachRemark != null) {
+			if (countWords(this.coachRemark) < 25)
 				throw new ValidationException("Remark should be minimum of 25 words.");
 			activityPerformed.setCoachRemark(this.coachRemark);
 		}
-			
-	
+
 //		activityPerformed.setCoachRemarkDate(DateUtil.convertStringToDate(this.coachRemarkDate));
 //		activityPerformed.setActive(this.active);
 
@@ -220,36 +220,36 @@ public class ActivityPerformedRequest extends Request{
 		Double percentScore = ((double) totalScore / 25) * 100;
 		double fractionalStar = 0;
 
-		if(totalScore > 0) {
-		if (percentScore > 90.0)
-			fractionalStar = 5.0;
-		else if (percentScore > 80 && percentScore <= 90)
-			fractionalStar = 4.5;
-		else if (percentScore > 70 && percentScore <= 80)
-			fractionalStar = 4;
-		else if (percentScore > 60 && percentScore <= 70)
-			fractionalStar = 3.5;
-		else if (percentScore > 50 && percentScore <= 60)
-			fractionalStar = 3;
-		else if (percentScore > 40 && percentScore <= 50)
-			fractionalStar = 2.5;
-		else if (percentScore > 30 && percentScore <= 40)
-			fractionalStar = 2;
-		else if (percentScore > 20 && percentScore <= 30)
-			fractionalStar = 1.5;
-		else if (percentScore > 10 && percentScore <= 20)
-			fractionalStar = 1;
-		else if (percentScore > 0 && percentScore <= 10)
-			fractionalStar = 0.5;
-		else
-			fractionalStar = 0;
+		if (totalScore > 0) {
+			if (percentScore > 90.0)
+				fractionalStar = 5.0;
+			else if (percentScore > 80 && percentScore <= 90)
+				fractionalStar = 4.5;
+			else if (percentScore > 70 && percentScore <= 80)
+				fractionalStar = 4;
+			else if (percentScore > 60 && percentScore <= 70)
+				fractionalStar = 3.5;
+			else if (percentScore > 50 && percentScore <= 60)
+				fractionalStar = 3;
+			else if (percentScore > 40 && percentScore <= 50)
+				fractionalStar = 2.5;
+			else if (percentScore > 30 && percentScore <= 40)
+				fractionalStar = 2;
+			else if (percentScore > 20 && percentScore <= 30)
+				fractionalStar = 1.5;
+			else if (percentScore > 10 && percentScore <= 20)
+				fractionalStar = 1;
+			else if (percentScore > 0 && percentScore <= 10)
+				fractionalStar = 0.5;
+			else
+				fractionalStar = 0;
 		}
 
 		System.out.println("fractionalStar :" + fractionalStar);
 
 		activityPerformed.setStar(fractionalStar);
-		if(this.title != null)
-		    activityPerformed.setTitle(this.title);
+		if (this.title != null)
+			activityPerformed.setTitle(this.title);
 		return activityPerformed;
 	}
 

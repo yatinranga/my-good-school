@@ -3,33 +3,28 @@ package com.nxtlife.mgs.view;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
-import org.glassfish.jersey.server.validation.ValidationError;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 
 import com.nxtlife.mgs.entity.school.Award;
-import com.nxtlife.mgs.enums.AwardCriterion;
-import com.nxtlife.mgs.enums.FourS;
-import com.nxtlife.mgs.enums.PSDArea;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.util.DateUtil;
 
-public class AwardRequest extends Request{
+public class AwardRequest extends Request {
 
 	@NotEmpty(message = "Award Type cannot be null or empty.")
 	private String awardType;
 	private String id;
-	
+
 	@NotNull
 	private String description;
-	
+
 	@NotNull(message = "teacher id cannot be null.")
 	private String teacherId;
-	
+
 	private String studentId;
 	private List<String> activityPerformedIds;
 	private String schoolId;
@@ -121,7 +116,6 @@ public class AwardRequest extends Request{
 		this.awardType = awardType;
 	}
 
-	
 	public String getAwardCriterion() {
 		return awardCriterion;
 	}
@@ -157,41 +151,38 @@ public class AwardRequest extends Request{
 	public Award toEntity() {
 		return toEntity(null);
 	}
-	
+
 	public Award toEntity(Award award) {
 		award = award == null ? new Award() : award;
 		award.setCid(this.id);
-		if(this.description != null) {
-			if(countWords(this.description) < 10)
+		if (this.description != null) {
+			if (countWords(this.description) < 10)
 				throw new ValidationException("description cannot be less than 10 words.");
 			award.setDescription(this.description);
 		}
 		LocalDateTime currentDateTime = LocalDateTime.now(DateTimeZone.forTimeZone(DateUtil.defaultTimeZone));
-		if((validFrom !=null && DateUtil.convertStringToDate(validFrom).after(currentDateTime.toDate())) ||
-				validUntil !=null && DateUtil.convertStringToDate(validUntil).after(currentDateTime.toDate()))
+		if ((validFrom != null && DateUtil.convertStringToDate(validFrom).after(currentDateTime.toDate()))
+				|| validUntil != null && DateUtil.convertStringToDate(validUntil).after(currentDateTime.toDate()))
 			throw new ValidationException("StartDate or endDate cannot be a future date.");
-		Date startDate,endDate; 
-		if(validFrom == null && validUntil == null) {
+		Date startDate, endDate;
+		if (validFrom == null && validUntil == null) {
 			endDate = currentDateTime.toDate();
 			startDate = currentDateTime.minusMonths(4).toDate();
-		}else if(validFrom == null && validUntil!=null) {
+		} else if (validFrom == null && validUntil != null) {
 			endDate = DateUtil.convertStringToDate(validUntil);
 			startDate = LocalDateTime.fromDateFields(endDate).minusMonths(4).toDate();
-		}else if(validFrom != null && validUntil == null) {
-			 startDate = DateUtil.convertStringToDate(validFrom);
-			 endDate = currentDateTime.toDate();
-		}else {
+		} else if (validFrom != null && validUntil == null) {
 			startDate = DateUtil.convertStringToDate(validFrom);
-            endDate = DateUtil.convertStringToDate(validUntil);
-            if(startDate.after(endDate))
-            	throw new ValidationException("startDate shall fall before end date.");
+			endDate = currentDateTime.toDate();
+		} else {
+			startDate = DateUtil.convertStringToDate(validFrom);
+			endDate = DateUtil.convertStringToDate(validUntil);
+			if (startDate.after(endDate))
+				throw new ValidationException("startDate shall fall before end date.");
 		}
 		award.setValidFrom(startDate);
 		award.setValidUntil(endDate);
 
-		
-		
-		
 //		if(this.getValidFrom() == null && this.getValidUntil() == null) {
 //			LocalDateTime currentDate = LocalDateTime.now();
 //			award.setValidFrom(currentDate.toDate());

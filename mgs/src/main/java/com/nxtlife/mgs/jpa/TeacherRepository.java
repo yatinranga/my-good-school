@@ -3,7 +3,6 @@ package com.nxtlife.mgs.jpa;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +19,7 @@ import com.nxtlife.mgs.entity.user.Teacher;
 public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 
 	public Teacher getOneByCidAndActiveTrue(String cid);
-	
+
 	public Teacher getByUserId(Long userId);
 
 	public int countByEmailAndActiveTrue(String email);
@@ -43,9 +42,11 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 
 	public Teacher findByUsernameAndActiveTrue(String username);
 
-	public List<Teacher> findAllBySchoolCidAndActivitiesNameAndIsCoachTrueAndActiveTrue(String schoolCid, String activityName);
+	public List<Teacher> findAllBySchoolCidAndActivitiesNameAndIsCoachTrueAndActiveTrue(String schoolCid,
+			String activityName);
 
-	public List<Teacher> findAllBySchoolCidAndActivitiesCidAndIsCoachTrueAndActiveTrue(String schoolCid, String activityCid);
+	public List<Teacher> findAllBySchoolCidAndActivitiesCidAndIsCoachTrueAndActiveTrue(String schoolCid,
+			String activityCid);
 
 	public List<Teacher> findAllBySchoolCidAndIsCoachTrueAndActiveTrue(String schoolCid);
 
@@ -68,7 +69,7 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 	public String findNameByCidAndActiveTrue(String assignerCid);
 
 	public boolean existsByUserIdAndIsManagmentMemberTrueAndActiveTrue(Long userId);
-	
+
 	public boolean existsByUserIdAndActiveTrue(Long userId);
 
 	@Query(value = "select t.id from Teacher t where t.cid = :cid and t.active = true")
@@ -84,25 +85,26 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 
 	@Modifying
 	@Query(value = "update Teacher s set s.active = ?2 where s.cid = ?1 and s.active = true")
-	public int deleteByCidAndActiveTrue(String cid ,Boolean active);
+	public int deleteByCidAndActiveTrue(String cid, Boolean active);
 
 	@Query(value = "select s.id as id , s.cid as cid from Teacher s where s.user.id = :userId and s.active = true")
 	public Map<String, Object> findIdAndCidByUserIdAndActiveTrue(@Param("userId") Long userId);
-	
+
 	@Query(value = "select t.school.cid from Teacher t where t.cid = ?1 and t.active = true")
 	public String findSchoolCidbyTeacherCid(String teacherCid);
-	
+
 	@Query(value = "select t.school.id from Teacher t where t.cid = ?1 and t.active = true")
 	public Long findSchoolIdbyTeacherCid(String teacherCid);
-	
+
 	@Query(value = "select  s.teacherActivityGrades as clubs from Teacher s where s.cid = ?1 and s.active = true")
-	public Map<String,Collection<TeacherActivityGrade>> findClubsByCidAndActiveTrue(String cid);
+	public Map<String, Collection<TeacherActivityGrade>> findClubsByCidAndActiveTrue(String cid);
 
 	@Query("Select t from Teacher t join t.grades g join t.teacherActivityGrades tag where t.school.cid = ?1 and (g.cid in ?2 or tag.grade.cid in ?2 ) and t.active = true")
-	public List<Teacher> findAllBySchoolCidAndGradesCidOrTeacherActivityGradesGradeCidInAndActiveTrue(String schoolCid,Collection<String> gradesIds);
+	public List<Teacher> findAllBySchoolCidAndGradesCidOrTeacherActivityGradesGradeCidInAndActiveTrue(String schoolCid,
+			Collection<String> gradesIds);
 
 	public int deleteByUserId(Long id);
-	
+
 //	List<Teacher> findAllByActivitiesCid(String cid);
 
 }

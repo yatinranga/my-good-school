@@ -1,17 +1,7 @@
 package com.nxtlife.mgs.util;
 
-import static java.time.DayOfWeek.SATURDAY;
 import static java.time.temporal.TemporalAdjusters.nextOrSame;
-import org.apache.commons.lang3.time.DateUtils;
-import org.joda.time.DateTimeZone;
-import org.joda.time.LocalDateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 
-import com.nxtlife.mgs.ex.ValidationException;
-
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
@@ -21,6 +11,13 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+
+import org.apache.commons.lang3.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
+
+import com.nxtlife.mgs.ex.ValidationException;
 
 public class DateUtil {
 	private static Logger logger = LoggerFactory.getLogger(DateUtil.class);
@@ -58,7 +55,9 @@ public class DateUtil {
 			}
 			return date;
 		} catch (ParseException e) {
-			throw new ValidationException(String.format("Invalid date format correct format is : %s", defaultDateFormat));
+			logger.error(String.format("Invalid date format correct format is : %s", defaultDateFormat));
+			throw new ValidationException(
+					String.format("Invalid date format correct format is : %s", defaultDateFormat));
 		}
 //		return null;
 	}
@@ -105,66 +104,66 @@ public class DateUtil {
 	public static Date atEndOfDay(Date date) {
 		return DateUtils.addMilliseconds(DateUtils.ceiling(date, Calendar.DATE), -1);
 	}
-	
-	public static LocalDate getLastLocalDayOfMonth(LocalDate present ,TimeZone zone) {
-		if(present == null)
+
+	public static LocalDate getLastLocalDayOfMonth(LocalDate present, TimeZone zone) {
+		if (present == null)
 			throw new ValidationException("date cannot be null.");
 		zone = zone == null ? defaultTimeZone : zone;
 		return LocalDate.now(defaultTimeZone.toZoneId()).with(TemporalAdjusters.lastDayOfMonth());
 	}
-	
-	public static Date getLastDayOfMonth(LocalDate lastDayOfMonth ,TimeZone zone) {
-		if(lastDayOfMonth == null)
+
+	public static Date getLastDayOfMonth(LocalDate lastDayOfMonth, TimeZone zone) {
+		if (lastDayOfMonth == null)
 			throw new ValidationException("date cannot be null.");
 		zone = zone == null ? defaultTimeZone : zone;
-		return convertLocalDateToDateAtEndOfDay(lastDayOfMonth ,zone);
+		return convertLocalDateToDateAtEndOfDay(lastDayOfMonth, zone);
 	}
-	
-	public static Date convertLocalDateToDateAtEndOfDay(LocalDate date , TimeZone zone) {
+
+	public static Date convertLocalDateToDateAtEndOfDay(LocalDate date, TimeZone zone) {
 		zone = zone == null ? defaultTimeZone : zone;
-		return  atEndOfDay(Date.from(date.atStartOfDay(zone.toZoneId()).toInstant()));
+		return atEndOfDay(Date.from(date.atStartOfDay(zone.toZoneId()).toInstant()));
 	}
-	
-    public static Date convertLocalDateToDateAtStartOfDay(LocalDate date , TimeZone zone) {
-    	zone = zone == null ? defaultTimeZone : zone;
-		return  atStartOfDay(Date.from(date.atStartOfDay(zone.toZoneId()).toInstant()));
+
+	public static Date convertLocalDateToDateAtStartOfDay(LocalDate date, TimeZone zone) {
+		zone = zone == null ? defaultTimeZone : zone;
+		return atStartOfDay(Date.from(date.atStartOfDay(zone.toZoneId()).toInstant()));
 	}
-	
-	public static Date getLastWorkingDayOfMonth(LocalDate lastDayOfMonth ,TimeZone zone) {
-		if(lastDayOfMonth == null)
+
+	public static Date getLastWorkingDayOfMonth(LocalDate lastDayOfMonth, TimeZone zone) {
+		if (lastDayOfMonth == null)
 			throw new ValidationException("date cannot be null.");
-		   LocalDate lastWorkingDayofMonth;
-		   switch (DayOfWeek.of(lastDayOfMonth.get(ChronoField.DAY_OF_WEEK))) {
+		LocalDate lastWorkingDayofMonth;
+		switch (DayOfWeek.of(lastDayOfMonth.get(ChronoField.DAY_OF_WEEK))) {
 //		     case SATURDAY:
 //		       lastWorkingDayofMonth = lastDayOfMonth.minusDays(1);
 //		       break;
-		     case SUNDAY:
-		       lastWorkingDayofMonth = lastDayOfMonth.minusDays(1);
-		       break;
-		     default:
-		       lastWorkingDayofMonth = lastDayOfMonth;
-		   }
-		   return convertLocalDateToDateAtEndOfDay(lastWorkingDayofMonth ,zone);
-		 }
-	
-	public static Date getLastDayOfWeek(LocalDate present , TimeZone zone) {
-		LocalDate saturday =  present.with(nextOrSame(DayOfWeek.SATURDAY));  //LocalDate.now(defaultTimeZone.toZoneId()).with(nextOrSame(DayOfWeek.SATURDAY));
+		case SUNDAY:
+			lastWorkingDayofMonth = lastDayOfMonth.minusDays(1);
+			break;
+		default:
+			lastWorkingDayofMonth = lastDayOfMonth;
+		}
+		return convertLocalDateToDateAtEndOfDay(lastWorkingDayofMonth, zone);
+	}
+
+	public static Date getLastDayOfWeek(LocalDate present, TimeZone zone) {
+		LocalDate saturday = present.with(nextOrSame(DayOfWeek.SATURDAY)); // LocalDate.now(defaultTimeZone.toZoneId()).with(nextOrSame(DayOfWeek.SATURDAY));
 //		 Calendar c = Calendar.getInstance();
 //	     c.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
 //	     c.add(Calendar.DATE,6);
-	     return convertLocalDateToDateAtEndOfDay(saturday ,zone);
+		return convertLocalDateToDateAtEndOfDay(saturday, zone);
 	}
-	
-	public static Date getlastWorkingDayOfWeek(Date lastWorkingDayOfWeek ,TimeZone zone) {
-		if(lastWorkingDayOfWeek == null)
+
+	public static Date getlastWorkingDayOfWeek(Date lastWorkingDayOfWeek, TimeZone zone) {
+		if (lastWorkingDayOfWeek == null)
 			throw new ValidationException("date cannot be null.");
 		zone = zone == null ? defaultTimeZone : zone;
-		return  getLastWorkingDayOfMonth(convertToLocalDate(lastWorkingDayOfWeek ,zone),zone);
+		return getLastWorkingDayOfMonth(convertToLocalDate(lastWorkingDayOfWeek, zone), zone);
 	}
-	
-	public static LocalDate convertToLocalDate(Date dateToConvert ,TimeZone zone) {
+
+	public static LocalDate convertToLocalDate(Date dateToConvert, TimeZone zone) {
 		zone = zone == null ? defaultTimeZone : zone;
-	    return dateToConvert.toInstant().atZone(zone.toZoneId()).toLocalDate();
+		return dateToConvert.toInstant().atZone(zone.toZoneId()).toLocalDate();
 	}
 
 }

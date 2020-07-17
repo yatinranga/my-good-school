@@ -18,7 +18,6 @@ import com.nxtlife.mgs.service.ActivityService;
 import com.nxtlife.mgs.service.TeacherService;
 import com.nxtlife.mgs.view.ActivityRequestResponse;
 import com.nxtlife.mgs.view.ClubMembershipResponse;
-import com.nxtlife.mgs.view.StudentResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
 import com.nxtlife.mgs.view.TeacherRequest;
 import com.nxtlife.mgs.view.TeacherResponse;
@@ -30,12 +29,11 @@ public class TeacherController {
 
 	@Autowired
 	private TeacherService teacherService;
-	
+
 	@Autowired
 	private ActivityService activityService;
 
-
-	@PostMapping(value = {"api/teacher/" ,"teacher/signUp"})
+	@PostMapping(value = { "api/teacher/", "teacher/signUp" })
 	public TeacherResponse saveTeacher(@RequestBody TeacherRequest teacherRequest) {
 		return teacherService.save(teacherRequest);
 	}
@@ -48,17 +46,19 @@ public class TeacherController {
 //	}
 
 	@PutMapping("api/teacher/update/{cid}")
-	public TeacherResponse update(@RequestBody TeacherRequest request, @PathVariable(value = "cid" ,required = false) String cid) {
+	public TeacherResponse update(@RequestBody TeacherRequest request,
+			@PathVariable(value = "cid", required = false) String cid) {
 		return teacherService.update(request, cid);
 	}
-	
+
 	@PutMapping("api/teacher/profilePic")
-	public TeacherResponse setProfilePic(@RequestParam("profilePic") MultipartFile file,@RequestParam(value = "cid" ,required = false) String cid) {
-		return teacherService.setProfilePic(file,cid);
+	public TeacherResponse setProfilePic(@RequestParam("profilePic") MultipartFile file,
+			@RequestParam(value = "cid", required = false) String cid) {
+		return teacherService.setProfilePic(file, cid);
 	}
-	
+
 	@DeleteMapping("api/teacher/{cid}")
-	public SuccessResponse delete(@PathVariable(value = "cid" ,required = false) String cid) {
+	public SuccessResponse delete(@PathVariable(value = "cid", required = false) String cid) {
 		return teacherService.delete(cid);
 	}
 
@@ -67,9 +67,10 @@ public class TeacherController {
 			@RequestParam(defaultValue = "20") Integer pageSize) {
 		return teacherService.getAllTeachers(pageNo, pageSize);
 	}
-	
+
 	@GetMapping(value = "api/teachers/{schoolId}")
-	public List<TeacherResponse> getAllTeachersBySchool(@PathVariable(value = "schoolId" ,required = false) String schoolId){
+	public List<TeacherResponse> getAllTeachersBySchool(
+			@PathVariable(value = "schoolId", required = false) String schoolId) {
 		return teacherService.getAllTeachersOfSchool(schoolId);
 	}
 
@@ -81,7 +82,7 @@ public class TeacherController {
 //	}
 
 	@GetMapping(value = "api/teacher/{cId}")
-	public TeacherResponse getTeacherByCId(@PathVariable(value = "cId" , required = false) String cId) {
+	public TeacherResponse getTeacherByCId(@PathVariable(value = "cId", required = false) String cId) {
 		return teacherService.findByCId(cId);
 	}
 
@@ -94,25 +95,34 @@ public class TeacherController {
 //	public List<TeacherResponse> getAllManagmentBySchool(@PathVariable("schoolCid") String schoolCid) {
 //		return teacherService.getAllManagmentBySchool(schoolCid);
 //	}
-	
-	@GetMapping(value = "api/teacher/club/members") //doneGrade //toSend
-	public List<ClubMembershipResponse> getMembershipDetails(@RequestParam(value = "teacherId" , required = false) String teacherId ,@RequestParam(value = "schoolId" , required = false) String schoolCid){
-		return teacherService.getMembershipDetails(teacherId ,schoolCid);
+
+	@GetMapping(value = "api/teacher/club/members") // doneGrade //toSend
+	public List<ClubMembershipResponse> getMembershipDetails(
+			@RequestParam(value = "teacherId", required = false) String teacherId,
+			@RequestParam(value = "schoolId", required = false) String schoolCid) {
+		return teacherService.getMembershipDetails(teacherId, schoolCid);
 	}
-	
-	@GetMapping(value = "api/teacher/club/{clubId}/members") //doneGrade //toSend
-	public List<ClubMembershipResponse> getMembershipDetailsbyClub(@PathVariable("clubId") String clubId ,@RequestParam(value = "teacherId" , required = false) String teacherId ,@RequestParam(value = "schoolId" , required = false) String schoolCid){
-		return teacherService.getMembershipDetailsbyClub(clubId,teacherId,schoolCid);
+
+	@GetMapping(value = "api/teacher/club/{clubId}/members") // doneGrade //toSend
+	public List<ClubMembershipResponse> getMembershipDetailsbyClub(@PathVariable("clubId") String clubId,
+			@RequestParam(value = "teacherId", required = false) String teacherId,
+			@RequestParam(value = "schoolId", required = false) String schoolCid) {
+		return teacherService.getMembershipDetailsbyClub(clubId, teacherId, schoolCid);
 	}
-	
-	@GetMapping(value = "api/teacher/clubs")//doneGrade 
-	public List<ActivityRequestResponse> getAllClubsOfTeacher(@RequestParam(value = "teacherId" , required = false) String teacherId ,@RequestParam(value = "schoolId" , required = false) String schoolId){
-		return activityService.getAllClubsOfTeacher(teacherId,schoolId);
+
+	@GetMapping(value = "api/teacher/clubs") // doneGrade
+	public List<ActivityRequestResponse> getAllClubsOfTeacher(
+			@RequestParam(value = "teacherId", required = false) String teacherId,
+			@RequestParam(value = "schoolId", required = false) String schoolId) {
+		return activityService.getAllClubsOfTeacher(teacherId, schoolId);
 	}
-	
-	@PutMapping(value = "api/teacher/club") //doneGrade //toSend
-	public ClubMembershipResponse updateStatus(@RequestParam(name = "studentId")  String studentId,@RequestParam(name = "activityId") String activityId , @RequestParam(name="verified",defaultValue="true") Boolean verified ,@RequestParam(value = "teacherId" , required = false) String teacherId) {
-		return teacherService.updateStatus(studentId, activityId, verified ,teacherId);
+
+	@PutMapping(value = "api/teacher/club") // doneGrade //toSend
+	public ClubMembershipResponse updateStatus(@RequestParam(name = "studentId") String studentId,
+			@RequestParam(name = "activityId") String activityId,
+			@RequestParam(name = "verified", defaultValue = "true") Boolean verified,
+			@RequestParam(value = "teacherId", required = false) String teacherId) {
+		return teacherService.updateStatus(studentId, activityId, verified, teacherId);
 	}
 
 }

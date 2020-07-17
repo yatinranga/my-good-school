@@ -1,12 +1,10 @@
 package com.nxtlife.mgs.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import javax.validation.Valid;
 
-import org.glassfish.jersey.server.validation.ValidationError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,12 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.nxtlife.mgs.enums.ActivityStatus;
 import com.nxtlife.mgs.enums.ApprovalStatus;
-import com.nxtlife.mgs.ex.ValidationException;
-import com.nxtlife.mgs.jpa.CertificateRepository;
-import com.nxtlife.mgs.jpa.StudentRepository;
-import com.nxtlife.mgs.service.ActivityPerformedService;
 import com.nxtlife.mgs.service.ActivityService;
 import com.nxtlife.mgs.service.StudentService;
 import com.nxtlife.mgs.view.ActivityRequestResponse;
@@ -43,9 +36,6 @@ public class StudentController {
 
 	@Autowired
 	private StudentService studentService;
-
-	@Autowired
-	private ActivityPerformedService activityPerformedService;
 	
 	@Autowired
 	private ActivityService activityService;

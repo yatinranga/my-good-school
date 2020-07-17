@@ -29,7 +29,6 @@ import com.nxtlife.mgs.service.BaseService;
 import com.nxtlife.mgs.service.RoleService;
 import com.nxtlife.mgs.util.AuthorityUtils;
 import com.nxtlife.mgs.view.SuccessResponse;
-import com.nxtlife.mgs.view.user.security.AuthorityResponse;
 import com.nxtlife.mgs.view.user.security.RoleRequest;
 import com.nxtlife.mgs.view.user.security.RoleResponse;
 
@@ -89,8 +88,8 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 			role.setAuthorities(authorityDao.findByAuthorityRolesRoleId(role.getId()));
 			return role;
 		}).collect(Collectors.toList());
-		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin"))) {
-			roles.removeIf(r-> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Guardian"));
+		if (!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin"))) {
+			roles.removeIf(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Guardian"));
 		}
 		return roles;
 
@@ -128,11 +127,11 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 	@Override
 	public RoleResponse save(RoleRequest request) {
 		Long schoolId = null;
-		if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin")))
+		if (getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin")))
 			schoolId = schoolRepository.findIdByCid(request.getSchoolId());
 		else
 			schoolId = getUser().gettSchoolId();
-		
+
 		validateRequest(request, schoolId);
 		Role role = request.toEntity();
 		School school = new School();
@@ -141,7 +140,7 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 		roleDao.save(role);
 		List<RoleAuthority> roleAuthorities = new ArrayList<>();
 		for (Long authorityId : request.getAuthorityIds()) {
-			AuthorityResponse response = authorityDao.findResponseById(authorityId);
+//			AuthorityResponse response = authorityDao.findResponseById(authorityId);
 			if (authorityDao.findResponseById(authorityId) != null) {
 				roleAuthorities.add(new RoleAuthority(role.getId(), authorityId));
 			}
@@ -163,7 +162,7 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 		if (role.getName().equalsIgnoreCase("MainAdmin")) {
 			throw new ValidationException("MainAdmin role can't be updated");
 		}
-		
+
 		validateAuthorityIds(new HashSet<Long>(request.getAuthorityIds()));
 		Long existRoleId = roleDao.findIdByNameAndSchoolId(request.getName(), schoolId);
 		if (existRoleId != null && !existRoleId.equals(id)) {
@@ -189,7 +188,7 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 		RoleResponse roleResponse = roleDao.findResponseById(id);
 		roleResponse.setAuthorities(authorityDao.findByAuthorityRolesRoleId(id));
 		return roleResponse;
-		
+
 	}
 
 	@Override

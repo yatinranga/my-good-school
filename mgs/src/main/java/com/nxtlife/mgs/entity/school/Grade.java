@@ -6,13 +6,9 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -48,10 +44,10 @@ public class Grade extends BaseEntity {
 
 //	@ManyToOne
 //	private Teacher teacher;
-	
+
 	@ManyToMany(mappedBy = "grades", cascade = CascadeType.ALL)
 	private List<Teacher> teachers;
-	
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "grade")
 	private List<Student> students;
 
@@ -60,10 +56,10 @@ public class Grade extends BaseEntity {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "grade")
 	private List<TeacherSchoolGrade> teacherSchoolGrades;
-	
+
 	@ManyToMany(mappedBy = "grades")
 	private List<Event> sessions;
-	
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "grade")
 	private List<TeacherActivityGrade> teacherActivityGrades;
 
@@ -111,10 +107,6 @@ public class Grade extends BaseEntity {
 		return cid;
 	}
 
-	public void setcId(String cid) {
-		this.cid = cid;
-	}
-
 	public List<StudentSchoolGrade> getStudentSchoolGrades() {
 		return studentSchoolGrades;
 	}
@@ -134,7 +126,6 @@ public class Grade extends BaseEntity {
 	public void setTeacherSchoolGrades(List<TeacherSchoolGrade> teacherSchoolGrades) {
 		this.teacherSchoolGrades = teacherSchoolGrades;
 	}
-	
 
 	public List<Teacher> getTeachers() {
 		return teachers;
@@ -160,7 +151,8 @@ public class Grade extends BaseEntity {
 		this.teacherActivityGrades = teacherActivityGrades;
 	}
 
-	public Grade(@NotNull String name, @NotNull String cid, String section, Boolean active, List<School> schools, List<Student> students) {
+	public Grade(@NotNull String name, @NotNull String cid, String section, Boolean active, List<School> schools,
+			List<Student> students) {
 		this.name = name;
 		this.cid = cid;
 		this.section = section;

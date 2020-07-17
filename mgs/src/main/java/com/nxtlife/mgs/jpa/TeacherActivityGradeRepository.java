@@ -18,7 +18,7 @@ public interface TeacherActivityGradeRepository extends JpaRepository<TeacherAct
 	
 	public boolean findByTeacherCid(String teacherCid);
 	
-	@Query(value = "select distinct tag.teacher from TeacherActivityGrade tag where tag.activity.cid = :activityCid and tag.teacher.school.cid = :schoolCid and tag.grade.cid in :gradeIds and tag.active = true")
+	@Query(value = "select distinct tag.teacher from TeacherActivityGrade tag where (tag.activity.cid = :activityCid and tag.grade.cid in :gradeIds) and tag.teacher.school.cid = :schoolCid and tag.active = true")
 	public List<Teacher> findAllTeacherByActivityCidAndTeacherSchoolCidAndGradeCidInAndActiveTrue(@Param("activityCid") String activityCid ,@Param("schoolCid") String schoolCid ,@Param("gradeIds") Collection<String> gradeIds );
 	
 	@Query(value = "select distinct tag.teacher from TeacherActivityGrade tag where tag.activity.name = :activityName and tag.teacher.school.cid = :schoolCid and tag.active = true")

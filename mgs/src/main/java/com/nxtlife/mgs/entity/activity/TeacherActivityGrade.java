@@ -11,15 +11,14 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
-import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.common.TeacherActivityGradeId;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.user.Teacher;
 
 @SuppressWarnings("serial")
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"teacher_id","activity_id","grade_id"}))
-public class TeacherActivityGrade implements Serializable{
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "teacher_id", "activity_id", "grade_id" }))
+public class TeacherActivityGrade implements Serializable {
 
 	@EmbeddedId
 	TeacherActivityGradeId teacherActivityGradeId;
@@ -27,7 +26,7 @@ public class TeacherActivityGrade implements Serializable{
 	@MapsId(value = "gradeId")
 	@ManyToOne
 	private Grade grade;
-	
+
 	@MapsId(value = "teacherId")
 	@ManyToOne
 	private Teacher teacher;
@@ -35,11 +34,10 @@ public class TeacherActivityGrade implements Serializable{
 	@MapsId(value = "activityId")
 	@ManyToOne
 	private Activity activity;
-	
+
 	@NotNull
 	@Column(name = "active", columnDefinition = "boolean default true")
 	private Boolean active = true;
-	
 
 	public Boolean getActive() {
 		return active;
@@ -94,8 +92,8 @@ public class TeacherActivityGrade implements Serializable{
 	public TeacherActivityGrade() {
 		super();
 	}
-	
-	public TeacherActivityGrade(Long teacherId , Long activityId , Long gradeId) {
+
+	public TeacherActivityGrade(Long teacherId, Long activityId, Long gradeId) {
 		if (gradeId != null) {
 			this.grade = new Grade();
 			this.grade.setId(gradeId);
@@ -105,16 +103,13 @@ public class TeacherActivityGrade implements Serializable{
 			this.activity = new Activity();
 			this.activity.setId(activityId);
 		}
-		
-		if(teacherId != null) {
+
+		if (teacherId != null) {
 			this.teacher = new Teacher();
 			this.teacher.setId(teacherId);
 		}
 
-		this.teacherActivityGradeId = new TeacherActivityGradeId( teacherId, activityId ,gradeId);
+		this.teacherActivityGradeId = new TeacherActivityGradeId(teacherId, activityId, gradeId);
 	}
-	
-	
-	
-	
+
 }

@@ -17,11 +17,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 
 import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.school.AwardActivityPerformed;
@@ -33,13 +30,13 @@ import com.nxtlife.mgs.enums.ActivityStatus;
 @Entity
 @Table(name = "activity_performed")
 @DynamicUpdate(true)
-public class ActivityPerformed extends BaseEntity implements Serializable{
+public class ActivityPerformed extends BaseEntity implements Serializable {
 
 	@NotNull
 	private Date dateOfActivity;
-	
+
 	private Date submittedOn;
-	
+
 	private Date reviewedOn;
 
 	@NotNull
@@ -48,7 +45,7 @@ public class ActivityPerformed extends BaseEntity implements Serializable{
 
 	@Column(columnDefinition = "TEXT ")
 	private String description;
-	
+
 	@Column(columnDefinition = "TEXT ")
 	private String title;
 
@@ -57,25 +54,25 @@ public class ActivityPerformed extends BaseEntity implements Serializable{
 
 	private Date coachRemarkDate;
 
-	@Min(value = 0,message = "Minimum permissible value is 0.")
-	@Max(value = 10,message = "Maximum permissible value is 10.")
+	@Min(value = 0, message = "Minimum permissible value is 0.")
+	@Max(value = 10, message = "Maximum permissible value is 10.")
 	@Column(columnDefinition = "INT default 0")
 	private Integer participationScore;
 
-	@Min(value = 0,message = "Minimum permissible value is 0.")
-	@Max(value = 10,message = "Maximum permissible value is 10.")
+	@Min(value = 0, message = "Minimum permissible value is 0.")
+	@Max(value = 10, message = "Maximum permissible value is 10.")
 	@Column(columnDefinition = "INT default 0")
 	private Integer initiativeScore;
 
-	@Min(value = 0,message = "Minimum permissible value is 0.")
-	@Max(value = 5,message = "Maximum permissible value is 5.")
+	@Min(value = 0, message = "Minimum permissible value is 0.")
+	@Max(value = 5, message = "Maximum permissible value is 5.")
 	@Column(columnDefinition = "INT default 0")
 	private Integer achievementScore;
 
-	@Min(value = 0,message = "Minimum permissible value is 0.")
-	@Max(value = 5,message = "Maximum permissible value is 5.")
+	@Min(value = 0, message = "Minimum permissible value is 0.")
+	@Max(value = 5, message = "Maximum permissible value is 5.")
 	@Column(columnDefinition = " DECIMAL(4,2) default '0.0' ")
-	private Double star= 0d;
+	private Double star = 0d;
 
 	@NotNull
 	@Enumerated(EnumType.STRING)
@@ -97,8 +94,8 @@ public class ActivityPerformed extends BaseEntity implements Serializable{
 	@NotNull
 	@ManyToOne
 	private Teacher teacher;
-	
-	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy="activityPerformed")
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "activityPerformed")
 	private List<AwardActivityPerformed> awardActivityPerformed;
 
 	public String getTitle() {
@@ -254,9 +251,9 @@ public class ActivityPerformed extends BaseEntity implements Serializable{
 	}
 
 	public ActivityPerformed(Date dateOfActivity, String cid, String description, String coachRemark,
-			Date coachRemarkDate, Integer participationScore, Integer initiativeScore,
-			Integer achievementScore, Double star, ActivityStatus activityStatus, Activity activity, List<File> files,
-			Student student, Teacher teacher) {
+			Date coachRemarkDate, Integer participationScore, Integer initiativeScore, Integer achievementScore,
+			Double star, ActivityStatus activityStatus, Activity activity, List<File> files, Student student,
+			Teacher teacher) {
 		this.dateOfActivity = dateOfActivity;
 		this.cid = cid;
 		this.description = description;

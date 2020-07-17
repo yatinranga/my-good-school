@@ -1,19 +1,17 @@
 package com.nxtlife.mgs.view;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.nxtlife.mgs.entity.user.Guardian;
 import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.util.DateUtil;
@@ -33,14 +31,13 @@ public class StudentRequest extends Request {
 	private String dob;
 
 	private String sessionStartDate;
-	
+
 	private MultipartFile profileImage;
 
 	@NotEmpty
 	@Email(message = "email pattern not vaild")
 	private String email;
 
-	
 	@Size(min = 10, max = 10)
 	@Pattern(regexp = "^[0-9]*$", message = "Mobile no should contain only digit")
 	private String mobileNumber;
@@ -55,7 +52,7 @@ public class StudentRequest extends Request {
 
 	@NotEmpty(message = "grade id can't be null or empty")
 	private String gradeId;
-	
+
 	private String username;
 
 	public String getName() {
@@ -181,8 +178,9 @@ public class StudentRequest extends Request {
 	public Student toEntity(Student student) {
 		student = student == null ? new Student() : student;
 		if (this.name != null) {
-			if(!isStringOnlyAlphabet(this.name))
-				throw new ValidationException(String.format("Name (%s) is in invalid format, it should contain only alphabets.",this.name));
+			if (!isStringOnlyAlphabet(this.name))
+				throw new ValidationException(
+						String.format("Name (%s) is in invalid format, it should contain only alphabets.", this.name));
 			student.setName(this.name);
 		}
 		if (this.email != null) {
@@ -193,23 +191,24 @@ public class StudentRequest extends Request {
 			student.setGender(this.gender);
 		if (this.dob != null) {
 			Date dateOfBirth = DateUtil.convertStringToDate(this.dob);
-			if(dateOfBirth.before(LocalDateTime.now(DateTimeZone.forTimeZone(DateUtil.defaultTimeZone)).minusYears(21).toDate()))
+			if (dateOfBirth.before(
+					LocalDateTime.now(DateTimeZone.forTimeZone(DateUtil.defaultTimeZone)).minusYears(21).toDate()))
 				throw new ValidationException("Dob should be within 21 years from todays date.");
 			student.setDob(dateOfBirth);
-			
+
 		}
-			
+
 		// student.setDob(DateUtil.getDate(this.dob));
 		if (this.mobileNumber != null) {
 			validateMobileNumber(this.mobileNumber);
 			student.setMobileNumber(this.mobileNumber);
 		}
 		if (this.subscriptionEndDate != null)
-			student.setSubscriptionEndDate( DateUtil.convertStringToDate(this.subscriptionEndDate));
+			student.setSubscriptionEndDate(DateUtil.convertStringToDate(this.subscriptionEndDate));
 		if (this.sessionStartDate != null)
-			student.setSessionStartDate( DateUtil.convertStringToDate(this.sessionStartDate));
-		if(this.username != null)
-		    student.setUsername(this.username);
+			student.setSessionStartDate(DateUtil.convertStringToDate(this.sessionStartDate));
+		if (this.username != null)
+			student.setUsername(this.username);
 
 		return student;
 	}
@@ -217,22 +216,20 @@ public class StudentRequest extends Request {
 	public Student toEntity() {
 		return this.toEntity(null);
 	}
-	
+
 	public StudentRequest() {
-		
+
 	}
 
 	public StudentRequest(@NotEmpty(message = "name can't be null/empty") String name,
 			@NotEmpty @Email(message = "email pattern not vaild") String email,
 			@Size(min = 10, max = 10) @Pattern(regexp = "^[0-9]*$", message = "Mobile no should contain only digit") String mobileNumber,
-			String username ,String gender) {
+			String username, String gender) {
 		this.name = name;
 		this.email = email;
 		this.mobileNumber = mobileNumber;
 		this.username = username;
 		this.gender = gender;
 	}
-	
-    
 
 }

@@ -3,20 +3,17 @@ package com.nxtlife.mgs.entity.school;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
-import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.common.StudentActivityId;
 import com.nxtlife.mgs.entity.user.Student;
@@ -25,8 +22,8 @@ import com.nxtlife.mgs.enums.ApprovalStatus;
 
 @SuppressWarnings("serial")
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"student_id","activityId"}))
-public class StudentClub  implements Serializable {
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "student_id", "activity_id" ,"teacher_id"}))
+public class StudentClub implements Serializable {
 
 	@EmbeddedId
 	StudentActivityId studentActivityId;
@@ -34,28 +31,26 @@ public class StudentClub  implements Serializable {
 	@MapsId(value = "studentId")
 	@ManyToOne
 	private Student student;
-	
+
 	@MapsId(value = "teacherId")
 	@ManyToOne
 	private Teacher teacher;
 
 	@MapsId(value = "activityId")
 	@ManyToOne
-	@JoinColumn(name = "activityId")
+//	@JoinColumn(name = "activityId")
 	private Activity activity;
 
 	@Enumerated(EnumType.STRING)
-	ApprovalStatus membershipStatus;
+	ApprovalStatus membershipStatus = ApprovalStatus.PENDING;
 
 	Date appliedOn;
 
 	Date consideredOn;
-	
+
 	@NotNull
 	@Column(name = "active", columnDefinition = "boolean default true")
 	private Boolean active = true;
-	
-	
 
 	public StudentActivityId getStudentActivityId() {
 		return studentActivityId;
@@ -135,7 +130,7 @@ public class StudentClub  implements Serializable {
 		this.consideredOn = consideredOn;
 	}
 
-	public StudentClub(Long studentId, Long activityId ,Long teacherId) {
+	public StudentClub(Long studentId, Long activityId, Long teacherId) {
 		if (studentId != null) {
 			this.student = new Student();
 			this.student.setId(studentId);
@@ -145,13 +140,13 @@ public class StudentClub  implements Serializable {
 			this.activity = new Activity();
 			this.activity.setId(activityId);
 		}
-		
-		if(teacherId != null) {
+
+		if (teacherId != null) {
 			this.teacher = new Teacher();
 			this.teacher.setId(teacherId);
 		}
 
-		this.studentActivityId = new StudentActivityId(studentId, activityId , teacherId);
+		this.studentActivityId = new StudentActivityId(studentId, activityId, teacherId);
 	}
 
 }

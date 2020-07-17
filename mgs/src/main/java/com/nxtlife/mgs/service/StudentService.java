@@ -1,13 +1,11 @@
 package com.nxtlife.mgs.service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.nxtlife.mgs.entity.school.StudentClub;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.view.CertificateRequest;
 import com.nxtlife.mgs.view.CertificateResponse;

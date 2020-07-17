@@ -1,7 +1,6 @@
 package com.nxtlife.mgs.view.user;
 
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -9,14 +8,14 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+
 import com.nxtlife.mgs.entity.user.User;
 import com.nxtlife.mgs.view.Request;
-import com.nxtlife.mgs.view.StudentRequest;
 
 public class UserRequest extends Request {
 
-	private String id ;
-	
+	private String id;
+
 	@NotNull(message = "User's name can't be null")
 	private String name;
 
@@ -34,11 +33,11 @@ public class UserRequest extends Request {
 
 	@NotEmpty(message = "Role ids can't be null or empty")
 	private Set<Long> roleIds;
-	
+
 	private String schoolId;
-	
+
 	private String gender;
-	
+
 //	private StudentRequest student;
 
 	public String getName() {

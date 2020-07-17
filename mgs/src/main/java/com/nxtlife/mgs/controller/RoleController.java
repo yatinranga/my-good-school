@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.hibernate.annotations.Parameter;
-import org.hibernate.validator.constraints.SafeHtml.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,12 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nxtlife.mgs.ex.ApiError;
 import com.nxtlife.mgs.service.RoleService;
 import com.nxtlife.mgs.view.SuccessResponse;
 import com.nxtlife.mgs.view.user.security.RoleRequest;
 import com.nxtlife.mgs.view.user.security.RoleResponse;
-
 
 @RestController
 //@Tag(name = "Role", description = "Role api's for fetch ,create and delete the role")
@@ -49,7 +45,7 @@ public class RoleController {
 	public List<RoleResponse> getAllRolesByOrganizationId() {
 		return roleService.getAllRoles();
 	}
-	
+
 	@GetMapping(value = "role/{roleId}", produces = { "application/json" })
 //	@Operation(summary = "Find roles by organization id", description = "return a list of roles by organization id which is taken by currently login user", tags = {
 //			"Role" })
@@ -66,8 +62,7 @@ public class RoleController {
 	 * save the role and return the same if authority not exist ,it will return
 	 * empty list
 	 *
-	 * @param request
-	 *            [Key value pair which we want to save that role]
+	 * @param request [Key value pair which we want to save that role]
 	 * @return RoleResponse
 	 */
 
@@ -77,17 +72,16 @@ public class RoleController {
 //	@ApiResponses(value = {
 //			@ApiResponse(responseCode = "200", description = "successful operation", content = @Content(schema = @Schema(implementation = RoleResponse.class))),
 //			@ApiResponse(responseCode = "400", description = "If role already exist or authority ids are not valid", content = @Content(schema = @Schema(implementation = ApiError.class))) })
-	public RoleResponse save(
-			/*
-			 * @Parameter(description = "role request for the role to be saved", required =
-			 * true)
-			 */ @Valid @RequestBody RoleRequest request) {
+	public RoleResponse save(/*
+								 * @Parameter(description = "role request for the role to be saved", required =
+								 * true)
+								 */ @Valid @RequestBody RoleRequest request) {
 		return roleService.save(request);
 	}
 
 	/**
-	 * update the role and return the same role as role response if role not
-	 * exist ,it will throw validation exception
+	 * update the role and return the same role as role response if role not exist
+	 * ,it will throw validation exception
 	 *
 	 * @Param id
 	 * @Param request
@@ -101,11 +95,10 @@ public class RoleController {
 //			@ApiResponse(responseCode = "200", description = "successful operation", content = @Content(schema = @Schema(implementation = RoleResponse.class))),
 //			@ApiResponse(responseCode = "400", description = "If role already exist or authority ids are not valid", content = @Content(schema = @Schema(implementation = ApiError.class))),
 //			@ApiResponse(responseCode = "404", description = "roles not found", content = @Content(schema = @Schema(implementation = ApiError.class))) })
-	public RoleResponse update(
-			/*
-			 * @Parameter(description = "Id of the role for which role to be update",
-			 * required = true)
-			 */ @PathVariable Long roleId,
+	public RoleResponse update(/*
+								 * @Parameter(description = "Id of the role for which role to be update",
+								 * required = true)
+								 */ @PathVariable Long roleId,
 			/*
 			 * @Parameter(description = "role request for the role to be update", required =
 			 * true)

@@ -2,27 +2,24 @@ package com.nxtlife.mgs.view;
 
 import java.util.Arrays;
 
-import javax.persistence.Column;
-import javax.validation.constraints.NotNull;
-
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.entity.activity.File;
 
 public class FileRequest {
 
-    private String name;
-	
+	private String name;
+
 	private String id;
-	
+
 	private String url;
-	
+
 	private Boolean active;
-	
+
 	private String extension;
-	
-	private Boolean isImage = false ;
-	
+
+	private Boolean isImage = false;
+
 	private MultipartFile file;
 
 	public String getName() {
@@ -82,19 +79,19 @@ public class FileRequest {
 	}
 
 	public File toEntity(File file) {
-		file = file==null?new File():file;
-		if(this.file != null) {
+		file = file == null ? new File() : file;
+		if (this.file != null) {
 			this.name = this.file.getOriginalFilename();
 			this.extension = this.name.substring(this.name.lastIndexOf("."));
-			if(Arrays.asList("png", "jpeg" , "jpg" , "PNG" ,"JPEG","JPG").contains(this.extension))
+			if (Arrays.asList("png", "jpeg", "jpg", "PNG", "JPEG", "JPG").contains(this.extension))
 				this.isImage = true;
 		}
 		file.setName(this.name);
-		if(this.url != null)
-		   file.setUrl(this.url);
+		if (this.url != null)
+			file.setUrl(this.url);
 		file.setActive(true);
 		file.setExtension(this.extension);
-		if(this.id !=null)
+		if (this.id != null)
 			file.setCid(this.id);
 		return file;
 	}
@@ -102,6 +99,5 @@ public class FileRequest {
 	public File toEntity() {
 		return toEntity(null);
 	}
-	
-	
+
 }

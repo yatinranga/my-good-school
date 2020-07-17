@@ -7,30 +7,29 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 
-import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.common.StudentSchoolGradeId;
 import com.nxtlife.mgs.entity.user.Student;
 
 @Entity
-public class StudentSchoolGrade  implements Serializable {
+public class StudentSchoolGrade implements Serializable {
 
 	private static final long serialVersionUID = 2848327034025855705L;
-	
+
 	@EmbeddedId
 	StudentSchoolGradeId studentSchoolGradeId;
-	
+
 	@MapsId(value = "studentId")
 	@ManyToOne
-	private Student student ;
-	
-	@MapsId(value="schoolId")
+	private Student student;
+
+	@MapsId(value = "schoolId")
 	@ManyToOne
 	private School school;
-	
-	@MapsId(value="gradeId")
+
+	@MapsId(value = "gradeId")
 	@ManyToOne
 	private Grade grade;
-	
+
 	private String year;
 
 	public StudentSchoolGradeId getStudentSchoolGradeId() {
@@ -73,7 +72,6 @@ public class StudentSchoolGrade  implements Serializable {
 		this.year = year;
 	}
 
-
 	public StudentSchoolGrade(StudentSchoolGradeId studentSchoolGradeId, Student student, School school, Grade grade,
 			String year) {
 		this.studentSchoolGradeId = studentSchoolGradeId;
@@ -89,11 +87,9 @@ public class StudentSchoolGrade  implements Serializable {
 		this.school = school;
 		this.grade = grade;
 	}
-	
+
 	public StudentSchoolGrade() {
-		
+
 	}
-	
-	
-	
+
 }

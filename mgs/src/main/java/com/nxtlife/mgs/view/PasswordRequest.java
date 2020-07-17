@@ -1,8 +1,7 @@
 package com.nxtlife.mgs.view;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
-
-import org.hibernate.validator.constraints.NotEmpty;
 
 import com.nxtlife.mgs.ex.ValidationException;
 

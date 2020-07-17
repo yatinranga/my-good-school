@@ -8,44 +8,51 @@ import javax.persistence.Enumerated;
 
 import com.nxtlife.mgs.enums.FourS;
 
+@SuppressWarnings("serial")
 @Embeddable
 public class FocusAreaActivityFoursS implements Serializable {
 
 	private Long focusAreaId;
-	
+
 	private Long ActivityId;
-	
+
 	@Enumerated(EnumType.STRING)
 	private FourS fourS;
-	
+
 	public Long getFocusAreaId() {
 		return focusAreaId;
 	}
+
 	public void setFocusAreaId(Long focusAreaId) {
 		this.focusAreaId = focusAreaId;
 	}
+
 	public Long getActivityId() {
 		return ActivityId;
 	}
+
 	public void setActivityId(Long activityId) {
 		ActivityId = activityId;
 	}
+
 	public FourS getFourS() {
 		return fourS;
 	}
+
 	public void setFourS(FourS fourS) {
 		this.fourS = fourS;
 	}
+
 	public FocusAreaActivityFoursS(Long focusAreaId, Long activityId, FourS fourS) {
 		this.focusAreaId = focusAreaId;
 		ActivityId = activityId;
 		this.fourS = fourS;
 	}
-	
-	public FocusAreaActivityFoursS()
-	{
-		
+
+	public FocusAreaActivityFoursS() {
+
 	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -55,6 +62,7 @@ public class FocusAreaActivityFoursS implements Serializable {
 		result = prime * result + ((fourS == null) ? 0 : fourS.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -78,7 +86,5 @@ public class FocusAreaActivityFoursS implements Serializable {
 			return false;
 		return true;
 	}
-	
-	
-	
+
 }

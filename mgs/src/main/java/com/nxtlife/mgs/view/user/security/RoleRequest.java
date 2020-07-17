@@ -1,7 +1,6 @@
 package com.nxtlife.mgs.view.user.security;
 
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
@@ -19,7 +18,7 @@ public class RoleRequest extends Request {
 	private Set<Long> authorityIds;
 
 	private String schoolId;
-	
+
 	public Role toEntity() {
 		Role role = new Role();
 		role.setName(name);
@@ -37,6 +36,5 @@ public class RoleRequest extends Request {
 	public String getSchoolId() {
 		return schoolId;
 	}
-	
-	
+
 }

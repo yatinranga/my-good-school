@@ -20,8 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.nxtlife.mgs.entity.activity.FocusArea;
-import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.FocusAreaRepository;
 import com.nxtlife.mgs.jpa.SchoolRepository;
@@ -57,7 +57,7 @@ public class FocusAreaServiceImpl extends BaseService implements FocusAreaServic
 //			throw new ValidationException("This focus Area already exists.");
 		if (focusArea != null) {
 			focusArea = request.toEntity(focusArea);
-		}else {
+		} else {
 			focusArea = request.toEntity();
 			focusArea.setCid(Utils.generateRandomAlphaNumString(8));
 		}
@@ -79,13 +79,15 @@ public class FocusAreaServiceImpl extends BaseService implements FocusAreaServic
 
 	@Override
 	public List<FocusAreaRequestResponse> getAllFocusAreasBySchool(String schoolCid) {
-		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")))
+		if (!getUser().getRoles().stream()
+				.anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")))
 			schoolCid = getUser().getSchool().getCid();
 		if (schoolCid == null)
 			throw new ValidationException("school id cannot be null.");
 		if (!schoolRepository.existsByCidAndActive(schoolCid, true))
 			throw new ValidationException("School with id : " + schoolCid + " not found.");
-		List<FocusArea> focusAreaList = focusAreaRepository.findAllDistinctByActivitiesSchoolsCidAndActiveTrue(schoolCid);
+		List<FocusArea> focusAreaList = focusAreaRepository
+				.findAllDistinctByActivitiesSchoolsCidAndActiveTrue(schoolCid);
 		if (focusAreaList == null)
 			throw new ValidationException("No Focus Areas found.");
 		return focusAreaList.stream().distinct().map(FocusAreaRequestResponse::new).collect(Collectors.toList());

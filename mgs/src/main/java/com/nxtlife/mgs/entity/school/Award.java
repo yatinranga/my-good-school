@@ -14,7 +14,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -44,9 +43,9 @@ public class Award extends BaseEntity {
 	private String description;
 
 	private Date dateOfReceipt;
-	
+
 	private Date validFrom;
-	
+
 	private Date validUntil;
 
 	@Enumerated(EnumType.STRING)
@@ -59,10 +58,10 @@ public class Award extends BaseEntity {
 	@ManyToOne
 	@JoinColumn(name = "student_id")
 	private Student student;
-	
+
 	@ManyToOne
 	private User statusModifiedBy;
-	
+
 	private Date statusModifiedAt;
 
 	@ManyToOne
@@ -70,15 +69,15 @@ public class Award extends BaseEntity {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "award")
 	private List<AwardActivityPerformed> awardActivityPerformed;
-	
+
 	@ManyToOne
 	private AwardType awardType;
-	
+
 	@Enumerated(EnumType.STRING)
 	private AwardCriterion awardCriterion;
-	
+
 	private String criterionValue;
-	
+
 	@ManyToOne
 	private Grade grade;
 

@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.nxtlife.mgs.entity.school.School;
@@ -48,18 +47,18 @@ public interface SchoolRepository extends JpaRepository<School, Long> {
 
 	@Query(value = "select id from School where name=?1")
 	public Long findIdByName(String name);
-	
+
 	@Query(value = "select id from School where cid=?1")
 	public Long findIdByCid(String cid);
-	
+
 	@Query(value = "select cid from School where id=?1")
 	public String findCidById(Long cid);
 
 	@Modifying
 	@Query(value = "update School s set s.active = ?2 where s.cid = ?1 and s.active = true")
-	public int deleteByCidAndActiveTrue(String cid,Boolean active);
+	public int deleteByCidAndActiveTrue(String cid, Boolean active);
 
-	public boolean existsByCidAndActive(String cid ,boolean active);
+	public boolean existsByCidAndActive(String cid, boolean active);
 
 	public boolean existsByContactNumberAndCidNot(String contactNumber, String cid);
 

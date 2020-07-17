@@ -1,14 +1,8 @@
 package com.nxtlife.mgs.view;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.school.StudentClub;
-import com.nxtlife.mgs.entity.user.Student;
-import com.nxtlife.mgs.util.DateUtil;
 
 @JsonInclude(content = Include.NON_ABSENT)
 public class ClubMembershipResponse {

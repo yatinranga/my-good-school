@@ -1,7 +1,6 @@
 package com.nxtlife.mgs.view;
-
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -27,8 +26,8 @@ public class LFINRequestResponse {
 	private String gender;
 
 	private String userId;
-	
-	private String username ;
+
+	private String username;
 
 	public String getId() {
 		return id;
@@ -104,23 +103,23 @@ public class LFINRequestResponse {
 		lfin.setEmail(this.email);
 		lfin.setContactNumber(this.contactNumber);
 		lfin.setGender(this.gender);
-		if(this.dob != null)
-		   lfin.setDob(DateUtil.convertStringToDate(this.dob));
+		if (this.dob != null)
+			lfin.setDob(DateUtil.convertStringToDate(this.dob));
 		return lfin;
 	}
 
 	public LFINRequestResponse() {
 	}
-	
+
 	public LFINRequestResponse(LFIN lfin) {
 		this.name = lfin.getName();
 		this.id = lfin.getCid();
 		this.email = lfin.getEmail();
 		this.contactNumber = lfin.getContactNumber();
-		if(lfin.getDob()!=null)
-			   this.dob = DateUtil.formatDate(lfin.getDob());
+		if (lfin.getDob() != null)
+			this.dob = DateUtil.formatDate(lfin.getDob());
 		this.gender = lfin.getGender();
-		if(lfin.getUser()!=null)
+		if (lfin.getUser() != null)
 			this.userId = lfin.getUser().getCid();
 		this.username = lfin.getUsername();
 	}

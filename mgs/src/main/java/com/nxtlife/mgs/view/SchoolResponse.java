@@ -1,16 +1,11 @@
 package com.nxtlife.mgs.view;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.nxtlife.mgs.entity.activity.Activity;
-import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
 
 @JsonInclude(value = Include.NON_ABSENT)
@@ -29,7 +24,7 @@ public class SchoolResponse {
 	private String logo;
 
 	private Set<ActivityRequestResponse> activities;
-	
+
 	private List<GradeResponse> grades;
 
 	public String getName() {
@@ -103,10 +98,11 @@ public class SchoolResponse {
 		this.setContactNumber(school.getContactNumber());
 		this.setEmail(school.getEmail());
 		this.setLogo(school.getLogo());
-		if(school.getActivities() != null && ! school.getActivities().isEmpty())
-			this.activities = school.getActivities().stream().map(ActivityRequestResponse :: new).distinct().collect(Collectors.toSet());
-			
-		if(school.getGrades()!=null && !school.getGrades().isEmpty()) {
+		if (school.getActivities() != null && !school.getActivities().isEmpty())
+			this.activities = school.getActivities().stream().map(ActivityRequestResponse::new).distinct()
+					.collect(Collectors.toSet());
+
+		if (school.getGrades() != null && !school.getGrades().isEmpty()) {
 			this.grades = school.getGrades().stream().map(GradeResponse::new).collect(Collectors.toList());
 		}
 	}
@@ -124,6 +120,5 @@ public class SchoolResponse {
 		this.contactNumber = contactNumber;
 		this.logo = logo;
 	}
-	
 
 }

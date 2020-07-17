@@ -5,7 +5,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -19,13 +18,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nxtlife.mgs.ex.ApiError;
 import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.view.PasswordRequest;
 import com.nxtlife.mgs.view.SuccessResponse;
 import com.nxtlife.mgs.view.user.UserRequest;
 import com.nxtlife.mgs.view.user.UserResponse;
-
 
 @RestController
 @RequestMapping("/")
@@ -33,7 +30,7 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private TokenStore tokenStore;
 
@@ -46,12 +43,12 @@ public class UserController {
 //	public SuccessResponse changePassword(@Valid @RequestBody PasswordRequest request) {
 //		return userService.changePassword(request);
 //	}
-	
+
 	@GetMapping("/forgot-password/{username}")
 	public SuccessResponse forgotPassword(@PathVariable String username) {
 		return userService.forgotPassword(username);
 	}
-	
+
 	@GetMapping(produces = { "application/json" }, value = "api/me")
 //	@Operation(summary = "Find login user info", description = "return user info using access token detail", tags = {
 //			"User", "Me" })
@@ -69,7 +66,7 @@ public class UserController {
 //			@ApiResponse(description = "User info after saving user details", responseCode = "200", content = @Content(schema = @Schema(implementation = UserResponse.class))),
 //			@ApiResponse(description = "If user doesn't have access to save user", responseCode = "403", content = @Content(schema = @Schema(implementation = ApiError.class))),
 //			@ApiResponse(description = "If required field are not filled or role ids not valid or username already exist", responseCode = "400", content = @Content(schema = @Schema(implementation = ApiError.class))) })
-	public UserResponse save( @Valid @RequestBody(required = true) UserRequest request) {
+	public UserResponse save(@Valid @RequestBody(required = true) UserRequest request) {
 		return userService.save(request);
 	}
 
@@ -112,8 +109,10 @@ public class UserController {
 //			@ApiResponse(description = "Success message", responseCode = "200", content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
 //			@ApiResponse(description = "If user not found with password", responseCode = "404", content = @Content(schema = @Schema(implementation = ApiError.class))),
 //			@ApiResponse(description = "If old password is not correct", responseCode = "400", content = @Content(schema = @Schema(implementation = ApiError.class))) })
-	public SuccessResponse changePassword(
-			/* @Parameter(description = "Old password and new password", required = true) */ @Valid @RequestBody PasswordRequest request) {
+	public SuccessResponse changePassword(/*
+											 * @Parameter(description = "Old password and new password", required =
+											 * true)
+											 */ @Valid @RequestBody PasswordRequest request) {
 		return userService.changePassword(request);
 	}
 
@@ -154,7 +153,7 @@ public class UserController {
 			/* @Parameter(description = "User id", required = true) */ @PathVariable String userId) {
 		return userService.delete(userId);
 	}
-	
+
 	@GetMapping(produces = { "application/json" }, value = "api/user/role/{roleId}")
 	public List<UserResponse> findByRoleId(
 			/* @Parameter(description = "User id", required = true) */ @PathVariable("roleId") Long roleId) {

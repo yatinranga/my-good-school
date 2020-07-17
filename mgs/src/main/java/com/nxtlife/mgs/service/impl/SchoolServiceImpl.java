@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -24,19 +23,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.entity.activity.Activity;
-import com.nxtlife.mgs.entity.common.UserRoleKey;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.school.School;
 import com.nxtlife.mgs.entity.user.Role;
 import com.nxtlife.mgs.entity.user.User;
-import com.nxtlife.mgs.entity.user.UserRole;
 import com.nxtlife.mgs.ex.NotFoundException;
 import com.nxtlife.mgs.ex.ValidationException;
 import com.nxtlife.mgs.jpa.ActivityRepository;
@@ -49,8 +44,6 @@ import com.nxtlife.mgs.service.BaseService;
 //import com.nxtlife.mgs.service.FileService;
 import com.nxtlife.mgs.service.FileStorageService;
 import com.nxtlife.mgs.service.SchoolService;
-//import com.nxtlife.mgs.service.SequenceGeneratorService;
-import com.nxtlife.mgs.service.UserService;
 import com.nxtlife.mgs.util.AuthorityUtils;
 import com.nxtlife.mgs.util.ExcelUtil;
 import com.nxtlife.mgs.util.Utils;
@@ -59,7 +52,6 @@ import com.nxtlife.mgs.view.GradeRequest;
 import com.nxtlife.mgs.view.SchoolRequest;
 import com.nxtlife.mgs.view.SchoolResponse;
 import com.nxtlife.mgs.view.SuccessResponse;
-import com.sun.mail.smtp.SMTPSendFailedException;
 
 @Service
 public class SchoolServiceImpl extends BaseService implements SchoolService {
@@ -68,13 +60,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 	private SchoolRepository schoolRepository;
 
 	@Autowired
-	private UserService userService;
-
-	@Autowired
 	private FileStorageService<MultipartFile> fileStorageService;
-
-//	@Autowired
-//	private SequenceGeneratorService sequenceGeneratorService;
 
 	@Autowired
 	private RoleRepository roleRepository;
@@ -113,8 +99,8 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 		if (school == null) {
 			school = new School();
 			school.setName("MyGoodSchool");
-			school.setUsername(
-					String.format("%s%s", school.getName().toLowerCase().substring(0, 3), Utils.generateRandomNumString(8)));
+			school.setUsername(String.format("%s%s", school.getName().toLowerCase().substring(0, 3),
+					Utils.generateRandomNumString(8)));
 			// Long schoolsequence =
 			// sequenceGeneratorService.findSequenceByUserType(UserType.School);
 			// sequenceGeneratorService.updateSequenceByUserType(schoolsequence,
@@ -140,7 +126,7 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			user.setActive(true);
 			user.setContactNumber(Utils.generateRandomNumString(10));
 			user.setEmail(school.getEmail());
-			if(school.getId()!=null)
+			if (school.getId() != null)
 				userRepository.save(user);
 //			school.setUser(user);
 		}
@@ -295,9 +281,10 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_UPDATE)
 	public SchoolResponse update(SchoolRequest request, String cid) {
-		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")))
+		if (!getUser().getRoles().stream()
+				.anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")))
 			cid = getUser().getSchool().getCid();
-		
+
 		if (cid == null)
 			throw new ValidationException("id cannot be null.");
 
@@ -314,19 +301,20 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 			if (schoolRepository.existsByAddressAndCidNotAndActiveTrue(request.getAddress(), request.getId()))
 				throw new ValidationException(String.format("Address (%s) already belongs to some other school."));
 		}
-		
-		if (request.getContactNumber() != null && schoolRepository.existsByContactNumberAndCidNot(request.getContactNumber(),school.getCid())) {
+
+		if (request.getContactNumber() != null
+				&& schoolRepository.existsByContactNumberAndCidNot(request.getContactNumber(), school.getCid())) {
 			throw new ValidationException(String.format("Contact Number (%s) already belongs to some other school.",
 					request.getContactNumber()));
 		}
-		
-		if (request.getEmail() != null && schoolRepository.existsByEmailAndCidNot(request.getEmail(),school.getCid())) {
+
+		if (request.getEmail() != null
+				&& schoolRepository.existsByEmailAndCidNot(request.getEmail(), school.getCid())) {
 			throw new ValidationException(
 					String.format("Email (%s) already belongs to some other school.", request.getEmail()));
 		}
 
 		school = request.toEntity(school);
-		
 
 //		if (request.getContactNumber() != null) {
 //			if (!userRepository.existsByContactNumberAndCidNot(request.getContactNumber(), school.getUser().getCid())) {
@@ -500,9 +488,10 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_FETCH)
 	public SchoolResponse findByCid(String schoolCid) {
-		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")))
+		if (!getUser().getRoles().stream()
+				.anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")))
 			schoolCid = getUser().getSchool().getCid();
-		
+
 		if (schoolCid == null)
 			throw new ValidationException("id cannot be null.");
 		School school = schoolRepository.findByCidAndActiveTrue(schoolCid);
@@ -530,13 +519,14 @@ public class SchoolServiceImpl extends BaseService implements SchoolService {
 	@Transactional
 	@Secured(AuthorityUtils.SCHOOL_DELETE)
 	public SuccessResponse delete(String cid) {
-		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")))
+		if (!getUser().getRoles().stream()
+				.anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")))
 			cid = getUser().getSchool().getCid();
 		if (cid == null)
 			throw new ValidationException("cid cannot be null.");
 
 		String msg = new String("Student deleted successfully");
-		if(schoolRepository.deleteByCidAndActiveTrue(cid,false) == 0)
+		if (schoolRepository.deleteByCidAndActiveTrue(cid, false) == 0)
 			msg = new String("Student already deleted");
 		return new SuccessResponse(org.springframework.http.HttpStatus.OK.value(), msg);
 	}

@@ -2,12 +2,11 @@ package com.nxtlife.mgs.view;
 
 import java.util.List;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import com.nxtlife.mgs.entity.user.Guardian;
 import com.nxtlife.mgs.ex.ValidationException;
@@ -15,26 +14,26 @@ import com.nxtlife.mgs.ex.ValidationException;
 public class GuardianRequest extends Request {
 
 	private String id;
-	
+
 	@NotNull(message = "Guardian's name can't be null")
 	private String name;
-	
+
 	@NotEmpty(message = "Guardian's email can't be empty")
 	@Email(message = "Email pattern isn't correct")
 	private String email;
-	
+
 	private String gender;
-	
+
 	@Size(min = 10, max = 10)
 	@Pattern(regexp = "^[0-9]*$", message = "Mobile no should contain only digit")
 	private String mobileNumber;
-	
+
 	@NotNull(message = "Relationship can't be null")
 	private String relationship;
-	
+
 	@NotEmpty(message = "Student Ids can't be empty.")
 	private List<String> studentIds;
-	
+
 	private String username;
 
 	public String getName() {
@@ -60,7 +59,6 @@ public class GuardianRequest extends Request {
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
 	}
-	
 
 	public List<String> getStudentIds() {
 		return studentIds;
@@ -105,8 +103,9 @@ public class GuardianRequest extends Request {
 	public Guardian toEntity(Guardian guardian) {
 		guardian = guardian == null ? new Guardian() : guardian;
 		if (this.name != null) {
-			if(!isStringOnlyAlphabet(this.name))
-				throw new ValidationException(String.format("Name (%s) is in invalid format, it should contain only alphabets.",this.name));
+			if (!isStringOnlyAlphabet(this.name))
+				throw new ValidationException(
+						String.format("Name (%s) is in invalid format, it should contain only alphabets.", this.name));
 			guardian.setName(this.name);
 		}
 		if (this.email != null) {
@@ -119,7 +118,7 @@ public class GuardianRequest extends Request {
 		}
 		guardian.setRelationship(this.relationship);
 		guardian.setGender(this.gender);
-		if(this.username != null)
+		if (this.username != null)
 			guardian.setUsername(this.username);
 		return guardian;
 	}
@@ -128,7 +127,8 @@ public class GuardianRequest extends Request {
 		return toEntity(null);
 	}
 
-	public GuardianRequest(String name, String email, String gender, String mobileNumber, String relationship ,String username) {
+	public GuardianRequest(String name, String email, String gender, String mobileNumber, String relationship,
+			String username) {
 		this.name = name;
 		this.email = email;
 		this.gender = gender;
@@ -136,8 +136,8 @@ public class GuardianRequest extends Request {
 		this.relationship = relationship;
 		this.username = username == null ? this.username : username;
 	}
-	
-	public GuardianRequest(String name, String email, String mobileNumber , String username, String gender) {
+
+	public GuardianRequest(String name, String email, String mobileNumber, String username, String gender) {
 		this.name = name;
 		this.email = email;
 		this.gender = gender;

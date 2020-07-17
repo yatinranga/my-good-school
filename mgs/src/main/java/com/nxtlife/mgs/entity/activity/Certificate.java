@@ -5,8 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.nxtlife.mgs.entity.BaseEntity;
@@ -16,33 +14,32 @@ import com.nxtlife.mgs.enums.FourS;
 @SuppressWarnings("serial")
 @Entity
 //@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"title","description","student_id"}))
-public class Certificate extends BaseEntity{
+public class Certificate extends BaseEntity {
 
 	@NotNull
 	@Column(unique = true)
 	private String cid;
-	
+
 	@NotNull
 	private String title;
-	
+
 	@Column(columnDefinition = "TEXT")
 	private String description;
-	
+
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private FourS fourS;
-	
+
 	@NotNull
 	private String certificationAuthority;
-	
+
 	@NotNull
 	private String imageUrl;
-	
+
 	@NotNull
 	@ManyToOne
 //	@Column(name = "student_id")
 	Student student;
-	
 
 	public String getTitle() {
 		return title;
@@ -107,9 +104,9 @@ public class Certificate extends BaseEntity{
 		this.certificationAuthority = certificationAuthority;
 		this.imageUrl = imageUrl;
 	}
-	
+
 	public Certificate() {
-		
+
 	}
-	
+
 }

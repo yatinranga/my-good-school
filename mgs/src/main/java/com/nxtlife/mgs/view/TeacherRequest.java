@@ -1,6 +1,5 @@
 package com.nxtlife.mgs.view;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -45,11 +44,11 @@ public class TeacherRequest extends Request {
 	private String designation;
 
 	private Boolean isManagmentMember;
-	
+
 	private List<TeacherRequest> teachers;
-	
+
 	private String profileBrief;
-	
+
 	private Set<String> roles;
 
 	public String getName() {
@@ -219,8 +218,9 @@ public class TeacherRequest extends Request {
 	public Teacher toEntity(Teacher teacher) {
 		teacher = teacher == null ? new Teacher() : teacher;
 		if (this.name != null) {
-			if(!isStringOnlyAlphabet(this.name))
-				throw new ValidationException(String.format("Name (%s) is in invalid format, it should contain only alphabets.",this.name));
+			if (!isStringOnlyAlphabet(this.name))
+				throw new ValidationException(
+						String.format("Name (%s) is in invalid format, it should contain only alphabets.", this.name));
 			teacher.setName(this.name);
 		}
 
@@ -251,19 +251,18 @@ public class TeacherRequest extends Request {
 
 		teacher.setIsManagmentMember(this.isManagmentMember);
 		teacher.setDesignation(this.designation);
-		
-		if(this.profileBrief != null) {
-			if(countWords(this.profileBrief) < 20 || countWords(this.profileBrief) >200)
+
+		if (this.profileBrief != null) {
+			if (countWords(this.profileBrief) < 20 || countWords(this.profileBrief) > 200)
 				throw new ValidationException("profile brief can be between 20 to 200 words.");
 			teacher.setProfileBrief(this.profileBrief);
 		}
-		   
 
 		return teacher;
 	}
-	
+
 	public TeacherRequest() {
-		
+
 	}
 
 	public TeacherRequest(String name, String username, String email, String mobileNumber, String gender) {
@@ -273,7 +272,5 @@ public class TeacherRequest extends Request {
 		this.mobileNumber = mobileNumber;
 		this.gender = gender;
 	}
-	
-	
 
 }

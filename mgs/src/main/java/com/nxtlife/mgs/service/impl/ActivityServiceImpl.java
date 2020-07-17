@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -88,10 +87,10 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 
 	@Autowired
 	private TeacherActivityGradeRepository teacherActivityGradeRepository;
-	
+
 	@Autowired
 	GradeRepository gradeRepository;
-	
+
 	@Autowired
 	ActivityPerformedRepository activityPerformedRepository;
 
@@ -141,13 +140,12 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 
 		focusAreaList = focusAreaRepository.saveAll(focusAreaList);
 
-		String[] skillActivities = { "Yoga","Art And Craft",
-				"Music And Dance", "Band", "Computers", "Cooking" };
+		String[] skillActivities = { "Yoga", "Art And Craft", "Music And Dance", "Band", "Computers", "Cooking" };
 		String[] sportActivities = { "Martial Arts", "Cricket", "Fencing", "Football", "Kho-Kho", "Badminton",
 				"Kabaddi" };
 		String[] serviceActivities = { "Social Service League", "NCC", "Scouts And Guides", "Rural Livelihood Maping",
 				"Green School Club", "Eco Club" };
-		String[] studyActivities = {"Literary Society Hindi", "Literary Society English", "Reading" };
+		String[] studyActivities = { "Literary Society Hindi", "Literary Society English", "Reading" };
 
 		List<Activity> activityRepoList = activityRepository.findAllByActiveTrue();
 		List<Activity> activityList = new ArrayList<Activity>();
@@ -451,28 +449,30 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 		if (request == null)
 			throw new ValidationException("Request cannot be null");
 		if (request.getName() == null && request.getId() == null)
-			throw new ValidationException("Activity name and id cannot be null simultaneously , provide id when updating activity.");
-		
-		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")))
+			throw new ValidationException(
+					"Activity name and id cannot be null simultaneously , provide id when updating activity.");
+
+		if (!getUser().getRoles().stream()
+				.anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")))
 			request.setSchoolIds(new ArrayList<String>(Arrays.asList(getUser().getSchool().getCid())));
-		if(request.getSchoolIds() == null || request.getSchoolIds().isEmpty())
+		if (request.getSchoolIds() == null || request.getSchoolIds().isEmpty())
 			throw new ValidationException("school ids cannot be null or empty.");
 		// if (request.getFocusAreaIds() == null)
 		// throw new ValidationException("Focus area ids cannot be null.");
-		Activity activity ;
-		if(request.getId() != null) {
+		Activity activity;
+		if (request.getId() != null) {
 			activity = activityRepository.findByCid(request.getId());
-		}else {
-			activity =	activityRepository.findByName(request.getName());
+		} else {
+			activity = activityRepository.findByName(request.getName());
 		}
 		Boolean activityPresent = false;
-		if (activity != null ) {
-			if(!activity.getActive()) {
+		if (activity != null) {
+			if (!activity.getActive()) {
 				activity.setActive(true);
 //				activity.setSchools(new ArrayList<School>());
 				List<School> schools = activity.getSchools();
 				final Long id = activity.getId();
-				schools.stream().forEach(s-> s.getActivities().removeIf(a -> a.getId().equals(id)));
+				schools.stream().forEach(s -> s.getActivities().removeIf(a -> a.getId().equals(id)));
 				schools = schoolRepository.saveAll(schools);
 			}
 			activityPresent = true;
@@ -482,7 +482,7 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 //				throw new ValidationException(String.format("Activity already exists in schools (%s).",request.getSchoolIds()));
 //			activity.getSchools().removeIf(s -> !request.getSchoolIds().contains(s.getCid()));
 		}
-			
+
 		// List<FocusArea> focusAreaList = focusAreaRepository.findAll();
 		// if (focusAreaList == null)
 		// throw new ValidationException("No Focus Areas found.");
@@ -495,61 +495,69 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 		// }
 
 		List<FocusArea> focusAreas = new ArrayList<>();
-		if(!activityPresent) {
+		if (!activityPresent) {
 			if (request.getFourS() == null)
 				throw new ValidationException("Four S cannot be null.");
 			activity = request.toEntity();
 			activity.setCid(Utils.generateRandomAlphaNumString(8));
 			activity.setActive(true);
-			
+
 			if (request.getFocusAreaRequests() != null && !request.getFocusAreaRequests().isEmpty()) {
 				addOrCreateFocusAreas(request.getFocusAreaRequests(), focusAreas, activity);
 			}
 
 			activity.setFocusAreas(focusAreas);
 
-		}else {
-			if(request.getName() != null) {
-				
-				if(activityPerformedRepository.existsByActivityCidAndActive(activity.getCid(), true))
-					throw new ValidationException(String.format("Activity with id (%s) has already been performed by some students , so it can't be renamed contact your service provider for that.",activity.getCid()));
-				
-				if(activityRepository.existsByNameAndCidNot(request.getName() , activity.getCid()))
-					throw new ValidationException(String.format("Another activity with this name (%s) already exists.",request.getName()));
+		} else {
+			if (request.getName() != null) {
+
+				if (activityPerformedRepository.existsByActivityCidAndActive(activity.getCid(), true))
+					throw new ValidationException(String.format(
+							"Activity with id (%s) has already been performed by some students , so it can't be renamed contact your service provider for that.",
+							activity.getCid()));
+
+				if (activityRepository.existsByNameAndCidNot(request.getName(), activity.getCid()))
+					throw new ValidationException(
+							String.format("Another activity with this name (%s) already exists.", request.getName()));
 			}
-				
+//			else {
+//				request.setName(activity.getName());
+//			}
+
 			activity = request.toEntity(activity);
 			activity.setActive(true);
-			
-			if(request.getFocusAreaRequests() != null && !request.getFocusAreaRequests().isEmpty()) {
+
+			if (request.getFocusAreaRequests() != null && !request.getFocusAreaRequests().isEmpty()) {
 				List<FocusArea> toDeleteList = activity.getFocusAreas();
-				Set<String> reqFocAreaIds = request.getFocusAreaRequests().stream().map(f -> f.getId()).collect(Collectors.toSet());
-				toDeleteList.stream().forEach(f -> f.getActivities().removeIf(a -> !reqFocAreaIds.contains(a.getCid())));
+				Set<String> reqFocAreaIds = request.getFocusAreaRequests().stream().map(f -> f.getId())
+						.collect(Collectors.toSet());
+				toDeleteList.stream()
+						.forEach(f -> f.getActivities().removeIf(a -> !reqFocAreaIds.contains(a.getCid())));
 				toDeleteList = focusAreaRepository.saveAll(toDeleteList);
-				
+
 				addOrCreateFocusAreas(request.getFocusAreaRequests(), focusAreas, activity);
 			}
 			activity.setFocusAreas(focusAreas);
 		}
-		
 
 		List<School> schools = new ArrayList<School>();
 		if (request.getSchoolIds() != null && !request.getSchoolIds().isEmpty()) {
 			List<School> toDeleteList = activity.getSchools();
 
-			for (int i =0 ; i< request.getSchoolIds().size() ; i++) {
+			for (int i = 0; i < request.getSchoolIds().size(); i++) {
 				String schoolId = request.getSchoolIds().get(i);
 				if (!schoolRepository.existsByCidAndActiveTrue(schoolId))
 					throw new ValidationException(String.format("School with id (%s) not found", schoolId));
-				School preExist = null ;
-				if(toDeleteList != null)
-				    preExist = toDeleteList.stream().distinct().filter(s -> s.getCid().equals(schoolId)).findAny().orElse(null);
-				if(preExist != null) {
+				School preExist = null;
+				if (toDeleteList != null)
+					preExist = toDeleteList.stream().distinct().filter(s -> s.getCid().equals(schoolId)).findAny()
+							.orElse(null);
+				if (preExist != null) {
 					schools.add(preExist);
 					toDeleteList.remove(preExist);
 					request.getSchoolIds().remove(i--);
 //					i = i != 0 ?i-1 :i ;
-				}else {
+				} else {
 					School school = schoolRepository.findByCidAndActiveTrue(schoolId);
 					List<Activity> activities = school.getActivities();
 					activities.add(activity);
@@ -557,18 +565,17 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 					schools.add(school);
 				}
 			}
-			
-			if(toDeleteList != null && !toDeleteList.isEmpty()) {
+
+			if (toDeleteList != null && !toDeleteList.isEmpty()) {
 				final Long id = activity.getId();
 				toDeleteList.stream().forEach(sc -> sc.getActivities().removeIf(a -> a.getId().equals(id)));
 				toDeleteList = schoolRepository.saveAll(toDeleteList);
 			}
 
-		} 
+		}
 		activity.setSchools(schools);
 		// activity = activityRepository.save(activity);
 
-		
 		activity = activityRepository.save(activity);
 		if (activity == null)
 			throw new RuntimeException("Something went wrong activity not created.");
@@ -596,8 +603,8 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 					focusArea.setActivities(activities);
 					focusAreas.add(focusArea);
 				} else {/*
-						 * Indicates that FocusArea with this name and psdArea
-						 * exists but may be inactive
+						 * Indicates that FocusArea with this name and psdArea exists but may be
+						 * inactive
 						 */
 					if (!focusArea.getActive())
 						focusArea.setActive(true);
@@ -605,8 +612,8 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 					List<Activity> activities = focusArea.getActivities();
 					if (activities == null)
 						activities = new ArrayList<Activity>();
-					
-					if(!activities.stream().anyMatch(act -> act.getCid().equals(activity.getCid()))) {
+
+					if (!activities.stream().anyMatch(act -> act.getCid().equals(activity.getCid()))) {
 						activities.add(activity);
 						focusArea.setActivities(activities);
 					}
@@ -614,8 +621,8 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 					focusAreas.add(focusArea);
 				}
 			} else {/*
-					 * Outer else loop to indicate that id of focusArea is not
-					 * null and its not a new focusArea
+					 * Outer else loop to indicate that id of focusArea is not null and its not a
+					 * new focusArea
 					 */
 				focusArea = focusAreaRepository.findByCid(focusAreaReq.getId());
 				if (focusArea == null)
@@ -628,12 +635,12 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 				List<Activity> activities = focusArea.getActivities();
 				if (activities == null)
 					activities = new ArrayList<Activity>();
-				
-				if(!activities.stream().anyMatch(act -> act.getCid().equals(activity.getCid()))) {
+
+				if (!activities.stream().anyMatch(act -> act.getCid().equals(activity.getCid()))) {
 					activities.add(activity);
 					focusArea.setActivities(activities);
 				}
-				
+
 				// focusArea = focusAreaRepository.save(focusArea);
 				focusAreas.add(focusArea);
 
@@ -657,14 +664,15 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 	public List<ActivityRequestResponse> getAllOfferedActivitiesBySchool(String schoolCid) {
 		List<Activity> activities;
 
-		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")))
+		if (!getUser().getRoles().stream()
+				.anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")))
 			schoolCid = getUser().getSchool().getCid();
-		if(schoolCid == null)
+		if (schoolCid == null)
 			throw new ValidationException("school id cannot be null.");
 
 //			activities = activityRepository.findAllByIsGeneralTrueAndActiveTrue();
 //		else
-			activities = activityRepository.findAllBySchoolsCidAndActiveTrue(schoolCid);
+		activities = activityRepository.findAllBySchoolsCidAndActiveTrue(schoolCid);
 
 		if (activities == null || activities.isEmpty())
 			throw new ValidationException("No activities found for school");
@@ -676,51 +684,56 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 	public List<ActivityRequestResponse> getAllOfferedActivitiesBySchoolAsPerGrade(String schoolCid) {
 		List<Activity> activities;
 		List<String> gradeIds = null;
-		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))) {
+		if (!getUser().getRoles().stream()
+				.anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))) {
 			schoolCid = getUser().getSchool().getCid();
-			if(schoolCid == null)
+			if (schoolCid == null)
 				throw new ValidationException("School id not assigned to user logged in.");
 
-			if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("SchoolAdmin"))) {
+			if (getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("SchoolAdmin"))) {
 
-				if(!teacherRepository.existsByUserIdAndActiveTrue(getUserId()))
-					gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue( schoolCid);
+				if (!teacherRepository.existsByUserIdAndActiveTrue(getUserId()))
+					gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue(schoolCid);
 				else
-					gradeIds = gradeRepository.findAllCidBySchoolsCidAndTeacherIdActiveTrue( schoolCid, teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
-			}else {
-				if(!teacherRepository.existsByUserIdAndActiveTrue(getUserId())) {
-					if(!studentRepository.existsByUserIdAndActiveTrue(getUserId()))
+					gradeIds = gradeRepository.findAllCidBySchoolsCidAndTeacherIdActiveTrue(schoolCid,
+							teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
+			} else {
+				if (!teacherRepository.existsByUserIdAndActiveTrue(getUserId())) {
+					if (!studentRepository.existsByUserIdAndActiveTrue(getUserId()))
 						throw new ValidationException("Not Authorized to see details.");
-					gradeIds = Arrays.asList(studentRepository.findGradeCidByCidAndActiveTrue(studentRepository.findCidByUserIdAndActiveTrue(getUserId())));
-				}else {
-					gradeIds = gradeRepository.findAllCidBySchoolsCidAndTeacherIdActiveTrue( schoolCid,teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
+					gradeIds = Arrays.asList(studentRepository.findGradeCidByCidAndActiveTrue(
+							studentRepository.findCidByUserIdAndActiveTrue(getUserId())));
+				} else {
+					gradeIds = gradeRepository.findAllCidBySchoolsCidAndTeacherIdActiveTrue(schoolCid,
+							teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
 				}
 			}
 
-		}else {	
-			if(schoolCid == null)
+		} else {
+			if (schoolCid == null)
 				throw new ValidationException("School id cannot be null.");
-			gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue( schoolCid);
+			gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue(schoolCid);
 		}
 
-			activities = teacherActivityGradeRepository.findAllActivityBySchoolCidAndGradeCidsInActiveTrue(schoolCid ,gradeIds);
+		activities = teacherActivityGradeRepository.findAllActivityBySchoolCidAndGradeCidsInActiveTrue(schoolCid,
+				gradeIds);
 
 		if (activities == null || activities.isEmpty())
 			throw new ValidationException(String.format("No activities found in school for grades (%s)", gradeIds));
 
 		return activities.stream().map(ActivityRequestResponse::new).collect(Collectors.toList());
 	}
-	
+
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_CLUB_MEMBERSHIP_FETCH)
 	public List<ActivityRequestResponse> getAllClubsOfStudent(String studentCid) {
 //		List<Activity> activities;
 		Long studentId = null;
-		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student"))) {
-			if(studentCid == null)
+		if (!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student"))) {
+			if (studentCid == null)
 				throw new ValidationException("StudentId cannot be null.");
 			studentId = studentRepository.findIdByCidAndActiveTrue(studentCid);
-		}else {
+		} else {
 			studentId = studentRepository.findIdByUserIdAndActiveTrue(getUserId());
 		}
 		if (!studentClubRepository.existsByStudentIdAndMembershipStatusAndActiveTrue(studentId,
@@ -729,9 +742,10 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 
 //		activities = studentClubRepository.findActivityByStudentIdAndMembershipStatusAndActiveTrue(studentId,
 //				ApprovalStatus.VERIFIED);
-		Set<StudentClub> activitiyTeacherLookUp = studentClubRepository.findActivityAndTeacherByStudentIdAndMembershipStatusAndActiveTrue(studentId, ApprovalStatus.VERIFIED);
+		Set<StudentClub> activitiyTeacherLookUp = studentClubRepository
+				.findActivityAndTeacherByStudentIdAndMembershipStatusAndActiveTrue(studentId, ApprovalStatus.VERIFIED);
 
-		if(activitiyTeacherLookUp == null || activitiyTeacherLookUp.isEmpty())
+		if (activitiyTeacherLookUp == null || activitiyTeacherLookUp.isEmpty())
 			throw new ValidationException("Student not member of any Clubs.");
 		List<ActivityRequestResponse> activities = new ArrayList<>();
 		activitiyTeacherLookUp.stream().forEach(entry -> {
@@ -745,96 +759,104 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_CLUB_MEMBERSHIP_FETCH)
-	public List<ActivityRequestResponse> getAllClubsOfTeacher(String teacherCid , String schoolCid) {
+	public List<ActivityRequestResponse> getAllClubsOfTeacher(String teacherCid, String schoolCid) {
 		List<ActivityRequestResponse> activities = null;
 		List<TeacherActivityGrade> teacherActivityGradesList = null;
 		Long teacherId = null;
 		List<String> gradeIds;
-		
-		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor"))) {
-			if(teacherCid == null)
+
+		if (!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor"))) {
+			if (teacherCid == null)
 				throw new ValidationException("TeacherId cannot be null.");
 			teacherId = teacherRepository.findIdByCidAndActiveTrue(teacherCid);
-			
+
 			if (teacherId == null)
 				throw new ValidationException("Teacher id is null or user id not set for teacher");
 			if (!teacherActivityGradeRepository.existsByTeacherIdAndActiveTrue(teacherId))
 				throw new ValidationException("Teacher not running any clubs or societies.");
-			
-			if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))) {
+
+			if (!getUser().getRoles().stream()
+					.anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin"))) {
 				schoolCid = getUser().getSchool().getCid();
-				if(schoolCid == null)
+				if (schoolCid == null)
 					throw new ValidationException("School id not assigned to user logged in.");
-				
-	        if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("SchoolAdmin"))) {
-					
-					if(!teacherRepository.existsByUserIdAndActiveTrue(getUserId()))
-						gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue( schoolCid);
+
+				if (getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("SchoolAdmin"))) {
+
+					if (!teacherRepository.existsByUserIdAndActiveTrue(getUserId()))
+						gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue(schoolCid);
 					else
-						gradeIds = gradeRepository.findAllCidBySchoolsCidAndTeacherIdActiveTrue( schoolCid, teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
-				}else {
-					if(!teacherRepository.existsByUserIdAndActiveTrue(getUserId())) {
-						if(!studentRepository.existsByUserIdAndActiveTrue(getUserId()))
+						gradeIds = gradeRepository.findAllCidBySchoolsCidAndTeacherIdActiveTrue(schoolCid,
+								teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
+				} else {
+					if (!teacherRepository.existsByUserIdAndActiveTrue(getUserId())) {
+						if (!studentRepository.existsByUserIdAndActiveTrue(getUserId()))
 							throw new ValidationException("Not Authorized to see details.");
-						gradeIds = Arrays.asList(studentRepository.findGradeCidByCidAndActiveTrue(studentRepository.findCidByUserIdAndActiveTrue(getUserId())));
-					}else {
-						gradeIds = gradeRepository.findAllCidBySchoolsCidAndTeacherIdActiveTrue( schoolCid,teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
+						gradeIds = Arrays.asList(studentRepository.findGradeCidByCidAndActiveTrue(
+								studentRepository.findCidByUserIdAndActiveTrue(getUserId())));
+					} else {
+						gradeIds = gradeRepository.findAllCidBySchoolsCidAndTeacherIdActiveTrue(schoolCid,
+								teacherRepository.getIdByUserIdAndActiveTrue(getUserId()));
 					}
 				}
-				
-			}else {	
-				
-				if(schoolCid == null)
+
+			} else {
+
+				if (schoolCid == null)
 					throw new ValidationException("School id cannot be null.");
-				gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue( schoolCid);
+				gradeIds = gradeRepository.findAllCidBySchoolsCidAndActiveTrue(schoolCid);
 			}
-			
-			teacherActivityGradesList = teacherActivityGradeRepository.findAllByTeacherIdAndGradeCidInAndActiveTrue(teacherId ,gradeIds);
-			
-		}else {
+
+			teacherActivityGradesList = teacherActivityGradeRepository
+					.findAllByTeacherIdAndGradeCidInAndActiveTrue(teacherId, gradeIds);
+
+		} else {
 			teacherId = teacherRepository.getIdByUserIdAndActiveTrue(getUserId());
 			if (teacherId == null)
 				throw new ValidationException("Teacher id is null or user id not set for teacher");
 			if (!teacherActivityGradeRepository.existsByTeacherIdAndActiveTrue(teacherId))
 				throw new ValidationException("Teacher not running any clubs or societies.");
 
-			 teacherActivityGradesList = teacherActivityGradeRepository.findAllByTeacherIdAndActiveTrue(teacherId);
+			teacherActivityGradesList = teacherActivityGradeRepository.findAllByTeacherIdAndActiveTrue(teacherId);
 		}
-		
-		
-		if(teacherActivityGradesList != null) {
+
+		if (teacherActivityGradesList != null) {
 			activities = new ArrayList<ActivityRequestResponse>();
-			Map<Activity,List<Grade>> activityGradeLookUp = new HashMap<>();
+			Map<Activity, List<Grade>> activityGradeLookUp = new HashMap<>();
 			teacherActivityGradesList.stream().distinct().forEach(tag -> {
-				if(activityGradeLookUp.containsKey(tag.getActivity())) {
-					List<Grade> grades = activityGradeLookUp.get(tag.getActivity()) == null ? new ArrayList<Grade>() : activityGradeLookUp.get(tag.getActivity());
-					if(!grades.contains(tag.getGrade()) ) 
+				if (activityGradeLookUp.containsKey(tag.getActivity())) {
+					List<Grade> grades = activityGradeLookUp.get(tag.getActivity()) == null ? new ArrayList<Grade>()
+							: activityGradeLookUp.get(tag.getActivity());
+					if (!grades.contains(tag.getGrade()))
 						grades.add(tag.getGrade());
-					activityGradeLookUp.replace(tag.getActivity(),grades);
-				}else {
+					activityGradeLookUp.replace(tag.getActivity(), grades);
+				} else {
 					activityGradeLookUp.put(tag.getActivity(), new ArrayList<Grade>(Arrays.asList(tag.getGrade())));
 				}
 			});
-			
-		if(!activityGradeLookUp.isEmpty())	
-			for(Activity activity : activityGradeLookUp.keySet()) {
-				ActivityRequestResponse item = new ActivityRequestResponse(activity);
-				item.setGradeResponses(activityGradeLookUp.get(activity).stream().distinct().map(GradeResponse :: new).collect(Collectors.toList()));
-				activities.add(item);
-			}
+
+			if (!activityGradeLookUp.isEmpty())
+				for (Activity activity : activityGradeLookUp.keySet()) {
+					ActivityRequestResponse item = new ActivityRequestResponse(activity);
+					item.setGradeResponses(activityGradeLookUp.get(activity).stream().distinct().map(GradeResponse::new)
+							.collect(Collectors.toList()));
+					activities.add(item);
+				}
 		}
 
-		return activities ;
+		return activities;
 	}
 
 	@Override
 //	@Secured(AuthorityUtils.SCHOOL_ACTIVITY_VIEW)
 	public List<ActivityRequestResponse> getAllGeneralActivities() {
 
-		List<Activity> generalActivities = activityRepository.findAllBySchoolsIdNotAndActiveTrue(getUser().gettSchoolId());
+		List<Activity> generalActivities = activityRepository
+				.findAllBySchoolsIdNotAndActiveTrue(getUser().gettSchoolId());
 
 		if (generalActivities == null || generalActivities.isEmpty()) {
-			throw new NotFoundException("No general activities found which is not being currently offered in your school.");
+			throw new NotFoundException(
+					"No general activities found which is not being currently offered in your school.");
 		}
 
 		return generalActivities.stream().map(ActivityRequestResponse::new).collect(Collectors.toList());
@@ -868,34 +890,41 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 	@Override
 	@Transactional
 	@Secured(AuthorityUtils.SCHOOL_ACTIVITY_DELETE)
-	public SuccessResponse deleteActivityByCid(String cid ,String schoolCid ,Boolean forAll) {
-		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")))
+	public SuccessResponse deleteActivityByCid(String cid, String schoolCid, Boolean forAll) {
+		if (!getUser().getRoles().stream()
+				.anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")))
 			schoolCid = getUser().getSchool().getCid();
 		else {
-			if(forAll) {
-				if(activityPerformedRepository.existsByActivityCidAndActive(cid, true))
-					throw new ValidationException(String.format("Activity with id (%s) has already been performed by some students , so it can't be deleted contact your service provider for that.",cid));
+			if (forAll) {
+				if (activityPerformedRepository.existsByActivityCidAndActive(cid, true))
+					throw new ValidationException(String.format(
+							"Activity with id (%s) has already been performed by some students , so it can't be deleted contact your service provider for that.",
+							cid));
 				activityRepository.updateActivitySetActiveByCid(false, cid);
 				return new SuccessResponse(200, "Activity successfully deleted for all schools.");
-			}else {
-				if(schoolCid == null)
+			} else {
+				if (schoolCid == null)
 					throw new ValidationException("school id cannot be null.");
 			}
 		}
-		if(activityPerformedRepository.existsByActivityCidAndStudentSchoolCidInAndActive(cid, Arrays.asList(schoolCid), true))
-			throw new ValidationException(String.format("Activity with id (%s) has already been performed by some students in school (id : %s) , so it can't be deleted contact your service provider for that.",cid,schoolCid));
+		if (activityPerformedRepository.existsByActivityCidAndStudentSchoolCidInAndActive(cid, Arrays.asList(schoolCid),
+				true))
+			throw new ValidationException(String.format(
+					"Activity with id (%s) has already been performed by some students in school (id : %s) , so it can't be deleted contact your service provider for that.",
+					cid, schoolCid));
 		Activity activity = activityRepository.getOneByCidAndActiveTrue(cid);
 		if (activity == null)
 			throw new ValidationException(String.format("No activity found with id : %s ", cid));
 		List<School> schools = activity.getSchools();
 		final String schoolId = schoolCid;
-		schools.removeIf(s-> s.getCid().equals(schoolId));
+		schools.removeIf(s -> s.getCid().equals(schoolId));
 		activity.setSchools(activity.getSchools());
 		activity = activityRepository.save(activity);
 //		int i = activityRepository.updateActivitySetActiveByCid(false, cid);
 //		if (i == 0)
 //			throw new RuntimeException("Something went wrong Activity not deleted.");
-		return new SuccessResponse(200, String.format("Activity successfuly deleted from school (id : %s).",schoolCid));
+		return new SuccessResponse(200,
+				String.format("Activity successfuly deleted from school (id : %s).", schoolCid));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -904,10 +933,11 @@ public class ActivityServiceImpl extends BaseService implements ActivityService 
 	public ResponseEntity<?> uploadActivityFromExcel(MultipartFile file, String schoolCid) {
 		if (file == null || file.isEmpty() || file.getSize() == 0)
 			throw new ValidationException("Pls upload valid excel file.");
-		
-		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")))
+
+		if (!getUser().getRoles().stream()
+				.anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin") || r.getName().equalsIgnoreCase("Lfin")))
 			schoolCid = getUser().getSchool().getCid();
-		if(schoolCid == null)
+		if (schoolCid == null)
 			throw new ValidationException("school id cannot be null.");
 
 		List<String> errors = new ArrayList<String>();

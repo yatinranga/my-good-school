@@ -16,8 +16,6 @@ import com.nxtlife.mgs.entity.activity.ActivityPerformed;
 import com.nxtlife.mgs.enums.ActivityStatus;
 import com.nxtlife.mgs.enums.FourS;
 import com.nxtlife.mgs.enums.PSDArea;
-import com.nxtlife.mgs.view.ActivityPerformedResponse;
-import com.nxtlife.mgs.view.GroupResponseBy;
 import com.nxtlife.mgs.view.PropertyCount;
 import com.querydsl.core.types.Predicate;
 
@@ -34,8 +32,8 @@ public interface ActivityPerformedRepository
 	public List<ActivityPerformed> findAllByStudentCidAndActivityFourSAndActivityStatusAndActiveTrue(String studentCid,
 			FourS fourS, ActivityStatus activityStatus);
 
-	public List<ActivityPerformed> findAllByStudentCidAndActivityFocusAreasCidAndActivityStatusAndActiveTrue(String studentCid,
-			String focusAreaCid, ActivityStatus activityStatus);
+	public List<ActivityPerformed> findAllByStudentCidAndActivityFocusAreasCidAndActivityStatusAndActiveTrue(
+			String studentCid, String focusAreaCid, ActivityStatus activityStatus);
 
 	public List<ActivityPerformed> findAllByStudentCidAndActivityFocusAreasPsdAreaAndActivityStatusAndActiveTrue(
 			String studentCid, PSDArea psdArea, ActivityStatus activityStatus);
@@ -77,16 +75,18 @@ public interface ActivityPerformedRepository
 
 	public List<ActivityPerformed> findAllByStudentSchoolCidAndStudentSchoolActiveTrueAndActiveTrue(String schoolCid);
 
-	public 	List<ActivityPerformed> findAllByStudentSchoolCidAndStudentGradeCidAndActivityCidAndAndActivityStatusAndStudentSchoolActiveTrueAndStudentGradeActiveTrueAndActivityActiveTrueAndActiveTrue(
+	public List<ActivityPerformed> findAllByStudentSchoolCidAndStudentGradeCidAndActivityCidAndAndActivityStatusAndStudentSchoolActiveTrueAndStudentGradeActiveTrueAndActivityActiveTrueAndActiveTrue(
 			String schoolCid, String gradeCid, String ActivityCid, ActivityStatus status);
 
-	public 	List<ActivityPerformed> findAllByStudentCidAndActiveTrue(String studentCid, Pageable pageable);
+	public List<ActivityPerformed> findAllByStudentCidAndActivityStatusInAndActiveTrue(String studentCid,
+			Collection<ActivityStatus> statuses, Pageable pageable);
 
-	public 	List<ActivityPerformed> findAllByTeacherCidAndActivityStatusAndActiveTrue(String coachCid, ActivityStatus reviewed);
+	public List<ActivityPerformed> findAllByTeacherCidAndActivityStatusAndActiveTrue(String coachCid,
+			ActivityStatus reviewed);
 
-	public 	List<ActivityPerformed> findAll(Predicate build);
+	public List<ActivityPerformed> findAll(Predicate build);
 
-	public 	List<ActivityPerformed> findAllByStudentCidAndActiveTrue(String studentCid);
+	public List<ActivityPerformed> findAllByStudentCidAndActiveTrue(String studentCid);
 
 	@Query(value = "Select ap from ActivityPerformed ap where ap.teacher.cid =:coachCid and (ap.activityStatus =:submittedbystudent or ap.activityStatus =:savedbyteacher or ap.activityStatus =:reviewed) and ap.active = true")
 	public List<ActivityPerformed> findAllByTeacherCidAndActivityStatusOrActivityStatusOrActivityStatusAndActiveTrue(
@@ -96,9 +96,9 @@ public interface ActivityPerformedRepository
 	@Query(value = "select ap.id from ActivityPerformed  ap where ap.cid =:activityPerformedCid and ap.active = true")
 	public Long findIdByCidAndActiveTrue(@Param("activityPerformedCid") String activityPerformedCid);
 
-	public 	boolean existsByCidAndActiveTrue(String activityCid);
+	public boolean existsByCidAndActiveTrue(String activityCid);
 
-	public 	boolean existsByTeacherCidAndActivityCidAndActiveTrue(String teacherCid, String activityCid);
+	public boolean existsByTeacherCidAndActivityCidAndActiveTrue(String teacherCid, String activityCid);
 
 	@Query("SELECT " + "new com.nxtlife.mgs.view.PropertyCount(a.activity.fourS, COUNT(DISTINCT a.id)) " + "FROM "
 			+ "    ActivityPerformed a "
@@ -118,62 +118,66 @@ public interface ActivityPerformedRepository
 			+ "   f.psdArea")
 	public List<PropertyCount> findPsdAreaCount(@Param("cid") String cid, @Param("status") ActivityStatus status);
 
-	public 	Set<ActivityPerformed> findAllByStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasPsdAreaAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
-			String schoolCid, String gradeCid, PSDArea psdArea, ActivityStatus status, Date startDate, Date endDate);
-	
-	public 	Set<ActivityPerformed> findAllByTeacherCidAndStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasPsdAreaAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(String teacherCid,
+	public Set<ActivityPerformed> findAllByStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasPsdAreaAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
 			String schoolCid, String gradeCid, PSDArea psdArea, ActivityStatus status, Date startDate, Date endDate);
 
-	public 	Set<ActivityPerformed> findAllByStudentSchoolCidAndActivityFocusAreasPsdAreaAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
-			String schoolCid, PSDArea psdArea, ActivityStatus status, Date startDate, Date endDate);
-	
-	public 	Set<ActivityPerformed> findAllByTeacherCidAndStudentSchoolCidAndActivityFocusAreasPsdAreaAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(String teacherCid,
+	public Set<ActivityPerformed> findAllByTeacherCidAndStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasPsdAreaAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
+			String teacherCid, String schoolCid, String gradeCid, PSDArea psdArea, ActivityStatus status,
+			Date startDate, Date endDate);
+
+	public Set<ActivityPerformed> findAllByStudentSchoolCidAndActivityFocusAreasPsdAreaAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
 			String schoolCid, PSDArea psdArea, ActivityStatus status, Date startDate, Date endDate);
 
-	public 	Set<ActivityPerformed> findAllByStudentSchoolCidAndStudentGradeCidAndActivityFourSAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
+	public Set<ActivityPerformed> findAllByTeacherCidAndStudentSchoolCidAndActivityFocusAreasPsdAreaAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
+			String teacherCid, String schoolCid, PSDArea psdArea, ActivityStatus status, Date startDate, Date endDate);
+
+	public Set<ActivityPerformed> findAllByStudentSchoolCidAndStudentGradeCidAndActivityFourSAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
 			String schoolCid, String gradeCid, FourS fourS, ActivityStatus status, Date startDate, Date endDate);
-	
-	public 	Set<ActivityPerformed> findAllByTeacherCidAndStudentSchoolCidAndStudentGradeCidAndActivityFourSAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
-			String teacherCid ,String schoolCid, String gradeCid, FourS fourS, ActivityStatus status, Date startDate, Date endDate);
+
+	public Set<ActivityPerformed> findAllByTeacherCidAndStudentSchoolCidAndStudentGradeCidAndActivityFourSAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
+			String teacherCid, String schoolCid, String gradeCid, FourS fourS, ActivityStatus status, Date startDate,
+			Date endDate);
 
 	public Set<ActivityPerformed> findAllByStudentSchoolCidAndActivityFourSAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
 			String schoolCid, FourS fourS, ActivityStatus status, Date startDate, Date endDate);
-	
+
 	public Set<ActivityPerformed> findAllByTeacherCidAndStudentSchoolCidAndActivityFourSAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
-			String teacherCid ,String schoolCid, FourS fourS, ActivityStatus status, Date startDate, Date endDate);
+			String teacherCid, String schoolCid, FourS fourS, ActivityStatus status, Date startDate, Date endDate);
 
 	public Set<ActivityPerformed> findAllByStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
 			String schoolCid, String gradeCid, String focusAreaName, ActivityStatus status, Date startDate,
 			Date endDate);
-	
+
 	public Set<ActivityPerformed> findAllByTeacherCidAndStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
-			String teacherCid ,String schoolCid, String gradeCid, String focusAreaName, ActivityStatus status, Date startDate,
-			Date endDate);
-	
+			String teacherCid, String schoolCid, String gradeCid, String focusAreaName, ActivityStatus status,
+			Date startDate, Date endDate);
+
 	public Set<ActivityPerformed> findAllByStudentSchoolCidAndStudentGradeCidAndActivityFocusAreasNameAndActivityCidInAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
-			String schoolCid, String gradeCid, String focusAreaName,Collection<String> activityCids, ActivityStatus status, Date startDate,
-			Date endDate);
+			String schoolCid, String gradeCid, String focusAreaName, Collection<String> activityCids,
+			ActivityStatus status, Date startDate, Date endDate);
 
 	public Set<ActivityPerformed> findAllByStudentSchoolCidAndActivityFocusAreasNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
 			String schoolCid, String focusAreaName, ActivityStatus status, Date startDate, Date endDate);
-	
+
 	public Set<ActivityPerformed> findAllByTeacherCidAndStudentSchoolCidAndActivityFocusAreasNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
-			String teacherCid ,String schoolCid, String focusAreaName, ActivityStatus status, Date startDate, Date endDate);
+			String teacherCid, String schoolCid, String focusAreaName, ActivityStatus status, Date startDate,
+			Date endDate);
 
 	public Set<ActivityPerformed> findAllByStudentSchoolCidAndStudentGradeCidAndActivityNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
 			String schoolCid, String gradeCid, String activityName, ActivityStatus status, Date startDate,
 			Date endDate);
-	
+
 	public Set<ActivityPerformed> findAllByTeacherCidAndStudentSchoolCidAndStudentGradeCidAndActivityNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
-			String teacherCid ,String schoolCid, String gradeCid, String activityName, ActivityStatus status, Date startDate,
+			String teacherCid, String schoolCid, String gradeCid, String activityName, ActivityStatus status,
+			Date startDate, Date endDate);
+
+	public Set<ActivityPerformed> findAllByStudentSchoolCidAndActivityNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
+			String schoolCid, String activityName, ActivityStatus status, Date startDate, Date endDate);
+
+	public Set<ActivityPerformed> findAllByTeacherCidAndStudentSchoolCidAndActivityNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
+			String teacherCid, String schoolCid, String activityName, ActivityStatus status, Date startDate,
 			Date endDate);
 
-	public 	Set<ActivityPerformed> findAllByStudentSchoolCidAndActivityNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
-			String schoolCid, String activityName, ActivityStatus status, Date startDate, Date endDate);
-	
-	public 	Set<ActivityPerformed> findAllByTeacherCidAndStudentSchoolCidAndActivityNameAndActivityStatusAndDateOfActivityGreaterThanEqualAndDateOfActivityLessThanEqualAndActiveTrue(
-			String teacherCid ,String schoolCid, String activityName, ActivityStatus status, Date startDate, Date endDate);
-	
 //	@Query("select ap.activity.name as criterionValue , COUNT(DISTINCT ap.id) as count , ap as responses from ActivityPerformed ap  where ap.student.school.id =?1 and ap.student.grade.id in ?2 and ap.activityStatus in ?3 and ap.active = true group by ap.activity.name")
 //	Set<GroupResponseBy<ActivityPerformed>> findAllBySchoolIdAndGradesIdInAndActivityStatusIn(Long schoolId , Collection<Long> gradeIds ,Collection<ActivityStatus> statuses );
 //	com.nxtlife.mgs.view.GroupResponseByActivityName
@@ -185,14 +189,17 @@ public interface ActivityPerformedRepository
 //	
 //	@Query("select ap.activity.name as criterionValue , COUNT(DISTINCT ap.id) as count , ap as responses from ActivityPerformed ap  where ap.student.school.cid =?1 and ap.student.grade.id in ?2 and ap.activityStatus in ?3 and ap.active = true group by ap.activity.name having ap.activity.cid = ?4")
 //	Set<GroupResponseBy<ActivityPerformed>> findAllBySchoolCidAndGradesIdInAndActivityStatusInAndClubId(String schoolId , Collection<Long> gradeIds ,Collection<ActivityStatus> statuses ,String activityCid );
-	
+
 	@Query("select ap from ActivityPerformed ap  where ap.student.school.cid =?1 and ap.student.grade.id in ?2 and ap.activityStatus in ?3 and ap.active = true group by ap.student.id , ap.activity.name order by ap.student.name , ap.activity.name , ap.submittedOn ")
-	public Set<ActivityPerformed> findAllBySchoolCidAndGradesIdInAndActivityStatusIn(String schoolId , Collection<Long> gradeIds ,Collection<ActivityStatus> statuses );
-	
+	public Set<ActivityPerformed> findAllBySchoolCidAndGradesIdInAndActivityStatusIn(String schoolId,
+			Collection<Long> gradeIds, Collection<ActivityStatus> statuses);
+
 	@Query("select ap from ActivityPerformed ap  where ap.student.school.cid =?1 and ap.student.grade.id in ?2 and ap.activityStatus in ?3 and ap.active = true group by ap.student.id , ap.activity.name having ap.activity.cid = ?4 order by ap.student.name , ap.activity.name , ap.submittedOn ")
-	public Set<ActivityPerformed> findAllBySchoolCidAndGradesIdInAndActivityStatusInAndClubId(String schoolId , Collection<Long> gradeIds ,Collection<ActivityStatus> statuses ,String activityCid );
-	
-	public Boolean existsByActivityCidAndActive(String activityCid ,Boolean active);
-	
-	public Boolean existsByActivityCidAndStudentSchoolCidInAndActive(String activityCid ,Collection<String> schoolIds ,Boolean active);
+	public Set<ActivityPerformed> findAllBySchoolCidAndGradesIdInAndActivityStatusInAndClubId(String schoolId,
+			Collection<Long> gradeIds, Collection<ActivityStatus> statuses, String activityCid);
+
+	public Boolean existsByActivityCidAndActive(String activityCid, Boolean active);
+
+	public Boolean existsByActivityCidAndStudentSchoolCidInAndActive(String activityCid, Collection<String> schoolIds,
+			Boolean active);
 }

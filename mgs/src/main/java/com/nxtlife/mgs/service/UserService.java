@@ -2,14 +2,9 @@ package com.nxtlife.mgs.service;
 
 import java.util.List;
 
-import com.nxtlife.mgs.entity.school.School;
-import com.nxtlife.mgs.entity.user.Guardian;
-import com.nxtlife.mgs.entity.user.Student;
-import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.entity.user.User;
 import com.nxtlife.mgs.view.Mail;
 import com.nxtlife.mgs.view.MailRequest;
-
 import com.nxtlife.mgs.view.PasswordRequest;
 import com.nxtlife.mgs.view.SuccessResponse;
 import com.nxtlife.mgs.view.user.UserRequest;
@@ -18,16 +13,8 @@ import com.sun.mail.smtp.SMTPSendFailedException;
 
 public interface UserService {
 
-//	User createStudentUser(Student student);
-//
-//	User createParentUser(Guardian guardian);
-//	
-//	User createTeacherUser(Teacher teacher) ;
-//	
-//	User createSchoolUser(School school);
-
 	UserResponse getLoggedInUserResponse();
-	
+
 	void sendLoginCredentialsByGmailApi(MailRequest request);
 
 	Boolean sendLoginCredentialsBySMTP(Mail request) throws SMTPSendFailedException;
@@ -61,5 +48,5 @@ public interface UserService {
 	SuccessResponse delete(String id);
 
 	List<UserResponse> findAllByRoleId(Long roleId);
-	
+
 }

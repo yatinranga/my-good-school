@@ -2,22 +2,15 @@ package com.nxtlife.mgs.service.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.UUID;
 
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -26,13 +19,13 @@ import com.nxtlife.mgs.service.ExcelTemplateService;
 import com.nxtlife.mgs.util.ExcelUtil;
 
 @Service
-public class ExcelTemplateServiceImpl extends BaseService implements ExcelTemplateService{
+public class ExcelTemplateServiceImpl extends BaseService implements ExcelTemplateService {
 
 	@Value("${mgs.file.upload.location}")
 	protected String filedir;
-	
-	private static Logger logger = LoggerFactory.getLogger(ExcelTemplateServiceImpl.class);
-	
+
+//	private static Logger logger = LoggerFactory.getLogger(ExcelTemplateServiceImpl.class);
+
 	@Override
 	public ByteArrayInputStream exportExampleFile(String type) throws IOException {
 
@@ -42,28 +35,28 @@ public class ExcelTemplateServiceImpl extends BaseService implements ExcelTempla
 
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		XSSFSheet sheet = workbook.createSheet(type.toUpperCase());
-		
+
 		Map<String, CellType> columnTypes = ExcelUtil.sheetColumns(type.toUpperCase());
 
 		XSSFRow row = sheet.createRow(0);
 
 		int col = 0;
 
-		for(Entry<String, CellType> entry : columnTypes.entrySet()) {
+		for (Entry<String, CellType> entry : columnTypes.entrySet()) {
 			XSSFCell cell = row.createCell(col++);
 			cell.setCellValue(entry.getKey());
 		}
 
 //		File file = new File(filename);
-		try(ByteArrayOutputStream out = new ByteArrayOutputStream();) {
-		workbook.write(out);
-		workbook.close();
-		
+		try (ByteArrayOutputStream out = new ByteArrayOutputStream();) {
+			workbook.write(out);
+			workbook.close();
+
 //		} catch (IOException e) {
 //		logger.error("error in creating ", e);
 //		}
-		return new ByteArrayInputStream(out.toByteArray());
+			return new ByteArrayInputStream(out.toByteArray());
 		}
-		}
+	}
 
 }

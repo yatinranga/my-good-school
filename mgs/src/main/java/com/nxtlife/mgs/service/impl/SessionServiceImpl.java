@@ -2,7 +2,6 @@ package com.nxtlife.mgs.service.impl;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -27,11 +26,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.activity.File;
-import com.nxtlife.mgs.entity.activity.TeacherActivityGrade;
 import com.nxtlife.mgs.entity.school.Grade;
-import com.nxtlife.mgs.entity.school.StudentClub;
 import com.nxtlife.mgs.entity.session.Event;
-import com.nxtlife.mgs.entity.user.Student;
 import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.enums.ApprovalStatus;
 import com.nxtlife.mgs.enums.SessionFetch;
@@ -85,32 +81,33 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 
 	@Autowired
 	private FileRepository fileRepository;
-	
+
 	@Autowired
 	StudentClubRepository studentClubRepository;
-	
+
 	@Autowired
 	TeacherActivityGradeRepository teacherActivityGradeRepository;
 
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_SESSION_CREATE)
-	public SessionResponse createSession(SessionRequest request ,String teacherCid) {
+	public SessionResponse createSession(SessionRequest request, String teacherCid) {
 		Teacher teacher = null;
 //		String schoolCid = null;
-		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor") || r.getName().equalsIgnoreCase("Coordinator") || r.getName().equalsIgnoreCase("Head") )) {
+		if (!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor")
+				|| r.getName().equalsIgnoreCase("Coordinator") || r.getName().equalsIgnoreCase("Head"))) {
 			if (teacherCid == null) {
 				throw new ValidationException("teacherId cannot be null.");
 			}
 			Long id = teacherRepository.findIdByCidAndActiveTrue(teacherCid);
-			if(id == null)
-				throw new ValidationException(String.format("Invalid teacherId (%s) ." , teacherCid));
+			if (id == null)
+				throw new ValidationException(String.format("Invalid teacherId (%s) .", teacherCid));
 			teacher = new Teacher();
 			teacher.setId(id);
-		}else {
+		} else {
 			Map<String, Object> response = teacherRepository.findIdAndCidByUserIdAndActiveTrue(getUserId());
-			if (response == null) 
+			if (response == null)
 				throw new ValidationException("Teacher not found probably userId is not set for teacher.");
-			
+
 			teacherCid = (String) response.get("cid");
 			teacher = new Teacher();
 			teacher.setId((Long) response.get("id"));
@@ -124,7 +121,8 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 
 		if (request.getGradeIds() != null && !request.getGradeIds().isEmpty()) {
 
-			List<Grade> repoGradeList = gradeRepository.findAllBySchoolsCidAndActiveTrue(teacherRepository.findSchoolCidbyTeacherCid(teacherCid));
+			List<Grade> repoGradeList = gradeRepository
+					.findAllBySchoolsCidAndActiveTrue(teacherRepository.findSchoolCidbyTeacherCid(teacherCid));
 			List<Grade> finalGradeList = new ArrayList<Grade>();
 
 			for (int i = 0; i < request.getGradeIds().size(); i++) {
@@ -245,7 +243,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 		}
 
 		List<FileRequest> requestFiles = request.getFileRequests();
-		
+
 //		if (requestFiles != null && !requestFiles.isEmpty()) {
 //			List<String> repoFiles = fileRepository.findAllCidByEventCidAndActiveTrue(request.getId());
 //			List<String> repoCopy = new ArrayList<>(repoFiles); // copy of repofile ids.
@@ -317,8 +315,8 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 			}
 
 			/*
-			 * logic to delete the files which were previously there but in new
-			 * request have been removed.
+			 * logic to delete the files which were previously there but in new request have
+			 * been removed.
 			 */
 			for (File f : allValidFilesOfActivity) {
 				fileRepository.updateFileSetActiveByCid(false, f.getCid());
@@ -339,8 +337,8 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 			// Setting files to session
 			session.setFiles(updatedFiles);
 
-		}else {
-			if(session.getFiles() != null && !session.getFiles().isEmpty())
+		} else {
+			if (session.getFiles() != null && !session.getFiles().isEmpty())
 				session.getFiles().stream().forEach(f -> f.setActive(false));
 		}
 
@@ -360,18 +358,18 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_SESSION_FETCH)
-	public SessionResponse getStudentSessionsOfClubBy(String clubId, String sessionFetch, String teacherId, String studentCid ,
-			Integer page, Integer pageSize) {
-		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student") )) {
+	public SessionResponse getStudentSessionsOfClubBy(String clubId, String sessionFetch, String teacherId,
+			String studentCid, Integer page, Integer pageSize) {
+		if (!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student"))) {
 			if (studentCid == null || !studentRepository.existsByCidAndActiveTrue(studentCid)) {
 				throw new ValidationException("studentId cannot be null or invalid.");
 			}
-			}else {
-				 studentCid = studentRepository.findCidByUserIdAndActiveTrue(getUserId());
-				if (studentCid == null) 
-					throw new ValidationException("Student not found probably userId is not set for student.");
-			}
-		
+		} else {
+			studentCid = studentRepository.findCidByUserIdAndActiveTrue(getUserId());
+			if (studentCid == null)
+				throw new ValidationException("Student not found probably userId is not set for student.");
+		}
+
 		if (clubId == null)
 			throw new ValidationException("Club Id cannot be null.");
 		if (!activityRepository.existsByCidAndActiveTrue(clubId))
@@ -383,9 +381,9 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 		if (sessionFetch == null) {
 			sessions = getStudentSessionsOfClub(gradeId, clubId, teacherId, page, pageSize);
 		} else {
-	
+
 			Date start = DateTime.now(DateTimeZone.forTimeZone(zone)).minusSeconds(60).toDate(), end;// LocalDateTime.now().minusSeconds(60).toDate(),
-																		// end;
+			// end;
 			if (!SessionFetch.matches(sessionFetch))
 				throw new ValidationException(String.format(
 						"Invalid value (%s) for sessionFetch it should be from List : {today, week, year}",
@@ -398,8 +396,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 						throw new ValidationException(String.format("Teacher with id (%s) not found.", teacherId));
 					sessions = sessionRepository
 							.findAllByGradesCidAndClubCidAndStartDateGreaterThanAndStartDateLessThanAndTeacherCidAndActiveTrue(
-									gradeId, clubId, start, end, teacherId,
-									Sort.by(Direction.ASC, "startDate"));
+									gradeId, clubId, start, end, teacherId, Sort.by(Direction.ASC, "startDate"));
 				} else {
 					sessions = sessionRepository
 							.findAllByGradesCidAndClubCidAndStartDateGreaterThanAndStartDateLessThanAndActiveTrue(
@@ -414,8 +411,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 						throw new ValidationException(String.format("Teacher with id (%s) not found.", teacherId));
 					sessions = sessionRepository
 							.findAllByGradesCidAndClubCidAndStartDateGreaterThanAndStartDateLessThanAndTeacherCidAndActiveTrue(
-									gradeId, clubId, start, end, teacherId,
-									Sort.by(Direction.ASC, "startDate"));
+									gradeId, clubId, start, end, teacherId, Sort.by(Direction.ASC, "startDate"));
 				} else {
 					sessions = sessionRepository
 							.findAllByGradesCidAndClubCidAndStartDateGreaterThanAndStartDateLessThanAndActiveTrue(
@@ -423,14 +419,14 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 				}
 				break;
 			case month:
-				end = DateUtil.getLastWorkingDayOfMonth(DateUtil.getLastLocalDayOfMonth(DateUtil.convertToLocalDate(start, zone),zone),zone);
+				end = DateUtil.getLastWorkingDayOfMonth(
+						DateUtil.getLastLocalDayOfMonth(DateUtil.convertToLocalDate(start, zone), zone), zone);
 				if (teacherId != null) {
 					if (!teacherRepository.existsByCidAndActiveTrue(teacherId))
 						throw new ValidationException(String.format("Teacher with id (%s) not found.", teacherId));
 					sessions = sessionRepository
 							.findAllByGradesCidAndClubCidAndStartDateGreaterThanAndStartDateLessThanAndTeacherCidAndActiveTrue(
-									gradeId, clubId, start, end, teacherId,
-									Sort.by(Direction.ASC, "startDate"));
+									gradeId, clubId, start, end, teacherId, Sort.by(Direction.ASC, "startDate"));
 				} else {
 					sessions = sessionRepository
 							.findAllByGradesCidAndClubCidAndStartDateGreaterThanAndStartDateLessThanAndActiveTrue(
@@ -458,8 +454,11 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 		List<GroupResponseBy<SessionResponse>> finalSessionList = new ArrayList<GroupResponseBy<SessionResponse>>();
 		for (LocalDate startDate : startDates) {
 			GroupResponseBy<SessionResponse> tempSessionList = new GroupResponseBy<SessionResponse>();
-			tempSessionList.setCriterionAndValue("date",startDate.toString()
-					/*DateUtil.formatDate(DateUtil.convertLocalDateToDateAtStartOfDay(startDate,zone))*/);
+			tempSessionList.setCriterionAndValue("date", startDate.toString()
+			/*
+			 * DateUtil.formatDate(DateUtil.convertLocalDateToDateAtStartOfDay(startDate,
+			 * zone))
+			 */);
 			tempSessionList.setResponses(sessions.stream().filter(s -> s.getStartLocalDate(zone).equals(startDate))
 					.map(SessionResponse::new).distinct().collect(Collectors.toList()));
 			finalSessionList.add(tempSessionList);
@@ -490,25 +489,26 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 
 	@Secured(AuthorityUtils.SCHOOL_SESSION_FETCH)
 	@Override
-	public SessionResponse getStudentSessionsOfClubsBy(String sessionFetch, String teacherId,String studentCid, Integer page,
-			Integer pageSize) {
-		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student") )) {
+	public SessionResponse getStudentSessionsOfClubsBy(String sessionFetch, String teacherId, String studentCid,
+			Integer page, Integer pageSize) {
+		if (!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Student"))) {
 			if (studentCid == null || !studentRepository.existsByCidAndActiveTrue(studentCid)) {
 				throw new ValidationException("studentId cannot be null or invalid.");
 			}
-			}else {
-				 studentCid = studentRepository.findCidByUserIdAndActiveTrue(getUserId());
-				if (studentCid == null) 
-					throw new ValidationException("Student not found probably userId is not set for student.");
-			}
-		
+		} else {
+			studentCid = studentRepository.findCidByUserIdAndActiveTrue(getUserId());
+			if (studentCid == null)
+				throw new ValidationException("Student not found probably userId is not set for student.");
+		}
+
 //		Student student = studentRepository.getByUserIdAndActiveTrue(getUserId());
 //		if (student == null)
 //			throw new ForbiddenException("Login as a student to see sessions details.");
-		
+
 		String gradeId = gradeRepository.findIdByStudentCidAndActiveTrue(studentCid);
-		List<Activity> clubs = studentClubRepository.findActivityByStudentCidAndMembershipStatusAndActiveTrue(studentCid, ApprovalStatus.VERIFIED);
-		if(clubs == null || clubs.isEmpty())
+		List<Activity> clubs = studentClubRepository
+				.findActivityByStudentCidAndMembershipStatusAndActiveTrue(studentCid, ApprovalStatus.VERIFIED);
+		if (clubs == null || clubs.isEmpty())
 			throw new ValidationException("Student is not member of any club.");
 
 		TimeZone zone = DateUtil.defaultTimeZone;
@@ -529,8 +529,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 						throw new ValidationException(String.format("Teacher with id (%s) not found.", teacherId));
 					sessions = sessionRepository
 							.findAllByGradesCidAndClubInAndStartDateGreaterThanAndStartDateLessThanAndTeacherCidAndActiveTrueGroupByClubId(
-									gradeId, clubs, start, end, teacherId,
-									Sort.by(Direction.ASC, "startDate"));
+									gradeId, clubs, start, end, teacherId, Sort.by(Direction.ASC, "startDate"));
 				} else {
 					sessions = sessionRepository
 							.findAllByGradesCidAndClubInAndStartDateGreaterThanAndStartDateLessThanAndActiveTrueGroupByClubId(
@@ -545,8 +544,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 						throw new ValidationException(String.format("Teacher with id (%s) not found.", teacherId));
 					sessions = sessionRepository
 							.findAllByGradesCidAndClubInAndStartDateGreaterThanAndStartDateLessThanAndTeacherCidAndActiveTrueGroupByClubId(
-									gradeId, clubs, start, end, teacherId,
-									Sort.by(Direction.ASC, "startDate"));
+									gradeId, clubs, start, end, teacherId, Sort.by(Direction.ASC, "startDate"));
 				} else {
 					sessions = sessionRepository
 							.findAllByGradesCidAndClubInAndStartDateGreaterThanAndStartDateLessThanAndActiveTrueGroupByClubId(
@@ -554,14 +552,14 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 				}
 				break;
 			case month:
-				end = DateUtil.getLastWorkingDayOfMonth(DateUtil.getLastLocalDayOfMonth(DateUtil.convertToLocalDate(start, zone),zone),zone);
+				end = DateUtil.getLastWorkingDayOfMonth(
+						DateUtil.getLastLocalDayOfMonth(DateUtil.convertToLocalDate(start, zone), zone), zone);
 				if (teacherId != null) {
 					if (!teacherRepository.existsByCidAndActiveTrue(teacherId))
 						throw new ValidationException(String.format("Teacher with id (%s) not found.", teacherId));
 					sessions = sessionRepository
 							.findAllByGradesCidAndClubInAndStartDateGreaterThanAndStartDateLessThanAndTeacherCidAndActiveTrueGroupByClubId(
-									gradeId, clubs, start, end, teacherId,
-									Sort.by(Direction.ASC, "startDate"));
+									gradeId, clubs, start, end, teacherId, Sort.by(Direction.ASC, "startDate"));
 				} else {
 					sessions = sessionRepository
 							.findAllByGradesCidAndClubInAndStartDateGreaterThanAndStartDateLessThanAndActiveTrueGroupByClubId(
@@ -589,8 +587,10 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 		List<GroupResponseBy<SessionResponse>> finalSessionList = new ArrayList<GroupResponseBy<SessionResponse>>();
 		for (LocalDate startDate : startDates) {
 			GroupResponseBy<SessionResponse> tempSessionList = new GroupResponseBy<SessionResponse>();
-			tempSessionList.setCriterionAndValue("date",startDate.toString()
-					/*DateUtil.formatDate(DateUtil.convertLocalDateToDateAtStartOfDay(startDate))*/);
+			tempSessionList.setCriterionAndValue("date", startDate.toString()
+			/*
+			 * DateUtil.formatDate(DateUtil.convertLocalDateToDateAtStartOfDay(startDate))
+			 */);
 			tempSessionList.setResponses(sessions.stream().filter(s -> s.getStartLocalDate(zone).equals(startDate))
 					.map(SessionResponse::new).distinct().collect(Collectors.toList()));
 			finalSessionList.add(tempSessionList);
@@ -607,8 +607,7 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 			if (!teacherRepository.existsByCidAndActiveTrue(teacherId))
 				throw new ValidationException(String.format("Teacher with id (%s) not found.", teacherId));
 			return sessionRepository.findAllByGradesCidAndClubInAndTeacherCidAndActiveTrueGroupByClubId(gradeCid, clubs,
-					teacherId,
-					(Pageable) PageRequest.of(page, pageSize, Sort.by(Direction.ASC, "startDate")));
+					teacherId, (Pageable) PageRequest.of(page, pageSize, Sort.by(Direction.ASC, "startDate")));
 		}
 		return sessionRepository.findAllByGradesCidAndClubInAndActiveTrueGroupByClubId(gradeCid, clubs,
 				(Pageable) PageRequest.of(page, pageSize, Sort.by(Direction.ASC, "startDate")));
@@ -616,18 +615,18 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_SESSION_FETCH)
-	public SessionResponse getTeacherSessionsOfClubBy(String clubId, String sessionFetch,String teacherCid , Integer page,
-			Integer pageSize) {
-		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor"))) {
+	public SessionResponse getTeacherSessionsOfClubBy(String clubId, String sessionFetch, String teacherCid,
+			Integer page, Integer pageSize) {
+		if (!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor"))) {
 			if (teacherCid == null || !teacherRepository.existsByCidAndActiveTrue(teacherCid)) {
 				throw new ValidationException("teacherId cannot be null or invalid.");
 			}
-			}else {
-				 teacherCid = teacherRepository.findCidByUserIdAndActiveTrue(getUserId());
-				if (teacherCid == null) 
-					throw new ValidationException("Teacher not found probably userId is not set for teacher.");
-			}
-		
+		} else {
+			teacherCid = teacherRepository.findCidByUserIdAndActiveTrue(getUserId());
+			if (teacherCid == null)
+				throw new ValidationException("Teacher not found probably userId is not set for teacher.");
+		}
+
 		if (clubId == null)
 			throw new ValidationException("Club Id cannot be null.");
 		if (!activityRepository.existsByCidAndActiveTrue(clubId))
@@ -659,7 +658,8 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 								teacherCid, clubId, start, end, Sort.by(Direction.ASC, "startDate"));
 				break;
 			case month:
-				end = DateUtil.getLastWorkingDayOfMonth(DateUtil.getLastLocalDayOfMonth(DateUtil.convertToLocalDate(start, zone),zone),zone);
+				end = DateUtil.getLastWorkingDayOfMonth(
+						DateUtil.getLastLocalDayOfMonth(DateUtil.convertToLocalDate(start, zone), zone), zone);
 				sessions = sessionRepository
 						.findAllByTeacherCidAndClubCidAndStartDateGreaterThanAndStartDateLessThanAndActiveTrue(
 								teacherCid, clubId, start, end, Sort.by(Direction.ASC, "startDate"));
@@ -685,8 +685,10 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 		List<GroupResponseBy<SessionResponse>> finalSessionList = new ArrayList<GroupResponseBy<SessionResponse>>();
 		for (LocalDate startDate : startDates) {
 			GroupResponseBy<SessionResponse> tempSessionList = new GroupResponseBy<SessionResponse>();
-			tempSessionList.setCriterionAndValue("date",startDate.toString()
-					/*DateUtil.formatDate(DateUtil.convertLocalDateToDateAtStartOfDay(startDate))*/);
+			tempSessionList.setCriterionAndValue("date", startDate.toString()
+			/*
+			 * DateUtil.formatDate(DateUtil.convertLocalDateToDateAtStartOfDay(startDate))
+			 */);
 			tempSessionList.setResponses(sessions.stream().filter(s -> s.getStartLocalDate(zone).equals(startDate))
 					.map(SessionResponse::new).distinct().collect(Collectors.toList()));
 			finalSessionList.add(tempSessionList);
@@ -704,16 +706,17 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_SESSION_FETCH)
-	public SessionResponse getTeacherSessionsOfClubsBy(String sessionFetch,String teacherCid , Integer page, Integer pageSize) {
-		if(!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor"))) {
+	public SessionResponse getTeacherSessionsOfClubsBy(String sessionFetch, String teacherCid, Integer page,
+			Integer pageSize) {
+		if (!getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("Supervisor"))) {
 			if (teacherCid == null || !teacherRepository.existsByCidAndActiveTrue(teacherCid)) {
 				throw new ValidationException("teacherId cannot be null or invalid.");
 			}
-			}else {
-				 teacherCid = teacherRepository.findCidByUserIdAndActiveTrue(getUserId());
-				if (teacherCid == null) 
-					throw new ValidationException("Teacher not found probably userId is not set for teacher.");
-			}
+		} else {
+			teacherCid = teacherRepository.findCidByUserIdAndActiveTrue(getUserId());
+			if (teacherCid == null)
+				throw new ValidationException("Teacher not found probably userId is not set for teacher.");
+		}
 		List<Activity> clubs = teacherActivityGradeRepository.findAllActivityByTeacherCidAndActiveTrue(teacherCid);
 
 		TimeZone zone = DateUtil.defaultTimeZone;
@@ -741,7 +744,8 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 								teacherCid, clubs, start, end, Sort.by(Direction.ASC, "startDate"));
 				break;
 			case month:
-				end = DateUtil.getLastWorkingDayOfMonth(DateUtil.getLastLocalDayOfMonth(DateUtil.convertToLocalDate(start, zone),zone),zone);
+				end = DateUtil.getLastWorkingDayOfMonth(
+						DateUtil.getLastLocalDayOfMonth(DateUtil.convertToLocalDate(start, zone), zone), zone);
 				sessions = sessionRepository
 						.findAllByTeacherCidAndClubInAndStartDateGreaterThanAndStartDateLessThanAndActiveTrueGroupByClubId(
 								teacherCid, clubs, start, end, Sort.by(Direction.ASC, "startDate"));
@@ -767,8 +771,10 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 		List<GroupResponseBy<SessionResponse>> finalSessionList = new ArrayList<GroupResponseBy<SessionResponse>>();
 		for (LocalDate startDate : startDates) {
 			GroupResponseBy<SessionResponse> tempSessionList = new GroupResponseBy<SessionResponse>();
-			tempSessionList.setCriterionAndValue("date",startDate.toString()
-					/*DateUtil.formatDate(DateUtil.convertLocalDateToDateAtStartOfDay(startDate))*/);
+			tempSessionList.setCriterionAndValue("date", startDate.toString()
+			/*
+			 * DateUtil.formatDate(DateUtil.convertLocalDateToDateAtStartOfDay(startDate))
+			 */);
 			tempSessionList.setResponses(sessions.stream().filter(s -> s.getStartLocalDate(zone).equals(startDate))
 					.map(SessionResponse::new).distinct().collect(Collectors.toList()));
 			finalSessionList.add(tempSessionList);
@@ -791,8 +797,9 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 	public SuccessResponse deleteSession(String sessionCid) {
 		if (sessionCid == null)
 			throw new ValidationException("Session id cannot be null.");
-		
-		String msg = sessionRepository.deleteByCidAndActiveTrue(sessionCid, false) == 0 ? "Session already inactive" : "Session deleted successfuly" ;
+
+		String msg = sessionRepository.deleteByCidAndActiveTrue(sessionCid, false) == 0 ? "Session already inactive"
+				: "Session deleted successfuly";
 
 		return new SuccessResponse(200, String.format(msg));
 	}
@@ -800,8 +807,9 @@ public class SessionServiceImpl extends BaseService implements SessionService {
 	@Override
 	@Secured(AuthorityUtils.SCHOOL_SESSION_FETCH)
 	public SessionResponse getSession(String sessionId) {
-		if(sessionId == null || !sessionRepository.existsByCidAndActiveTrue(sessionId))
-			throw new ValidationException(String.format("Session id (%s) is invalid or session is deleted.",sessionId));
+		if (sessionId == null || !sessionRepository.existsByCidAndActiveTrue(sessionId))
+			throw new ValidationException(
+					String.format("Session id (%s) is invalid or session is deleted.", sessionId));
 		return new SessionResponse(sessionRepository.findByCidAndActiveTrue(sessionId));
 	}
 

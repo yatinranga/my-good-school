@@ -2,17 +2,12 @@ package com.nxtlife.mgs.entity.activity;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
@@ -22,26 +17,25 @@ import com.nxtlife.mgs.enums.PSDArea;
 
 @SuppressWarnings("serial")
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name","psdArea" }))
-public class FocusArea extends BaseEntity{
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "psdArea" }))
+public class FocusArea extends BaseEntity {
 
-	
 	@NotNull
 	@Column(unique = true)
 	private String name;
-	
+
 	@NotNull
 	@Column(unique = true)
 	private String cid;
-	
+
 	private String description;
-	
+
 	@Enumerated(EnumType.STRING)
 	PSDArea psdArea;
-	
-	@ManyToMany(mappedBy = "focusAreas",fetch = FetchType.EAGER)
+
+	@ManyToMany(mappedBy = "focusAreas", fetch = FetchType.EAGER)
 	private List<Activity> activities;
-	
+
 //	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY,mappedBy ="focusArea")
 //	private List<ActivityOfferedFocusArea> activityOfferedFocusArea;
 
@@ -104,7 +98,7 @@ public class FocusArea extends BaseEntity{
 	}
 
 	public FocusArea() {
-		
+
 	}
-	
+
 }

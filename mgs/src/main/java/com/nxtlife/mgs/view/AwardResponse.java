@@ -5,14 +5,11 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.nxtlife.mgs.entity.school.Award;
-import com.nxtlife.mgs.entity.school.AwardActivityPerformed;
 import com.nxtlife.mgs.enums.ApprovalStatus;
-import com.nxtlife.mgs.util.DateUtil;
 
 @JsonInclude(value = Include.NON_ABSENT)
 public class AwardResponse {
@@ -32,7 +29,10 @@ public class AwardResponse {
 	private String studentName;
 	private String studentGrade;
 	private ActivityRequestResponse activity;
-	/*Adding these fields fourS focusAreas and psdAreas on front end's demand but they are already present in activityPerformedResponses */
+	/*
+	 * Adding these fields fourS focusAreas and psdAreas on front end's demand but
+	 * they are already present in activityPerformedResponses
+	 */
 	private String fourS;
 	private Set<String> focusAreas;
 	private Set<String> psdAreas;
@@ -198,7 +198,7 @@ public class AwardResponse {
 	public void setAwards(List<GroupResponseByActivityName<AwardResponse>> awards) {
 		this.awards = awards;
 	}
-	
+
 	public String getValidFrom() {
 		return validFrom;
 	}
@@ -251,8 +251,8 @@ public class AwardResponse {
 	public AwardResponse(Award award) {
 		this.id = award.getCid();
 		this.description = award.getDescription();
-		if(award.getAwardType() != null)
-		this.awardType = award.getAwardType().getName();
+		if (award.getAwardType() != null)
+			this.awardType = award.getAwardType().getName();
 		this.dateOfReceipt = award.getDateOfReceipt();
 		this.status = award.getStatus();
 		this.statusModifiedAt = award.getStatusModifiedAt();
@@ -263,41 +263,44 @@ public class AwardResponse {
 		if (award.getStudent() != null) {
 			this.studentId = award.getStudent().getCid();
 			this.studentName = award.getStudent().getName();
-			if(award.getStudent().getGrade()!=null)
-			  this.studentGrade = String.format("%s-%s", award.getStudent().getGrade().getName(),award.getStudent().getGrade().getSection());
+			if (award.getStudent().getGrade() != null)
+				this.studentGrade = String.format("%s-%s", award.getStudent().getGrade().getName(),
+						award.getStudent().getGrade().getSection());
 		}
 		if (award.getAwardActivityPerformed() != null && !award.getAwardActivityPerformed().isEmpty()) {
 			this.activityPerformedResponses = new ArrayList<>();
 			Set<String> activityTypes = new HashSet<String>();
-			award.getAwardActivityPerformed().stream().forEach(act -> {activityTypes.add(act.getActivityPerformed().getActivity().getName());});
-			if(activityTypes !=null && !activityTypes.isEmpty()) {
-				for(String type : activityTypes) {
+			award.getAwardActivityPerformed().stream().forEach(act -> {
+				activityTypes.add(act.getActivityPerformed().getActivity().getName());
+			});
+			if (activityTypes != null && !activityTypes.isEmpty()) {
+				for (String type : activityTypes) {
 					GroupResponseByActivityName<ActivityPerformedResponse> partialList = new GroupResponseByActivityName<ActivityPerformedResponse>();
 					partialList.setCriterion("activityName");
 					partialList.setCriterionValue(type);
-					double avgStars[] = {0d};
-					Long[] count = {0l};
+					double avgStars[] = { 0d };
+					Long[] count = { 0l };
 					List<ActivityPerformedResponse> activityList = new ArrayList<ActivityPerformedResponse>();
 					award.getAwardActivityPerformed().stream().forEach(act -> {
-						if(act.getActivityPerformed().getActivity().getName().equalsIgnoreCase(type)) {
+						if (act.getActivityPerformed().getActivity().getName().equalsIgnoreCase(type)) {
 							activityList.add(new ActivityPerformedResponse(act.getActivityPerformed()));
-							avgStars[0]+=act.getActivityPerformed().getStar();
+							avgStars[0] += act.getActivityPerformed().getStar();
 							count[0]++;
-							}
-						});
+						}
+					});
 					partialList.setResponses(activityList);
 					partialList.setCount(count[0]);
 					partialList.setAverageStars(avgStars[0] / count[0]);
 					this.activityPerformedResponses.add(partialList);
-					}
-					
 				}
+
 			}
+		}
 //			for (AwardActivityPerformed awardActivityPerformed : award.getAwardActivityPerformed()) {
 //				this.activityPerformedResponses
 //						.add(new ActivityPerformedResponse(awardActivityPerformed.getActivityPerformed()));
 //			}
-			
+
 //			ActivityPerformedResponse activityPerfResp = this.getActivityPerformedResponses().stream().findFirst().orElse(null);
 //			if(activityPerfResp != null) {
 //				this.fourS = activityPerfResp.getFourS();
@@ -308,20 +311,20 @@ public class AwardResponse {
 		if (award.getActivity() != null) {
 			activity = new ActivityRequestResponse(award.getActivity());
 		}
-		if(award.getStatusModifiedBy()!=null){
-			this.statusModifiedBy=award.getStatusModifiedBy().getName();
-			this.statusModifierId=award.getStatusModifiedBy().getCid();
+		if (award.getStatusModifiedBy() != null) {
+			this.statusModifiedBy = award.getStatusModifiedBy().getName();
+			this.statusModifierId = award.getStatusModifiedBy().getCid();
 		}
-		this.validFrom = award.getValidFrom().toString() ;//DateUtil.formatDate(award.getValidFrom());
-		this.validUntil = award.getValidUntil().toString() ; //DateUtil.formatDate(award.getValidUntil());
-		if(award.getAwardCriterion() != null)
-		   this.awardCriterion = award.getAwardCriterion().toString();
+		this.validFrom = award.getValidFrom().toString();// DateUtil.formatDate(award.getValidFrom());
+		this.validUntil = award.getValidUntil().toString(); // DateUtil.formatDate(award.getValidUntil());
+		if (award.getAwardCriterion() != null)
+			this.awardCriterion = award.getAwardCriterion().toString();
 		this.criterionValue = award.getCriterionValue();
-		if(award.getGrade() != null)
+		if (award.getGrade() != null)
 			this.gradeId = award.getGrade().getCid();
-		
+
 	}
-	
+
 //	public AwardResponse performActivityGrouping() {
 //		if(this.awards != null && !this.awards.isEmpty()) {
 //			for()

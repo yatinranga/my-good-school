@@ -1,7 +1,5 @@
 package com.nxtlife.mgs.view;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -10,7 +8,6 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.nxtlife.mgs.entity.activity.ActivityPerformed;
-import com.nxtlife.mgs.entity.activity.File;
 import com.nxtlife.mgs.entity.activity.FocusArea;
 import com.nxtlife.mgs.enums.ActivityStatus;
 import com.nxtlife.mgs.util.DateUtil;
@@ -19,9 +16,9 @@ import com.nxtlife.mgs.util.DateUtil;
 public class ActivityPerformedResponse {
 
 	private String dateOfActivity;
-	
-    private String submittedOn;
-	
+
+	private String submittedOn;
+
 	private String reviewedOn;
 
 	private String id;
@@ -65,11 +62,11 @@ public class ActivityPerformedResponse {
 	private Set<String> psdAreas;
 
 	private String grade;
-	
+
 	private Integer totalMarks;
-	
+
 	private String title;
-	
+
 	private String gradeId;
 
 	public String getDateOfActivity() {
@@ -321,25 +318,29 @@ public class ActivityPerformedResponse {
 			if (activityPerformed.getStudent().getGrade() != null) {
 				this.grade = String.format("%s - %s", activityPerformed.getStudent().getGrade().getName(),
 						activityPerformed.getStudent().getGrade().getSection());
-				this.gradeId =  activityPerformed.getStudent().getGrade().getCid();
+				this.gradeId = activityPerformed.getStudent().getGrade().getCid();
 			}
 		}
 		this.coachRemark = activityPerformed.getCoachRemark();
 		if (activityPerformed.getCoachRemarkDate() != null)
-			this.coachRemarkDate = activityPerformed.getCoachRemarkDate().toString(); //DateUtil.formatDate(activityPerformed.getCoachRemarkDate());
-		this.participationScore = activityPerformed.getParticipationScore()== null? 0 : activityPerformed.getParticipationScore() ;
-		this.initiativeScore = activityPerformed.getInitiativeScore() == null ? 0 : activityPerformed.getInitiativeScore();
-		this.achievementScore = activityPerformed.getAchievementScore() == null ? 0 : activityPerformed.getAchievementScore();
+			this.coachRemarkDate = activityPerformed.getCoachRemarkDate().toString(); // DateUtil.formatDate(activityPerformed.getCoachRemarkDate());
+		this.participationScore = activityPerformed.getParticipationScore() == null ? 0
+				: activityPerformed.getParticipationScore();
+		this.initiativeScore = activityPerformed.getInitiativeScore() == null ? 0
+				: activityPerformed.getInitiativeScore();
+		this.achievementScore = activityPerformed.getAchievementScore() == null ? 0
+				: activityPerformed.getAchievementScore();
 		this.star = activityPerformed.getStar();
 		if (activityPerformed.getFiles() != null) {
-			this.fileResponses = activityPerformed.getFiles().stream().filter(f -> f.getActive()).distinct().map(FileResponse :: new).collect(Collectors.toList());
+			this.fileResponses = activityPerformed.getFiles().stream().filter(f -> f.getActive()).distinct()
+					.map(FileResponse::new).collect(Collectors.toList());
 		}
 		this.totalMarks = this.initiativeScore + this.achievementScore + this.participationScore;
-		
+
 		if (activityPerformed.getSubmittedOn() != null)
-			this.dateOfActivity = activityPerformed.getSubmittedOn().toString() ;//DateUtil.formatDate(activityPerformed.getSubmittedOn());
+			this.dateOfActivity = activityPerformed.getSubmittedOn().toString();// DateUtil.formatDate(activityPerformed.getSubmittedOn());
 		if (activityPerformed.getReviewedOn() != null)
-			this.dateOfActivity = activityPerformed.getReviewedOn().toString() ; //DateUtil.formatDate(activityPerformed.getReviewedOn());
+			this.dateOfActivity = activityPerformed.getReviewedOn().toString(); // DateUtil.formatDate(activityPerformed.getReviewedOn());
 		this.title = activityPerformed.getTitle();
 
 	}

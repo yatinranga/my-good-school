@@ -3,7 +3,6 @@ package com.nxtlife.mgs.service.impl;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -109,13 +108,13 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Autowired
 	private HttpServletRequest httpServletRequest;
-	
+
 	@Autowired
 	private StudentRepository studentRepository;
-	
+
 	@Autowired
 	GuardianRepository guardianRepository;
-	
+
 	@Autowired
 	TeacherRepository teacherRepository;
 
@@ -655,7 +654,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Override
 	@Async
-	public Boolean sendLoginCredentialsBySMTP(Mail request) throws SMTPSendFailedException{
+	public Boolean sendLoginCredentialsBySMTP(Mail request) throws SMTPSendFailedException {
 		if (request.getMailTo() == null || request.getMailFrom() == null || request.getMailSubject() == null)
 			throw new ValidationException("Please provide to , from and subject if not provided already.");
 		if (request.getMailContent() == null)
@@ -691,8 +690,8 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		if ((school = schoolRepository.findByNameAndActiveTrue("MyGoodSchool")) == null) {
 			school = new School();
 			school.setName("MyGoodSchool");
-			school.setUsername(
-					String.format("%s%s", school.getName().toLowerCase().substring(0, 3), Utils.generateRandomNumString(8)));
+			school.setUsername(String.format("%s%s", school.getName().toLowerCase().substring(0, 3),
+					Utils.generateRandomNumString(8)));
 			school.setEmail("mygoodschool@gmail.com");
 			school.setCid(Utils.generateRandomAlphaNumString(8));
 			school.setActive(true);
@@ -774,8 +773,8 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	}
 
 	/**
-	 * this method used to validate role ids that these role ids exist in
-	 * database or not for an organization
+	 * this method used to validate role ids that these role ids exist in database
+	 * or not for an organization
 	 * 
 	 * @param requestRoleIds
 	 * @param schoolId
@@ -801,8 +800,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	}
 
 	/**
-	 * this method used to validate user request like username already exist or
-	 * not
+	 * this method used to validate user request like username already exist or not
 	 * 
 	 * @param request
 	 * @param schoolId
@@ -857,11 +855,11 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@Secured(AuthorityUtils.USER_CREATE)
 	public UserResponse save(UserRequest request) {
 		Long schoolId = null;
-		if(getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin")))
+		if (getUser().getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("MainAdmin")))
 			schoolId = schoolRepository.findIdByCid(request.getSchoolId());
 		else
 			schoolId = getUser().gettSchoolId();
-		
+
 		validate(request, schoolId);
 		User user = request.toEntity();
 		user.settSchoolId(schoolId);
@@ -872,38 +870,43 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			userRoleRepository.save(user.getId(), roleId);
 		}
 		UserResponse response = fetch(user, request.getRoleIds());
-		
+
 		Set<String> roles = roleRepository.findAllNameByIdIn(request.getRoleIds());
-		if(roles != null && !roles.isEmpty()) {
+		if (roles != null && !roles.isEmpty()) {
 			School school = new School();
 			school.setId(schoolId);
-			
-			if(roles.contains("Student")) {
-				Student student = new StudentRequest(user.getName(), user.getEmail(), user.getContactNumber(), user.getUsername(),request.getGender()).toEntity();
+
+			if (roles.contains("Student")) {
+				Student student = new StudentRequest(user.getName(), user.getEmail(), user.getContactNumber(),
+						user.getUsername(), request.getGender()).toEntity();
 				student.setCid(Utils.generateRandomAlphaNumString(8));
 				student.setUser(user);
 				student.setSchool(school);
 				student = studentRepository.save(student);
 				response.setStudentId(student.getCid());
 			}
-			
-			if(roles.contains("Guardian")) {
-				Guardian guardian = new GuardianRequest(user.getName(), user.getEmail(), user.getContactNumber(), user.getUsername(),request.getGender()).toEntity();
+
+			if (roles.contains("Guardian")) {
+				Guardian guardian = new GuardianRequest(user.getName(), user.getEmail(), user.getContactNumber(),
+						user.getUsername(), request.getGender()).toEntity();
 				guardian.setCid(Utils.generateRandomAlphaNumString(8));
 				guardian.setUser(user);
 				guardian = guardianRepository.save(guardian);
 				response.setGuardianId(guardian.getCid());
 			}
-			
-			if(roles.stream().anyMatch(r -> r.equalsIgnoreCase("Supervisor") || r.equalsIgnoreCase("Coordinator") || r.equalsIgnoreCase("Head") || r.equalsIgnoreCase("SchoolAdmin"))) {
-				Teacher teacher = new TeacherRequest(user.getName(), user.getUsername(), user.getEmail(), user.getContactNumber(), request.getGender()).toEntity();
+
+			if (roles.stream().anyMatch(r -> r.equalsIgnoreCase("Supervisor") || r.equalsIgnoreCase("Coordinator")
+					|| r.equalsIgnoreCase("Head") || r.equalsIgnoreCase("SchoolAdmin"))) {
+				Teacher teacher = new TeacherRequest(user.getName(), user.getUsername(), user.getEmail(),
+						user.getContactNumber(), request.getGender()).toEntity();
 				teacher.setCid(Utils.generateRandomAlphaNumString(8));
 				teacher.setUser(user);
+				teacher.setSchool(school);
 				teacher = teacherRepository.save(teacher);
-				response.setTeacherId(teacher.getCid());	
+				response.setTeacherId(teacher.getCid());
 			}
 		}
-		
+
 		return response;
 	}
 
@@ -925,7 +928,6 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		}
 		return userResponseList;
 	}
-	
 
 	@Override
 	@Secured(AuthorityUtils.USER_FETCH)
@@ -1036,51 +1038,57 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			}
 			Set<String> rolesToDel = roleRepository.findAllNameByIdIn(roleIds);
 			Set<String> rolesToAdd = roleRepository.findAllNameByIdIn(newRoles);
-			if(rolesToDel != null)
-				for(String role : rolesToDel) {
-					if(role.equalsIgnoreCase("Student"))
+			if (rolesToDel != null)
+				for (String role : rolesToDel) {
+					if (role.equalsIgnoreCase("Student"))
 						studentRepository.deleteByUserId(user.getId());
-					else if(role.equalsIgnoreCase("Guardian"))
+					else if (role.equalsIgnoreCase("Guardian"))
 						guardianRepository.deleteByUserId(user.getId());
 					else {
-						List<String> teacherRoles = Arrays.asList("Supervisor" ,"Coordinator","Head","SchoolAdmin");
-						if(teacherRoles.contains(role) && rolesToAdd != null && !rolesToAdd.stream().anyMatch(r -> teacherRoles.contains(r)))
+						List<String> teacherRoles = Arrays.asList("Supervisor", "Coordinator", "Head", "SchoolAdmin");
+						if (teacherRoles.contains(role) && rolesToAdd != null
+								&& !rolesToAdd.stream().anyMatch(r -> teacherRoles.contains(r)))
 							teacherRepository.deleteByUserId(user.getId());
 					}
 				}
 		}
 		UserResponse userResponse = fetch(user, request.getRoleIds() == null ? roleIds : request.getRoleIds());
-		
-		Set<String> roles = roleRepository.findAllNameByIdIn(userResponse.getRoles().stream().map(r -> r.getId()).collect(Collectors.toSet()));
-		
-		if(roles != null && !roles.isEmpty()) {
+
+		Set<String> roles = roleRepository
+				.findAllNameByIdIn(userResponse.getRoles().stream().map(r -> r.getId()).collect(Collectors.toSet()));
+
+		if (roles != null && !roles.isEmpty()) {
 			School school = new School();
 			school.setId(schoolId);
-			
-			if(roles.contains("Student")) {
-				if(!studentRepository.existsByUserIdAndActiveTrue(user.getId())) {
-					Student student = new StudentRequest(user.getName(), user.getEmail(), user.getContactNumber(), user.getUsername(),request.getGender()).toEntity();
+
+			if (roles.contains("Student")) {
+				if (!studentRepository.existsByUserIdAndActiveTrue(user.getId())) {
+					Student student = new StudentRequest(user.getName(), user.getEmail(), user.getContactNumber(),
+							user.getUsername(), request.getGender()).toEntity();
 					student.setCid(Utils.generateRandomAlphaNumString(8));
 					student.setUser(user);
 					student.setSchool(school);
 					student = studentRepository.save(student);
 					userResponse.setStudentId(student.getCid());
-					}
+				}
 			}
-			
-			if(roles.contains("Guardian")) {
-				if(!guardianRepository.existsByUserIdAndActiveTrue(user.getId())) {
-					Guardian guardian = new GuardianRequest(user.getName(), user.getEmail(), user.getContactNumber(), user.getUsername(),request.getGender()).toEntity();
+
+			if (roles.contains("Guardian")) {
+				if (!guardianRepository.existsByUserIdAndActiveTrue(user.getId())) {
+					Guardian guardian = new GuardianRequest(user.getName(), user.getEmail(), user.getContactNumber(),
+							user.getUsername(), request.getGender()).toEntity();
 					guardian.setCid(Utils.generateRandomAlphaNumString(8));
 					guardian.setUser(user);
 					guardian = guardianRepository.save(guardian);
 					userResponse.setGuardianId(guardian.getCid());
 				}
 			}
-			
-			if(roles.stream().anyMatch(r -> r.equalsIgnoreCase("Supervisor") || r.equalsIgnoreCase("Coordinator") || r.equalsIgnoreCase("Head") || r.equalsIgnoreCase("SchoolAdmin"))) {
-				if(!teacherRepository.existsByUserIdAndActiveTrue(user.getId())) {
-					Teacher teacher = new TeacherRequest(user.getName(), user.getUsername(), user.getEmail(), user.getContactNumber(), request.getGender()).toEntity();
+
+			if (roles.stream().anyMatch(r -> r.equalsIgnoreCase("Supervisor") || r.equalsIgnoreCase("Coordinator")
+					|| r.equalsIgnoreCase("Head") || r.equalsIgnoreCase("SchoolAdmin"))) {
+				if (!teacherRepository.existsByUserIdAndActiveTrue(user.getId())) {
+					Teacher teacher = new TeacherRequest(user.getName(), user.getUsername(), user.getEmail(),
+							user.getContactNumber(), request.getGender()).toEntity();
 					teacher.setCid(Utils.generateRandomAlphaNumString(8));
 					teacher.setUser(user);
 					teacher = teacherRepository.save(teacher);
@@ -1208,12 +1216,13 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		}
 		return new SuccessResponse(HttpStatus.OK.value(), "User deleted successfully");
 	}
-	
+
 	@Override
 	@Secured(AuthorityUtils.USER_FETCH)
 	public List<UserResponse> findAllByRoleId(Long roleId) {
 		Long schoolId = getUser().gettSchoolId();
-		List<UserResponse> userResponseList = userRepository.findBySchoolIdAndIdIn(schoolId , userRoleRepository.findUserIdsByRoleId(roleId));
+		List<UserResponse> userResponseList = userRepository.findBySchoolIdAndIdIn(schoolId,
+				userRoleRepository.findUserIdsByRoleId(roleId));
 		Set<Long> roleIds = roleRepository.findIdsBySchoolIdAandActive(schoolId, true);
 		Map<Long, List<AuthorityResponse>> roleAuthoritiesMap = new HashMap<>();
 		for (Long rId : roleIds) {

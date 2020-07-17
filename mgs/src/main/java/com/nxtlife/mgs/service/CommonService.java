@@ -1,7 +1,5 @@
 package com.nxtlife.mgs.service;
 
-import java.io.IOException;
-
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 
