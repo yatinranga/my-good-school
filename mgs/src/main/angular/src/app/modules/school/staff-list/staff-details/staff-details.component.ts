@@ -161,7 +161,6 @@ export class StaffDetailsComponent implements OnInit {
     this.alertService.showLoader("");
     this.schoolService.assignClub(reqBody).subscribe((res) => {
       this.staffDetails = res.teachers[0];
-      console.log(res);
       this.sortClubs(); // Reload to see the New Assigned Club/Society
       this.clubIds = {};
       $('#assignClubModal').modal('hide');
@@ -232,7 +231,6 @@ export class StaffDetailsComponent implements OnInit {
     this.schoolService.assignClub(reqBody).subscribe((res) => {
       this.profileUpdated.emit("Grade Assigned");
       this.staffDetails = res.teachers[0];
-      console.log(res);
       this.sortClubs(); // Reload to see the New Assigned Club/Society
       this.clubIds = {};
       $('#assignGradeModal').modal('hide');
@@ -277,7 +275,6 @@ export class StaffDetailsComponent implements OnInit {
         if(e.name==this.roleName){
           const reqBody = { roleIds : [e.id]};
           this.schoolService.updateRole(this.staffDetails.userId,reqBody).subscribe(res=>{
-            console.log(res);
             this.profileUpdated.emit("Profile Updated");
           })
         }
@@ -296,7 +293,6 @@ export class StaffDetailsComponent implements OnInit {
     this.updateSupervisorForm.value.dob = this.updateSupervisorForm.value.dob + " 00:00:00";
     this.alertService.showLoader("");
     this.schoolService.updateSupervisorProfile(this.staffDetails.id, this.updateSupervisorForm.value).subscribe((res) => {
-      console.log(res);
       this.profileUpdated.emit("Profile Updated");
       this.staffDetails = res;
       $('#editSupervisorModal').modal('hide');
@@ -307,12 +303,49 @@ export class StaffDetailsComponent implements OnInit {
     });
   }
 
+  /** Unassign Club/Society */
+  unassignClub(club_obj) {
+    // Response Body
+    const reqBody = {
+      teachers: [{
+        id: this.staffDetails.id,
+        activities: []
+      }]
+    };
+
+    this.alertService.confirmWithoutLoader('question', 'Are you sure you want to unassign '+club_obj.name+' ?', '', 'Yes').then(result => {
+      if (result.value) {
+        this.staffDetails['activityAndGrades'].forEach(ele => {
+          if (ele.id == club_obj.id) { }
+          else {
+            const clubid = ele.id
+            const grades = [];
+            ele.gradeResponses.forEach(element => {
+              grades.push(element.id);
+            });
+            reqBody.teachers[0].activities.push({ id: clubid, grades: grades });
+          }
+        });
+        console.log(reqBody);
+        this.alertService.showLoader("");
+        this.schoolService.assignClub(reqBody).subscribe((res) => {
+          console.log("Res of unassing - ",res)
+          this.staffDetails = res.teachers[0];
+      this.sortClubs(); // Reload to see the New Assigned Club/Society
+          this.profileUpdated.emit("Club-Supervisor Updated");
+          this.alertService.showMessageWithSym(club_obj.clubOrSociety + " Unassigned !", "Success", "success");
+        }, (err) => {
+          console.log(err);
+          this.errorMessage(err);
+        });
+      }
+    });
+  }
+
   updateRole(event) {
     console.log(event);
     this.isRoleChanged = true;
   }
-
-
 
   /** Selected Club Ids */
   // selectedClubIds(){

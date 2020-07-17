@@ -10,7 +10,8 @@
                         <img [src]="imagePath">
                     </div> -->
                     <div class="photo">
-                        <img [src]="imagePath">
+                        <img *ngIf="studentDetails.profileImage" [attr.src]="BASE_URL + studentDetails.profileImage">
+                        <img *ngIf="!studentDetails.profileImage" src="\assets\images\childprofile.jpg">
                     </div>
                 </div>
 

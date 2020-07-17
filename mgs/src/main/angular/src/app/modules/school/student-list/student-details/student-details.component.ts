@@ -2,6 +2,8 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SchoolService } from 'src/app/services/school.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AlertService } from 'src/app/services/alert.service';
+import { BASE_URL } from 'src/app/services/app.constant';
+
 declare let $: any;
 
 @Component({
@@ -10,6 +12,8 @@ declare let $: any;
   styleUrls: ['./student-details.component.scss']
 })
 export class StudentDetailsComponent implements OnInit {
+
+  BASE_URL: string;
 
   col = "col-12";
   @Input() studentDetails: any;
@@ -29,7 +33,8 @@ export class StudentDetailsComponent implements OnInit {
   guardianForm: FormGroup;
   updateStudentForm: FormGroup;
   constructor(private schoolService: SchoolService, private formBuilder: FormBuilder, private alertService: AlertService) {
-    this.showClub = false
+    this.BASE_URL = BASE_URL + "/file/download?filePath=";    
+    this.showClub = false;
   }
 
   ngOnInit() {
@@ -125,8 +130,7 @@ export class StudentDetailsComponent implements OnInit {
         case "Mother": this.guardianForm.value.gender = "female"; break;
       }
       console.log(this.guardianForm.value);
-      this.schoolService.editGuardian(this.guardianId, this.guardianForm.value).subscribe((res) => {
-        console.log(res);
+      this.schoolService.editGuardian(this.guardianId, this.guardianForm.value).subscribe((res) => {        
         this.studentDetails['guardianResponseList'].splice(this.guardianArrIndex,1);
         this.studentDetails['guardianResponseList'].splice(this.guardianArrIndex,0,res);
         this.alertService.showMessageWithSym("Guardian Updated !", "Successful", "success");
@@ -144,7 +148,6 @@ export class StudentDetailsComponent implements OnInit {
       }
       console.log(this.guardianForm.value);
       this.schoolService.addGuardian(this.guardianForm.value).subscribe((res) => {
-        console.log(res);
         this.studentDetails['guardianResponseList'].push(res);
         this.alertService.showMessageWithSym("Guardian Added !", "Successful", "success");
         $('#editGuardianModal').modal('hide');
@@ -176,10 +179,10 @@ export class StudentDetailsComponent implements OnInit {
 
   updateStudentProfile() {
     this.updateStudentForm.value.dob = this.updateStudentForm.value.dob + " 00:00:00";
-    console.log(this.updateStudentForm.value);
     this.alertService.showLoader("");
     this.schoolService.updateStudentProfile(this.studentDetails.id, this.updateStudentForm.value).subscribe((res) => {
-      console.log(res);
+      this.updatedProfile.emit("Update Profile");
+      this.studentDetails = res;
       this.alertService.showMessageWithSym("Profile Updated !", "Success", "success");
       $('#editStudentModal').modal('hide');
     }, (err) => {

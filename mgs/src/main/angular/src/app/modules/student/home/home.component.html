@@ -123,11 +123,13 @@
                 <h3>{{s.criterionValue | date}} - {{s.criterionValue | date:'EEEE'}} </h3>
                 <ul *ngFor="let res of s.responses; let i = index;">
                   <div id="session_title"> {{i+1}}. {{res.title}} </div>
-                  <li> <strong>Club Name : </strong> ({{res.club.name}}) </li>
-                  <li> <strong>Time : </strong> {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs </li>
-                  <li> <strong>Supervisor : </strong> {{res.teacherName}}</li>
-                  <li> <strong>Description : </strong> {{res.description}}</li>
-                  <li *ngIf="res.fileResponses.length"><strong>Attachment : </strong>
+                  <li> <i class="fa fa-trophy" aria-hidden="true"></i>  <strong>({{res.club.name}})</strong> </li>
+                  <li> <i class="fa fa-trophy" aria-hidden="true"></i>  <strong>{{res.club.fourS}}</strong> </li>
+                  <li> <i class="fa fa-clock-o" aria-hidden="true"></i> {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs </li>
+                  <li> <i class="fa fa-user" aria-hidden="true"></i>
+                    {{res.teacherName}}</li>
+                  <li><i class="fa fa-audio-description" aria-hidden="true"></i> Description - {{res.description}}</li>
+                  <li *ngIf="res.fileResponses.length"><i class="fa fa-paperclip" aria-hidden="true"></i> Attachment -
                     <a [attr.href]="BASE_URL + res.fileResponses[0].url">
                     {{res.fileResponses[0].name}}</a></li>
                 </ul>

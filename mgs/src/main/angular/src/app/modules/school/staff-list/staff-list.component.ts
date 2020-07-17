@@ -53,7 +53,6 @@ export class StaffListComponent implements OnInit {
     this.schoolService.getStaff().subscribe((res) => {
       this.staffArr = res;
       this.copyStaffArr = Object.assign([], res);
-      console.log(res);
       this.staff_loader = false;
     }, (err) => {
       this.staff_loader = false;

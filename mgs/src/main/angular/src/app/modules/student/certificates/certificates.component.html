@@ -31,8 +31,8 @@
                             <p>{{certi.certificationAuthority}}</p>
                             <div class="btns-certifivates">
                                 <button class="btn btn-primary" (click)="editCertificatebtn(certi,i)">Edit</button>
-                                <button class="btn btn-success"><a
-                                        [attr.href]="BASE_URL + certi.imageUrl">Download</a></button>
+                                <a class="btn btn-success" 
+                                        [attr.href]="BASE_URL + certi.imageUrl">Download</a>
                                 <button class="btn btn-danger" (click)="deleteCertificate(certi,i)">Delete</button>
                             </div>
                         </div>

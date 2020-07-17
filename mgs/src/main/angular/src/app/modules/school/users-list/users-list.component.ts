@@ -16,7 +16,6 @@ export class UsersListComponent implements OnInit {
 
   getUsers(){
     this.schoolService.getUsers().subscribe((res) => {
-      console.log(res);
     }, (err) => {console.log(err);})
   }
 

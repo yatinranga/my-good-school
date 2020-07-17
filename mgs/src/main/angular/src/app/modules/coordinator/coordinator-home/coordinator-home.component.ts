@@ -30,7 +30,6 @@ export class CoordinatorHomeComponent implements OnInit {
     this.clubLoader = true;
     this.teacherService.getUserClubsInGrades(this.userInfo.schoolId).subscribe(res => {
       this.clubLoader = false;
-      console.log(res);
       this.allActivities = res;
       this.sportArr = res.filter((e) => (e.fourS == 'Sport'));
       this.serviceArr = res.filter((e) => (e.fourS == 'Service'));

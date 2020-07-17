@@ -30,7 +30,6 @@ export class CoordinatorStaffComponent implements OnInit {
   getSupervisors() {
     this.sup_loader = true;
     this.teacherService.getSupervisor(this.coordinatorInfo.schoolId).subscribe(res => {
-      console.log(res);
       this.supervisorArr = res;
       this.copySupervisorArr = Object.assign([],res);
       this.sup_loader = false;

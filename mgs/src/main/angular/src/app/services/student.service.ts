@@ -33,11 +33,6 @@ export class StudentService {
     return this.http.get("/api/student/awards");
   }
 
-  // to get AWARDS of student by Activity ID
-  // getAwards(studentCid,activityId){
-  //   return this.http.get("/api/student/awards?studentId=" + studentCid + "&activityId=" + activityId);
-  // }
-
   // to get the list of all schools
   getSchools(url) {
     return this.http.get(url);
@@ -50,27 +45,28 @@ export class StudentService {
 
   // to get all activities in particular school
   getActivity(schoolId) {
-    return this.http.get("/activities");
+    // return this.http.get("/activities");
+    return this.http.get("/activitiesOffered");
   }
 
   // to get SAVED activities of student
   getSavedActivity(studentCid) {
-    return this.http.get("/api/student/activities?status=saved&studentId=" + studentCid);
+    return this.http.get("/api/student/activities?pageSize=50&status=saved&studentId=" + studentCid);
   }
 
   // to get SUBMITTED Activities of student
   getSubmittedActivity(studentCid) {
-    return this.http.get("/api/student/activities?status=submitted&studentId=" + studentCid);
+    return this.http.get("/api/student/activities?pageSize=50&status=submitted&studentId=" + studentCid);
   }
 
   // to get REVIEWED Activities of student
   getReviewedActivity(studentCid) {
-    return this.http.get("/api/student/activities?status=reviewed&studentId=" + studentCid);
+    return this.http.get("/api/student/activities?pageSize=50&status=reviewed&studentId=" + studentCid);
   }
 
   // to get ALL Activities of student
   getAllActivity(studentCid) {
-    return this.http.get("/api/student/activities?studentId=" + studentCid);
+    return this.http.get("/api/student/activities?pageSize=50&studentId=" + studentCid);
   }
 
   // to get teacher/coaches who perform particular activity
@@ -163,13 +159,13 @@ export class StudentService {
   }
 
   // delete certificate
-  deleteCertificate(certiId){
-    return this.http.delete("/api/student/certificate/"+certiId);
+  deleteCertificate(certiId) {
+    return this.http.delete("/api/student/certificate/" + certiId);
   }
 
   // update certificate
-  updateCertificate(certiId,formDate){
-    return this.http.put("/api/student/certificate/"+certiId,formDate);
+  updateCertificate(certiId, formDate) {
+    return this.http.put("/api/student/certificate/" + certiId, formDate);
 
   }
 

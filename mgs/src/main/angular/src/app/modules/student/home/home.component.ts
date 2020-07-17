@@ -99,14 +99,10 @@ export class HomeComponent implements OnInit {
   // List of enrolled Clubs and Societies
   getEnrolledClub() {
     this.studentService.getAllEnrolledClub().subscribe(res => {
-      console.log(res);
       this.enrolledClubsArr = res.filter(e => e.clubOrSociety == "Club");
       this.enrolledSocietyArr = res.filter(e => e.clubOrSociety == "Society");
       this.enrolledClubsArr.forEach(e => this.highlightClubArr.push(e.name));
       this.enrolledSocietyArr.forEach(e => this.highlightSocietyArr.push(e.name));
-
-      console.log(this.highlightClubArr);
-      console.log(this.highlightSocietyArr);
     }, (err) => {
       console.log(err);
       this.alertService.showMessageWithSym("You are not member of any Club/Society", "", "info")
@@ -144,7 +140,6 @@ export class HomeComponent implements OnInit {
     this.enrollSch_loader = true;
     this.clubSchedule = [];
     this.studentService.getEnrolledClubSession(clubId).subscribe((res) => {
-      console.log(res.sessions);
       this.clubSchedule = res.sessions;
       this.copySchedule = Object.assign([], res.sessions);
       this.enrollSch_loader = false
@@ -218,7 +213,6 @@ export class HomeComponent implements OnInit {
     this.supervisor_loader = true;
     this.studentService.getCoach(this.schoolId, actiId).subscribe((res) => {
       this.coaches = res;
-      console.log(res);
       this.supervisor_loader = false;
     }, (err) => {
       console.log(err);
@@ -238,7 +232,6 @@ export class HomeComponent implements OnInit {
     this.enrollSch_loader = true; // Supervisor Session loader
     this.supervisorId = obj_sup.id;
     this.studentService.getSupervisorSchedule(this.clubId, obj_sup.id).subscribe((res) => {
-      console.log(res.sessions);
       this.clubSchedule = res.sessions;
       this.copySchedule = Object.assign([], res.sessions);
       this.enrollSch_loader = false;
@@ -255,7 +248,6 @@ export class HomeComponent implements OnInit {
     this.studentService.getSupervisorStudent(this.clubId, supervisorId).subscribe((res) => {
       this.students = res;
       this.copyStuArr = Object.assign([], res);
-      console.log(res);
       this.student_loader
         = false;
     }, (err) => {
@@ -289,7 +281,6 @@ export class HomeComponent implements OnInit {
     this.clubId = actiId;
     this.studentService.getCoach(this.schoolId, actiId).subscribe((res) => {
       this.clubSupervisor = res;
-      console.log(res);
       this.csup_loader = false;
     }, (err) => {
       console.log(err);
@@ -299,12 +290,10 @@ export class HomeComponent implements OnInit {
 
   // Register in specific club/society
   clubRegistration() {
-    console.log(this.clubId);
     console.log("Supervisor- ", this.supervisorId);
     if (this.clubId && this.supervisorId) {
       this.alertService.showLoader("");
       this.studentService.postEnrollInClub(this.clubId, this.supervisorId).subscribe(res => {
-        console.log(res)
         this.alertService.showSuccessAlert("Request Sent");
         $('#registrationModal').modal('hide');
         $('.modal-backdrop').remove();

@@ -24,28 +24,37 @@
   left: 0;
   right: 0;
   margin: 0 auto;
-  top: 200px;
+  top: 50%;
   box-shadow: 0 0 20px #ddd;
   border-left: 7px solid #71cec4;
   border-top: 7px solid #e04090;
   border-right: 7px solid #0d5ea9;
   border-bottom: 7px solid #8dc33a;
   background: white;
+  transform: translateY(-50%);
 }
-.login_form img {
-  width: 60px;
-  height: 60px;
-  float: left;
-  margin-right: 15px;
-}
-  .login_form h2{
-    font-weight: 400;
-    text-transform: uppercase;
+.login-logo{
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 20px;
+  img{
+    width: 100%;
+    height: auto;
+    max-width: 200px;
+  }
+  label{
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    font-size: 25px;
+    font-weight: bold;
     color: #333;
-    letter-spacing: 3px;
-    margin: 15px 0 30px 0;
-    font-size: 30px;
+    margin-top: 5px;
+    font-family: arial !important;
+  }
 }
+
 input.loginform.forms_field-input {
   background: #b3b3b3 !important;
   border: 1px solid lightgray;

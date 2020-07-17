@@ -14,9 +14,21 @@ export class AppComponent implements OnInit {
   constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
+    if (!localStorage.getItem('access_token')) {
+      this.router.navigate(['login']);
+    } else {
+      this.checkUserType(JSON.parse(localStorage.getItem('user_type')));
+    }
+  }
 
-    if (!JSON.parse(localStorage.getItem('user_type'))) {
-      this.router.navigate(['/login']);
+  checkUserType(userType) {
+    switch (userType) {
+      case "MainAdmin": this.router.navigate(['Admin']); break;
+      case "Student": this.router.navigate(['Student/' + '/home']); break;
+      case "Supervisor": this.router.navigate(['Supervisor/' + '/home']); break;
+      case "Coordinator": this.router.navigate(['Coordinator/' + '/home']); break;
+      case "Head": this.router.navigate(['Head/' + '/home']); break;
+      case "SchoolAdmin": this.router.navigate(['School/' + '']); break;
     }
   }
 

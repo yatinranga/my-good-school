@@ -24,7 +24,6 @@ export class CoordinatorAwardsComponent implements OnInit {
   getAwards() {
     this.award_loader = true;
     this.teacherService.getCoordinatorAwards().subscribe(res => {
-      console.log(res);
       this.awardsArr = res;
       this.award_loader = false;
     }, (err => {
@@ -40,11 +39,10 @@ export class CoordinatorAwardsComponent implements OnInit {
     console.log(awardId);
 
     if (val) {
-      this.alertService.confirmWithoutLoader('question', "Approve Award", '', 'Yes').then(result => {
+      this.alertService.confirmWithoutLoader('question', "Review Award", '', 'Yes').then(result => {
         if (result.value) {
           this.alertService.showLoader("");
           this.teacherService.verifyAwards(awardId,"true").subscribe((res) => {
-            console.log(res);
             this.alertService.showSuccessAlert("");
             this.awardsArr[i].status = res.status;
           },
@@ -59,7 +57,6 @@ export class CoordinatorAwardsComponent implements OnInit {
         if (result.value) {
           this.alertService.showLoader("");
           this.teacherService.verifyAwards(awardId,"false").subscribe((res) => {
-            console.log(res);
             this.alertService.showSuccessAlert("");
             this.awardsArr[i].status = "REJECTED";
           },

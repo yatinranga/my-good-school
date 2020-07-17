@@ -27,9 +27,6 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    localStorage.removeItem('user_info');
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('user_type');
     this.loader = true;
     this.authService.loginUser(this.loginForm.value).subscribe((res) => {
       localStorage.setItem('access_token', res.access_token);
@@ -37,6 +34,9 @@ export class LoginComponent implements OnInit {
       this.getUserInfo();
     }, (err) => {
       this.loader = false;
+      localStorage.removeItem('user_info');
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('user_type');
     });
   }
 

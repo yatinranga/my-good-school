@@ -141,7 +141,6 @@ export class TeacherActivityComponent implements OnInit {
   allActivities() {
     this.activitiesArr = [];
     this.teacherService.getAllActivity(this.teacherId).subscribe((res) => {
-      console.log(res);
       this.allActivitiesArr = res.filter((e) => (e.activityStatus != "SavedByStudent"));
       this.copyAllActi = Object.assign([], res.filter((e) => (e.activityStatus != "SavedByStudent")));
       this.activitiesArr = this.allActivitiesArr;
@@ -157,7 +156,6 @@ export class TeacherActivityComponent implements OnInit {
   reviewedActivities() {
     this.activitiesArr = [];
     this.teacherService.getReviewedActivity(this.teacherId).subscribe((res) => {
-      console.log(res);
       this.reviewedActivitiesArr = res;
       this.copyReviewActi = Object.assign([], res);
       this.activitiesArr = this.reviewedActivitiesArr;
@@ -183,7 +181,6 @@ export class TeacherActivityComponent implements OnInit {
     formData.append('achievementScore', this.reviewForm.value.achievementScore);
 
     this.teacherService.saveReviewedActivity(formData).subscribe((res) => {
-      console.log(res);
       if (this.activityType == "All" || this.activityType == "Saved") {
         this.activitiesArr.splice(this.index, 1);
         this.activitiesArr.unshift(res);
@@ -242,7 +239,6 @@ export class TeacherActivityComponent implements OnInit {
 
         console.log(actCid);
         this.teacherService.submitActivity(actCid).subscribe((res) => {
-          console.log(res);
           if (this.activityType == "All") {
             this.activitiesArr.splice(index, 1);
             this.activitiesArr.unshift(res);
@@ -269,7 +265,6 @@ export class TeacherActivityComponent implements OnInit {
       console.log(result);
       if (result.value)
         this.teacherService.submitActivity(activityId).subscribe((res) => {
-          console.log(res);
           this.save_loader = false;
           if (this.activityType == "All") {
             this.activitiesArr.shift();

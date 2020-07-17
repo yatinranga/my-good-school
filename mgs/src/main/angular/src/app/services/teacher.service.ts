@@ -26,23 +26,23 @@ export class TeacherService {
 
   // get PENDING Activities of Teacher
   getPendingActivity(coachId) {
-    return this.http.get("/api/coach/activities?coachId=" + coachId + "&status=pending");
+    return this.http.get("/api/coach/activities?coachId=" + coachId + "&status=pending&pageSize=50");
   }
 
-  // get PENDING Activities of Teacher
+  // get REVIEWED Activities of Teacher
   getReviewedActivity(coachId) {
-    return this.http.get("/api/coach/activities?coachId=" + coachId + "&status=reviewed");
+    return this.http.get("/api/coach/activities?coachId=" + coachId + "&status=reviewed&pageSize=50");
   }
 
   // get ALL Activities of Teacher
   getAllActivity(coachId) {
-    return this.http.get("/api/coach/activities?coachId=" + coachId);
+    return this.http.get("/api/coach/activities?pageSize=50&coachId=" + coachId);
   }
 
-  // get SAVED Activities of Teacher
-  getSavedActivity() {
-    return this.http.get("api/coaches/activities");
-  }
+  // // get SAVED Activities of Teacher
+  // getSavedActivity() {
+  //   return this.http.get("api/coaches/activities?pageSize=50");
+  // }
 
   // get AWARDS of school
   getAwards() {
@@ -66,7 +66,6 @@ export class TeacherService {
 
   // SUBMIT Acitivity by Teacher
   submitActivity(activityPerformedId) {
-    console.log("service");
     return this.http.post("/api/coach/" + activityPerformedId + "/submit", {});
   }
 
@@ -209,7 +208,7 @@ export class TeacherService {
 
   // get List of All Clubs and Society offered in School
   getSupervisedActivities() {
-    return this.http.get("/api/students/activities");
+    return this.http.get("/api/students/activities?pageSize=50");
   }
 
   // get List of Clubs/societies running in grades of Coordinator

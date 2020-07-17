@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { TeacherService } from 'src/app/services/teacher.service';
+import { BASE_URL } from 'src/app/services/app.constant';
 
 @Component({
   selector: 'app-students-details',
@@ -8,14 +9,18 @@ import { TeacherService } from 'src/app/services/teacher.service';
 })
 export class StudentsDetailsComponent implements OnInit {
 
+  BASE_URL: string;
+
   @Input() studentDetails: any
-  imagePath = "assets/images/childprofile.jpg";
+  // imagePath = "assets/images/childprofile.jpg";
   showClub: boolean = false;
   studentEnrolledClubArr = [];
   studentEnrolledSociArr = [];
   club_loader: boolean = false;
 
-  constructor(private teacherService: TeacherService) { }
+  constructor(private teacherService: TeacherService) {
+    this.BASE_URL = BASE_URL + "/file/download?filePath=";
+   }
 
   ngOnInit() {
   }
