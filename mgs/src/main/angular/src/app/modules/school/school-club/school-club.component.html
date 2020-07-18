@@ -47,7 +47,7 @@
                             <td>{{i+1}}</td>
                             <td>{{s.name}}</td>
                             <td>{{s.clubOrSociety}}</td>
-                            <td>{{s.fourS}}</td>
+                            <td><span class="badge" [ngClass]="s.fourS">{{s.fourS}}</span></td>
                             <td><span *ngFor="let fs of s.focusAreaResponses; let i = index">
                                     {{ (i === s.focusAreaResponses.length-1) ? fs.name  : fs.name + "," + ' '}}
                                 </span>

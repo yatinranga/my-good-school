@@ -122,8 +122,8 @@
               <div class="day">
                 <h3>{{s.criterionValue | date}} - {{s.criterionValue | date:'EEEE'}} </h3>
                 <ul *ngFor="let res of s.responses; let i = index;">
-                  <div id="session_title"> {{i+1}}. {{res.title}} </div>
-                  <li> <i class="fa fa-trophy" aria-hidden="true"></i>  <strong>({{res.club.name}})</strong> </li>
+                  <div id="session_title"> {{i+1}}. {{res.title}} <strong class="club-name" [ngClass]="res.club.name">{{res.club.name}}</strong></div>
+                  <!-- <li> <i class="fa fa-trophy" aria-hidden="true"></i>  <strong [ngClass]="res.club.name">{{res.club.name}}</strong> </li> -->
                   <li> <i class="fa fa-clock-o" aria-hidden="true"></i> {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs </li>
                   <li> <i class="fa fa-user" aria-hidden="true"></i>
                     {{res.teacherName}}</li>

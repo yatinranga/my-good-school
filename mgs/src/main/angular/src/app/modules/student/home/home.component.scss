@@ -523,3 +523,33 @@ span.supervisor_name {
         }
     }
 }
+
+strong.club-name {
+    font-size: 12px;
+    margin-left: 5px;
+
+    &.Reading {
+        color: #1f69ad;
+    }
+    &.Yoga{
+        color: #9fbb73;
+    }
+    &.Music{
+        color: #9fbb73;
+    }
+    &.Art{
+        color: #9fbb73;
+    }
+    &.NCC{
+        color: #d86ea3;
+    }
+    &.Cricket{
+        color: #4bafa5;
+    }
+    &.Martial{
+        color: #4bafa5;
+    }
+    &.Fencing{
+        color: #4bafa5;
+    }
+}

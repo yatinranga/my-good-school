@@ -74,4 +74,30 @@ export class CoordinatorActivityComponent implements OnInit {
     });
   }
 
+
+  countStar(count){
+    const array = [];
+    var mode = count;
+    for (var index = 0; index < Math.floor(count); index++) {
+      array[index] = index+1;
+    }
+    if(mode.toString().split('.')[1]) array[index] = parseFloat('0.'+ mode.toString().split('.')[1]);
+    return array;
+  }
+
+  star(star){
+    switch (star) {
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+      case 5:
+        return 'fa fa-star'
+        break;
+        case 0.5:
+          return 'fa fa-star-half'
+        break;
+    }
+  }
+
 }

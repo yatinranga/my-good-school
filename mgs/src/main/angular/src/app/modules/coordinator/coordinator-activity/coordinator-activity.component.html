@@ -86,7 +86,12 @@
                                                         </strong>{{activity.achievementScore}}</p>
                                                     <p> <strong>Total Score -
                                                         </strong>{{activity.totalMarks}} </p>
-                                                    <p> <strong>Star - </strong>{{activity.star}}</p>
+                                                    <p> <strong>Star - </strong>
+                                                            
+                                                            <i [class]="star(s)" *ngFor="let s of countStar(activity.star)">
+                                                                
+                                                            </i>
+                                                    </p>
                                                 </div>
                                             </div>
                                             <div class="col-3" *ngIf="activity.fileResponses.length">

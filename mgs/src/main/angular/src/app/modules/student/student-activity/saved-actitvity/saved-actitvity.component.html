@@ -243,7 +243,9 @@
                                                     <div class="description">
                                                         <h5> Remarks : </h5>
                                                         <p *ngIf="activity.star">
-                                                            <strong>Star - </strong>{{activity.star}}</p>
+                                                            <strong>Star - </strong><i [class]="star(s)" *ngFor="let s of countStar(activity.star)">
+                                                            </i></p>
+                                                            
                                                         <p *ngIf="activity.coachRemark">
                                                             <strong>Remarks - </strong>{{activity.coachRemark}}</p>
                                                         <p *ngIf="activity.coachRemarkDate">
