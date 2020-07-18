@@ -61,7 +61,7 @@
                                             <div class="col-3">
                                                 <div class="description">
                                                     <h5> Activity Details : </h5>
-                                                    <p> <strong> Description - </strong>
+                                                    <p> 
                                                         {{activity.description}} </p>
 
                                                 </div>
@@ -69,10 +69,8 @@
                                             <div class="col-3">
                                                 <div class="description">
                                                     <h5> Reviews : </h5>
-                                                    <p> <strong style="color: green">Remarks -
-                                                        </strong>{{activity.coachRemark}}</p>
-                                                    <p> <strong> Reviewed Date -
-                                                        </strong>{{activity.coachRemarkDate | date }} </p>
+                                                    <p> {{activity.coachRemark}}</p>
+                                                    <p class="mt-3"> <b>{{activity.coachRemarkDate | date }}</b> </p>
                                                 </div>
                                             </div>
                                             <div class="col-3">
@@ -86,7 +84,12 @@
                                                         </strong>{{activity.achievementScore}}</p>
                                                     <p> <strong>Total Score -
                                                         </strong>{{activity.totalMarks}} </p>
-                                                    <p> <strong>Star - </strong>{{activity.star}}</p>
+                                                    <p> 
+                                                            
+                                                            <i [class]="star(s)" *ngFor="let s of countStar(activity.star)">
+                                                                
+                                                            </i>
+                                                    </p>
                                                 </div>
                                             </div>
                                             <div class="col-3" *ngIf="activity.fileResponses.length">
@@ -118,8 +121,7 @@
                                             <div class="col-6">
                                                 <div class="description">
                                                     <h5> Activity Details : </h5>
-                                                    <p> <strong> Description - </strong>
-                                                        {{activity.description}} </p>
+                                                    <p> {{activity.description}} </p>
                                                 </div>
                                             </div>
                                             <div class="col-6" *ngIf="activity.fileResponses.length">

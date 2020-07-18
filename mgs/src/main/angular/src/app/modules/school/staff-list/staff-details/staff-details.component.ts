@@ -2,6 +2,8 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SchoolService } from 'src/app/services/school.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertService } from 'src/app/services/alert.service';
+import { BASE_URL } from 'src/app/services/app.constant';
+
 declare let $: any;
 
 
@@ -11,6 +13,8 @@ declare let $: any;
   styleUrls: ['./staff-details.component.scss']
 })
 export class StaffDetailsComponent implements OnInit {
+
+  BASE_URL: string;
 
   col = "col-12";
   @Input() staffDetails: any;
@@ -33,7 +37,9 @@ export class StaffDetailsComponent implements OnInit {
 
   updateSupervisorForm: FormGroup;
 
-  constructor(private schoolService: SchoolService, private formBuilder: FormBuilder, private alertService: AlertService) { }
+  constructor(private schoolService: SchoolService, private formBuilder: FormBuilder, private alertService: AlertService) {
+    this.BASE_URL = BASE_URL + "/file/download?filePath=";    
+   }
 
   ngOnInit() {
     this.getSchoolClubs();

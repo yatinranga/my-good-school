@@ -112,17 +112,20 @@
                                        top: 8px;
                                        right: 20px;
                                    ">( {{res.status | uppercase}} )</span>
+                                   <div class="btns-action">
+                                    <button [disabled]="res.status=='ended'" class="btn btn-success" (click)="editSessionBtn(res,i,j)">Edit</button>
+                                    <button class="btn btn-danger" (click)="deleteSession(res,i,j)">Delete</button>
+                                </div>
+
                                    </li>
-                                   <li class="des"> <strong>Description : </strong> {{res.description}}</li>
-                                   <li> <strong>Time : </strong> {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs
+                                   
+                                   <li> <strong> <i class="fa fa-clock-o"></i> </strong> {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs
                                    </li>
-                                   <li class="grades"> <strong>Grades : </strong> <span *ngFor="let g of res.grades; let i = index">
+                                   <li class="grades"> <strong> <i class="fa fa-graduation-cap"></i> </strong> <span *ngFor="let g of res.grades; let i = index">
                                            {{ (i === res.grades.length-1) ? g.grade+" "+g.section : g.grade+" "+g.section + "," + ' '}}</span>
                                    </li>
-                                   <div class="btns">
-                                       <button [disabled]="res.status=='ended'" class="btn btn-success" (click)="editSessionBtn(res,i,j)">Edit</button>
-                                       <button class="btn btn-danger" (click)="deleteSession(res,i,j)">Delete</button>
-                                   </div>
+                                   <li class="des" title="{{res.description}}"> <strong> <i class="fa fa-audio-description"></i> </strong> {{res.description}}</li>
+                                   
                                </ul>
                            </div>
                        </div>

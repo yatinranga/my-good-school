@@ -48,6 +48,13 @@ export class StudentClubDetailsComponent implements OnInit {
     this.studentInfo = JSON.parse(localStorage.getItem('user_info'));
     this.schoolId = this.studentInfo.schoolId;
     this.getGrades(this.schoolId);
+
+
+    function myFunction() {
+      var element = document.getElementById("read-more");
+      element.classList.add("full-content");
+   }
+
   }
 
   ngOnChanges(clubObject: any) {
@@ -164,7 +171,7 @@ export class StudentClubDetailsComponent implements OnInit {
         }, (err) => {
           console.log(err);
           if (err.status === 400) {
-            this.alertService.showMessageWithSym("Already applied for the membership of this club and its status is pending or rejected.", "", "info");
+            this.alertService.showMessageWithSym(err.msg, "", "info");
           }
           else {
             this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");

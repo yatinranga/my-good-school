@@ -120,7 +120,7 @@
                                                     <div class="description">
                                                         <h5> Activity Details : </h5>
                                                         <p *ngIf="activity.description">
-                                                            <strong> Description : </strong> {{activity.description}}
+                                                            {{activity.description}}
                                                         </p>
                                                         <!-- <p id="fa"> <strong> Focus Area : </strong> </p>
                                                         <span id="fa"
@@ -185,7 +185,7 @@
                                                     <div class="description">
                                                         <h5> Activity Details : </h5>
                                                         <p *ngIf="activity.description">
-                                                            <strong> Description : </strong> {{activity.description}}
+                                                            {{activity.description}}
                                                         </p>                                                   
 
                                                     </div>
@@ -215,12 +215,13 @@
                                                     <div class="description">
                                                         <h5> Remarks : </h5>
                                                         <p *ngIf="activity.star">
-                                                            <strong>Star - </strong>{{activity.star}}</p>
+                                                            <i [class]="star(s)" *ngFor="let s of countStar(activity.star)">
+                                                            </i></p>
+                                                            
                                                         <p *ngIf="activity.coachRemark">
-                                                            <strong>Remarks - </strong>{{activity.coachRemark}}</p>
+                                                            {{activity.coachRemark}}</p>
                                                         <p *ngIf="activity.coachRemarkDate">
-                                                            <strong>Remark Date -
-                                                            </strong>{{activity.coachRemarkDate | date}}</p>
+                                                            <b>{{activity.coachRemarkDate | date}}</b> </p>
                                                     </div>
                                                 </div>
                                                 <div class="col-3" *ngIf="activity.fileResponses">

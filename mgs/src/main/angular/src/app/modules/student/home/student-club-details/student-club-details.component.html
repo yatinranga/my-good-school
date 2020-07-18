@@ -23,9 +23,10 @@
                     <img *ngIf="!c.imagePath" src="assets/images/maleteacher.jpg"></div>
                   <div class="teachername" >
                     {{c.name}} </div>
-                  <div class="brief">
+                  <div class="brief" title="{{c.profileBrief}}" id="read-more">
                     {{c.profileBrief}}
                   </div>
+                  
                 </div>
               </div>
           </div>
