@@ -43,10 +43,15 @@ export class StudentService {
     return this.http.get("/grades?schoolId=" + schoolId);
   }
 
-  // to get all activities in particular school
+  // to get all activities in particular school in which supervisor is there
   getActivity(schoolId) {
     // return this.http.get("/activities");
     return this.http.get("/activitiesOffered");
+  }
+
+  // to get all activities in particular school
+  getAllSchoolActivity(){
+    return this.http.get("/activities");
   }
 
   // to get SAVED activities of student

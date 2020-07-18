@@ -84,7 +84,7 @@ export class TeacherActivityComponent implements OnInit {
       participationScore: [, [Validators.min(0), Validators.max(10)]],
       initiativeScore: [, [Validators.min(0), Validators.max(10)]],
       // star: [],
-      coachRemark: [, [Validators.required, Validators.minLength(25)]]
+      coachRemark: [, [Validators.required, Validators.minLength(10)]]
     })
   }
 

@@ -171,7 +171,7 @@ export class StudentClubDetailsComponent implements OnInit {
         }, (err) => {
           console.log(err);
           if (err.status === 400) {
-            this.alertService.showMessageWithSym("Already applied for the membership of this club and its status is pending or rejected.", "", "info");
+            this.alertService.showMessageWithSym(err.msg, "", "info");
           }
           else {
             this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");

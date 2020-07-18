@@ -73,7 +73,7 @@ export class SavedActitvityComponent implements OnInit {
 
     this.savedActivityForm = this.formBuilder.group({
       activityId: [, [Validators.required]],
-      description: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(25)]],
+      description: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(10)]],
       dateOfActivity: [{ value: '', disabled: true }, [Validators.required]],
       coachId: [{ value: '', disabled: true }, [Validators.required]],
       title: [{ value: '', disabled: true }, [Validators.required]],
