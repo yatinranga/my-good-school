@@ -220,7 +220,8 @@
                                                             
                                                         <p *ngIf="activity.coachRemark">
                                                             {{activity.coachRemark}}</p>
-                                                        <p *ngIf="activity.coachRemarkDate">
+                                                        <p class="mt-2" *ngIf="activity.coachRemarkDate">
+                                                            <i style="margin-right: 10px; color: #333;" class="fa fa-calendar" aria-hidden="true"></i>
                                                             <b>{{activity.coachRemarkDate | date}}</b> </p>
                                                     </div>
                                                 </div>
