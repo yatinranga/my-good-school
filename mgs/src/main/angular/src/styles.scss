@@ -782,3 +782,9 @@ input[type=number]::-webkit-outer-spin-button {
     }
     
 }
+
+.active .brief {
+    -webkit-line-clamp: inherit !important;
+    overflow: inherit !important;
+    height: auto !important;
+}

@@ -156,8 +156,7 @@
                                                                 </td>
                                                                 <td>Activity Count - <strong> {{pa.count}} </strong>
                                                                 </td>
-                                                                <td>Average Stars - <strong> {{pa.averageStars}}
-                                                                    </strong> </td>
+                                                                <td><i [class]="star(s)" *ngFor="let s of countStar(pa.averageStars)"></i>  </td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="last collapsed-td" colspan="12">
@@ -325,7 +324,7 @@
                                                                 <td>{{i+1}}.{{j+1}}</td>
                                                                 <td id="actname">{{pa.criterionValue}}</td>
                                                                 <td>Activity Count - {{pa.count}}</td>
-                                                                <td>Average Stars - {{pa.averageStars}}</td>
+                                                                <td><i [class]="star(s)" *ngFor="let s of countStar(pa.averageStars)"></i> </td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="last collapsed-td" colspan="12">

@@ -48,6 +48,13 @@ export class StudentClubDetailsComponent implements OnInit {
     this.studentInfo = JSON.parse(localStorage.getItem('user_info'));
     this.schoolId = this.studentInfo.schoolId;
     this.getGrades(this.schoolId);
+
+
+    function myFunction() {
+      var element = document.getElementById("read-more");
+      element.classList.add("full-content");
+   }
+
   }
 
   ngOnChanges(clubObject: any) {

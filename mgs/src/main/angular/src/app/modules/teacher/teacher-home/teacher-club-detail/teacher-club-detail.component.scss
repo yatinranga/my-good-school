@@ -282,6 +282,7 @@ ul#studentname li span, #student_list li span {
     margin-right: -10px;
     padding: 5px;
     border-bottom: solid 1px rgba(221, 221, 221, 0.52);
+    margin-bottom: 15px;
 }
 .btns {
     margin-top: 10px;
@@ -427,4 +428,24 @@ span.member-statuss {
     padding: 0 5px;
     font-size: 12px;
     background: #fafafa;
+}
+.teacherschedule .day_post .day ul li i.fa {
+    margin-left: -30px;
+    width: 20px;
+}
+.teacherschedule .day_post .day ul li {
+    padding-left: 30px;
+}
+
+.btns-action{
+    display: inline-block;
+    width: auto;
+    float: right;
+
+    .btn{
+        margin: 0 3px;
+        padding: 3px 7px 2px;
+        line-height: normal;
+        font-size: 12px;
+    }
 }
