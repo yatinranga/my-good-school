@@ -264,6 +264,7 @@ export class SupervisorDetailsComponent implements OnInit {
   resetForm() {
     this.supervisorId = "";
     this.gradesIds = {};
+    $('#assignSupervisorModal').modal('hide');
   }
 
   /** Handling Error */

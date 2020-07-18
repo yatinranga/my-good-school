@@ -72,7 +72,7 @@ export class TeacherAwardsComponent implements OnInit {
       validUntil: [],
       gradeId: [null],
       awardType: [, [Validators.required]],
-      description: [, [Validators.required, Validators.minLength(40)]],
+      description: [, [Validators.required, Validators.minLength(10)]],
       activityPerformedIds: [([])],
     });
   }

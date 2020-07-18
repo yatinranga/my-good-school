@@ -67,9 +67,11 @@ export class HomeComponent implements OnInit {
   showClubDetails: boolean = false;
   col = "col-12";
 
+  clubWithSupervisor = [];
+
   constructor(private studentService: StudentService, public alertService: AlertService, private router: Router) {
     this.BASE_URL = BASE_URL + "/file/download?filePath=";
-   }
+  }
 
 
   ngOnInit() {
@@ -86,11 +88,17 @@ export class HomeComponent implements OnInit {
   // get List of Activities of School
   getActivity(schoolId) {
     this.studentService.getActivity(schoolId).subscribe((res) => {
-      this.allActivities = res;
+      this.clubWithSupervisor = res;
       this.sportArr = res.filter((e) => (e.fourS == 'Sport'));
       this.serviceArr = res.filter((e) => (e.fourS == 'Service'));
       this.studyArr = res.filter((e) => (e.fourS == 'Study'));
       this.skillArr = res.filter((e) => (e.fourS == 'Skill'));
+    },
+      (err) => console.log(err)
+    );
+
+    this.studentService.getAllSchoolActivity().subscribe((res) => {
+      this.allActivities = res;
     },
       (err) => console.log(err)
     );
@@ -181,7 +189,7 @@ export class HomeComponent implements OnInit {
       this.showClubDetails = false;
     }
 
-    val?(this.col="col-6"):(this.col="col-12");
+    val ? (this.col = "col-6") : (this.col = "col-12");
 
     if (clubObj) {
       // Changing color on the basis of 
@@ -301,7 +309,7 @@ export class HomeComponent implements OnInit {
       }, (err) => {
         console.log(err);
         if (err.status === 400) {
-          this.alertService.showMessageWithSym("Already applied for the membership of this club and its status is pending or rejected.", "", "info");
+          this.alertService.showMessageWithSym(err.msg, "", "info");
         } else {
           this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");
         }
