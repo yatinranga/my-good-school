@@ -582,8 +582,18 @@ strong.fours {
     ul{
         li{
             a{
+                &.reference{
+                    &::before{
+                        color: white !important;
+                    }  
+                }
                 &:hover{
                     background: #9fbb73 !important;
+                    &::before{
+                        color: white !important;
+                    }  
+                 
+
                 }
                 &::before{
                     color: #9fbb73 !important;
@@ -601,8 +611,17 @@ strong.fours {
     ul{
         li{
             a{
+                &.reference{
+                    &::before{
+                        color: white !important;
+                    }  
+                }
                 &:hover{
                     background: #d86ea3 !important;
+                    &::before{
+                        color: white !important;
+                    }
+
                 }
                 &::before{
                     color: #d86ea3 !important;
@@ -621,8 +640,16 @@ strong.fours {
     ul{
         li{
             a{
+                &.reference{
+                    &::before{
+                        color: white !important;
+                    }  
+                }
                 &:hover{
                     background: #1f69ad !important;
+                    &::before{
+                        color: white !important;
+                    }  
                 }
                 &::before{
                     color: #1f69ad !important;
