@@ -45,7 +45,8 @@ export class StudentService {
 
   // to get all activities in particular school
   getActivity(schoolId) {
-    return this.http.get("/activities");
+    // return this.http.get("/activities");
+    return this.http.get("/activitiesOffered");
   }
 
   // to get SAVED activities of student
@@ -158,13 +159,13 @@ export class StudentService {
   }
 
   // delete certificate
-  deleteCertificate(certiId){
-    return this.http.delete("/api/student/certificate/"+certiId);
+  deleteCertificate(certiId) {
+    return this.http.delete("/api/student/certificate/" + certiId);
   }
 
   // update certificate
-  updateCertificate(certiId,formDate){
-    return this.http.put("/api/student/certificate/"+certiId,formDate);
+  updateCertificate(certiId, formDate) {
+    return this.http.put("/api/student/certificate/" + certiId, formDate);
 
   }
 
