@@ -775,7 +775,7 @@ input[type=number]::-webkit-outer-spin-button {
     .clubs-details-main {
         position: sticky;
         top: 70px;
-
+        z-index: 2222;
         .btn{
             right: 0 !important;
         }
@@ -787,4 +787,11 @@ input[type=number]::-webkit-outer-spin-button {
     -webkit-line-clamp: inherit !important;
     overflow: inherit !important;
     height: auto !important;
+}
+.modal-open{
+    .sticky {
+        .clubs-details-main{
+            position: static !important;
+        }
+    }
 }
