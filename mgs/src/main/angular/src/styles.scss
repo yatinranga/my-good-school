@@ -421,7 +421,7 @@ ul.student_list li {
     display: inline-block;
     width: 250px;
     padding: 0;
-    position: -webkit-sticky;
+    position: -webkit-fixed;
     position: fixed;
     min-height: 100vh;
     z-index: 22;
@@ -794,4 +794,13 @@ input[type=number]::-webkit-outer-spin-button {
             position: static !important;
         }
     }
+}
+
+.modal {
+    .modal-dialog {
+        max-width: 480px;
+    }
+}
+.modal-body {
+    padding-bottom: 0;
 }
