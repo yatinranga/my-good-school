@@ -167,7 +167,7 @@ span.choosefile.choosefile-custom {
     content: "Choose file...";
     position: absolute;
     width: 60%;
-    left: 0;
+    left: 10px;
     padding: 10px 0;
     color: $black;
     z-index: 1;
@@ -296,9 +296,22 @@ span.tooltip_text{
 //     background: #8dc33a !important;
 // }
 
-.form-group h2 {
-    color: crimson;
-    font-size: 14px;
+.modal-body{
+    .form-group h2 {
+        color: crimson;
+        font-size: 14px;
+        span{
+            color: #333;
+        }
+    }
+    .col-form-label{
+        padding-bottom: 3px;
+        font-size: 15px;
+        b{
+            color: #555;
+        }
+    }
+
 }
 .form-control:disabled, .form-control[readonly]{
     background: gainsboro !important;
@@ -358,3 +371,40 @@ tr[aria-expanded=true] {
     font-size: 12px;
 }
 
+
+div#addActivityModal {
+    .modal-dialog{
+        max-width: 600px;
+    }
+}
+.modal-content .attached-file{
+    ul{
+        padding-left: 20px;
+        margin: 5px 0 0 0;
+        border: solid 1px #ddd;
+        position: relative;
+        li{
+            word-break: break-word;
+            width: calc(100% - 30px);
+            /* position: relative; */
+            border-right: solid 1px #ddd;
+            margin: 0;
+            .icon_button{
+                position: absolute;
+                top: 0;
+                right: 0px;
+                height: 100%;
+            }
+            &::after{
+                content: "\f0c6";
+                display: inline-block;
+                width: 20px;
+                height: 100%;
+                position: absolute;
+                left: 5px;
+                font-family: FontAwesome;
+                top: 2px;
+            }
+        }
+    }
+}

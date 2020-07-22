@@ -94,17 +94,25 @@
                           <div class="day">
                             <h3>{{club.criterionValue | date}} - {{club.criterionValue | date:'EEEE'}} </h3>
                             <ul *ngFor="let res of club.responses; let i = index;">
-                              <li id="session_title"> {{i+1}}. {{res.title}}
+                              <div id="session_title"> {{i+1}}. {{res.title}}
                                 <span *ngIf="res.status=='upcoming'"
-                                  style="color: red">({{res.status | uppercase}})</span>
+                                  style="color: green;     font-size: 14px;
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    font-weight: bold;">({{res.status | uppercase}})</span>
                                 <span *ngIf="res.status=='ended'"
-                                  style="color: green">({{res.status | uppercase}})</span>
-                              </li>
-                              <li>{{res.club.name}} - {{res.startDate | date:"HH:mm"}}hrs -
+                                  style="color: red;     font-size: 14px;
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    font-weight: bold;">({{res.status | uppercase}})</span>
+                              </div>
+                              <li> <i class="fa fa-clock-o"></i> {{res.startDate | date:"HH:mm"}}hrs -
                                 {{res.endDate | date:"HH:mm"}}hrs
                               </li>
-                              <li> <strong>Description : </strong> {{res.description}}</li>
-                              <li *ngIf="res.fileResponses.length"><strong>Attachment : </strong><a
+                              <li> <strong> <i class="fa fa-audio-description"></i> </strong> {{res.description}}</li>
+                              <li *ngIf="res.fileResponses.length"><strong> <i class="fa fa-paperclip"></i> </strong><a
                                   [attr.href]="BASE_URL + res.fileResponses[0].url">
                                   {{res.fileResponses[0].name}}</a></li>
                             </ul>

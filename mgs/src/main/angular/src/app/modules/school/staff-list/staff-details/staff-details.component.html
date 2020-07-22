@@ -118,7 +118,7 @@
                     <h3 for="recipient-name" class="col-form-label">Name of Teacher :
                         {{staffDetails.name}}</h3>
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Club/Society :</label>
+                        <label for="recipient-name" class="col-form-label">Club/Society</label>
                         <select class="form-control" name="club" [(ngModel)]="clubId">
                             <option value="" selected disabled>Select One</option>
                             <option *ngFor="let c of allSchoolClubsArr" value={{c.id}}>
@@ -128,14 +128,14 @@
                     </div>
                     <div class="form-group">
                         <div class="grade-main">
-                            <h3 for="recipient-name" class="col-form-label">Grades : <button class="btn btn-success"
+                            <h3 for="recipient-name" class="col-form-label">Grades <button class="btn btn-success"
                                     (click)="selectGrades('All')">Select all</button>
                                 <!-- <button class="btn btn-danger" (click)="selectGrades('Reset')">Reset</button> -->
                             </h3>
                             <div class="form-check" *ngFor="let grade of schoolGrades;">
                                 <label class="form-check-label" for="exampleCheck1">
                                     <input type="checkbox" class="form-check-input" [(ngModel)]="gradesIds[grade.id]">
-                                    <span>{{grade.grade}} {{grade.section}}</span>
+                                    <label>{{grade.grade}} {{grade.section}}</label>
                                 </label>
                             </div>
                         </div>
@@ -164,7 +164,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title" id="exampleModalLabel"> Assign Grade : </h3>
+                    <h3 class="modal-title" id="exampleModalLabel"> Assign Grade </h3>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetForm()">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -176,14 +176,14 @@
                     <div class="form-group">
 
                         <div class="grade-main">
-                            <h3 for="recipient-name" class="col-form-label">Grades :
+                            <h3 for="recipient-name" class="col-form-label">Grades
                                 <button class="btn btn-success" (click)="selectGrades('All')">Select all</button>
                                 <!-- <button class="btn btn-danger" (click)="selectGrades('Reset')">Reset</button> -->
                             </h3>
                             <div class="form-check" *ngFor="let grade of schoolGrades;">
                                 <label class="form-check-label" for="exampleCheck1">
                                     <input type="checkbox" class="form-check-input" [(ngModel)]="gradesIds[grade.id]">
-                                    <span>{{grade.grade}} {{grade.section}}</span>
+                                    <label>{{grade.grade}} {{grade.section}}</label>
                                 </label>
                             </div>
                         </div>
@@ -210,7 +210,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" id="exampleModalLabel"> Update Profile : </h3>
+                <h3 class="modal-title" id="exampleModalLabel"> Update Profile </h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetForm()">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -221,61 +221,62 @@
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Name : </label>
+                                    <label for="recipient-name" class="col-form-label">Name </label>
                                     <input type="text" class="form-control add" name="name" placeholder="Add Name Here"
                                         formControlName="name">
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Email : </label>
+                                    <label for="recipient-name" class="col-form-label">Email </label>
                                     <input type="email" class="form-control add" name="email"
                                         placeholder="Add Name Here" formControlName="email">
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">DOB : </label>
+                                    <label for="recipient-name" class="col-form-label">DOB  </label>
                                     <input type="date" class="form-control add" name="dob" placeholder="Add DOB Here"
                                         formControlName="dob">
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Mobile No : </label>
+                                    <label for="recipient-name" class="col-form-label">Mobile No </label>
                                     <input type="tel" class="form-control add" maxlength="10" pattern="[0-9]{10}"
                                         name="mobileNumber" placeholder="Add Mobile Number Here"
                                         formControlName="mobileNumber">
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Brief : </label>
+                                    <label for="recipient-name" class="col-form-label">Brief </label>
                                     <textarea class="form-control" name="profileBrief" rows="3"
                                         formControlName="profileBrief"></textarea>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Gender : </label>
+                                    <label for="recipient-name" class="col-form-label">Gender </label>
                                     <div class="form-check">
-                                        <div class="check-field">
-                                            <input class="form-check-input" type="radio" name="gender"
+                                        <div class="radio-field">
+                                            <input id="male" class="form-check-input" type="radio" name="gender"
                                                 formControlName="gender" value="male">
-                                            <label for="">Male</label>
+                                            <label for="male">Male</label>
                                         </div>
-                                        <div class="check-field">
-                                            <input class="form-check-input" type="radio" name="gender"
+                                        <div class="radio-field">
+                                            <input id="female" class="form-check-input" type="radio" name="gender"
                                                 formControlName="gender" value="female">
-                                            <label for="">Female</label>
+                                            <label for="female">Female</label>
                                         </div>
 
                                     </div>
                                 </div>
+
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Qualification : </label>
+                                    <label for="recipient-name" class="col-form-label">Qualification </label>
                                     <textarea class="form-control" name="qualification" rows="3"
                                         formControlName="qualification"></textarea>
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Year of Enrollment : </label>
+                                    <label for="recipient-name" class="col-form-label">Year of Enrollment </label>
                                     <input type="number" class="form-control add" name="yearOfEnrolment"
                                         placeholder="Add Year of Enrollment Here" formControlName="yearOfEnrolment">
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Role : </label>
+                                    <label for="recipient-name" class="col-form-label">Role </label>
                                     <select class="form-control" name="role" [(ngModel)]="roleName"
                                         [ngModelOptions]="{standalone: true}" (ngModelChange)="updateRole($event)">
                                         <option value='' selected disabled>Select One</option>
@@ -289,7 +290,7 @@
                                 *ngIf="staffDetails.roles.includes('Coordinator') || staffDetails.roles.includes('Head')">
                                 <div class="form-group">
                                     <div class="grade-main">
-                                        <h3 for="recipient-name" class="">Grades :
+                                        <h3 for="recipient-name" class="">Grades
                                             <button type="button" class="btn btn-success"
                                                 (click)="selectGrades('All')">Select
                                                 all</button>
@@ -301,7 +302,7 @@
                                                 <input name="headGrade" type="checkbox" class="form-check-input"
                                                     [(ngModel)]="gradesIds[grade.id]"
                                                     [ngModelOptions]="{standalone: true}">
-                                                <span for="grade">{{grade.grade}} {{grade.section}}</span>
+                                                <label for="grade">{{grade.grade}} {{grade.section}}</label>
                                             </label>
                                         </div>
                                     </div>

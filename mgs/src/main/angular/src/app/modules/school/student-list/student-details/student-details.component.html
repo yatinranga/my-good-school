@@ -36,7 +36,7 @@
 
 
             <div class="guardian-information">
-                <h3>Guardians : <button class="btn btn-success"
+                <h3>Guardians <button class="btn btn-success"
                         [disabled]="studentDetails['guardianResponseList'].length==2"
                         (click)="showGuardianModal('Add')">Add Guardian</button>
                 </h3>
@@ -105,7 +105,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" id="exampleModalLabel"> {{guardianModalType}} Guardians : </h3>
+                <h3 class="modal-title" id="exampleModalLabel"> {{guardianModalType}} Guardians </h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetForm()">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -116,12 +116,12 @@
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Name : </label>
+                                    <label for="recipient-name" class="col-form-label">Name</label>
                                     <input type="text" class="form-control add" name="name" placeholder="Add Name Here"
                                         formControlName="name">
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Contact No. : </label>
+                                    <label for="recipient-name" class="col-form-label">Contact No. </label>
                                     <input type="text" class="form-control add" name="mobileNumber" type="tel"
                                         maxlength="10" pattern="[0-9]{10}" placeholder="Add Contact Here"
                                         formControlName="mobileNumber">
@@ -138,19 +138,25 @@
                                     </div>
                                 </div> -->
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Email : </label>
+                                    <label for="recipient-name" class="col-form-label">Email </label>
                                     <input type="email" class="form-control add" name="email"
                                         placeholder="Add Email Here" formControlName="email">
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Relationship : </label>
+                                    <label for="recipient-name" class="col-form-label">Relationship</label>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="relationship"
-                                            formControlName="relationship" value="Father">Father<br>
-                                        <input class="form-check-input" type="radio" name="relationship"
-                                            formControlName="relationship" value="Mother">Mother<br>
-                                        <!-- <input class="form-check-input" type="radio" name="relationship"
-                                            formControlName="relationship" value="Local Guardian">Local Guardian -->
+                                        <div class="radio-field">
+                                            <input id="father" class="form-check-input" type="radio" name="relationship"
+                                                formControlName="relationship" value="Father">
+                                            <label for="father">Father</label>
+                                        </div>
+
+                                        <div class="radio-field">
+                                            <input id="mother" class="form-check-input" type="radio" name="relationship"
+                                                formControlName="relationship" value="Mother">
+                                            <label for="mother">Mother</label>
+                                        </div>
+                                 
                                     </div>
                                 </div>
                             </div>
@@ -173,7 +179,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" id="exampleModalLabel"> Update Profile : </h3>
+                <h3 class="modal-title" id="exampleModalLabel"> Update Profile </h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetForm()">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -184,33 +190,41 @@
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Name : </label>
+                                    <label for="recipient-name" class="col-form-label">Name </label>
                                     <input type="text" class="form-control add" name="name" placeholder="Add Name Here"
                                         formControlName="name">
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Email : </label>
+                                    <label for="recipient-name" class="col-form-label">Email </label>
                                     <input type="email" class="form-control add" name="name"
                                         placeholder="Add Email Here" formControlName="email">
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">DOB : </label>
+                                    <label for="recipient-name" class="col-form-label">DOB </label>
                                     <input type="date" class="form-control add" name="name" placeholder="Add Name Here"
                                         formControlName="dob">
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Gender : </label>
+                                    <label for="recipient-name" class="col-form-label">Gender </label>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gender"
-                                            formControlName="gender" value="male">Male<br>
-                                        <input class="form-check-input" type="radio" name="gender"
-                                            formControlName="gender" id="exampleRadios1" value="female">Female
+
+                                        <div class="radio-field">
+                                            <input id="male" class="form-check-input" type="radio" name="gender"
+                                                formControlName="gender" value="male">
+                                            <label for="male">Male</label>
+                                        </div>
+                                        <div class="radio-field">
+                                            <input class="form-check-input" type="radio" name="gender"
+                                            formControlName="gender" id="female" value="female">
+                                            <label for="female">Female</label>
+                                        </div>
+                                        
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Grade : </label>
+                                    <label for="recipient-name" class="col-form-label">Grade </label>
                                     <select class="form-control" name="gradeId" formControlName="gradeId"
                                         [disabled]="!schoolGrades.length">
                                         <option [ngValue]=null selected>Select Grades</option>
@@ -221,7 +235,7 @@
 
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Year of Enrollment : </label>
+                                    <label for="recipient-name" class="col-form-label">Year of Enrollment </label>
                                     <input type="number" class="form-control add" name="name"
                                         placeholder="Add Name Here" formControlName="yearOfEnrolment">
                                 </div>

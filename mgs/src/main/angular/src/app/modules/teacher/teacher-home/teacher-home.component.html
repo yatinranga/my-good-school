@@ -85,14 +85,14 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body pl-0 pr-0">
                 <!-- <h5 style="color: red"> Note : All Fields Are Mandatory </h5> -->
                 <form [formGroup]="createSessionForm" (ngSubmit)="createSession()">
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Club/Society <span>*</span> </label>
+                                    <label for="recipient-name" class="col-form-label"> <b>Club/Society <span>*</span> </b></label>
                                     <select class="form-control" name="activityId" formControlName="clubId" (change)="clubGrades()">
                                         <option [ngValue]=null selected disabled>Select One</option>
                                         <option *ngFor="let acti of allAssignedActi" value={{acti.id}}>
@@ -101,17 +101,17 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Name of Session <span>*</span> </label>
+                                    <label for="recipient-name" class="col-form-label"> <b> Name of Session <span>*</span> </b></label>
                                     <input type="text" class="form-control add" name="title"
                                         placeholder="Add Title Here" formControlName="title">
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Session Number <span>*</span> </label>
+                                    <label for="recipient-name" class="col-form-label"> <b> Session Number <span>*</span> </b></label>
                                     <input type="number" class="form-control add" name="sessionNumber"
                                         placeholder="Enter Session Number Here" formControlName="number">
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Description <span>*</span> </label>
+                                    <label for="recipient-name" class="col-form-label"> <b>Description <span>*</span></b> </label>
                                     <textarea class="form-control add" name="description" formControlName="description"
                                         placeholder="Enter Description Here" rows="3"></textarea>
                                 </div>
@@ -119,19 +119,19 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Date <span>*</span> </label>
+                                    <label for="recipient-name" class="col-form-label"> <b>Date <span>*</span></b> </label>
                                     <input type="date" class="form-control" name="startDate"
                                         formControlName="startDate" [attr.min]="minDate">
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label" style="display: block;">Timing <span>*</span> </label>
+                                    <label for="recipient-name" class="col-form-label" style="display: block;"> <b>Timing <span>*</span></b> </label>
                                     <input type="time" class="form-control time-s" name="startTime" [(ngModel)]="startTime"
                                         [ngModelOptions]="{standalone: true}">
                                     <input type="time" class="form-control time-e" name="endTime" [(ngModel)]="endTime"
                                         [ngModelOptions]="{standalone: true}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Grades <span>*</span> </label>
+                                    <label for="recipient-name" class="col-form-label"> <b>Grades <span>*</span></b> </label>
                                     <select class="form-control" name="gradeId" formControlName="gradeIds" multiple>
                                         <option value=null selected disabled>Select Grades</option>
                                         <option *ngFor="let grade of schoolGrades" value={{grade.id}}>

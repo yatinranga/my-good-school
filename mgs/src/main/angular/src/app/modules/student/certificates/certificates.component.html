@@ -62,7 +62,7 @@
                     <form [formGroup]="certificateForm" (ngSubmit)="addCertificate()">
                         <div class="form-group">
                             <!-- <h2> Note : All Fields Are Mandatory </h2> -->
-                            <label for="recipient-name" class="col-form-label">Title <span>*</span> </label>
+                            <label for="recipient-name" class="col-form-label"> <b>Title <span>*</span></b> </label>
                             <input type="text" class="form-control" name="name" formControlName="title">
                             <small class="text-danger"
                                 *ngIf="!certificateForm.get('title').valid && certificateForm.get('title').touched">
@@ -71,7 +71,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">Description <span>*</span> </label>
+                            <label for="recipient-name" class="col-form-label"> <b>Description <span>*</span></b> </label>
                             <textarea class="form-control add" name="description" formControlName="description"
                                 rows="3"></textarea>
                             <small class="text-danger"
@@ -81,7 +81,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">4S <span>*</span> </label>
+                            <label for="recipient-name" class="col-form-label"> <b>4S <span>*</span></b> </label>
                             <select class="form-control" name="fourS" formControlName="fourS">
                                 <option value="" Selected Disabled>Choose One</option>
                                 <option *ngFor="let fourS of fourSArr" value={{fourS}}>{{fourS}}
@@ -93,7 +93,7 @@
                             </small>
                         </div>
                         <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">Authority <span>*</span> </label>
+                            <label for="recipient-name" class="col-form-label"> <b>Authority <span>*</span></b> </label>
                             <input type="text" name="certificationAuthority" class="form-control"
                                 formControlName="certificationAuthority">
                             <small class="text-danger"
@@ -131,22 +131,23 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-success" *ngIf="certiModalType=='Add'"
-                                [disabled]="certificateForm.invalid">
-                                <div *ngIf="add_loader" class="spinner-border text-dark" role="status">
-                                </div>{{add_loader ? 'Loading...' : 'Add'}}
-                            </button>
-                            <button type="submit" class="btn btn-success" *ngIf="certiModalType=='Edit'"
-                                [disabled]="certificateForm.invalid">
-                                <div *ngIf="add_loader" class="spinner-border text-dark" role="status">
-                                </div>{{add_loader ? 'Loading...' : 'Update'}}
-                            </button>
-                            <button type="button" class="btn btn-danger" (click)="resetForm()">Reset</button>
-                        </div>
+                        
                     </form>
                 </div>
 
+                <div class="modal-footer mt-4">
+                    <button type="submit" class="btn btn-success" *ngIf="certiModalType=='Add'"
+                        [disabled]="certificateForm.invalid">
+                        <div *ngIf="add_loader" class="spinner-border text-dark" role="status">
+                        </div>{{add_loader ? 'Loading...' : 'Add'}}
+                    </button>
+                    <button type="submit" class="btn btn-success" *ngIf="certiModalType=='Edit'"
+                        [disabled]="certificateForm.invalid">
+                        <div *ngIf="add_loader" class="spinner-border text-dark" role="status">
+                        </div>{{add_loader ? 'Loading...' : 'Update'}}
+                    </button>
+                    <button type="button" class="btn btn-danger" (click)="resetForm()">Reset</button>
+                </div>
 
             </div>
         </div>

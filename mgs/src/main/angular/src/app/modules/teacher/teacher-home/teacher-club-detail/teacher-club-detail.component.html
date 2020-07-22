@@ -161,7 +161,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body pl-0 pr-0">
                 <!-- <h5 style="color: red"> Note : All Fields Are Mandatory </h5> -->
                 <form [formGroup]="createSessionForm" (ngSubmit)="createSession()">
                     <div class="container-fluid">
@@ -244,9 +244,9 @@
             <div class="modal-footer">
                 <button type="submit" class="btn btn-success" [disabled]="createSessionForm.invalid"
                 *ngIf="createSessionView" (click)="createSession()">Create</button>
-                <button type="submit" class="btn btn-success" [disabled]="createSessionForm.invalid"
+                <button type="submit" class="btn btn-primary" [disabled]="createSessionForm.invalid"
                 *ngIf="editSessionView" (click)="createSession()">Edit</button>
-                <button type="button" class="btn btn-secondary" (click)="resetForm()">Reset</button>
+                <button type="button" class="btn btn-danger" (click)="resetForm()">Reset</button>
             </div>
         </div>
     </div>

@@ -120,7 +120,7 @@ li.reference {
 /*--------------------------------------MODAL------------------------------*/
 
 .modal-content {
-    border: 5px solid #b4d673;
+    // border: 5px solid #b4d673;
     top: 100px;
     height: 600px;
     overflow-y: scroll;
@@ -320,9 +320,15 @@ button.close span {
     color: #555;
     margin: 0;
 }
+#registrationModal .modal-body .input-group .custom-select{
+    &:focus{
+        box-shadow: none;
+    }
+}
 #registrationModal .modal-body .input-group .custom-select, #registrationModal .modal-body .input-group-text {
     border: solid 1px #ddd;
     border-radius: 0;
+    width: 160px;
 }
 
 #registrationModal .modal-footer .btn{

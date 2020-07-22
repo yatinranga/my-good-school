@@ -116,7 +116,7 @@
     z-index: 22;
     cursor: pointer;
 }
-.form-check .form-check-input + span:after {
+.form-check .form-check-input + label:after {
     content: "";
     display: inline-block;
     width: 18px;
@@ -131,16 +131,17 @@
     font-size: 11px;
     color: #4bafa5;
 }
-.form-check .form-check-input:checked + span:after{
+.form-check .form-check-input:checked + label:after{
     border-color: #4bafa5;
     content: "\f00c";
 
 }
-.form-check label.form-check-label span {
+.form-check label.form-check-label label {
     padding-left: 10px;
     line-height: normal;
     margin-top: 1px;
     display: inline-block;
+    margin-bottom: 0;
 }
 .supervisor-main-card {
     // box-shadow: 0 0 3px #ddd;
