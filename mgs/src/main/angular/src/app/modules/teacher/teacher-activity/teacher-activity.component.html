@@ -255,8 +255,8 @@
                         <div class="modal-body">
                             <form [formGroup]="reviewForm" (ngSubmit)="saveReview()">
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Achievement Score : (out
-                                        of 5)</label>
+                                    <label for="recipient-name" class="col-form-label"> <b>Achievement Score : </b> (out
+                                        of 5) </label>
                                     <select class="form-control" name="achievementScore" formControlName="achievementScore"
                                         (ngModelChange)="calTotalMarks('achievement',$event)">
                                         <option [ngValue]="null" selected>Select Score</option>
@@ -268,8 +268,8 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Participation Score :
-                                        (out of 10)</label>
+                                    <label for="recipient-name" class="col-form-label"> <b>Participation Score : </b>
+                                        (out of 10) </label>
                                     <select class="form-control" name="participationScore"
                                         formControlName="participationScore"
                                         (ngModelChange)="calTotalMarks('participation',$event)">
@@ -287,7 +287,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Initiative Score : (out
+                                    <label for="recipient-name" class="col-form-label"> <b>Initiative Score : </b>  (out
                                         of 10)</label>
                                     <select class="form-control" name="initiativeScore" formControlName="initiativeScore"
                                         (ngModelChange)="calTotalMarks('initiative',$event)">
@@ -304,42 +304,13 @@
                                         <option value=10>10</option>
                                     </select>
                                 </div>
-                                <!-- <div class="form-group">
-                                            <label for="recipient-name" class="col-form-label">Achievement Score : (out of
-                                                5)</label>
-                                            <input type="number" name="achievementScore" class="form-control" min="1"
-                                                max="5" formControlName="achievementScore"
-                                                (ngModelChange)="calTotalMarks('achievement',$event)">
-                                            <small class="text-danger"
-                                                *ngIf="reviewForm.controls.achievementScore.errors">*Between 0-5
-                                                only</small>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="recipient-name" class="col-form-label">Participation Score : (out of
-                                                10)</label>
-                                            <input type="number" name="participationScore" class="form-control" min="1"
-                                                max="10" formControlName="participationScore"
-                                                (ngModelChange)="calTotalMarks('participation',$event)">
-                                            <small class="text-danger"
-                                                *ngIf="reviewForm.controls.participationScore.errors">*Between 0-10
-                                                only</small>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="recipient-name" class="col-form-label">Initiative Score : (out of
-                                                10)</label>
-                                            <input type="number" name="initiativeScore" class="form-control" min="1"
-                                                max="10" formControlName="initiativeScore"
-                                                (ngModelChange)="calTotalMarks('initiative',$event)">
-                                            <small class="text-danger"
-                                                *ngIf="reviewForm.controls.initiativeScore.errors">*Between 0-10
-                                                only</small>
-                                        </div> -->
+                                
                                 <div class="form-group">
-                                    <label for="message-text" class="col-form-label">Total Score : </label>
-                                    <label> {{ totalScore}} / 25</label>
+                                    <label for="message-text" class="col-form-label"> <b>Total Score : </b> {{ totalScore}} / 25 </label>
+                                    
                                 </div>
                                 <div class="form-group">
-                                    <label for="message-text" class="col-form-label">Remarks : (Min. 25
+                                    <label for="message-text" class="col-form-label"> <b>Remarks :</b> (Min. 25
                                         words)</label>
                                     <textarea style="height: 100px;" class="form-control" name="coachRemark"  rows="5" formControlName="coachRemark"
                                         (ngModelChange)="wordCount($event)"></textarea>
@@ -351,16 +322,17 @@
 
                                 </div>
                                 
-                                <div class="modal-footer">
-                                    <button class="btn btn-success" type="submit" name="submit"
-                                        [disabled]="reviewForm.invalid">
-                                        <div *ngIf="save_loader" class="spinner-border text-dark" role="status">
-                                        </div>{{save_loader ? 'Saving...' : 'Save Changes'}}
-                                    </button>
-                                    <button type="button" name="resetForm" class="reset btn btn-danger"
-                                        (click)="resetForm()">Reset</button>
-                                </div>
+                                
                             </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-success" type="submit" name="submit"
+                                [disabled]="reviewForm.invalid">
+                                <div *ngIf="save_loader" class="spinner-border text-dark" role="status">
+                                </div>{{save_loader ? 'Saving...' : 'Save Changes'}}
+                            </button>
+                            <button type="button" name="resetForm" class="reset btn btn-danger"
+                                (click)="resetForm()">Reset</button>
                         </div>
                     </div>
                 </div>

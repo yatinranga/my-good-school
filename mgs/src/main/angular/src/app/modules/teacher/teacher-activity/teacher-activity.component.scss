@@ -112,7 +112,7 @@ button.reset.btn.btn-secondary {
 }
 #reviewModal .modal-content{
     
-    border: 5px solid #1e68a9;
+    // border: 5px solid #1e68a9;
     max-width: 450px;
     margin-left: auto;
     margin-right: auto;
@@ -131,4 +131,9 @@ button.reset.btn.btn-secondary {
     margin: 0 3px;
     color: #f3cd0c;
     font-size: 12px;
+}
+.col-form-label{
+    b{
+        color: #555;
+    }
 }

@@ -319,7 +319,7 @@ ul#studentname li span, #student_list li span {
 input.form-control.time-s, input.form-control.time-e {
     margin-right:10px;
     display: inline-block;
-    width: 35% !important;
+    width: 45% !important;
 }
 
 .choose-file{
@@ -447,5 +447,11 @@ span.member-statuss {
         padding: 3px 7px 2px;
         line-height: normal;
         font-size: 12px;
+    }
+}
+
+div#createSessionModal1 {
+    .modal-dialog {
+        max-width: 650px;
     }
 }

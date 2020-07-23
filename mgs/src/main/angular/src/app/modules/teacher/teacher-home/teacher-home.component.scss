@@ -28,7 +28,7 @@ button.btn.register.btn-primary{
     background: #8dc33a;
 }
 .modal-content {
-    border: 5px solid #b4d673;
+    // border: 5px solid #b4d673;
     top: 10px;
 }
 .choosemedia.form-group img {
@@ -248,7 +248,7 @@ div#session_title {
 input.form-control.time-s, input.form-control.time-e {
     margin-right:10px;
     display: inline-block;
-    width: 35% !important;
+    width: 45% !important;
 }
 
 .choose-file{
@@ -380,4 +380,17 @@ strong.fours {
     font-size: 12px;
     margin-left: 0;
 
+}
+
+div#createSessionModal {
+    .modal-dialog {
+        max-width: 650px;
+
+        .col-form-label{
+            b{
+                color: #555;
+            }
+        }
+    }
+    
 }

@@ -33,6 +33,8 @@ export class SchoolClubComponent implements OnInit {
 
   addClubForm: FormGroup;
   focusareaIds = {};
+  order = false; // sort the array
+
 
   constructor(private schoolService: SchoolService, private formBuilder: FormBuilder, private alertService: AlertService) { }
 
@@ -210,5 +212,24 @@ export class SchoolClubComponent implements OnInit {
       this.alertService.showMessageWithSym("There is some error in server. \nTry after some time !", "Error", "error");
     }
   }
+
+    // Sorting Activities
+    sortByStatus() {
+      this.order = !this.order;
+      // sort by activityStatus
+      this.schoolClubs.sort((a, b) => {
+        const nameA = a.fourS.toUpperCase(); // ignore upper and lowercase
+        const nameB = b.fourS.toUpperCase(); // ignore upper and lowercase
+        if (nameA < nameB) {
+          return this.order ? -1 : 1;
+        }
+        if (nameA > nameB) {
+          return this.order ? 1 : -1;
+        }
+  
+        // names must be equal
+        return 0;
+      });
+    }
 
 }
