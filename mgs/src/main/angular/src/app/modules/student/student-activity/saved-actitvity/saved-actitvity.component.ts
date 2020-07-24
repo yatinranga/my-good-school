@@ -95,7 +95,6 @@ export class SavedActitvityComponent implements OnInit {
   // to get the list of SAVED Activities of student
   getStudentSavedActivities(studentId) {
     this.studentService.getSavedActivity(studentId).subscribe((res) => {
-      console.log(res);
       this.savedActivitiesArr = res;
       this.copySavedActi = Object.assign([], res);
       this.allActivitiesArr = this.savedActivitiesArr;
@@ -156,7 +155,6 @@ export class SavedActitvityComponent implements OnInit {
     $('#addActivityModal').modal('show');
 
     e.stopPropagation();
-    console.log(activity);
     this.activityId = activity.activityId;
     this.getStudentCoach(this.activityId);
     this.savedActivityForm.controls.dateOfActivity.patchValue(activity.dateOfActivity.split(' ')[0]);
@@ -174,7 +172,6 @@ export class SavedActitvityComponent implements OnInit {
   }
 
   addActivity() {
-    console.log("Add Activity Modal");
     this.savedActivityForm.reset();
     this.savedActivityForm.value.attachment = [];
     this.files = [];
@@ -190,7 +187,6 @@ export class SavedActitvityComponent implements OnInit {
         this.alertService.showLoader("");
         const activityId = array[index].id;
         this.studentService.submitActivity(activityId).subscribe((res) => {
-          console.log(res);
           if (this.activityType === 'All') {
             array.splice(index, 1);
             array.unshift(res);
@@ -236,9 +232,7 @@ export class SavedActitvityComponent implements OnInit {
       if (result.value) {
         this.alertService.showLoader("");
         const activityId = activity.id;
-        console.log(activityId);
         this.studentService.deleteActivity(activityId).subscribe((res) => {
-          console.log(res);
           this.allActivitiesArr.splice(i, 1);
           this.alertService.showSuccessToast('Activity Deleted !');
         },
@@ -263,9 +257,8 @@ export class SavedActitvityComponent implements OnInit {
     this.coaches = [];
     if (activityId != null) {
       this.modal_loader = true;
-      this.studentService.getCoach(this.schoolId, activityId).subscribe((res) => {
-        // this.coaches = res;
-        this.coaches = [{name:"Jatin Chawla",id:"CPfch1XJ"}]
+      this.studentService.getEnrolledCoach(activityId).subscribe((res) => {
+        this.coaches = res;
         if (this.coaches.length) {
           this.savedActivityForm.get('coachId').enable();
           this.savedActivityForm.get('description').enable();
@@ -293,7 +286,6 @@ export class SavedActitvityComponent implements OnInit {
     if (this.editActivityShow) {
       this.submit_loader = true;
       this.savedActivityForm.value.attachment = this.files;
-      console.log(this.savedActivityForm.value.attachment);
       const formData = new FormData();
       const activityDate = this.savedActivityForm.value.dateOfActivity + ' 00:00:00';
       // const activityDate = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
@@ -309,19 +301,15 @@ export class SavedActitvityComponent implements OnInit {
       if (this.savedActivityForm.value.attachment.length > 0) {
         this.savedActivityForm.value.attachment.forEach((element, index) => {
           if (element.id) {
-            console.log("Old file");
             formData.append('fileRequests[' + index + '].id', element.id);
           } else {
-            console.log("New file");
             formData.append('fileRequests[' + index + '].file', element);
           }
         });
       }
-      console.log(this.savedActivityForm.value);
 
       this.studentService.addActivity('/api/student/activity', formData).subscribe(
         (res) => {
-          console.log(res);
           this.allActivitiesArr.splice(this.index, 1);
           this.allActivitiesArr.unshift(res);
           this.submit_loader = false;
@@ -348,7 +336,6 @@ export class SavedActitvityComponent implements OnInit {
     if (this.addActivityShow) {
       this.submit_loader = true;
       this.savedActivityForm.value.attachment = this.files;
-      console.log(this.savedActivityForm.value.attachment);
       const time = this.savedActivityForm.value.dateOfActivity + ' 00:00:00';
       this.savedActivityForm.value.dateOfActivity = time;
       const formData = new FormData();
@@ -365,11 +352,9 @@ export class SavedActitvityComponent implements OnInit {
         });
       }
 
-      console.log(this.savedActivityForm.value);
 
       this.studentService.addActivity('/api/student/activity', formData).subscribe(
         (res) => {
-          console.log(res);
           this.allActivitiesArr.unshift(res);
           this.submit_loader = false;
           $('#addActivityModal').modal('hide');
@@ -379,7 +364,6 @@ export class SavedActitvityComponent implements OnInit {
           //   this.directSubmitActivity(res.id);
           // });
           this.addActivityShow = false;
-          console.log(this.allActivitiesArr);
         },
         (err) => {
           this.submit_loader = false;
@@ -402,10 +386,6 @@ export class SavedActitvityComponent implements OnInit {
     if (event.target.files.length <= 5 && (this.files.length + event.target.files.length) <= 5) {
       if (event.target.files.length > 0) {
         this.files = [...this.files, ...event.target.files];
-        console.log(this.files.length);
-        console.log(this.files);
-        // this.savedActivityForm.value.attachment = this.files;
-        // console.log(this.files);
       }
     } else {
       console.log("error");

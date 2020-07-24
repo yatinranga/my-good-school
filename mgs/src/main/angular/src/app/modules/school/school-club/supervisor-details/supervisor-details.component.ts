@@ -115,7 +115,6 @@ export class SupervisorDetailsComponent implements OnInit {
         reqBody.teachers.push({ id: supId, activities: activities });
       });
 
-      console.log(reqBody);
 
       this.alertService.showLoader("");
       this.schoolService.assignClub(reqBody).subscribe((res) => {
@@ -151,7 +150,6 @@ export class SupervisorDetailsComponent implements OnInit {
   editGrades() {
     const arr = Object.values(this.gradesIds)
     if (arr.includes(true)) {
-      console.log(this.gradesIds);
       // Response Body
       const reqBody = {
         teachers: []
@@ -193,7 +191,6 @@ export class SupervisorDetailsComponent implements OnInit {
           reqBody.teachers.push({ id: supId, activities: activities });
         }
       });
-      console.log(reqBody);
       this.alertService.showLoader("");
       this.schoolService.assignClub(reqBody).subscribe((res) => {
         this.clubSupervisor = res.teachers;
@@ -235,7 +232,6 @@ export class SupervisorDetailsComponent implements OnInit {
           });
           reqBody.teachers.push({ id: supId, activities: activities });
         });
-        console.log(reqBody);
         this.alertService.showLoader("");
         this.schoolService.assignClub(reqBody).subscribe((res) => {
           this.getSupervisor();

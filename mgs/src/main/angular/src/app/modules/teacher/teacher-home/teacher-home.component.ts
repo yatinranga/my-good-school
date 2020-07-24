@@ -71,7 +71,6 @@ export class TeacherHomeComponent implements OnInit {
     this.teacherService.getAssignedClubs().subscribe(res => {
       this.allAssignedActi = res;
       this.assignedClubLoader = false;
-      console.log(this.allAssignedActi);
     }, (err) => {
       console.log(err);
       this.assignedClubLoader = false;
@@ -91,7 +90,6 @@ export class TeacherHomeComponent implements OnInit {
     const startDate = this.createSessionForm.value.startDate.split(" ")[0];
     this.createSessionForm.value.endDate = startDate + " " + this.endTime + ":00";
     this.createSessionForm.value.startDate = startDate + " " + this.startTime + ":00";
-    console.log(this.createSessionForm.value);
 
     if (this.createSessionView) {
       this.alertService.showLoader("");
@@ -114,7 +112,6 @@ export class TeacherHomeComponent implements OnInit {
       });
 
       this.teacherService.createNewSession(formData).subscribe((res) => {
-        console.log(res);
         $('#createSessionModal').modal('hide');
         $('.modal-backdrop').remove();
         this.alertService.showMessageWithSym("Session Created !", "Success", "success");
@@ -159,7 +156,6 @@ export class TeacherHomeComponent implements OnInit {
       });
 
       this.teacherService.updateSession(formData).subscribe((res) => {
-        console.log(res);
         $('#createSessionModal').modal('hide');
         $('.modal-backdrop').remove();
         this.alertService.showMessageWithSym("Session Edited !", "Success", "success");
@@ -197,12 +193,10 @@ export class TeacherHomeComponent implements OnInit {
 
   // Delete Scheduled Session
   deleteSession(session, out_index, in_index) {
-    console.log(session);
     this.alertService.confirmWithoutLoader('question', 'Sure you want to DELETE ?', '', 'Yes').then(result => {
       if (result.value) {
         this.alertService.showLoader("");
         this.teacherService.deleteSession(session.id).subscribe((res) => {
-          console.log(res);
           this.sessionsArr[out_index].responses.splice(in_index, 1);
           this.alertService.showMessageWithSym("Session Deleted", "Success", "success");
           this.getSessionDetails();
@@ -223,7 +217,6 @@ export class TeacherHomeComponent implements OnInit {
     $('#createSessionModal').modal('show');
     this.createSessionView = false;
     this.editSessionView = true;
-    console.log(session);
     this.setMinDate();
 
     let sDate = new Date(session.startDate);
@@ -294,7 +287,6 @@ export class TeacherHomeComponent implements OnInit {
     this.name = ""; //reset the file name
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
-      console.log("File Uploaded", event.target.files[0]);
       this.createSessionForm.value.fileRequests = file;
       this.name = file.name;
 

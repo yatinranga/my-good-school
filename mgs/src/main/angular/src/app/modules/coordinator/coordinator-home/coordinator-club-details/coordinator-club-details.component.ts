@@ -45,7 +45,6 @@ export class CoordinatorClubDetailsComponent implements OnInit {
     this.sup_loader = true;
     this.teacherService.getClubSupervisor(this.clubObject.id).subscribe(res => {
       this.supervisorArr = res;
-      console.log("Club Supervisor - ", res);
       this.sup_loader = false;
     }, (err => {
       console.log(err);
@@ -61,7 +60,6 @@ export class CoordinatorClubDetailsComponent implements OnInit {
 
     this.clubSchedule = [];
     this.teacherService.getSupervisorSchedule(this.clubObject.id, supervisor_obj.id).subscribe((res) => {
-      console.log(res.sessions);
       this.clubSchedule = res.sessions;
       this.copySchedule = Object.assign([], res.sessions);
       this.session_loader = false;

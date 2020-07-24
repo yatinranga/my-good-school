@@ -109,7 +109,6 @@ export class CoordinatorProfileComponent implements OnInit {
     this.teacherService.putProfilePhoto(formData).subscribe((res) => {
       this.teacherDetails = res;
       this.alertService.showSuccessAlert("Profile Photo Updated");
-      console.log("Profile Photo Changed");
     }, (err) => {
       console.log(err);
     })

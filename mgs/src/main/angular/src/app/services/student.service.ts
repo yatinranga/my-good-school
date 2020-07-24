@@ -79,6 +79,11 @@ export class StudentService {
     return this.http.get("/api/coaches/activity/" + activityId);
   }
 
+  // to get teacher under which student is enrolled for partiualar club/society
+  getEnrolledCoach(activityId){
+    return this.http.get("/api/coaches/student/activity/"+activityId);
+  }
+
   // to ADD new activity performed by student
   addActivity(url, formData: FormData) {
     return this.http.post(url, formData)

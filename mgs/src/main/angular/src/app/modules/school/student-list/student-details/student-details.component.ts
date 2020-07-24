@@ -106,7 +106,6 @@ export class StudentDetailsComponent implements OnInit {
       this.guardianModalType = val;
       this.guardianArrIndex = index;
       $('#editGuardianModal').modal('show');
-      console.log(guardianObj);
       this.guardianId = guardianObj.id;
 
       this.guardianForm.patchValue({
@@ -129,7 +128,6 @@ export class StudentDetailsComponent implements OnInit {
         case "Father": this.guardianForm.value.gender = "male"; break;
         case "Mother": this.guardianForm.value.gender = "female"; break;
       }
-      console.log(this.guardianForm.value);
       this.schoolService.editGuardian(this.guardianId, this.guardianForm.value).subscribe((res) => {        
         this.studentDetails['guardianResponseList'].splice(this.guardianArrIndex,1);
         this.studentDetails['guardianResponseList'].splice(this.guardianArrIndex,0,res);
@@ -146,7 +144,6 @@ export class StudentDetailsComponent implements OnInit {
         case "Father": this.guardianForm.value.gender = "male"; break;
         case "Mother": this.guardianForm.value.gender = "female"; break;
       }
-      console.log(this.guardianForm.value);
       this.schoolService.addGuardian(this.guardianForm.value).subscribe((res) => {
         this.studentDetails['guardianResponseList'].push(res);
         this.alertService.showMessageWithSym("Guardian Added !", "Successful", "success");

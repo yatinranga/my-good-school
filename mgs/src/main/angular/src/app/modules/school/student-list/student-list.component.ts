@@ -64,7 +64,6 @@ export class StudentListComponent implements OnInit {
     if (student_obj) {
       this.student_obj = student_obj;
       this.studentId = student_obj.id;
-      console.log(student_obj);
     }
     if(!val){
       this.studentId = "";

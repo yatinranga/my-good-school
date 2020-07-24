@@ -112,12 +112,10 @@ export class TeacherAwardsComponent implements OnInit {
       }
     })
 
-    console.log(this.assignAwardForm.value);
     let validFrom = this.startDate + " 00:00:00";
     let validUntil = this.endDate + " 00:00:00";
 
     this.teacherService.assignAward(this.assignAwardForm.value).subscribe((res) => {
-      console.log(res);
       this.alertService.showSuccessAlert("");
       $('#assignAwardModal').modal('hide');
       $('.modal-backdrop').remove();
@@ -150,7 +148,6 @@ export class TeacherAwardsComponent implements OnInit {
     this.performedActiArr = [];
     if (this.gradeId) {
       this.teacherService.getStudentPerformedActivities(this.awardCriterion, this.criterionValue, sDate, eDate, this.gradeId).subscribe((res) => {
-        console.log(res);
         this.performedActiArr = res;
         this.pa_loader = false;
       },
@@ -162,7 +159,6 @@ export class TeacherAwardsComponent implements OnInit {
     } else {
       this.teacherService.getStudentPerformedActivities(this.awardCriterion, this.criterionValue, sDate, eDate).subscribe((res) => {
         this.performedActiArr = res;
-        console.log(res);
         this.pa_loader = false;
       },
         (err) => {
@@ -177,7 +173,6 @@ export class TeacherAwardsComponent implements OnInit {
   getPerformedActivities(type, value?) {
     this.pa_loader = true;
     this.studentActivityList = true;
-    // console.log(this.criterionValue)
     this.performedActiArr = [];
     let sDate = this.startDate + ' 00:00:00';
     let eDate = this.endDate + ' 00:00:00';
@@ -186,7 +181,6 @@ export class TeacherAwardsComponent implements OnInit {
         this.criterionValue = value;
         this.teacherService.getStudentPerformedActivities(this.awardCriterion, value, sDate, eDate).subscribe((res) => {
           this.performedActiArr = res;
-          console.log(res);
           this.pa_loader = false;
           // this.pa_loader = false;
         },
@@ -197,7 +191,6 @@ export class TeacherAwardsComponent implements OnInit {
       } else {
         this.criterionValue = value;
         this.teacherService.getStudentPerformedActivities(this.awardCriterion, value, sDate, eDate, this.gradeId).subscribe((res) => {
-          console.log(res);
           this.performedActiArr = res;
           this.pa_loader = false;
           // this.pa_loader = false;
@@ -213,7 +206,6 @@ export class TeacherAwardsComponent implements OnInit {
       this.gradeId = value;
       if (this.criterionValue) {
         this.teacherService.getStudentPerformedActivities(this.awardCriterion, this.criterionValue, sDate, eDate, value).subscribe((res) => {
-          console.log(res);
           this.performedActiArr = res;
         }, (err) => {
           console.log(err);
@@ -226,7 +218,6 @@ export class TeacherAwardsComponent implements OnInit {
   // change award view
   awardView(type) {
     this.awardViewType = type;
-    console.log("Award View Type = " + this.awardViewType);
     this.viewAwards();
     if (type == "assign") {
       this.awardCriteria();
@@ -249,7 +240,6 @@ export class TeacherAwardsComponent implements OnInit {
       this.award_loader = true;
       this.teacherService.getTeacherAwards().subscribe((res) => {
         this.awardsList = res;
-        console.log(this.awardsList);
         this.award_loader = false;
       },
         (err) => {
@@ -261,7 +251,6 @@ export class TeacherAwardsComponent implements OnInit {
 
   // to get all awards of school
   getSchoolAwards() {
-    console.log(this.gradeId);
     this.award_loader = true;
     this.schoolAwards = [];
     this.assignAwardForm.value.activityPerformedIds = [];
@@ -297,13 +286,11 @@ export class TeacherAwardsComponent implements OnInit {
   verifySelectedAward(e, i) {
     e.stopPropagation();
     const awardId = this.awardsList[i].id;
-    console.log(awardId);
 
     this.alertService.confirmWithoutLoader('question', "Verify Actvity", '', 'Yes').then(result => {
       if (result.value) {
         this.alertService.showLoader("");
         this.teacherService.verifyAwards(awardId).subscribe((res) => {
-          console.log(res);
           this.alertService.showSuccessAlert("");
           this.awardsList[i].status = "VERIFIED";
         },
@@ -368,7 +355,6 @@ export class TeacherAwardsComponent implements OnInit {
     this.showCriteriaValues = false; // to show the Criteria Values on when Criteria is selected
     this.teacherService.getAwardCriteriaValue().subscribe((res) => {
       this.criteriaValuesArr = res;
-      // console.log(this.criteriaValuesArr);
       switch (event) {
         case "PSD Area": {
           this.criteriaValuesArr = res["PSD Areas"];
@@ -399,7 +385,6 @@ export class TeacherAwardsComponent implements OnInit {
   getPerformedIds(activity) {
     this.actiPerform = {};
     this.studentId = activity.id;
-    console.log(activity);
     activity.performedActivities.forEach((ele) => {
       ele.responses.forEach(element => {
         this.actiPerform[element.id] = true;

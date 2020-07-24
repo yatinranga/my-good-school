@@ -73,7 +73,6 @@ export class StaffListComponent implements OnInit {
     if (staff_obj) {
       this.staff_obj = staff_obj;
       this.supervisorId = staff_obj.id;
-      console.log(staff_obj);
     }
 
     if(!val){

@@ -163,7 +163,6 @@ export class StaffDetailsComponent implements OnInit {
       })
     }
 
-    console.log(reqBody);
     this.alertService.showLoader("");
     this.schoolService.assignClub(reqBody).subscribe((res) => {
       this.staffDetails = res.teachers[0];
@@ -179,7 +178,6 @@ export class StaffDetailsComponent implements OnInit {
 
   /** Show Edit Grades Modal */
   showGradeEditModal(club_obj) {
-    console.log(club_obj);
     this.gradesIds = {};
     $('#assignGradeModal').modal('show');
     this.clubName = club_obj.name;
@@ -232,7 +230,6 @@ export class StaffDetailsComponent implements OnInit {
       })
     }
 
-    console.log(reqBody);
     this.alertService.showLoader("");
     this.schoolService.assignClub(reqBody).subscribe((res) => {
       this.profileUpdated.emit("Grade Assigned");
@@ -295,7 +292,6 @@ export class StaffDetailsComponent implements OnInit {
     });
 
     this.updateSupervisorForm.value.gradeIds = gradeIds;
-    console.log(this.updateSupervisorForm.value);
     this.updateSupervisorForm.value.dob = this.updateSupervisorForm.value.dob + " 00:00:00";
     this.alertService.showLoader("");
     this.schoolService.updateSupervisorProfile(this.staffDetails.id, this.updateSupervisorForm.value).subscribe((res) => {
@@ -332,10 +328,8 @@ export class StaffDetailsComponent implements OnInit {
             reqBody.teachers[0].activities.push({ id: clubid, grades: grades });
           }
         });
-        console.log(reqBody);
         this.alertService.showLoader("");
         this.schoolService.assignClub(reqBody).subscribe((res) => {
-          console.log("Res of unassing - ",res)
           this.staffDetails = res.teachers[0];
       this.sortClubs(); // Reload to see the New Assigned Club/Society
           this.profileUpdated.emit("Club-Supervisor Updated");
