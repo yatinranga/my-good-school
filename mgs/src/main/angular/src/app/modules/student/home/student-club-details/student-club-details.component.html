@@ -3,7 +3,7 @@
     <!----------------------------------List of supervisor------------------------>
     <div class="supervisor-header">
       <div class="title">
-        <h1> {{clubObject['name']}} - List of Supervisor </h1>
+        <h1> {{clubObject['name']}} - List of Supervisors </h1>
         <button [disabled]="!(supervisorId)" class="register_act btn btn-primary btn-sm" (click)="clubRegBtn()">
           Register
         </button>
@@ -93,7 +93,7 @@
                   <div class="day" >
                     <h3>{{club.criterionValue | date}} - {{club.criterionValue | date:'EEEE'}} </h3>
                     <ul *ngFor="let res of club.responses; let i = index;">
-                      <li id="session_title"> {{i+1}}. {{res.title}}
+                      <div id="session_title"> {{i+1}}. {{res.title}}
                         <span *ngIf="res.status=='upcoming'" style="color: green;
                         position: absolute;
                         top: 8px;
@@ -106,11 +106,12 @@
                         right: 5px;
                         font-size: 14px;
                         font-weight: bold;">({{res.status | uppercase}})</span>
+                      </div>
+
+                      <li> <i class="fa fa-clock-o"></i>  {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs
                       </li>
-                      <li>{{res.club.name}} - {{res.startDate | date:"HH:mm"}}hrs - {{res.endDate | date:"HH:mm"}}hrs
-                      </li>
-                      <li> <strong>Description : </strong> {{res.description}}</li>
-                      <li *ngIf="res.fileResponses.length"><strong>Attachment : </strong><a [attr.href]="BASE_URL + res.fileResponses[0].url">
+                      <li> <strong> <i class="fa fa-audio-description"></i> </strong> {{res.description}}</li>
+                      <li *ngIf="res.fileResponses.length"><strong> <i class="fa fa-paperclip"></i> </strong><a [attr.href]="BASE_URL + res.fileResponses[0].url">
                         {{res.fileResponses[0].name}}</a></li>  
                     </ul>
                   </div>

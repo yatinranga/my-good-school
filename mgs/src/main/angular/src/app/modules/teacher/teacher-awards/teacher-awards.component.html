@@ -82,8 +82,10 @@
                                 <ng-container *ngFor="let activity of performedActiArr ; let i = index;">
                                     <tr data-toggle="collapse" [attr.data-target]="'#collapse'+i">
                                         <td (click)="stopCollapse($event)">
-                                            <label> <input type="radio" name="selectStudent" value={{activity.id}}
+                                            <label class="radio-field"> 
+                                                <input type="radio" name="selectStudent" value={{activity.id}}
                                                     (change)="getPerformedIds(activity)" (click)="stopCollapse($event)">
+                                                <label for="">&nbsp;</label>
                                             </label>
                                         </td>
                                         <td>{{activity.name}}</td>
@@ -167,12 +169,13 @@
                                                                             <div class="row">
                                                                                 <div class="col-6">
                                                                                     <div class="assign description">
-                                                                                        <h5> <label> <input type="checkbox"
+                                                                                        <h5> <div class="form-check-label"> 
+                                                                                            <input type="checkbox"
                                                                                                     name="selectPerformedActivity"
                                                                                                     value={{ac.id}}
                                                                                                     [(ngModel)]="actiPerform[ac.id]">
-                                                                                            </label>
-                                                                                            {{i+1}}.{{j+1}}
+                                                                                                    <label for="">{{i+1}}.{{j+1}}</label>
+                                                                                            </div>
                                                                                         </h5>
                                                                                         <p> <strong>Title -
                                                                                             </strong>{{ac.title}} </p>
@@ -394,7 +397,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Award Details - </h5>
+                <h5 class="modal-title" id="exampleModalLabel">Award Details</h5>
                 <button type="button" name="closeModal" class="close" data-dismiss="modal" aria-label="Close"
                     (click)="resetForm()">
                     <span aria-hidden="true">&times;</span>
@@ -403,7 +406,7 @@
             <div class="modal-body">
                 <form [formGroup]="assignAwardForm" (ngSubmit)="assignAward()">
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label"> Award Name - </label>
+                        <label for="recipient-name" class="col-form-label"> <b>Award Name</b> </label>
                         <select class="form-control" name="awardType" formControlName="awardType">
                             <option [ngValue]="null" disabled selected> Select Award </option>
                             <option *ngFor="let award of schoolAwards" value={{award}}>
@@ -417,7 +420,7 @@
                         </span>
                     </div>
                     <div class="form-group">
-                        <label for="message-text" class="col-form-label"> Description - (Minimum 10 words)</label>
+                        <label for="message-text" class="col-form-label">  <b>Description</b> - (Minimum 10 words)</label>
                         <textarea class="form-control" name="description" id="message-text"
                             (ngModelChange)="wordCount($event)" formControlName="description"></textarea>
                         <span class="text-muted">Word count - {{count}}</span><br>
@@ -426,19 +429,21 @@
                             Min Length 10 words.
                         </small>
                     </div>
-                    <div class="modal-footer">
-                                
-                        <button type="submit" name="submit" class="btn btn-success"
-                            [disabled]="assignAwardForm.invalid">
-                            <div *ngIf="pa_loader" class="spinner-border text-dark" role="status">
-                            </div>{{pa_loader ? 'Loading...' :  'Done'}}
-                        </button>
-                        <button type="button" name="resetForm" class="reset btn btn-danger" (click)="resetForm()">
-                            Reset </button>
-                    </div>
+                    
 
                     
                 </form>
+            </div>
+
+            <div class="modal-footer">
+                                
+                <button type="submit" name="submit" class="btn btn-success"
+                    [disabled]="assignAwardForm.invalid">
+                    <div *ngIf="pa_loader" class="spinner-border text-dark" role="status">
+                    </div>{{pa_loader ? 'Loading...' :  'Done'}}
+                </button>
+                <button type="button" name="resetForm" class="reset btn btn-danger" (click)="resetForm()">
+                    Reset </button>
             </div>
 
         </div>

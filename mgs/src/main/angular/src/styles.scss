@@ -225,7 +225,7 @@ table tbody tr th {
     color: #333;
 }
 div#assignAwardModal .modal-content {
-    border: 5px solid #b4d673;
+    // border: 5px solid #b4d673;
     max-width: 450px;
     margin-left: auto;
     margin-right: auto;
@@ -265,7 +265,7 @@ tbody#accordionExample > tr[aria-expanded="true"] {
     display: none !important;
 }
 i.fa.fa-sort {
-    color: #e04090;
+    color: #333;
     font-size: 15px;
     margin: 0 !important;
     padding: 0 !important;
@@ -421,7 +421,7 @@ ul.student_list li {
     display: inline-block;
     width: 250px;
     padding: 0;
-    position: -webkit-sticky;
+    position: -webkit-fixed;
     position: fixed;
     min-height: 100vh;
     z-index: 22;
@@ -679,6 +679,7 @@ td.collapse-td .collapse, td.collapse-td .collapsing {
     line-height: 50px;
     border-left: solid 1px #ddd;
     background: rgba(0,0,0,0.05);
+    opacity: 1 !important;
 }
 .modal-header .modal-title {
     margin-top: 5px;
@@ -794,4 +795,13 @@ input[type=number]::-webkit-outer-spin-button {
             position: static !important;
         }
     }
+}
+
+.modal {
+    .modal-dialog {
+        max-width: 480px;
+    }
+}
+.modal-body {
+    padding-bottom: 0;
 }
