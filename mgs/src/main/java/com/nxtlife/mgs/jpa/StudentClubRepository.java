@@ -14,6 +14,7 @@ import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.common.StudentActivityId;
 import com.nxtlife.mgs.entity.school.StudentClub;
 import com.nxtlife.mgs.entity.user.Student;
+import com.nxtlife.mgs.entity.user.Teacher;
 import com.nxtlife.mgs.enums.ApprovalStatus;
 
 public interface StudentClubRepository extends JpaRepository<StudentClub, StudentActivityId> {
@@ -23,12 +24,19 @@ public interface StudentClubRepository extends JpaRepository<StudentClub, Studen
 	public boolean existsByStudentIdAndActivityIdAndMembershipStatusAndActiveTrue(Long studentId, Long activityId,
 			ApprovalStatus membershipStatus);
 
+	public boolean existsByStudentIdAndActivityCidAndMembershipStatusAndActiveTrue(Long studentId, String activityCid,
+			ApprovalStatus membershipStatus);
+
 	@Query("select sc.membershipStatus from StudentClub sc where sc.student.id = ?1 and sc.activity.cid = ?2 and sc.teacher.cid = ?3 and sc.active = ?4")
 	public ApprovalStatus getApprovalStatusByStudentIdAndActivityCidAndTeacherCidAndActive(Long studentId,
 			String activityCid, String supervisorCid, Boolean active);
 
-	public StudentClub findByStudentIdAndActivityCidAndTeacherCidAndActive(Long studentId,
-			String activityCid, String supervisorCid, Boolean active);
+	public StudentClub findByStudentIdAndActivityCidAndTeacherCidAndActive(Long studentId, String activityCid,
+			String supervisorCid, Boolean active);
+	
+	@Query(value = "select distinct sc.teacher from StudentClub sc where sc.activity.cid = ?1 and sc.student.id = ?2")
+	public Set<Teacher> findTeachersOfActivityForStudent(String activityCid , Long studentId);
+
 	@Modifying
 	@Query("update StudentClub  set membershipStatus = ?4 , appliedOn = ?5 where student.id = ?1 and activity.cid = ?2 and teacher.cid = ?3 ")
 	public int updateMemberhipStatusAndAppliedOnByStudentIdAndActivityCidAndTeacherCid(Long studentId,

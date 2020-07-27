@@ -192,14 +192,14 @@ public class ActivityPerformedRequest extends Request {
 		}
 //		activityPerformed.setActivityStatus(this.activityStatus);
 		if (this.description != null) {
-			if (countWords(this.description) < 25 || countWords(this.description) > 250)
-				throw new ValidationException("description can be between 25 to 250 words.");
+			if (countWords(this.description) < 10 || countWords(this.description) > 250)
+				throw new ValidationException("description can be between 10 to 250 words.");
 			activityPerformed.setDescription(this.description);
 		}
 
 		if (this.coachRemark != null) {
-			if (countWords(this.coachRemark) < 25)
-				throw new ValidationException("Remark should be minimum of 25 words.");
+			if (countWords(this.coachRemark) < 10)
+				throw new ValidationException("Remark should be minimum of 10 words.");
 			activityPerformed.setCoachRemark(this.coachRemark);
 		}
 

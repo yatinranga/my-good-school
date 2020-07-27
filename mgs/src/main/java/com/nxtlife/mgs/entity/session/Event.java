@@ -1,7 +1,6 @@
 package com.nxtlife.mgs.entity.session;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -9,8 +8,6 @@ import java.util.TimeZone;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -25,59 +22,59 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
-import com.google.api.client.util.DateTime;
 import com.nxtlife.mgs.entity.BaseEntity;
 import com.nxtlife.mgs.entity.activity.Activity;
 import com.nxtlife.mgs.entity.activity.File;
 import com.nxtlife.mgs.entity.school.Grade;
 import com.nxtlife.mgs.entity.user.Teacher;
-import com.nxtlife.mgs.enums.SessionStatus;
 import com.nxtlife.mgs.util.DateUtil;
 
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "event",uniqueConstraints = {@UniqueConstraint(columnNames = {"teacher_id","startDate","club_id"})})
-public class Event extends BaseEntity{
-	
+@Table(name = "event", uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "teacher_id", "startDate", "club_id" }) })
+public class Event extends BaseEntity {
+
 	@NotNull
 	@Column(unique = true)
 	private String cid;
-	
+
 	private Long number;
-	
+
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date startDate;
-	
+
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date endDate;
-	
+
 	private String title;
-	
+
 //	@Enumerated(EnumType.STRING)
 //	private SessionStatus status;
-	
+
 	@NotNull
 	@OneToOne
 	private Activity club;
-	
+
 	@NotNull
 	@ManyToMany
 	@JoinTable(name = "session_grade", joinColumns = { @JoinColumn(name = "session_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "grade_id") },uniqueConstraints = {@UniqueConstraint(columnNames = {"session_id","grade_id"})})
-	private List<Grade> grades ;
-	
+			@JoinColumn(name = "grade_id") }, uniqueConstraints = {
+					@UniqueConstraint(columnNames = { "session_id", "grade_id" }) })
+	private List<Grade> grades;
+
 	@NotNull
 	@ManyToOne
-	private Teacher teacher ;
-	
+	private Teacher teacher;
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "event")
 	private List<File> files;
-	
+
 	@Column(columnDefinition = "TEXT ")
 	private String description;
-	
+
 	@Transient
 	private LocalDate startLocalDate;
 
@@ -144,18 +141,18 @@ public class Event extends BaseEntity{
 	public void setTeacher(Teacher teacher) {
 		this.teacher = teacher;
 	}
-	
+
 	public LocalDate getStartLocalDate(TimeZone zone) {
 		zone = zone == null ? DateUtil.defaultTimeZone : zone;
-		Date start =  new Date();
-			start.setHours(0);
-			start.setMinutes(0);
-			start.setSeconds(0);
-			start.setDate(this.startDate.getDate());
-			start.setMonth(this.startDate.getMonth());
-			start.setYear(this.startDate.getYear());
-		
-		return DateUtil.convertToLocalDate(start ,zone);
+		Date start = new Date();
+		start.setHours(0);
+		start.setMinutes(0);
+		start.setSeconds(0);
+		start.setDate(this.startDate.getDate());
+		start.setMonth(this.startDate.getMonth());
+		start.setYear(this.startDate.getYear());
+
+		return DateUtil.convertToLocalDate(start, zone);
 	}
 
 	public List<File> getFiles() {
@@ -177,8 +174,8 @@ public class Event extends BaseEntity{
 	public Event() {
 	}
 
-	public Event(String cid, Long number, Date startDate, Date endDate, String title,
-			Boolean active, Activity club, List<Grade> grades, Teacher teacher) {
+	public Event(String cid, Long number, Date startDate, Date endDate, String title, Boolean active, Activity club,
+			List<Grade> grades, Teacher teacher) {
 		this.cid = cid;
 		this.number = number;
 		this.startDate = startDate;
@@ -189,5 +186,5 @@ public class Event extends BaseEntity{
 		this.grades = grades;
 		this.teacher = teacher;
 	}
-	
+
 }

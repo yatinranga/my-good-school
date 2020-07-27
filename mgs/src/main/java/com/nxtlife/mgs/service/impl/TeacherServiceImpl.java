@@ -3,6 +3,7 @@ package com.nxtlife.mgs.service.impl;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,6 +29,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -879,6 +881,22 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 					"No coaches found for activity having id (%s) in school having id (%s).", activityCid, schoolCid));
 
 		return teachers.stream().map(TeacherResponse::new).distinct().collect(Collectors.toList());
+	}
+
+	@Override
+	@Secured(AuthorityUtils.SCHOOL_FACULTY_FETCH)
+	public Collection<TeacherResponse> getCoachesOfActivityForStudent(String activityCid) {
+		if (!activityRepository.existsByCidAndActiveTrue(activityCid))
+			throw new ValidationException(String.format("Activity having id (%s) does not exist.", activityCid));
+		if (!getUser().getRoles().stream().anyMatch(r -> r.getName().equals("Student")))
+			throw new AccessDeniedException("User not logged in as student.");
+		Long studentId = studentRepository.findIdByUserIdAndActiveTrue(getUserId());
+		if (!studentClubRepository.existsByStudentIdAndActivityCidAndMembershipStatusAndActiveTrue(studentId,
+				activityCid, ApprovalStatus.VERIFIED))
+			throw new NotFoundException(
+					String.format("Student is not a member of club/society (%s) or status might be pending/rejected."));
+		return studentClubRepository.findTeachersOfActivityForStudent(activityCid, studentId).stream()
+				.map(TeacherResponse::new).collect(Collectors.toSet());
 	}
 
 	@Override

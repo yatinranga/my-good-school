@@ -1,5 +1,6 @@
 package com.nxtlife.mgs.service;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -66,5 +67,7 @@ public interface TeacherService {
 	ClubMembershipResponse updateStatus(String studentId, String activityId, Boolean isVerified ,String teacherCid);
 
 	List<ClubMembershipResponse> getMembershipDetailsbyClub(String clubId ,String teacherCid ,String schoolCid);
+
+	Collection<TeacherResponse> getCoachesOfActivityForStudent(String activityCid);
 
 }

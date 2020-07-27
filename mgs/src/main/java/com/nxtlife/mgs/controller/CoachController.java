@@ -1,5 +1,6 @@
 package com.nxtlife.mgs.controller;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
@@ -44,6 +45,11 @@ public class CoachController {
 	@GetMapping(value = "coach/{cId}")
 	public TeacherResponse getCoachByCId(@PathVariable(value = "cId", required = false) String cId) {
 		return teacherService.findCoachByCId(cId);
+	}
+
+	@GetMapping(value = "coaches/student/activity/{activityId}")
+	public Collection<TeacherResponse> getCoachesOfActivityForStudent(@PathVariable("activityId") String activityCid) {
+		return teacherService.getCoachesOfActivityForStudent(activityCid);
 	}
 
 //	@PostMapping("coaches")
