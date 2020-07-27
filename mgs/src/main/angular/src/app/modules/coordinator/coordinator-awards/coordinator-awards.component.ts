@@ -36,7 +36,6 @@ export class CoordinatorAwardsComponent implements OnInit {
   verifySelectedAward(e, i, val: boolean) {
     e.stopPropagation();
     const awardId = this.awardsArr[i].id;
-    console.log(awardId);
 
     if (val) {
       this.alertService.confirmWithoutLoader('question', "Review Award", '', 'Yes').then(result => {

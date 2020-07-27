@@ -81,7 +81,6 @@ export class TeacherClubDetailComponent implements OnInit {
     this.clubReqArr = [];
     this.clubReqLoader = true;
     this.teacherService.getSupervisorClubReq(clubId).subscribe((res) => {
-      console.log(res);
       this.clubReqArr = res.filter(e => e.membershipStatus != 'VERIFIED');
       this.copyClubReqArr = Object.assign([], res.filter(e => e.membershipStatus != 'VERIFIED'));
       this.clubReqLoader = false;
@@ -200,7 +199,6 @@ export class TeacherClubDetailComponent implements OnInit {
     const startDate = this.createSessionForm.value.startDate.split(" ")[0];
     this.createSessionForm.value.endDate = startDate + " " + this.endTime + ":00";
     this.createSessionForm.value.startDate = startDate + " " + this.startTime + ":00";
-    console.log(this.createSessionForm.value);
 
     if (this.createSessionView) {
       this.alertService.showLoader("");
@@ -223,7 +221,6 @@ export class TeacherClubDetailComponent implements OnInit {
       });
 
       this.teacherService.createNewSession(formData).subscribe((res) => {
-        console.log(res);
         $('#createSessionModal1').modal('hide');
         $('.modal-backdrop').remove();
         this.alertService.showMessageWithSym("Session Created !", "Success", "success");
@@ -267,7 +264,6 @@ export class TeacherClubDetailComponent implements OnInit {
         }
       });
       this.teacherService.updateSession(formData).subscribe((res) => {
-        console.log(res);
         $('#createSessionModal1').modal('hide');
         $('.modal-backdrop').remove();
         this.alertService.showMessageWithSym("Session Edited !", "Success", "success");
@@ -296,7 +292,6 @@ export class TeacherClubDetailComponent implements OnInit {
     $('#createSessionModal1').modal('show');
     this.createSessionView = false;
     this.editSessionView = true;
-    console.log(session);
     this.setMinDate();
 
     let sDate = new Date(session.startDate);
@@ -347,12 +342,10 @@ export class TeacherClubDetailComponent implements OnInit {
 
   // Delete Scheduled Session
   deleteSession(session, out_index, in_index) {
-    console.log(session);
     this.alertService.confirmWithoutLoader('question', 'Sure you want to DELETE ?', '', 'Yes').then(result => {
       if (result.value) {
         this.alertService.showLoader("");
         this.teacherService.deleteSession(session.id).subscribe((res) => {
-          console.log(res);
           this.clubSchedule[out_index].responses.splice(in_index, 1);
           this.alertService.showMessageWithSym("Session Deleted", "Success", "success");
           this.getClubSession(this.clubObject.id);
@@ -385,7 +378,6 @@ export class TeacherClubDetailComponent implements OnInit {
     this.name = ""; //reset the file name
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
-      console.log("File Uploaded", event.target.files[0]);
       this.createSessionForm.value.fileRequests = file;
       this.name = file.name;
 

@@ -64,7 +64,6 @@ export class CoordinatorStudentsComponent implements OnInit {
   /** Set Show Details */
   setShowDetails(val: boolean, student_obj?) {
     this.student_obj = student_obj;
-    console.log(student_obj);
     this.showDetails = val;
     this.showDetails ? (this.col = "col-7") : (this.col = "col-12");
   }

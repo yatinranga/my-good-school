@@ -98,7 +98,7 @@ export class ClubDetailsComponent implements OnInit {
   }
 
   updateClub() {
-    // this.alertService.showLoader("");
+    this.alertService.showLoader("");
     const arr = [];
     Object.keys(this.focusareaIds).forEach(key => {
       if (this.focusareaIds[key]) {

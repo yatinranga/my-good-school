@@ -113,7 +113,6 @@ export class TeacherActivityComponent implements OnInit {
       this.pendingActivitiesArr = res.filter((e) => (e.activityStatus == "SubmittedByStudent"));
       this.copyPendingActi = Object.assign([], res.filter((e) => (e.activityStatus == "SubmittedByStudent")));
       this.activitiesArr = this.pendingActivitiesArr;
-      console.log(this.pendingActivitiesArr);
       this.loader = false;
     },
       (err) => {
@@ -169,7 +168,6 @@ export class TeacherActivityComponent implements OnInit {
 
   // Save/Review Pending Activity
   saveReview() {
-    console.log(this.reviewForm.value);
     this.save_loader = true;
     const formData = new FormData();
     formData.append('id', this.activityId);
@@ -237,7 +235,6 @@ export class TeacherActivityComponent implements OnInit {
         var actCid: any;
         actCid = activity.id;
 
-        console.log(actCid);
         this.teacherService.submitActivity(actCid).subscribe((res) => {
           if (this.activityType == "All") {
             this.activitiesArr.splice(index, 1);
@@ -262,7 +259,6 @@ export class TeacherActivityComponent implements OnInit {
 
   directSubmitReview(activityId) {
     this.alertService.confirmWithoutLoader('question', "Do you want to submit ?", '', 'Yes').then(result => {
-      console.log(result);
       if (result.value)
         this.teacherService.submitActivity(activityId).subscribe((res) => {
           this.save_loader = false;
@@ -340,7 +336,6 @@ export class TeacherActivityComponent implements OnInit {
     if ((this.initScore > -1) && (this.partiScore > -1) && (this.achiScore > -1)
       && (this.initScore < 11) && (this.partiScore < 11) && (this.achiScore < 6)) {
       this.totalScore = this.initScore + this.partiScore + this.achiScore;
-      console.log("Total Score - " + this.totalScore);
     } else if (this.totalScore > 25) {
       this.totalScore = 0;
     } else {

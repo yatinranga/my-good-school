@@ -33,7 +33,6 @@ export class AddUserComponent implements OnInit {
   getRoles() {
     this.schoolService.getRoles().subscribe((res) => {
       this.rolesArr = res;
-      console.log(res);
     }, (err) => { console.log(err); })
   }
 
@@ -42,9 +41,7 @@ export class AddUserComponent implements OnInit {
   addUser() {
     this.alertService.showLoader("");
     this.createUserForm.value.roleIds = [this.createUserForm.value.roleIds];
-    console.log(this.createUserForm.value);
     this.schoolService.createUser(this.createUserForm.value).subscribe((res) => {
-      console.log(res);
       this.alertService.showMessageWithSym("User Created !","Success","success");
       this.resetForm();
     },(err) => {

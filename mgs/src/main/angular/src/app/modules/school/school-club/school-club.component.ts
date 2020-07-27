@@ -122,7 +122,6 @@ export class SchoolClubComponent implements OnInit {
   }
 
   setShowWindow(type, club_obj?) {
-    console.log(club_obj);
 
     if (type == 'supervisor') {
       this.showClubDetails = false;
@@ -160,9 +159,7 @@ export class SchoolClubComponent implements OnInit {
     if (Object.keys(this.focusareaIds).length) {
       this.alertService.showLoader("");
 
-      console.log(this.addClubForm.value);
       this.schoolService.updateClub(this.addClubForm.value).subscribe(res => {
-        console.log(res);
         $('#addClubModal').modal('hide');
         this.resetForm();
         this.schoolClubs.unshift(res);
