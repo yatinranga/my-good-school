@@ -90,7 +90,7 @@ table.table tr.active {
         .action-btns{
             .fa{
                 cursor: pointer;
-                margin: 0 3px;
+                margin: 3px;
                 font-size: 12px;
 
                 &.fa-trash{
@@ -154,6 +154,10 @@ table.table tr.active {
 }
 
 .modal-body {
+    .form-group {
+        margin-bottom: 10px;
+    }
+
     label{
         b {
             color: #555;
@@ -165,7 +169,8 @@ table.table tr.active {
 
         .radio-field {
             position: relative;
-            width: 100%;
+            width: auto;
+            margin-right: 15px;
             display: inline-block;
 
             input {
@@ -201,7 +206,7 @@ table.table tr.active {
             }
             label{
                 cursor: pointer;
-                padding-left: 25px;
+                padding-left: 20px;
             }
 
 
@@ -262,4 +267,20 @@ table.table tr.active {
             
         }
     }
+}
+
+.focuareas {
+    max-height: 140px;
+    height: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    // box-shadow: 0 0 3px #ddd;
+    border: solid 1px #ddd;
+    padding: 10px;
+}
+
+
+
+@media screen and (max-width:1259px) {
+    
 }

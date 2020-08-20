@@ -4,4 +4,4 @@
 
 declare const DATA;
 
-export const BASE_URL = 'http://' + String(DATA.ipAddress);
+export const BASE_URL = 'http://www.mygoodschool.in';

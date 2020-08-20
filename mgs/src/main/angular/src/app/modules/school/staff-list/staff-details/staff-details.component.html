@@ -50,20 +50,22 @@
                         Club/Society</button></h2>
                 <div class="club-socity-card">
                     <div class="clubs" *ngIf="assignedClubsArr.length">
-                        <h4><b> Clubs : </b></h4>
+                        <h4><b> Clubs </b></h4>
                         <div *ngFor="let club of assignedClubsArr; let i = index;">
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">{{i+1}}. {{club.name}} </h5>
-                                    <strong>Grades : </strong>
+                                    <strong>Grades </strong>
                                     <ul>
                                         <li *ngFor="let grade of club.gradeResponses; let i = index">
                                             {{ (i === club.gradeResponses.length-1) ? grade.grade + "-" + grade.section : grade.grade + "-" + grade.section  + "," + ' '}}
                                         </li>
                                     </ul>
-                                    <button class="btn btn-success" (click)="showGradeEditModal(club)">Update/Assign
-                                    </button>
-                                    <button class="btn btn-danger" (click)="unassignClub(club)">Unassign</button>
+                                    <div class="btns">
+                                        <button class="btn btn-success" (click)="showGradeEditModal(club)">Update/Assign
+                                        </button>
+                                        <button class="btn btn-danger" (click)="unassignClub(club)">Unassign</button>
+                                    </div>
 
                                 </div>
                             </div>
@@ -72,22 +74,24 @@
                 </div>
                 <div class="club-socity-card">
                     <div class="society" *ngIf="assignedSocietyArr.length">
-                        <h4><b> Societies :</b></h4>
+                        <h4><b> Societies</b></h4>
                         <div *ngFor="let soc of assignedSocietyArr; let i = index;">
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">{{i+1}}. {{soc.name}}</h5>
                                     <div class="grade-content">
-                                        <strong>Grades : </strong>
+                                        <strong>Grades</strong>
                                         <ul>
                                             <li *ngFor="let grade of soc.gradeResponses; let i = index">
                                                 {{ (i === soc.gradeResponses.length-1) ? grade.grade + "-" + grade.section : grade.grade + "-" + grade.section  + "," + ' '}}
                                             </li>
                                         </ul>
                                     </div>
-                                    <button class="btn btn-success" (click)="showGradeEditModal(soc)">Update/Assign
-                                    </button>
-                                    <button class="btn btn-danger" (click)="unassignClub(soc)">Unassign</button>
+                                    <div class="btns">
+                                        <button class="btn btn-success" (click)="showGradeEditModal(soc)">Update/Assign
+                                        </button>
+                                        <button class="btn btn-danger" (click)="unassignClub(soc)">Unassign</button>
+                                    </div>
 
                                 </div>
                             </div>
@@ -115,10 +119,10 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <h3 for="recipient-name" class="col-form-label">Name of Teacher :
+                    <h3 for="recipient-name" class="col-form-label"> <b>Name of Teacher :</b>
                         {{staffDetails.name}}</h3>
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Club/Society</label>
+                        <label for="recipient-name" class="col-form-label"> <b>Club/Society</b> </label>
                         <select class="form-control" name="club" [(ngModel)]="clubId">
                             <option value="" selected disabled>Select One</option>
                             <option *ngFor="let c of allSchoolClubsArr" value={{c.id}}>
@@ -171,7 +175,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Club/Society : {{clubName}}</label>
+                        <label for="recipient-name" class="col-form-label"> <b>Club/Society :</b> {{clubName}}</label>
                     </div>
                     <div class="form-group">
 
@@ -241,11 +245,7 @@
                                         name="mobileNumber" placeholder="Add Mobile Number Here"
                                         formControlName="mobileNumber">
                                 </div>
-                                <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Brief </label>
-                                    <textarea class="form-control" name="profileBrief" rows="3"
-                                        formControlName="profileBrief"></textarea>
-                                </div>
+                                
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
@@ -267,7 +267,7 @@
 
                                 <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">Qualification </label>
-                                    <textarea class="form-control" name="qualification" rows="3"
+                                    <textarea class="form-control" name="qualification" rows="1"
                                         formControlName="qualification"></textarea>
                                 </div>
                                 <div class="form-group">
@@ -284,6 +284,13 @@
                                             {{role.name}}
                                         </option>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group brief-full">
+                                    <label for="recipient-name" class="col-form-label">Brief </label>
+                                    <textarea class="form-control" name="profileBrief" rows="3"
+                                        formControlName="profileBrief"></textarea>
                                 </div>
                             </div>
                             <div class="col-12"

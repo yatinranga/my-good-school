@@ -161,21 +161,35 @@
 
 .clubs ul li, .society ul li {
     margin-bottom: 5px;
+    font-size: 14px;
 }
 .clubs ul, .society ul {
-    padding: 0;
-    min-height: 120px;
-    margin: 0;
-    max-height: 120px;
+    min-height: 90px;
+    max-height: 90px;
     overflow-y: auto;
+    box-shadow: 0 0 2px #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    margin-top: 5px;
 }
+.clubs-socity-main{
+    .card-body {
+        .btns {
+            padding: 0;
+            margin-top: 0;
+        }
+    
+    }
+}
+
 .club-socity-card .card{
     margin-bottom: 10px;
 
 }
 .card-body strong {
-    font-size: 15px;
+    font-size: 14px;
     color: #555;
+    
 }
 
 .clubs h4, .society h4 {
@@ -204,11 +218,22 @@
 }
 
 .modal-body .form-group textarea{
-    height: 120px;
+    height: auto;
+    padding: 6px 10px;
 }
 .modal-body .form-group .col-form-label{
-    font-weight: bold;
     color: #555;
+    font-weight: bold;
+}
+div#assignGradeModal .modal-body label.col-form-label {
+    font-weight: normal;
+}
+
+.grade-main{
+    .col-form-label{
+        font-size: 16px !important;
+        padding: 8px 15px !important;
+    }
 }
 #editSupervisorModal .modal-dialog {
     max-width: 580px;
@@ -346,12 +371,15 @@ span.badge {
     display: inline-block;
     padding: 15px;
     width: 100%;
+    font-size: 14px;
 }
 
 .grade-main{
     .btn{
         float: right;
-        margin-top: -8px;
+        margin-top: 0;
+        font-size: 12px;
+        padding: 5px 10px;
     }
 }
 
@@ -364,14 +392,31 @@ button.btn.btn-primary{
 }
 
 .modal-body{
+    h3{
+        &.col-form-label{
+            font-size: 16px;
+            padding: 5px 0;
+            color: #555;
+
+        }   
+    }
+    .form-group{
+        // margin-top: 10px;
+        .form-control{
+            padding: 6px 10px !important;
+
+        }
+    }
     .form-check{
-        padding-left: 0;
-    
+        padding-left: 15px;
+        margin-top: 10px;
+        
         .radio-field {
             position: relative;
-            width: 100%;
+            width: auto;
             display: inline-block;
-    
+            margin-right: 15px;
+            margin-bottom: 3px;
             input {
                 width: 15px;
                 height: 15px;
@@ -405,17 +450,13 @@ button.btn.btn-primary{
             }
             label{
                 cursor: pointer;
-                padding-left: 25px;
+                padding-left: 20px;
                 margin-bottom: 0;
             }
     
     
             
         }
-    }
-
-    .form-check{
-        padding-left: 15px;
 
         .form-check-label {
             position: relative;
@@ -467,6 +508,17 @@ button.btn.btn-primary{
 
             
         }
+
     }
 
+
+}
+
+
+.modal-body{
+    .grade-main{
+        .form-check{
+            margin-top: 0;
+        }
+    }
 }
